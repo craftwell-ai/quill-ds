@@ -253,7 +253,91 @@ Three sections with live CSS variable swatches:
 
 ---
 
-## 7. Dependencies to install
+## 7. Dark mode stories
+
+Although Quill's published product has no dark mode, components must be verified against the `.dark` CSS class (defined in `globals.css`) for consumers who may build dark surfaces.
+
+### Implementation
+
+`preview.tsx` adds a `withDarkMode` global decorator that reads a Storybook global (`theme: 'light' | 'dark'`) and toggles the `dark` class on the story container. A toolbar button lets reviewers flip between modes.
+
+```tsx
+// .storybook/preview.tsx (excerpt)
+export const globalTypes = {
+  theme: {
+    name: 'Theme',
+    defaultValue: 'light',
+    toolbar: {
+      icon: 'circlehollow',
+      items: ['light', 'dark'],
+      dynamicTitle: true,
+    },
+  },
+}
+
+const withTheme: Decorator = (Story, context) => {
+  const theme = context.globals.theme
+  return (
+    <div className={theme === 'dark' ? 'dark' : ''} style={{ background: theme === 'dark' ? '#1a1714' : '#F5EDDD', padding: 24, minHeight: '100vh' }}>
+      <Story />
+    </div>
+  )
+}
+export const decorators = [withTheme]
+```
+
+### Per-story dark exports
+
+Components with meaningful dark state get an explicit `Dark` story:
+
+```tsx
+export const Dark: Story = {
+  parameters: { globals: { theme: 'dark' } },
+  args: { ... }
+}
+```
+
+Components where dark mode is purely cosmetic (Separator, Skeleton, Spinner) do not need a separate `Dark` export — the toolbar toggle is sufficient.
+
+---
+
+## 8. Deployment
+
+Storybook is deployed as a static site on Vercel, separate from the Next.js app.
+
+### Build
+
+```bash
+npm run build-storybook   # outputs to storybook-static/
+```
+
+Added to `package.json` scripts:
+```json
+"build-storybook": "storybook build -o storybook-static"
+```
+
+### Vercel project config
+
+A second Vercel project (`quill-ds-storybook`) is created pointing to the same repo with:
+
+```json
+// vercel.json (in repo root, for the storybook project)
+{
+  "buildCommand": "npm run build-storybook",
+  "outputDirectory": "storybook-static",
+  "installCommand": "npm install"
+}
+```
+
+Alternatively, a `storybook` subfolder in the Vercel dashboard can be configured via the Vercel project settings (Framework: Other, Output Directory: `storybook-static`). Either approach works; the `vercel.json` route is preferred for reproducibility.
+
+### CI/CD
+
+No additional CI config needed — Vercel's GitHub integration triggers a rebuild on every push to `main`. Preview deployments are created automatically for every PR, giving per-PR component previews.
+
+---
+
+## 9. Dependencies to install
 
 ```bash
 npx storybook@latest init --yes
@@ -264,9 +348,7 @@ npm install --save-dev @storybook/addon-a11y @storybook/theming
 
 ---
 
-## 8. Out of scope
+## 10. Out of scope
 
-- Dark mode stories (Quill has no dark mode)
 - `direction.tsx` (utility provider, not a UI component)
-- Storybook deployment/hosting (separate concern)
 - Custom addon development
