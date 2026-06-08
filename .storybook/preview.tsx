@@ -1,6 +1,8 @@
 import type { Decorator, Preview } from '@storybook/nextjs-vite'
 import '../src/app/globals.css'
 import quillTheme from './quill-theme'
+import { ThemeProvider } from 'next-themes'
+import { Toaster } from '../src/components/ui/sonner'
 
 export const globalTypes = {
   theme: {
@@ -20,16 +22,19 @@ export const globalTypes = {
 const withTheme: Decorator = (Story, context) => {
   const theme = context.globals['theme'] ?? 'light'
   return (
-    <div
-      className={theme === 'dark' ? 'dark' : ''}
-      style={{
-        background: theme === 'dark' ? '#1a1714' : '#F5EDDD',
-        padding: 24,
-        minHeight: '100vh',
-      }}
-    >
-      <Story />
-    </div>
+    <ThemeProvider attribute="class" defaultTheme={theme} forcedTheme={theme}>
+      <div
+        className={theme === 'dark' ? 'dark' : ''}
+        style={{
+          background: theme === 'dark' ? '#1a1714' : '#F5EDDD',
+          padding: 24,
+          minHeight: '100vh',
+        }}
+      >
+        <Story />
+        <Toaster position="bottom-right" />
+      </div>
+    </ThemeProvider>
   )
 }
 

@@ -24,14 +24,6 @@ Use typed variants (\`toast.success\`, \`toast.error\`, etc.) for semantic meani
     },
   },
   argTypes: { className: { table: { disable: true } } },
-  decorators: [
-    (Story) => (
-      <>
-        <Toaster position="bottom-right" />
-        <Story />
-      </>
-    ),
-  ],
 } satisfies Meta<typeof Toaster>
 
 export default meta
