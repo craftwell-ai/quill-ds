@@ -11,10 +11,20 @@ import {
   ComboboxItem,
   ComboboxEmpty,
   ComboboxInput,
+  ComboboxGroup,
+  ComboboxLabel,
+  ComboboxSeparator,
+  ComboboxChips,
+  ComboboxChip,
+  ComboboxChipsInput,
+  useComboboxAnchor,
 } from '@/components/ui/combobox'
 import { Button } from '@/components/ui/button'
 
 const frameworks = ['Next.js', 'Remix', 'Astro', 'SvelteKit', 'Nuxt', 'TanStack Start']
+
+const jsFrameworks = ['Next.js', 'Remix', 'TanStack Start']
+const otherFrameworks = ['Astro', 'SvelteKit', 'Nuxt']
 
 const meta = {
   title: 'UI / Combobox',
@@ -55,7 +65,7 @@ export const Default: Story = {
       <ComboboxTrigger render={<Button variant="outline" className="w-52 justify-between" />}>
         <ComboboxValue placeholder="Select framework…" />
       </ComboboxTrigger>
-      <ComboboxContent>
+      <ComboboxContent className="min-w-(--anchor-width)">
         <ComboboxInput placeholder="Search…" showTrigger={false} />
         <ComboboxList>
           <ComboboxEmpty>No results found.</ComboboxEmpty>
@@ -92,8 +102,8 @@ export const Default: Story = {
 export const Inline: Story = {
   render: () => (
     <Combobox items={frameworks}>
-      <ComboboxInput placeholder="Search framework…" className="w-52" />
-      <ComboboxContent>
+      <ComboboxInput placeholder="Search framework…" className="w-52" aria-label="Search framework" />
+      <ComboboxContent className="min-w-(--anchor-width)">
         <ComboboxList>
           <ComboboxEmpty>No results found.</ComboboxEmpty>
           <ComboboxCollection>
@@ -119,5 +129,109 @@ export const Inline: Story = {
 
     // Astro doesn't match 'nu' — removed from DOM
     expect(screen.queryByText('Astro')).not.toBeInTheDocument()
+  },
+}
+
+export const WithClear: Story = {
+  name: 'With Clear Button',
+  render: () => (
+    <Combobox items={frameworks}>
+      <ComboboxInput
+        placeholder="Search framework…"
+        className="w-52"
+        aria-label="Search framework"
+        showTrigger
+        showClear
+      />
+      <ComboboxContent className="min-w-(--anchor-width)">
+        <ComboboxList>
+          <ComboboxEmpty>No results found.</ComboboxEmpty>
+          <ComboboxCollection>
+            {(fw: string) => (
+              <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+            )}
+          </ComboboxCollection>
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  ),
+}
+
+export const WithGroups: Story = {
+  name: 'With Groups',
+  render: () => (
+    <Combobox items={frameworks}>
+      <ComboboxTrigger render={<Button variant="outline" className="w-52 justify-between" />}>
+        <ComboboxValue placeholder="Select framework…" />
+      </ComboboxTrigger>
+      <ComboboxContent className="min-w-(--anchor-width)">
+        <ComboboxInput placeholder="Search…" showTrigger={false} />
+        <ComboboxList>
+          <ComboboxEmpty>No results found.</ComboboxEmpty>
+          <ComboboxGroup>
+            <ComboboxLabel>JavaScript</ComboboxLabel>
+            <ComboboxCollection>
+              {(fw: string) => jsFrameworks.includes(fw)
+                ? <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+                : null
+              }
+            </ComboboxCollection>
+          </ComboboxGroup>
+          <ComboboxSeparator />
+          <ComboboxGroup>
+            <ComboboxLabel>Other</ComboboxLabel>
+            <ComboboxCollection>
+              {(fw: string) => otherFrameworks.includes(fw)
+                ? <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+                : null
+              }
+            </ComboboxCollection>
+          </ComboboxGroup>
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  ),
+}
+
+function MultiSelectDemo() {
+  const anchor = useComboboxAnchor()
+  return (
+    <Combobox items={frameworks} multiple>
+      <ComboboxChips ref={anchor} className="w-72">
+        <ComboboxChipsInput placeholder="Select frameworks…" aria-label="Select frameworks" />
+      </ComboboxChips>
+      <ComboboxContent anchor={anchor} className="min-w-(--anchor-width)">
+        <ComboboxList>
+          <ComboboxEmpty>No results found.</ComboboxEmpty>
+          <ComboboxCollection>
+            {(fw: string) => (
+              <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+            )}
+          </ComboboxCollection>
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  )
+}
+
+export const MultiSelect: Story = {
+  name: 'Multi-select (Chips)',
+  render: () => <MultiSelectDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const input = canvas.getByPlaceholderText('Select frameworks…')
+    await userEvent.click(input)
+
+    // Select two items from the popup
+    const nextItem = await screen.findByText('Next.js')
+    await userEvent.click(nextItem)
+
+    const astroItem = await screen.findByText('Astro')
+    await userEvent.click(astroItem)
+
+    // Both selections should appear as chips in the input area
+    expect(canvas.getByText('Next.js')).toBeInTheDocument()
+    expect(canvas.getByText('Astro')).toBeInTheDocument()
   },
 }

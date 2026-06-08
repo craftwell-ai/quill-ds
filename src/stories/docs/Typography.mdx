@@ -4,9 +4,9 @@ import { Meta } from '@storybook/blocks'
 
 export const TypeSample = ({ token, size, weight, style, vset, children }) => (
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, padding: '10px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
-    <code style={{ fontSize: 11, color: '#8A7F72', width: 100, flexShrink: 0 }}>{token}</code>
+    <code style={{ fontSize: 11, color: '#675F58', width: 100, flexShrink: 0 }}>{token}</code>
     <span style={{ fontSize: size, fontWeight: weight, fontStyle: style || 'normal', fontVariationSettings: vset, color: '#2A2622', lineHeight: 1.3 }}>{children}</span>
-    <span style={{ fontSize: 11, color: '#8A7F72', marginLeft: 'auto' }}>{size}</span>
+    <span style={{ fontSize: 11, color: '#675F58', marginLeft: 'auto' }}>{size}</span>
   </div>
 )
 
@@ -31,9 +31,9 @@ Fraunces is a variable font with optical-size (`opsz`), softness (`SOFT`), and w
 
 export const FraunchesSample = ({ label, vset, size, style, children }) => (
   <div style={{ padding: '16px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
-    <div style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8A7F72', marginBottom: 8 }}>{label}</div>
+    <div style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#675F58', marginBottom: 8 }}>{label}</div>
     <div style={{ fontFamily: 'var(--font-fraunces, Georgia, serif)', fontSize: size || 32, fontVariationSettings: vset, fontStyle: style || 'normal', color: '#2A2622', lineHeight: 1.2 }}>{children}</div>
-    <code style={{ fontSize: 10, color: '#8A7F72', display: 'block', marginTop: 6 }}>font-variation-settings: {vset}</code>
+    <code style={{ fontSize: 10, color: '#675F58', display: 'block', marginTop: 6 }}>font-variation-settings: {vset}</code>
   </div>
 )
 
@@ -57,7 +57,7 @@ export const FraunchesSample = ({ label, vset, size, style, children }) => (
 
 export const InterSample = ({ weight, label }) => (
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, padding: '8px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
-    <span style={{ fontSize: 11, color: '#8A7F72', width: 80, flexShrink: 0 }}>{label}</span>
+    <span style={{ fontSize: 11, color: '#675F58', width: 80, flexShrink: 0 }}>{label}</span>
     <span style={{ fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 16, fontWeight: weight, color: '#2A2622' }}>
       The quick brown fox jumps over the lazy dog.
     </span>
@@ -75,7 +75,7 @@ Used for section labels, category tags, and UI micro-copy.
 <div style={{ padding: '16px 0' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
     <div style={{ width: 18, height: 2, background: '#C4684B', borderRadius: 1 }}/>
-    <span style={{ fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#8A7F72' }}>Category · Eyebrow Label</span>
+    <span style={{ fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#675F58' }}>Category · Eyebrow Label</span>
   </div>
 </div>
 

@@ -4,9 +4,10 @@ import {
   InputGroupAddon,
   InputGroupInput,
   InputGroupButton,
+  InputGroupText,
+  InputGroupTextarea,
 } from '@/components/ui/input-group'
-import { Button } from '@/components/ui/button'
-import { SearchIcon, GlobeIcon } from 'lucide-react'
+import { SearchIcon, GlobeIcon, DollarSignIcon, CopyIcon } from 'lucide-react'
 
 const meta = {
   title: 'UI / InputGroup',
@@ -21,6 +22,7 @@ const meta = {
 InputGroup merges an input with prefix/suffix addons (icons, buttons, text).
 Use \`InputGroupAddon\` for non-interactive prefixes/suffixes (icons, labels).
 Use \`InputGroupButton\` for interactive suffix actions (search, copy, clear).
+Use \`InputGroupText\` for plain text spans inside an addon.
         `,
       },
     },
@@ -36,7 +38,7 @@ export const WithPrefixIcon: Story = {
   render: () => (
     <InputGroup>
       <InputGroupAddon><SearchIcon /></InputGroupAddon>
-      <InputGroupInput placeholder="Search courses…" />
+      <InputGroupInput placeholder="Search courses…" aria-label="Search courses" />
     </InputGroup>
   ),
 }
@@ -45,8 +47,8 @@ export const WithSuffix: Story = {
   render: () => (
     <InputGroup>
       <InputGroupAddon><GlobeIcon /></InputGroupAddon>
-      <InputGroupInput placeholder="yourdomain.com" />
-      <InputGroupButton><Button size="sm">Connect</Button></InputGroupButton>
+      <InputGroupInput placeholder="yourdomain.com" aria-label="Domain name" />
+      <InputGroupButton>Connect</InputGroupButton>
     </InputGroup>
   ),
 }
@@ -55,7 +57,37 @@ export const WithTextPrefix: Story = {
   render: () => (
     <InputGroup>
       <InputGroupAddon>https://</InputGroupAddon>
-      <InputGroupInput placeholder="quill.design" />
+      <InputGroupInput placeholder="quill.design" aria-label="Website URL" />
+    </InputGroup>
+  ),
+}
+
+export const WithSuffixIcon: Story = {
+  render: () => (
+    <InputGroup>
+      <InputGroupAddon><DollarSignIcon /></InputGroupAddon>
+      <InputGroupInput placeholder="0.00" aria-label="Amount in USD" />
+      <InputGroupAddon align="inline-end">
+        <InputGroupText>USD</InputGroupText>
+      </InputGroupAddon>
+    </InputGroup>
+  ),
+}
+
+export const WithCopyButton: Story = {
+  render: () => (
+    <InputGroup>
+      <InputGroupInput defaultValue="https://quill.design/share/abc123" readOnly aria-label="Share link" />
+      <InputGroupButton aria-label="Copy link"><CopyIcon /></InputGroupButton>
+    </InputGroup>
+  ),
+}
+
+export const WithTextarea: Story = {
+  render: () => (
+    <InputGroup>
+      <InputGroupAddon align="block-start">Note</InputGroupAddon>
+      <InputGroupTextarea placeholder="Add a note about this student…" rows={3} aria-label="Note" />
     </InputGroup>
   ),
 }
@@ -66,15 +98,26 @@ export const AllVariants: Story = {
     <div className="flex flex-col gap-3 w-80">
       <InputGroup>
         <InputGroupAddon><SearchIcon /></InputGroupAddon>
-        <InputGroupInput placeholder="Icon prefix" />
+        <InputGroupInput placeholder="Icon prefix" aria-label="Search" />
       </InputGroup>
       <InputGroup>
         <InputGroupAddon>https://</InputGroupAddon>
-        <InputGroupInput placeholder="Text prefix" />
+        <InputGroupInput placeholder="Text prefix" aria-label="Website URL" />
       </InputGroup>
       <InputGroup>
-        <InputGroupInput placeholder="With button suffix" />
-        <InputGroupButton><Button size="sm">Search</Button></InputGroupButton>
+        <InputGroupInput placeholder="With button suffix" aria-label="Search query" />
+        <InputGroupButton>Search</InputGroupButton>
+      </InputGroup>
+      <InputGroup>
+        <InputGroupAddon><DollarSignIcon /></InputGroupAddon>
+        <InputGroupInput placeholder="0.00" aria-label="Amount" />
+        <InputGroupAddon align="inline-end">
+          <InputGroupText>USD</InputGroupText>
+        </InputGroupAddon>
+      </InputGroup>
+      <InputGroup>
+        <InputGroupAddon align="block-start">Note</InputGroupAddon>
+        <InputGroupTextarea placeholder="Multiline input…" rows={2} aria-label="Note" />
       </InputGroup>
     </div>
   ),
