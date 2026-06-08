@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Docs / Elevation" />
+
+export const ShadowCard = ({ token, shadow, label }) => (
+  <div style={{
+    background: '#F5EDDD',
+    borderRadius: 10,
+    padding: '20px 24px',
+    boxShadow: shadow,
+    minWidth: 180,
+  }}>
+    <div style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8A7F72', marginBottom: 6 }}>{label}</div>
+    <code style={{ fontSize: 10.5, color: '#5C524A', display: 'block', lineHeight: 1.5 }}>{token}</code>
+  </div>
+)
+
+# Elevation
+
+Quill shadows use a warm sepia formula — `rgba(42,38,34,…)` — so they feel like cast ink, not grey box-shadows. A negative spread keeps the shadow tight under the element.
+
+<div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, padding: '32px 0' }}>
+  <ShadowCard
+    label="shadow-xs"
+    token="--shadow-xs"
+    shadow="0 1px 2px -1px rgba(42,38,34,0.12), 0 0 0 1px rgba(42,38,34,0.05)"
+  />
+  <ShadowCard
+    label="shadow-sm"
+    token="--shadow-sm"
+    shadow="0 2px 4px -1px rgba(42,38,34,0.14), 0 1px 2px -1px rgba(42,38,34,0.08)"
+  />
+  <ShadowCard
+    label="shadow"
+    token="--shadow"
+    shadow="0 4px 8px -2px rgba(42,38,34,0.16), 0 2px 4px -2px rgba(42,38,34,0.10)"
+  />
+  <ShadowCard
+    label="shadow-lg"
+    token="--shadow-lg"
+    shadow="0 12px 20px -4px rgba(42,38,34,0.18), 0 4px 8px -4px rgba(42,38,34,0.10)"
+  />
+  <ShadowCard
+    label="shadow-pop"
+    token="--shadow-pop"
+    shadow="0 20px 32px -6px rgba(42,38,34,0.22), 0 8px 12px -6px rgba(42,38,34,0.12)"
+  />
+</div>
+
+## Shadow formula
+
+```css
+/* Two layers: soft ambient + sharper key */
+--shadow-xs:  0 1px  2px -1px rgba(42,38,34,0.12), 0 0   0  1px rgba(42,38,34,0.05);
+--shadow-sm:  0 2px  4px -1px rgba(42,38,34,0.14), 0 1px 2px -1px rgba(42,38,34,0.08);
+--shadow:     0 4px  8px -2px rgba(42,38,34,0.16), 0 2px 4px -2px rgba(42,38,34,0.10);
+--shadow-lg:  0 12px 20px -4px rgba(42,38,34,0.18), 0 4px 8px  -4px rgba(42,38,34,0.10);
+--shadow-pop: 0 20px 32px -6px rgba(42,38,34,0.22), 0 8px 12px -6px rgba(42,38,34,0.12);
+```
+
+## Usage guide
+
+| Token | Use |
+|---|---|
+| `shadow-xs` | Subtle card borders, inset well indicators |
+| `shadow-sm` | Default cards, dropdowns, select menus |
+| `shadow` | Popovers, tooltips, hover-elevated cards |
+| `shadow-lg` | Modals, dialogs, sheets |
+| `shadow-pop` | Dragged elements, command palette, max elevation |

@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Docs / Colors" />
+
+export const Swatch = ({ token, hex, usage }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+    <div style={{ width: 36, height: 36, background: hex, borderRadius: 6, border: '1px solid rgba(42,38,34,0.12)', flexShrink: 0 }}/>
+    <div>
+      <code style={{ fontSize: 12, color: '#2A2622', display: 'block' }}>{token}</code>
+      <div style={{ fontSize: 11, color: '#8A7F72', marginTop: 2 }}>{hex} · {usage}</div>
+    </div>
+  </div>
+)
+
+export const BorderSwatch = ({ token, value, usage }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+    <div style={{ width: 60, height: 36, borderRadius: 6, border: `2px solid ${value}`, flexShrink: 0, background: '#F5EDDD' }}/>
+    <div>
+      <code style={{ fontSize: 12, color: '#2A2622', display: 'block' }}>{token}</code>
+      <div style={{ fontSize: 11, color: '#8A7F72', marginTop: 2 }}>{value} · {usage}</div>
+    </div>
+  </div>
+)
+
+# Colors
+
+Quill's palette is grounded in aged paper and sepia ink — warm, editorial, and intentional. One accent color (terracotta) carries all interactive emphasis.
+
+## Papers
+
+Background surfaces. Use in order from lightest to deepest for visual hierarchy.
+
+<Swatch token="--paper" hex="#F5EDDD" usage="page background, default surface" />
+<Swatch token="--paper-warm" hex="#EFE4CE" usage="cards, popovers, sidebars" />
+<Swatch token="--paper-deep" hex="#E8DCC0" usage="pressed states, secondary surfaces, icon containers" />
+
+## Inks
+
+Text and iconography. The three-step ink scale mirrors the hierarchy of type weight.
+
+<Swatch token="--ink" hex="#2A2622" usage="primary text, headings, icons" />
+<Swatch token="--ink-soft" hex="#5C524A" usage="body text, secondary labels" />
+<Swatch token="--ink-muted" hex="#8A7F72" usage="placeholder, captions, disabled text" />
+
+## Pigments
+
+Used sparingly — one pigment per surface, never competing. Each has a `-deep` variant for hover/pressed states.
+
+<Swatch token="--terracotta" hex="#C4684B" usage="primary action, links, the single accent" />
+<Swatch token="--terracotta-deep" hex="#A0513A" usage="terracotta hover / pressed" />
+<Swatch token="--moss" hex="#7A8C5C" usage="success, growth, nature" />
+<Swatch token="--moss-deep" hex="#5E6E43" usage="moss hover / pressed" />
+<Swatch token="--indigo" hex="#5B6B8A" usage="info, links in body text" />
+<Swatch token="--indigo-deep" hex="#44516D" usage="indigo hover / pressed" />
+<Swatch token="--gold" hex="#B89968" usage="premium, highlight, reward" />
+<Swatch token="--gold-deep" hex="#9A7D4E" usage="gold hover / pressed" />
+
+## Hairlines
+
+Borders and dividers. Always ink at low alpha — never a separate color.
+
+<BorderSwatch token="--line-faint" value="rgba(42,38,34,0.08)" usage="subtle dividers, ghost borders" />
+<BorderSwatch token="--line-soft" value="rgba(42,38,34,0.12)" usage="default border (--border)" />
+<BorderSwatch token="--line" value="rgba(42,38,34,0.15)" usage="input borders, stronger rules" />
+<BorderSwatch token="--line-strong" value="rgba(42,38,34,0.20)" usage="emphasis borders, focused rings" />
+
+## Semantic aliases
+
+These map the Quill palette to the ShadCN CSS variable contract.
+
+| Alias | Resolves to | Purpose |
+|---|---|---|
+| `--background` | `--paper` | Page background |
+| `--foreground` | `--ink` | Default text |
+| `--card` | `--paper-warm` | Card / popover backgrounds |
+| `--primary` | `--ink` | Primary button fill |
+| `--primary-foreground` | `--paper` | Text on primary buttons |
+| `--secondary` | `--paper-deep` | Secondary button fill |
+| `--muted` | `--paper-deep` | Muted backgrounds |
+| `--muted-foreground` | `--ink-muted` | Muted text |
+| `--accent` | `--paper-deep` | Hover accent (NOT terracotta) |
+| `--destructive` | `--terracotta-deep` | Error / destructive |
+| `--border` | `--line-soft` | Default border |
+| `--input` | `--line` | Input border |
+| `--ring` | `--ink` | Focus ring (NEVER terracotta) |

@@ -1,0 +1,91 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Docs / Typography" />
+
+export const TypeSample = ({ token, size, weight, style, vset, children }) => (
+  <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, padding: '10px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+    <code style={{ fontSize: 11, color: '#8A7F72', width: 100, flexShrink: 0 }}>{token}</code>
+    <span style={{ fontSize: size, fontWeight: weight, fontStyle: style || 'normal', fontVariationSettings: vset, color: '#2A2622', lineHeight: 1.3 }}>{children}</span>
+    <span style={{ fontSize: 11, color: '#8A7F72', marginLeft: 'auto' }}>{size}</span>
+  </div>
+)
+
+# Typography
+
+Quill uses two typefaces: **Fraunces** for display and editorial moments, **Inter** for interface text.
+
+## Type scale
+
+<TypeSample token="text-4xl" size="36px" weight={400}>The quick brown fox</TypeSample>
+<TypeSample token="text-3xl" size="30px" weight={400}>The quick brown fox</TypeSample>
+<TypeSample token="text-2xl" size="24px" weight={400}>The quick brown fox</TypeSample>
+<TypeSample token="text-xl" size="20px" weight={400}>The quick brown fox</TypeSample>
+<TypeSample token="text-lg" size="18px" weight={400}>The quick brown fox</TypeSample>
+<TypeSample token="text-base" size="15.2px" weight={400}>The quick brown fox jumps</TypeSample>
+<TypeSample token="text-sm" size="13.6px" weight={400}>The quick brown fox jumps over the lazy dog</TypeSample>
+<TypeSample token="text-xs" size="12px" weight={400}>The quick brown fox jumps over the lazy dog, again</TypeSample>
+
+## Fraunces presets
+
+Fraunces is a variable font with optical-size (`opsz`), softness (`SOFT`), and wonkiness (`WONK`) axes.
+
+export const FraunchesSample = ({ label, vset, size, style, children }) => (
+  <div style={{ padding: '16px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+    <div style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8A7F72', marginBottom: 8 }}>{label}</div>
+    <div style={{ fontFamily: 'var(--font-fraunces, Georgia, serif)', fontSize: size || 32, fontVariationSettings: vset, fontStyle: style || 'normal', color: '#2A2622', lineHeight: 1.2 }}>{children}</div>
+    <code style={{ fontSize: 10, color: '#8A7F72', display: 'block', marginTop: 6 }}>font-variation-settings: {vset}</code>
+  </div>
+)
+
+<FraunchesSample label="fraunces-display — opsz 144, SOFT 50, WONK 0" vset='"opsz" 144, "SOFT" 50, "WONK" 0'>
+  Skills, made by hand.
+</FraunchesSample>
+
+<FraunchesSample label="fraunces-accent — opsz 144, SOFT 100, WONK 1 (italic)" vset='"opsz" 144, "SOFT" 100, "WONK" 1' style="italic" size={28}>
+  A moment of delight.
+</FraunchesSample>
+
+<FraunchesSample label="fraunces-text — opsz 24, SOFT 50" vset='"opsz" 24, "SOFT" 50' size={18}>
+  Section headings and pull quotes at reading size.
+</FraunchesSample>
+
+<FraunchesSample label="fraunces-caption — opsz 14, SOFT 100 (italic)" vset='"opsz" 14, "SOFT" 100' style="italic" size={13}>
+  Captions, bylines, and small labels that still need character.
+</FraunchesSample>
+
+## Inter weights
+
+export const InterSample = ({ weight, label }) => (
+  <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, padding: '8px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+    <span style={{ fontSize: 11, color: '#8A7F72', width: 80, flexShrink: 0 }}>{label}</span>
+    <span style={{ fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 16, fontWeight: weight, color: '#2A2622' }}>
+      The quick brown fox jumps over the lazy dog.
+    </span>
+  </div>
+)
+
+<InterSample weight={400} label="400 · Regular" />
+<InterSample weight={500} label="500 · Medium" />
+<InterSample weight={600} label="600 · SemiBold" />
+
+## Eyebrow pattern
+
+Used for section labels, category tags, and UI micro-copy.
+
+<div style={{ padding: '16px 0' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div style={{ width: 18, height: 2, background: '#C4684B', borderRadius: 1 }}/>
+    <span style={{ fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#8A7F72' }}>Category · Eyebrow Label</span>
+  </div>
+</div>
+
+```css
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ink-muted);
+}
+/* Preceded by a 2px terracotta dash via ::before or a sibling element */
+```

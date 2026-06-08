@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Docs / Spacing" />
+
+export const SpaceRule = ({ token, px, usage }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '8px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+    <code style={{ fontSize: 11, color: '#8A7F72', width: 80, flexShrink: 0 }}>{token}</code>
+    <div style={{ height: 16, background: '#C4684B', opacity: 0.7, borderRadius: 2, width: px }}/>
+    <span style={{ fontSize: 11, color: '#5C524A' }}>{px}px · {usage}</span>
+  </div>
+)
+
+# Spacing
+
+Quill uses a 4px base grid. All spacing tokens are multiples of 4px.
+
+<SpaceRule token="space-1" px={4} usage="icon gaps, tight insets" />
+<SpaceRule token="space-2" px={8} usage="small padding, badge insets" />
+<SpaceRule token="space-3" px={12} usage="input padding, compact row gap" />
+<SpaceRule token="space-4" px={16} usage="component internals, card padding sm" />
+<SpaceRule token="space-5" px={20} usage="form field spacing" />
+<SpaceRule token="space-6" px={24} usage="card padding default, section gaps" />
+<SpaceRule token="space-8" px={32} usage="section padding, comfortable breathing room" />
+<SpaceRule token="space-10" px={40} usage="large component padding" />
+<SpaceRule token="space-12" px={48} usage="hero insets, modal padding" />
+<SpaceRule token="space-16" px={64} usage="page-level horizontal padding" />
+<SpaceRule token="space-20" px={80} usage="large section margins" />
+<SpaceRule token="space-24" px={96} usage="section breathing room, max vertical gaps" />
+
+## Usage guide
+
+| Scale | Token | Use |
+|---|---|---|
+| 4–8px | `space-1`, `space-2` | Icon gaps, badge insets, hairline offsets |
+| 12–16px | `space-3`, `space-4` | Component internals, input padding, small card spacing |
+| 20–24px | `space-5`, `space-6` | Form spacing, card padding, list row gaps |
+| 32–48px | `space-8`, `space-12` | Section padding, modal insets, comfortable breathing room |
+| 64–96px | `space-16`, `space-24` | Page-level padding, large section separators |
