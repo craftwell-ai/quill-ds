@@ -23,6 +23,7 @@ export default defineConfig({
         ],
         test: {
           name: 'storybook',
+          exclude: ['**/._*', '**/node_modules/**'],
           browser: {
             enabled: true,
             headless: true,
