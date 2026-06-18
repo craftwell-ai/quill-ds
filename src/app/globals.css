@@ -276,7 +276,8 @@
     font-variation-settings: var(--fraunces-display);
   }
   a {
-    color: var(--indigo);
+    /* terracotta = the single brand accent (indigo is the MCP semantic pigment). */
+    color: var(--terracotta);
   }
 }
 

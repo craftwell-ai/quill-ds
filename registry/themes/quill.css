@@ -144,28 +144,34 @@
 }
 
 /* ── Base typography ────────────────────────────────────────────────────────── */
-body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  line-height: 1.7;
-  color: var(--ink-soft);
-  background-color: var(--paper);
-}
+/* In @layer base so Tailwind text-* utilities override these element defaults.
+   (Unlayered, they outrank the utilities layer in Tailwind v4 — e.g. a link-
+   styled CTA's text-color utility was being ignored.) */
+@layer base {
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    background-color: var(--paper);
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Fraunces", Georgia, serif;
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-  color: var(--ink);
-  font-variation-settings: var(--fraunces-text);
-}
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    color: var(--ink);
+    font-variation-settings: var(--fraunces-text);
+  }
 
-h1 {
-  line-height: 1.05;
-  font-variation-settings: var(--fraunces-display);
-}
+  h1 {
+    line-height: 1.05;
+    font-variation-settings: var(--fraunces-display);
+  }
 
-a { color: var(--indigo); }
+  /* terracotta = the single brand accent (indigo is the MCP semantic pigment). */
+  a { color: var(--terracotta); }
+}
 
 /* ── Utility classes ────────────────────────────────────────────────────────── */
 .fraunces-display  { font-variation-settings: var(--fraunces-display); }
