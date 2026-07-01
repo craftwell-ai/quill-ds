@@ -1,5 +1,5 @@
 {/* src/stories/docs/Tokens.mdx */}
-import { Meta } from '@storybook/addon-docs/blocks'
+import { Meta } from '@storybook/blocks'
 import { tokens } from '../../tokens/quill.tokens.mjs'
 
 <Meta title="Docs / Tokens" />
@@ -66,6 +66,24 @@ export const colorRows = (obj, prefix = []) => Object.entries(obj).flatMap(([k, 
 <div>{Object.entries(tokens.font).map(([k, v]) => (
   <Row key={k} name={`--font-${k}`} value={v} figma={`font/${k}`}
     swatch={<span style={{ fontFamily: v, width: 40 }}>Aa</span>} />
+))}</div>
+
+## Semantic aliases
+
+<div>{Object.entries(tokens.semantic).map(([name, alias]) => (
+  <Row key={name}
+    swatch={<span style={{ width: 22, height: 22, borderRadius: 5, background: 'var(--' + name + ')', border: '1px solid rgba(42,38,34,0.15)', display: 'inline-block' }} />}
+    name={'--' + name}
+    value={alias} />
+))}</div>
+
+## ShadCN contract
+
+<div>{Object.entries(tokens.shadcn).map(([name, alias]) => (
+  <Row key={name}
+    swatch={<span style={{ width: 22, height: 22, borderRadius: 5, background: 'var(--' + name + ')', border: '1px solid rgba(42,38,34,0.15)', display: 'inline-block' }} />}
+    name={'--' + name}
+    value={alias} />
 ))}</div>
 
 ## Fraunces presets · Motion — CSS-only
