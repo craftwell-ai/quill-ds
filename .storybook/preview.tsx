@@ -49,6 +49,14 @@ const preview: Preview = {
       disable: true,
     },
     layout: 'centered',
+    options: {
+      storySort: {
+        order: [
+          'Docs',
+          ['Introduction', 'Colors', 'Typography', 'Spacing', 'Elevation'],
+        ],
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -56,7 +64,7 @@ const preview: Preview = {
       },
     },
     a11y: {
-      test: 'todo',
+      test: 'error',
     },
   },
 }
