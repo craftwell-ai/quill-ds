@@ -142,6 +142,10 @@ function CommandSeparator({
   return (
     <CommandPrimitive.Separator
       data-slot="command-separator"
+      // A role="separator" isn't a permitted child of the list's role="listbox"
+      // (axe: aria-required-children). It's a purely visual divider, so hide it
+      // from the accessibility tree.
+      aria-hidden="true"
       className={cn("-mx-1 h-px bg-border", className)}
       {...props}
     />

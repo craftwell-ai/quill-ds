@@ -36,6 +36,10 @@ function ToggleGroup({
   return (
     <ToggleGroupPrimitive
       data-slot="toggle-group"
+      // Base UI defaults to role="group", which disallows the aria-orientation
+      // it also emits (axe: aria-allowed-attr). "toolbar" permits aria-orientation
+      // and correctly describes a row/column of toggle buttons.
+      role="toolbar"
       data-variant={variant}
       data-size={size}
       data-spacing={spacing}

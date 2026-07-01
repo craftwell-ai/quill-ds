@@ -41,6 +41,15 @@ function Slider({
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}
+            // Give each thumb's range input an accessible name (WCAG label).
+            // Consumers can override by passing `aria-label` on <Slider>.
+            aria-label={
+              _values.length > 1
+                ? index === 0
+                  ? "Minimum"
+                  : "Maximum"
+                : "Value"
+            }
             className="relative block size-3 shrink-0 rounded-full border border-ring bg-background ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
           />
         ))}

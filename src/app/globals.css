@@ -276,8 +276,10 @@
     font-variation-settings: var(--fraunces-display);
   }
   a {
-    /* terracotta = the single brand accent (indigo is the MCP semantic pigment). */
-    color: var(--terracotta);
+    /* terracotta = the single brand accent (indigo is the MCP semantic pigment).
+       Use the -deep shade for text so links meet WCAG 2.1 AA (4.5:1) on paper;
+       plain --terracotta (3.32:1) is reserved for fills, icons, and large display. */
+    color: var(--terracotta-deep);
   }
 }
 
@@ -288,7 +290,8 @@
 .fraunces-accent {
   font-variation-settings: var(--fraunces-accent);
   font-style: italic;
-  color: var(--terracotta);
+  /* -deep shade keeps AA contrast when the accent is used at reading sizes */
+  color: var(--terracotta-deep);
 }
 .fraunces-text {
   font-variation-settings: var(--fraunces-text);

@@ -20,8 +20,21 @@ function ResizablePanelGroup({
   )
 }
 
-function ResizablePanel({ ...props }: ResizablePrimitive.PanelProps) {
-  return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />
+function ResizablePanel({
+  children,
+  ...props
+}: ResizablePrimitive.PanelProps) {
+  // react-resizable-panels wraps content in an internal overflow:auto div that
+  // isn't keyboard-reachable. We can't prop into it, so wrap children in a
+  // focusable element — that gives the scroll region focusable content and
+  // satisfies axe's scrollable-region-focusable rule.
+  return (
+    <ResizablePrimitive.Panel data-slot="resizable-panel" {...props}>
+      <div tabIndex={0} className="h-full outline-none">
+        {children}
+      </div>
+    </ResizablePrimitive.Panel>
+  )
 }
 
 function ResizableHandle({
