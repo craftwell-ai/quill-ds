@@ -9,6 +9,8 @@
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "test:tokens": "node --test src/tokens/*.test.mjs scripts/*.test.mjs",
     "test-storybook": "vitest --project=storybook run",
     "test-storybook:watch": "vitest --project=storybook",
     "test-storybook:coverage": "vitest --project=storybook run --coverage"
