@@ -22,14 +22,22 @@
 
 **Not managed here:** dark-mode elevation (Figma effect styles can't hold modes) — deferred to the component phase. Components, Code Connect, and patterns are later phases.
 
-## Built (verified 2026-07-01)
+## Built (verified 2026-07-02)
 
-- `Quill Primitives` collection, modes **Light/Dark** — 40 variables (18 color + 8 radius + 10 type + 4 font).
+- `Quill Primitives` collection, modes **Light/Dark** — **67 variables**:
+  18 color, 12 `spacing/*`, 8 `corner-radius/*`, 5 `border-width/*`, 10 `type/*`, 4 `font/*`, 10 `shadow/*/*`.
 - `Quill Semantic` collection, single mode — 47 alias variables (text 5, surface 3, border 3, status 5, shadcn 31).
 - 12 text styles (`Display/*`, `Heading/*`, `Body/*`, `Accent`, `Eyebrow`).
-- 5 effect styles (`Elevation/xs·sm·base·lg·pop`, light).
+- 5 **mode-aware** effect styles (`Elevation/xs·sm·base·lg·pop`): each shadow's color is bound to a
+  `shadow/*/*` variable, so the same style adapts Light↔Dark automatically (no separate dark set).
 - `Foundations Specimen` frame (node `10:2`) — swatches, type, and elevation bound to the variables/styles; verified in both Light and Dark.
-- **Idempotency verified:** re-running the full sync reported 0 created / all updated (no duplicates).
+- **Idempotency verified:** re-running the full sync reports 0 created / all updated (no duplicates).
+
+### Not representable in Figma (genuine platform limits — stay CSS-only)
+- **Motion** (easing/duration/transform) — Figma has no motion variable type.
+- **Fraunces optical axes** (opsz/SOFT/WONK) — the Plugin API exposes no variable-font-axis control;
+  text styles use base Fraunces (Regular/Italic), which is the closest available.
+Both are marked `$type: other` / CSS-only in the DTCG and documented on the Storybook Tokens page.
 
 ## Publish as a library (manual — required)
 

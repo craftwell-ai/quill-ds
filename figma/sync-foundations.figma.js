@@ -224,7 +224,33 @@ function parseShadows(css) {
   return out
 }
 
+// Per-layer shadow colors → mode-aware COLOR variables, so ONE effect style adapts Light↔Dark.
+const SHADOW_COLOR_SCOPES = ['EFFECT_COLOR']
+const shadowColors = (css) => css.match(/rgba?\([^)]*\)/g) || []
+
+async function syncShadowColorVars(DTCG) {
+  const col = await upsertCollection('Quill Primitives')
+  const modes = ensureModes(col, ['Light', 'Dark'])
+  const existing = await varsInCollection(col)
+  let created = 0
+  let updated = 0
+  for (const [k, tok] of Object.entries(DTCG.Primitives.elevation)) {
+    const light = shadowColors(tok.$extensions['com.figma'].modes.Light)
+    const dark = shadowColors(tok.$extensions['com.figma'].modes.Dark)
+    for (let i = 0; i < light.length; i++) {
+      const name = `shadow/${k}/${i + 1}`
+      let v = existing[name]
+      if (!v) { v = figma.variables.createVariable(name, col, 'COLOR'); v.scopes = SHADOW_COLOR_SCOPES; created++ } else updated++
+      v.setValueForMode(modes.Light, toFigmaColor(light[i]))
+      v.setValueForMode(modes.Dark, toFigmaColor(dark[i]))
+      existing[name] = v
+    }
+  }
+  return { created, updated }
+}
+
 async function syncEffectStyles(DTCG) {
+  const shadowVars = await varsInCollection(await upsertCollection('Quill Primitives'))
   const byName = Object.fromEntries((await figma.getLocalEffectStylesAsync()).map((s) => [s.name, s]))
   let created = 0
   let updated = 0
@@ -233,7 +259,12 @@ async function syncEffectStyles(DTCG) {
     let es = byName[name]
     if (!es) { es = figma.createEffectStyle(); created++ } else updated++
     es.name = name
-    es.effects = parseShadows(tok.$value)
+    // Offsets/blur/spread come from the (light) value — identical across modes;
+    // each shadow's COLOR is bound to its mode-aware shadow/* variable.
+    es.effects = parseShadows(tok.$value).map((eff, i) => {
+      const v = shadowVars[`shadow/${k}/${i + 1}`]
+      return v ? figma.variables.setBoundVariableForEffect(eff, 'color', v) : eff
+    })
     byName[name] = es
   }
   return { created, updated, total: Object.keys(DTCG.Primitives.elevation).length }
@@ -244,6 +275,7 @@ async function syncFoundations(DTCG) {
   results.colors = await syncPrimitiveColors(DTCG)
   results.scalars = await syncPrimitiveScalars(DTCG)
   results.semantic = await syncSemanticAliases(DTCG)
+  results.shadowColors = await syncShadowColorVars(DTCG)
   results.text = await syncTextStyles()
   results.effects = await syncEffectStyles(DTCG)
   return results
