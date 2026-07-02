@@ -108,9 +108,11 @@ that's an auto-layout child (use the up/down glyph instead).
 - **Code (source of truth):** 28 pattern stories under `src/stories/patterns/`
   (Auth/Forms/Data/State/Marketing/Shells/Nav) + a `Patterns / Overview` page.
 - **Figma:** patterns mirror onto `❖ <Name>` pages by composing real component **instances**
-  (with text overrides). Built so far: **`❖ Login`** (103:3) — a token-bound card composing
-  Input + Button instances. The rest follow the same recipe: instance the components, override
-  text/props, lay out with auto-layout, bind container tokens.
+  (with text overrides). Built so far: **`❖ Login`** (103:3, Input + Button instances) and
+  **`❖ Stat cards`** (105:3, Badge instances). The rest follow the same recipe: instance the
+  components, override text/props, lay out with auto-layout, bind container tokens.
+  - Quirk: a **destructive Badge instance** drops its 10%-opacity fill (renders solid) — re-apply
+    `fills.map(p => ({...p, opacity: 0.1}))` on the instance, or use another variant.
 
 ## Next
 
