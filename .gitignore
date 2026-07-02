@@ -43,6 +43,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# generated per-icon lazy modules (rebuilt by `npm run build:icons`)
+/src/components/ui/icons/
+
 *storybook.log
 storybook-static
 
