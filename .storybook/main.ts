@@ -2,7 +2,7 @@ import type { StorybookConfig } from '@storybook/nextjs-vite'
 
 const config: StorybookConfig = {
   stories: [
-    '../src/stories/docs/**/*.mdx',
+    '../src/stories/**/*.mdx',
     '../src/stories/**/*.stories.{ts,tsx}',
   ],
   addons: [
