@@ -114,7 +114,8 @@ async function syncPrimitiveScalars(DTCG) {
   let created = 0
   let updated = 0
   const bump = (c) => (c ? created++ : updated++)
-  for (const [k, t] of Object.entries(DTCG.Primitives.spacing)) bump(upsertScalar(col, 'spacing/' + k, dimToPx(t.$value), 'FLOAT', SPACE_SCOPES, modes, existing))
+  // Figma variable names can't contain '.', so fractional spacing keys (2.5→2_5) are sanitized.
+  for (const [k, t] of Object.entries(DTCG.Primitives.spacing)) bump(upsertScalar(col, 'spacing/' + String(k).replace('.', '_'), dimToPx(t.$value), 'FLOAT', SPACE_SCOPES, modes, existing))
   // Figma names this "corner-radius" (matches Figma's own UI term); code stays --radius-*.
   for (const [k, t] of Object.entries(DTCG.Primitives.radius)) bump(upsertScalar(col, 'corner-radius/' + k, dimToPx(t.$value), 'FLOAT', RADIUS_SCOPES, modes, existing))
   for (const [k, t] of Object.entries(DTCG.Primitives.borderWidth)) bump(upsertScalar(col, 'border-width/' + k, dimToPx(t.$value), 'FLOAT', STROKE_SCOPES, modes, existing))

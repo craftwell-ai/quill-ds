@@ -278,9 +278,17 @@
         "$type": "dimension",
         "$value": "1.5rem"
       },
+      "7": {
+        "$type": "dimension",
+        "$value": "1.75rem"
+      },
       "8": {
         "$type": "dimension",
         "$value": "2rem"
+      },
+      "9": {
+        "$type": "dimension",
+        "$value": "2.25rem"
       },
       "10": {
         "$type": "dimension",
@@ -301,6 +309,18 @@
       "24": {
         "$type": "dimension",
         "$value": "6rem"
+      },
+      "0.5": {
+        "$type": "dimension",
+        "$value": "0.125rem"
+      },
+      "1.5": {
+        "$type": "dimension",
+        "$value": "0.375rem"
+      },
+      "2.5": {
+        "$type": "dimension",
+        "$value": "0.625rem"
       }
     },
     "radius": {
