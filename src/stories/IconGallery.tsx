@@ -57,11 +57,35 @@ function IconDetail({ name, onClose }: { name: string; onClose: () => void }) {
   )
 }
 
+const PAGE = 150 // icons rendered per "page"; more load as you scroll
+
 export function IconGallery() {
   const [query, setQuery] = React.useState('')
   const [selected, setSelected] = React.useState<string | null>(null)
+  const [count, setCount] = React.useState(PAGE)
   const q = query.trim().toLowerCase()
-  const results = q ? NAMES.filter((n) => n.includes(q)) : NAMES
+  const results = React.useMemo(() => (q ? NAMES.filter((n) => n.includes(q)) : NAMES), [q])
+  const visible = results.slice(0, count)
+  const sentinelRef = React.useRef<HTMLDivElement>(null)
+
+  // Reset how many are shown whenever the search changes.
+  React.useEffect(() => {
+    setCount(PAGE)
+  }, [q])
+
+  // Load the next page as the sentinel scrolls near the viewport (lazy on scroll).
+  React.useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) setCount((c) => Math.min(c + PAGE, results.length))
+      },
+      { rootMargin: '800px' }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [results.length])
 
   return (
     <div className="flex gap-6 text-ink not-prose">
@@ -82,24 +106,29 @@ export function IconGallery() {
         {results.length === 0 ? (
           <p className="text-sm text-muted-foreground">No icons match “{q}”.</p>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(84px,1fr))] gap-2">
-            {results.map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => setSelected(n)}
-                aria-pressed={selected === n}
-                className={`flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-colors [contain-intrinsic-size:auto_76px] [content-visibility:auto] hover:bg-accent ${
-                  selected === n ? 'border-ring bg-accent' : 'border-transparent'
-                }`}
-              >
-                <span className="text-foreground">
-                  <Glyph name={n} size={24} />
-                </span>
-                <span className="w-full truncate text-[10px] text-foreground">{n}</span>
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(84px,1fr))] gap-2">
+              {visible.map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setSelected(n)}
+                  aria-pressed={selected === n}
+                  className={`flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-colors hover:bg-accent ${
+                    selected === n ? 'border-ring bg-accent' : 'border-transparent'
+                  }`}
+                >
+                  <span className="text-foreground">
+                    <Glyph name={n} size={24} />
+                  </span>
+                  <span className="w-full truncate text-[10px] text-foreground">{n}</span>
+                </button>
+              ))}
+            </div>
+            {visible.length < results.length && (
+              <div ref={sentinelRef} aria-hidden className="h-10" />
+            )}
+          </>
         )}
       </div>
       {selected && <IconDetail name={selected} onClose={() => setSelected(null)} />}
