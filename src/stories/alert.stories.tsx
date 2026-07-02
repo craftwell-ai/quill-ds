@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Alert, AlertTitle, AlertDescription, AlertAction } from '@/components/ui/alert'
-import { InfoIcon, AlertTriangleIcon, XIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
 
 const meta = {
@@ -47,7 +47,7 @@ export const Default: Story = {
   args: { variant: 'default' },
   render: (args) => (
     <Alert {...args}>
-      <InfoIcon />
+      <Icon name="info" />
       <AlertTitle>Note</AlertTitle>
       <AlertDescription>Your profile changes have been saved.</AlertDescription>
     </Alert>
@@ -58,7 +58,7 @@ export const Destructive: Story = {
   args: { variant: 'destructive' },
   render: (args) => (
     <Alert {...args}>
-      <AlertTriangleIcon />
+      <Icon name="warning" />
       <AlertTitle>Error</AlertTitle>
       <AlertDescription>Unable to save changes. Please try again.</AlertDescription>
     </Alert>
@@ -79,12 +79,12 @@ export const WithAction: Story = {
   args: { variant: 'default' },
   render: (args) => (
     <Alert {...args}>
-      <InfoIcon />
+      <Icon name="info" />
       <AlertTitle>New version available</AlertTitle>
       <AlertDescription>Refresh the page to get the latest features and bug fixes.</AlertDescription>
       <AlertAction>
         <Button variant="ghost" size="icon" aria-label="Dismiss">
-          <XIcon />
+          <Icon name="close" />
         </Button>
       </AlertAction>
     </Alert>
@@ -96,12 +96,12 @@ export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
       <Alert variant="default">
-        <InfoIcon />
+        <Icon name="info" />
         <AlertTitle>Informational</AlertTitle>
         <AlertDescription>This is a default alert with an icon.</AlertDescription>
       </Alert>
       <Alert variant="destructive">
-        <AlertTriangleIcon />
+        <Icon name="warning" />
         <AlertTitle>Destructive</AlertTitle>
         <AlertDescription>Something went wrong with your request.</AlertDescription>
       </Alert>
@@ -110,12 +110,12 @@ export const AllVariants: Story = {
         <AlertDescription>Alerts can omit the icon when the message is self-explanatory.</AlertDescription>
       </Alert>
       <Alert variant="default">
-        <InfoIcon />
+        <Icon name="info" />
         <AlertTitle>With action</AlertTitle>
         <AlertDescription>Alerts can include an inline dismiss or action button.</AlertDescription>
         <AlertAction>
           <Button variant="ghost" size="icon" aria-label="Dismiss">
-            <XIcon />
+            <Icon name="close" />
           </Button>
         </AlertAction>
       </Alert>

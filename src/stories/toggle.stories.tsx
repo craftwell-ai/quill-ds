@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Toggle } from '@/components/ui/toggle'
-import { BoldIcon, ItalicIcon, UnderlineIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / Toggle',
@@ -45,7 +45,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     'aria-label': 'Bold',
-    children: <BoldIcon />,
+    children: <Icon name="format_bold" />,
   },
 }
 
@@ -54,7 +54,7 @@ export const Outline: Story = {
     variant: 'outline',
     'aria-label': 'Bold',
     defaultPressed: true,
-    children: <BoldIcon />,
+    children: <Icon name="format_bold" />,
   },
 }
 
@@ -64,7 +64,7 @@ export const WithText: Story = {
     defaultPressed: true,
     children: (
       <>
-        <BoldIcon />
+        <Icon name="format_bold" />
         Bold
       </>
     ),
@@ -78,30 +78,30 @@ export const AllVariants: Story = {
       <div>
         <p className="text-xs text-ink-muted mb-2">Default</p>
         <div className="flex gap-1">
-          <Toggle aria-label="Bold"><BoldIcon /></Toggle>
-          <Toggle aria-label="Italic" defaultPressed><ItalicIcon /></Toggle>
-          <Toggle aria-label="Underline"><UnderlineIcon /></Toggle>
+          <Toggle aria-label="Bold"><Icon name="format_bold" /></Toggle>
+          <Toggle aria-label="Italic" defaultPressed><Icon name="format_italic" /></Toggle>
+          <Toggle aria-label="Underline"><Icon name="format_underlined" /></Toggle>
         </div>
       </div>
       <div>
         <p className="text-xs text-ink-muted mb-2">Outline</p>
         <div className="flex gap-1">
-          <Toggle variant="outline" aria-label="Bold"><BoldIcon /></Toggle>
-          <Toggle variant="outline" aria-label="Italic" defaultPressed><ItalicIcon /></Toggle>
-          <Toggle variant="outline" aria-label="Underline"><UnderlineIcon /></Toggle>
+          <Toggle variant="outline" aria-label="Bold"><Icon name="format_bold" /></Toggle>
+          <Toggle variant="outline" aria-label="Italic" defaultPressed><Icon name="format_italic" /></Toggle>
+          <Toggle variant="outline" aria-label="Underline"><Icon name="format_underlined" /></Toggle>
         </div>
       </div>
       <div>
         <p className="text-xs text-ink-muted mb-2">Sizes</p>
         <div className="flex items-center gap-1">
-          <Toggle size="sm" aria-label="Bold"><BoldIcon /></Toggle>
-          <Toggle size="default" aria-label="Bold"><BoldIcon /></Toggle>
-          <Toggle size="lg" aria-label="Bold"><BoldIcon /></Toggle>
+          <Toggle size="sm" aria-label="Bold"><Icon name="format_bold" /></Toggle>
+          <Toggle size="default" aria-label="Bold"><Icon name="format_bold" /></Toggle>
+          <Toggle size="lg" aria-label="Bold"><Icon name="format_bold" /></Toggle>
         </div>
       </div>
       <div>
         <p className="text-xs text-ink-muted mb-2">Disabled</p>
-        <Toggle disabled aria-label="Bold"><BoldIcon /></Toggle>
+        <Toggle disabled aria-label="Bold"><Icon name="format_bold" /></Toggle>
       </div>
     </div>
   ),

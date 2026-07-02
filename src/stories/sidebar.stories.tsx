@@ -19,28 +19,20 @@ import {
 } from '@/components/ui/sidebar'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
-import {
-  LayoutDashboard,
-  BookOpen,
-  Palette,
-  Users,
-  Settings,
-  CreditCard,
-  HelpCircle,
-  Bell,
-} from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
+import type { IconName } from '@/components/ui/icon'
 
-const navItems = [
-  { label: 'Dashboard', icon: LayoutDashboard },
-  { label: 'Courses', icon: BookOpen },
-  { label: 'Workshops', icon: Palette },
-  { label: 'Community', icon: Users, badge: '3' },
+const navItems: { label: string; icon: IconName; badge?: string }[] = [
+  { label: 'Dashboard', icon: 'dashboard' },
+  { label: 'Courses', icon: 'menu_book' },
+  { label: 'Workshops', icon: 'palette' },
+  { label: 'Community', icon: 'group', badge: '3' },
 ]
 
-const settingsItems = [
-  { label: 'Account', icon: Settings },
-  { label: 'Billing', icon: CreditCard },
-  { label: 'Help', icon: HelpCircle },
+const settingsItems: { label: string; icon: IconName }[] = [
+  { label: 'Account', icon: 'settings' },
+  { label: 'Billing', icon: 'credit_card' },
+  { label: 'Help', icon: 'help' },
 ]
 
 const meta = {
@@ -90,20 +82,17 @@ export const Default: Story = {
               <SidebarGroupLabel>Main</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {navItems.map((item, i) => {
-                    const Icon = item.icon
-                    return (
-                      <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton isActive={i === 0} tooltip={item.label}>
-                          <Icon />
-                          <span>{item.label}</span>
-                        </SidebarMenuButton>
-                        {item.badge && (
-                          <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
-                        )}
-                      </SidebarMenuItem>
-                    )
-                  })}
+                  {navItems.map((item, i) => (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton isActive={i === 0} tooltip={item.label}>
+                        <Icon name={item.icon} />
+                        <span>{item.label}</span>
+                      </SidebarMenuButton>
+                      {item.badge && (
+                        <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                      )}
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -111,17 +100,14 @@ export const Default: Story = {
               <SidebarGroupLabel>Settings</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {settingsItems.map((item) => {
-                    const Icon = item.icon
-                    return (
-                      <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton tooltip={item.label}>
-                          <Icon />
-                          <span>{item.label}</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    )
-                  })}
+                  {settingsItems.map((item) => (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton tooltip={item.label}>
+                        <Icon name={item.icon} />
+                        <span>{item.label}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -172,20 +158,17 @@ export const CollapsedIconMode: Story = {
               <SidebarGroupLabel>Main</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {navItems.map((item, i) => {
-                    const Icon = item.icon
-                    return (
-                      <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton isActive={i === 0} tooltip={item.label}>
-                          <Icon />
-                          <span>{item.label}</span>
-                        </SidebarMenuButton>
-                        {item.badge && (
-                          <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
-                        )}
-                      </SidebarMenuItem>
-                    )
-                  })}
+                  {navItems.map((item, i) => (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton isActive={i === 0} tooltip={item.label}>
+                        <Icon name={item.icon} />
+                        <span>{item.label}</span>
+                      </SidebarMenuButton>
+                      {item.badge && (
+                        <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                      )}
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -193,17 +176,14 @@ export const CollapsedIconMode: Story = {
               <SidebarGroupLabel>Settings</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {settingsItems.map((item) => {
-                    const Icon = item.icon
-                    return (
-                      <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton tooltip={item.label}>
-                          <Icon />
-                          <span>{item.label}</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    )
-                  })}
+                  {settingsItems.map((item) => (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton tooltip={item.label}>
+                        <Icon name={item.icon} />
+                        <span>{item.label}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -304,25 +284,22 @@ export const WithNotifications: Story = {
               <SidebarGroupLabel>Main</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {[
-                    { label: 'Dashboard', icon: LayoutDashboard, badge: null },
-                    { label: 'Courses', icon: BookOpen, badge: null },
-                    { label: 'Community', icon: Users, badge: '12' },
-                    { label: 'Notifications', icon: Bell, badge: '5' },
-                  ].map((item, i) => {
-                    const Icon = item.icon
-                    return (
-                      <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton isActive={i === 0} tooltip={item.label}>
-                          <Icon />
-                          <span>{item.label}</span>
-                        </SidebarMenuButton>
-                        {item.badge && (
-                          <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
-                        )}
-                      </SidebarMenuItem>
-                    )
-                  })}
+                  {([
+                    { label: 'Dashboard', icon: 'dashboard' as const, badge: null },
+                    { label: 'Courses', icon: 'menu_book' as const, badge: null },
+                    { label: 'Community', icon: 'group' as const, badge: '12' },
+                    { label: 'Notifications', icon: 'notifications' as const, badge: '5' },
+                  ] as const).map((item, i) => (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton isActive={i === 0} tooltip={item.label}>
+                        <Icon name={item.icon} />
+                        <span>{item.label}</span>
+                      </SidebarMenuButton>
+                      {item.badge && (
+                        <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                      )}
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>

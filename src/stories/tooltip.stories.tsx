@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
-import { InfoIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / Tooltip',
@@ -51,7 +51,7 @@ export const IconTrigger: Story = {
       <TooltipTrigger
         render={
           <button className="rounded-full p-1 text-ink-muted hover:text-ink" aria-label="More information">
-            <InfoIcon className="size-4" />
+            <Icon name="info" className="size-4" />
           </button>
         }
       />

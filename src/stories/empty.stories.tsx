@@ -8,7 +8,7 @@ import {
   EmptyContent,
 } from '@/components/ui/empty'
 import { Button } from '@/components/ui/button'
-import { BookOpenIcon, FolderOpenIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / Empty',
@@ -39,7 +39,7 @@ export const Default: Story = {
   render: () => (
     <Empty>
       <EmptyHeader>
-        <EmptyMedia><BookOpenIcon className="size-8 text-ink-muted" /></EmptyMedia>
+        <EmptyMedia><Icon name="menu_book" className="size-8 text-ink-muted" /></EmptyMedia>
         <EmptyTitle>No courses yet</EmptyTitle>
         <EmptyDescription>You haven’t created any courses. Start building your first skill deck.</EmptyDescription>
       </EmptyHeader>
@@ -55,7 +55,7 @@ export const IconVariant: Story = {
   render: () => (
     <Empty>
       <EmptyHeader>
-        <EmptyMedia variant="icon"><FolderOpenIcon /></EmptyMedia>
+        <EmptyMedia variant="icon"><Icon name="folder_open" /></EmptyMedia>
         <EmptyTitle>No files uploaded</EmptyTitle>
         <EmptyDescription>Upload your first file to get started. Supported formats include PDF, DOCX, and MP4.</EmptyDescription>
       </EmptyHeader>

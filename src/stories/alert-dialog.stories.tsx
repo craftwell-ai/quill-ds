@@ -12,7 +12,7 @@ import {
   AlertDialogMedia,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Trash2Icon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / AlertDialog',
@@ -66,7 +66,7 @@ export const WithMedia: Story = {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogMedia>
-            <Trash2Icon />
+            <Icon name="delete" />
           </AlertDialogMedia>
           <AlertDialogTitle>Remove this student?</AlertDialogTitle>
           <AlertDialogDescription>

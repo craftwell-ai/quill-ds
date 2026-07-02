@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
-import { FileIcon, SearchIcon, SettingsIcon, StarIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / Command',
@@ -47,12 +47,12 @@ export const Inline: Story = {
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Files">
           <CommandItem>
-            <FileIcon aria-hidden="true" />
+            <Icon name="description" aria-hidden="true" />
             Open file
             <CommandShortcut>⌘O</CommandShortcut>
           </CommandItem>
           <CommandItem>
-            <SearchIcon aria-hidden="true" />
+            <Icon name="search" aria-hidden="true" />
             Find in files
             <CommandShortcut>⇧⌘F</CommandShortcut>
           </CommandItem>
@@ -60,7 +60,7 @@ export const Inline: Story = {
         <CommandSeparator />
         <CommandGroup heading="Settings">
           <CommandItem>
-            <SettingsIcon aria-hidden="true" />
+            <Icon name="settings" aria-hidden="true" />
             Preferences
             <CommandShortcut>⌘,</CommandShortcut>
           </CommandItem>
@@ -83,11 +83,11 @@ function AsDialogStory() {
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
             <CommandItem onSelect={() => setOpen(false)}>
-              <FileIcon aria-hidden="true" />
+              <Icon name="description" aria-hidden="true" />
               New course
             </CommandItem>
             <CommandItem onSelect={() => setOpen(false)}>
-              <SearchIcon aria-hidden="true" />
+              <Icon name="search" aria-hidden="true" />
               Search lessons
             </CommandItem>
           </CommandGroup>
@@ -109,12 +109,12 @@ export const WithCheckedItem: Story = {
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Favorites">
           <CommandItem data-checked="true">
-            <StarIcon aria-hidden="true" />
+            <Icon name="star" aria-hidden="true" />
             Starred lessons
             <CommandShortcut>⌘★</CommandShortcut>
           </CommandItem>
           <CommandItem>
-            <FileIcon aria-hidden="true" />
+            <Icon name="description" aria-hidden="true" />
             All files
             <CommandShortcut>⌘A</CommandShortcut>
           </CommandItem>

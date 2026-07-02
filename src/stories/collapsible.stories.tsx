@@ -6,7 +6,7 @@ import {
   CollapsibleContent,
 } from '@/components/ui/collapsible'
 import { Button } from '@/components/ui/button'
-import { ChevronDownIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { useState } from 'react'
 
 const meta = {
@@ -44,7 +44,7 @@ export const Default: Story = {
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-ink">Repositories (3)</span>
           <CollapsibleTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Toggle repositories" />}>
-            <ChevronDownIcon className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+            <Icon name="keyboard_arrow_down" className={`transition-transform ${open ? 'rotate-180' : ''}`} />
           </CollapsibleTrigger>
         </div>
         <CollapsibleContent className="mt-2 space-y-1">
@@ -65,7 +65,7 @@ export const DefaultOpen: Story = {
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-ink">Repositories (3)</span>
           <CollapsibleTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Toggle repositories" />}>
-            <ChevronDownIcon className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+            <Icon name="keyboard_arrow_down" className={`transition-transform ${open ? 'rotate-180' : ''}`} />
           </CollapsibleTrigger>
         </div>
         <CollapsibleContent className="mt-2 space-y-1">

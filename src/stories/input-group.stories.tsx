@@ -7,7 +7,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from '@/components/ui/input-group'
-import { SearchIcon, GlobeIcon, DollarSignIcon, CopyIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / InputGroup',
@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>
 export const WithPrefixIcon: Story = {
   render: () => (
     <InputGroup>
-      <InputGroupAddon><SearchIcon /></InputGroupAddon>
+      <InputGroupAddon><Icon name="search" /></InputGroupAddon>
       <InputGroupInput placeholder="Search courses…" aria-label="Search courses" />
     </InputGroup>
   ),
@@ -46,7 +46,7 @@ export const WithPrefixIcon: Story = {
 export const WithSuffix: Story = {
   render: () => (
     <InputGroup>
-      <InputGroupAddon><GlobeIcon /></InputGroupAddon>
+      <InputGroupAddon><Icon name="language" /></InputGroupAddon>
       <InputGroupInput placeholder="yourdomain.com" aria-label="Domain name" />
       <InputGroupButton>Connect</InputGroupButton>
     </InputGroup>
@@ -65,7 +65,7 @@ export const WithTextPrefix: Story = {
 export const WithSuffixIcon: Story = {
   render: () => (
     <InputGroup>
-      <InputGroupAddon><DollarSignIcon /></InputGroupAddon>
+      <InputGroupAddon><Icon name="attach_money" /></InputGroupAddon>
       <InputGroupInput placeholder="0.00" aria-label="Amount in USD" />
       <InputGroupAddon align="inline-end">
         <InputGroupText>USD</InputGroupText>
@@ -78,7 +78,7 @@ export const WithCopyButton: Story = {
   render: () => (
     <InputGroup>
       <InputGroupInput defaultValue="https://quill.design/share/abc123" readOnly aria-label="Share link" />
-      <InputGroupButton aria-label="Copy link"><CopyIcon /></InputGroupButton>
+      <InputGroupButton aria-label="Copy link"><Icon name="content_copy" /></InputGroupButton>
     </InputGroup>
   ),
 }
@@ -97,7 +97,7 @@ export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-3 w-80">
       <InputGroup>
-        <InputGroupAddon><SearchIcon /></InputGroupAddon>
+        <InputGroupAddon><Icon name="search" /></InputGroupAddon>
         <InputGroupInput placeholder="Icon prefix" aria-label="Search" />
       </InputGroup>
       <InputGroup>
@@ -109,7 +109,7 @@ export const AllVariants: Story = {
         <InputGroupButton>Search</InputGroupButton>
       </InputGroup>
       <InputGroup>
-        <InputGroupAddon><DollarSignIcon /></InputGroupAddon>
+        <InputGroupAddon><Icon name="attach_money" /></InputGroupAddon>
         <InputGroupInput placeholder="0.00" aria-label="Amount" />
         <InputGroupAddon align="inline-end">
           <InputGroupText>USD</InputGroupText>

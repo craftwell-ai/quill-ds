@@ -17,7 +17,7 @@ import {
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontalIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / DropdownMenu',
@@ -47,7 +47,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><MoreHorizontalIcon /></Button>} />
+      <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><Icon name="more_horiz" /></Button>} />
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>

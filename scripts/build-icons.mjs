@@ -9,8 +9,8 @@ const SRC = join(root, 'node_modules/@material-symbols/svg-200/outlined')
 // Deduped Material Symbols names in use (see plan's mapping table).
 export const MANIFEST = [
   'add', 'arrow_forward', 'attach_money', 'check', 'check_circle', 'chevron_left',
-  'chevron_right', 'close', 'content_copy', 'dangerous', 'dashboard', 'delete',
-  'description', 'dock_to_left', 'edit', 'folder_open', 'format_align_center',
+  'chevron_right', 'close', 'content_copy', 'credit_card', 'dangerous', 'dashboard',
+  'delete', 'description', 'dock_to_left', 'edit', 'folder_open', 'format_align_center',
   'format_align_left', 'format_align_right', 'format_bold', 'format_italic',
   'format_underlined', 'group', 'help', 'info', 'keyboard_arrow_down',
   'keyboard_arrow_up', 'keyboard_command_key', 'language', 'menu_book', 'more_horiz',

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Button } from '@/components/ui/button'
-import { PlusIcon, ArrowRightIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / Button',
@@ -60,7 +60,7 @@ export const WithIcon: Story = {
   args: { children: 'Add lesson' },
   render: (args) => (
     <Button {...args}>
-      <PlusIcon data-icon="inline-start" />
+      <Icon name="add" data-icon="inline-start" />
       {args.children}
     </Button>
   ),
@@ -70,7 +70,7 @@ export const IconOnly: Story = {
   args: { size: 'icon', 'aria-label': 'Next' },
   render: (args) => (
     <Button {...args}>
-      <ArrowRightIcon />
+      <Icon name="arrow_forward" />
     </Button>
   ),
 }
@@ -98,7 +98,7 @@ export const AllSizes: Story = {
       <div className="flex flex-wrap gap-2 items-center">
         {(['icon-xs', 'icon-sm', 'icon', 'icon-lg'] as const).map((s) => (
           <Button key={s} size={s} aria-label={`Icon ${s}`}>
-            <ArrowRightIcon />
+            <Icon name="arrow_forward" />
           </Button>
         ))}
       </div>

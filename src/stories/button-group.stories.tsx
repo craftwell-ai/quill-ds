@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from '@/components/ui/button-group'
 import { Button } from '@/components/ui/button'
-import { AlignLeftIcon, AlignCenterIcon, AlignRightIcon, BoldIcon, ItalicIcon, UnderlineIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / ButtonGroup',
@@ -40,9 +40,9 @@ export const Default: Story = {
 export const IconGroup: Story = {
   render: () => (
     <ButtonGroup>
-      <Button variant="outline" size="icon" aria-label="Align left"><AlignLeftIcon /></Button>
-      <Button variant="outline" size="icon" aria-label="Align center"><AlignCenterIcon /></Button>
-      <Button variant="outline" size="icon" aria-label="Align right"><AlignRightIcon /></Button>
+      <Button variant="outline" size="icon" aria-label="Align left"><Icon name="format_align_left" /></Button>
+      <Button variant="outline" size="icon" aria-label="Align center"><Icon name="format_align_center" /></Button>
+      <Button variant="outline" size="icon" aria-label="Align right"><Icon name="format_align_right" /></Button>
     </ButtonGroup>
   ),
 }
@@ -59,7 +59,7 @@ export const ActiveState: Story = {
           aria-pressed={alignment === 'left'}
           onClick={() => setAlignment('left')}
         >
-          <AlignLeftIcon />
+          <Icon name="format_align_left" />
         </Button>
         <Button
           variant={alignment === 'center' ? 'default' : 'outline'}
@@ -68,7 +68,7 @@ export const ActiveState: Story = {
           aria-pressed={alignment === 'center'}
           onClick={() => setAlignment('center')}
         >
-          <AlignCenterIcon />
+          <Icon name="format_align_center" />
         </Button>
         <Button
           variant={alignment === 'right' ? 'default' : 'outline'}
@@ -77,7 +77,7 @@ export const ActiveState: Story = {
           aria-pressed={alignment === 'right'}
           onClick={() => setAlignment('right')}
         >
-          <AlignRightIcon />
+          <Icon name="format_align_right" />
         </Button>
       </ButtonGroup>
     )
@@ -97,10 +97,10 @@ export const VerticalGroup: Story = {
 export const WithSeparator: Story = {
   render: () => (
     <ButtonGroup>
-      <Button variant="outline" size="icon" aria-label="Bold"><BoldIcon /></Button>
-      <Button variant="outline" size="icon" aria-label="Italic"><ItalicIcon /></Button>
+      <Button variant="outline" size="icon" aria-label="Bold"><Icon name="format_bold" /></Button>
+      <Button variant="outline" size="icon" aria-label="Italic"><Icon name="format_italic" /></Button>
       <ButtonGroupSeparator />
-      <Button variant="outline" size="icon" aria-label="Underline"><UnderlineIcon /></Button>
+      <Button variant="outline" size="icon" aria-label="Underline"><Icon name="format_underlined" /></Button>
     </ButtonGroup>
   ),
 }
@@ -124,9 +124,9 @@ export const AllVariants: Story = {
         <Button variant="outline">Next</Button>
       </ButtonGroup>
       <ButtonGroup>
-        <Button variant="outline" size="icon" aria-label="Align left"><AlignLeftIcon /></Button>
-        <Button variant="outline" size="icon" aria-label="Align center"><AlignCenterIcon /></Button>
-        <Button variant="outline" size="icon" aria-label="Align right"><AlignRightIcon /></Button>
+        <Button variant="outline" size="icon" aria-label="Align left"><Icon name="format_align_left" /></Button>
+        <Button variant="outline" size="icon" aria-label="Align center"><Icon name="format_align_center" /></Button>
+        <Button variant="outline" size="icon" aria-label="Align right"><Icon name="format_align_right" /></Button>
       </ButtonGroup>
       <ButtonGroup orientation="vertical">
         <Button variant="outline">Bold</Button>
@@ -134,10 +134,10 @@ export const AllVariants: Story = {
         <Button variant="outline">Underline</Button>
       </ButtonGroup>
       <ButtonGroup>
-        <Button variant="outline" size="icon" aria-label="Bold"><BoldIcon /></Button>
-        <Button variant="outline" size="icon" aria-label="Italic"><ItalicIcon /></Button>
+        <Button variant="outline" size="icon" aria-label="Bold"><Icon name="format_bold" /></Button>
+        <Button variant="outline" size="icon" aria-label="Italic"><Icon name="format_italic" /></Button>
         <ButtonGroupSeparator />
-        <Button variant="outline" size="icon" aria-label="Underline"><UnderlineIcon /></Button>
+        <Button variant="outline" size="icon" aria-label="Underline"><Icon name="format_underlined" /></Button>
       </ButtonGroup>
       <ButtonGroup>
         <ButtonGroupText>Sort by</ButtonGroupText>

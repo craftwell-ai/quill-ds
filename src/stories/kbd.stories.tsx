@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Kbd, KbdGroup } from '@/components/ui/kbd'
-import { CommandIcon } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'UI / Kbd',
@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = { args: { children: 'K' } }
 export const Symbol: Story = { args: { children: '⌘' } }
 export const WithIcon: Story = {
-  render: () => <Kbd><CommandIcon /></Kbd>,
+  render: () => <Kbd><Icon name="keyboard_command_key" /></Kbd>,
 }
 
 /** Shows Kbd used inline within a prose hint — the primary real-world usage pattern. */
@@ -87,7 +87,7 @@ export const AllVariants: Story = {
           <Kbd>Del</Kbd>
         </KbdGroup>
         <KbdGroup>
-          <Kbd><CommandIcon /></Kbd>
+          <Kbd><Icon name="keyboard_command_key" /></Kbd>
           <Kbd>K</Kbd>
         </KbdGroup>
       </div>
