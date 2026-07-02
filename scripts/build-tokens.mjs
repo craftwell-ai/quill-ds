@@ -55,6 +55,10 @@ export function renderCss(t) {
   // Semantic + shadcn aliases + radius base.
   for (const [k, v] of Object.entries(t.semantic)) rootLines.push(`  --${k}: ${v};`)
   rootLines.push(`  --radius: ${t.radiusBase};`)
+  // Spacing + border-width (documented scales; kept in :root, not @theme, so they
+  // don't collide with Tailwind's built-in numeric utilities).
+  for (const [k, v] of Object.entries(t.spacing)) rootLines.push(`  --space-${k}: ${v};`)
+  for (const [k, v] of Object.entries(t.borderWidth)) rootLines.push(`  --border-width-${k}: ${v};`)
   for (const [k, v] of Object.entries(t.shadcn)) rootLines.push(`  --${k}: ${v};`)
 
   // @theme inline: fonts, color mappings, radii, type scale.
@@ -149,7 +153,9 @@ export function renderDtcg(t) {
   }
   emit(t.color, [], primColor)
   const font = Object.fromEntries(Object.entries(t.font).map(([k, v]) => [k, { $type: 'fontFamily', $value: v }]))
+  const spacing = Object.fromEntries(Object.entries(t.spacing).map(([k, v]) => [k, dim(v)]))
   const radius = Object.fromEntries(Object.entries(t.radius).map(([k, v]) => [k, dim(v)]))
+  const borderWidth = Object.fromEntries(Object.entries(t.borderWidth).map(([k, v]) => [k, dim(v)]))
   const type = Object.fromEntries(Object.entries(t.text).map(([k, v]) => [k, dim(v)]))
   const elevation = Object.fromEntries(Object.entries(t.shadow).map(([k, v]) => [k, shadow(v)]))
   const motion = Object.fromEntries(Object.entries(t.motion).map(([k, v]) => [k, other(v)]))
@@ -165,7 +171,7 @@ export function renderDtcg(t) {
 
   return {
     $description: 'Quill Design System tokens (DTCG). Colors/dimensions → Figma variables; shadows → effect styles; motion/fraunces are CSS-only.',
-    Primitives: { color: primColor, font, radius, type, elevation, motion, fraunces },
+    Primitives: { color: primColor, font, spacing, radius, borderWidth, type, elevation, motion, fraunces },
     Theme,
   }
 }

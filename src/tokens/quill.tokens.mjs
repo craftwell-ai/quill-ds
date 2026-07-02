@@ -38,6 +38,11 @@ export const tokens = {
     xl: '1rem', '2xl': '1.5rem', '3xl': '2rem', '4xl': '2.5rem',
   },
   radiusBase: '0.5rem',
+  spacing: {
+    1: '0.25rem', 2: '0.5rem', 3: '0.75rem', 4: '1rem', 5: '1.25rem', 6: '1.5rem',
+    8: '2rem', 10: '2.5rem', 12: '3rem', 16: '4rem', 20: '5rem', 24: '6rem',
+  },
+  borderWidth: { 0: '0px', 1: '1px', 2: '2px', 3: '3px', 4: '4px' },
   text: {
     '2xs': '0.7rem', xs: '0.75rem', sm: '0.85rem', base: '0.95rem', lg: '1.15rem',
     xl: '1.5rem', '2xl': '2rem', '3xl': '3rem', '4xl': '4rem', '5xl': '5.5rem',

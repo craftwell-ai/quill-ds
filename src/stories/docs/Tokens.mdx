@@ -42,16 +42,36 @@ export const colorRows = (obj, prefix = []) => Object.entries(obj).flatMap(([k, 
 
 ## Type scale
 
+Labels are fixed-width on the left; the specimen sits on the right and is clipped so large sizes never overlap the token names.
+
 <div>{Object.entries(tokens.text).map(([k, v]) => (
-  <Row key={k} name={`--text-${k}`} value={v} figma={`type/${k}`}
-    swatch={<span style={{ fontSize: v, lineHeight: 1, width: 40 }}>Aa</span>} />
+  <div key={k} style={{ display: 'flex', alignItems: 'baseline', gap: 12, padding: '8px 0', borderBottom: '1px solid rgba(42,38,34,0.08)', fontSize: 12 }}>
+    <code style={{ width: 90, flexShrink: 0 }}>{`--text-${k}`}</code>
+    <span style={{ width: 52, flexShrink: 0, color: '#675F58' }}>{v}</span>
+    <code style={{ width: 76, flexShrink: 0, color: '#944A33' }}>{`type/${k}`}</code>
+    <span style={{ fontSize: v, lineHeight: 1.15, whiteSpace: 'nowrap', overflow: 'hidden', flex: 1, minWidth: 0 }}>Ag</span>
+  </div>
 ))}</div>
 
-## Radii
+## Border radius
 
 <div>{Object.entries(tokens.radius).map(([k, v]) => (
-  <Row key={k} name={`--radius-${k}`} value={v} figma={`radius/${k}`}
+  <Row key={k} name={`--radius-${k}`} value={v} figma={`corner-radius/${k}`}
     swatch={<span style={{ width: 22, height: 22, background: '#E8DCC0', borderRadius: v }} />} />
+))}</div>
+
+## Spacing
+
+<div>{Object.entries(tokens.spacing).map(([k, v]) => (
+  <Row key={k} name={`--space-${k}`} value={v} figma={`spacing/${k}`}
+    swatch={<span style={{ height: 16, width: Math.min(parseFloat(v) * 16, 96), background: '#C4684B', opacity: 0.7, borderRadius: 2, display: 'inline-block', flexShrink: 0 }} />} />
+))}</div>
+
+## Border width
+
+<div>{Object.entries(tokens.borderWidth).map(([k, v]) => (
+  <Row key={k} name={`--border-width-${k}`} value={v} figma={`border-width/${k}`}
+    swatch={<span style={{ width: 24, height: 22, borderLeft: `${v} solid #2A2622`, background: '#EFE4CE', display: 'inline-block', flexShrink: 0 }} />} />
 ))}</div>
 
 ## Elevation
