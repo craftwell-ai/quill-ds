@@ -156,13 +156,52 @@ async function syncSemanticAliases(DTCG) {
   return { collection: semCol.name, created, updated, buckets: buckets.map((b) => `${b}:${Object.keys(DTCG.Theme[b]).length}`) }
 }
 
+// ---- Text styles (curated; sizes mirror the type scale; color applied via variables on layers) ----
+const TEXT_STYLES = [
+  { name: 'Display/XL', family: 'Fraunces', style: 'Regular', size: 88, lh: 105, ls: -3 },
+  { name: 'Display/L', family: 'Fraunces', style: 'Regular', size: 64, lh: 105, ls: -3 },
+  { name: 'Display/M', family: 'Fraunces', style: 'Regular', size: 48, lh: 110, ls: -3 },
+  { name: 'Heading/L', family: 'Fraunces', style: 'Regular', size: 32, lh: 120, ls: -2 },
+  { name: 'Heading/M', family: 'Fraunces', style: 'Regular', size: 24, lh: 120, ls: -2 },
+  { name: 'Heading/S', family: 'Fraunces', style: 'Regular', size: 18, lh: 130, ls: -1 },
+  { name: 'Body/L', family: 'Inter', style: 'Regular', size: 18, lh: 170 },
+  { name: 'Body/Base', family: 'Inter', style: 'Regular', size: 15.2, lh: 170 },
+  { name: 'Body/S', family: 'Inter', style: 'Regular', size: 13.6, lh: 160 },
+  { name: 'Body/XS', family: 'Inter', style: 'Regular', size: 12, lh: 150 },
+  { name: 'Accent', family: 'Fraunces', style: 'Italic', size: 28, lh: 120, ls: -2 },
+  { name: 'Eyebrow', family: 'Inter', style: 'Medium', size: 11, lh: 100, ls: 15, textCase: 'UPPER' },
+]
+
+async function syncTextStyles() {
+  const fonts = [...new Set(TEXT_STYLES.map((s) => s.family + '|' + s.style))].map((x) => {
+    const [family, style] = x.split('|')
+    return { family, style }
+  })
+  for (const f of fonts) await figma.loadFontAsync(f)
+  const byName = Object.fromEntries((await figma.getLocalTextStylesAsync()).map((s) => [s.name, s]))
+  let created = 0
+  let updated = 0
+  for (const s of TEXT_STYLES) {
+    let ts = byName[s.name]
+    if (!ts) { ts = figma.createTextStyle(); created++ } else updated++
+    ts.name = s.name
+    ts.fontName = { family: s.family, style: s.style }
+    ts.fontSize = s.size
+    ts.lineHeight = { unit: 'PERCENT', value: s.lh }
+    ts.letterSpacing = { unit: 'PERCENT', value: s.ls ?? 0 }
+    ts.textCase = s.textCase || 'ORIGINAL'
+    byName[s.name] = ts
+  }
+  return { created, updated, total: TEXT_STYLES.length }
+}
+
 async function syncFoundations(DTCG) {
   const results = {}
   results.colors = await syncPrimitiveColors(DTCG)
   results.scalars = await syncPrimitiveScalars(DTCG)
   results.semantic = await syncSemanticAliases(DTCG)
-  // Wired up across later tasks:
-  //   results.text     = await syncTextStyles(DTCG)
+  results.text = await syncTextStyles()
+  // Wired up in the next task:
   //   results.effects  = await syncEffectStyles(DTCG)
   return results
 }
