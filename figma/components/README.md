@@ -103,11 +103,14 @@ Remaining Wave B: Field, Input/Button groups (thin composition wrappers).
 set `primaryAxisSizingMode='AUTO'` and text nodes `textAutoResize='HEIGHT'`. Don't rotate a chevron
 that's an auto-layout child (use the up/down glyph instead).
 
-## Patterns (code-first, Storybook — done separately)
+## Patterns
 
-28 pattern stories under `src/stories/patterns/` (Auth/Forms/Data/State/Marketing/Shells/Nav) + a
-`Patterns / Overview` page. These compose the coded components; a subset can be mirrored into Figma
-`❖` Pattern pages once the composite components they use exist in Figma (Card/Alert now do).
+- **Code (source of truth):** 28 pattern stories under `src/stories/patterns/`
+  (Auth/Forms/Data/State/Marketing/Shells/Nav) + a `Patterns / Overview` page.
+- **Figma:** patterns mirror onto `❖ <Name>` pages by composing real component **instances**
+  (with text overrides). Built so far: **`❖ Login`** (103:3) — a token-bound card composing
+  Input + Button instances. The rest follow the same recipe: instance the components, override
+  text/props, lay out with auto-layout, bind container tokens.
 
 ## Next
 
