@@ -60,3 +60,4 @@ public/axe.min.js
 .claude/
 .superpowers/
 docs/superpowers/plans/
+src/components/ui/icon-names.generated.mjs
