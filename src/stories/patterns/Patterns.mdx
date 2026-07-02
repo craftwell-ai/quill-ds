@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Patterns / Overview" />
+
+# Patterns
+
+Ready-made, **Quill-styled** compositions built entirely from the components and tokens —
+so they inherit the theme and dark mode automatically, and pass the same enforced
+accessibility checks. Use them as starting points and adapt.
+
+## Catalog
+
+- **Auth** — Login · Sign up
+- **Forms** — Settings · Wizard
+- **Data** — Stat cards · Data table · Notifications · Order summary · Chat · Profile card · Search results · Kanban board
+- **State** — Empty state · Error 404 · Cookie consent · Alerts · Onboarding checklist
+- **Marketing** — Hero · Feature section · Pricing · Testimonial · Footer
+- **Shells** — Dashboard · Page header · Tabs page · List + detail
+- **Nav** — Navbar · Command palette
+
+## How they’re built
+
+Each pattern is a Storybook story under `src/stories/patterns/` that composes
+`@/components/ui/*`. Nothing is hardcoded — colors, spacing, radii, and type resolve
+through the token foundation, so a theme change propagates everywhere.
