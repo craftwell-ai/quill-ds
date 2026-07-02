@@ -4,7 +4,15 @@ import * as React from 'react'
 // the lazy `<Icon>` path instead — this file never reaches an app bundle.
 import { allIcons } from '@/components/ui/icons.all.generated.mjs'
 
-const NAMES = Object.keys(allIcons) // sorted by the generator
+// Alphabetical, but with number-prefixed names (10k, 360, 3d_rotation…) moved to the
+// END — after the last letter-named icon — instead of sorting to the front.
+const startsWithDigit = (n: string) => n.charCodeAt(0) >= 48 && n.charCodeAt(0) <= 57
+const NAMES = Object.keys(allIcons).sort((a, b) => {
+  const da = startsWithDigit(a)
+  const db = startsWithDigit(b)
+  if (da !== db) return da ? 1 : -1
+  return a < b ? -1 : a > b ? 1 : 0
+})
 
 // Inline glyph straight from the data map (instant, no lazy import).
 function Glyph({ name, size = 24 }: { name: string; size?: number }) {
