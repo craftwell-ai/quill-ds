@@ -2,21 +2,14 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { MANIFEST } from './icons.manifest.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SRC = join(root, 'node_modules/@material-symbols/svg-200/outlined')
 
-// Deduped Material Symbols names in use (see plan's mapping table).
-export const MANIFEST = [
-  'add', 'arrow_forward', 'attach_money', 'check', 'check_circle', 'chevron_left',
-  'chevron_right', 'close', 'content_copy', 'credit_card', 'dangerous', 'dashboard',
-  'delete', 'description', 'dock_to_left', 'edit', 'folder_open', 'format_align_center',
-  'format_align_left', 'format_align_right', 'format_bold', 'format_italic',
-  'format_underlined', 'group', 'help', 'info', 'keyboard_arrow_down',
-  'keyboard_arrow_up', 'keyboard_command_key', 'language', 'menu_book', 'more_horiz',
-  'notifications', 'palette', 'progress_activity', 'remove', 'search', 'settings',
-  'star', 'warning',
-]
+// MANIFEST (top ~1000 Material Symbols Outlined by Google popularity + in-use icons)
+// lives in scripts/icons.manifest.mjs — regenerate it via scripts/build-manifest.mjs.
+export { MANIFEST }
 
 function parseSvg(name) {
   const svg = readFileSync(join(SRC, `${name}.svg`), 'utf8')
