@@ -66,14 +66,24 @@ the variant properties above), `npx figma connect publish`.
 - **Visual QA pass:** review each page in Figma; refine any spacing/rounding nuances.
 - Optional: add `Disabled` boolean + hover/focus states later (variant structure supports it).
 
-## Wave B (composites) — in progress
+## Wave B (composites) — 8 done
 
 | Component | Page | Notes |
 |---|---|---|
-| Card | ❖ Card | token-bound container (header/content/footer); footer uses real **Button instances** |
+| Card | ❖ Card | container (header/content/footer); footer uses real **Button instances** |
 | Alert | ❖ Alert | Variant: default/destructive; icon + title + description |
+| Tabs | ❖ Tabs | segmented TabsList; active tab uses the `Elevation/xs` style |
+| Tooltip | ❖ Tooltip | dark bubble + arrow |
+| Select | ❖ Select | trigger + chevron (like Input) |
+| Breadcrumb | ❖ Breadcrumb | links + chevron separators + current page |
+| Pagination | ❖ Pagination | prev/next + numbered cells, active bordered |
+| Accordion | ❖ Accordion | 3 items, first expanded + description |
 
-Remaining Wave B: Tabs, Tooltip, Select, Field, Input/Button groups, Breadcrumb, Pagination, Accordion.
+Remaining Wave B: Field, Input/Button groups (thin composition wrappers).
+
+**Build lesson:** after `createComponentFromNode`, a hug-layout component may come back FIXED-size —
+set `primaryAxisSizingMode='AUTO'` and text nodes `textAutoResize='HEIGHT'`. Don't rotate a chevron
+that's an auto-layout child (use the up/down glyph instead).
 
 ## Patterns (code-first, Storybook — done separately)
 
