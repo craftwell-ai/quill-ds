@@ -18,7 +18,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Quill — SkillDecks",
-  description: "Skills, made by hand.",
+  description: "A warm, editorial design system.",
 };
 
 export default function RootLayout({

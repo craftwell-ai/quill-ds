@@ -51,7 +51,7 @@ export const Default: Story = {
       <AccordionItem value="item-1">
         <AccordionTrigger>What is Quill?</AccordionTrigger>
         <AccordionContent>
-          Quill is a design system for SkillDecks — a platform for publishing hand-crafted skill courses.
+          Quill is a design system — a platform for publishing hand-crafted skill courses.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
@@ -76,7 +76,7 @@ export const DefaultOpen: Story = {
       <AccordionItem value="item-1">
         <AccordionTrigger>What is Quill?</AccordionTrigger>
         <AccordionContent>
-          Quill is a design system for SkillDecks — a platform for publishing hand-crafted skill courses.
+          Quill is a design system — a platform for publishing hand-crafted skill courses.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
@@ -101,7 +101,7 @@ export const MultipleOpen: Story = {
       <AccordionItem value="a">
         <AccordionTrigger>What is Quill?</AccordionTrigger>
         <AccordionContent>
-          Quill is a design system for SkillDecks — a platform for publishing hand-crafted skill courses.
+          Quill is a design system — a platform for publishing hand-crafted skill courses.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="b">
@@ -127,7 +127,7 @@ export const Dark: Story = {
       <AccordionItem value="item-1">
         <AccordionTrigger>What is Quill?</AccordionTrigger>
         <AccordionContent>
-          Quill is a design system for SkillDecks — a platform for publishing hand-crafted skill courses.
+          Quill is a design system — a platform for publishing hand-crafted skill courses.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
