@@ -25,9 +25,8 @@ token files and component sources in this project.
 solutions company. The brand feels printed, collected, and kept. The voice is
 that of a letterpress shop that sells apps — warm, unhurried, quietly confident.
 
-Source of truth for the visual language: `uploads/marketplace-preview.html`. The
-`phillipsry/quill` GitHub repo was empty at authoring time; if it gains real
-source, it supersedes values here.
+Source of truth for the visual language: `uploads/marketplace-preview.html`. If
+a dedicated brand-source repo ever lands, it supersedes values here.
 
 ---
 
