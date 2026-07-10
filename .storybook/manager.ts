@@ -6,7 +6,7 @@ addons.setConfig({
   theme: create({
     base: 'light',
     brandTitle: 'Quill Design System',
-    brandImage: '/quill_lockup.svg',
+    brandImage: '/quill-lockup-sm-light.svg',
     brandUrl: '/',
     brandTarget: '_self',
     fontBase: '"Raleway", -apple-system, BlinkMacSystemFont, sans-serif',
