@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite'
+import remarkGfm from 'remark-gfm'
 
 const config: StorybookConfig = {
   stories: [
@@ -6,7 +7,17 @@ const config: StorybookConfig = {
     '../src/stories/**/*.stories.{ts,tsx}',
   ],
   addons: [
-    '@storybook/addon-docs',
+    {
+      // Storybook's MDX no longer parses markdown tables by default; remark-gfm restores them
+      name: '@storybook/addon-docs',
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
     '@storybook/addon-a11y',
     '@chromatic-com/storybook',
     '@storybook/addon-vitest',

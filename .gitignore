@@ -61,3 +61,4 @@ public/axe.min.js
 .superpowers/
 docs/superpowers/plans/
 src/components/ui/icons.all.generated.mjs
+public/storybook

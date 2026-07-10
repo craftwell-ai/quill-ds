@@ -6,7 +6,8 @@ addons.setConfig({
   theme: create({
     base: 'light',
     brandTitle: 'Quill Design System',
-    brandImage: '/quill-lockup-md-light.svg',
+    // Relative so it resolves under a subpath deploy (/storybook/) and at root.
+    brandImage: './quill-lockup-md-light.svg',
     brandUrl: '/',
     brandTarget: '_self',
     fontBase: '"Raleway", -apple-system, BlinkMacSystemFont, sans-serif',
@@ -56,6 +57,20 @@ style.textContent = `
     font-family: "Raleway", -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 13px;
     border-radius: 6px;
+  }
+
+  /* Search field border — match the DS field border (line-control). Storybook
+     draws it as a hardcoded inset box-shadow, not via theme.inputBorder, so
+     override at rest and leave Storybook's own focus style alone. */
+  .search-field:not(:focus-within) {
+    box-shadow: #8A7F6E 0 0 0 1px inset !important;
+  }
+
+  /* Nav item hover — paper-warm. Components/roots render as <button>, docs and
+     stories as <a>, so cover both. */
+  [data-nodetype] button:hover,
+  [data-nodetype] a:hover {
+    background: #EFE4CE;
   }
 
   /* Active story highlight */

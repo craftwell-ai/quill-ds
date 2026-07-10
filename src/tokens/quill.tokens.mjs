@@ -123,8 +123,4 @@ export const tokens = {
     'sidebar-accent': 'var(--paper-deep)', 'sidebar-accent-foreground': 'var(--ink)',
     'sidebar-border': 'var(--line-faint)', 'sidebar-ring': 'var(--ink)',
   },
-  manager: {
-    // Storybook chrome needs stronger non-text contrast than the app hairline.
-    controlBorder: 'rgba(42,38,34,0.32)',
-  },
 }

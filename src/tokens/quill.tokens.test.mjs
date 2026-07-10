@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { tokens } from './quill.tokens.mjs'
+import { renderManager } from '../../scripts/build-tokens.mjs'
 
 test('primitive color values match current globals.css', () => {
   assert.equal(tokens.color.paper.base.light, '#F5EDDD')
@@ -23,8 +24,8 @@ test('the accent alias is fixed to terracotta-deep (a11y)', () => {
   assert.equal(tokens.shadcn.destructive, 'var(--terracotta-deep)')
 })
 
-test('manager control border is the readable value', () => {
-  assert.equal(tokens.manager.controlBorder, 'rgba(42,38,34,0.32)')
+test('manager search input border matches the DS field border (line-control)', () => {
+  assert.equal(renderManager(tokens).inputBorder, tokens.color.line.control.light)
 })
 
 test('interactive controls use a solid AA boundary, not the faint alpha line (WCAG 1.4.11)', () => {

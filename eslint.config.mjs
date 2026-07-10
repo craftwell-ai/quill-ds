@@ -15,6 +15,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Build artifacts (static Storybook served by the Next app):
+    "public/storybook/**",
+    "storybook-static/**",
+    ".vercel/**",
   ]),
   ...storybook.configs["flat/recommended"]
 ]);

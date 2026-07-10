@@ -17,8 +17,16 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Quill — SkillDecks",
-  description: "A warm, editorial design system.",
+  title: "Quill — a design system drawn by hand",
+  description:
+    "Pressed digital paper, sepia ink, and four botanical pigments. The Quill Design System by Craftwell.",
+  icons: {
+    icon: [
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/apple-touch-180.png",
+  },
 };
 
 export default function RootLayout({

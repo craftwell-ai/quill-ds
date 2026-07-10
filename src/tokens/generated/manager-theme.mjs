@@ -5,7 +5,7 @@ export const managerTheme = {
   "appPreviewBg": "#F5EDDD",
   "barBg": "#EFE4CE",
   "inputBg": "#EFE4CE",
-  "inputBorder": "rgba(42,38,34,0.32)",
+  "inputBorder": "#8A7F6E",
   "barSelectedColor": "#C4684B",
   "colorPrimary": "#C4684B",
   "colorSecondary": "#C4684B",

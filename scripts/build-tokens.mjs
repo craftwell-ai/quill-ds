@@ -102,7 +102,7 @@ export function renderManager(t) {
   return {
     appBg: L(t.color.paper.base), appContentBg: L(t.color.paper.base), appPreviewBg: L(t.color.paper.base),
     barBg: L(t.color.paper.warm), inputBg: L(t.color.paper.warm),
-    inputBorder: t.manager.controlBorder,
+    inputBorder: L(t.color.line.control),
     barSelectedColor: L(t.color.pigment.terracotta.base),
     colorPrimary: L(t.color.pigment.terracotta.base), colorSecondary: L(t.color.pigment.terracotta.base),
     textColor: L(t.color.ink.base), inputTextColor: L(t.color.ink.base),

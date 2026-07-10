@@ -8,3 +8,11 @@
   rel="stylesheet"
   href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Raleway:wght@400;500;600&display=swap"
 >
+
+<!-- Docs inline-code chips: use paper-warm instead of Storybook's default grey.
+     Scoped to :not(pre *) so fenced code blocks keep their own panel styling. -->
+<style>
+  .sbdocs code:not(pre code) {
+    background: #EFE4CE; /* --paper-warm */
+  }
+</style>

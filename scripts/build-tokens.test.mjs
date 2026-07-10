@@ -54,7 +54,7 @@ test('injectMarkers replaces only between markers and is idempotent', () => {
 
 test('manager theme resolves literals incl. readable input border', () => {
   const m = renderManager(tokens)
-  assert.equal(m.inputBorder, 'rgba(42,38,34,0.32)')
+  assert.equal(m.inputBorder, '#8A7F6E')   // line-control light — same border as DS fields
   assert.equal(m.inputBg, '#EFE4CE')       // paper-warm light
   assert.equal(m.appBg, '#F5EDDD')         // paper light
   assert.equal(m.barSelectedColor, '#C4684B') // terracotta light
