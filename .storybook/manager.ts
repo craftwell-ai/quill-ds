@@ -81,6 +81,22 @@ style.textContent = `
     font-weight: 500;
   }
 
+  /* Route back to the site from the sidebar */
+  .quill-home-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: "Raleway", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #675F58;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .quill-home-link:hover {
+    color: #C4684B;
+  }
+
   /* Sidebar scrollbar */
   #storybook-explorer-menu::-webkit-scrollbar {
     width: 4px;
@@ -94,3 +110,21 @@ style.textContent = `
   }
 `
 document.head.appendChild(style)
+
+// Explicit route back to the site. The brand logo already links home
+// (brandUrl '/'), but a labeled link makes the way back discoverable.
+// The sidebar renders asynchronously (and rerenders), so keep observing.
+const injectHomeLink = () => {
+  const header = document.querySelector('.sidebar-header')
+  if (!header || header.querySelector('.quill-home-link')) return
+  const link = document.createElement('a')
+  link.className = 'quill-home-link'
+  link.href = '/'
+  link.textContent = '← Back to homepage'
+  header.appendChild(link)
+}
+new MutationObserver(injectHomeLink).observe(document.body, {
+  childList: true,
+  subtree: true,
+})
+injectHomeLink()

@@ -147,18 +147,19 @@ export default function Home() {
 
       {/* ── Nav ─────────────────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-10 border-b border-[var(--border-divider)] bg-[var(--surface-page)]">
-        <div className="mx-auto flex h-[72px] max-w-[1400px] items-center justify-between gap-8 px-12">
+        <div className="mx-auto flex h-[72px] max-w-[1400px] items-center justify-between gap-8 px-12 max-sm:gap-4 max-sm:px-4">
           <a href="#top" className="flex items-center gap-3 no-underline">
             <Logo />
-            <span className="inline-block h-[18px] w-px bg-[var(--line)]" />
-            <span className="text-2xs font-medium tracking-[0.2em] uppercase text-[var(--text-muted-color)]">
+            {/* On mobile only the feather + Quill wordmark stays. */}
+            <span className="inline-block h-[18px] w-px bg-[var(--line)] max-sm:hidden" />
+            <span className="text-2xs font-medium tracking-[0.2em] uppercase text-[var(--text-muted-color)] max-sm:hidden">
               Design system
             </span>
           </a>
-          <div className="flex items-center gap-7">
-            <a href="#foundations" className={navLink}>Foundations</a>
-            <a href="#components" className={navLink}>Components</a>
-            <a href="#principles" className={navLink}>Principles</a>
+          <div className="flex items-center gap-7 max-sm:gap-3">
+            <a href="#foundations" className={`${navLink} max-sm:text-xs`}>Foundations</a>
+            <a href="#components" className={`${navLink} max-sm:text-xs`}>Components</a>
+            <a href="#principles" className={`${navLink} max-sm:text-xs`}>Principles</a>
             <Switch checked={theme === "dark"} onCheckedChange={toggleTheme} aria-label="Dusk mode" title="Dusk mode" />
           </div>
         </div>
