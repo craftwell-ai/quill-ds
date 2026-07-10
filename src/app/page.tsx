@@ -54,8 +54,8 @@ function Logo() {
 
 function Eyebrow({ children, dash = false }: { children: React.ReactNode; dash?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2.5 font-sans text-xs font-medium tracking-[0.15em] uppercase text-terracotta">
-      {dash && <span className="h-px w-5 bg-terracotta" />}
+    <span className="inline-flex items-center gap-2.5 font-sans text-xs font-medium tracking-[0.15em] uppercase text-terracotta whitespace-nowrap max-sm:text-[0.65rem] max-sm:tracking-[0.08em]">
+      {dash && <span className="h-px w-5 bg-terracotta max-sm:hidden" />}
       {children}
     </span>
   );

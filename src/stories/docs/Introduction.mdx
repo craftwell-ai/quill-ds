@@ -4,6 +4,16 @@ import { Meta } from '@storybook/blocks'
 
 <div style={{ fontFamily: 'var(--font-raleway, Raleway, sans-serif)', color: 'var(--ink, #2A2622)', maxWidth: 640 }}>
 
+{/* Wayfinder back to the site. target="_top" — docs render inside the
+    preview iframe, and the homepage must replace the whole window. */}
+<a
+  href="/"
+  target="_top"
+  style={{ display: 'inline-block', marginBottom: 24, fontSize: 12, fontWeight: 500, letterSpacing: '0.02em', color: '#675F58', textDecoration: 'none' }}
+>
+  ← quilldesignsystem.com
+</a>
+
 <p style={{ fontSize: 14, lineHeight: 1.7, color: '#5C524A', marginBottom: 32 }}>
   Welcome to the Quill Design System component & pattern library. Careful attention and detail has gone into ensuring every artifact in our collection is approachable and accessible for everyday use by people. Feel free to peruse around while you are here.
 </p>
