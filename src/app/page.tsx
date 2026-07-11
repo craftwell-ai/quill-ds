@@ -260,7 +260,7 @@ export default function Home() {
       <header id="top" className="relative overflow-hidden bg-[var(--surface-page)]">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.07] saturate-0 dark:opacity-[0.035]"
+          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.07] saturate-0 dark:invert"
           style={{ backgroundImage: "url('/home/declaration.webp')" }}
         />
         <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-[15px] max-sm:pb-16">
