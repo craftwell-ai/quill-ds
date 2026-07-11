@@ -21,7 +21,7 @@
       "name": "icon",
       "type": "registry:ui",
       "title": "Icon (Material Symbols)",
-      "description": "The Quill icon component — Material Symbols Outlined at weight 200, bundled as a self-contained core set covering every icon the Quill blocks use.",
+      "description": "The Quill icon component \u2014 Material Symbols Outlined at weight 200, bundled as a self-contained core set covering every icon the Quill blocks use.",
       "files": [
         {
           "path": "registry/lib/icon.tsx",
@@ -840,15 +840,14 @@
     {
       "name": "signup-social",
       "type": "registry:block",
-      "title": "Signup — social first",
+      "title": "Signup \u2014 social first",
       "description": "Signup card leading with GitHub and Google provider buttons, followed by an email and password fallback.",
       "registryDependencies": [
         "card",
         "input",
         "label",
         "button",
-        "separator",
-        "https://www.quilldesignsystem.com/r/icon.json"
+        "separator"
       ],
       "files": [
         {
