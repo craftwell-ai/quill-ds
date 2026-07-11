@@ -143,7 +143,18 @@ that's an auto-layout child (use the up/down glyph instead).
 | 4 | ❖ Mail inbox | 215:2 | list + reading pane; Avatar/Badge/Input instances |
 | 4 | ❖ Login — split panel | 215:154 | primary brand panel + form; Button instance |
 | 4 | ❖ Login — minimal | 215:187 | arrow glyph in composed primary button |
-| 5 | ❖ Theme selector | 231:2 | dropdown trigger + open menu; four theme chips pinned via `setExplicitVariableModeForCollection` |
+| 5 | ❖ Theme selector | 231:2 | dropdown trigger + open menu (Theme + Accent sections, menu node 233:2); four theme chips pinned via `setExplicitVariableModeForCollection` |
+
+### Accent (2026-07-11)
+
+Code adds `data-accent="terracotta|moss|indigo|gold"` (eyebrows, accent italics,
+links, focus rings). Figma can't model a second runtime dimension — the Primitives
+collection is at its 4-mode ceiling — so the accent is **pinned to terracotta**:
+- `status/link`, `shadcn/ring`, `shadcn/sidebar-ring` re-aliased → `color/pigment/terracotta/deep`
+  (link was fixed indigo; rings were ink) to match the new code default.
+- New primitive `color/pigment/gold/text` (VariableID:232:3) — gold's AA text cut
+  (`#826637` / `#E2CA9E` / `#996D18` / `#ECC883`); gold/deep is only 3.3:1 on light grounds.
+- The ❖ Theme selector menu shows the Accent section with pigment swatches.
 
 ### Variable modes (four themes, 2026-07-11)
 
