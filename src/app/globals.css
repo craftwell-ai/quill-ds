@@ -73,6 +73,13 @@
   --text-3xl: 3rem;
   --text-4xl: 4rem;
   --text-5xl: 5.5rem;
+  --shadow-2xs: var(--shadow-xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-pop);
+  --shadow-2xl: var(--shadow-pop);
 }
 
 :root {
@@ -323,10 +330,13 @@ html {
   background-size: 24px 24px;
 }
 
-/* ── Dark grain inversion — multiply disappears on walnut; screen reads as tooth */
+/* ── Dark grain inversion — multiply disappears on walnut; screen reads as tooth.
+   The noise itself also swaps to a light-tinted cut (per the brand reference):
+   the dark multiply grain contributes nothing under a screen blend. */
 [data-theme="dark"] .paper-grain {
   mix-blend-mode: screen;
   opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.88 0 0 0 0 0.78 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 [data-theme="dark"] .paper-specks {

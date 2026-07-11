@@ -307,7 +307,7 @@ export default function Home() {
                 <PlateLabel>Texture &amp; elevation</PlateLabel>
                 <div className="flex items-end gap-4 px-0.5 pt-2 pb-3">
                   <span className="h-[52px] w-[52px] rounded-sm border border-[var(--line-faint)] bg-paper-warm shadow-sm" />
-                  <span className="h-[52px] w-[52px] rounded-lg border border-[var(--line-faint)] bg-paper-warm shadow" />
+                  <span className="h-[52px] w-[52px] rounded-lg border border-[var(--line-faint)] bg-paper-warm shadow-md" />
                   <span className="h-[52px] w-[52px] rounded-xl border border-[var(--line-faint)] bg-paper-warm shadow-lg" />
                 </div>
                 <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
@@ -496,7 +496,7 @@ export default function Home() {
             </Button>
           </div>
           {/* The code card stays dark in both themes. */}
-          <div className="overflow-x-auto rounded-lg bg-[#2A2622] p-7 px-8 font-mono text-sm leading-loose text-[#F5EDDD] shadow">
+          <div className="overflow-x-auto rounded-lg bg-[#2A2622] p-7 px-8 font-mono text-sm leading-loose text-[#F5EDDD] shadow-md">
             <div className="text-[rgba(245,237,221,0.55)]"># add the quill theme</div>
             <div>
               npx shadcn add <span className="text-[#D6BA86]">https://www.quilldesignsystem.com/r/quill.json</span>

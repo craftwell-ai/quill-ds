@@ -82,6 +82,14 @@ export function renderCss(t) {
   for (const [k, v] of Object.entries(paletteMap)) themeLines.push(`  --color-${k}: ${`var(${v})`};`)
   for (const [k, v] of Object.entries(t.radius)) themeLines.push(`  --radius-${k}: ${v};`)
   for (const [k, v] of Object.entries(t.text)) themeLines.push(`  --text-${k}: ${v};`)
+  // Shadow utilities route through the :root tokens (remapped in dark) —
+  // without these, Tailwind's shadow-* fall back to its cool-black defaults
+  // and never flip in dark mode. Tailwind's 7-step scale maps onto our 5.
+  const shadowMap = {
+    '2xs': '--shadow-xs', xs: '--shadow-xs', sm: '--shadow-sm', md: '--shadow',
+    lg: '--shadow-lg', xl: '--shadow-pop', '2xl': '--shadow-pop',
+  }
+  for (const [k, v] of Object.entries(shadowMap)) themeLines.push(`  --shadow-${k}: var(${v});`)
 
   return { theme: themeLines.join('\n'), root: [...rootLines, ...dkLines].join('\n'), dark: darkLines.join('\n') }
 }
