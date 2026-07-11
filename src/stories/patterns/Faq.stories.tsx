@@ -43,7 +43,7 @@ export const Faq: Story = {
           Everything else lives in the docs — or ask us directly.
         </p>
       </div>
-      <Accordion type="single" collapsible defaultValue="item-0" className="w-full">
+      <Accordion defaultValue={['item-0']} className="w-full">
         {faqs.map((f, i) => (
           <AccordionItem key={i} value={`item-${i}`}>
             <AccordionTrigger>{f.q}</AccordionTrigger>
