@@ -143,6 +143,18 @@ that's an auto-layout child (use the up/down glyph instead).
 | 4 | ❖ Mail inbox | 215:2 | list + reading pane; Avatar/Badge/Input instances |
 | 4 | ❖ Login — split panel | 215:154 | primary brand panel + form; Button instance |
 | 4 | ❖ Login — minimal | 215:187 | arrow glyph in composed primary button |
+| 5 | ❖ Theme selector | 231:2 | dropdown trigger + open menu; four theme chips pinned via `setExplicitVariableModeForCollection` |
+
+### Variable modes (four themes, 2026-07-11)
+
+`Quill Primitives` (VariableCollectionId:3:2) now has four modes — **Light (Dawn),
+Dark (Dusk), Classic Light, Classic Dark** — matching the code's `data-theme`
+values (`light`/`dark`/`classic-light`/`classic-dark`). All 29 COLOR variables
+carry per-mode values sourced from `tokens/quill.figma.json` (the DTCG export
+emits the same four modes). `Quill Semantic` stays single-mode: its aliases
+resolve through the Primitives modes. FLOAT/STRING variables are mode-independent
+(new modes inherit the default-mode value). Note: 4 modes is the Professional-plan
+ceiling — a fifth theme would need an Org plan or a second collection.
 
 ## Next
 
