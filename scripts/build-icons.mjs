@@ -67,8 +67,11 @@ function parseSvg(name) {
 
 // Icons referenced in the codebase — `<Icon name="…">` and `icon: '…'` literals.
 export function usedInSrc() {
+  // Coarse shell filter (git grep ERE has no \x hex escapes — the old
+  // icon: branch silently never matched); the JS regexes below do the
+  // precise extraction for both quote styles.
   const srcText = execSync(
-    'git grep -h -E "name=\\"[a-z][a-z0-9_]+\\"|icon: ?[\\x27\\x22][a-z][a-z0-9_]+[\\x27\\x22]" -- src',
+    'git grep -h -E \'name="|icon:\' -- src registry',
     { cwd: root, encoding: 'utf8' }
   )
   return [
