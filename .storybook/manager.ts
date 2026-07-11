@@ -67,9 +67,12 @@ style.textContent = `
   }
 
   /* Nav item hover — paper-warm. Components/roots render as <button>, docs and
-     stories as <a>, so cover both. */
-  [data-nodetype] button:hover,
-  [data-nodetype] a:hover {
+     stories as <a>, so cover both. Child combinator + :not(data-selected):
+     the selected pill is painted by the item WRAPPER, so hovering must not
+     paint the inner link over it (and a descendant selector would sneak back
+     in through the non-selected root section wrapper). */
+  [data-nodetype]:not([data-selected="true"]) > button:hover,
+  [data-nodetype]:not([data-selected="true"]) > a:hover {
     background: #EFE4CE;
   }
 
