@@ -27,10 +27,25 @@ export const globalTypes = {
       dynamicTitle: true,
     },
   },
+  accent: {
+    name: 'Accent',
+    defaultValue: 'terracotta',
+    toolbar: {
+      icon: 'paintbrush',
+      items: [
+        { value: 'terracotta', title: 'Terracotta' },
+        { value: 'moss', title: 'Moss' },
+        { value: 'indigo', title: 'Indigo' },
+        { value: 'gold', title: 'Gold' },
+      ],
+      dynamicTitle: true,
+    },
+  },
 }
 
 const withTheme: Decorator = (Story, context) => {
   const theme = context.globals['theme'] ?? 'light'
+  const accent = context.globals['accent'] ?? 'terracotta'
   return (
     <ThemeProvider
       attribute="data-theme"
@@ -40,6 +55,7 @@ const withTheme: Decorator = (Story, context) => {
     >
       <div
         data-theme={theme}
+        data-accent={accent}
         style={{
           background: THEME_BG[theme] ?? THEME_BG.light,
           padding: 24,

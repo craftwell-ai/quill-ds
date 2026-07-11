@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Icon } from '@/components/ui/icon'
@@ -17,10 +19,21 @@ export const quillThemes = [
   { value: 'classic-dark', label: 'Classic Dark', icon: 'disk' },
 ] as const
 
+// Swatch classes are static strings so Tailwind can see them.
+export const quillAccents = [
+  { value: 'terracotta', label: 'Terracotta', swatch: 'bg-terracotta' },
+  { value: 'moss', label: 'Moss', swatch: 'bg-moss' },
+  { value: 'indigo', label: 'Indigo', swatch: 'bg-indigo-brand' },
+  { value: 'gold', label: 'Gold', swatch: 'bg-gold' },
+] as const
+
 export type ThemeValue = (typeof quillThemes)[number]['value']
+export type AccentValue = (typeof quillAccents)[number]['value']
 
 const isTheme = (v: unknown): v is ThemeValue =>
   quillThemes.some((t) => t.value === v)
+const isAccent = (v: unknown): v is AccentValue =>
+  quillAccents.some((a) => a.value === v)
 
 // Filled disk for Classic Dark — the Quill icon set is outlined-only, so the
 // filled Material Symbols `circle` ships inline (weight 500, to match the ring).
@@ -40,43 +53,70 @@ function ThemeGlyph({ icon, size = 16 }: { icon: (typeof quillThemes)[number]['i
 export function ThemeSelector({
   value,
   onValueChange,
+  accent,
+  onAccentChange,
   storageKey = 'quill-theme',
+  accentStorageKey = 'quill-accent',
 }: {
   /** Controlled theme. Omit to let the selector own `data-theme` on <html>. */
   value?: ThemeValue
   onValueChange?: (theme: ThemeValue) => void
-  /** localStorage key used in uncontrolled mode. */
+  /** Controlled accent. Omit to let the selector own `data-accent` on <html>. */
+  accent?: AccentValue
+  onAccentChange?: (accent: AccentValue) => void
+  /** localStorage keys used in uncontrolled mode. */
   storageKey?: string
+  accentStorageKey?: string
 }) {
-  const [internal, setInternal] = useState<ThemeValue>('light')
-  const controlled = value !== undefined
-  const theme = controlled ? value : internal
+  const [internalTheme, setInternalTheme] = useState<ThemeValue>('light')
+  const [internalAccent, setInternalAccent] = useState<AccentValue>('terracotta')
+  const themeControlled = value !== undefined
+  const accentControlled = accent !== undefined
+  const theme = themeControlled ? value : internalTheme
+  const activeAccent = accentControlled ? accent : internalAccent
   const active = quillThemes.find((t) => t.value === theme) ?? quillThemes[0]
 
   useEffect(() => {
-    if (controlled) return
-    // Read post-hydration: prerendered markup is always Dawn, so reading
-    // storage during render would mismatch.
-    let stored: string | null = null
+    // Read post-hydration: prerendered markup is always Dawn/terracotta, so
+    // reading storage during render would mismatch.
+    let storedTheme: string | null = null
+    let storedAccent: string | null = null
     try {
-      stored = localStorage.getItem(storageKey)
+      storedTheme = localStorage.getItem(storageKey)
+      storedAccent = localStorage.getItem(accentStorageKey)
     } catch {}
-    if (isTheme(stored)) {
-      document.documentElement.setAttribute('data-theme', stored)
+    if (!themeControlled && isTheme(storedTheme)) {
+      document.documentElement.setAttribute('data-theme', storedTheme)
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setInternal(stored)
+      setInternalTheme(storedTheme)
     }
-  }, [controlled, storageKey])
+    if (!accentControlled && isAccent(storedAccent)) {
+      document.documentElement.setAttribute('data-accent', storedAccent)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setInternalAccent(storedAccent)
+    }
+  }, [themeControlled, accentControlled, storageKey, accentStorageKey])
 
-  function select(next: ThemeValue) {
-    if (!controlled) {
-      setInternal(next)
+  function selectTheme(next: ThemeValue) {
+    if (!themeControlled) {
+      setInternalTheme(next)
       document.documentElement.setAttribute('data-theme', next)
       try {
         localStorage.setItem(storageKey, next)
       } catch {}
     }
     onValueChange?.(next)
+  }
+
+  function selectAccent(next: AccentValue) {
+    if (!accentControlled) {
+      setInternalAccent(next)
+      document.documentElement.setAttribute('data-accent', next)
+      try {
+        localStorage.setItem(accentStorageKey, next)
+      } catch {}
+    }
+    onAccentChange?.(next)
   }
 
   return (
@@ -90,17 +130,34 @@ export function ThemeSelector({
           </Button>
         }
       />
-      <DropdownMenuContent align="end" className="w-44">
+      <DropdownMenuContent align="end" className="w-48">
+        {/* Base UI: GroupLabel must live INSIDE a Group/RadioGroup. */}
         <DropdownMenuRadioGroup
           value={theme}
           onValueChange={(next) => {
-            if (isTheme(next)) select(next)
+            if (isTheme(next)) selectTheme(next)
           }}
         >
+          <DropdownMenuLabel>Theme</DropdownMenuLabel>
           {quillThemes.map((t) => (
             <DropdownMenuRadioItem key={t.value} value={t.value}>
               <ThemeGlyph icon={t.icon} />
               {t.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup
+          value={activeAccent}
+          onValueChange={(next) => {
+            if (isAccent(next)) selectAccent(next)
+          }}
+        >
+          <DropdownMenuLabel>Accent</DropdownMenuLabel>
+          {quillAccents.map((a) => (
+            <DropdownMenuRadioItem key={a.value} value={a.value}>
+              <span className={`size-3.5 shrink-0 rounded-full border border-border ${a.swatch}`} aria-hidden />
+              {a.label}
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>

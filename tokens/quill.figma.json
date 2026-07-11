@@ -209,6 +209,20 @@
                 }
               }
             }
+          },
+          "text": {
+            "$type": "color",
+            "$value": "#826637",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#826637",
+                  "Dark": "#E2CA9E",
+                  "Classic Light": "#996D18",
+                  "Classic Dark": "#ECC883"
+                }
+              }
+            }
           }
         }
       },
@@ -645,7 +659,7 @@
     },
     "status": {
       "link": {
-        "$value": "{Primitives.color.pigment.indigo.base}"
+        "$value": "{Primitives.color.pigment.terracotta.deep}"
       },
       "success": {
         "$value": "{Primitives.color.pigment.moss.deep}"
@@ -713,7 +727,7 @@
         "$value": "{Primitives.color.line.control}"
       },
       "ring": {
-        "$value": "{Primitives.color.ink.base}"
+        "$value": "{Primitives.color.pigment.terracotta.deep}"
       },
       "chart-1": {
         "$value": "{Primitives.color.pigment.terracotta.base}"
@@ -752,7 +766,7 @@
         "$value": "{Primitives.color.line.faint}"
       },
       "sidebar-ring": {
-        "$value": "{Primitives.color.ink.base}"
+        "$value": "{Primitives.color.pigment.terracotta.deep}"
       }
     }
   }

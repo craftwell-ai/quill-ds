@@ -28,7 +28,8 @@ test('renderCss reproduces primitive + dk + remap declarations', () => {
   assert.match(root, /--dk-paper:\s*#20180E;/)
   assert.match(dark, /--paper:\s*var\(--dk-paper\);/)
   // semantic + shadcn present in :root
-  assert.match(root, /--text-accent-color:\s*var\(--terracotta-deep\);/)
+  assert.match(root, /--text-accent-color:\s*var\(--accent-pigment-text\);/)
+  assert.match(root, /--accent-pigment-text:\s*var\(--terracotta-deep\);/)
   assert.match(root, /--destructive:\s*var\(--terracotta-deep\);/)
   // @theme mappings + scale
   assert.match(theme, /--color-terracotta:\s*var\(--terracotta\);/)
@@ -64,6 +65,20 @@ test('DTCG color tokens carry all four Figma modes', () => {
   const paper = d.Primitives.color.paper.base
   assert.equal(paper.$extensions['com.figma'].modes['Classic Light'], '#FFFFFF')
   assert.equal(paper.$extensions['com.figma'].modes['Classic Dark'], '#000000')
+})
+
+test('accent blocks emit after theme blocks so the chosen accent wins on <html>', () => {
+  const css = renderCss(tokens)
+  const block = registryBlock(css)
+  for (const name of ['terracotta', 'moss', 'indigo', 'gold']) {
+    assert.match(block, new RegExp(`\\[data-accent="${name}"\\] \\{`))
+  }
+  assert.match(block, /\[data-accent="gold"\] \{\n  --accent-pigment: var\(--gold-deep\);\n  --accent-pigment-text: var\(--gold-text\);/)
+  // theme blocks re-declare the DEFAULT accent (island safety); source order
+  // must put accent blocks after theme blocks so [data-accent] still wins.
+  assert.ok(block.lastIndexOf('[data-theme=') < block.indexOf('[data-accent='))
+  // gold's AA text cut exists as a primitive in :root
+  assert.match(css.root, /--gold-text:\s*#826637;/)
 })
 
 test('theme blocks re-declare aliases so nested data-theme islands re-resolve', () => {

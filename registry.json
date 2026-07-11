@@ -608,7 +608,7 @@
       "name": "theme-selector",
       "type": "registry:block",
       "title": "Theme selector",
-      "description": "A dropdown theme picker for the four Quill themes — Dawn, Dusk, Classic Light, and Classic Dark — that sets data-theme and persists the choice to localStorage.",
+      "description": "A dropdown picker for the four Quill themes (Dawn, Dusk, Classic Light, Classic Dark) and the four pigment accents (terracotta, moss, indigo, gold) — sets data-theme/data-accent and persists both to localStorage.",
       "registryDependencies": [
         "button",
         "dropdown-menu",

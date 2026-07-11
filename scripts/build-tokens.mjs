@@ -68,11 +68,19 @@ export function renderCss(t) {
   // alias resolved at :root ignores a remap on a nested data-theme island.
   // Re-declaring at the themed element makes scoped theming work — a
   // `<div data-theme="dusk">` island inside a Dawn page — not just the
-  // <html>-level switch.
+  // <html>-level switch. The accent defaults ride along for the same reason
+  // (an island re-cuts the default accent to its own theme; pair a
+  // data-accent attribute with data-theme for accented islands).
+  const accentDefaultLines = [
+    `  --accent-pigment: ${t.accents.terracotta.base};`,
+    `  --accent-pigment-text: ${t.accents.terracotta.text};`,
+  ]
   const aliasLines = [
+    ...accentDefaultLines,
     ...Object.entries(t.semantic).map(([k, v]) => `  --${k}: ${v};`),
     ...Object.entries(t.shadcn).map(([k, v]) => `  --${k}: ${v};`),
   ]
+  rootLines.push(...accentDefaultLines)
   rootLines.push(...Object.entries(t.semantic).map(([k, v]) => `  --${k}: ${v};`))
   rootLines.push(`  --radius: ${t.radiusBase};`)
   // Spacing + border-width (documented scales; kept in :root, not @theme, so they
@@ -120,14 +128,22 @@ export function renderCss(t) {
     // `dark` kept as a named field (first mode) for existing callers/tests.
     dark: modeLines.dark.join('\n'),
     modes: MODES.map((m) => ({ attr: m.attr, colorScheme: m.colorScheme, body: modeLines[m.key].join('\n') })),
+    accents: Object.entries(t.accents).map(([name, a]) => ({
+      name,
+      body: `  --accent-pigment: ${a.base};\n  --accent-pigment-text: ${a.text};`,
+    })),
   }
 }
 
-// Every [data-theme="…"] block, in MODES order.
+// Every [data-theme="…"] block, in MODES order, then the [data-accent="…"] blocks.
 function modeBlocks(css) {
-  return css.modes
+  const themes = css.modes
     .map((m) => `[data-theme="${m.attr}"] {\n  color-scheme: ${m.colorScheme};\n\n${m.body}\n}`)
     .join('\n\n')
+  const accents = css.accents
+    .map((a) => `[data-accent="${a.name}"] {\n${a.body}\n}`)
+    .join('\n\n')
+  return `${themes}\n\n${accents}`
 }
 
 export function injectMarkers(source, block) {
@@ -186,6 +202,10 @@ export function renderDtcg(t) {
     }
   }
   buildMap(t.color, [])
+  // Accent aliases are runtime-switchable (data-accent); Figma variables are
+  // not, so the DTCG export pins them to the default (terracotta) pigment.
+  varToDtcg['--accent-pigment'] = 'Primitives.color.pigment.terracotta.base'
+  varToDtcg['--accent-pigment-text'] = 'Primitives.color.pigment.terracotta.deep'
 
   // var(--x) → DTCG alias using the real primitive path from the lookup map.
   const alias = (ref) => {

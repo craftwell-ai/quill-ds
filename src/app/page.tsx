@@ -16,8 +16,10 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -58,6 +60,17 @@ const THEME_OPTIONS = [
 type ThemeValue = (typeof THEME_OPTIONS)[number]["value"];
 const isTheme = (v: unknown): v is ThemeValue => THEME_OPTIONS.some((t) => t.value === v);
 
+// Accent: which pigment carries eyebrows, accent words, links, and focus
+// rings. Swatches use the pigment vars so they re-cut with the theme.
+const ACCENT_OPTIONS = [
+  { value: "terracotta", label: "Terracotta", swatchVar: "var(--terracotta)" },
+  { value: "moss", label: "Moss", swatchVar: "var(--moss)" },
+  { value: "indigo", label: "Indigo", swatchVar: "var(--indigo)" },
+  { value: "gold", label: "Gold", swatchVar: "var(--gold)" },
+] as const;
+type AccentValue = (typeof ACCENT_OPTIONS)[number]["value"];
+const isAccent = (v: unknown): v is AccentValue => ACCENT_OPTIONS.some((a) => a.value === v);
+
 function ToggleGlyph({ path, className }: { path: string; className?: string }) {
   return (
     <svg viewBox="0 -960 960 960" width={18} height={18} fill="currentColor" aria-hidden className={`inline-block shrink-0 ${className ?? ""}`}>
@@ -95,8 +108,8 @@ function Logo() {
 
 function Eyebrow({ children, dash = false }: { children: React.ReactNode; dash?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2.5 font-sans text-xs font-medium tracking-[0.15em] uppercase text-terracotta whitespace-nowrap max-sm:text-[0.65rem] max-sm:tracking-[0.08em]">
-      {dash && <span className="h-px w-5 bg-terracotta max-sm:hidden" />}
+    <span className="inline-flex items-center gap-2.5 font-sans text-xs font-medium tracking-[0.15em] uppercase text-[var(--accent-pigment)] whitespace-nowrap max-sm:text-[0.65rem] max-sm:tracking-[0.08em]">
+      {dash && <span className="h-px w-5 bg-[var(--accent-pigment)] max-sm:hidden" />}
       {children}
     </span>
   );
@@ -127,7 +140,7 @@ function SectionHeader({
 }
 
 function Accent({ children }: { children: React.ReactNode }) {
-  return <em className="italic text-terracotta [font-variation-settings:var(--fraunces-accent)]">{children}</em>;
+  return <em className="italic text-[var(--accent-pigment)] [font-variation-settings:var(--fraunces-accent)]">{children}</em>;
 }
 
 function PlateLabel({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -149,6 +162,7 @@ function Swatch({ color, pill = false, bordered = false }: { color: string; pill
 
 export default function Home() {
   const [theme, setTheme] = useState<ThemeValue>("light");
+  const [accent, setAccent] = useState<AccentValue>("terracotta");
   const [specimenOn, setSpecimenOn] = useState(true);
 
   useEffect(() => {
@@ -178,6 +192,16 @@ export default function Home() {
       setTheme(stored);
     }
 
+    let storedAccent: string | null = null;
+    try {
+      storedAccent = localStorage.getItem("quill-home-accent");
+    } catch {}
+    if (isAccent(storedAccent)) {
+      document.documentElement.setAttribute("data-accent", storedAccent);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setAccent(storedAccent);
+    }
+
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(timer);
@@ -192,8 +216,16 @@ export default function Home() {
     } catch {}
   }
 
+  function selectAccent(next: AccentValue) {
+    document.documentElement.setAttribute("data-accent", next);
+    setAccent(next);
+    try {
+      localStorage.setItem("quill-home-accent", next);
+    } catch {}
+  }
+
   const navLink =
-    "text-sm font-medium text-[var(--text-body)] no-underline transition-colors duration-200 hover:text-terracotta";
+    "text-sm font-medium text-[var(--text-body)] no-underline transition-colors duration-200 hover:text-[var(--accent-pigment)]";
 
   return (
     <div className="min-h-screen w-full bg-[var(--surface-page)] font-sans text-[var(--text-body)]">
@@ -236,17 +268,38 @@ export default function Home() {
                 </span>
                 <ToggleGlyph path={CARET_500_PATH} className="size-3 text-[var(--ink-soft)]" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuContent align="end" className="w-48">
+                {/* Base UI: GroupLabel must live INSIDE a Group/RadioGroup. */}
                 <DropdownMenuRadioGroup
                   value={theme}
                   onValueChange={(next) => {
                     if (isTheme(next)) selectTheme(next);
                   }}
                 >
+                  <DropdownMenuLabel>Theme</DropdownMenuLabel>
                   {THEME_OPTIONS.map((t) => (
                     <DropdownMenuRadioItem key={t.value} value={t.value}>
                       <ToggleGlyph path={t.path} className="size-4" />
                       {t.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={accent}
+                  onValueChange={(next) => {
+                    if (isAccent(next)) selectAccent(next);
+                  }}
+                >
+                  <DropdownMenuLabel>Accent</DropdownMenuLabel>
+                  {ACCENT_OPTIONS.map((a) => (
+                    <DropdownMenuRadioItem key={a.value} value={a.value}>
+                      <span
+                        aria-hidden
+                        className="size-3.5 shrink-0 rounded-full border border-[var(--line-soft)]"
+                        style={{ background: a.swatchVar }}
+                      />
+                      {a.label}
                     </DropdownMenuRadioItem>
                   ))}
                 </DropdownMenuRadioGroup>
@@ -338,7 +391,7 @@ export default function Home() {
                   <span className="font-sans text-[30px] font-medium leading-none text-[var(--text-muted-color)]">Aa</span>
                 </div>
                 <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
-                  Fraunces carries the voice; Raleway does the work. One italic word per headline, always in terracotta.
+                  Fraunces carries the voice; Raleway does the work. One italic word per headline, always in the accent pigment.
                 </p>
               </CardContent>
             </Card>
@@ -378,7 +431,7 @@ export default function Home() {
                 <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
                   The quill, set in sepia ink. Ships as SVG, a full favicon set, and lock-ups in three sizes.
                 </p>
-                <a href={storyUrl("foundations-brand--docs")} className="text-sm font-medium text-[var(--link)] no-underline transition-colors duration-200 hover:text-terracotta">
+                <a href={storyUrl("foundations-brand--docs")} className="text-sm font-medium text-[var(--link)] no-underline transition-colors duration-200 hover:text-[var(--accent-pigment)]">
                   View the lock-ups →
                 </a>
               </CardContent>
@@ -496,7 +549,7 @@ export default function Home() {
       {/* ── Principles ──────────────────────────────────────────────────── */}
       <section id="principles" className="border-y border-[var(--border-divider)] bg-paper-warm">
         <div className="mx-auto flex max-w-[800px] flex-col items-center gap-7 px-12 pt-24 pb-[72px] text-center max-sm:px-6 max-sm:pt-14 max-sm:pb-10">
-          <span className="font-display text-3xl leading-none text-terracotta">¶</span>
+          <span className="font-display text-3xl leading-none text-[var(--accent-pigment)]">¶</span>
           <p className="m-0 font-display text-2xl font-normal leading-[1.45] tracking-[-0.02em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:pretty] max-sm:text-xl">
             &ldquo;People sit at the core of our design system and shape what good looks like: distinctive yet
             familiar, with a flair of style that makes it easy to come back to every day.&rdquo;
@@ -510,7 +563,7 @@ export default function Home() {
               ["№ 03", "A gentle settle", "Hovers lift, presses set down. Nothing bounces, nothing loops, nothing hurries you along."],
             ].map(([num, title, body]) => (
               <div key={num} className="flex flex-col gap-2.5">
-                <span className="font-display text-base italic text-terracotta [font-variation-settings:var(--fraunces-caption)]">{num}</span>
+                <span className="font-display text-base italic text-[var(--accent-pigment)] [font-variation-settings:var(--fraunces-caption)]">{num}</span>
                 <h3 className="m-0 font-display text-xl font-normal text-[var(--text-strong)] [font-variation-settings:var(--fraunces-text)]">{title}</h3>
                 <p className="m-0 text-sm leading-[1.7] text-[var(--text-body)]">{body}</p>
               </div>

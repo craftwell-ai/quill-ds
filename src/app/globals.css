@@ -98,6 +98,7 @@
   --indigo-deep: #44516D;
   --gold: #B89968;
   --gold-deep: #9A7D4E;
+  --gold-text: #826637;
   --line-faint: rgba(42, 38, 34, 0.08);
   --line-soft: rgba(42, 38, 34, 0.12);
   --line: rgba(42, 38, 34, 0.15);
@@ -119,6 +120,8 @@
   --fraunces-accent: "opsz" 144, "SOFT" 100, "WONK" 1;
   --fraunces-text: "opsz" 24, "SOFT" 50;
   --fraunces-caption: "opsz" 14, "SOFT" 100;
+  --accent-pigment: var(--terracotta);
+  --accent-pigment-text: var(--terracotta-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);
@@ -126,8 +129,8 @@
   --text-body: var(--ink-soft);
   --text-muted-color: var(--ink-muted);
   --text-on-ink: var(--paper);
-  --text-accent-color: var(--terracotta-deep);
-  --link: var(--indigo);
+  --text-accent-color: var(--accent-pigment-text);
+  --link: var(--accent-pigment-text);
   --border-card: var(--line-soft);
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
@@ -175,7 +178,7 @@
   --destructive: var(--terracotta-deep);
   --border: var(--line-soft);
   --input: var(--line-control);
-  --ring: var(--ink);
+  --ring: var(--accent-pigment-text);
   --chart-1: var(--terracotta);
   --chart-2: var(--moss);
   --chart-3: var(--indigo);
@@ -188,7 +191,7 @@
   --sidebar-accent: var(--paper-deep);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--line-faint);
-  --sidebar-ring: var(--ink);
+  --sidebar-ring: var(--accent-pigment-text);
   --dk-paper: #20180E;
   --cl-paper: #FFFFFF;
   --cd-paper: #000000;
@@ -231,6 +234,9 @@
   --dk-gold-deep: #E2CA9E;
   --cl-gold-deep: #A57928;
   --cd-gold-deep: #ECC883;
+  --dk-gold-text: #E2CA9E;
+  --cl-gold-text: #996D18;
+  --cd-gold-text: #ECC883;
   --dk-line-faint: rgba(241, 231, 211, 0.07);
   --cl-line-faint: rgba(0, 0, 0, 0.07);
   --cd-line-faint: rgba(255, 255, 255, 0.08);
@@ -280,6 +286,7 @@
   --indigo-deep: var(--dk-indigo-deep);
   --gold: var(--dk-gold);
   --gold-deep: var(--dk-gold-deep);
+  --gold-text: var(--dk-gold-text);
   --line-faint: var(--dk-line-faint);
   --line-soft: var(--dk-line-soft);
   --line: var(--dk-line);
@@ -290,6 +297,8 @@
   --shadow: var(--dk-shadow);
   --shadow-lg: var(--dk-shadow-lg);
   --shadow-pop: var(--dk-shadow-pop);
+  --accent-pigment: var(--terracotta);
+  --accent-pigment-text: var(--terracotta-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);
@@ -297,8 +306,8 @@
   --text-body: var(--ink-soft);
   --text-muted-color: var(--ink-muted);
   --text-on-ink: var(--paper);
-  --text-accent-color: var(--terracotta-deep);
-  --link: var(--indigo);
+  --text-accent-color: var(--accent-pigment-text);
+  --link: var(--accent-pigment-text);
   --border-card: var(--line-soft);
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
@@ -323,7 +332,7 @@
   --destructive: var(--terracotta-deep);
   --border: var(--line-soft);
   --input: var(--line-control);
-  --ring: var(--ink);
+  --ring: var(--accent-pigment-text);
   --chart-1: var(--terracotta);
   --chart-2: var(--moss);
   --chart-3: var(--indigo);
@@ -336,7 +345,7 @@
   --sidebar-accent: var(--paper-deep);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--line-faint);
-  --sidebar-ring: var(--ink);
+  --sidebar-ring: var(--accent-pigment-text);
 }
 
 [data-theme="classic-light"] {
@@ -356,6 +365,7 @@
   --indigo-deep: var(--cl-indigo-deep);
   --gold: var(--cl-gold);
   --gold-deep: var(--cl-gold-deep);
+  --gold-text: var(--cl-gold-text);
   --line-faint: var(--cl-line-faint);
   --line-soft: var(--cl-line-soft);
   --line: var(--cl-line);
@@ -366,6 +376,8 @@
   --shadow: var(--cl-shadow);
   --shadow-lg: var(--cl-shadow-lg);
   --shadow-pop: var(--cl-shadow-pop);
+  --accent-pigment: var(--terracotta);
+  --accent-pigment-text: var(--terracotta-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);
@@ -373,8 +385,8 @@
   --text-body: var(--ink-soft);
   --text-muted-color: var(--ink-muted);
   --text-on-ink: var(--paper);
-  --text-accent-color: var(--terracotta-deep);
-  --link: var(--indigo);
+  --text-accent-color: var(--accent-pigment-text);
+  --link: var(--accent-pigment-text);
   --border-card: var(--line-soft);
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
@@ -399,7 +411,7 @@
   --destructive: var(--terracotta-deep);
   --border: var(--line-soft);
   --input: var(--line-control);
-  --ring: var(--ink);
+  --ring: var(--accent-pigment-text);
   --chart-1: var(--terracotta);
   --chart-2: var(--moss);
   --chart-3: var(--indigo);
@@ -412,7 +424,7 @@
   --sidebar-accent: var(--paper-deep);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--line-faint);
-  --sidebar-ring: var(--ink);
+  --sidebar-ring: var(--accent-pigment-text);
 }
 
 [data-theme="classic-dark"] {
@@ -432,6 +444,7 @@
   --indigo-deep: var(--cd-indigo-deep);
   --gold: var(--cd-gold);
   --gold-deep: var(--cd-gold-deep);
+  --gold-text: var(--cd-gold-text);
   --line-faint: var(--cd-line-faint);
   --line-soft: var(--cd-line-soft);
   --line: var(--cd-line);
@@ -442,6 +455,8 @@
   --shadow: var(--cd-shadow);
   --shadow-lg: var(--cd-shadow-lg);
   --shadow-pop: var(--cd-shadow-pop);
+  --accent-pigment: var(--terracotta);
+  --accent-pigment-text: var(--terracotta-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);
@@ -449,8 +464,8 @@
   --text-body: var(--ink-soft);
   --text-muted-color: var(--ink-muted);
   --text-on-ink: var(--paper);
-  --text-accent-color: var(--terracotta-deep);
-  --link: var(--indigo);
+  --text-accent-color: var(--accent-pigment-text);
+  --link: var(--accent-pigment-text);
   --border-card: var(--line-soft);
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
@@ -475,7 +490,7 @@
   --destructive: var(--terracotta-deep);
   --border: var(--line-soft);
   --input: var(--line-control);
-  --ring: var(--ink);
+  --ring: var(--accent-pigment-text);
   --chart-1: var(--terracotta);
   --chart-2: var(--moss);
   --chart-3: var(--indigo);
@@ -488,7 +503,27 @@
   --sidebar-accent: var(--paper-deep);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--line-faint);
-  --sidebar-ring: var(--ink);
+  --sidebar-ring: var(--accent-pigment-text);
+}
+
+[data-accent="terracotta"] {
+  --accent-pigment: var(--terracotta);
+  --accent-pigment-text: var(--terracotta-deep);
+}
+
+[data-accent="moss"] {
+  --accent-pigment: var(--moss);
+  --accent-pigment-text: var(--moss-deep);
+}
+
+[data-accent="indigo"] {
+  --accent-pigment: var(--indigo);
+  --accent-pigment-text: var(--indigo-deep);
+}
+
+[data-accent="gold"] {
+  --accent-pigment: var(--gold-deep);
+  --accent-pigment-text: var(--gold-text);
 }
 /* @quill-tokens:end */
 

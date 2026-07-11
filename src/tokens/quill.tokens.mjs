@@ -40,6 +40,10 @@ export const tokens = {
       gold: {
         base: { light: '#B89968', dark: '#D6BA86', classicLight: '#C49544', classicDark: '#E2B764' },
         deep: { light: '#9A7D4E', dark: '#E2CA9E', classicLight: '#A57928', classicDark: '#ECC883' },
+        // Gold is the one pigment whose deep cut can't carry TEXT duty on light
+        // grounds (3.3:1 on Dawn paper, 3.9:1 on white). This darker text cut
+        // clears 4.5:1 there; dark grounds reuse the deep cut (11:1+).
+        text: { light: '#826637', dark: '#E2CA9E', classicLight: '#996D18', classicDark: '#ECC883' },
       },
     },
     line: {
@@ -116,6 +120,19 @@ export const tokens = {
     text: '"opsz" 24, "SOFT" 50',
     caption: '"opsz" 14, "SOFT" 100',
   },
+  // User-selectable accent: which pigment carries the voice (eyebrows, accent
+  // italics, links, focus rings). Switched via data-accent="…" on <html>;
+  // terracotta is the default. `base` decorates (accent words, swatches);
+  // `text` is the AA-safe cut for text/ring duty — the deep cut everywhere
+  // except gold, whose deep cut fails 4.5:1 on light grounds (see gold.text).
+  accents: {
+    terracotta: { base: 'var(--terracotta)', text: 'var(--terracotta-deep)' },
+    moss: { base: 'var(--moss)', text: 'var(--moss-deep)' },
+    indigo: { base: 'var(--indigo)', text: 'var(--indigo-deep)' },
+    // Gold's base cut is 2.3:1 on light grounds — under even the 3:1 large-text
+    // bar — so gold's decorative cut is the deep one (3.3:1+ everywhere).
+    gold: { base: 'var(--gold-deep)', text: 'var(--gold-text)' },
+  },
   // Aliases → primitives (var references, keyed by CSS var name without `--`).
   semantic: {
     'surface-page': 'var(--paper)',
@@ -125,8 +142,8 @@ export const tokens = {
     'text-body': 'var(--ink-soft)',
     'text-muted-color': 'var(--ink-muted)',
     'text-on-ink': 'var(--paper)',
-    'text-accent-color': 'var(--terracotta-deep)', // fixed: was var(--terracotta) — see spec
-    'link': 'var(--indigo)',
+    'text-accent-color': 'var(--accent-pigment-text)', // follows the chosen accent (default terracotta-deep)
+    'link': 'var(--accent-pigment-text)', // links follow the accent (was fixed indigo pre-accent)
     'border-card': 'var(--line-soft)',
     'border-field': 'var(--line-control)',
     'border-divider': 'var(--line-faint)',
@@ -144,12 +161,12 @@ export const tokens = {
     'muted': 'var(--paper-deep)', 'muted-foreground': 'var(--ink-muted)',
     'accent': 'var(--paper-deep)', 'accent-foreground': 'var(--ink)',
     'destructive': 'var(--terracotta-deep)',
-    'border': 'var(--line-soft)', 'input': 'var(--line-control)', 'ring': 'var(--ink)',
+    'border': 'var(--line-soft)', 'input': 'var(--line-control)', 'ring': 'var(--accent-pigment-text)',
     'chart-1': 'var(--terracotta)', 'chart-2': 'var(--moss)', 'chart-3': 'var(--indigo)',
     'chart-4': 'var(--gold-deep)', 'chart-5': 'var(--ink-soft)',
     'sidebar': 'var(--paper-warm)', 'sidebar-foreground': 'var(--ink)',
     'sidebar-primary': 'var(--ink)', 'sidebar-primary-foreground': 'var(--paper)',
     'sidebar-accent': 'var(--paper-deep)', 'sidebar-accent-foreground': 'var(--ink)',
-    'sidebar-border': 'var(--line-faint)', 'sidebar-ring': 'var(--ink)',
+    'sidebar-border': 'var(--line-faint)', 'sidebar-ring': 'var(--accent-pigment-text)',
   },
 }

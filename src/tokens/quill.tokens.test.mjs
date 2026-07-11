@@ -19,9 +19,42 @@ test('scalars match current values', () => {
   assert.equal(tokens.fraunces.accent, '"opsz" 144, "SOFT" 100, "WONK" 1')
 })
 
-test('the accent alias is fixed to terracotta-deep (a11y)', () => {
-  assert.equal(tokens.semantic['text-accent-color'], 'var(--terracotta-deep)')
+test('accent aliases follow data-accent, defaulting to terracotta (a11y)', () => {
+  assert.equal(tokens.semantic['text-accent-color'], 'var(--accent-pigment-text)')
+  assert.equal(tokens.semantic.link, 'var(--accent-pigment-text)')
+  assert.equal(tokens.shadcn.ring, 'var(--accent-pigment-text)')
+  assert.equal(tokens.accents.terracotta.text, 'var(--terracotta-deep)')
+  // status colors do NOT follow the accent
   assert.equal(tokens.shadcn.destructive, 'var(--terracotta-deep)')
+  assert.equal(tokens.semantic.warning, 'var(--gold-deep)')
+})
+
+test('every accent text cut clears WCAG 4.5:1 on every theme ground (16 combos)', () => {
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+  const lum = (hex) =>
+    [1, 3, 5]
+      .map((i) => lin(parseInt(hex.slice(i, i + 2), 16) / 255))
+      .reduce((acc, c, i) => acc + c * [0.2126, 0.7152, 0.0722][i], 0)
+  const contrast = (a, b) => {
+    const [x, y] = [lum(a) + 0.05, lum(b) + 0.05]
+    return Math.max(x, y) / Math.min(x, y)
+  }
+  // 'var(--gold-text)' → tokens.color.pigment.gold.text etc.
+  const resolve = (ref, mode) => {
+    const [pigment, ...cut] = ref.replace(/^var\(--|\)$/g, '').split('-')
+    return tokens.color.pigment[pigment][cut.join('-') || 'base'][mode]
+  }
+  for (const mode of ['light', 'dark', 'classicLight', 'classicDark']) {
+    const ground = tokens.color.paper.base[mode]
+    for (const [name, accent] of Object.entries(tokens.accents)) {
+      const textCut = resolve(accent.text, mode)
+      const ratio = contrast(textCut, ground)
+      assert.ok(
+        ratio >= 4.5,
+        `accent '${name}' text cut ${textCut} is ${ratio.toFixed(2)}:1 on ${mode} ground ${ground} — links/eyebrows would fail AA`,
+      )
+    }
+  }
 })
 
 test('classic themes: pure grounds, +50%-chroma pigments, AA control borders', () => {
