@@ -111,15 +111,40 @@ that's an auto-layout child (use the up/down glyph instead).
 - **Code (source of truth):** 28 pattern stories under `src/stories/patterns/`
   (Auth/Forms/Data/State/Marketing/Shells/Nav) + a `Patterns / Overview` page.
 - **Figma:** patterns mirror onto `❖ <Name>` pages by composing real component **instances**
-  (with text overrides). Built so far: **`❖ Login`** (103:3, Input + Button instances),
-  **`❖ Stat cards`** (105:3, Badge instances), and — batch one, 2026-07-10 —
-  **`❖ Forgot password`** (182:2), **`❖ OTP verification`** (183:2, hand-built token-bound
-  slots), **`❖ Signup — social first`** (184:2, Separator divider), **`❖ Newsletter`**
-  (185:2, mail glyph imported as SVG, fills bound to muted-foreground). The rest follow the same recipe: instance the
-  components, override text/props, lay out with auto-layout, bind container tokens.
+  (with text overrides). Recipe: instance the components, override text/props, lay out with
+  auto-layout, bind container tokens (card fill→`shadcn/card`, stroke→`shadcn/border`,
+  radius→`corner-radius/xl`), and clear `fills = []` on every wrapper/glyph frame.
   - Quirk: a **destructive Badge instance** drops its 10%-opacity fill (renders solid) — re-apply
     `fills.map(p => ({...p, opacity: 0.1}))` on the instance, or use another variant.
 
+### Pattern pages built (all batches complete, 2026-07-10/11)
+
+| Batch | Page | Node | Notes |
+|---|---|---|---|
+| — | ❖ Login | 103:3 | Input + Button instances |
+| — | ❖ Stat cards | 105:3 | Badge instances |
+| 1 | ❖ Forgot password | 182:2 | |
+| 1 | ❖ OTP verification | 183:2 | hand-built token-bound slots |
+| 1 | ❖ Signup — social first | 184:2 | Separator divider; real GitHub/Google marks |
+| 1 | ❖ Newsletter | 185:2 | mail glyph as SVG, fill→muted-foreground |
+| 2 | ❖ Contact form | 200:2 | Input/Textarea/Select instances |
+| 2 | ❖ File upload | 201:2 | dashed dropzone + Progress instance |
+| 2 | ❖ Checkout | 203:2 | two-column form + order summary |
+| 2 | ❖ Stats band | 204:2 | |
+| 2 | ❖ Announcement banner | 205:2 | |
+| 3 | ❖ Team section | 207:2 | Avatar instances |
+| 3 | ❖ FAQ | 207:76 | Accordion instance |
+| 3 | ❖ Activity feed | 208:2 | timeline glyphs as SVG |
+| 3 | ❖ Invoice | 209:2 | table rows, tabular figures |
+| 3 | ❖ Calendar page | 210:2 | month grid + session list |
+| 3 | ❖ Calendar range | 211:2 | two-month range selection |
+| 3 | ❖ Analytics charts | 213:2 | area + bar charts via `createNodeFromSvg`, fills bound to pigment vars, 0.25 node opacity on areas |
+| 4 | ❖ Sidebar navigation | 214:2 | sidebar tokens (`shadcn/sidebar*`), per-side strokes |
+| 4 | ❖ Mail inbox | 215:2 | list + reading pane; Avatar/Badge/Input instances |
+| 4 | ❖ Login — split panel | 215:154 | primary brand panel + form; Button instance |
+| 4 | ❖ Login — minimal | 215:187 | arrow glyph in composed primary button |
+
 ## Next
 
-- Finish Wave B, then Wave C (overlays/compounds). Mirror key patterns into Figma.
+- Finish Wave B, then Wave C (overlays/compounds).
+- Visual QA sweep of pattern pages in light/dark modes.
