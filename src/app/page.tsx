@@ -227,7 +227,7 @@ export default function Home() {
           <div className="flex flex-col items-start gap-7 max-sm:gap-5">
             <Eyebrow dash>The Quill design system · Issue № 001</Eyebrow>
             <h1 className="m-0 font-display text-5xl font-normal leading-[1.05] tracking-[-0.03em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
-              A design system, made for <Accent>People</Accent>.
+              A design system, made for <Accent>people</Accent>.
             </h1>
             <p className="m-0 max-w-[540px] text-lg leading-[1.7] text-[var(--text-body)]">
               Textured digital paper, sepia ink, and four botanical pigments. Quill is designed for making interfaces
