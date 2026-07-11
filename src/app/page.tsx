@@ -209,8 +209,8 @@ export default function Home() {
           className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.07]"
           style={{ backgroundImage: "url('/home/declaration.webp')" }}
         />
-        <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] max-lg:grid-cols-1">
-          <div className="flex flex-col items-start gap-7">
+        <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-5 max-sm:pb-16">
+          <div className="flex flex-col items-start gap-7 max-sm:gap-5">
             <Eyebrow dash>The Quill design system · Issue № 001</Eyebrow>
             <h1 className="m-0 font-display text-5xl font-normal leading-[1.05] tracking-[-0.03em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
               A design system, made for <Accent>People</Accent>.
