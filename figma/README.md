@@ -22,6 +22,14 @@
 
 **Not managed here:** dark-mode elevation (Figma effect styles can't hold modes) — deferred to the component phase. Components, Code Connect, and patterns are later phases.
 
+## Re-synced 2026-07-10
+
+Re-run after the a11y token overhaul: created `color/line/control` (the solid
+field-border primitive added after the last sync), updated 18 colors / 44
+scalars / 47 semantic aliases / 14 text styles / 5 elevation styles in place.
+`border/field` and `shadcn/input` now alias `line/control`. Zero new objects
+besides the one genuinely new variable — idempotency verified.
+
 ## Built (verified 2026-07-02)
 
 - `Quill Primitives` collection, modes **Light/Dark** — **67 variables**:
