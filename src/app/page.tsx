@@ -618,11 +618,6 @@ export default function Home() {
             <Logo />
             <span className="text-sm text-[var(--text-body)]">— A design system, made for people.</span>
           </div>
-          <div className="flex items-center gap-7">
-            <a href={STORYBOOK_URL} className={navLink}>Storybook</a>
-            <a href="https://github.com/craftwell-ai/quill-ds" className={navLink}>GitHub</a>
-            <a href="#foundations" className={navLink}>Foundations</a>
-          </div>
           <span className="font-display text-sm italic text-[var(--text-muted-color)] [font-variation-settings:var(--fraunces-caption)]">
             v{packageJson.version}
           </span>

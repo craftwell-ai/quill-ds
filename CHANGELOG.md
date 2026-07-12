@@ -9,6 +9,12 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.2] — 2026-07-11
+
+### Changed
+- Footer drops the nav links (Storybook / GitHub / Foundations) — logo and
+  tagline left, version stamp right.
+
 ## [0.2.1] — 2026-07-11
 
 ### Changed
