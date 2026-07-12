@@ -337,7 +337,7 @@ export default function Home() {
               </Button>
             </div>
             <p className="m-0 mt-1 font-display text-sm italic text-[var(--text-muted-color)] [font-variation-settings:var(--fraunces-caption)]">
-              Architected for agentic deployments.
+              Optimized for agentic development.
             </p>
           </div>
           <figure className="m-0 flex flex-col items-center gap-5 max-lg:hidden">

@@ -9,6 +9,11 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.4] — 2026-07-11
+
+### Changed
+- Hero caption reads "Optimized for agentic development."
+
 ## [0.2.3] — 2026-07-11
 
 ### Changed
