@@ -624,7 +624,7 @@ export default function Home() {
             <a href="#foundations" className={navLink}>Foundations</a>
           </div>
           <span className="font-display text-sm italic text-[var(--text-muted-color)] [font-variation-settings:var(--fraunces-caption)]">
-            Quill v{packageJson.version}
+            v{packageJson.version}
           </span>
         </div>
       </footer>
