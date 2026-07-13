@@ -19,10 +19,11 @@ test('scalars match current values', () => {
   assert.equal(tokens.fraunces.accent, '"opsz" 144, "SOFT" 100, "WONK" 1')
 })
 
-test('accent aliases follow data-accent, defaulting to terracotta (a11y)', () => {
+test('accent aliases follow data-accent, defaulting to moss (a11y)', () => {
   assert.equal(tokens.semantic['text-accent-color'], 'var(--accent-pigment-text)')
   assert.equal(tokens.semantic.link, 'var(--accent-pigment-text)')
   assert.equal(tokens.shadcn.ring, 'var(--accent-pigment-text)')
+  assert.equal(tokens.accents.moss.text, 'var(--moss-deep)')
   assert.equal(tokens.accents.terracotta.text, 'var(--terracotta-deep)')
   // status colors do NOT follow the accent
   assert.equal(tokens.shadcn.destructive, 'var(--terracotta-deep)')

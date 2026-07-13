@@ -101,7 +101,7 @@ the whole token layer flips, **no JS required**. In apps, the `ThemeSelector`
 block (`registry/blocks/theme-selector.tsx`) owns the attribute: after hydration
 it reads the stored choice from `localStorage` (`quill-theme`, plus `quill-accent`
 for the accent pigment) and stamps `<html>` — prerendered markup is always
-Dawn/terracotta.
+Dawn/moss.
 
 > **Implementation contract.** Values live once in a `--dk-*` set on `:root`
 > (inert in Dawn — nothing reads them). A single `[data-theme="dark"]`

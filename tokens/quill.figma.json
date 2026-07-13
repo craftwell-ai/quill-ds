@@ -632,7 +632,7 @@
         "$value": "{Primitives.color.paper.base}"
       },
       "text-accent-color": {
-        "$value": "{Primitives.color.pigment.terracotta.deep}"
+        "$value": "{Primitives.color.pigment.moss.deep}"
       }
     },
     "surface": {
@@ -659,7 +659,7 @@
     },
     "status": {
       "link": {
-        "$value": "{Primitives.color.pigment.terracotta.deep}"
+        "$value": "{Primitives.color.pigment.moss.deep}"
       },
       "success": {
         "$value": "{Primitives.color.pigment.moss.deep}"
@@ -727,7 +727,7 @@
         "$value": "{Primitives.color.line.control}"
       },
       "ring": {
-        "$value": "{Primitives.color.pigment.terracotta.deep}"
+        "$value": "{Primitives.color.pigment.moss.deep}"
       },
       "chart-1": {
         "$value": "{Primitives.color.pigment.terracotta.base}"
@@ -766,7 +766,7 @@
         "$value": "{Primitives.color.line.faint}"
       },
       "sidebar-ring": {
-        "$value": "{Primitives.color.pigment.terracotta.deep}"
+        "$value": "{Primitives.color.pigment.moss.deep}"
       }
     }
   }

@@ -120,8 +120,8 @@
   --fraunces-accent: "opsz" 144, "SOFT" 100, "WONK" 1;
   --fraunces-text: "opsz" 24, "SOFT" 50;
   --fraunces-caption: "opsz" 14, "SOFT" 100;
-  --accent-pigment: var(--terracotta);
-  --accent-pigment-text: var(--terracotta-deep);
+  --accent-pigment: var(--moss);
+  --accent-pigment-text: var(--moss-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);
@@ -297,8 +297,8 @@
   --shadow: var(--dk-shadow);
   --shadow-lg: var(--dk-shadow-lg);
   --shadow-pop: var(--dk-shadow-pop);
-  --accent-pigment: var(--terracotta);
-  --accent-pigment-text: var(--terracotta-deep);
+  --accent-pigment: var(--moss);
+  --accent-pigment-text: var(--moss-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);
@@ -376,8 +376,8 @@
   --shadow: var(--cl-shadow);
   --shadow-lg: var(--cl-shadow-lg);
   --shadow-pop: var(--cl-shadow-pop);
-  --accent-pigment: var(--terracotta);
-  --accent-pigment-text: var(--terracotta-deep);
+  --accent-pigment: var(--moss);
+  --accent-pigment-text: var(--moss-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);
@@ -455,8 +455,8 @@
   --shadow: var(--cd-shadow);
   --shadow-lg: var(--cd-shadow-lg);
   --shadow-pop: var(--cd-shadow-pop);
-  --accent-pigment: var(--terracotta);
-  --accent-pigment-text: var(--terracotta-deep);
+  --accent-pigment: var(--moss);
+  --accent-pigment-text: var(--moss-deep);
   --surface-page: var(--paper);
   --surface-card: var(--paper-warm);
   --surface-well: var(--paper-deep);

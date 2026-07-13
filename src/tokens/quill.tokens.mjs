@@ -122,7 +122,7 @@ export const tokens = {
   },
   // User-selectable accent: which pigment carries the voice (eyebrows, accent
   // italics, links, focus rings). Switched via data-accent="…" on <html>;
-  // terracotta is the default. `base` decorates (accent words, swatches);
+  // moss is the default. `base` decorates (accent words, swatches);
   // `text` is the AA-safe cut for text/ring duty — the deep cut everywhere
   // except gold, whose deep cut fails 4.5:1 on light grounds (see gold.text).
   accents: {
@@ -142,7 +142,7 @@ export const tokens = {
     'text-body': 'var(--ink-soft)',
     'text-muted-color': 'var(--ink-muted)',
     'text-on-ink': 'var(--paper)',
-    'text-accent-color': 'var(--accent-pigment-text)', // follows the chosen accent (default terracotta-deep)
+    'text-accent-color': 'var(--accent-pigment-text)', // follows the chosen accent (default moss-deep)
     'link': 'var(--accent-pigment-text)', // links follow the accent (was fixed indigo pre-accent)
     'border-card': 'var(--line-soft)',
     'border-field': 'var(--line-control)',

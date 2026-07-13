@@ -72,8 +72,8 @@ export function renderCss(t) {
   // (an island re-cuts the default accent to its own theme; pair a
   // data-accent attribute with data-theme for accented islands).
   const accentDefaultLines = [
-    `  --accent-pigment: ${t.accents.terracotta.base};`,
-    `  --accent-pigment-text: ${t.accents.terracotta.text};`,
+    `  --accent-pigment: ${t.accents.moss.base};`,
+    `  --accent-pigment-text: ${t.accents.moss.text};`,
   ]
   const aliasLines = [
     ...accentDefaultLines,
@@ -203,9 +203,9 @@ export function renderDtcg(t) {
   }
   buildMap(t.color, [])
   // Accent aliases are runtime-switchable (data-accent); Figma variables are
-  // not, so the DTCG export pins them to the default (terracotta) pigment.
-  varToDtcg['--accent-pigment'] = 'Primitives.color.pigment.terracotta.base'
-  varToDtcg['--accent-pigment-text'] = 'Primitives.color.pigment.terracotta.deep'
+  // not, so the DTCG export pins them to the default (moss) pigment.
+  varToDtcg['--accent-pigment'] = 'Primitives.color.pigment.moss.base'
+  varToDtcg['--accent-pigment-text'] = 'Primitives.color.pigment.moss.deep'
 
   // var(--x) → DTCG alias using the real primitive path from the lookup map.
   const alias = (ref) => {
