@@ -9,6 +9,19 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.5] — 2026-07-13
+
+### Changed
+- "Paper first" principle card reads "Every surface, a texture you can almost
+  feel with a typeset that has an unhurried editorial rhythm." — the old copy
+  claimed "no pure white, no pure black," which the Classic themes now
+  contradict.
+- DESIGN.md caught up with the four-theme reality: themes are named Dawn and
+  Dusk, the no-pure-white/black rule is scoped to the brand themes with the
+  Classics documented as the sanctioned exception, the paper metaphor is
+  explicitly digital paper, and the token source of truth points to
+  `src/tokens/quill.tokens.mjs` instead of dead paths.
+
 ## [0.2.4] — 2026-07-11
 
 ### Changed

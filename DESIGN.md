@@ -5,9 +5,10 @@ Everything an agent or developer needs to design on-brand: voice, color, type,
 spacing, effects, components, iconography, and assets. Distilled from the live
 token files and component sources in this project.
 
-> **Brand in one line:** a naturalist's sketchbook — pressed cream paper, soft
-> sepia ink, hand-drawn portraits, and a small cast of botanical pigments used
-> sparingly. **No pure white, no pure black, no emoji, no decorative gradients.**
+> **Brand in one line:** a naturalist's sketchbook — pressed cream digital paper,
+> soft sepia ink, hand-drawn portraits, and a small cast of botanical pigments used
+> sparingly. **No pure white, no pure black (Classic themes excepted — §3), no
+> emoji, no decorative gradients.**
 
 **Related files**
 - `styles.css` — the single entry point consumers link (imports every token + font).
@@ -21,22 +22,24 @@ token files and component sources in this project.
 
 ## 1. Brand & product context
 
-**Quill** is the design system behind Craftwell — a digital e-comm, product & AI
-solutions company. The brand feels printed, collected, and kept. The voice is
+**Quill** is the design system for digital products. The brand feels printed, collected, and kept. The voice is
 that of a letterpress shop that sells apps — warm, unhurried, quietly confident.
 
-Source of truth for the visual language: `uploads/marketplace-preview.html`. If
-a dedicated brand-source repo ever lands, it supersedes values here.
+Source of truth for all token values: `src/tokens/quill.tokens.mjs` — edit
+there, then `npm run build:tokens` regenerates the CSS token blocks, the Figma
+token JSON, and the generated exports.
 
 ---
 
 ## 2. Color
 
-No true white or black anywhere — everything sits on paper. Three **papers**
+No true white or black in the brand themes — everything sits on digital paper.
+The values below are **Dawn**, the default theme. Three **digital papers**
 (grounds), three **inks** (text), four **pigments** (accents, used like a single
-colored pencil on a graphite page).
+colored pencil on a graphite page). The Classic themes (§3) deliberately swap
+this palette for pure neutrals.
 
-### Papers — surfaces / grounds
+### Digital papers — surfaces / grounds
 | Token | Hex | Use |
 |---|---|---|
 | `--paper` | `#F5EDDD` | base page — pressed cream |
@@ -58,7 +61,7 @@ colored pencil on a graphite page).
 | `--indigo` | `#5B6B8A` | `#44516D` | "featured" tier, links, info |
 | `--gold` | `#B89968` | `#9A7D4E` | highlight, warning |
 
-### Hairlines — ink at low alpha over paper
+### Hairlines — ink at low alpha over digital paper
 `--line-faint` (ink 8%) · `--line-soft` (12%) · `--line` (15%) · `--line-strong` (20%).
 Borders are always ink-at-alpha, never a solid grey.
 
@@ -79,41 +82,44 @@ Borders are always ink-at-alpha, never a solid grey.
 
 ---
 
-## 3. Dark mode
+## 3. Dusk — the dark theme
 
-The sketchbook, closed at dusk and opened again under a desk lamp. An **added
-theme**, not the default — grounds become **dark walnut** (deep, warm, low-chroma
-browns, like oiled wood and aged leather) and the sepia ink inverts to a warm
-**cream** that sits on the wood the way chalk or gouache would. The warmth of the
-light theme is preserved, just turned down for the evening. **Still no pure black,
-no pure white, no cold greys.** Source of truth: `tokens/dark.css`.
+The sketchbook, closed at dusk and opened again under a desk lamp — hence the
+name. **Dusk** is an added theme, not the default (**Dawn**) — grounds become
+**dark walnut** (deep, warm, low-chroma browns, like oiled wood and aged leather)
+and the sepia ink inverts to a warm **cream** that sits on the wood the way chalk
+or gouache would. The warmth of Dawn is preserved, just turned down for the
+evening. **Still no pure black, no pure white, no cold greys.** Source of truth:
+`src/tokens/quill.tokens.mjs` (`npm run build:tokens` regenerates
+`registry/themes/quill.css` and `src/app/globals.css`).
 
 ### Activation
-Dark is a **token remap under `[data-theme="dark"]`** on a parent (usually
-`<html>`); `[data-theme="light"]` forces light. Set the attribute and the whole
-token layer flips, **no JS required**. *“Follow the OS by default”* is delivered by
-resolving `prefers-color-scheme` into that attribute at load: a tiny theme
-controller (see `ui_kits/marketplace/index.html`) reads the stored choice, else
-the OS, stamps `data-theme` on `<html>` before first paint, then keeps it in sync
-until the user picks explicitly. A `?theme=light|dark` URL param pins a view
-(non-persistent) for previews.
+Themes are **token remaps under `data-theme`** on a parent (usually `<html>`):
+no attribute = **Dawn** (default), `data-theme="dark"` = **Dusk**, plus
+`data-theme="classic-light"` / `data-theme="classic-dark"`. Set the attribute and
+the whole token layer flips, **no JS required**. In apps, the `ThemeSelector`
+block (`registry/blocks/theme-selector.tsx`) owns the attribute: after hydration
+it reads the stored choice from `localStorage` (`quill-theme`, plus `quill-accent`
+for the accent pigment) and stamps `<html>` — prerendered markup is always
+Dawn/terracotta.
 
 > **Implementation contract.** Values live once in a `--dk-*` set on `:root`
-> (inert in light mode — nothing reads them). A single `[data-theme="dark"]`
+> (inert in Dawn — nothing reads them). A single `[data-theme="dark"]`
 > selector remaps the real semantic tokens to them, so there is **one source of
-> truth** per dark color and every component inherits dark for free — author
+> truth** per dark color and every component inherits Dusk for free — author
 > against the semantic tokens (`--paper`, `--ink`, `--terracotta`…), never the
-> `--dk-*` values directly.
+> `--dk-*` values directly. The Classic themes follow the same pattern with
+> `--cl-*` / `--cd-*` sets.
 
 ### Walnut grounds — surfaces
-| Token | Light | Dark | Use |
+| Token | Dawn | Dusk | Use |
 |---|---|---|---|
 | `--paper` | `#F5EDDD` | `#20180E` | base page — deep oiled walnut |
 | `--paper-warm` | `#EFE4CE` | `#2A2014` | cards, raised surfaces |
 | `--paper-deep` | `#E8DCC0` | `#352A1A` | wells, muted chips, image backdrops |
 
 ### Cream ink — text / strokes
-| Token | Light | Dark | Use |
+| Token | Dawn | Dusk | Use |
 |---|---|---|---|
 | `--ink` | `#2A2622` | `#F1E7D3` | primary text — warm chalk cream |
 | `--ink-soft` | `#5C524A` | `#C8B9A0` | secondary text, body at ease |
@@ -121,12 +127,12 @@ until the user picks explicitly. A `?theme=light|dark` URL param pins a view
 
 ### Lifted pigments
 Brightened and slightly desaturated so they read like colored pencil on a dark
-page instead of disappearing into it. **In dark, the `-deep` variant is the
+page instead of disappearing into it. **In Dusk, the `-deep` variant is the
 *brighter* one** — it does the work of legible accent text on tinted fills,
 feedback colors, and hover-lighten states, where a darker pressed tone would
 vanish on walnut.
 
-| Token | Light | Dark | `-deep` (light → dark) |
+| Token | Dawn | Dusk | `-deep` (Dawn → Dusk) |
 |---|---|---|---|
 | `--terracotta` | `#C4684B` | `#DB8568` | `#944A33` → `#E89A80` |
 | `--moss` | `#7A8C5C` | `#A2B57E` | `#5E6E43` → `#B6C896` |
@@ -146,13 +152,13 @@ Same principle as light (ink-at-alpha), inverted to cream-at-alpha.
 | Heirloom | terracotta @15% | `--terracotta-deep` (lifted) |
 
 ### Elevation — deeper, warmer near-black
-Shadows rebuild on warm near-black `rgba(8,5,3,…)` at higher alpha than light
+Shadows rebuild on warm near-black `rgba(8,5,3,…)` at higher alpha than Dawn
 (walnut needs more contrast to lift a surface): `--shadow-xs` 0.40 →
 `--shadow-pop` up to 0.72, plus `--shadow-btn-hover`. Same layered, negative-spread
 structure as light — never a hard black drop.
 
 ### Texture & focus
-- **Grain inverts.** The light `multiply` grain would vanish on walnut, so dark
+- **Grain inverts.** The Dawn `multiply` grain would vanish on walnut, so Dusk
   swaps `.paper-grain` to a **light fractal under `mix-blend-mode: screen`**
   (opacity ~0.22) — the tooth reads as a faint highlight instead of a shadow.
   `.paper-specks` drops to ~0.10.
@@ -160,12 +166,19 @@ structure as light — never a hard black drop.
   `--focus-ring-danger` lifted-terracotta 22%. `--scrim` warm near-black 62%.
 - `color-scheme: dark` is set so native form controls and scrollbars follow.
 
-### Do / Don't (dark)
-**Do** — author against semantic tokens so dark is free; trust the lifted `-deep`
+### Do / Don't (Dusk)
+**Do** — author against semantic tokens so Dusk is free; trust the lifted `-deep`
 pigments for accent text on tints; keep focus rings cream-neutral; let the screen-
-blend grain carry the paper tooth. **Don't** — reference `--dk-*` directly in
-components; reintroduce pure `#000`/`#FFF`; darken pigments for dark (they lift);
-keep the multiply grain (it disappears).
+blend grain carry the digital paper tooth. **Don't** — reference `--dk-*` directly
+in components; reintroduce pure `#000`/`#FFF`; darken pigments for Dusk (they
+lift); keep the multiply grain (it disappears).
+
+### Classic themes — the sanctioned exception
+`classic-light` and `classic-dark` trade the sketchbook palette for conventional
+neutrals: pure `#FFFFFF` / `#000000` grounds, neutral greys, and no digital paper
+grain (both texture overlays are disabled). Use them where the brand look isn't
+wanted; the no-pure-white/black rule applies only to Dawn & Dusk. Values live in
+the `--cl-*` / `--cd-*` sets.
 
 ---
 
@@ -256,7 +269,7 @@ Shadows are built from sepia ink `rgba(42,38,34,…)` at low alpha with negative
 - No bounces, no infinite loops, no parallax. Arrows slide `+4px` on hover.
 
 ### Texture — the tooth of the page
-Two fixed, pointer-events-none overlays give surfaces paper grain:
+Two fixed, pointer-events-none overlays give surfaces digital paper grain:
 - `.paper-grain` — fractal-noise SVG (`--grain-noise`), opacity ~0.4, `mix-blend-mode: multiply`.
 - `.paper-specks` — faint radial-dot speck layer, opacity ~0.15.
 Place both as fixed siblings in the app shell (skip on dense dashboards).
@@ -325,7 +338,7 @@ Sizes `sm` (32) / `md` (44) / `lg` (64).
 ```
 
 ### Card — `components/surfaces/Card.jsx`
-Base paper surface. `interactive` adds the hover-lift; `flush` removes padding and
+Base digital paper surface. `interactive` adds the hover-lift; `flush` removes padding and
 clips children for full-bleed media.
 ```jsx
 <Card interactive>…</Card>
@@ -390,11 +403,12 @@ Sample microcopy: headline *"Tools, made by **hand**."* · CTA *"Save me a deck"
 
 ## 11. Do / Don't
 
-**Do** — sit everything on paper; reserve terracotta for the one accent word, the
+**Do** — sit everything on digital paper; reserve terracotta for the one accent word, the
 primary CTA's hover, and the hero `accent` button; use **ink** for primary actions
 and focus; warm layered shadows; Fraunces light + tight for headings; hand-drawn
 portraits; typographic glyphs over icons.
 
-**Don't** — pure white (`#FFF`) or pure black (`#000`); terracotta focus rings
+**Don't** — pure white (`#FFF`) or pure black (`#000`) in Dawn & Dusk (the
+Classic themes use them by design); terracotta focus rings
 (reads as error); terracotta on every hover; blue-purple gradients; emoji; heavy
 or bold Fraunces; tight body leading; bouncy or looping motion; stock photography.

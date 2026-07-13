@@ -560,7 +560,7 @@ export default function Home() {
         <div className="mx-auto max-w-[1400px] px-12 pb-24 max-sm:px-6 max-sm:pb-14">
           <div className="grid grid-cols-3 gap-12 border-t border-[var(--line-soft)] pt-12 max-md:grid-cols-1 max-sm:gap-8 max-sm:pt-8">
             {[
-              ["№ 01", "Paper first", "No pure white, no pure black. Every surface is pressed cream; every shadow is warm ink, never a hard drop."],
+              ["№ 01", "Paper first", "Every surface, a texture you can almost feel with a typeset that has an unhurried editorial rhythm."],
               ["№ 02", "One italic word", "Emphasis is earned. A single accented italic per headline — never two, never shouted."],
               ["№ 03", "A gentle settle", "Hovers lift, presses set down. Nothing bounces, nothing loops, nothing hurries you along."],
             ].map(([num, title, body]) => (
