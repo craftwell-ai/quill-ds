@@ -65,8 +65,8 @@ const isTheme = (v: unknown): v is ThemeValue => THEME_OPTIONS.some((t) => t.val
 // Accent: which pigment carries eyebrows, accent words, links, and focus
 // rings. Swatches use the pigment vars so they re-cut with the theme.
 const ACCENT_OPTIONS = [
-  { value: "terracotta", label: "Terracotta", swatchVar: "var(--terracotta)" },
   { value: "moss", label: "Moss", swatchVar: "var(--moss)" },
+  { value: "terracotta", label: "Terracotta", swatchVar: "var(--terracotta)" },
   { value: "indigo", label: "Indigo", swatchVar: "var(--indigo)" },
   { value: "gold", label: "Gold", swatchVar: "var(--gold)" },
 ] as const;
@@ -164,7 +164,7 @@ function Swatch({ color, pill = false, bordered = false }: { color: string; pill
 
 export default function Home() {
   const [theme, setTheme] = useState<ThemeValue>("light");
-  const [accent, setAccent] = useState<AccentValue>("terracotta");
+  const [accent, setAccent] = useState<AccentValue>("moss");
   const [specimenOn, setSpecimenOn] = useState(true);
 
   useEffect(() => {
@@ -318,7 +318,7 @@ export default function Home() {
           className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.07] saturate-0 dark:invert [[data-theme=dark]_&]:opacity-[0.035]"
           style={{ backgroundImage: "url('/home/declaration.webp')" }}
         />
-        <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-[15px] max-sm:pb-16">
+        <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] lg:pt-[68px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-[15px] max-sm:pb-16">
           <div className="flex flex-col items-start gap-7 max-sm:gap-5">
             <Eyebrow dash>The Quill design system · Issue № 001</Eyebrow>
             <h1 className="m-0 font-display text-5xl font-normal leading-[1.05] tracking-[-0.03em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">

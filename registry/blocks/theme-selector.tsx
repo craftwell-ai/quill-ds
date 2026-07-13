@@ -21,8 +21,8 @@ export const quillThemes = [
 
 // Swatch classes are static strings so Tailwind can see them.
 export const quillAccents = [
-  { value: 'terracotta', label: 'Terracotta', swatch: 'bg-terracotta' },
   { value: 'moss', label: 'Moss', swatch: 'bg-moss' },
+  { value: 'terracotta', label: 'Terracotta', swatch: 'bg-terracotta' },
   { value: 'indigo', label: 'Indigo', swatch: 'bg-indigo-brand' },
   { value: 'gold', label: 'Gold', swatch: 'bg-gold' },
 ] as const
@@ -69,7 +69,7 @@ export function ThemeSelector({
   accentStorageKey?: string
 }) {
   const [internalTheme, setInternalTheme] = useState<ThemeValue>('light')
-  const [internalAccent, setInternalAccent] = useState<AccentValue>('terracotta')
+  const [internalAccent, setInternalAccent] = useState<AccentValue>('moss')
   const themeControlled = value !== undefined
   const accentControlled = accent !== undefined
   const theme = themeControlled ? value : internalTheme
@@ -77,7 +77,7 @@ export function ThemeSelector({
   const active = quillThemes.find((t) => t.value === theme) ?? quillThemes[0]
 
   useEffect(() => {
-    // Read post-hydration: prerendered markup is always Dawn/terracotta, so
+    // Read post-hydration: prerendered markup is always Dawn/moss, so
     // reading storage during render would mismatch.
     let storedTheme: string | null = null
     let storedAccent: string | null = null

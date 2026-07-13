@@ -20,7 +20,7 @@ type Story = StoryObj
 // the block sets both attributes on <html> and persists to localStorage.
 function Demo() {
   const [theme, setTheme] = useState<ThemeValue>('light')
-  const [accent, setAccent] = useState<AccentValue>('terracotta')
+  const [accent, setAccent] = useState<AccentValue>('moss')
   return (
     <div
       data-theme={theme}

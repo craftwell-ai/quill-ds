@@ -9,6 +9,18 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.6] — 2026-07-13
+
+### Changed
+- **Default accent is Moss** (was Terracotta) — `--accent-pigment` /
+  `--accent-pigment-text` now resolve to moss/moss-deep in `:root` and every
+  theme block; the Figma token export pins to `moss.deep`. Stored user choices
+  still win; `data-accent` switching is unchanged.
+- Moss moved to first position in the accent list of the theme dropdown (both
+  the `theme-selector` registry block and the homepage nav).
+- Hero content sits 20px lower on desktop (`lg:` and up); tablet and mobile
+  unchanged.
+
 ## [0.2.5] — 2026-07-13
 
 ### Changed

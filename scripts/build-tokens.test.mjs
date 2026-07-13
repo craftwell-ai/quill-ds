@@ -29,7 +29,7 @@ test('renderCss reproduces primitive + dk + remap declarations', () => {
   assert.match(dark, /--paper:\s*var\(--dk-paper\);/)
   // semantic + shadcn present in :root
   assert.match(root, /--text-accent-color:\s*var\(--accent-pigment-text\);/)
-  assert.match(root, /--accent-pigment-text:\s*var\(--terracotta-deep\);/)
+  assert.match(root, /--accent-pigment-text:\s*var\(--moss-deep\);/)
   assert.match(root, /--destructive:\s*var\(--terracotta-deep\);/)
   // @theme mappings + scale
   assert.match(theme, /--color-terracotta:\s*var\(--terracotta\);/)
@@ -137,9 +137,9 @@ test('DTCG export types + modes + Figma-friendly grouping', () => {
       return node[seg]
     }, d)
   }
-  // spot-check: text-accent-color must resolve to Primitives.color.pigment.terracotta.deep
+  // spot-check: text-accent-color must resolve to Primitives.color.pigment.moss.deep
   const accentAlias = d.Theme.text['text-accent-color']
-  assert.equal(accentAlias.$value, '{Primitives.color.pigment.terracotta.deep}')
+  assert.equal(accentAlias.$value, '{Primitives.color.pigment.moss.deep}')
   const accentLeaf = resolveAlias(accentAlias.$value)
   assert.equal(accentLeaf.$type, 'color', `text-accent-color alias did not resolve to a color leaf`)
   // iterate every Theme.*.*  alias and assert it resolves to a leaf with $type
