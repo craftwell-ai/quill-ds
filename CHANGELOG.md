@@ -9,6 +9,20 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.8] — 2026-07-20
+
+### Changed
+- Dependency sweep: all runtime and dev dependencies updated to latest —
+  notably @base-ui/react 1.6, shadcn 4.13 (registry rebuilt), Storybook 10.5.3,
+  react-day-picker 10, Next 16.2.10, React 19.2.7, Tailwind 4.3.3, vitest 4.1.10,
+  Playwright 1.61.
+- Calendar: `table` classNames key renamed to `month_grid` for react-day-picker
+  10 (the old key was removed upstream; visual output unchanged).
+- Held back: TypeScript stays on 5.9 and ESLint on 9.39 — `eslint-config-next`
+  16.2 (typescript-eslint, eslint-plugin-import/react/jsx-a11y) does not yet
+  support TS 7 / ESLint 10. `@types/node` pinned to ^24 to match the Node 24
+  runtime used locally and in CI.
+
 ## [0.2.7] — 2026-07-13
 
 ### Changed
