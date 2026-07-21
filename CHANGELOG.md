@@ -9,6 +9,17 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.11] — 2026-07-20
+
+### Added
+- Figma Wave C complete (16/16 overlays/compounds), each token-bound on its own
+  `❖` page: Dialog, Alert Dialog, Sheet (Right/Bottom), Drawer, Popover,
+  Hover Card, Dropdown Menu, Context Menu, Menubar, Command, Combobox,
+  Toggle Group, Slider, Input OTP, Table, Toast (Default/Success/Destructive).
+  Composes existing component instances (Button, Badge, Avatar, Label, Input,
+  Kbd, icons) throughout; deferrals and build lessons recorded in
+  `figma/components/README.md`.
+
 ## [0.2.10] — 2026-07-20
 
 ### Added

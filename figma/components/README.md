@@ -175,14 +175,34 @@ resolve through the Primitives modes. FLOAT/STRING variables are mode-independen
 (new modes inherit the default-mode value). Note: 4 modes is the Professional-plan
 ceiling — a fifth theme would need an Org plan or a second collection.
 
+## Wave C (overlays/compounds) — 16/16 done (2026-07-20)
+
+| Component | Page | Notes |
+|---|---|---|
+| Dialog | ❖ Dialog | popover surface + foreground/10 ring + Elevation/base; full-bleed muted/50 footer with **Button instances** (Cancel/Save) |
+| AlertDialog | ❖ Alert Dialog | destructive Button instance (10%-opacity fill re-applied — same instance quirk as Badge) |
+| Sheet | ❖ Sheet | Side=Right (320×420, border-l, stacked full-width buttons) / Side=Bottom (border-t, footer row) |
+| Drawer | ❖ Drawer | bottom, rounded-t-xl, muted grab handle, stacked footer buttons |
+| Popover | ❖ Popover | w-72, p-2.5; title/desc + Label/Input instances row |
+| HoverCard | ❖ Hover Card | w-64; Avatar instance + name/bio/joined (fixed primary-axis width — hug collapses horizontal shells) |
+| DropdownMenu | ❖ Dropdown Menu | p-1 groups, rounded-md items, icons + ⌘-shortcuts, separator, destructive item |
+| ContextMenu | ❖ Context Menu | no-icon items, disabled row at 50% opacity, destructive Delete |
+| Menubar | ❖ Menubar | h-8 bordered bar, p-[3px] (literal in code too), gap-0.5 triggers |
+| Command | ❖ Command | rounded-xl + Elevation/lg; h-10 search row, group labels, selected item bg-muted |
+| Combobox | ❖ Combobox | embedded search m-1 bg/border input@30%; checked option via icon/check |
+| ToggleGroup | ❖ Toggle Group | 3 icon toggles (format_bold/italic/underlined), middle pressed bg-muted |
+| Slider | ❖ Slider | absolute layout: track input, range primary, thumb background + ring stroke |
+| InputOTP | ❖ Input OTP | two fused 3-slot groups (border collapse like ButtonGroup) + icon/remove dash |
+| Table | ❖ Table | h-10 rows, border-b, Badge instances for status, right-aligned amounts |
+| Toast | ❖ Toast | Variant: Default/Success/Destructive; icons check_circle→status/success, dangerous→destructive |
+
+Deferred with reasons: Navigation Menu (complex marketing nav, low app value),
+Calendar (already mocked in two pattern pages), Carousel/Chart (SVG-heavy; charts
+live in the Analytics pattern), Scroll Area/Resizable/Collapsible (interaction-only),
+Empty/Item (trivial wrappers), Native Select (visually = Select), Sidebar (exists
+as pattern).
+
 ## Next
 
-- **Wave C (overlays/compounds), locked scope:** Dialog, Alert Dialog, Sheet, Drawer,
-  Popover, Hover Card, Dropdown Menu, Context Menu, Menubar, Command, Combobox,
-  Toggle Group, Slider, Input OTP, Table, Toast (Sonner).
-  Deferred with reasons: Navigation Menu (complex marketing nav, low app value),
-  Calendar (already mocked in two pattern pages), Carousel/Chart (SVG-heavy; charts
-  live in the Analytics pattern), Scroll Area/Resizable/Collapsible (interaction-only),
-  Empty/Item (trivial wrappers), Native Select (visually = Select), Sidebar (exists
-  as pattern).
-- Visual QA sweep of pattern pages in light/dark modes.
+- Code Connect for Waves A–C — still blocked by plan (mappings ready).
+- Visual QA sweep of component + pattern pages in light/dark modes.
