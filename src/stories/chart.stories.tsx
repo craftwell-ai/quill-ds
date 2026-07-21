@@ -19,7 +19,7 @@ const chartData = [
 ]
 
 const chartConfig = {
-  lessons: { label: 'Lessons', color: 'var(--terracotta)' },
+  lessons: { label: 'Lessons', color: 'var(--chart-1)' },
 }
 
 const multiSeriesData = [
@@ -32,8 +32,8 @@ const multiSeriesData = [
 ]
 
 const multiSeriesConfig = {
-  lessons: { label: 'Lessons', color: 'var(--terracotta)' },
-  completions: { label: 'Completions', color: 'var(--moss)' },
+  lessons: { label: 'Lessons', color: 'var(--chart-1)' },
+  completions: { label: 'Completions', color: 'var(--chart-2)' },
 }
 
 const meta = {
@@ -46,10 +46,15 @@ const meta = {
       description: {
         component: `
 ### Design tokens
-\`--terracotta\` · \`--moss\` · \`--indigo\` · \`--gold\` — mapped to \`--chart-1\` through \`--chart-4\`
+Series colors come from the chart-only cuts \`--chart-1\` … \`--chart-5\` (aliases of
+\`--chart-series-1..5\`) — **never raw pigments**, which fail colorblind-safety checks as data
+marks. Magnitude ramps (\`--chart-seq-1..5\`) and polarity ramps (\`--chart-div-1..5\`) are
+documented in **Foundations / Colors**. All chart tokens re-cut per theme automatically.
 
 ### Rules
-Chart colors use the Quill pigment palette. Pass a \`config\` object mapping data keys to labels and colors.
+Assign series colors in fixed order (\`--chart-1\` first, then \`2\`, …) and never reorder the
+survivors when a filter drops a series. Prefer \`color: "var(--chart-N)"\` in the config — the
+\`theme\` field only distinguishes light/dark schemes, not all four Quill themes.
 Always include \`ChartTooltip\` for accessibility.
         `,
       },

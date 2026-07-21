@@ -9,6 +9,28 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.13] — 2026-07-21
+
+### Changed
+- Foundations docs pages (Colors, Typography type scale, Spacing, Elevation)
+  now render live from `src/tokens/quill.tokens.mjs` instead of hardcoding
+  values — the same no-drift pattern as the Tokens page. This retires real
+  drift: Typography claimed `text-4xl` was 36px (it's 64px), Colors listed a
+  wrong `--terracotta-deep` hex, called terracotta "the single accent"
+  (moss has been the default since v0.2.6), and said the ring is ink (it
+  follows the accent). Colors gains a **Data visualization** section
+  documenting the series palette and the seq/div ramps.
+- Chart story uses `var(--chart-1/2)` instead of raw pigments (the exact
+  CVD-failing pair v0.2.12 replaced) and documents the fixed-order rule.
+- `chart.tsx`: the `ChartConfig` theme selector now targets Quill's
+  `data-theme` attribute (both dark-scheme themes) instead of a `.dark` class.
+- Lint output de-noised: generated icon modules are excluded (1,004
+  machine-written `import/no-anonymous-default-export` warnings gone), two
+  stale `eslint-disable` directives removed — 1,009 warnings → 3 real ones.
+- Figma: ❖ Analytics charts re-bound from pigment fills to
+  `color/chart/series/*` (two-series chart = series 1+2 in fixed order with
+  matching legend; bar chart = series 3).
+
 ## [0.2.12] — 2026-07-20
 
 ### Added

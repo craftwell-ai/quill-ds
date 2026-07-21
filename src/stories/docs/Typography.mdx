@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/blocks'
+import { tokens } from '../../tokens/quill.tokens.mjs'
 
 <Meta title="Foundations / Typography" />
 
@@ -16,14 +17,13 @@ Quill uses two typefaces: **Fraunces** for display and editorial moments, **Rale
 
 ## Type scale
 
-<TypeSample token="text-4xl" size="36px" weight={400}>The quick brown fox</TypeSample>
-<TypeSample token="text-3xl" size="30px" weight={400}>The quick brown fox</TypeSample>
-<TypeSample token="text-2xl" size="24px" weight={400}>The quick brown fox</TypeSample>
-<TypeSample token="text-xl" size="20px" weight={400}>The quick brown fox</TypeSample>
-<TypeSample token="text-lg" size="18px" weight={400}>The quick brown fox</TypeSample>
-<TypeSample token="text-base" size="15.2px" weight={400}>The quick brown fox jumps</TypeSample>
-<TypeSample token="text-sm" size="13.6px" weight={400}>The quick brown fox jumps over the lazy dog</TypeSample>
-<TypeSample token="text-xs" size="12px" weight={400}>The quick brown fox jumps over the lazy dog, again</TypeSample>
+Sizes render live from the token source (`tokens.text`, rem × 16).
+
+{['5xl', '4xl', '3xl', '2xl', 'xl', 'lg', 'base', 'sm', 'xs', '2xs'].map((step) => (
+  <TypeSample key={step} token={`text-${step}`} size={`${parseFloat(tokens.text[step]) * 16}px`} weight={400}>
+    The quick brown fox
+  </TypeSample>
+))}
 
 ## Text styles
 

@@ -1,6 +1,28 @@
+{/* Values render live from the token source — this page cannot drift. */}
 import { Meta } from '@storybook/blocks'
+import { tokens } from '../../tokens/quill.tokens.mjs'
 
 <Meta title="Foundations / Spacing" />
+
+export const USAGE = {
+  '0.5': 'hairline offsets, tight icon nudges',
+  1: 'icon gaps, tight insets',
+  1.5: 'compact icon gaps (gap-1.5)',
+  2: 'small padding, badge insets',
+  2.5: 'control padding (px-2.5)',
+  3: 'input padding, compact row gap',
+  4: 'component internals, card padding sm',
+  5: 'form field spacing',
+  6: 'card padding default, section gaps',
+  7: 'compact control height (h-7)',
+  8: 'section padding, default control height (h-8)',
+  9: 'large control height (h-9)',
+  10: 'large component padding',
+  12: 'hero insets, modal padding',
+  16: 'page-level horizontal padding',
+  20: 'large section margins',
+  24: 'section breathing room, max vertical gaps',
+}
 
 export const SpaceRule = ({ token, px, usage }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '8px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
@@ -12,27 +34,22 @@ export const SpaceRule = ({ token, px, usage }) => (
 
 # Spacing
 
-Quill uses a 4px base grid. All spacing tokens are multiples of 4px.
+Quill uses a 4px base grid, with half-steps and control sizes filling the gaps
+components actually need. Values render live from the token source
+(`tokens.spacing`, rem × 16).
 
-<SpaceRule token="space-1" px={4} usage="icon gaps, tight insets" />
-<SpaceRule token="space-2" px={8} usage="small padding, badge insets" />
-<SpaceRule token="space-3" px={12} usage="input padding, compact row gap" />
-<SpaceRule token="space-4" px={16} usage="component internals, card padding sm" />
-<SpaceRule token="space-5" px={20} usage="form field spacing" />
-<SpaceRule token="space-6" px={24} usage="card padding default, section gaps" />
-<SpaceRule token="space-8" px={32} usage="section padding, comfortable breathing room" />
-<SpaceRule token="space-10" px={40} usage="large component padding" />
-<SpaceRule token="space-12" px={48} usage="hero insets, modal padding" />
-<SpaceRule token="space-16" px={64} usage="page-level horizontal padding" />
-<SpaceRule token="space-20" px={80} usage="large section margins" />
-<SpaceRule token="space-24" px={96} usage="section breathing room, max vertical gaps" />
+{Object.entries(tokens.spacing)
+  .sort(([a], [b]) => parseFloat(a) - parseFloat(b))
+  .map(([step, rem]) => (
+    <SpaceRule key={step} token={`space-${step}`} px={parseFloat(rem) * 16} usage={USAGE[step] ?? ''} />
+  ))}
 
 ## Usage guide
 
 | Scale | Token | Use |
 |---|---|---|
-| 4–8px | `space-1`, `space-2` | Icon gaps, badge insets, hairline offsets |
-| 12–16px | `space-3`, `space-4` | Component internals, input padding, small card spacing |
+| 2–8px | `space-0.5` – `space-2` | Icon gaps, badge insets, hairline offsets |
+| 10–16px | `space-2.5` – `space-4` | Component internals, input padding, small card spacing |
 | 20–24px | `space-5`, `space-6` | Form spacing, card padding, list row gaps |
-| 32–48px | `space-8`, `space-12` | Section padding, modal insets, comfortable breathing room |
-| 64–96px | `space-16`, `space-24` | Page-level padding, large section separators |
+| 28–40px | `space-7` – `space-10` | Control heights, section padding, breathing room |
+| 48–96px | `space-12` – `space-24` | Hero insets, page-level padding, section separators |

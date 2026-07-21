@@ -7,7 +7,13 @@ import type { TooltipValueType } from "recharts"
 import { cn } from "@/lib/utils"
 
 // Format: { THEME_NAME: CSS_SELECTOR }
-const THEMES = { light: "", dark: ".dark" } as const
+// Quill themes via data-theme (not a .dark class); both dark-scheme themes get
+// the ChartConfig `theme.dark` value. Prefer color: "var(--chart-N)" — the
+// tokens already resolve per theme without this selector.
+const THEMES = {
+  light: "",
+  dark: ':is([data-theme="dark"], [data-theme="classic-dark"])',
+} as const
 
 const INITIAL_DIMENSION = { width: 320, height: 200 } as const
 type TooltipNameType = number | string

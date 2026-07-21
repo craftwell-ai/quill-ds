@@ -92,7 +92,6 @@ export function ThemeSelector({
     }
     if (!accentControlled && isAccent(storedAccent)) {
       document.documentElement.setAttribute('data-accent', storedAccent)
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInternalAccent(storedAccent)
     }
   }, [themeControlled, accentControlled, storageKey, accentStorageKey])

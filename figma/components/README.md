@@ -143,7 +143,7 @@ that's an auto-layout child (use the up/down glyph instead).
 | 3 | ❖ Invoice | 209:2 | table rows, tabular figures |
 | 3 | ❖ Calendar page | 210:2 | month grid + session list |
 | 3 | ❖ Calendar range | 211:2 | two-month range selection |
-| 3 | ❖ Analytics charts | 213:2 | area + bar charts via `createNodeFromSvg`, fills bound to pigment vars, 0.25 node opacity on areas |
+| 3 | ❖ Analytics charts | 213:2 | area + bar charts via `createNodeFromSvg`, 0.25 node opacity on areas; fills/strokes re-bound to `color/chart/series/*` 2026-07-21 (two-series chart = series 1+2 in fixed order, legend follows; bar chart = series 3) |
 | 4 | ❖ Sidebar navigation | 214:2 | sidebar tokens (`shadcn/sidebar*`), per-side strokes |
 | 4 | ❖ Mail inbox | 215:2 | list + reading pane; Avatar/Badge/Input instances |
 | 4 | ❖ Login — split panel | 215:154 | primary brand panel + form; Button instance |
