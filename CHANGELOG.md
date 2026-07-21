@@ -9,6 +9,17 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.9] — 2026-07-20
+
+### Fixed
+- Figma accent drift: the live Figma file's `status/link`, `shadcn/ring`, and
+  `shadcn/sidebar-ring` variables still aliased `color/pigment/terracotta/deep`
+  from before v0.2.6 made moss the default accent — re-aliased to
+  `color/pigment/moss/deep` to match code and the DTCG export. The ❖ Theme
+  selector pattern page now lists Moss first with the selected check (matching
+  the v0.2.6 dropdown order). `figma/components/README.md` accent section
+  updated to document the moss pinning.
+
 ## [0.2.8] — 2026-07-20
 
 ### Changed

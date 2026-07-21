@@ -145,13 +145,16 @@ that's an auto-layout child (use the up/down glyph instead).
 | 4 | ❖ Login — minimal | 215:187 | arrow glyph in composed primary button |
 | 5 | ❖ Theme selector | 231:2 | dropdown trigger + open menu (Theme + Accent sections, menu node 233:2); four theme chips pinned via `setExplicitVariableModeForCollection` |
 
-### Accent (2026-07-11)
+### Accent (2026-07-11; re-pinned to moss 2026-07-20)
 
 Code adds `data-accent="terracotta|moss|indigo|gold"` (eyebrows, accent italics,
 links, focus rings). Figma can't model a second runtime dimension — the Primitives
-collection is at its 4-mode ceiling — so the accent is **pinned to terracotta**:
-- `status/link`, `shadcn/ring`, `shadcn/sidebar-ring` re-aliased → `color/pigment/terracotta/deep`
-  (link was fixed indigo; rings were ink) to match the new code default.
+collection is at its 4-mode ceiling — so the accent is **pinned to the code default,
+moss** (was terracotta until v0.2.6 made moss the default):
+- `status/link`, `shadcn/ring`, `shadcn/sidebar-ring` re-aliased → `color/pigment/moss/deep`
+  (originally fixed indigo/ink, then terracotta; re-synced to moss 2026-07-20).
+- The ❖ Theme selector menu lists Moss first with the selected check (matches the
+  v0.2.6 dropdown order).
 - New primitive `color/pigment/gold/text` (VariableID:232:3) — gold's AA text cut
   (`#826637` / `#E2CA9E` / `#996D18` / `#ECC883`); gold/deep is only 3.3:1 on light grounds.
 - The ❖ Theme selector menu shows the Accent section with pigment swatches.
