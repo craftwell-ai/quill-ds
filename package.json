@@ -1,6 +1,6 @@
 {
   "name": "quill-ds",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "private": true,
   "scripts": {
     "predev": "npm run build:icons",

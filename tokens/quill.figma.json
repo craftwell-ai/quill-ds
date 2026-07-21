@@ -226,6 +226,224 @@
           }
         }
       },
+      "chart": {
+        "series": {
+          "1": {
+            "$type": "color",
+            "$value": "#BC6751",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#BC6751",
+                  "Dark": "#C66F59",
+                  "Classic Light": "#C44829",
+                  "Classic Dark": "#D25436"
+                }
+              }
+            }
+          },
+          "2": {
+            "$type": "color",
+            "$value": "#345799",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#345799",
+                  "Dark": "#4265A9",
+                  "Classic Light": "#194AAC",
+                  "Classic Dark": "#2A5DBF"
+                }
+              }
+            }
+          },
+          "3": {
+            "$type": "color",
+            "$value": "#A27B1C",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#A27B1C",
+                  "Dark": "#B58D34",
+                  "Classic Light": "#B18401",
+                  "Classic Dark": "#BA8B01"
+                }
+              }
+            }
+          },
+          "4": {
+            "$type": "color",
+            "$value": "#79376C",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#79376C",
+                  "Dark": "#924E84",
+                  "Classic Light": "#852076",
+                  "Classic Dark": "#993588"
+                }
+              }
+            }
+          },
+          "5": {
+            "$type": "color",
+            "$value": "#688838",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#688838",
+                  "Dark": "#6C8D3D",
+                  "Classic Light": "#659102",
+                  "Classic Dark": "#6D9C03"
+                }
+              }
+            }
+          }
+        },
+        "seq": {
+          "1": {
+            "$type": "color",
+            "$value": "#C7D8B5",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#C7D8B5",
+                  "Dark": "#303D20",
+                  "Classic Light": "#CCE0B6",
+                  "Classic Dark": "#2A3815"
+                }
+              }
+            }
+          },
+          "2": {
+            "$type": "color",
+            "$value": "#A1B787",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#A1B787",
+                  "Dark": "#475A2E",
+                  "Classic Light": "#A0BC7E",
+                  "Classic Dark": "#41591D"
+                }
+              }
+            }
+          },
+          "3": {
+            "$type": "color",
+            "$value": "#7C975A",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#7C975A",
+                  "Dark": "#5F793D",
+                  "Classic Light": "#779A45",
+                  "Classic Dark": "#5A7B25"
+                }
+              }
+            }
+          },
+          "4": {
+            "$type": "color",
+            "$value": "#567428",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#567428",
+                  "Dark": "#79994D",
+                  "Classic Light": "#527602",
+                  "Classic Dark": "#749F2B"
+                }
+              }
+            }
+          },
+          "5": {
+            "$type": "color",
+            "$value": "#375101",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#375101",
+                  "Dark": "#97B86B",
+                  "Classic Light": "#375101",
+                  "Classic Dark": "#95C352"
+                }
+              }
+            }
+          }
+        },
+        "div": {
+          "1": {
+            "$type": "color",
+            "$value": "#903F2B",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#903F2B",
+                  "Dark": "#DC836D",
+                  "Classic Light": "#A22801",
+                  "Classic Dark": "#FA7959"
+                }
+              }
+            }
+          },
+          "2": {
+            "$type": "color",
+            "$value": "#BB8273",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#BB8273",
+                  "Dark": "#986153",
+                  "Classic Light": "#C77B68",
+                  "Classic Dark": "#A75D4B"
+                }
+              }
+            }
+          },
+          "3": {
+            "$type": "color",
+            "$value": "#CFC9C5",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#CFC9C5",
+                  "Dark": "#403C39",
+                  "Classic Light": "#D4D0CD",
+                  "Classic Dark": "#3A3735"
+                }
+              }
+            }
+          },
+          "4": {
+            "$type": "color",
+            "$value": "#7993C1",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#7993C1",
+                  "Dark": "#59729E",
+                  "Classic Light": "#7092D0",
+                  "Classic Dark": "#5474AF"
+                }
+              }
+            }
+          },
+          "5": {
+            "$type": "color",
+            "$value": "#36589B",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#36589B",
+                  "Dark": "#779EE6",
+                  "Classic Light": "#2253B5",
+                  "Classic Dark": "#71A3FF"
+                }
+              }
+            }
+          }
+        }
+      },
       "line": {
         "faint": {
           "$type": "color",
@@ -730,19 +948,19 @@
         "$value": "{Primitives.color.pigment.moss.deep}"
       },
       "chart-1": {
-        "$value": "{Primitives.color.pigment.terracotta.base}"
+        "$value": "{Primitives.color.chart.series.1}"
       },
       "chart-2": {
-        "$value": "{Primitives.color.pigment.moss.base}"
+        "$value": "{Primitives.color.chart.series.2}"
       },
       "chart-3": {
-        "$value": "{Primitives.color.pigment.indigo.base}"
+        "$value": "{Primitives.color.chart.series.3}"
       },
       "chart-4": {
-        "$value": "{Primitives.color.pigment.gold.deep}"
+        "$value": "{Primitives.color.chart.series.4}"
       },
       "chart-5": {
-        "$value": "{Primitives.color.ink.soft}"
+        "$value": "{Primitives.color.chart.series.5}"
       },
       "sidebar": {
         "$value": "{Primitives.color.paper.warm}"

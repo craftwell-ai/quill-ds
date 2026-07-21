@@ -9,6 +9,26 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.12] — 2026-07-20
+
+### Added
+- **Chart color system.** New `color.chart` token group with three ramps per
+  theme: `--chart-series-1..5` (categorical — terracotta/indigo/gold/plum/moss,
+  chart-only cuts re-stepped above the OKLCH 0.10 chroma floor),
+  `--chart-seq-1..5` (sequential moss ramp, monotonic emphasis), and
+  `--chart-div-1..5` (diverging terracotta↔indigo around a neutral midpoint).
+  Figma gains the 15 matching `color/chart/*` primitives (4 modes, Dev Mode
+  code syntax); `shadcn/chart-1..5` re-aliased to the series cuts in both code
+  and Figma.
+
+### Fixed
+- The old chart palette (raw pigments + ink-soft) failed colorblind-safety
+  checks in every theme — terracotta↔moss adjacency scored ΔE 3.2 (deuteranopia)
+  on Dawn, and most slots sat below the data-mark chroma floor. Every new
+  series palette passes all six palette checks (CVD ≥ 8, normal-vision ≥ 15,
+  lightness band, chroma floor, 3:1 contrast) per theme ground, enforced by a
+  new token test.
+
 ## [0.2.11] — 2026-07-20
 
 ### Added

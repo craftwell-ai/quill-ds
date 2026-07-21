@@ -46,6 +46,41 @@ export const tokens = {
         text: { light: '#826637', dark: '#E2CA9E', classicLight: '#996D18', classicDark: '#ECC883' },
       },
     },
+    chart: {
+      // Chart-only cuts. The UI pigments can't do series duty: their OKLCH chroma
+      // sits below the 0.10 "reads gray" floor for data marks, and terracotta↔moss
+      // adjacency fails deuteranopia separation (ΔE 3.2 on Dawn; target ≥8).
+      // These re-step the same brand hues (terracotta 35°, indigo 262°, gold 84°,
+      // moss 128° + a chart-only plum 335° replacing ink-soft) per ground, validated
+      // against all six palette checks per theme. Assign series colors in this fixed
+      // order — never cycle or reorder survivors when a filter drops a series.
+      series: {
+        1: { light: '#BC6751', dark: '#C66F59', classicLight: '#C44829', classicDark: '#D25436' },
+        2: { light: '#345799', dark: '#4265A9', classicLight: '#194AAC', classicDark: '#2A5DBF' },
+        3: { light: '#A27B1C', dark: '#B58D34', classicLight: '#B18401', classicDark: '#BA8B01' },
+        4: { light: '#79376C', dark: '#924E84', classicLight: '#852076', classicDark: '#993588' },
+        5: { light: '#688838', dark: '#6C8D3D', classicLight: '#659102', classicDark: '#6D9C03' },
+      },
+      // Sequential (magnitude): one hue — moss — light→dark on light grounds,
+      // dark→light on dark grounds; 1 = low emphasis (near ground), 5 = high.
+      seq: {
+        1: { light: '#C7D8B5', dark: '#303D20', classicLight: '#CCE0B6', classicDark: '#2A3815' },
+        2: { light: '#A1B787', dark: '#475A2E', classicLight: '#A0BC7E', classicDark: '#41591D' },
+        3: { light: '#7C975A', dark: '#5F793D', classicLight: '#779A45', classicDark: '#5A7B25' },
+        4: { light: '#567428', dark: '#79994D', classicLight: '#527602', classicDark: '#749F2B' },
+        5: { light: '#375101', dark: '#97B86B', classicLight: '#375101', classicDark: '#95C352' },
+      },
+      // Diverging (polarity): terracotta pole ↔ indigo pole (warm/cool — never
+      // red/green) around a near-neutral warm-gray midpoint; 1 = strong negative,
+      // 3 = midpoint, 5 = strong positive.
+      div: {
+        1: { light: '#903F2B', dark: '#DC836D', classicLight: '#A22801', classicDark: '#FA7959' },
+        2: { light: '#BB8273', dark: '#986153', classicLight: '#C77B68', classicDark: '#A75D4B' },
+        3: { light: '#CFC9C5', dark: '#403C39', classicLight: '#D4D0CD', classicDark: '#3A3735' },
+        4: { light: '#7993C1', dark: '#59729E', classicLight: '#7092D0', classicDark: '#5474AF' },
+        5: { light: '#36589B', dark: '#779EE6', classicLight: '#2253B5', classicDark: '#71A3FF' },
+      },
+    },
     line: {
       faint: { light: 'rgba(42, 38, 34, 0.08)', dark: 'rgba(241, 231, 211, 0.07)', classicLight: 'rgba(0, 0, 0, 0.07)', classicDark: 'rgba(255, 255, 255, 0.08)' },
       soft: { light: 'rgba(42, 38, 34, 0.12)', dark: 'rgba(241, 231, 211, 0.11)', classicLight: 'rgba(0, 0, 0, 0.11)', classicDark: 'rgba(255, 255, 255, 0.12)' },
@@ -162,8 +197,8 @@ export const tokens = {
     'accent': 'var(--paper-deep)', 'accent-foreground': 'var(--ink)',
     'destructive': 'var(--terracotta-deep)',
     'border': 'var(--line-soft)', 'input': 'var(--line-control)', 'ring': 'var(--accent-pigment-text)',
-    'chart-1': 'var(--terracotta)', 'chart-2': 'var(--moss)', 'chart-3': 'var(--indigo)',
-    'chart-4': 'var(--gold-deep)', 'chart-5': 'var(--ink-soft)',
+    'chart-1': 'var(--chart-series-1)', 'chart-2': 'var(--chart-series-2)', 'chart-3': 'var(--chart-series-3)',
+    'chart-4': 'var(--chart-series-4)', 'chart-5': 'var(--chart-series-5)',
     'sidebar': 'var(--paper-warm)', 'sidebar-foreground': 'var(--ink)',
     'sidebar-primary': 'var(--ink)', 'sidebar-primary-foreground': 'var(--paper)',
     'sidebar-accent': 'var(--paper-deep)', 'sidebar-accent-foreground': 'var(--ink)',
