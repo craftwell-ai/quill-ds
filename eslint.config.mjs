@@ -22,6 +22,9 @@ const eslintConfig = defineConfig([
     // Vendored minified library + Figma plugin-sandbox scripts (not app code):
     "public/axe.min.js",
     "figma/**",
+    // Generated icon modules (scripts/build-icons.mjs) — machine-written; their
+    // ~1000 anonymous default exports drowned every real warning in lint output:
+    "src/components/ui/icons/**",
   ]),
   ...storybook.configs["flat/recommended"]
 ]);

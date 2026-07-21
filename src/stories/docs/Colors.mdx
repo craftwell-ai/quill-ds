@@ -1,6 +1,10 @@
+{/* Values render live from the token source — this page cannot drift. */}
 import { Meta } from '@storybook/blocks'
+import { tokens } from '../../tokens/quill.tokens.mjs'
 
 <Meta title="Foundations / Colors" />
+
+export const c = tokens.color
 
 export const Swatch = ({ token, hex, usage }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
@@ -22,64 +26,115 @@ export const BorderSwatch = ({ token, value, usage }) => (
   </div>
 )
 
+export const Ramp = ({ token, steps, note }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+    <div style={{ display: 'flex', flexShrink: 0 }}>
+      {Object.values(steps).map((s, i) => (
+        <div key={i} style={{ width: 32, height: 36, background: s.light, borderRadius: i === 0 ? '6px 0 0 6px' : i === 4 ? '0 6px 6px 0' : 0 }} title={s.light} />
+      ))}
+    </div>
+    <div>
+      <code style={{ fontSize: 12, color: '#2A2622', display: 'block' }}>{token}</code>
+      <div style={{ fontSize: 11, color: '#675F58', marginTop: 2 }}>{note}</div>
+    </div>
+  </div>
+)
+
 # Colors
 
-Quill's palette is grounded in aged paper and sepia ink — warm, editorial, and intentional. One accent color (terracotta) carries all interactive emphasis.
+Quill's palette is grounded in aged paper and sepia ink — warm, editorial, and
+intentional. The accent (**moss** by default, switchable per surface via
+`data-accent`) carries interactive emphasis: links, focus rings, eyebrows.
+Every value on this page renders live from `src/tokens/quill.tokens.mjs`
+(Dawn cuts shown — each token re-cuts per theme).
 
 ## Papers
 
 Background surfaces. Use in order from lightest to deepest for visual hierarchy.
 
-<Swatch token="--paper" hex="#F5EDDD" usage="page background, default surface" />
-<Swatch token="--paper-warm" hex="#EFE4CE" usage="cards, popovers, sidebars" />
-<Swatch token="--paper-deep" hex="#E8DCC0" usage="pressed states, secondary surfaces, icon containers" />
+<Swatch token="--paper" hex={c.paper.base.light} usage="page background, default surface" />
+<Swatch token="--paper-warm" hex={c.paper.warm.light} usage="cards, popovers, sidebars" />
+<Swatch token="--paper-deep" hex={c.paper.deep.light} usage="pressed states, secondary surfaces, icon containers" />
 
 ## Inks
 
 Text and iconography. The three-step ink scale mirrors the hierarchy of type weight.
 
-<Swatch token="--ink" hex="#2A2622" usage="primary text, headings, icons" />
-<Swatch token="--ink-soft" hex="#5C524A" usage="body text, secondary labels" />
-<Swatch token="--ink-muted" hex="#675F58" usage="placeholder, captions, disabled text" />
+<Swatch token="--ink" hex={c.ink.base.light} usage="primary text, headings, icons" />
+<Swatch token="--ink-soft" hex={c.ink.soft.light} usage="body text, secondary labels" />
+<Swatch token="--ink-muted" hex={c.ink.muted.light} usage="placeholder, captions, disabled text" />
 
 ## Pigments
 
-Used sparingly — one pigment per surface, never competing. Each has a `-deep` variant for hover/pressed states.
+Used sparingly — one pigment per surface, never competing. Each `-deep` cut
+carries hover/pressed and text duty (AA on paper); gold alone needs a darker
+`-text` cut for AA text on light grounds.
 
-<Swatch token="--terracotta" hex="#C4684B" usage="primary action, links, the single accent" />
-<Swatch token="--terracotta-deep" hex="#944A33" usage="terracotta hover / pressed" />
-<Swatch token="--moss" hex="#7A8C5C" usage="success, growth, nature" />
-<Swatch token="--moss-deep" hex="#5E6E43" usage="moss hover / pressed" />
-<Swatch token="--indigo" hex="#5B6B8A" usage="info, links in body text" />
-<Swatch token="--indigo-deep" hex="#44516D" usage="indigo hover / pressed" />
-<Swatch token="--gold" hex="#B89968" usage="premium, highlight, reward" />
-<Swatch token="--gold-deep" hex="#9A7D4E" usage="gold hover / pressed" />
+<Swatch token="--terracotta" hex={c.pigment.terracotta.base.light} usage="danger, destructive; accent option" />
+<Swatch token="--terracotta-deep" hex={c.pigment.terracotta.deep.light} usage="terracotta hover / pressed / text duty" />
+<Swatch token="--moss" hex={c.pigment.moss.base.light} usage="success; the default accent" />
+<Swatch token="--moss-deep" hex={c.pigment.moss.deep.light} usage="moss hover / pressed / text duty (links, rings)" />
+<Swatch token="--indigo" hex={c.pigment.indigo.base.light} usage="info; accent option" />
+<Swatch token="--indigo-deep" hex={c.pigment.indigo.deep.light} usage="indigo hover / pressed / text duty" />
+<Swatch token="--gold" hex={c.pigment.gold.base.light} usage="warning, premium, highlight; accent option" />
+<Swatch token="--gold-deep" hex={c.pigment.gold.deep.light} usage="gold hover / pressed" />
+<Swatch token="--gold-text" hex={c.pigment.gold.text.light} usage="gold text duty — the deep cut misses 4.5:1 on paper" />
 
 ## Hairlines
 
-Borders and dividers. Always ink at low alpha — never a separate color.
+Borders and dividers. Ink at low alpha for passive lines; interactive controls
+get the solid `control` boundary, which clears WCAG 1.4.11 non-text 3:1.
 
-<BorderSwatch token="--line-faint" value="rgba(42,38,34,0.08)" usage="subtle dividers, ghost borders" />
-<BorderSwatch token="--line-soft" value="rgba(42,38,34,0.12)" usage="default border (--border)" />
-<BorderSwatch token="--line" value="rgba(42,38,34,0.15)" usage="input borders, stronger rules" />
-<BorderSwatch token="--line-strong" value="rgba(42,38,34,0.20)" usage="emphasis borders, focused rings" />
+<BorderSwatch token="--line-faint" value={c.line.faint.light} usage="subtle dividers, ghost borders" />
+<BorderSwatch token="--line-soft" value={c.line.soft.light} usage="default border (--border)" />
+<BorderSwatch token="--line" value={c.line.base.light} usage="stronger rules" />
+<BorderSwatch token="--line-strong" value={c.line.strong.light} usage="emphasis borders" />
+<BorderSwatch token="--line-control" value={c.line.control.light} usage="interactive control boundaries (--input): fields, switch tracks, checkboxes" />
+
+## Data visualization
+
+Chart-only cuts — the UI pigments read gray as data marks and fail
+colorblind-safety checks, so charts get their own palette, validated per theme
+(CVD ΔE ≥ 8 between neighbors, ≥ 3:1 on every ground). **Assign series colors
+in this fixed order, never cycled or reordered** — a filter that drops a series
+must not repaint the survivors.
+
+<Swatch token="--chart-series-1" hex={c.chart.series[1].light} usage="series 1 — terracotta cut (--chart-1)" />
+<Swatch token="--chart-series-2" hex={c.chart.series[2].light} usage="series 2 — indigo cut (--chart-2)" />
+<Swatch token="--chart-series-3" hex={c.chart.series[3].light} usage="series 3 — gold cut (--chart-3)" />
+<Swatch token="--chart-series-4" hex={c.chart.series[4].light} usage="series 4 — plum, a chart-only hue (--chart-4)" />
+<Swatch token="--chart-series-5" hex={c.chart.series[5].light} usage="series 5 — moss cut (--chart-5)" />
+
+Magnitude and polarity use ramps, not the series palette:
+
+<Ramp token="--chart-seq-1 … 5" steps={c.chart.seq} note="sequential (magnitude): one hue — moss — low → high emphasis; heatmaps, choropleths" />
+<Ramp token="--chart-div-1 … 5" steps={c.chart.div} note="diverging (polarity): terracotta ↔ indigo around a neutral midpoint — never red/green" />
 
 ## Semantic aliases
 
-These map the Quill palette to the ShadCN CSS variable contract.
+The shadcn contract, generated from the token source:
 
-| Alias | Resolves to | Purpose |
-|---|---|---|
-| `--background` | `--paper` | Page background |
-| `--foreground` | `--ink` | Default text |
-| `--card` | `--paper-warm` | Card / popover backgrounds |
-| `--primary` | `--ink` | Primary button fill |
-| `--primary-foreground` | `--paper` | Text on primary buttons |
-| `--secondary` | `--paper-deep` | Secondary button fill |
-| `--muted` | `--paper-deep` | Muted backgrounds |
-| `--muted-foreground` | `--ink-muted` | Muted text |
-| `--accent` | `--paper-deep` | Hover accent (NOT terracotta) |
-| `--destructive` | `--terracotta-deep` | Error / destructive |
-| `--border` | `--line-soft` | Default border |
-| `--input` | `--line` | Input border |
-| `--ring` | `--ink` | Focus ring (NEVER terracotta) |
+<div style={{ fontSize: 12 }}>
+  {[
+    ['background', 'page background'],
+    ['foreground', 'default text'],
+    ['card', 'card / popover surfaces'],
+    ['primary', 'primary button fill'],
+    ['primary-foreground', 'text on primary buttons'],
+    ['secondary', 'secondary button fill'],
+    ['muted', 'muted backgrounds'],
+    ['muted-foreground', 'muted text'],
+    ['accent', 'hover wash (paper, not a pigment)'],
+    ['destructive', 'error / destructive'],
+    ['border', 'default border'],
+    ['input', 'interactive control boundary'],
+    ['ring', 'focus ring — follows the active accent'],
+    ['chart-1', 'chart series 1 (see Data visualization)'],
+  ].map(([key, purpose]) => (
+    <div key={key} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
+      <code style={{ width: 180, flexShrink: 0 }}>{`--${key}`}</code>
+      <code style={{ width: 220, flexShrink: 0, color: '#944A33' }}>{tokens.shadcn[key]}</code>
+      <span style={{ color: '#675F58' }}>{purpose}</span>
+    </div>
+  ))}
+</div>
