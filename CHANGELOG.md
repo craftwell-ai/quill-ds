@@ -9,6 +9,16 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.10] — 2026-07-20
+
+### Added
+- Figma Wave B complete (11/11 composites): new token-bound component sets
+  **❖ Field** (Orientation × State, composing Label/Input/Switch instances),
+  **❖ Button group** (horizontal/vertical fused outline segments), and
+  **❖ Input group** (inline search shell with Kbd instance; block prompt box).
+  Wave C scope locked in `figma/components/README.md` (16 overlays/compounds,
+  deferrals noted).
+
 ## [0.2.9] — 2026-07-20
 
 ### Fixed

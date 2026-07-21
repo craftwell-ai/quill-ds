@@ -87,7 +87,7 @@ Re-apply after regenerating variables via the mapping in the foundations sync.
 - **Visual QA pass:** review each page in Figma; refine any spacing/rounding nuances.
 - Optional: add `Disabled` boolean + hover/focus states later (variant structure supports it).
 
-## Wave B (composites) — 8 done
+## Wave B (composites) — 11/11 done
 
 | Component | Page | Notes |
 |---|---|---|
@@ -99,8 +99,13 @@ Re-apply after regenerating variables via the mapping in the foundations sync.
 | Breadcrumb | ❖ Breadcrumb | links + chevron separators + current page |
 | Pagination | ❖ Pagination | prev/next + numbered cells, active bordered |
 | Accordion | ❖ Accordion | 3 items, first expanded + description |
+| Field | ❖ Field | Orientation(Vertical/Horizontal) × State(Default/Invalid), sparse 3-variant set; Label/Input/Switch **instances**; gaps→spacing/2·0_5; invalid overrides label/stroke/error→destructive |
+| ButtonGroup | ❖ Button group | Orientation: horizontal/vertical; 3 hand-built fused outline segments (bg→background, stroke→border, h→spacing/8), end-only radii→corner-radius/lg, inner borders collapsed via per-side strokeWeight=0 |
+| InputGroup | ❖ Input group | Layout: inline/block; shell stroke→input, radius→lg; inline = icon/search + placeholder + Kbd "⌘K" instances; block = prompt box with block-end addon + primary send button (icon/arrow_forward) |
 
-Remaining Wave B: Field, Input/Button groups (thin composition wrappers).
+Wave B note: Field's `responsive` orientation is container-query behavior — not modelable
+statically, deferred. ButtonGroupText / ButtonGroupSeparator and the InputGroup
+inline-end-button arrangement are compositional micro-variants, deferred to usage in patterns.
 
 **Build lesson:** after `createComponentFromNode`, a hug-layout component may come back FIXED-size —
 set `primaryAxisSizingMode='AUTO'` and text nodes `textAutoResize='HEIGHT'`. Don't rotate a chevron
@@ -172,5 +177,12 @@ ceiling — a fifth theme would need an Org plan or a second collection.
 
 ## Next
 
-- Finish Wave B, then Wave C (overlays/compounds).
+- **Wave C (overlays/compounds), locked scope:** Dialog, Alert Dialog, Sheet, Drawer,
+  Popover, Hover Card, Dropdown Menu, Context Menu, Menubar, Command, Combobox,
+  Toggle Group, Slider, Input OTP, Table, Toast (Sonner).
+  Deferred with reasons: Navigation Menu (complex marketing nav, low app value),
+  Calendar (already mocked in two pattern pages), Carousel/Chart (SVG-heavy; charts
+  live in the Analytics pattern), Scroll Area/Resizable/Collapsible (interaction-only),
+  Empty/Item (trivial wrappers), Native Select (visually = Select), Sidebar (exists
+  as pattern).
 - Visual QA sweep of pattern pages in light/dark modes.
