@@ -1,0 +1,101 @@
+# Quill Design System
+
+> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 50 composable blocks. Version 0.2.15.
+
+Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
+
+## Theming
+
+- **Themes** — set `data-theme` on `<html>`: `light` → Dawn (light, default), `dark` → Dusk (dark), `classic-light` → Classic Light, `classic-dark` → Classic Dark. Consumers must match one of these values; the token layer re-declares aliases so scoped `data-theme` islands work, not just the root switch.
+- **Accents** — set `data-accent` on `<html>`: terracotta, moss (default), indigo, gold. The accent drives links, eyebrows, focus rings (`--ring`), and accent italics; it defaults to moss when unset.
+- Both attributes are independent of the color-scheme; dark grounds and accent are separate axes.
+
+## Tokens
+
+- **Semantic contract** — the shadcn variables map onto Quill pigments: `--background`, `--foreground`, `--card`, `--primary`, `--muted`, `--muted-foreground`, `--destructive`, `--border`, `--input`, `--ring`.
+- **Accent-driven** — `--link`, `--ring`, and accent text follow `data-accent` (default moss-deep). Never hardcode a pigment for these.
+- **Charts** — use the chart tokens, never raw pigments (raw pigments fail colorblind-safety as data marks):
+  - Categorical: `--chart-1`…`--chart-5` (5 colorblind-safe series cuts). **Assign in fixed order; never cycle or repaint survivors when a series is filtered out.**
+  - Magnitude: `--chart-seq-1`…`--chart-seq-5` (one-hue sequential ramp).
+  - Polarity: `--chart-div-1`…`--chart-div-5` (diverging ramp, neutral midpoint — never red/green).
+- **Accessibility** — WCAG 2.1 AA: text cuts clear 4.5:1 on every theme ground; interactive control borders clear non-text 3:1.
+
+## Component intents
+
+Blocks are tagged with an intent vocabulary so you can pick by the job to be done:
+
+- `auth` — Authentication and account access — sign-in, sign-up, recovery, verification.
+- `form` — Structured data entry and validation.
+- `data-display` — Presenting records, lists, and metrics for reading.
+- `data-viz` — Charts and quantitative visuals.
+- `navigation` — Moving around an app — bars, breadcrumbs, tabs, command menus.
+- `app-shell` — Full-page layout scaffolding for application screens.
+- `feedback` — System status — alerts, notifications, empty and error states.
+- `marketing` — Landing-page and promotional sections.
+- `commerce` — Purchase, checkout, and billing.
+- `messaging` — Conversational and inbox interfaces.
+- `scheduling` — Dates, calendars, and bookings.
+- `productivity` — Task and workflow management.
+- `content` — Editorial and informational blocks.
+- `settings` — Configuration and preferences.
+
+## Components
+
+Each block is a composition of restyled primitives. `intent` lists its jobs; `use_when` says when to reach for it.
+
+- [Activity feed](https://www.quilldesignsystem.com/r/activity-feed.json) — _[data-display]_ You need to show a chronological history of what happened — recent events with who, what, and when.
+- [Alert stack](https://www.quilldesignsystem.com/r/alerts.json) — _[feedback]_ You need to surface inline status messages of varying severity (info, success, destructive) within a page.
+- [Analytics charts](https://www.quilldesignsystem.com/r/analytics-charts.json) — _[data-viz, data-display]_ You need a dashboard view of trends over time — an area chart plus a bar chart on card surfaces.
+- [Announcement banners](https://www.quilldesignsystem.com/r/announcement-banner.json) — _[feedback, marketing]_ You need to announce something site-wide with a dismissible banner, either inline or full-bleed.
+- [Badges on card](https://www.quilldesignsystem.com/r/badge-on-card.json) — _[data-display]_ You need to show status or category badges attached to a content card.
+- [Calendar page](https://www.quilldesignsystem.com/r/calendar-page.json) — _[scheduling]_ You need to pick a single date and show what's scheduled that day.
+- [Calendar range picker](https://www.quilldesignsystem.com/r/calendar-range.json) — _[scheduling, form]_ You need to book a span of days with a two-month range picker and confirm/clear actions.
+- [Chat panel](https://www.quilldesignsystem.com/r/chat.json) — _[messaging]_ You need a one-on-one messaging panel with a contact header, bubbles, and a composer.
+- [Checkout](https://www.quilldesignsystem.com/r/checkout.json) — _[commerce, form]_ You need to collect payment and card details alongside an order summary.
+- [Command palette](https://www.quilldesignsystem.com/r/command-palette.json) — _[navigation]_ You need a searchable ⌘K launcher for actions and quick navigation.
+- [Contact form](https://www.quilldesignsystem.com/r/contact-form.json) — _[form]_ You need a get-in-touch form with name, email, topic, and message fields.
+- [Cookie consent](https://www.quilldesignsystem.com/r/cookie-consent.json) — _[feedback]_ You need a compliance banner offering accept, reject, and preferences choices.
+- [Dashboard shell](https://www.quilldesignsystem.com/r/dashboard.json) — _[app-shell, data-display]_ You need a full application home — sidebar, search header, and KPI cards.
+- [Data table](https://www.quilldesignsystem.com/r/data-table.json) — _[data-display]_ You need a filterable, actionable table of records with status badges and row actions.
+- [Empty state](https://www.quilldesignsystem.com/r/empty-state.json) — _[feedback]_ You need to explain why a view is empty and offer the primary action to fill it.
+- [404 page](https://www.quilldesignsystem.com/r/error-404.json) — _[feedback]_ You need a full-page not-found state with recovery actions.
+- [FAQ section](https://www.quilldesignsystem.com/r/faq.json) — _[content, marketing]_ You need to answer common questions in an accordion with a contact fallback.
+- [Feature section](https://www.quilldesignsystem.com/r/feature-section.json) — _[marketing]_ You need to present product features in an editorial multi-column grid.
+- [File upload](https://www.quilldesignsystem.com/r/file-upload.json) — _[form]_ You need drag-and-drop asset upload with a progress-tracked queue.
+- [Site footer](https://www.quilldesignsystem.com/r/footer.json) — _[marketing, navigation]_ You need a site-wide footer with link columns, a brand blurb, and legal links.
+- [Forgot password](https://www.quilldesignsystem.com/r/forgot-password.json) — _[auth]_ You need a password-reset request card that sends a recovery link.
+- [Hero](https://www.quilldesignsystem.com/r/hero.json) — _[marketing]_ You need the top-of-page marketing statement — headline, supporting copy, and calls to action.
+- [Invoice](https://www.quilldesignsystem.com/r/invoice.json) — _[commerce, data-display]_ You need a printable invoice with parties, line-item totals, and a download action.
+- [Kanban board](https://www.quilldesignsystem.com/r/kanban.json) — _[productivity]_ You need to manage work across status columns with draggable, tagged task cards.
+- [List + detail](https://www.quilldesignsystem.com/r/list-detail.json) — _[messaging, app-shell]_ You need an inbox-style split view pairing a selectable list with a detail pane.
+- [Login](https://www.quilldesignsystem.com/r/login.json) — _[auth]_ You need the standard email-and-password sign-in with remember-me and reset links.
+- [Minimal login](https://www.quilldesignsystem.com/r/login-minimal.json) — _[auth]_ You need the leanest possible sign-in — a single field for one-time-code entry.
+- [Login with split panel](https://www.quilldesignsystem.com/r/login-split-panel.json) — _[auth, marketing]_ You need a branded full-page sign-in with a testimonial side panel and magic-link option.
+- [Mail inbox shell](https://www.quilldesignsystem.com/r/mail-shell.json) — _[messaging, app-shell]_ You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply.
+- [Navbar](https://www.quilldesignsystem.com/r/navbar.json) — _[navigation]_ You need a top navigation bar with wordmark, links, and sign-in / get-started actions.
+- [Theme selector](https://www.quilldesignsystem.com/r/theme-selector.json) — _[settings]_ You need to let users switch among Quill's four themes and four accents, persisted to localStorage.
+- [Newsletter signup](https://www.quilldesignsystem.com/r/newsletter.json) — _[marketing, form]_ You need an email-capture section with social proof to grow a list.
+- [Notifications](https://www.quilldesignsystem.com/r/notifications.json) — _[feedback, data-display]_ You need a notifications center with unread indicators and a mark-all-read action.
+- [Onboarding checklist](https://www.quilldesignsystem.com/r/onboarding.json) — _[productivity]_ You need a setup checklist that tracks progress and links to remaining steps.
+- [Order summary](https://www.quilldesignsystem.com/r/order-summary.json) — _[commerce]_ You need a cart-review card with line items, a promo field, a total, and a pay button.
+- [OTP verification](https://www.quilldesignsystem.com/r/otp-verification.json) — _[auth]_ You need to verify an email with a six-digit one-time passcode and resend.
+- [Page header](https://www.quilldesignsystem.com/r/page-header.json) — _[navigation, app-shell]_ You need a screen header with breadcrumbs, title, description, and primary actions.
+- [Pricing](https://www.quilldesignsystem.com/r/pricing.json) — _[marketing, commerce]_ You need a tiered pricing grid with a highlighted plan and feature checklists.
+- [Profile card](https://www.quilldesignsystem.com/r/profile-card.json) — _[data-display]_ You need a compact user profile with avatar, role, stats, and follow / message actions.
+- [Search results](https://www.quilldesignsystem.com/r/search-results.json) — _[navigation, data-display]_ You need a search panel with a query input, result count, and a linked result list.
+- [Settings form](https://www.quilldesignsystem.com/r/settings.json) — _[settings, form]_ You need a profile settings form with name, bio, and notification preferences.
+- [Sidebar navigation shell](https://www.quilldesignsystem.com/r/sidebar-nav.json) — _[app-shell, navigation]_ You need a collapsible icon-sidebar app shell with grouped menus and a content area.
+- [Sign up](https://www.quilldesignsystem.com/r/signup.json) — _[auth]_ You need standard account creation — name, email, password, and a sign-in link.
+- [Signup — social first](https://www.quilldesignsystem.com/r/signup-social.json) — _[auth]_ You need signup that leads with OAuth providers and falls back to email/password.
+- [Stat cards](https://www.quilldesignsystem.com/r/stat-cards.json) — _[data-display]_ You need a row of KPI cards showing values with period-over-period deltas.
+- [Stats band](https://www.quilldesignsystem.com/r/stats-band.json) — _[marketing]_ You need a marketing band of headline statistics separated by dividers.
+- [Tabs page](https://www.quilldesignsystem.com/r/tabs-page.json) — _[navigation, settings]_ You need a settings screen split into account, notifications, and security tabs.
+- [Team section](https://www.quilldesignsystem.com/r/team-section.json) — _[marketing]_ You need a marketing team grid with member cards, roles, and contact actions.
+- [Testimonial](https://www.quilldesignsystem.com/r/testimonial.json) — _[marketing, content]_ You need a customer-quote card with a serif pull-quote and attribution.
+- [Setup wizard step](https://www.quilldesignsystem.com/r/wizard.json) — _[form, productivity]_ You need a multi-step setup flow with a progress stepper and back/continue navigation.
+
+## Links
+
+- [Storybook](https://www.quilldesignsystem.com/storybook/) — live components, foundations, and patterns
+- [Theme item](https://www.quilldesignsystem.com/r/quill.json) — the token layer (install first)
+- [Full registry index](https://www.quilldesignsystem.com/r/registry.json)
