@@ -18,5 +18,11 @@
       "target": "components/quill/signup-social.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "auth"
+    ],
+    "use_when": "You need signup that leads with OAuth providers and falls back to email/password."
+  },
   "type": "registry:block"
 }

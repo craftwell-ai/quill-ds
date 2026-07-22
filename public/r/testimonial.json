@@ -12,5 +12,12 @@
       "target": "components/quill/testimonial.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing",
+      "content"
+    ],
+    "use_when": "You need a customer-quote card with a serif pull-quote and attribution."
+  },
   "type": "registry:block"
 }

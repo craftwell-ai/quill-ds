@@ -17,5 +17,12 @@
       "target": "components/quill/newsletter.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing",
+      "form"
+    ],
+    "use_when": "You need an email-capture section with social proof to grow a list."
+  },
   "type": "registry:block"
 }

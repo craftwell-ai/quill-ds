@@ -15,5 +15,11 @@
       "target": "components/quill/stat-cards.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "data-display"
+    ],
+    "use_when": "You need a row of KPI cards showing values with period-over-period deltas."
+  },
   "type": "registry:block"
 }

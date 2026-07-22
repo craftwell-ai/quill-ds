@@ -18,5 +18,12 @@
       "target": "components/quill/wizard.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "form",
+      "productivity"
+    ],
+    "use_when": "You need a multi-step setup flow with a progress stepper and back/continue navigation."
+  },
   "type": "registry:block"
 }

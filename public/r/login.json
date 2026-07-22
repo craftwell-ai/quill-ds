@@ -18,5 +18,11 @@
       "target": "components/quill/login.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "auth"
+    ],
+    "use_when": "You need the standard email-and-password sign-in with remember-me and reset links."
+  },
   "type": "registry:block"
 }

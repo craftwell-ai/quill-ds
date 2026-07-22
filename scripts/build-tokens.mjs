@@ -17,6 +17,11 @@ export const MODES = [
   { key: 'classicDark', prefix: 'cd', attr: 'classic-dark', colorScheme: 'dark', figmaMode: 'Classic Dark' },
 ]
 
+// The accent that ships unset: `--accent-pigment` at :root and the Figma DTCG
+// pin both resolve to this pigment. Single source of truth so downstream docs
+// and drift checks read the default from here rather than restating it.
+export const DEFAULT_ACCENT = 'moss'
+
 // 'pigment' is a grouping namespace, not part of the CSS var name.
 // Trailing 'base' is the default leaf — also dropped.
 export function cssVarName(path) {
@@ -72,8 +77,8 @@ export function renderCss(t) {
   // (an island re-cuts the default accent to its own theme; pair a
   // data-accent attribute with data-theme for accented islands).
   const accentDefaultLines = [
-    `  --accent-pigment: ${t.accents.moss.base};`,
-    `  --accent-pigment-text: ${t.accents.moss.text};`,
+    `  --accent-pigment: ${t.accents[DEFAULT_ACCENT].base};`,
+    `  --accent-pigment-text: ${t.accents[DEFAULT_ACCENT].text};`,
   ]
   const aliasLines = [
     ...accentDefaultLines,
@@ -204,8 +209,8 @@ export function renderDtcg(t) {
   buildMap(t.color, [])
   // Accent aliases are runtime-switchable (data-accent); Figma variables are
   // not, so the DTCG export pins them to the default (moss) pigment.
-  varToDtcg['--accent-pigment'] = 'Primitives.color.pigment.moss.base'
-  varToDtcg['--accent-pigment-text'] = 'Primitives.color.pigment.moss.deep'
+  varToDtcg['--accent-pigment'] = `Primitives.color.pigment.${DEFAULT_ACCENT}.base`
+  varToDtcg['--accent-pigment-text'] = `Primitives.color.pigment.${DEFAULT_ACCENT}.deep`
 
   // var(--x) → DTCG alias using the real primitive path from the lookup map.
   const alias = (ref) => {

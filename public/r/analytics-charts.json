@@ -19,5 +19,12 @@
       "target": "components/quill/analytics-charts.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "data-viz",
+      "data-display"
+    ],
+    "use_when": "You need a dashboard view of trends over time — an area chart plus a bar chart on card surfaces."
+  },
   "type": "registry:block"
 }

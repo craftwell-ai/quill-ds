@@ -17,5 +17,11 @@
       "target": "components/quill/signup.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "auth"
+    ],
+    "use_when": "You need standard account creation — name, email, password, and a sign-in link."
+  },
   "type": "registry:block"
 }

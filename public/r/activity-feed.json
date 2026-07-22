@@ -17,5 +17,11 @@
       "target": "components/quill/activity-feed.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "data-display"
+    ],
+    "use_when": "You need to show a chronological history of what happened — recent events with who, what, and when."
+  },
   "type": "registry:block"
 }

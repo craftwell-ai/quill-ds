@@ -16,5 +16,12 @@
       "target": "components/quill/announcement-banner.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "feedback",
+      "marketing"
+    ],
+    "use_when": "You need to announce something site-wide with a dismissible banner, either inline or full-bleed."
+  },
   "type": "registry:block"
 }

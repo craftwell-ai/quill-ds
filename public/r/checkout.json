@@ -20,5 +20,12 @@
       "target": "components/quill/checkout.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "commerce",
+      "form"
+    ],
+    "use_when": "You need to collect payment and card details alongside an order summary."
+  },
   "type": "registry:block"
 }

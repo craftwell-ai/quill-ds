@@ -18,5 +18,11 @@
       "target": "components/quill/order-summary.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "commerce"
+    ],
+    "use_when": "You need a cart-review card with line items, a promo field, a total, and a pay button."
+  },
   "type": "registry:block"
 }

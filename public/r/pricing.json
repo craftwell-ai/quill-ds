@@ -17,5 +17,12 @@
       "target": "components/quill/pricing.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing",
+      "commerce"
+    ],
+    "use_when": "You need a tiered pricing grid with a highlighted plan and feature checklists."
+  },
   "type": "registry:block"
 }

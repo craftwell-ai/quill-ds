@@ -18,5 +18,12 @@
       "target": "components/quill/login-split-panel.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "auth",
+      "marketing"
+    ],
+    "use_when": "You need a branded full-page sign-in with a testimonial side panel and magic-link option."
+  },
   "type": "registry:block"
 }

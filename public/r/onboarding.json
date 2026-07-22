@@ -16,5 +16,11 @@
       "target": "components/quill/onboarding.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "productivity"
+    ],
+    "use_when": "You need a setup checklist that tracks progress and links to remaining steps."
+  },
   "type": "registry:block"
 }

@@ -14,5 +14,11 @@
       "target": "components/quill/feature-section.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing"
+    ],
+    "use_when": "You need to present product features in an editorial multi-column grid."
+  },
   "type": "registry:block"
 }

@@ -20,5 +20,12 @@
       "target": "components/quill/calendar-range.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "scheduling",
+      "form"
+    ],
+    "use_when": "You need to book a span of days with a two-month range picker and confirm/clear actions."
+  },
   "type": "registry:block"
 }

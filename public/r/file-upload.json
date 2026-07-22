@@ -18,5 +18,11 @@
       "target": "components/quill/file-upload.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "form"
+    ],
+    "use_when": "You need drag-and-drop asset upload with a progress-tracked queue."
+  },
   "type": "registry:block"
 }

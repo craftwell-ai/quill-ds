@@ -16,5 +16,11 @@
       "target": "components/quill/theme-selector.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "settings"
+    ],
+    "use_when": "You need to let users switch among Quill's four themes and four accents, persisted to localStorage."
+  },
   "type": "registry:block"
 }

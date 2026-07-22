@@ -17,5 +17,11 @@
       "target": "components/quill/login-minimal.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "auth"
+    ],
+    "use_when": "You need the leanest possible sign-in — a single field for one-time-code entry."
+  },
   "type": "registry:block"
 }

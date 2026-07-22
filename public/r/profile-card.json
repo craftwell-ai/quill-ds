@@ -18,5 +18,11 @@
       "target": "components/quill/profile-card.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "data-display"
+    ],
+    "use_when": "You need a compact user profile with avatar, role, stats, and follow / message actions."
+  },
   "type": "registry:block"
 }

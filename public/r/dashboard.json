@@ -18,5 +18,12 @@
       "target": "components/quill/dashboard.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "app-shell",
+      "data-display"
+    ],
+    "use_when": "You need a full application home — sidebar, search header, and KPI cards."
+  },
   "type": "registry:block"
 }

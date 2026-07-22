@@ -20,5 +20,12 @@
       "target": "components/quill/mail-shell.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "messaging",
+      "app-shell"
+    ],
+    "use_when": "You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply."
+  },
   "type": "registry:block"
 }

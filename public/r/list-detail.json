@@ -17,5 +17,12 @@
       "target": "components/quill/list-detail.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "messaging",
+      "app-shell"
+    ],
+    "use_when": "You need an inbox-style split view pairing a selectable list with a detail pane."
+  },
   "type": "registry:block"
 }

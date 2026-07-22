@@ -16,5 +16,11 @@
       "target": "components/quill/chat.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "messaging"
+    ],
+    "use_when": "You need a one-on-one messaging panel with a contact header, bubbles, and a composer."
+  },
   "type": "registry:block"
 }

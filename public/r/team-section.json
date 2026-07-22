@@ -18,5 +18,11 @@
       "target": "components/quill/team-section.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing"
+    ],
+    "use_when": "You need a marketing team grid with member cards, roles, and contact actions."
+  },
   "type": "registry:block"
 }

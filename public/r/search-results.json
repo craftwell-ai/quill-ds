@@ -17,5 +17,12 @@
       "target": "components/quill/search-results.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "navigation",
+      "data-display"
+    ],
+    "use_when": "You need a search panel with a query input, result count, and a linked result list."
+  },
   "type": "registry:block"
 }

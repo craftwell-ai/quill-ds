@@ -19,5 +19,12 @@
       "target": "components/quill/invoice.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "commerce",
+      "data-display"
+    ],
+    "use_when": "You need a printable invoice with parties, line-item totals, and a download action."
+  },
   "type": "registry:block"
 }
