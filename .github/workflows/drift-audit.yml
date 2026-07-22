@@ -1,0 +1,34 @@
+name: Drift audit
+
+# The "watch" step of the self-healing loop, as a native scheduled workflow —
+# no Claude cloud cost, no interactive auth. Reports the time-based drift that
+# per-PR CI can't catch (dependency freshness, security advisories, release
+# housekeeping) to the run's step summary. Fails — and so emails — only on an
+# actionable high/critical advisory. Per-PR deterministic invariants live in the
+# test suite; live Figma↔code parity is on-demand (see scripts/DRIFT-AUDIT.md).
+
+on:
+  schedule:
+    - cron: '0 13 * * 1' # Mondays 13:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  audit:
+    name: Weekly drift audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # tags, for the release-housekeeping check
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit
+        run: npm run drift-audit
