@@ -19,5 +19,11 @@
       "target": "components/quill/contact-form.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "form"
+    ],
+    "use_when": "You need a get-in-touch form with name, email, topic, and message fields."
+  },
   "type": "registry:block"
 }

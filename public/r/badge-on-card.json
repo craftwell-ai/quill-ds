@@ -15,5 +15,11 @@
       "target": "components/quill/badge-on-card.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "data-display"
+    ],
+    "use_when": "You need to show status or category badges attached to a content card."
+  },
   "type": "registry:block"
 }

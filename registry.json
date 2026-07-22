@@ -7,7 +7,7 @@
       "name": "quill",
       "type": "registry:base",
       "title": "Quill Design System",
-      "description": "Warm parchment surfaces, terracotta accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications.",
+      "description": "Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications.",
       "author": "Craftwell (https://www.quilldesignsystem.com)",
       "files": [
         {
@@ -45,6 +45,12 @@
       "type": "registry:block",
       "title": "Activity feed",
       "description": "Card with a vertical timeline of recent events, each with an avatar, action text, and timestamp.",
+      "meta": {
+        "intent": [
+          "data-display"
+        ],
+        "use_when": "You need to show a chronological history of what happened — recent events with who, what, and when."
+      },
       "registryDependencies": [
         "card",
         "avatar",
@@ -64,6 +70,12 @@
       "type": "registry:block",
       "title": "Alert stack",
       "description": "A vertical stack of informational, success, and destructive alerts with icons.",
+      "meta": {
+        "intent": [
+          "feedback"
+        ],
+        "use_when": "You need to surface inline status messages of varying severity (info, success, destructive) within a page."
+      },
       "registryDependencies": [
         "alert",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -81,6 +93,13 @@
       "type": "registry:block",
       "title": "Analytics charts",
       "description": "Dashboard pair of cards showing an area chart of audience growth and a bar chart of weekly sales.",
+      "meta": {
+        "intent": [
+          "data-viz",
+          "data-display"
+        ],
+        "use_when": "You need a dashboard view of trends over time — an area chart plus a bar chart on card surfaces."
+      },
       "registryDependencies": [
         "card",
         "chart",
@@ -102,6 +121,13 @@
       "type": "registry:block",
       "title": "Announcement banners",
       "description": "Two dismissible announcement banners: an inline bordered page banner and a full-bleed primary-color variant.",
+      "meta": {
+        "intent": [
+          "feedback",
+          "marketing"
+        ],
+        "use_when": "You need to announce something site-wide with a dismissible banner, either inline or full-bleed."
+      },
       "registryDependencies": [
         "badge",
         "button",
@@ -120,6 +146,12 @@
       "type": "registry:block",
       "title": "Badges on card",
       "description": "Default, secondary, and destructive badges displayed on a card surface.",
+      "meta": {
+        "intent": [
+          "data-display"
+        ],
+        "use_when": "You need to show status or category badges attached to a content card."
+      },
       "registryDependencies": [
         "card",
         "badge"
@@ -137,6 +169,12 @@
       "type": "registry:block",
       "title": "Calendar page",
       "description": "A studio schedule card pairing a single-date calendar with the selected day's session list.",
+      "meta": {
+        "intent": [
+          "scheduling"
+        ],
+        "use_when": "You need to pick a single date and show what's scheduled that day."
+      },
       "registryDependencies": [
         "card",
         "calendar",
@@ -156,6 +194,13 @@
       "type": "registry:block",
       "title": "Calendar range picker",
       "description": "Stateful two-month range calendar in a card for booking a span of days, with clear and reserve actions.",
+      "meta": {
+        "intent": [
+          "scheduling",
+          "form"
+        ],
+        "use_when": "You need to book a span of days with a two-month range picker and confirm/clear actions."
+      },
       "registryDependencies": [
         "card",
         "calendar",
@@ -178,6 +223,12 @@
       "type": "registry:block",
       "title": "Chat panel",
       "description": "A messaging panel with a contact header, message bubbles, and a composer input.",
+      "meta": {
+        "intent": [
+          "messaging"
+        ],
+        "use_when": "You need a one-on-one messaging panel with a contact header, bubbles, and a composer."
+      },
       "registryDependencies": [
         "input",
         "button",
@@ -196,6 +247,13 @@
       "type": "registry:block",
       "title": "Checkout",
       "description": "Two-column checkout with payment method picker, card form, and an order summary sidebar.",
+      "meta": {
+        "intent": [
+          "commerce",
+          "form"
+        ],
+        "use_when": "You need to collect payment and card details alongside an order summary."
+      },
       "registryDependencies": [
         "card",
         "input",
@@ -218,6 +276,12 @@
       "type": "registry:block",
       "title": "Command palette",
       "description": "A searchable command palette with grouped actions, recent items, and keyboard shortcuts.",
+      "meta": {
+        "intent": [
+          "navigation"
+        ],
+        "use_when": "You need a searchable ⌘K launcher for actions and quick navigation."
+      },
       "registryDependencies": [
         "command",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -235,6 +299,12 @@
       "type": "registry:block",
       "title": "Contact form",
       "description": "A get-in-touch card with name, email, topic select, and message fields.",
+      "meta": {
+        "intent": [
+          "form"
+        ],
+        "use_when": "You need a get-in-touch form with name, email, topic, and message fields."
+      },
       "registryDependencies": [
         "card",
         "input",
@@ -256,6 +326,12 @@
       "type": "registry:block",
       "title": "Cookie consent",
       "description": "A cookie consent banner with accept, reject, and preferences actions.",
+      "meta": {
+        "intent": [
+          "feedback"
+        ],
+        "use_when": "You need a compliance banner offering accept, reject, and preferences choices."
+      },
       "registryDependencies": [
         "button",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -273,6 +349,13 @@
       "type": "registry:block",
       "title": "Dashboard shell",
       "description": "An app shell with sidebar navigation, a search header, and KPI stat cards.",
+      "meta": {
+        "intent": [
+          "app-shell",
+          "data-display"
+        ],
+        "use_when": "You need a full application home — sidebar, search header, and KPI cards."
+      },
       "registryDependencies": [
         "button",
         "input",
@@ -293,6 +376,12 @@
       "type": "registry:block",
       "title": "Data table",
       "description": "A members table with filter toolbar, status badges, and per-row actions.",
+      "meta": {
+        "intent": [
+          "data-display"
+        ],
+        "use_when": "You need a filterable, actionable table of records with status badges and row actions."
+      },
       "registryDependencies": [
         "table",
         "badge",
@@ -313,6 +402,12 @@
       "type": "registry:block",
       "title": "Empty state",
       "description": "A dashed-border empty state with an icon, explanatory text, and a primary action.",
+      "meta": {
+        "intent": [
+          "feedback"
+        ],
+        "use_when": "You need to explain why a view is empty and offer the primary action to fill it."
+      },
       "registryDependencies": [
         "button",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -330,6 +425,12 @@
       "type": "registry:block",
       "title": "404 page",
       "description": "A full-page 404 error state with go-back and home actions.",
+      "meta": {
+        "intent": [
+          "feedback"
+        ],
+        "use_when": "You need a full-page not-found state with recovery actions."
+      },
       "registryDependencies": [
         "button",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -347,6 +448,13 @@
       "type": "registry:block",
       "title": "FAQ section",
       "description": "Centered FAQ section with an accordion of common questions and a contact call-to-action footer.",
+      "meta": {
+        "intent": [
+          "content",
+          "marketing"
+        ],
+        "use_when": "You need to answer common questions in an accordion with a contact fallback."
+      },
       "registryDependencies": [
         "accordion",
         "button"
@@ -364,6 +472,12 @@
       "type": "registry:block",
       "title": "Feature section",
       "description": "A marketing section with an editorial heading and a three-column feature grid.",
+      "meta": {
+        "intent": [
+          "marketing"
+        ],
+        "use_when": "You need to present product features in an editorial multi-column grid."
+      },
       "registryDependencies": [
         "https://www.quilldesignsystem.com/r/icon.json"
       ],
@@ -380,6 +494,12 @@
       "type": "registry:block",
       "title": "File upload",
       "description": "An asset upload card with a drag-and-drop dropzone and a progress-tracked upload queue.",
+      "meta": {
+        "intent": [
+          "form"
+        ],
+        "use_when": "You need drag-and-drop asset upload with a progress-tracked queue."
+      },
       "registryDependencies": [
         "card",
         "button",
@@ -400,6 +520,13 @@
       "type": "registry:block",
       "title": "Site footer",
       "description": "A marketing footer with brand blurb, link columns, and legal links.",
+      "meta": {
+        "intent": [
+          "marketing",
+          "navigation"
+        ],
+        "use_when": "You need a site-wide footer with link columns, a brand blurb, and legal links."
+      },
       "registryDependencies": [
         "separator"
       ],
@@ -416,6 +543,12 @@
       "type": "registry:block",
       "title": "Forgot password",
       "description": "A password reset card with an email field, send-link action, and back-to-sign-in button.",
+      "meta": {
+        "intent": [
+          "auth"
+        ],
+        "use_when": "You need a password-reset request card that sends a recovery link."
+      },
       "registryDependencies": [
         "card",
         "input",
@@ -436,6 +569,12 @@
       "type": "registry:block",
       "title": "Hero",
       "description": "A centered marketing hero with a release badge, serif headline, supporting copy, and primary/secondary call-to-action buttons.",
+      "meta": {
+        "intent": [
+          "marketing"
+        ],
+        "use_when": "You need the top-of-page marketing statement — headline, supporting copy, and calls to action."
+      },
       "registryDependencies": [
         "badge",
         "button",
@@ -454,6 +593,13 @@
       "type": "registry:block",
       "title": "Invoice",
       "description": "Invoice card with sender and recipient details, a line-item table with totals, and a download action.",
+      "meta": {
+        "intent": [
+          "commerce",
+          "data-display"
+        ],
+        "use_when": "You need a printable invoice with parties, line-item totals, and a download action."
+      },
       "registryDependencies": [
         "card",
         "table",
@@ -475,6 +621,12 @@
       "type": "registry:block",
       "title": "Kanban board",
       "description": "A three-column kanban board with card counts, tagged task cards, avatars, and an add-card affordance per column.",
+      "meta": {
+        "intent": [
+          "productivity"
+        ],
+        "use_when": "You need to manage work across status columns with draggable, tagged task cards."
+      },
       "registryDependencies": [
         "badge",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -492,6 +644,13 @@
       "type": "registry:block",
       "title": "List + detail",
       "description": "An inbox-style split view pairing a selectable message list with a detail pane that includes archive and delete actions.",
+      "meta": {
+        "intent": [
+          "messaging",
+          "app-shell"
+        ],
+        "use_when": "You need an inbox-style split view pairing a selectable list with a detail pane."
+      },
       "registryDependencies": [
         "badge",
         "button",
@@ -511,6 +670,12 @@
       "type": "registry:block",
       "title": "Login",
       "description": "A sign-in card with email and password fields, a remember-me checkbox, and primary and forgot-password actions.",
+      "meta": {
+        "intent": [
+          "auth"
+        ],
+        "use_when": "You need the standard email-and-password sign-in with remember-me and reset links."
+      },
       "registryDependencies": [
         "card",
         "input",
@@ -531,6 +696,12 @@
       "type": "registry:block",
       "title": "Minimal login",
       "description": "Bare centered login form with a logo mark and a single email field for one-time-code sign-in.",
+      "meta": {
+        "intent": [
+          "auth"
+        ],
+        "use_when": "You need the leanest possible sign-in — a single field for one-time-code entry."
+      },
       "registryDependencies": [
         "input",
         "label",
@@ -550,6 +721,13 @@
       "type": "registry:block",
       "title": "Login with split panel",
       "description": "Full-page login with a brand testimonial side panel and an email/password form with a magic-link option.",
+      "meta": {
+        "intent": [
+          "auth",
+          "marketing"
+        ],
+        "use_when": "You need a branded full-page sign-in with a testimonial side panel and magic-link option."
+      },
       "registryDependencies": [
         "input",
         "label",
@@ -570,6 +748,13 @@
       "type": "registry:block",
       "title": "Mail inbox shell",
       "description": "Two-pane mail client shell with a searchable message list and a reading pane with toolbar and inline reply.",
+      "meta": {
+        "intent": [
+          "messaging",
+          "app-shell"
+        ],
+        "use_when": "You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply."
+      },
       "registryDependencies": [
         "badge",
         "button",
@@ -592,6 +777,12 @@
       "type": "registry:block",
       "title": "Navbar",
       "description": "A top navigation bar with brand wordmark, responsive link list, and sign-in plus get-started actions.",
+      "meta": {
+        "intent": [
+          "navigation"
+        ],
+        "use_when": "You need a top navigation bar with wordmark, links, and sign-in / get-started actions."
+      },
       "registryDependencies": [
         "button",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -609,6 +800,12 @@
       "type": "registry:block",
       "title": "Theme selector",
       "description": "A dropdown picker for the four Quill themes (Dawn, Dusk, Classic Light, Classic Dark) and the four pigment accents (terracotta, moss, indigo, gold) — sets data-theme/data-accent and persists both to localStorage.",
+      "meta": {
+        "intent": [
+          "settings"
+        ],
+        "use_when": "You need to let users switch among Quill's four themes and four accents, persisted to localStorage."
+      },
       "registryDependencies": [
         "button",
         "dropdown-menu",
@@ -627,6 +824,13 @@
       "type": "registry:block",
       "title": "Newsletter signup",
       "description": "A centered newsletter signup section with an email form and social proof.",
+      "meta": {
+        "intent": [
+          "marketing",
+          "form"
+        ],
+        "use_when": "You need an email-capture section with social proof to grow a list."
+      },
       "registryDependencies": [
         "input",
         "label",
@@ -646,6 +850,13 @@
       "type": "registry:block",
       "title": "Notifications",
       "description": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action.",
+      "meta": {
+        "intent": [
+          "feedback",
+          "data-display"
+        ],
+        "use_when": "You need a notifications center with unread indicators and a mark-all-read action."
+      },
       "registryDependencies": [
         "card",
         "button",
@@ -665,6 +876,12 @@
       "type": "registry:block",
       "title": "Onboarding checklist",
       "description": "A setup checklist card with a progress bar, completed and pending tasks, and start links for remaining steps.",
+      "meta": {
+        "intent": [
+          "productivity"
+        ],
+        "use_when": "You need a setup checklist that tracks progress and links to remaining steps."
+      },
       "registryDependencies": [
         "card",
         "button",
@@ -683,6 +900,12 @@
       "type": "registry:block",
       "title": "Order summary",
       "description": "A checkout order summary card with line items, a promo code input, a total, and a pay-now button.",
+      "meta": {
+        "intent": [
+          "commerce"
+        ],
+        "use_when": "You need a cart-review card with line items, a promo field, a total, and a pay button."
+      },
       "registryDependencies": [
         "card",
         "button",
@@ -703,6 +926,12 @@
       "type": "registry:block",
       "title": "OTP verification",
       "description": "An email verification card with a six-digit one-time-passcode input and resend action.",
+      "meta": {
+        "intent": [
+          "auth"
+        ],
+        "use_when": "You need to verify an email with a six-digit one-time passcode and resend."
+      },
       "registryDependencies": [
         "card",
         "input-otp",
@@ -722,6 +951,13 @@
       "type": "registry:block",
       "title": "Page header",
       "description": "A page header with breadcrumb trail, title and description, and duplicate/new action buttons.",
+      "meta": {
+        "intent": [
+          "navigation",
+          "app-shell"
+        ],
+        "use_when": "You need a screen header with breadcrumbs, title, description, and primary actions."
+      },
       "registryDependencies": [
         "breadcrumb",
         "button",
@@ -740,6 +976,13 @@
       "type": "registry:block",
       "title": "Pricing",
       "description": "A three-tier pricing grid with a highlighted popular plan, feature checklists, and per-plan calls to action.",
+      "meta": {
+        "intent": [
+          "marketing",
+          "commerce"
+        ],
+        "use_when": "You need a tiered pricing grid with a highlighted plan and feature checklists."
+      },
       "registryDependencies": [
         "card",
         "button",
@@ -759,6 +1002,12 @@
       "type": "registry:block",
       "title": "Profile card",
       "description": "A centered profile card with avatar initials, role, follower stats, and follow and message actions.",
+      "meta": {
+        "intent": [
+          "data-display"
+        ],
+        "use_when": "You need a compact user profile with avatar, role, stats, and follow / message actions."
+      },
       "registryDependencies": [
         "card",
         "button",
@@ -779,6 +1028,13 @@
       "type": "registry:block",
       "title": "Search results",
       "description": "A docs search panel with a query input, result count, and a linked result list showing breadcrumbs and type badges.",
+      "meta": {
+        "intent": [
+          "navigation",
+          "data-display"
+        ],
+        "use_when": "You need a search panel with a query input, result count, and a linked result list."
+      },
       "registryDependencies": [
         "input",
         "badge",
@@ -798,6 +1054,13 @@
       "type": "registry:block",
       "title": "Settings form",
       "description": "A profile settings card with name fields, bio textarea, and an email notification toggle.",
+      "meta": {
+        "intent": [
+          "settings",
+          "form"
+        ],
+        "use_when": "You need a profile settings form with name, bio, and notification preferences."
+      },
       "registryDependencies": [
         "card",
         "input",
@@ -820,6 +1083,13 @@
       "type": "registry:block",
       "title": "Sidebar navigation shell",
       "description": "Collapsible icon sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.",
+      "meta": {
+        "intent": [
+          "app-shell",
+          "navigation"
+        ],
+        "use_when": "You need a collapsible icon-sidebar app shell with grouped menus and a content area."
+      },
       "registryDependencies": [
         "sidebar",
         "breadcrumb",
@@ -841,6 +1111,12 @@
       "type": "registry:block",
       "title": "Sign up",
       "description": "An account creation card with name, email, and password fields plus a sign-in link.",
+      "meta": {
+        "intent": [
+          "auth"
+        ],
+        "use_when": "You need standard account creation — name, email, password, and a sign-in link."
+      },
       "registryDependencies": [
         "card",
         "input",
@@ -860,6 +1136,12 @@
       "type": "registry:block",
       "title": "Signup — social first",
       "description": "Signup card leading with GitHub and Google provider buttons, followed by an email and password fallback.",
+      "meta": {
+        "intent": [
+          "auth"
+        ],
+        "use_when": "You need signup that leads with OAuth providers and falls back to email/password."
+      },
       "registryDependencies": [
         "card",
         "input",
@@ -880,6 +1162,12 @@
       "type": "registry:block",
       "title": "Stat cards",
       "description": "A responsive grid of KPI cards showing values with delta badges versus last month.",
+      "meta": {
+        "intent": [
+          "data-display"
+        ],
+        "use_when": "You need a row of KPI cards showing values with period-over-period deltas."
+      },
       "registryDependencies": [
         "card",
         "badge"
@@ -897,6 +1185,12 @@
       "type": "registry:block",
       "title": "Stats band",
       "description": "Marketing band of headline statistics separated by vertical dividers on a card background.",
+      "meta": {
+        "intent": [
+          "marketing"
+        ],
+        "use_when": "You need a marketing band of headline statistics separated by dividers."
+      },
       "registryDependencies": [
         "separator"
       ],
@@ -913,6 +1207,13 @@
       "type": "registry:block",
       "title": "Tabs page",
       "description": "A tabbed settings page with account, notifications, and security panels.",
+      "meta": {
+        "intent": [
+          "navigation",
+          "settings"
+        ],
+        "use_when": "You need a settings screen split into account, notifications, and security tabs."
+      },
       "registryDependencies": [
         "tabs",
         "card",
@@ -933,6 +1234,12 @@
       "type": "registry:block",
       "title": "Team section",
       "description": "Marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action.",
+      "meta": {
+        "intent": [
+          "marketing"
+        ],
+        "use_when": "You need a marketing team grid with member cards, roles, and contact actions."
+      },
       "registryDependencies": [
         "card",
         "avatar",
@@ -953,6 +1260,13 @@
       "type": "registry:block",
       "title": "Testimonial",
       "description": "A customer quote card with a serif pull-quote, avatar initials, and attribution.",
+      "meta": {
+        "intent": [
+          "marketing",
+          "content"
+        ],
+        "use_when": "You need a customer-quote card with a serif pull-quote and attribution."
+      },
       "registryDependencies": [],
       "files": [
         {
@@ -967,6 +1281,13 @@
       "type": "registry:block",
       "title": "Setup wizard step",
       "description": "A multi-step wizard card with a progress stepper, workspace fields, and back/continue actions.",
+      "meta": {
+        "intent": [
+          "form",
+          "productivity"
+        ],
+        "use_when": "You need a multi-step setup flow with a progress stepper and back/continue navigation."
+      },
       "registryDependencies": [
         "card",
         "input",

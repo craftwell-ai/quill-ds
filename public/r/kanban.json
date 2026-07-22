@@ -15,5 +15,11 @@
       "target": "components/quill/kanban.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "productivity"
+    ],
+    "use_when": "You need to manage work across status columns with draggable, tagged task cards."
+  },
   "type": "registry:block"
 }

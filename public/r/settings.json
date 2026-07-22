@@ -20,5 +20,12 @@
       "target": "components/quill/settings.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "settings",
+      "form"
+    ],
+    "use_when": "You need a profile settings form with name, bio, and notification preferences."
+  },
   "type": "registry:block"
 }

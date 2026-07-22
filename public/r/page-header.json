@@ -16,5 +16,12 @@
       "target": "components/quill/page-header.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "navigation",
+      "app-shell"
+    ],
+    "use_when": "You need a screen header with breadcrumbs, title, description, and primary actions."
+  },
   "type": "registry:block"
 }

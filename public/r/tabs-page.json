@@ -18,5 +18,12 @@
       "target": "components/quill/tabs-page.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "navigation",
+      "settings"
+    ],
+    "use_when": "You need a settings screen split into account, notifications, and security tabs."
+  },
   "type": "registry:block"
 }

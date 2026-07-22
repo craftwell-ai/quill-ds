@@ -14,5 +14,11 @@
       "target": "components/quill/stats-band.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing"
+    ],
+    "use_when": "You need a marketing band of headline statistics separated by dividers."
+  },
   "type": "registry:block"
 }

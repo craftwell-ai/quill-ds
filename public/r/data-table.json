@@ -18,5 +18,11 @@
       "target": "components/quill/data-table.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "data-display"
+    ],
+    "use_when": "You need a filterable, actionable table of records with status badges and row actions."
+  },
   "type": "registry:block"
 }

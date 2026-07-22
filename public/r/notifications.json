@@ -17,5 +17,12 @@
       "target": "components/quill/notifications.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "feedback",
+      "data-display"
+    ],
+    "use_when": "You need a notifications center with unread indicators and a mark-all-read action."
+  },
   "type": "registry:block"
 }

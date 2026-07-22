@@ -15,5 +15,12 @@
       "target": "components/quill/faq.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "content",
+      "marketing"
+    ],
+    "use_when": "You need to answer common questions in an accordion with a contact fallback."
+  },
   "type": "registry:block"
 }

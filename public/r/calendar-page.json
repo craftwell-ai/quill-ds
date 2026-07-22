@@ -17,5 +17,11 @@
       "target": "components/quill/calendar-page.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "scheduling"
+    ],
+    "use_when": "You need to pick a single date and show what's scheduled that day."
+  },
   "type": "registry:block"
 }

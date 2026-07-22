@@ -15,5 +15,11 @@
       "target": "components/quill/command-palette.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "navigation"
+    ],
+    "use_when": "You need a searchable ⌘K launcher for actions and quick navigation."
+  },
   "type": "registry:block"
 }

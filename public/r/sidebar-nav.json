@@ -19,5 +19,12 @@
       "target": "components/quill/sidebar-nav.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "app-shell",
+      "navigation"
+    ],
+    "use_when": "You need a collapsible icon-sidebar app shell with grouped menus and a content area."
+  },
   "type": "registry:block"
 }

@@ -15,5 +15,11 @@
       "target": "components/quill/empty-state.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "feedback"
+    ],
+    "use_when": "You need to explain why a view is empty and offer the primary action to fill it."
+  },
   "type": "registry:block"
 }

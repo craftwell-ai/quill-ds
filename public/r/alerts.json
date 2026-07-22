@@ -15,5 +15,11 @@
       "target": "components/quill/alerts.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "feedback"
+    ],
+    "use_when": "You need to surface inline status messages of varying severity (info, success, destructive) within a page."
+  },
   "type": "registry:block"
 }

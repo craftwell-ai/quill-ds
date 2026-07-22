@@ -16,5 +16,11 @@
       "target": "components/quill/hero.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing"
+    ],
+    "use_when": "You need the top-of-page marketing statement — headline, supporting copy, and calls to action."
+  },
   "type": "registry:block"
 }

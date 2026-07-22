@@ -15,5 +15,11 @@
       "target": "components/quill/navbar.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "navigation"
+    ],
+    "use_when": "You need a top navigation bar with wordmark, links, and sign-in / get-started actions."
+  },
   "type": "registry:block"
 }

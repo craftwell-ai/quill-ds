@@ -9,6 +9,25 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.14] — 2026-07-21
+
+### Added
+- **Registry intent metadata.** All 50 blocks now carry a `meta` object with an
+  `intent` array (from a controlled 14-tag vocabulary in
+  `scripts/registry-intent-tags.mjs`) and a `use_when` sentence — the semantic
+  layer that lets the catalog be searched by meaning and lets AI agents pick the
+  right block. `meta` is schema-native to shadcn and passes through
+  `shadcn build` into `public/r/*.json`. Convention documented in
+  `registry/README.md`; enforced by `scripts/registry-meta.test.mjs`.
+- `DEFAULT_ACCENT` constant in `scripts/build-tokens.mjs` — single source of
+  truth for the default accent (moss), consumed by the drift guard below.
+  Generated output is byte-identical.
+
+### Fixed
+- Registry base description said "terracotta accents" — stale since v0.2.6 made
+  moss the default. Corrected to "moss accents", and a new test ties the copy to
+  `DEFAULT_ACCENT` so this class of drift fails CI instead of shipping.
+
 ## [0.2.13] — 2026-07-21
 
 ### Changed

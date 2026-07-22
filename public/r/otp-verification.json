@@ -17,5 +17,11 @@
       "target": "components/quill/otp-verification.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "auth"
+    ],
+    "use_when": "You need to verify an email with a six-digit one-time passcode and resend."
+  },
   "type": "registry:block"
 }

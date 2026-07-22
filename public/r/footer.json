@@ -14,5 +14,12 @@
       "target": "components/quill/footer.tsx"
     }
   ],
+  "meta": {
+    "intent": [
+      "marketing",
+      "navigation"
+    ],
+    "use_when": "You need a site-wide footer with link columns, a brand blurb, and legal links."
+  },
   "type": "registry:block"
 }
