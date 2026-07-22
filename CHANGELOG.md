@@ -9,6 +9,28 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.16] — 2026-07-22
+
+### Added
+- **Drift audit (self-healing "watch" layer), de-risked into three tiers**
+  (`scripts/DRIFT-AUDIT.md`):
+  - **Tier 1 — CI invariants:** new `scripts/repo-invariants.test.mjs` (current
+    version has a CHANGELOG entry; every registry item's files exist), and the
+    CI "Generated files in sync" step now also regenerates the registry and
+    `llms.txt` and diffs `public/r` + `public/llms.txt` — so a forgotten
+    `build:registry`/`build:llms` fails CI. Deterministic, per-PR, no noise.
+  - **Tier 2 — scheduled report:** `npm run drift-audit`
+    (`scripts/drift-audit.mjs`) reports dependency freshness, security
+    advisories, and release housekeeping. Runs weekly via
+    `.github/workflows/drift-audit.yml` (native GitHub Actions — no cloud cost,
+    no interactive auth), failing only on an *actionable* high/critical advisory
+    (a real, non-major fix), so upstream-held advisories don't trigger weekly
+    false alarms.
+  - **Tier 3 — Figma↔code parity:** an on-demand interactive check (documented,
+    kept out of the headless path). Baseline run confirms the live Figma file is
+    in sync — accent aliases → moss.deep, `shadcn/chart-1..5` → the series cuts,
+    all 20 series hexes match.
+
 ## [0.2.15] — 2026-07-22
 
 ### Added

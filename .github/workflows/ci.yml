@@ -26,13 +26,15 @@ jobs:
         run: npm ci
 
       - name: Generated files in sync
-        # Tokens and the icon core set are generated from source-of-truth
-        # files and committed. If regenerating produces a diff, someone
-        # edited generated output by hand or forgot to rebuild.
+        # Tokens, icons, the built registry, and llms.txt are all generated from
+        # source-of-truth files and committed. If regenerating produces a diff,
+        # someone edited generated output by hand or forgot to rebuild.
         run: |
           npm run build:tokens
           npm run build:icons
-          git diff --exit-code -- src/app/globals.css src/tokens/generated registry/themes tokens src/components/ui/icons.core.mjs
+          npm run build:registry
+          npm run build:llms
+          git diff --exit-code -- src/app/globals.css src/tokens/generated registry/themes tokens src/components/ui/icons.core.mjs public/r public/llms.txt
 
       - name: Lint
         run: npm run lint
