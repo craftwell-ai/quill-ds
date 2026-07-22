@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 50 composable blocks. Version 0.2.16.
+> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 50 composable blocks. Version 0.2.17.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 

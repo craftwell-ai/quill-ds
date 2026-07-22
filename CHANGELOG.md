@@ -9,6 +9,16 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.17] — 2026-07-22
+
+### Changed
+- Patch-bumped `next` and `eslint-config-next` 16.2.10 → 16.2.11, and
+  `react`/`react-dom` 19.2.7 → 19.2.8 (surfaced by the weekly drift audit).
+  Held as before: `@types/node` (pinned ^24 to the runtime), `eslint` 9, and
+  `typescript` 5.9 — `eslint-config-next` 16.2 still rejects ESLint 10 / TS 7.
+  The two upstream `next`→`sharp`/`postcss` high advisories did not clear in
+  16.2.11 and remain held (drift audit reports but does not fail on them).
+
 ## [0.2.16] — 2026-07-22
 
 ### Added
