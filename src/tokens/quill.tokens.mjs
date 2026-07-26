@@ -31,7 +31,7 @@ export const tokens = {
       },
       moss: {
         base: { light: '#7A8C5C', dark: '#A2B57E', classicLight: '#758F43', classicDark: '#9DB962' },
-        deep: { light: '#55633C', dark: '#B6C896', classicLight: '#596F2A', classicDark: '#B1CC7E' },
+        deep: { light: '#4C5936', dark: '#B6C896', classicLight: '#516526', classicDark: '#B1CC7E' },
       },
       indigo: {
         base: { light: '#5B6B8A', dark: '#92A2C2', classicLight: '#536A99', classicDark: '#8AA2D2' },
@@ -43,7 +43,7 @@ export const tokens = {
         // Gold is the one pigment whose deep cut can't carry TEXT duty on light
         // grounds (3.3:1 on Dawn paper, 3.9:1 on white). This darker text cut
         // clears 4.5:1 there; dark grounds reuse the deep cut (11:1+).
-        text: { light: '#755C32', dark: '#E2CA9E', classicLight: '#8A6216', classicDark: '#ECC883' },
+        text: { light: '#68522D', dark: '#E2CA9E', classicLight: '#7C5814', classicDark: '#ECC883' },
       },
     },
     chart: {
