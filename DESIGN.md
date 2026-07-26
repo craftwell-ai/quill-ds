@@ -321,6 +321,19 @@ The tier pill — uppercase capsule. `tier`: `everyday` / `featured` / `signed` 
 <Badge tier="heirloom" />
 ```
 
+### ToneBadge — registry `tone-badge` → `components/ui/tone-badge.tsx`
+The generic uppercase tag pill for app status/tier/label chips — pigment
+`tone` (`moss` positive · `gold` caution · `terracotta` attention · `indigo`
+informational · `neutral`/`muted` quiet), tinted by default or `solid` for the
+strong cue. Two sanctioned sizes, and only these two: `md` (20px, the badge
+scale) and `sm` (16px, the count-pill scale). Type stays `--text-2xs` with
+`--tracking-wide` 0.1em in BOTH sizes — never tighten tracking to shrink a
+pill. Hand-rolling `rounded-full … uppercase` spans is a contract violation;
+render every tag pill through ToneBadge.
+```jsx
+<ToneBadge tone="moss" solid size="sm">current</ToneBadge>
+```
+
 ### Eyebrow — `components/display/Eyebrow.jsx`
 Uppercase tracked kicker above a heading. Default terracotta with a leading dash;
 `muted` for plain ink-muted section labels.

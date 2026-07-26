@@ -41,6 +41,22 @@
       ]
     },
     {
+      "name": "tone-badge",
+      "type": "registry:ui",
+      "title": "Tone badge",
+      "description": "The Quill uppercase tag pill — pigment tones (moss/gold/terracotta/indigo/neutral/muted), tinted or solid, in the 20px badge and 16px count-pill sizes. One component so status chips never drift per call site.",
+      "registryDependencies": [
+        "badge"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/tone-badge.tsx",
+          "target": "components/ui/tone-badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "activity-feed",
       "type": "registry:block",
       "title": "Activity feed",

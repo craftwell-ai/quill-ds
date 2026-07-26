@@ -138,13 +138,13 @@
           },
           "deep": {
             "$type": "color",
-            "$value": "#5E6E43",
+            "$value": "#55633C",
             "$extensions": {
               "com.figma": {
                 "modes": {
-                  "Light": "#5E6E43",
+                  "Light": "#55633C",
                   "Dark": "#B6C896",
-                  "Classic Light": "#5A712B",
+                  "Classic Light": "#596F2A",
                   "Classic Dark": "#B1CC7E"
                 }
               }
@@ -212,13 +212,13 @@
           },
           "text": {
             "$type": "color",
-            "$value": "#826637",
+            "$value": "#755C32",
             "$extensions": {
               "com.figma": {
                 "modes": {
-                  "Light": "#826637",
+                  "Light": "#755C32",
                   "Dark": "#E2CA9E",
-                  "Classic Light": "#996D18",
+                  "Classic Light": "#8A6216",
                   "Classic Dark": "#ECC883"
                 }
               }
