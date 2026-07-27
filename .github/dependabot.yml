@@ -1,0 +1,84 @@
+version: 2
+
+# The "act" step of the self-healing loop. The weekly drift audit
+# (scripts/DRIFT-AUDIT.md, Tier 2) *reports* dependency staleness; this opens the
+# PR that fixes it, and CI proves the bump is safe before it can merge.
+#
+# Two design rules carried over from the drift audit, both aimed at zero false
+# alarms — a maintenance bot you learn to ignore is worse than none:
+#
+#   1. Held majors are ignored, not retried. `eslint-config-next` 16.2 rejects
+#      ESLint 10 and TypeScript 7, and `@types/node` is pinned to the Node 24
+#      runtime. Left unignored, all three would reopen a red PR every Monday
+#      forever. Revisit these when eslint-config-next moves (see CHANGELOG 0.2.17).
+#   2. Lockstep families are grouped. Storybook requires every one of its
+#      packages at an identical version, and next/eslint-config-next release in
+#      tandem — bumped singly they break, so they move as one PR or not at all.
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '13:00'
+      timezone: Etc/UTC # same maintenance window as the weekly drift audit
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore(deps) # matches the existing history, e.g. e052065
+    groups:
+      # Storybook publishes its packages in lockstep; a partial bump is a broken
+      # install, so all of them ride in a single PR.
+      storybook:
+        patterns:
+          - storybook
+          - '@storybook/*'
+          - eslint-plugin-storybook
+        update-types: [minor, patch]
+
+      # next and eslint-config-next share a release train and a version number.
+      next:
+        patterns:
+          - next
+          - eslint-config-next
+        update-types: [minor, patch]
+
+      react:
+        patterns:
+          - react
+          - react-dom
+          - '@types/react'
+          - '@types/react-dom'
+        update-types: [minor, patch]
+
+      # Everything else, batched so routine patch drift is one PR a week rather
+      # than five. Majors stay out of every group and arrive individually, since
+      # each one needs a human read.
+      minor-and-patch:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+    ignore:
+      # Pinned to the CI/runtime Node major (ci.yml uses node-version: 24).
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
+      # eslint-config-next 16.2 still rejects ESLint 10.
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+      # eslint-config-next 16.2 still rejects TypeScript 7.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+
+  # Pins in ci.yml / drift-audit.yml (actions/checkout, actions/setup-node) go
+  # stale silently — nothing else in the repo watches them.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '13:00'
+      timezone: Etc/UTC
+    commit-message:
+      prefix: chore(ci)
+    groups:
+      actions:
+        patterns: ['*']

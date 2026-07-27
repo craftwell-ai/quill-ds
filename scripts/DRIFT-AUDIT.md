@@ -34,6 +34,16 @@ one with a real, non-major fix. Routine outdatedness and upstream advisories
 whose only "fix" is a breaking major (which we hold deliberately) are reported
 but do not fail the run, so there are no weekly false alarms.
 
+**The act arm — `.github/dependabot.yml`.** The audit reports staleness; it does
+not fix it. Dependabot opens the PR, on the same Monday 13:00 UTC window, and the
+required CI check proves the bump before it can merge. It inherits this file's
+no-false-alarms rule: the deliberately held majors (`@types/node`, `eslint`,
+`typescript`) are *ignored* rather than retried into a red PR every week, and
+lockstep families (all Storybook packages; `next` + `eslint-config-next`) are
+grouped so a partial bump — which would simply be broken — cannot be proposed.
+This is still not an agent editing the system: every change arrives as a PR a
+human merges.
+
 ## Tier 3 — Figma ↔ code parity (on-demand, interactive)
 
 The one check that needs interactive Figma MCP auth, so it is never scheduled —

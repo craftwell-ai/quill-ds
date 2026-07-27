@@ -77,8 +77,13 @@ test('accent blocks emit after theme blocks so the chosen accent wins on <html>'
   // theme blocks re-declare the DEFAULT accent (island safety); source order
   // must put accent blocks after theme blocks so [data-accent] still wins.
   assert.ok(block.lastIndexOf('[data-theme=') < block.indexOf('[data-accent='))
-  // gold's AA text cut exists as a primitive in :root
-  assert.match(css.root, /--gold-text:\s*#826637;/)
+  // gold's AA text cut exists as a primitive in :root. Derived from the token
+  // source, not a frozen literal: the *value* is owned by the 16-combo WCAG
+  // check in quill.tokens.test.mjs, which asserts the real 4.5:1 contrast. A
+  // hardcoded hex here only duplicates that check badly — it went stale through
+  // two legitimate AA retunes (#826637 → #755C32 → #68522D) and turned CI red
+  // for a passing design change.
+  assert.match(css.root, new RegExp(`--gold-text:\\s*${tokens.color.pigment.gold.text.light};`))
 })
 
 test('theme blocks re-declare aliases so nested data-theme islands re-resolve', () => {
