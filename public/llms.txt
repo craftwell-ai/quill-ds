@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 50 composable blocks. Version 0.2.17.
+> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.2.18.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -70,6 +70,7 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 - [List + detail](https://www.quilldesignsystem.com/r/list-detail.json) — _[messaging, app-shell]_ You need an inbox-style split view pairing a selectable list with a detail pane.
 - [Login](https://www.quilldesignsystem.com/r/login.json) — _[auth]_ You need the standard email-and-password sign-in with remember-me and reset links.
 - [Minimal login](https://www.quilldesignsystem.com/r/login-minimal.json) — _[auth]_ You need the leanest possible sign-in — a single field for one-time-code entry.
+- [Login with OAuth providers](https://www.quilldesignsystem.com/r/login-oauth.json) — _[auth]_ Identity comes from a provider (Google, GitHub, Apple) rather than a password you store.
 - [Login with split panel](https://www.quilldesignsystem.com/r/login-split-panel.json) — _[auth, marketing]_ You need a branded full-page sign-in with a testimonial side panel and magic-link option.
 - [Mail inbox shell](https://www.quilldesignsystem.com/r/mail-shell.json) — _[messaging, app-shell]_ You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply.
 - [Navbar](https://www.quilldesignsystem.com/r/navbar.json) — _[navigation]_ You need a top navigation bar with wordmark, links, and sign-in / get-started actions.

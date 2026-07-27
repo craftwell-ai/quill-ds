@@ -9,6 +9,45 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.18] — 2026-07-27
+
+### Added
+- **Dependabot (`.github/dependabot.yml`) — the "act" arm of the drift loop.**
+  Tier 2 already *reported* dependency staleness weekly; nothing opened the PR
+  that fixed it (0.2.17's bumps were done by hand). Dependabot now files them on
+  the same Monday 13:00 UTC window as the audit, and required CI proves each
+  bump before it can merge. Carries the audit's zero-false-alarm rule two ways:
+  the three deliberately held majors (`@types/node` pinned to the Node 24
+  runtime, `eslint` 9, `typescript` 5.9 — the latter two blocked by
+  `eslint-config-next` 16.2) are *ignored* rather than retried into a red PR
+  every week, and lockstep families are grouped so they cannot be split — all
+  Storybook packages as one PR, `next` + `eslint-config-next` as another.
+  GitHub Actions pins (`actions/checkout`, `actions/setup-node`) are now watched
+  too; nothing in the repo tracked them before.
+
+### Fixed
+- **`main` had been red since 0.2.17 and nothing stopped it.** The three commits
+  after PR #32 (`f2f9912`, `be3da66`, `4233d5c`) were pushed straight to `main`,
+  skipping the PR flow; CI ran on each push and failed on all three. Two real
+  defects had been sitting on `main` for a day:
+  - `public/llms.txt` was never regenerated after `login-oauth` was added, so
+    the published AI-consumption file advertised 50 blocks and omitted the new
+    one entirely — an LLM reading it could not know the block existed.
+  - `scripts/build-tokens.test.mjs` pinned `--gold-text` to the literal
+    `#826637`, which two legitimate AA retunes (`#755C32`, then `#68522D`) left
+    behind. The assertion now derives the expected value from the token source;
+    the real 4.5:1 contrast guarantee is owned by the 16-combo WCAG test, which
+    passed throughout. A frozen hex there only duplicated that check badly and
+    turned CI red for a correct design change.
+
+### Changed
+- **`main` is now genuinely protected.** The `Lint · types · tests · build`
+  check was running on every PR but was never *required* — the branch had no
+  protection rule and no ruleset, so a red PR merged as easily as a green one.
+  It is now a required status check (strict), with force-pushes and branch
+  deletion blocked. Admin enforcement is off, preserving the documented
+  emergency-push path.
+
 ## [0.2.17] — 2026-07-22
 
 ### Changed
