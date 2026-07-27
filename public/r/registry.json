@@ -733,6 +733,31 @@
       ]
     },
     {
+      "name": "login-oauth",
+      "type": "registry:block",
+      "title": "Login with OAuth providers",
+      "description": "Provider-first sign-in — Google, GitHub and Apple buttons above a divider, with an email fallback below.",
+      "registryDependencies": [
+        "input",
+        "label",
+        "button",
+        "separator"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/login-oauth.tsx",
+          "target": "components/quill/login-oauth.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "intent": [
+          "auth"
+        ],
+        "use_when": "Identity comes from a provider (Google, GitHub, Apple) rather than a password you store."
+      }
+    },
+    {
       "name": "login-split-panel",
       "type": "registry:block",
       "title": "Login with split panel",
