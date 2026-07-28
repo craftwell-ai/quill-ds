@@ -82,3 +82,7 @@ updates:
     groups:
       actions:
         patterns: ['*']
+        # Same rule as the npm groups: majors leave the group and arrive on
+        # their own, because each one needs a human read. (The first run grouped
+        # checkout/setup-node v4 → v7 together for exactly this missing filter.)
+        update-types: [minor, patch]
