@@ -31,7 +31,9 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: release
+  # Shared with self-heal.yml — see the note there. Both regenerate from source
+  # and can collide on the same file, so they take turns.
+  group: auto-maintenance
   cancel-in-progress: false
 
 jobs:
