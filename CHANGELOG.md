@@ -9,6 +9,11 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.23] — 2026-07-28
+
+### Changed
+- test(drift): deliberately stale llms.txt version to exercise self-heal
+
 ## [0.2.22] — 2026-07-28
 
 ### Changed
