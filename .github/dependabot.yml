@@ -68,6 +68,22 @@ updates:
       - dependency-name: typescript
         update-types: [version-update:semver-major]
 
+      # --- Transitive advisories with no reachable fix ---------------------
+      # `ignore` also governs SECURITY updates, which is the point here. These
+      # three are pulled in by next / eslint-config-next and cannot be bumped on
+      # their own; the security updater tries anyway and errors out, producing a
+      # failed run per advisory per cycle. Three failed runs on the first day —
+      # the same recurring false alarm scripts/DRIFT-AUDIT.md exists to prevent.
+      #
+      # Safe because none of them is a direct dependency: the real fix always
+      # arrives inside a `next` or `eslint-config-next` release, and neither of
+      # those is ignored. They also stay visible — the weekly drift audit lists
+      # every high/critical it cannot resolve, so silencing the bot that can't
+      # act does not silence the report that can tell you when it changes.
+      - dependency-name: postcss # via next; needs the held next major
+      - dependency-name: sharp # via next; needs the held next major
+      - dependency-name: brace-expansion # via eslint-config-next
+
   # Pins in ci.yml / drift-audit.yml (actions/checkout, actions/setup-node) go
   # stale silently — nothing else in the repo watches them.
   - package-ecosystem: github-actions

@@ -9,6 +9,30 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.21] — 2026-07-28
+
+### Fixed
+- **Dependabot security updates failed three times on their first cycle**, and
+  would have kept failing every cycle. Enabling them in 0.2.20 was right — they
+  immediately caught and auto-merged a real `@hono/node-server` advisory (#39) —
+  but the updater also attempts advisories it cannot resolve and errors out when
+  it can't. `postcss`, `sharp` (both via `next`) and `brace-expansion` (via
+  `eslint-config-next`) are transitive and only fixable inside a held major, so
+  each produced a failed run. That is the same recurring false alarm
+  `scripts/DRIFT-AUDIT.md` exists to prevent, reintroduced through a different
+  door. All three are now in `ignore`, which governs security updates as well as
+  version updates.
+- Safe because none is a direct dependency: the real fix always ships inside a
+  `next` or `eslint-config-next` release, and neither of those is ignored. They
+  also stay visible — the weekly audit still lists every high/critical it cannot
+  resolve, so the bot that can't act is silenced without silencing the report
+  that says when that changes.
+
+### Changed
+- `@hono/node-server` and `@modelcontextprotocol/sdk` bumped by the first
+  autonomous security merge (#39) — opened, verified, and merged with no human
+  in the loop.
+
 ## [0.2.20] — 2026-07-27
 
 ### Added
