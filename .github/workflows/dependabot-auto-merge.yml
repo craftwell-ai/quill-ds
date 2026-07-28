@@ -1,0 +1,46 @@
+name: Dependabot auto-merge
+
+# Closes the drift loop: the audit reports, Dependabot opens the PR, and this
+# merges it — but only once the required check is green. It does not merge
+# anything itself; it flips GitHub's "merge when green" switch, and branch
+# protection still refuses a red PR. A bad bump gets stuck as an open red PR
+# rather than reaching main.
+#
+# Majors are deliberately left for a human, matching dependabot.yml's grouping
+# rule: minor/patch are batched and automated, majors arrive alone and wait.
+
+on: pull_request_target
+
+# pull_request_target runs against the BASE repo with a write token, so it must
+# never check out or execute PR code. Nothing below does — the job only reads
+# metadata and calls the API.
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge (minor + patch)
+        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Flag majors for review
+        if: steps.meta.outputs.update-type == 'version-update:semver-major'
+        run: |
+          gh pr comment "$PR_URL" --body \
+            "Major update — not auto-merged. Held for a human read per \`.github/dependabot.yml\`. Merge manually once you've checked the upgrade notes."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

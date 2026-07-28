@@ -1,9 +1,14 @@
 # Drift audit
 
-Quill keeps itself honest with a three-tier "watch" system. It is deliberately
-**not** an autonomous agent that edits the system — every check either reports
-or blocks a merge; fixes always go through the normal PR flow. Each tier is
-scoped by what it needs, so the noisy/auth-gated failure modes never occur.
+Quill keeps itself honest with a three-tier "watch" system, and since v0.2.20 it
+also **acts** on what it sees. The original rule has not been relaxed, only
+automated: *fixes always go through the normal PR flow*. What changed is who
+opens the PR and who merges it — a bot, once the required check is green —
+rather than whether the check applies. Nothing writes to `main` directly, so an
+automated fix that is wrong shows up as a red PR, not a broken `main`.
+
+Each tier is scoped by what it needs, so the noisy/auth-gated failure modes never
+occur. The automation layer is described at the end.
 
 ## Tier 1 — invariants in CI (deterministic, per-PR, zero noise)
 
@@ -41,8 +46,8 @@ no-false-alarms rule: the deliberately held majors (`@types/node`, `eslint`,
 `typescript`) are *ignored* rather than retried into a red PR every week, and
 lockstep families (all Storybook packages; `next` + `eslint-config-next`) are
 grouped so a partial bump — which would simply be broken — cannot be proposed.
-This is still not an agent editing the system: every change arrives as a PR a
-human merges.
+Minor and patch bumps now merge themselves once green (see Automation below);
+majors are commented on and left for a human.
 
 ## Tier 3 — Figma ↔ code parity (on-demand, interactive)
 
@@ -58,3 +63,52 @@ repo's source of truth:
 
 The repo-side half of this (DTCG export vs. code) is already a Tier 1 check; only
 the live-file comparison is manual, and it naturally coincides with Figma edits.
+
+## Automation — the loop that closes itself
+
+Four workflows. The first three are deterministic: each has a provably correct
+answer, so a green required check genuinely means "correct". The fourth is not,
+and is fenced accordingly.
+
+| Workflow | Does | Merges itself? |
+| --- | --- | --- |
+| `dependabot-auto-merge.yml` | Enables auto-merge on Dependabot minor/patch PRs; comments on majors and leaves them | yes, once green |
+| `self-heal.yml` | Rebuilds generated files; opens a PR if the committed output drifted | yes, once green |
+| `release.yml` | Tags + publishes a version that has none; opens a bump PR when commits pile up untagged | yes, once green |
+| `claude-repair.yml` | On a red `main`, has Claude diagnose and open a fix PR | **no** — human merges |
+
+Two properties hold across all four:
+
+- **Nothing writes to `main`.** Every change arrives as a PR that the required
+  `Lint · types · tests · build` check must pass. A wrong automated fix is a red
+  PR, not a broken `main`.
+- **Everything terminates.** `self-heal` re-runs after its own PR merges, finds
+  no drift, and stops. `release` publishes, then finds nothing unreleased, and
+  stops.
+
+### Setup this depends on
+
+- **`AUTOMATION_TOKEN` secret — required, or the loop stalls.** A PR opened with
+  the default `GITHUB_TOKEN` does *not* start a workflow run, so CI never reports
+  on it, so auto-merge waits forever. `self-heal` and `release` therefore open
+  their PRs with a fine-grained PAT (Contents: read/write, Pull requests:
+  read/write on this repo). Both workflows fall back to `GITHUB_TOKEN` and write
+  a warning into the run summary rather than failing silently. Dependabot's own
+  PRs are unaffected — Dependabot is not `GITHUB_TOKEN`, so CI runs on them
+  normally and `dependabot-auto-merge.yml` needs no PAT.
+- **Repo settings:** allow auto-merge, workflow permissions = read *and write*,
+  Dependabot alerts + security updates on.
+- **`claude-repair.yml` is off** until both an `ANTHROPIC_API_KEY` secret and an
+  `ENABLE_CLAUDE_AUTOFIX = true` repo variable exist.
+
+### Why the fourth tier is fenced
+
+The first three automate work with a right answer. Claude repair automates
+judgement, and judgement fails differently: a confident wrong answer is
+indistinguishable from a confident right one at a glance. The session that built
+this loop produced a live example — a proposed fix to this very script parsed
+`npm audit fix --dry-run --json` as JSON. It is not JSON; it is a plain-text
+`add <pkg>` list. The "fix" would have failed every run, and it was caught only
+because a result contradicted an earlier measurement and got re-checked. So its
+PRs stay human-merged, and its prompt tells it to reproduce before fixing, verify
+after, and say plainly when it is unsure.

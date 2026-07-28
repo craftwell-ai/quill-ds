@@ -1,0 +1,84 @@
+name: Claude repair
+
+# The judgement tier. The other automations handle drift with a provably correct
+# answer — regenerate from source, bump a patch, merge a green bump. This one
+# handles the failures that need a read: a stale assertion, a renamed export, a
+# generator that broke rather than its output.
+#
+# It is the only part of the loop that is NOT deterministic, so it is fenced:
+#
+#   * Off unless the ENABLE_CLAUDE_AUTOFIX repo variable is 'true'.
+#   * Opens a PR. Never pushes to main, never merges, never auto-merges — the
+#     required check plus a human are both still in front of the merge button.
+#   * Read-only against the failing run; it cannot rerun or cancel workflows.
+#
+# Why the extra caution: an agent's confident wrong answer looks exactly like its
+# confident right one. During the session that built this loop, a proposed fix to
+# the drift audit was itself broken (it parsed `npm audit fix --dry-run --json`,
+# which is not JSON) and would have failed every run. It was caught by re-checking
+# a result that contradicted an earlier measurement — which is the sort of scruple
+# an unattended agent cannot be relied on to apply to itself.
+
+on:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: claude-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: >-
+      github.event.workflow_run.conclusion == 'failure' &&
+      vars.ENABLE_CLAUDE_AUTOFIX == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          additional_permissions: 'actions: read'
+          prompt: |
+            CI run ${{ github.event.workflow_run.id }} failed on `main`
+            (${{ github.event.workflow_run.html_url }}).
+
+            Diagnose it and open a pull request with the smallest fix that makes
+            the check pass. Work by these rules:
+
+            - Read `AGENTS.md` and `scripts/DRIFT-AUDIT.md` first. This repo's
+              Next.js version has breaking changes from what you may assume, and
+              the drift-audit design has opinions you must respect.
+            - Reproduce before you fix. Run the failing command locally
+              (`npm run test:tokens`, `npm run lint`, `npx tsc --noEmit`,
+              `npm run test-storybook`, `npm run build`) and confirm you see the
+              same failure. Do not fix from the log alone.
+            - Verify after you fix. Re-run the same command and confirm it now
+              passes. If your fix does not reproduce as passing, say so in the PR
+              rather than opening it as though it worked.
+            - If the failure is generated-file drift, do NOT hand-edit generated
+              output. Rebuild it (`npm run build:tokens`, `build:icons`,
+              `build:registry`, `build:llms`) and commit the rebuild.
+            - Prefer deleting a wrong assertion's hardcoded literal over updating
+              it, when a real check already covers the same property. A frozen
+              hex in a test duplicated the WCAG contrast suite badly and went
+              stale twice — see CHANGELOG 0.2.18.
+            - Bump the patch version in `package.json` and add a CHANGELOG entry,
+              as `CHANGELOG.md` requires of every PR.
+            - Say plainly in the PR body what failed, why, and what you changed.
+              If you are unsure the fix is right, say that too — an honest
+              "this needs a human" is more useful than false confidence.
+
+            Do not merge anything. Do not push to `main`. Open the PR and stop.
+          claude_args: '--max-turns 40'

@@ -1,0 +1,119 @@
+name: Self-heal generated drift
+
+# Tier 1 catches generated-file drift on a PR and blocks it. This repairs the
+# drift that reaches main anyway — the exact failure that left public/llms.txt
+# advertising 50 blocks for a day after login-oauth landed (see CHANGELOG 0.2.18).
+#
+# Guardrail A: it never pushes to main. It regenerates from source, and if the
+# committed output differs it opens a PR and lets the required check decide.
+# Every generated file here is a deterministic function of its source, so there
+# is a provably correct answer and CI passing genuinely means "correct".
+#
+# Terminates on its own: the fix PR merges, this runs again, finds no drift, exits.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Backstop. A merge performed by GITHUB_TOKEN does not raise a push event
+    # that starts a workflow, so the push trigger above can silently not fire
+    # after an auto-merge. This guarantees drift is still caught within 6h.
+    - cron: '17 */6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: self-heal
+  cancel-in-progress: false
+
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BRANCH: auto/self-heal
+      # Must stay in step with the "Generated files in sync" paths in ci.yml.
+      GENERATED: >-
+        src/app/globals.css src/tokens/generated registry/themes tokens
+        src/components/ui/icons.core.mjs public/r public/llms.txt
+      # AUTOMATION_TOKEN (a PAT) is what makes an opened PR trigger CI. With the
+      # default GITHUB_TOKEN the PR opens but no check ever runs, so auto-merge
+      # waits forever. Surfaced by the last step rather than failing silently.
+      HAS_PAT: ${{ secrets.AUTOMATION_TOKEN != '' }}
+      GH_TOKEN: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Regenerate everything from source
+        run: |
+          npm run build:tokens
+          npm run build:icons
+          npm run build:registry
+          npm run build:llms
+
+      - name: Detect drift
+        id: drift
+        run: |
+          if git diff --quiet -- $GENERATED; then
+            echo "drifted=false" >> "$GITHUB_OUTPUT"
+            echo "No drift — generated files match a fresh build." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "drifted=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Generated-file drift detected"
+              echo
+              echo '```'
+              git diff --stat -- $GENERATED
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Open (or update) the repair PR
+        if: steps.drift.outputs.drifted == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git checkout -B "$BRANCH"
+          git add -- $GENERATED
+          git commit \
+            -m 'fix(generated): restore generated files to match source' \
+            -m 'Opened automatically by .github/workflows/self-heal.yml. Every file here is regenerated output — the fix is a rebuild, not a hand edit. If this PR is red, the generator is at fault, not the committed output.'
+          git push --force-with-lease origin "$BRANCH"
+
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            printf '%s\n' \
+              'Regenerated from source by `self-heal.yml` because the committed output had drifted from a fresh build.' \
+              '' \
+              'Generated files are a deterministic function of their sources, so this needs no judgement — if the required check passes, the output is correct by construction. Merges itself once green.' \
+              > /tmp/pr-body.md
+            gh pr create --base main --head "$BRANCH" \
+              --title 'fix(generated): restore generated files to match source' \
+              --body-file /tmp/pr-body.md
+          fi
+
+          gh pr merge --auto --merge "$BRANCH" || true
+
+      - name: Warn when the PR cannot self-merge
+        if: steps.drift.outputs.drifted == 'true' && env.HAS_PAT != 'true'
+        run: |
+          {
+            echo
+            echo '> [!WARNING]'
+            echo '> Opened with the default `GITHUB_TOKEN`, so **CI will not run on this PR**'
+            echo '> and auto-merge cannot complete. Add an `AUTOMATION_TOKEN` secret to close'
+            echo '> the loop — see scripts/DRIFT-AUDIT.md.'
+          } >> "$GITHUB_STEP_SUMMARY"
