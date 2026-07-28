@@ -9,6 +9,42 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.19] — 2026-07-27
+
+### Fixed
+- **The drift audit's "actionable advisory" test was a false-alarm generator**,
+  and would have emailed a red run every Monday from here on. It trusted npm's
+  per-advisory `fixAvailable` flag, which is wrong two ways. It is *not
+  deterministic*: when several advisories share one root cause (a `minimatch`
+  ReDoS reaching us through `eslint-config-next`), npm marks an arbitrary one
+  `fixAvailable: true` and the rest major-only — three consecutive runs on an
+  unchanged lockfile blamed `eslint-plugin-react`, then `eslint-plugin-import`,
+  then `eslint-plugin-react`. And `fixAvailable: true` does not mean fixable: a
+  real `npm audit fix` churned 22 packages and cleared none of the 17
+  advisories. Actionability is now *measured* — the fix is simulated against a
+  throwaway copy of the manifest + lockfile (`npm audit fix
+  --package-lock-only`), then re-audited there, and the run fails only if the
+  high/critical count actually drops. Deterministic across runs, leaves the repo
+  untouched, and reports "couldn't measure" as an unknown rather than as
+  success. Note `npm audit fix --dry-run --json` is not usable for this: despite
+  the flag it emits a plain-text `add <pkg>` list, so parsing it as JSON silently
+  measures zero remaining advisories every time.
+- **Dependabot's `actions` group had no `update-types` filter**, so majors were
+  batched instead of arriving individually for a human read — the npm groups had
+  the filter, this one didn't. Its first run bundled `actions/checkout` and
+  `actions/setup-node` v4 → v7 together; both are included here (CI green), and
+  the group is now restricted to minor/patch like the rest.
+
+### Changed
+- Dependency bumps from Dependabot's first run, consolidated into one release
+  (PRs #34–#37, each independently CI-green): Storybook 10.5.3 → 10.5.5 across
+  all six packages, `next` + `eslint-config-next` 16.2.11 → 16.2.12,
+  `@material-symbols/svg-200` 0.45.9, `playwright` 1.62.0, `recharts` 3.10.1,
+  `shadcn` 4.13.1 → 4.16.0, and the two GitHub Actions pins to v7. The
+  registry-build bump is the notable one: the generated-files gate confirms
+  `shadcn` 4.16 emits byte-identical `public/r` output. Held as before:
+  `@types/node`, `eslint` 9, `typescript` 5.9.
+
 ## [0.2.18] — 2026-07-27
 
 ### Added
