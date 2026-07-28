@@ -9,6 +9,24 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.24] — 2026-07-28
+
+### Fixed
+- **`self-heal` and `release` could race and orphan a PR.** Found by deliberately
+  drifting `main` to exercise the repair path for the first time. Self-heal
+  worked — it detected the hand-edited `public/llms.txt` and opened a PR with
+  exactly the right one-line fix. But the same push also triggered `release`,
+  which bumped the version and, because the version string is embedded in
+  `llms.txt`, regenerated the same line and merged first. The repair PR was left
+  conflicting and unmergeable, with nothing to ever clean it up.
+  - Both workflows now share one `auto-maintenance` concurrency group, so they
+    take turns instead of acting on the same commit simultaneously.
+  - Serialization alone is not sufficient — `release` merges asynchronously via
+    auto-merge, so it can still repair a file moments after `self-heal` opened a
+    PR for it. `self-heal` therefore closes its own repair PR when it finds no
+    drift left: if nothing is broken, an open repair is by definition obsolete.
+    The loop now self-corrects instead of leaving a permanently red PR.
+
 ## [0.2.23] — 2026-07-28
 
 ### Changed

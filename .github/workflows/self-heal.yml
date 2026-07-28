@@ -26,7 +26,12 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: self-heal
+  # Shared with release.yml on purpose. Both regenerate from source, so both can
+  # touch the same generated file — release must rebuild llms.txt because the
+  # version string is embedded in it. Run them at once on the same commit and
+  # they open two PRs editing the same line; the loser conflicts and is orphaned.
+  # One group serializes them.
+  group: auto-maintenance
   cancel-in-progress: false
 
 jobs:
@@ -78,6 +83,23 @@ jobs:
               git diff --stat -- $GENERATED
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Close a repair PR that reality already fixed
+        if: steps.drift.outputs.drifted == 'false'
+        run: |
+          set -euo pipefail
+          # Serialization narrows the window but cannot close it: release.yml
+          # merges its PR asynchronously via auto-merge, so it can repair the same
+          # file moments after this workflow opened a PR for it. That leaves a
+          # conflicting orphan nobody will ever merge. If there is no drift left,
+          # any open repair PR is by definition obsolete — say so and close it,
+          # rather than leaving a permanently red PR for a human to puzzle over.
+          N="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')"
+          if [ -n "$N" ]; then
+            gh pr comment "$N" --body 'Superseded — `main` no longer drifts, so this repair is obsolete. Most often another workflow (usually `release.yml`, which rebuilds `llms.txt` for the version string) regenerated the same file first. Closing automatically.'
+            gh pr close "$N" --delete-branch
+            echo "Closed obsolete repair PR #$N." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Open (or update) the repair PR
