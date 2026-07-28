@@ -9,6 +9,48 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.2.20] — 2026-07-27
+
+### Added
+- **The drift loop now closes itself.** Four workflows turn the watch tiers into
+  action. The original rule is not relaxed, only automated — *fixes still go
+  through the normal PR flow*; what changed is that a bot opens the PR and merges
+  it once the required check is green. **Nothing writes to `main` directly**, so
+  an automated fix that is wrong surfaces as a red PR rather than a broken
+  `main`.
+  - `dependabot-auto-merge.yml` — minor/patch dependency PRs merge themselves
+    once green; majors get a comment and wait for a human, matching
+    `dependabot.yml`'s grouping rule.
+  - `self-heal.yml` — rebuilds the generated files and opens a repair PR when the
+    committed output has drifted. This is the failure that left `public/llms.txt`
+    advertising 50 blocks for a day (0.2.18); it now fixes itself. Runs on push to
+    `main`, plus every 6h as a backstop.
+  - `release.yml` — tags and publishes a version that has no tag, and opens a
+    patch-bump PR when commits accumulate on `main` without one. Without this the
+    version would freeze while dependencies moved beneath it, and both the
+    homepage footer and `llms.txt` read `package.json`.
+  - `claude-repair.yml` — on a red `main`, Claude diagnoses and opens a fix PR.
+    **Off by default**, and its PRs are never auto-merged.
+- `scripts/release.mjs` (+ tests) — CHANGELOG-section extraction and patch-bump
+  preparation, kept testable rather than smeared across YAML. Publishing fails
+  loudly rather than cutting a release with empty notes.
+
+### Changed
+- Repo settings required by the above: auto-merge enabled, workflow
+  `GITHUB_TOKEN` raised to write, Dependabot alerts + **security** updates
+  enabled (the latter is a separate toggle from the version updates added in
+  0.2.18, and was off — transitive CVEs were never being PR'd).
+
+### Notes
+- **`AUTOMATION_TOKEN` is required or the loop stalls.** A PR opened with the
+  default `GITHUB_TOKEN` does not start a workflow run, so CI never reports and
+  auto-merge waits forever. `self-heal` and `release` use a fine-grained PAT and
+  fall back to `GITHUB_TOKEN` with a warning in the run summary. Dependabot's own
+  PRs are unaffected.
+- The deterministic tiers automate work with a right answer; Claude repair
+  automates judgement, which fails differently — see the reasoning in
+  `scripts/DRIFT-AUDIT.md`.
+
 ## [0.2.19] — 2026-07-27
 
 ### Fixed

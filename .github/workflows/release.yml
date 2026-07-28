@@ -1,0 +1,131 @@
+name: Release
+
+# The release half of the loop, in two phases that chase each other until they
+# settle:
+#
+#   publish  — package.json names a version with no tag? Tag it and cut the
+#              GitHub release, with notes read from the CHANGELOG.
+#   propose  — commits have piled up on main since the last tag (auto-merged
+#              dependency PRs, self-heal repairs) with no version bump? Open a
+#              PR that bumps the patch and writes the CHANGELOG entry.
+#
+# A propose PR merges, the next run publishes it, and the run after that finds
+# nothing to do. Without `propose` the version would freeze while dependencies
+# moved underneath it — and the homepage footer and llms.txt both read
+# package.json, so they would quietly start lying.
+#
+# Guardrail A: `publish` only ever writes a tag and a release, never source.
+# Every source change still arrives as a PR that the required check must pass.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # A merge performed by GITHUB_TOKEN raises no push event that starts a
+    # workflow, so the trigger above can silently not fire after an auto-merge.
+    - cron: '43 */6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BRANCH: auto/release
+      HAS_PAT: ${{ secrets.AUTOMATION_TOKEN != '' }}
+      GH_TOKEN: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # tags: both phases compare against the last one
+          token: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Publish the pending version, if any
+        id: publish
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "v$VERSION already tagged — nothing to publish." >> "$GITHUB_STEP_SUMMARY"
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Fails loudly rather than publishing empty notes.
+          node scripts/release.mjs notes "$VERSION" > /tmp/notes.md
+
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
+          gh release create "v$VERSION" --title "v$VERSION" --notes-file /tmp/notes.md
+
+          echo "published=true" >> "$GITHUB_OUTPUT"
+          echo "Published **v$VERSION**." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Propose the next release for accumulated commits
+        id: propose
+        run: |
+          set -uo pipefail
+          set +e
+          NEXT="$(node scripts/release.mjs prepare)"
+          STATUS=$?
+          set -e
+          if [ "$STATUS" -eq 2 ]; then
+            echo "No unreleased commits — nothing to propose." >> "$GITHUB_STEP_SUMMARY"
+            echo "proposed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [ "$STATUS" -eq 0 ] || exit "$STATUS"
+
+          # llms.txt embeds the version string, so it must be rebuilt in the same
+          # commit or the generated-files gate fails this very PR.
+          npm run build:llms
+
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -B "$BRANCH"
+          git add package.json CHANGELOG.md public/llms.txt
+          git commit \
+            -m "chore(release): v$NEXT" \
+            -m 'Opened automatically by .github/workflows/release.yml to version changes that reached main without a bump. The entry lists the commit subjects since the last tag; edit it before merging if it deserves better prose.'
+          git push --force-with-lease origin "$BRANCH"
+
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            printf '%s\n' \
+              "Versions the commits that have reached \`main\` since the last tag." \
+              '' \
+              'Opened by `release.yml`. The CHANGELOG entry is assembled from commit subjects — rewrite it before merging if this release deserves better prose. Merges itself once the required check is green, and the next run tags and publishes it.' \
+              > /tmp/pr-body.md
+            gh pr create --base main --head "$BRANCH" \
+              --title "chore(release): v$NEXT" --body-file /tmp/pr-body.md
+          fi
+
+          gh pr merge --auto --merge "$BRANCH" || true
+          echo "proposed=true" >> "$GITHUB_OUTPUT"
+          echo "Proposed **v$NEXT**." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Warn when the release PR cannot self-merge
+        if: steps.propose.outputs.proposed == 'true' && env.HAS_PAT != 'true'
+        run: |
+          {
+            echo
+            echo '> [!WARNING]'
+            echo '> Opened with the default `GITHUB_TOKEN`, so **CI will not run on this PR**'
+            echo '> and auto-merge cannot complete. Add an `AUTOMATION_TOKEN` secret to close'
+            echo '> the loop — see scripts/DRIFT-AUDIT.md.'
+          } >> "$GITHUB_STEP_SUMMARY"
