@@ -54,6 +54,7 @@ const CURATED_CORE = [
   'check_box', 'check_box_outline_blank', 'radio_button_checked',
   'radio_button_unchecked', 'cancel', 'add_circle', 'remove_circle',
   'chevron_right', 'chevron_left', 'star_border', 'delete_outline',
+  'attach_file',
 ]
 
 function parseSvg(name) {
