@@ -212,8 +212,36 @@ mute them or pollute that signal.
 
 ## Validation baseline
 
-The first run should reproduce what was found by hand on 2026-07-28. If it does
-not, the scan is wrong, not the baseline.
+The hand survey of 2026-07-28 was **semantic** — a person reading files and
+recognising that `update-feed` is an activity feed. The scan matches on **names**.
+So the scan should reproduce the name-matchable *subset* of the baseline, not all
+of it. Claiming otherwise would make a working scan look broken.
+
+**Confirmed by the first real run (2026-07-29):** `agent-avatar` (3 apps),
+`autonomy-ladder` (2), `app-sidebar` (2); possible repeats keyed `crew`, `queue`,
+`shell`; rebuilt blocks `ActivityFeed`, `EmptyState`, `PageHeader`,
+`ThemeSelector`.
+
+**Found by the scan but missed by the hand survey:** `app-sidebar` and the
+`app-shell`/`MobileShell` pair. The hand survey had folded `app-sidebar` into
+"duplicates `sidebar-nav`", but the names differ, so treating it as a fresh
+candidate is the defensible call.
+
+**In the baseline but invisible to name matching**, and stated in every report so
+an incomplete list never reads as complete: `update-feed` → `activity-feed`,
+`vitals-strip` → `stat-cards`, `OpsCharts` → `analytics-charts`, `auth-form` →
+`login`. The rebuilt list is a floor, not a total.
+
+**Two false alarms the first run produced, and how they were closed.** It reported
+Craftwell's correctly-installed `components/ui/tone-badge.tsx` and
+`components/ui/icon.tsx` as rebuilds. Quill's registry declares where every item
+installs — `components/ui/<name>.tsx` for components, `components/quill/<name>.tsx`
+for blocks — so a file at its declared target is Quill's own, not a copy of it.
+Reading those targets from the registry keeps this honest by construction rather
+than by guessing at paths. It also clustered `app-shell` with `AppBar` on the word
+`app` and `SignOutButton` with `google-button` on `button`; both are shape words
+and are now stopwords, which also stopped `app-shell` appearing in two clusters at
+once.
 
 **Candidates (in both Command Deck and Craftwell Command Center):**
 

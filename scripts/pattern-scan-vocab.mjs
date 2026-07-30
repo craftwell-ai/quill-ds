@@ -27,4 +27,8 @@ export const STOCK_COMPONENTS = [
 export const STRUCTURAL_STOPWORDS = [
   'card', 'panel', 'view', 'row', 'list', 'item', 'wrapper', 'container',
   'section', 'block', 'group', 'box', 'bar', 'ui', 'index',
+  // Added after the first real run: `app` clustered app-shell with AppBar, and
+  // `button` clustered SignOutButton with google-button. Both are shape words
+  // here, and `app` also made app-shell appear in two clusters at once.
+  'app', 'button',
 ]
