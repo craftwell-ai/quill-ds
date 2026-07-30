@@ -39,7 +39,9 @@ jobs:
         # PATTERN_SCAN_TOKEN is a fine-grained PAT scoped to the org with
         # Contents: read — strictly less privilege than AUTOMATION_TOKEN, which
         # needs write to open PRs. Without it the scan reports that it could not
-        # list the organisation and turns red, rather than looking clean.
+        # list the account's repos and turns red, rather than looking clean.
+        # craftwell-ai is a USER account: the token must be owned by it, since
+        # only /user/repos sees its private repos.
         #
         # GITHUB_TOKEN is passed separately because the tracking-issue comment is
         # a write to THIS repo, which the job's own `issues: write` covers; the

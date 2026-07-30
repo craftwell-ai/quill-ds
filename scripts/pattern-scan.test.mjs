@@ -390,6 +390,33 @@ test('the read token and the write token stay separate', () => {
   assert.match(source, /discoverApps\(readToken\)/)
 })
 
+test('discovery uses the authenticated-user endpoint, never orgs or public users', () => {
+  // craftwell-ai is a User account, not an organisation. The first real CI run
+  // 404'd on /orgs/craftwell-ai/repos. The neighbouring trap is worse than the
+  // 404: /users/{name}/repos answers 200 with only PUBLIC repos, which here is
+  // just quill-ds — a clean-looking scan of nothing. Only /user/repos sees the
+  // private ones.
+  // Strip comments first — the docblock explaining this bug names both wrong
+  // endpoints, and a test that reads its own explanation as the offence is useless.
+  const code = readFileSync(join(root, 'scripts/pattern-scan.mjs'), 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '')
+  assert.match(code, /\/user\/repos\?per_page=100&affiliation=owner/)
+  assert.doesNotMatch(code, /\/orgs\//, 'the account is a user, not an organisation')
+  assert.doesNotMatch(code, /\/users\//, '/users/{name}/repos hides private repos')
+})
+
+test('an empty repo listing fails loudly rather than reporting a clean scan', () => {
+  // Zero repos means the token is wrong, not that there is nothing to scan.
+  const source = readFileSync(join(root, 'scripts/pattern-scan.mjs'), 'utf8')
+  assert.match(source, /listed no repositories/)
+})
+
+test('the tracking issue targets this repo without hardcoding the owner', () => {
+  const source = readFileSync(join(root, 'scripts/pattern-scan.mjs'), 'utf8')
+  assert.match(source, /const SELF = process\.env\.GITHUB_REPOSITORY/)
+})
+
 test('the workflow grants exactly the permissions the scan needs', () => {
   const wf = readFileSync(join(root, '.github/workflows/pattern-scan.yml'), 'utf8')
   assert.match(wf, /contents: read/, 'the scan never writes code')
