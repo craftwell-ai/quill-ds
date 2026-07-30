@@ -9,7 +9,7 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
-## [0.3.0] — 2026-07-29
+## [0.3.0] — 2026-07-30
 
 ### Added
 - **The drift system now looks outward.** Tiers 1–3 all watch Quill against
@@ -56,6 +56,12 @@ displayed version updates with the bump.
   interchangeable: the org PAT is `Contents: read` and cannot create an issue,
   and `GITHUB_TOKEN` can comment here but cannot read the other repos. One
   variable silently lost half the job.
+
+## [0.2.25] — 2026-07-29
+
+### Changed
+- fix(generated): restore generated files to match source
+- icons: add attach_file to the sync core set
 
 ## [0.2.24] — 2026-07-28
 
