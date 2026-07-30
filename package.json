@@ -1,6 +1,6 @@
 {
   "name": "quill-ds",
-  "version": "0.2.25",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "predev": "npm run build:icons",
@@ -18,6 +18,7 @@
     "build:llms": "node scripts/build-llms.mjs",
     "build:icons": "node scripts/build-icons.mjs",
     "drift-audit": "node scripts/drift-audit.mjs",
+    "pattern-scan": "node scripts/pattern-scan.mjs",
     "pretest:tokens": "npm run build:icons",
     "test:tokens": "node --test src/tokens/*.test.mjs scripts/*.test.mjs",
     "pretest-storybook": "npm run build:icons",
