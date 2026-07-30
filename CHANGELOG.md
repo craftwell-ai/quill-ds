@@ -9,6 +9,54 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.3.0] — 2026-07-29
+
+### Added
+- **The drift system now looks outward.** Tiers 1–3 all watch Quill against
+  itself. Nothing watched the apps *styled with* Quill, so a pattern built by
+  hand in two of them went unnoticed, and a block Quill already ships got
+  rebuilt from scratch without anyone knowing it existed. A hand survey found
+  four of the first and seven of the second across three apps.
+  - `scripts/pattern-scan.mjs` + `.github/workflows/pattern-scan.yml` — Mondays
+    14:00 UTC, posting to one tracking issue whether or not anything is new,
+    because silence is indistinguishable from a broken scan. Documented as
+    Tier 4 in `scripts/DRIFT-AUDIT.md`.
+  - The app list is built by checking each org repo for Quill's token layer,
+    which makes the origination rule mechanical rather than a convention. It
+    also excludes the repos that merely *mention* Quill: `retail-ds` and
+    `scaffold` carry its script lineage but no styling, and 3 of 7 naive
+    matches were false positives.
+  - Candidates need two independent builds. Without that rule SkillDecks'
+    trading-card artwork qualifies — real Quill-styled work with no business in
+    a design system.
+  - **It reports, and promotes nothing.** All three apps have an "agent avatar"
+    and the three are 94/137/46 lines built from `lucide-react`,
+    `node:fs`+`next/image`, and `next/image` respectively — so name matching
+    cannot tell whether there is one component there. The report puts line
+    counts and imports side by side and leaves the judgement to a human. No AI,
+    so none of the confident-wrong-answer risk that keeps `claude-repair.yml`
+    fenced.
+  - **The rebuilt list states its own limit in every report.** It matches on
+    names, so `update-feed` (for `activity-feed`) and `vitals-strip` (for
+    `stat-cards`) are invisible to it. A floor, not a total — an incomplete list
+    that reads as complete is worse than no list.
+  - Red means the scan broke, never "there is news".
+
+### Fixed
+- Two false alarms the first real run produced, both closed before shipping.
+  Craftwell's correctly-**installed** `components/ui/tone-badge.tsx` and
+  `ui/icon.tsx` were reported as rebuilds; the registry declares where each item
+  installs, so a file at its declared target is Quill's own rather than a copy,
+  and reading those targets from `registry.json` makes this honest by
+  construction instead of a path guess. And `app` clustered `app-shell` with
+  `AppBar` while `button` clustered `SignOutButton` with `google-button` — shape
+  words, now stopwords, which also stopped `app-shell` appearing in two clusters
+  at once.
+- The read and write tokens are separate variables, because they are not
+  interchangeable: the org PAT is `Contents: read` and cannot create an issue,
+  and `GITHUB_TOKEN` can comment here but cannot read the other repos. One
+  variable silently lost half the job.
+
 ## [0.2.24] — 2026-07-28
 
 ### Fixed
