@@ -135,7 +135,7 @@ export function clusterCandidates(byApp) {
  * each app, because that is what lets a human judge whether there is really one
  * component there — the whole reason this scan reports instead of promoting.
  */
-export function buildReport({ apps, clusters, duplicates, decided, unreadable }) {
+export function buildReport({ apps, clusters, duplicates, decided, unreadable, seen }) {
   const out = []
   const p = (s = '') => out.push(s)
   const decidedKeys = new Set(decided.map((d) => d.pattern))
@@ -147,9 +147,31 @@ export function buildReport({ apps, clusters, duplicates, decided, unreadable })
   p()
   p('## Apps scanned')
   p()
-  if (apps.length === 0) p('None — no repo reachable by the token carries the Quill token layer.')
   for (const a of apps) p(`- \`${a.name}\` — identified by \`${a.marker}\``)
+  if (apps.length === 0) p('**None.**')
   p()
+  // The denominator, always. Zero-of-eight and zero-of-one mean completely
+  // different things, and only one of them is a token problem.
+  if (seen) {
+    p(
+      `_${apps.length} Quill-styled of ${seen.considered} repo(s) examined ` +
+        `(${seen.listed} visible to the token, minus quill-ds itself)._`,
+    )
+    if (seen.unreadable?.length) {
+      p()
+      p('Could not read the file list for:')
+      for (const u of seen.unreadable) p(`- \`${u.name}\` — ${u.reason}`)
+    }
+    if (apps.length === 0 && seen.considered <= 1) {
+      p()
+      p(
+        '> The token can reach almost nothing. A fine-grained token defaults to ' +
+          '**Only select repositories** — check it grants `Contents: read` on the ' +
+          'apps, not just on this repo.',
+      )
+    }
+    p()
+  }
 
   const showCluster = (c) => {
     p(`**\`${c.key}\`** — ${c.apps.length} apps`)
@@ -367,8 +389,14 @@ async function discoverApps(token) {
     throw new Error('the token listed no repositories — check it belongs to the account owning the apps')
   }
   const apps = []
+  // Counted, not inferred. "No apps found" has two very different causes — the
+  // token cannot see them, or none is Quill-styled — and a bare "None" cannot
+  // tell them apart. The first real run said "None" while the token could reach
+  // one repo out of eight, and the report gave no way to notice.
+  const seen = { listed: repos.length, considered: 0, unreadable: [] }
   for (const repo of repos) {
     if (repo.name === 'quill-ds' || repo.archived) continue
+    seen.considered++
     let paths = []
     try {
       const tree = await gh(
@@ -376,13 +404,16 @@ async function discoverApps(token) {
         token,
       )
       paths = (tree.tree ?? []).map((t) => t.path)
-    } catch {
+    } catch (err) {
+      // A repo whose tree cannot be read is NAMED, never silently skipped:
+      // unreadable is not the same as not-Quill-styled.
+      seen.unreadable.push({ name: repo.name, reason: err.message })
       continue
     }
     const marker = hasQuillMarker(paths)
     if (marker) apps.push({ name: repo.name, marker, cloneUrl: repo.clone_url })
   }
-  return apps
+  return { apps, seen }
 }
 
 function cloneShallow(app, token, into) {
@@ -451,6 +482,7 @@ export async function main() {
   const decided = readDecided(join(root, 'scripts/pattern-scan.decided.json'))
 
   let apps = []
+  let seen = null
   let tmp = null
   try {
     if (localDirs.length) {
@@ -462,7 +494,9 @@ export async function main() {
     } else {
       if (!readToken) throw new Error('no PATTERN_SCAN_TOKEN — cannot list the organisation')
       tmp = mkdtempSync(join(tmpdir(), 'pattern-scan-'))
-      for (const app of await discoverApps(readToken)) {
+      const discovered = await discoverApps(readToken)
+      seen = discovered.seen
+      for (const app of discovered.apps) {
         apps.push({ ...app, dir: cloneShallow(app, readToken, tmp) })
       }
     }
@@ -490,6 +524,7 @@ export async function main() {
       duplicates,
       decided,
       unreadable,
+      seen,
     })
 
     console.log(report)
