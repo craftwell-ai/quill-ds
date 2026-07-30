@@ -33,7 +33,9 @@ import { dirname, join, relative } from 'node:path'
 import { STOCK_COMPONENTS, STRUCTURAL_STOPWORDS } from './pattern-scan-vocab.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const ORG = 'craftwell-ai'
+// This repo, for the tracking issue. GITHUB_REPOSITORY is set in Actions; the
+// fallback is only for a local run, which never posts anyway.
+const SELF = process.env.GITHUB_REPOSITORY || 'craftwell-ai/quill-ds'
 const API = 'https://api.github.com'
 const MIN_APPS = 2 // The repetition rule: built independently in two apps or it isn't a pattern.
 
@@ -145,7 +147,7 @@ export function buildReport({ apps, clusters, duplicates, decided, unreadable })
   p()
   p('## Apps scanned')
   p()
-  if (apps.length === 0) p('None — no repo in the organisation carries the Quill token layer.')
+  if (apps.length === 0) p('None — no repo reachable by the token carries the Quill token layer.')
   for (const a of apps) p(`- \`${a.name}\` — identified by \`${a.marker}\``)
   p()
 
@@ -348,19 +350,29 @@ async function gh(path, token) {
 }
 
 /**
- * Which repos in the org are Quill-styled. One cheap tree call per repo — no
+ * Which of the owner's repos are Quill-styled. One cheap tree call per repo — no
  * clone needed to rule one out. A repo whose tree cannot be listed is skipped
  * rather than assumed clean, and quill-ds itself is never scanned.
+ *
+ * `craftwell-ai` is a USER account, not an organisation, which the first real run
+ * proved by 404ing on `/orgs/craftwell-ai/repos`. The neighbouring trap is worse
+ * than the 404: `/users/{name}/repos` returns only PUBLIC repos, so it would have
+ * answered 200 with just `quill-ds` and reported a clean scan of nothing. Only
+ * `/user/repos` — the AUTHENTICATED user's own repos — includes the private ones,
+ * so the token must belong to the account that owns them.
  */
 async function discoverApps(token) {
-  const repos = await gh(`/orgs/${ORG}/repos?per_page=100&type=all`, token)
+  const repos = await gh('/user/repos?per_page=100&affiliation=owner', token)
+  if (!Array.isArray(repos) || repos.length === 0) {
+    throw new Error('the token listed no repositories — check it belongs to the account owning the apps')
+  }
   const apps = []
   for (const repo of repos) {
     if (repo.name === 'quill-ds' || repo.archived) continue
     let paths = []
     try {
       const tree = await gh(
-        `/repos/${ORG}/${repo.name}/git/trees/${repo.default_branch}?recursive=1`,
+        `/repos/${repo.owner.login}/${repo.name}/git/trees/${repo.default_branch}?recursive=1`,
         token,
       )
       paths = (tree.tree ?? []).map((t) => t.path)
@@ -390,7 +402,7 @@ function cloneShallow(app, token, into) {
  */
 async function postToTrackingIssue(report, token) {
   const label = 'pattern-scan'
-  const issues = await gh(`/repos/${ORG}/quill-ds/issues?labels=${label}&state=open`, token)
+  const issues = await gh(`/repos/${SELF}/issues?labels=${label}&state=open`, token)
   let number = issues[0]?.number
   const headers = {
     accept: 'application/vnd.github+json',
@@ -398,7 +410,7 @@ async function postToTrackingIssue(report, token) {
     'content-type': 'application/json',
   }
   if (!number) {
-    const created = await fetch(`${API}/repos/${ORG}/quill-ds/issues`, {
+    const created = await fetch(`${API}/repos/${SELF}/issues`, {
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -413,7 +425,7 @@ async function postToTrackingIssue(report, token) {
     if (!created.ok) throw new Error(`could not create tracking issue: ${created.status}`)
     number = (await created.json()).number
   }
-  const commented = await fetch(`${API}/repos/${ORG}/quill-ds/issues/${number}/comments`, {
+  const commented = await fetch(`${API}/repos/${SELF}/issues/${number}/comments`, {
     method: 'POST',
     headers,
     body: JSON.stringify({ body: report }),

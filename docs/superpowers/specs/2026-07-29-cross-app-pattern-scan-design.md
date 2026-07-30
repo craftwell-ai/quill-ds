@@ -34,8 +34,9 @@ Two conditions, both required, before anything is even a candidate:
 
 ### 1. Finding the apps
 
-No hard-coded list. The scan asks GitHub for every repo in the `craftwell-ai`
-organization, then checks each one for Quill's colors-and-fonts file
+No hard-coded list. The scan asks GitHub for every repo the token's own account
+owns (`/user/repos?affiliation=owner`), then checks each one for Quill's
+colors-and-fonts file
 (`app/quill-theme.css`, or a `components.json` pointing at the Quill registry
 URL). Found → scanned. Not found → skipped entirely.
 
@@ -135,7 +136,7 @@ pile of open issues. It uses the workflow's own default token with
 `issues: write` — no new service, no new secret for this part.
 
 **The run exits non-zero only when the scan itself broke** — could not list the
-organisation, could not clone an app it had identified, could not write the
+account's repos, could not clone an app it had identified, could not write the
 comment. Red means "the scan is not working," never "there is news." That keeps
 the drift-audit contract intact: a red check is always something to fix.
 
@@ -182,8 +183,13 @@ mute them or pollute that signal.
 
 ## Setup this depends on
 
-- **A new read-only access token.** Fine-grained, scoped to the `craftwell-ai`
-  organization, `Contents: read` only — strictly less privilege than the existing
+- **A new read-only access token, owned by the account that owns the apps.**
+  `craftwell-ai` is a **user account, not an organisation** — `/orgs/…/repos`
+  404s, and `/users/<name>/repos` returns only *public* repos, which here is just
+  `quill-ds`. That second one is the dangerous case: it answers 200 and produces
+  a clean-looking scan of nothing. Only `/user/repos` — the authenticated user's
+  own repos — sees the private ones, so the token must belong to `craftwell-ai`.
+  Fine-grained, `Contents: read` only — strictly less privilege than the existing
   `AUTOMATION_TOKEN`, which needs write access to open PRs. Stored as
   `PATTERN_SCAN_TOKEN`. Without it the scan reports that it could not list the
   organization and exits 0, rather than failing silently or looking like a clean

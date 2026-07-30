@@ -156,3 +156,11 @@ means everywhere else in this file.
 scoped to the org with `Contents: read` — it reads the other repos and cannot
 create an issue. The workflow's own `GITHUB_TOKEN` writes the comment and cannot
 read the other repos. The script keeps them as separate variables on purpose.
+
+**The account is a user, not an organisation.** `craftwell-ai` is a personal
+account, so discovery uses `/user/repos?affiliation=owner` — the *authenticated*
+user's own repos. `/orgs/craftwell-ai/repos` 404s, and `/users/craftwell-ai/repos`
+is worse than a 404: it answers 200 with only the public repos (just `quill-ds`),
+which would have produced a confident, clean-looking scan of nothing. So
+`PATTERN_SCAN_TOKEN` must be owned by the account that owns the apps, and a run
+that lists zero repos fails loudly rather than reporting no findings.

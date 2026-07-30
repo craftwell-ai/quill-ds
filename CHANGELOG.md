@@ -9,6 +9,24 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.3.1] — 2026-07-30
+
+### Fixed
+- **The pattern scan could not see any app.** Its first real run failed with
+  `404 on /orgs/craftwell-ai/repos`: `craftwell-ai` is a **user account, not an
+  organisation**. The 404 was the lucky outcome. The neighbouring endpoint,
+  `/users/craftwell-ai/repos`, answers **200 with only the public repos** — here
+  just `quill-ds` — so a scan pointed at it would have reported a confident,
+  clean-looking result having examined nothing. Discovery now uses
+  `/user/repos?affiliation=owner`, the *authenticated* user's own repos, which is
+  the only form that includes the private ones; `PATTERN_SCAN_TOKEN` must
+  therefore belong to the account that owns the apps.
+- A run that lists **zero** repositories now fails loudly instead of reporting no
+  findings. Zero repos means the token is wrong, not that there is nothing to
+  scan — and "nothing found" is exactly what this scan must never say by accident.
+- The tracking issue is addressed via `GITHUB_REPOSITORY` rather than a
+  hardcoded owner, so the repo name is not duplicated in two places.
+
 ## [0.3.0] — 2026-07-30
 
 ### Added
