@@ -92,16 +92,22 @@ meaningless cluster.
 
 ### 5. What the report contains
 
-Written to the workflow's run summary and to standard output, in this order:
+Written to the workflow's run summary, to standard output, and to the tracking
+issue comment, in this order:
 
 1. **Apps scanned** — and which marker identified each as Quill-styled.
 2. **Candidates** — confirmed repeats first, then possible ones. Each entry
    lists the apps it appears in, the file path in each, the line count of each
    version, and what each version is built from.
-3. **Already in Quill but rebuilt** — the findability list, naming the Quill
+3. **Already decided** — candidates on the decided list, with the decision and
+   why. Listed, never hidden, but kept out of the fresh-candidates section.
+4. **Already in Quill but rebuilt** — the findability list, naming the Quill
    block that already covers it.
-4. **Couldn't read** — anything skipped, counted by the reader that skipped it,
+5. **Couldn't read** — anything skipped, counted by the reader that skipped it,
    never inferred by subtraction.
+
+A week with nothing new still posts, saying so in one line. Silence would be
+indistinguishable from a broken scan.
 
 The line counts and import lists in (2) are the point. They are what let a
 candidate be judged without opening three repos. Worked example from today's
@@ -114,19 +120,32 @@ avatar rather than a new `AgentAvatar` block.
 
 ### 6. How it reaches Ryan
 
-The report is always written and always readable in GitHub.
+**Every Monday, whether or not anything is new.**
 
-An **email only arrives when there is a candidate not yet ruled on.**
-`scripts/pattern-scan.decided.json` records candidates already decided —
-promoted or declined — and anything on it stays quiet permanently. The run exits
-non-zero only when an undecided candidate exists, which is what GitHub notifies
-on. This is the drift-audit idiom applied here: fail only on something genuinely
-actionable, so there are no weekly false alarms, and the loop goes quiet once a
-decision is recorded rather than re-raising the same four patterns every Monday.
+A passing scheduled workflow emails nobody — GitHub only notifies on failure. So
+"fail the run to get an email" would mean a red check every week, which trains
+everyone to ignore red. Instead the scan posts the report as a **comment on one
+long-lived tracking issue**, found by the `pattern-scan` label and created on
+first run if absent. Ryan is assigned to that issue, so he is subscribed and
+every comment notifies him.
 
-The file is a flat list, keyed by the normalised pattern name, carrying the
-decision and why — so a year from now the record says what was thought, not just
-that something was dismissed:
+One issue with 52 comments rather than 52 issues: the history stays in one
+chronological thread, and there is one notification stream instead of a growing
+pile of open issues. It uses the workflow's own default token with
+`issues: write` — no new service, no new secret for this part.
+
+**The run exits non-zero only when the scan itself broke** — could not list the
+organisation, could not clone an app it had identified, could not write the
+comment. Red means "the scan is not working," never "there is news." That keeps
+the drift-audit contract intact: a red check is always something to fix.
+
+`scripts/pattern-scan.decided.json` still exists, with a narrower job. Candidates
+already ruled on are listed in their own **Already decided** section of the
+report rather than in the fresh-candidates list, so the weekly report never
+re-litigates the same four patterns — but it also never hides them. The file is
+a flat list keyed by the normalised pattern name, carrying the decision and why,
+so a year from now the record says what was thought and not just that something
+was dismissed:
 
 ```json
 [
@@ -185,8 +204,11 @@ mute them or pollute that signal.
 - Origination gate: a repo without a Quill marker is never scanned, asserted
   against a fixture that mentions Quill but has no token layer — the
   `retail-ds`/`scaffold` case.
-- The decided-list silences a candidate, and an empty or missing file is treated
-  as "nothing decided yet", never an error.
+- The decided-list moves a candidate into the "already decided" section rather
+  than dropping it, and an empty or missing file is treated as "nothing decided
+  yet", never an error.
+- Exit code is 0 with candidates present and 0 with none; non-zero only on a
+  scan failure (org unlistable, clone failed, comment not written).
 
 ## Validation baseline
 
