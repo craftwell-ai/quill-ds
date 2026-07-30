@@ -112,3 +112,47 @@ this loop produced a live example — a proposed fix to this very script parsed
 because a result contradicted an earlier measurement and got re-checked. So its
 PRs stay human-merged, and its prompt tells it to reproduce before fixing, verify
 after, and say plainly when it is unsure.
+
+## Tier 4 — cross-app pattern scan (scheduled, outward-looking)
+
+Tiers 1–3 all watch Quill against itself. This one watches the apps *styled with*
+Quill: `npm run pattern-scan` (`scripts/pattern-scan.mjs`), Mondays 14:00 UTC via
+`.github/workflows/pattern-scan.yml`.
+
+It reports two things nobody was noticing — a pattern hand-built in two or more
+Quill-styled apps that Quill doesn't ship, and a block Quill already ships that
+got rebuilt from scratch anyway (a findability problem, not a gap).
+
+Two rules gate every candidate. **Origination:** the app must carry Quill's token
+layer, which is how the app list is built in the first place, so an app without
+Quill styling is never scanned and nothing from it can ever be suggested. That
+also excludes the repos that merely *mention* Quill — `retail-ds` and `scaffold`
+carry its script lineage but no styling, and 3 of 7 naive matches were false
+positives. **Repetition:** built independently in at least two apps, or one app's
+domain work qualifies (without it, SkillDecks' trading-card artwork is a
+candidate).
+
+Read-only. It opens no PRs and promotes nothing, because name matching cannot
+tell whether same-named components are one pattern — the three consumer apps each
+have an "agent avatar" and the three are 94/137/46 lines built from entirely
+different things. It reports line counts and imports side by side and leaves the
+call to a human. Promotion follows the normal branch → PR → CI → merge flow, and
+the decision is recorded in `scripts/pattern-scan.decided.json` so the report
+moves it to "Already decided" instead of raising it again.
+
+**It states its own limit in every report.** The rebuilt list only catches exact
+name matches, so `update-feed` (Quill ships `activity-feed`) and `vitals-strip`
+(`stat-cards`) are invisible to it. The list is a floor, not a total — an
+incomplete list that reads as complete is worse than no list.
+
+**Delivery is a tracking-issue comment, not a failed run.** A passing scheduled
+workflow emails nobody, and failing the run every week to force an email would
+train everyone to ignore red. So the report posts to the issue labelled
+`pattern-scan` (created on first run, assigned so every comment notifies), and the
+run turns red only when the scan itself breaks. Red here means the same thing it
+means everywhere else in this file.
+
+**Two tokens, not interchangeable.** `PATTERN_SCAN_TOKEN` is a fine-grained PAT
+scoped to the org with `Contents: read` — it reads the other repos and cannot
+create an issue. The workflow's own `GITHUB_TOKEN` writes the comment and cannot
+read the other repos. The script keeps them as separate variables on purpose.

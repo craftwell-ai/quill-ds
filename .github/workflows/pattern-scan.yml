@@ -1,0 +1,50 @@
+name: Pattern scan
+
+# The outward-looking half of the drift system. The drift audit watches Quill's
+# own health; this watches the apps STYLED with Quill and reports patterns built
+# by hand in two or more of them, plus blocks Quill already ships that got
+# rebuilt anyway. Read-only: it opens no PRs and promotes nothing.
+#
+# Posts every Monday to the tracking issue labelled `pattern-scan`, whether or
+# not anything is new — silence would be indistinguishable from a broken scan.
+# The run turns red ONLY when the scan itself breaks, never when there is news,
+# so a red check here always means something to fix.
+
+on:
+  schedule:
+    - cron: '0 14 * * 1' # Mondays 14:00 UTC, an hour after the drift audit
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write # the tracking-issue comment; nothing else is written
+
+jobs:
+  scan:
+    name: Weekly cross-app pattern scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scan
+        # PATTERN_SCAN_TOKEN is a fine-grained PAT scoped to the org with
+        # Contents: read — strictly less privilege than AUTOMATION_TOKEN, which
+        # needs write to open PRs. Without it the scan reports that it could not
+        # list the organisation and turns red, rather than looking clean.
+        #
+        # GITHUB_TOKEN is passed separately because the tracking-issue comment is
+        # a write to THIS repo, which the job's own `issues: write` covers; the
+        # PAT only needs to read the other repos.
+        env:
+          PATTERN_SCAN_TOKEN: ${{ secrets.PATTERN_SCAN_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run pattern-scan

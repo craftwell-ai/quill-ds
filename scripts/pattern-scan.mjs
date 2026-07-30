@@ -422,7 +422,13 @@ async function postToTrackingIssue(report, token) {
 }
 
 export async function main() {
-  const token = process.env.PATTERN_SCAN_TOKEN || process.env.GITHUB_TOKEN
+  // Two tokens, two jobs, and they are NOT interchangeable. Reading the other
+  // repos needs a PAT that spans the org (Contents: read) — which cannot create
+  // an issue. Commenting on the tracking issue is a write to THIS repo, which the
+  // workflow's own GITHUB_TOKEN covers — and which cannot read the other repos.
+  // Collapsing them into one variable meant whichever was set lost half the job.
+  const readToken = process.env.PATTERN_SCAN_TOKEN || process.env.GITHUB_TOKEN
+  const writeToken = process.env.GITHUB_TOKEN || process.env.PATTERN_SCAN_TOKEN
   const localDirs = (process.env.PATTERN_SCAN_DIRS ?? '')
     .split(',')
     .map((s) => s.trim())
@@ -442,10 +448,10 @@ export async function main() {
         marker: 'local path',
       }))
     } else {
-      if (!token) throw new Error('no PATTERN_SCAN_TOKEN — cannot list the organisation')
+      if (!readToken) throw new Error('no PATTERN_SCAN_TOKEN — cannot list the organisation')
       tmp = mkdtempSync(join(tmpdir(), 'pattern-scan-'))
-      for (const app of await discoverApps(token)) {
-        apps.push({ ...app, dir: cloneShallow(app, token, tmp) })
+      for (const app of await discoverApps(readToken)) {
+        apps.push({ ...app, dir: cloneShallow(app, readToken, tmp) })
       }
     }
 
@@ -483,7 +489,7 @@ export async function main() {
       }
     }
     // Only post from CI. A local run prints and stops — it must never notify.
-    if (process.env.GITHUB_ACTIONS && token) await postToTrackingIssue(report, token)
+    if (process.env.GITHUB_ACTIONS && writeToken) await postToTrackingIssue(report, writeToken)
   } catch (err) {
     // Non-zero means the scan is broken, never "there is news".
     console.error(`pattern scan failed: ${err.message}`)

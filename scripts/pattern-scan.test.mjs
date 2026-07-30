@@ -378,3 +378,23 @@ test('package.json exposes the scan', () => {
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
   assert.equal(pkg.scripts['pattern-scan'], 'node scripts/pattern-scan.mjs')
 })
+
+test('the read token and the write token stay separate', () => {
+  // They are not interchangeable: the org PAT is Contents:read and cannot create
+  // an issue; GITHUB_TOKEN can comment here but cannot read the other repos.
+  // Collapsing them into one variable silently loses half the job.
+  const source = readFileSync(join(root, 'scripts/pattern-scan.mjs'), 'utf8')
+  assert.match(source, /const readToken = process\.env\.PATTERN_SCAN_TOKEN \|\| process\.env\.GITHUB_TOKEN/)
+  assert.match(source, /const writeToken = process\.env\.GITHUB_TOKEN \|\| process\.env\.PATTERN_SCAN_TOKEN/)
+  assert.match(source, /postToTrackingIssue\(report, writeToken\)/)
+  assert.match(source, /discoverApps\(readToken\)/)
+})
+
+test('the workflow grants exactly the permissions the scan needs', () => {
+  const wf = readFileSync(join(root, '.github/workflows/pattern-scan.yml'), 'utf8')
+  assert.match(wf, /contents: read/, 'the scan never writes code')
+  assert.match(wf, /issues: write/, 'needed for the tracking-issue comment')
+  assert.match(wf, /PATTERN_SCAN_TOKEN/)
+  assert.match(wf, /GITHUB_TOKEN/)
+  assert.doesNotMatch(wf, /pull-requests: write/, 'the scan opens no PRs')
+})
