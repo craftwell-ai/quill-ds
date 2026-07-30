@@ -200,6 +200,35 @@ test('the report names every app scanned and how it was identified', () => {
   assert.match(r, /app\/quill-theme\.css/)
 })
 
+test('the report always states how many repos it examined', () => {
+  // "None" alone cannot distinguish "the token cannot see them" from "none is
+  // Quill-styled". The first real run said None while reaching 1 repo of 8, and
+  // the report gave no way to notice.
+  const r = buildReport({ ...BASE, apps: [], seen: { listed: 8, considered: 7, unreadable: [] } })
+  assert.match(r, /0 Quill-styled of 7 repo\(s\) examined/)
+  assert.match(r, /8 visible to the token/)
+})
+
+test('reaching almost no repos prints the token hint', () => {
+  const r = buildReport({ ...BASE, apps: [], seen: { listed: 1, considered: 0, unreadable: [] } })
+  assert.match(r, /Only select repositories/, 'the likeliest cause must be named')
+})
+
+test('finding apps normally prints no token hint', () => {
+  const r = buildReport({ ...BASE, seen: { listed: 8, considered: 7, unreadable: [] } })
+  assert.doesNotMatch(r, /Only select repositories/)
+})
+
+test('a repo whose file list cannot be read is named, not silently skipped', () => {
+  const r = buildReport({
+    ...BASE,
+    apps: [],
+    seen: { listed: 3, considered: 2, unreadable: [{ name: 'secret-app', reason: 'GitHub 404 on /repos/x' }] },
+  })
+  assert.match(r, /secret-app/)
+  assert.match(r, /404/)
+})
+
 test('a week with nothing new still says so in one line', () => {
   const r = buildReport(BASE)
   assert.match(r, /No new candidates/i, 'silence is indistinguishable from a broken scan')

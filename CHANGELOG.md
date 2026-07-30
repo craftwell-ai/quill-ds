@@ -9,6 +9,21 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.3.2] — 2026-07-30
+
+### Fixed
+- **"No apps found" was indistinguishable from "the token cannot see them."**
+  The first successful run reported `None — no repo reachable by the token
+  carries the Quill token layer` and exited 0, looking like a clean result. Both
+  apps do carry the marker at `app/quill-theme.css`; the token simply could not
+  reach them. The report now always prints the denominator — *"0 Quill-styled of
+  N repo(s) examined (M visible to the token)"* — so zero-of-eight and
+  zero-of-one are never confused, and names the likeliest cause when the reach is
+  near zero (a fine-grained token defaults to **Only select repositories**).
+- A repo whose file list cannot be read is now **named** in the report rather
+  than silently skipped. Unreadable is not the same as not-Quill-styled, and the
+  loop was quietly collapsing the two.
+
 ## [0.3.1] — 2026-07-30
 
 ### Fixed
