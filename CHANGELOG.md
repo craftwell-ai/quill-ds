@@ -9,6 +9,20 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.5.1] — 2026-07-31
+
+### Fixed
+- **The consumer icon component stopped exporting `IconName`, breaking the
+  first real library sync.** `craftwell-command-center` imports
+  `type IconName` from its copy of `icon.tsx`; the registry's standalone cut
+  had dropped that export, so the v0.5.0 sync PR failed the app's build —
+  caught exactly as designed (red PR, app untouched). The cut now exports
+  `type IconName = string` again: permissive on purpose, because the
+  standalone cut cannot know the full library union.
+- Stale rationale comment in the theme: links resolve through the accent
+  alias (default moss-deep), not `terracotta-deep`. Flagged by Greptile on
+  the `commanddeck` sync PR.
+
 ## [0.5.0] — 2026-07-31
 
 ### Added
