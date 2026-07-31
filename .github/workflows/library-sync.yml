@@ -1,0 +1,57 @@
+name: Library sync
+
+# The outward half of a release. The registry copies code INTO each app at
+# install time — so publishing a release changes nothing downstream until each
+# app re-pulls the items it uses. This workflow does the re-pull the moment a
+# release publishes: one PR per Quill-styled app in the account, rewriting only
+# the items that app already has, each PR merging itself once that app's own
+# checks pass. A red check leaves the PR open for a human — green means merged,
+# red means look, same as everywhere else in this repo.
+#
+# Trigger chain: release.yml publishes with AUTOMATION_TOKEN (a PAT), and
+# releases created by a PAT DO raise this `release` event — ones created by the
+# default GITHUB_TOKEN would not, by GitHub's recursion guard. If releases ever
+# start being published with GITHUB_TOKEN, this workflow silently stops firing;
+# the workflow_dispatch trigger is the manual override and the way to test.
+#
+# The checkout at a release event is the TAGGED commit, so the committed
+# public/r/*.json read by the script is exactly the released registry output —
+# no dependency on the production deploy having finished.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read # writes go to the OTHER repos, via the PAT
+
+concurrency:
+  group: library-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45 # per-app check-watching can wait up to 15m each
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      # No npm ci: the script leans only on node stdlib, git, and the gh CLI —
+      # all present on the runner. Keeping the job dependency-free means a
+      # broken lockfile can never block an urgent design-system rollout.
+      #
+      # LIBRARY_SYNC_TOKEN, not AUTOMATION_TOKEN: AUTOMATION_TOKEN is scoped to
+      # THIS repo (see scripts/DRIFT-AUDIT.md), and this job pushes branches and
+      # merges PRs in the OTHER repos. It needs a fine-grained PAT for All
+      # repositories with Contents: read/write + Pull requests: read/write.
+      # Absent secret → the script fails loudly rather than pretending to sync.
+      - name: Sync released items into the Quill-styled apps
+        env:
+          SYNC_TOKEN: ${{ secrets.LIBRARY_SYNC_TOKEN }}
+          GH_TOKEN: ${{ secrets.LIBRARY_SYNC_TOKEN }}
+        run: node scripts/library-sync.mjs

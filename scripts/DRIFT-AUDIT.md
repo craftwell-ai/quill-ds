@@ -66,22 +66,25 @@ the live-file comparison is manual, and it naturally coincides with Figma edits.
 
 ## Automation — the loop that closes itself
 
-Four workflows. The first three are deterministic: each has a provably correct
-answer, so a green required check genuinely means "correct". The fourth is not,
-and is fenced accordingly.
+Five workflows. All but `claude-repair` are deterministic: each has a provably
+correct answer, so a green required check genuinely means "correct".
+`claude-repair` is not, and is fenced accordingly.
 
 | Workflow | Does | Merges itself? |
 | --- | --- | --- |
 | `dependabot-auto-merge.yml` | Enables auto-merge on Dependabot minor/patch PRs; comments on majors and leaves them | yes, once green |
 | `self-heal.yml` | Rebuilds generated files; opens a PR if the committed output drifted | yes, once green |
 | `release.yml` | Tags + publishes a version that has none; opens a bump PR when commits pile up untagged | yes, once green |
+| `library-sync.yml` | On every published release, re-pulls the items each Quill-styled app already uses — one PR per app | yes, once **that app's** checks pass |
 | `claude-repair.yml` | On a red `main`, has Claude diagnose and open a fix PR | **no** — human merges |
 
-Two properties hold across all four:
+Two properties hold across all five:
 
-- **Nothing writes to `main`.** Every change arrives as a PR that the required
-  `Lint · types · tests · build` check must pass. A wrong automated fix is a red
-  PR, not a broken `main`.
+- **Nothing writes to a default branch.** Every change arrives as a PR that the
+  target repo's checks must pass — here the required `Lint · types · tests ·
+  build`, in a synced app whatever that app declares. A wrong automated change
+  is a red PR, not a broken `main`. (`library-sync` merges an app PR directly
+  only when the app declares no checks at all — green by absence.)
 - **Everything terminates.** `self-heal` re-runs after its own PR merges, finds
   no drift, and stops. `release` publishes, then finds nothing unreleased, and
   stops.
@@ -98,6 +101,14 @@ Two properties hold across all four:
   normally and `dependabot-auto-merge.yml` needs no PAT.
 - **Repo settings:** allow auto-merge, workflow permissions = read *and write*,
   Dependabot alerts + security updates on.
+- **`LIBRARY_SYNC_TOKEN` secret — required by `library-sync.yml` only.** The
+  sync pushes branches and merges PRs in the *app* repos, which the
+  quill-ds-scoped `AUTOMATION_TOKEN` cannot reach: it needs a fine-grained PAT
+  for **All repositories** with Contents: read/write and Pull requests:
+  read/write. "All repositories" is deliberate — a future app is covered the
+  day it is created. Missing secret → the run fails loudly at the first step.
+  The `release` trigger fires only because releases are published with a PAT;
+  see the comment in `library-sync.yml`.
 - **`claude-repair.yml` is off** until both an `ANTHROPIC_API_KEY` secret and an
   `ENABLE_CLAUDE_AUTOFIX = true` repo variable exist.
 
