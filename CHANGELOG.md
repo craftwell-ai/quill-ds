@@ -9,6 +9,22 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.5.0] — 2026-07-31
+
+### Added
+- **Library-sync bot — a release now reaches the apps by itself.** The registry
+  copies code into each app at install time, so until now a release changed
+  nothing downstream until every app re-pulled by hand. `library-sync.yml` runs
+  on every published release: it finds every Quill-styled app in the account
+  (same marker rule and loud denominator as the pattern scan), rewrites the
+  items each app already has from the released `public/r/*.json`, and opens one
+  PR per app that merges itself once that app's own checks pass. Red checks
+  leave the PR open for a human; an app with no Quill items is never touched;
+  a stale sync PR from an earlier release is closed as superseded. Requires a
+  new `LIBRARY_SYNC_TOKEN` secret (fine-grained PAT, All repositories,
+  Contents + Pull requests read/write) — `AUTOMATION_TOKEN` is scoped to
+  quill-ds only and cannot reach the apps.
+
 ## [0.4.0] — 2026-07-31
 
 ### Changed
