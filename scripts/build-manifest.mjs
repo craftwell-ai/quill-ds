@@ -12,7 +12,7 @@ import { dirname, join } from 'node:path'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const metaPath = process.argv[2] || '/tmp/ms-meta.json'
-const OUTLINED = join(root, 'node_modules/@material-symbols/svg-200/outlined')
+const OUTLINED = join(root, 'node_modules/@material-symbols/svg-400/outlined')
 const has = (n) => existsSync(join(OUTLINED, `${n}.svg`))
 
 const raw = readFileSync(metaPath, 'utf8').replace(/^\)\]\}'?\n?/, '')

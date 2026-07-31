@@ -9,6 +9,18 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.4.0] — 2026-07-31
+
+### Changed
+- **Icon weight bumped two steps: 200 → 400.** The source package is now
+  `@material-symbols/svg-400` (Outlined, Fill 0 — style unchanged), and every
+  generated artifact (core map, per-icon modules, tail, registry `icon` item)
+  is rebuilt at the heavier cut. The icon *names* are identical between the two
+  packages (verified: the generated `IconName` union did not change), so no
+  consumer code changes — apps pick up the new weight by re-pulling the `icon`
+  registry item. The homepage theme selector keeps its hand-inlined weight-500
+  glyphs, now only one step heavier than the system set.
+
 ## [0.3.2] — 2026-07-30
 
 ### Fixed
