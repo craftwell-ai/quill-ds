@@ -11,6 +11,12 @@ import { icons } from './icons.core.mjs'
 
 type IconData = { viewBox: string; paths: string[] }
 
+// Permissive by design: the standalone cut cannot know the full library union,
+// so IconName is plain string here — the design-system repo narrows it. Apps
+// import this type, so it must stay exported (dropping it broke a consumer
+// build in the v0.5.0 sync).
+type IconName = string
+
 const coreIcons = icons as Record<string, IconData>
 
 function Icon({
@@ -19,7 +25,7 @@ function Icon({
   className,
   'aria-label': ariaLabel,
   ...props
-}: React.SVGProps<SVGSVGElement> & { name: string; size?: number | string }) {
+}: React.SVGProps<SVGSVGElement> & { name: IconName; size?: number | string }) {
   const data = coreIcons[name]
   const viewBox = data?.viewBox ?? '0 0 24 24'
 
@@ -43,4 +49,4 @@ function Icon({
   )
 }
 
-export { Icon }
+export { Icon, type IconName }

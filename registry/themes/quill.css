@@ -582,7 +582,8 @@
     font-variation-settings: var(--fraunces-display);
   }
 
-  /* terracotta-deep via alias — meets WCAG AA (4.5:1) on paper backgrounds. */
+  /* Accent-text alias — follows data-accent, defaults to moss-deep; every
+     accent cut meets WCAG AA (4.5:1) on paper backgrounds. */
   a { color: var(--text-accent-color); }
 }
 
