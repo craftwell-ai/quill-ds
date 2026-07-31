@@ -4,7 +4,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { icons } from './icons.core.mjs'
 
-// Consumer cut of the Quill <Icon>: renders Material Symbols (outlined, wt 200)
+// Consumer cut of the Quill <Icon>: renders Material Symbols (outlined, wt 400)
 // from the bundled core map. The full design-system repo lazy-loads the entire
 // library; this standalone version covers every icon the Quill blocks use.
 // Unknown names render an empty, size-reserved placeholder.

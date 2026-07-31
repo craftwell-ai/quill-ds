@@ -38,8 +38,8 @@ const QUILL_MARK_PATH =
 
 // Material Symbols Outlined glyphs at weight 500, verbatim from
 // @material-symbols/svg-500 (viewBox 0 -960 960 960). The design system's Icon
-// set is weight 200; the theme selector uses this heavier cut so the tiny glyphs
-// keep their stroke presence at 14-18px.
+// set is weight 400; the theme selector uses this slightly heavier cut so the
+// tiny glyphs keep their stroke presence at 14-18px.
 const SUN_500_PATH =
   "M573.26-386.89q38.61-38.51 38.61-93.14 0-54.62-38.64-93.23-38.63-38.61-93.26-38.61-54.62 0-93.11 38.64-38.49 38.63-38.49 93.26 0 54.62 38.52 93.11 38.51 38.49 93.14 38.49 54.62 0 93.23-38.52ZM338.5-338.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5Q563-280 480-280t-141.5-58.5ZM204.07-445.93H35.93v-68.14h168.14v68.14Zm720 0H755.93v-68.14h168.14v68.14Zm-478.14-310v-168.14h68.14v168.14h-68.14Zm0 720v-168.14h68.14v168.14h-68.14ZM261.76-652.02l-105.5-102.74 48.5-49.98 102.22 105.26-45.22 47.46Zm494.48 495.76-104.22-105.5L699-308.74l104.74 103.26-47.5 49.22ZM651.26-699l103.5-104.74 49.98 47.5-104.26 104.22L651.26-699Zm-495 494.24 104.5-104.22L308.74-261 205.48-156.26l-49.22-48.5ZM480-480Z";
 const MOON_500_PATH =

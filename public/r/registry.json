@@ -21,7 +21,7 @@
       "name": "icon",
       "type": "registry:ui",
       "title": "Icon (Material Symbols)",
-      "description": "The Quill icon component — Material Symbols Outlined at weight 200, bundled as a self-contained core set covering every icon the Quill blocks use.",
+      "description": "The Quill icon component — Material Symbols Outlined at weight 400, bundled as a self-contained core set covering every icon the Quill blocks use.",
       "files": [
         {
           "path": "registry/lib/icon.tsx",
