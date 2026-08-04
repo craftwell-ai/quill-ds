@@ -9,6 +9,14 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.5.3] — 2026-08-04
+
+### Changed
+- chore(deps): Bump hono from 4.12.31 to 4.12.34
+- chore(deps): Bump undici from 7.28.0 to 7.29.0
+- chore(deps): Bump fast-uri from 3.1.4 to 3.1.5
+- chore(deps): Bump ip-address from 10.2.0 to 10.4.0
+
 ## [0.5.2] — 2026-08-03
 
 ### Changed
