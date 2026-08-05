@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs'
 
 import { renderLlms, LLMS_PATH } from './build-llms.mjs'
 import { DEFAULT_ACCENT } from './build-tokens.mjs'
+import { ALL_USAGE } from '../src/usage/index.mjs'
 
 const committed = readFileSync(LLMS_PATH, 'utf8')
 
@@ -26,5 +27,11 @@ test('llms.txt carries the chart fixed-order rule and every block', () => {
   const registry = JSON.parse(readFileSync(new URL('../registry.json', import.meta.url), 'utf8'))
   for (const b of registry.items.filter((i) => i.type === 'registry:block')) {
     assert.ok(committed.includes(`/r/${b.name}.json`), `llms.txt is missing block '${b.name}'`)
+  }
+})
+
+test('llms.txt links every usage guide', () => {
+  for (const u of ALL_USAGE) {
+    assert.ok(committed.includes(`/usage/${u.name}.md`), `llms.txt is missing the usage-guide link for '${u.name}'`)
   }
 })
