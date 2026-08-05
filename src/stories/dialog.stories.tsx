@@ -12,6 +12,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { usage } from '@/usage/dialog.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
 
 const meta = {
   title: 'Components / Dialog',
@@ -19,19 +21,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--card\` · \`--shadow-lg\` · \`--radius-xl\`
-
-### Rules
-Dialog is for non-destructive modals: forms, details, confirmation of reversible actions.
-For destructive confirmation (delete, overwrite) use \`AlertDialog\` instead.
-Pass \`showCloseButton={false}\` to \`DialogContent\` only if the close action is available via a footer button.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     open: { control: 'boolean', description: 'Controlled open state' },

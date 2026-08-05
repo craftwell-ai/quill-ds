@@ -15,6 +15,7 @@ import { dirname, join } from 'node:path'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 import { MODES, DEFAULT_ACCENT } from './build-tokens.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
+import { ALL_USAGE } from '../src/usage/index.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -28,6 +29,7 @@ const accentList = Object.keys(tokens.accents).map((a) => (a === DEFAULT_ACCENT 
 
 export function renderLlms(t = tokens) {
   const blocks = registry.items.filter((i) => i.type === 'registry:block')
+  const usageByName = new Map(ALL_USAGE.map((u) => [u.name, u]))
   const L = []
   const p = (s = '') => L.push(s)
 
@@ -69,9 +71,20 @@ export function renderLlms(t = tokens) {
   p()
   for (const b of blocks) {
     const intent = (b.meta?.intent ?? []).join(', ')
-    p(`- [${b.title ?? b.name}](${HOME}/r/${b.name}.json) — _[${intent}]_ ${b.meta?.use_when ?? b.description}`)
+    const guide = usageByName.has(b.name) ? ` · [usage guide](${HOME}/usage/${b.name}.md)` : ''
+    p(`- [${b.title ?? b.name}](${HOME}/r/${b.name}.json) — _[${intent}]_ ${b.meta?.use_when ?? b.description}${guide}`)
   }
   p()
+
+  const primitives = ALL_USAGE.filter((u) => u.kind === 'component')
+  if (primitives.length) {
+    p('## Primitive usage guides')
+    p()
+    p("Per-primitive usage rules — when to use, what to reach for instead, do/don't, accessibility:")
+    p()
+    for (const u of primitives) p(`- [${u.name}](${HOME}/usage/${u.name}.md) — ${u.summary}`)
+    p()
+  }
 
   p('## Links')
   p()

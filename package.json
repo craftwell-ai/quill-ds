@@ -1,6 +1,6 @@
 {
   "name": "quill-ds",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "private": true,
   "scripts": {
     "predev": "npm run build:icons",
@@ -11,11 +11,12 @@
     "lint": "eslint",
     "prestorybook": "npm run build:icons",
     "storybook": "storybook dev -p 6006",
-    "prebuild-storybook": "npm run build:tokens && npm run build:registry && npm run build:llms && npm run build:icons",
+    "prebuild-storybook": "npm run build:tokens && npm run build:usage && npm run build:registry && npm run build:llms && npm run build:icons",
     "build-storybook": "storybook build",
     "build:tokens": "node scripts/build-tokens.mjs",
     "build:registry": "shadcn build",
     "build:llms": "node scripts/build-llms.mjs",
+    "build:usage": "node scripts/build-usage.mjs",
     "build:icons": "node scripts/build-icons.mjs",
     "drift-audit": "node scripts/drift-audit.mjs",
     "pattern-scan": "node scripts/pattern-scan.mjs",

@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.5.3.
+> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.6.0.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -44,7 +44,7 @@ Blocks are tagged with an intent vocabulary so you can pick by the job to be don
 Each block is a composition of restyled primitives. `intent` lists its jobs; `use_when` says when to reach for it.
 
 - [Activity feed](https://www.quilldesignsystem.com/r/activity-feed.json) — _[data-display]_ You need to show a chronological history of what happened — recent events with who, what, and when.
-- [Alert stack](https://www.quilldesignsystem.com/r/alerts.json) — _[feedback]_ You need to surface inline status messages of varying severity (info, success, destructive) within a page.
+- [Alert stack](https://www.quilldesignsystem.com/r/alerts.json) — _[feedback]_ You need to surface inline status messages of varying severity (info, success, destructive) within a page. · [usage guide](https://www.quilldesignsystem.com/usage/alerts.md)
 - [Analytics charts](https://www.quilldesignsystem.com/r/analytics-charts.json) — _[data-viz, data-display]_ You need a dashboard view of trends over time — an area chart plus a bar chart on card surfaces.
 - [Announcement banners](https://www.quilldesignsystem.com/r/announcement-banner.json) — _[feedback, marketing]_ You need to announce something site-wide with a dismissible banner, either inline or full-bleed.
 - [Badges on card](https://www.quilldesignsystem.com/r/badge-on-card.json) — _[data-display]_ You need to show status or category badges attached to a content card.
@@ -94,6 +94,13 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 - [Team section](https://www.quilldesignsystem.com/r/team-section.json) — _[marketing]_ You need a marketing team grid with member cards, roles, and contact actions.
 - [Testimonial](https://www.quilldesignsystem.com/r/testimonial.json) — _[marketing, content]_ You need a customer-quote card with a serif pull-quote and attribution.
 - [Setup wizard step](https://www.quilldesignsystem.com/r/wizard.json) — _[form, productivity]_ You need a multi-step setup flow with a progress stepper and back/continue navigation.
+
+## Primitive usage guides
+
+Per-primitive usage rules — when to use, what to reach for instead, do/don't, accessibility:
+
+- [button](https://www.quilldesignsystem.com/usage/button.md) — Buttons trigger actions. The default (primary) variant is the single most important action on a surface.
+- [dialog](https://www.quilldesignsystem.com/usage/dialog.md) — A modal window over the page for focused, non-destructive tasks — forms, details, reversible confirmations.
 
 ## Links
 

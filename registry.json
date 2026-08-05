@@ -102,7 +102,8 @@
           "type": "registry:component",
           "target": "components/quill/alerts.tsx"
         }
-      ]
+      ],
+      "docs": "A vertical stack of informational, success, and destructive alerts with icons. Do: Match severity to consequence: destructive for blocking errors, default for neutral information. Don't: Use destructive styling for emphasis on non-error messages. Use sonner when the message is transient feedback about an action just taken — use a toast, not an inline alert. Use announcement-banner when the message is site-wide and dismissible rather than local to a page section. Use empty-state when the \"message\" is really an empty view that needs an explanation and a call to action."
     },
     {
       "name": "analytics-charts",
