@@ -3,6 +3,8 @@ import '../src/app/globals.css'
 import quillTheme from './quill-theme'
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from '../src/components/ui/sonner'
+import { useRef } from 'react'
+import { useOverlaySpace } from './use-overlay-space'
 
 // data-theme attribute value → preview canvas ground (paper token per theme)
 const THEME_BG: Record<string, string> = {
@@ -45,10 +47,13 @@ export const globalTypes = {
 
 export const CANVAS_PADDING = 24
 
-const withTheme: Decorator = (Story, context) => {
+const WithTheme: Decorator = (Story, context) => {
   const theme = context.globals['theme'] ?? 'light'
   const accent = context.globals['accent'] ?? 'terracotta'
   const isFullscreen = context.parameters.layout === 'fullscreen'
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
+  useOverlaySpace(wrapperRef, CANVAS_PADDING)
+
   return (
     <ThemeProvider
       attribute="data-theme"
@@ -57,6 +62,7 @@ const withTheme: Decorator = (Story, context) => {
       themes={['light', 'dark', 'classic-light', 'classic-dark']}
     >
       <div
+        ref={wrapperRef}
         data-theme={theme}
         data-accent={accent}
         style={{
@@ -72,7 +78,7 @@ const withTheme: Decorator = (Story, context) => {
   )
 }
 
-export const decorators: Decorator[] = [withTheme]
+export const decorators: Decorator[] = [WithTheme]
 
 const preview: Preview = {
   parameters: {
