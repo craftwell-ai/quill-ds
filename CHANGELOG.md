@@ -9,6 +9,20 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.6.0] — 2026-08-04
+
+### Added
+- **Single-source component usage documentation.** A component's usage
+  guidance — when to use it, what to reach for instead, do/don't rules,
+  accessibility notes, tokens — now lives in one `src/usage/<name>.usage.mjs`
+  file and is derived everywhere else: the Storybook docs page renders it, a
+  `public/usage/<name>.md` page publishes it, the registry item's `docs`
+  field carries it into the shadcn CLI at install time, and llms.txt links
+  it for AI consumers. Visual Do/Don't pairs render in stories with
+  test-enforced pairing to their written rule. Pilots: Button, Dialog, and
+  the Alerts pattern; staleness + coverage fences guard the rest of the
+  catalog for Waves 2–4.
+
 ## [0.5.3] — 2026-08-04
 
 ### Changed
