@@ -2,7 +2,8 @@
  * Generates the usage outputs derived from src/usage/*.usage.mjs:
  *   - public/usage/<name>.md            one full usage page per entry
  *   - registry.json                     `docs` field (shadcn CLI prints it at
- *                                       install time) and `meta.use_when`
+ *                                       install time), `description`
+ *                                       (:= summary), and `meta.use_when`
  *                                       (:= useWhen[0]) for documented items
  * The usage module is the single source; `scripts/build-usage.test.mjs` fails
  * CI when a committed output is stale. Run `npm run build:usage` after
@@ -35,6 +36,7 @@ export function injectRegistryDocs(registry, all = ALL_USAGE) {
     const u = byName.get(item.name)
     if (!u) continue
     item.docs = usageDocsField(u)
+    item.description = u.summary
     if (item.type === 'registry:block') item.meta = { ...item.meta, use_when: u.useWhen[0] }
   }
   return registry

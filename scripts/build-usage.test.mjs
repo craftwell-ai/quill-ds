@@ -14,13 +14,14 @@ test('every usage entry has a committed, current public usage page (run `npm run
   }
 })
 
-test('registry.json carries the derived docs field and use_when for documented items', () => {
+test('registry.json carries the derived docs field, description, and use_when for documented items', () => {
   const registry = JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'))
   const byName = new Map(registry.items.map((i) => [i.name, i]))
   for (const u of ALL_USAGE) {
     const item = byName.get(u.name)
     if (!item) continue // primitives like button/dialog are not registry items
     assert.equal(item.docs, usageDocsField(u), `registry item '${u.name}' docs is stale — run \`npm run build:usage\``)
+    assert.equal(item.description, u.summary, `registry item '${u.name}' description diverges from its usage file summary`)
     if (item.type === 'registry:block') {
       assert.equal(item.meta?.use_when, u.useWhen[0], `registry item '${u.name}' use_when diverges from its usage file`)
     }
