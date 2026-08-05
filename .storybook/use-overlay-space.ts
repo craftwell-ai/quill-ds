@@ -24,6 +24,15 @@ export function useOverlaySpace(wrapperRef: RefObject<HTMLElement | null>, baseP
       // known state — otherwise a padding boost from a previous measurement
       // would compound into the next one.
       wrapper.style.paddingBottom = `${basePadding}px`
+
+      // Docs pages mount one hook instance per story, all sharing this
+      // document — without this guard, an open popup in one story would
+      // inflate every other story's canvas too. Base UI triggers carry
+      // `data-popup-open` on themselves (not the portaled popup content)
+      // while their popup is open, so this scopes the check to "does THIS
+      // story's own trigger own an open popup" before touching the DOM.
+      if (!wrapper.querySelector('[data-popup-open]')) return
+
       const naturalBottom = wrapper.getBoundingClientRect().bottom
 
       const openPopups = document.querySelectorAll('[data-base-ui-portal] [data-open]')
