@@ -26,6 +26,15 @@
   .sbdocs table tr:nth-of-type(2n) {
     background-color: #EFE4CE !important; /* --paper-warm */
   }
+  /* The rule above targets prose-authored markdown tables, but the
+     selector can't tell those apart from a live-rendered story that
+     happens to use <table> markup (Calendar, Table itself). .docs-story
+     wraps only the rendered story, never prose, so this reverts the
+     stripe there — the story's own theme-aware background shows through
+     instead of a hardcoded light-mode color that broke on dark themes. */
+  .sbdocs .docs-story table tr:nth-of-type(2n) {
+    background-color: transparent !important;
+  }
 </style>
 
 <!-- Pages always open at the very top, never at a restored scroll position. -->

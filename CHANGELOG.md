@@ -9,6 +9,21 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.6.2] — 2026-08-05
+
+### Fixed
+- **Docs-page table rows on a dark theme no longer show a stray light
+  background.** Storybook's docs addon zebra-stripes every other `<table>`
+  row for readability in authored markdown tables; Quill overrides its
+  default color with `--paper-warm`, but the selector couldn't distinguish
+  a prose table from a live-rendered story that happens to use `<table>`
+  markup (Calendar, and Quill's own Table component). That hardcoded,
+  non-theme-aware color showed through even when the story's own theme was
+  switched to Dusk or Classic Dark. Reverted to transparent specifically
+  inside the live-story preview container, so genuine markdown tables keep
+  the intended warm stripe and rendered components show their own correct,
+  theme-aware background instead.
+
 ## [0.6.1] — 2026-08-04
 
 ### Fixed
