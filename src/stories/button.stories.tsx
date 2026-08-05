@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { usage } from '@/usage/button.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Button',
@@ -104,5 +105,27 @@ export const Dark: Story = {
         <Button key={v} variant={v}>{v}</Button>
       ))}
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="one-primary"
+      doExample={
+        <div className="flex gap-2">
+          <Button>Save changes</Button>
+          <Button variant="outline">Cancel</Button>
+        </div>
+      }
+      dontExample={
+        <div className="flex gap-2">
+          <Button>Save changes</Button>
+          <Button>Cancel</Button>
+        </div>
+      }
+    />
   ),
 }
