@@ -5,6 +5,7 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
 
 const meta = {
   title: 'Components / HoverCard',
@@ -54,6 +55,34 @@ export const Default: Story = {
       </HoverCardContent>
     </HoverCard>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const wrapper = canvasElement.querySelector('[data-theme]')
+    if (!wrapper) throw new Error('themed wrapper not found')
+    const closedBottom = wrapper.getBoundingClientRect().bottom
+
+    const trigger = canvas.getByRole('link', { name: '@johndoe' })
+    await userEvent.hover(trigger)
+
+    // HoverCard opens after an intent delay — allow more time than the default.
+    const name = await screen.findByText('John Doe', {}, { timeout: 2000 })
+    const popup = name.closest('[data-open]')
+    if (!popup) throw new Error('hover card popup not found')
+    const popupBottom = popup.getBoundingClientRect().bottom
+
+    await waitFor(() => {
+      expect(wrapper.getBoundingClientRect().bottom).toBeGreaterThanOrEqual(popupBottom)
+    })
+    expect(wrapper.getBoundingClientRect().bottom).toBeGreaterThan(closedBottom)
+
+    await userEvent.unhover(trigger)
+
+    await waitFor(() => {
+      expect(
+        Math.abs(wrapper.getBoundingClientRect().bottom - closedBottom)
+      ).toBeLessThan(2)
+    })
+  },
 }
 
 export const LinkPreview: Story = {

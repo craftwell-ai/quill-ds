@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
 
 const meta = {
   title: 'Components / DropdownMenu',
@@ -66,6 +67,38 @@ export const Default: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const wrapper = canvasElement.querySelector('[data-theme]')
+    if (!wrapper) throw new Error('themed wrapper not found')
+    const closedBottom = wrapper.getBoundingClientRect().bottom
+
+    const trigger = canvas.getByRole('button', { name: 'More actions' })
+    await userEvent.click(trigger)
+
+    const menu = await screen.findByRole('menu')
+    const popupBottom = menu.getBoundingClientRect().bottom
+
+    await waitFor(() => {
+      expect(wrapper.getBoundingClientRect().bottom).toBeGreaterThanOrEqual(popupBottom)
+    })
+    expect(wrapper.getBoundingClientRect().bottom).toBeGreaterThan(closedBottom)
+
+    await userEvent.keyboard('{Escape}')
+
+    await waitFor(() => {
+      expect(
+        Math.abs(wrapper.getBoundingClientRect().bottom - closedBottom)
+      ).toBeLessThan(2)
+    })
+
+    // Base UI keeps the popup (and its focus guards) mounted through the
+    // closing transition — wait for it to fully unmount so the a11y scan
+    // that runs after this test doesn't catch a mid-animation DOM state.
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+    })
+  },
 }
 
 export const WithCheckboxItems: Story = {

@@ -10,6 +10,7 @@ import {
   SelectLabel,
   SelectSeparator,
 } from '@/components/ui/select'
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
 
 const meta = {
   title: 'Components / Select',
@@ -61,6 +62,23 @@ export const Default: Story = {
       </SelectContent>
     </Select>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const wrapper = canvasElement.querySelector('[data-theme]')
+    if (!wrapper) throw new Error('themed wrapper not found')
+    const closedBottom = wrapper.getBoundingClientRect().bottom
+
+    const trigger = canvas.getByRole('combobox', { name: 'Select category' })
+    await userEvent.click(trigger)
+
+    const listbox = await screen.findByRole('listbox')
+    const popupBottom = listbox.getBoundingClientRect().bottom
+
+    await waitFor(() => {
+      expect(wrapper.getBoundingClientRect().bottom).toBeGreaterThanOrEqual(popupBottom)
+    })
+    expect(wrapper.getBoundingClientRect().bottom).toBeGreaterThan(closedBottom)
+  },
 }
 
 export const WithValue: Story = {

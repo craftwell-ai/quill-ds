@@ -143,6 +143,13 @@ function SelectSeparator({
   return (
     <SelectPrimitive.Separator
       data-slot="select-separator"
+      // Decorative only: role="listbox" doesn't permit role="separator" among
+      // its owned elements (only option/group), so this stays out of the
+      // accessibility tree rather than violating that ARIA requirement.
+      // aria-orientation is dropped alongside it — it's only a valid
+      // attribute on an element with a role that supports it.
+      role="presentation"
+      aria-orientation={undefined}
       className={cn("pointer-events-none -mx-1 my-1 h-px bg-border", className)}
       {...props}
     />

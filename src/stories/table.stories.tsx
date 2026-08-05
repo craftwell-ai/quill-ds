@@ -10,6 +10,7 @@ import {
   TableCaption,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { expect } from 'storybook/test'
 
 const courses = [
   { name: 'Watercolor Basics', instructor: 'Ana Rivera', enrolled: 42, status: 'Active' },
@@ -82,6 +83,11 @@ export const Default: Story = {
       </TableFooter>
     </Table>
   ),
+  play: async ({ canvasElement }) => {
+    const wrapper = canvasElement.querySelector('[data-theme]')
+    if (!wrapper) throw new Error('themed wrapper not found')
+    expect(wrapper.getBoundingClientRect().height).toBeLessThan(window.innerHeight)
+  },
 }
 
 export const WithSelectedRow: Story = {
