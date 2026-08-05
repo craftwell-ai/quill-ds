@@ -9,7 +9,7 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
-## [0.7.0] — 2026-08-04
+## [0.6.1] — 2026-08-04
 
 ### Fixed
 - **Storybook canvases no longer force a full-viewport minimum height.**
@@ -22,6 +22,11 @@ displayed version updates with the bump.
   reserves real space below the component**, so the open overlay no longer
   visually overlaps whatever renders after it on the page — the same
   margin that appears above the story also appears below the open overlay.
+- **`SelectSeparator` no longer renders an invalid ARIA role.** It used
+  Base UI's generic `Separator` primitive, which defaults to
+  `role="separator"` — not a permitted child of `role="listbox"` per
+  WAI-ARIA. Now renders `role="presentation"` instead; purely a semantics
+  fix, no visual change.
 
 ## [0.6.0] — 2026-08-04
 
