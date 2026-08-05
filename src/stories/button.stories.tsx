@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/button.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
 
 const meta = {
   title: 'Components / Button',
@@ -8,19 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--primary\` · \`--secondary\` · \`--destructive\` · \`--muted\` · \`--radius-lg\`
-
-### Rules
-Primary (\`default\`) = ink fill. Use for the single most important action on a surface.
-Secondary = paper-deep fill; ghost/outline = no fill. One primary per surface.
-Focus ring is \`--ring\` (ink), never terracotta.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     variant: {
