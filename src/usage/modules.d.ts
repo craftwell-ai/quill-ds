@@ -10,6 +10,16 @@ declare module '@/usage/button.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/dialog.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/alerts.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/render.mjs' {
   import type { Usage } from '@/usage/types'
   export function renderUsageDocs(usage: Usage): string
