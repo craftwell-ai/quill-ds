@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { expect } from 'storybook/test'
 import { usage } from '@/usage/button.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
@@ -39,7 +40,14 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = { args: { children: 'Save changes' } }
+export const Default: Story = {
+  args: { children: 'Save changes' },
+  play: async ({ canvasElement }) => {
+    const wrapper = canvasElement.querySelector('[data-theme]')
+    if (!wrapper) throw new Error('themed wrapper not found')
+    expect(wrapper.getBoundingClientRect().height).toBeLessThan(window.innerHeight)
+  },
+}
 export const Outline: Story = { args: { variant: 'outline', children: 'Cancel' } }
 export const Secondary: Story = { args: { variant: 'secondary', children: 'Secondary' } }
 export const Ghost: Story = { args: { variant: 'ghost', children: 'Ghost' } }

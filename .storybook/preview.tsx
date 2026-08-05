@@ -43,9 +43,12 @@ export const globalTypes = {
   },
 }
 
+export const CANVAS_PADDING = 24
+
 const withTheme: Decorator = (Story, context) => {
   const theme = context.globals['theme'] ?? 'light'
   const accent = context.globals['accent'] ?? 'terracotta'
+  const isFullscreen = context.parameters.layout === 'fullscreen'
   return (
     <ThemeProvider
       attribute="data-theme"
@@ -58,8 +61,8 @@ const withTheme: Decorator = (Story, context) => {
         data-accent={accent}
         style={{
           background: THEME_BG[theme] ?? THEME_BG.light,
-          padding: 24,
-          minHeight: '100vh',
+          padding: CANVAS_PADDING,
+          ...(isFullscreen ? { minHeight: '100vh' } : {}),
         }}
       >
         <Story />
