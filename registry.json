@@ -300,7 +300,7 @@
       "name": "command-palette",
       "type": "registry:block",
       "title": "Command palette",
-      "description": "A searchable command palette with grouped actions, recent items, and keyboard shortcuts.",
+      "description": "A searchable ⌘K command palette with grouped actions, recent items, and keyboard shortcuts.",
       "meta": {
         "intent": [
           "navigation"
@@ -317,7 +317,8 @@
           "type": "registry:component",
           "target": "components/quill/command-palette.tsx"
         }
-      ]
+      ],
+      "docs": "A searchable ⌘K command palette with grouped actions, recent items, and keyboard shortcuts. Do: Group items into labeled sections (Actions, Recent) so a long list stays scannable. Don't: Dump every possible command into one flat, unlabeled list. Use search-results when search results should live inline on the page, not in a global keyboard-triggered overlay. Use dropdown-menu when the list of options is small and tied to a specific trigger element, not a global searchable launcher."
     },
     {
       "name": "contact-form",
@@ -395,7 +396,8 @@
           "type": "registry:component",
           "target": "components/quill/dashboard.tsx"
         }
-      ]
+      ],
+      "docs": "An app shell with sidebar navigation, a search header, and KPI stat cards. Do: Give the current nav item a distinct active state (background + text color), not just a subtle underline. Don't: Leave every nav item looking identical — users lose track of where they are. Use sidebar-nav when you need the collapsible icon-sidebar variant with grouped menus, not this fixed-width text sidebar. Use stat-cards when you only need the KPI row, not the full shell around it."
     },
     {
       "name": "data-table",
@@ -678,7 +680,7 @@
       "name": "list-detail",
       "type": "registry:block",
       "title": "List + detail",
-      "description": "An inbox-style split view pairing a selectable message list with a detail pane that includes archive and delete actions.",
+      "description": "An inbox-style split view — a selectable message list beside a detail pane with archive and delete actions.",
       "meta": {
         "intent": [
           "messaging",
@@ -698,7 +700,8 @@
           "type": "registry:component",
           "target": "components/quill/list-detail.tsx"
         }
-      ]
+      ],
+      "docs": "An inbox-style split view — a selectable message list beside a detail pane with archive and delete actions. Do: Keep the selected thread visually marked in the list (background fill) while its detail is open, so context isn't lost. Don't: Let the list's selection state go stale or unmarked once a thread is open in the detail pane. Use mail-shell when you need a fuller mail client — search, reply composer, forward — not just list-and-read. Use chat when the conversation is a live back-and-forth thread, not discrete messages you select and read one at a time."
     },
     {
       "name": "login",
@@ -811,7 +814,7 @@
       "name": "mail-shell",
       "type": "registry:block",
       "title": "Mail inbox shell",
-      "description": "Two-pane mail client shell with a searchable message list and a reading pane with toolbar and inline reply.",
+      "description": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply.",
       "meta": {
         "intent": [
           "messaging",
@@ -834,13 +837,14 @@
           "type": "registry:component",
           "target": "components/quill/mail-shell.tsx"
         }
-      ]
+      ],
+      "docs": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply. Do: Hide the reading pane on narrow viewports so the message list gets the full width instead of squeezing both panes. Don't: Force the two-pane layout at phone widths where neither pane has room to be usable. Use list-detail when you need the simpler read-and-select pattern with no search, toolbar, or reply composer. Use chat when the messaging is a live conversational thread, not discrete emails with subjects."
     },
     {
       "name": "navbar",
       "type": "registry:block",
       "title": "Navbar",
-      "description": "A top navigation bar with brand wordmark, responsive link list, and sign-in plus get-started actions.",
+      "description": "A top navigation bar with brand wordmark, a responsive link list, and sign-in / get-started actions.",
       "meta": {
         "intent": [
           "navigation"
@@ -857,13 +861,14 @@
           "type": "registry:component",
           "target": "components/quill/navbar.tsx"
         }
-      ]
+      ],
+      "docs": "A top navigation bar with brand wordmark, a responsive link list, and sign-in / get-started actions. Do: Keep \"Get started\" as the one default-variant (primary) button; \"Sign in\" stays ghost so it doesn't compete. Don't: Style both actions as equally prominent primary buttons. Use sidebar-nav when primary navigation belongs in a persistent side rail for an app, not a top bar for a marketing site. Use command-palette when navigation is keyboard-driven and searchable, not a fixed row of links."
     },
     {
       "name": "theme-selector",
       "type": "registry:block",
       "title": "Theme selector",
-      "description": "A dropdown picker for the four Quill themes (Dawn, Dusk, Classic Light, Classic Dark) and the four pigment accents (terracotta, moss, indigo, gold) — sets data-theme/data-accent and persists both to localStorage.",
+      "description": "A dropdown picker for the four Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage.",
       "meta": {
         "intent": [
           "settings"
@@ -881,7 +886,8 @@
           "type": "registry:component",
           "target": "components/quill/theme-selector.tsx"
         }
-      ]
+      ],
+      "docs": "A dropdown picker for the four Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage. Do: Read the persisted theme/accent from localStorage in an effect, after mount — never during render, or prerendered markup mismatches the client. Don't: Read localStorage synchronously during render; that guarantees a hydration mismatch since the server always renders Dawn/moss. Use settings when theme choice is one field among many in a broader preferences form, not a standalone quick-switch control."
     },
     {
       "name": "newsletter",
@@ -1018,7 +1024,7 @@
       "name": "page-header",
       "type": "registry:block",
       "title": "Page header",
-      "description": "A page header with breadcrumb trail, title and description, and duplicate/new action buttons.",
+      "description": "A page header with a breadcrumb trail, title and description, and duplicate/new action buttons.",
       "meta": {
         "intent": [
           "navigation",
@@ -1037,7 +1043,8 @@
           "type": "registry:component",
           "target": "components/quill/page-header.tsx"
         }
-      ]
+      ],
+      "docs": "A page header with a breadcrumb trail, title and description, and duplicate/new action buttons. Do: Render the current page as BreadcrumbPage (plain text), not a link — you can't navigate to where you already are. Don't: Make every breadcrumb crumb, including the current page, a clickable link. Use sidebar-nav when you need the breadcrumb as part of a full app shell's top bar, not a standalone header block. Use hero when this is a marketing page's opening statement, not a utility screen's title bar."
     },
     {
       "name": "pricing",
@@ -1154,7 +1161,7 @@
       "name": "sidebar-nav",
       "type": "registry:block",
       "title": "Sidebar navigation shell",
-      "description": "Collapsible icon sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.",
+      "description": "A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.",
       "meta": {
         "intent": [
           "app-shell",
@@ -1176,7 +1183,8 @@
           "type": "registry:component",
           "target": "components/quill/sidebar-nav.tsx"
         }
-      ]
+      ],
+      "docs": "A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area. Do: Group sidebar items under labeled sections (e.g. \"Workspace\", \"Studio\"), as this block already does, rather than one long flat list. Don't: List every nav item at the same level with no grouping once the count grows past a handful. Use dashboard when you need a simpler, fixed-width text sidebar without the icon-collapse behavior. Use mail-shell when the main content area is a two-pane message list/reading layout, not a card grid."
     },
     {
       "name": "signup",
@@ -1303,7 +1311,8 @@
           "type": "registry:component",
           "target": "components/quill/tabs-page.tsx"
         }
-      ]
+      ],
+      "docs": "A tabbed settings page with account, notifications, and security panels. Do: Set defaultValue to whichever tab users need most often (here, Account) so the page isn't blank on load. Don't: Leave no tab selected by default and force an extra click before any content shows. Use settings when everything fits on one page without needing to split into separate tabbed sections. Use wizard when the sections are sequential setup steps completed once, not independent settings a user revisits and edits freely."
     },
     {
       "name": "team-section",

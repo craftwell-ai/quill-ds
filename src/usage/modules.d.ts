@@ -56,7 +56,17 @@ declare module '@/usage/checkout.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/command-palette.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/contact-form.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/dashboard.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -111,6 +121,11 @@ declare module '@/usage/kanban.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/list-detail.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/login.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -127,6 +142,16 @@ declare module '@/usage/login-oauth.usage.mjs' {
 }
 
 declare module '@/usage/login-split-panel.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/mail-shell.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/navbar.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -151,6 +176,11 @@ declare module '@/usage/otp-verification.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/page-header.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/pricing.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -167,6 +197,11 @@ declare module '@/usage/search-results.usage.mjs' {
 }
 
 declare module '@/usage/settings.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/sidebar-nav.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -191,12 +226,22 @@ declare module '@/usage/stats-band.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/tabs-page.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/team-section.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
 
 declare module '@/usage/testimonial.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/theme-selector.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

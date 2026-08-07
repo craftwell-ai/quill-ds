@@ -13,7 +13,9 @@ import { usage as calendarPage } from './calendar-page.usage.mjs'
 import { usage as calendarRange } from './calendar-range.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
+import { usage as commandPalette } from './command-palette.usage.mjs'
 import { usage as contactForm } from './contact-form.usage.mjs'
+import { usage as dashboard } from './dashboard.usage.mjs'
 import { usage as dataTable } from './data-table.usage.mjs'
 import { usage as dialog } from './dialog.usage.mjs'
 import { usage as faq } from './faq.usage.mjs'
@@ -24,24 +26,31 @@ import { usage as forgotPassword } from './forgot-password.usage.mjs'
 import { usage as hero } from './hero.usage.mjs'
 import { usage as invoice } from './invoice.usage.mjs'
 import { usage as kanban } from './kanban.usage.mjs'
+import { usage as listDetail } from './list-detail.usage.mjs'
 import { usage as login } from './login.usage.mjs'
 import { usage as loginMinimal } from './login-minimal.usage.mjs'
 import { usage as loginOauth } from './login-oauth.usage.mjs'
 import { usage as loginSplitPanel } from './login-split-panel.usage.mjs'
+import { usage as mailShell } from './mail-shell.usage.mjs'
+import { usage as navbar } from './navbar.usage.mjs'
 import { usage as newsletter } from './newsletter.usage.mjs'
 import { usage as notifications } from './notifications.usage.mjs'
 import { usage as orderSummary } from './order-summary.usage.mjs'
 import { usage as otpVerification } from './otp-verification.usage.mjs'
+import { usage as pageHeader } from './page-header.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as searchResults } from './search-results.usage.mjs'
 import { usage as settings } from './settings.usage.mjs'
+import { usage as sidebarNav } from './sidebar-nav.usage.mjs'
 import { usage as signup } from './signup.usage.mjs'
 import { usage as signupSocial } from './signup-social.usage.mjs'
 import { usage as statCards } from './stat-cards.usage.mjs'
 import { usage as statsBand } from './stats-band.usage.mjs'
+import { usage as tabsPage } from './tabs-page.usage.mjs'
 import { usage as teamSection } from './team-section.usage.mjs'
 import { usage as testimonial } from './testimonial.usage.mjs'
+import { usage as themeSelector } from './theme-selector.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
 export const ALL_USAGE = [
@@ -55,7 +64,9 @@ export const ALL_USAGE = [
   calendarRange,
   chat,
   checkout,
+  commandPalette,
   contactForm,
+  dashboard,
   dataTable,
   dialog,
   faq,
@@ -66,23 +77,30 @@ export const ALL_USAGE = [
   hero,
   invoice,
   kanban,
+  listDetail,
   login,
   loginMinimal,
   loginOauth,
   loginSplitPanel,
+  mailShell,
+  navbar,
   newsletter,
   notifications,
   orderSummary,
   otpVerification,
+  pageHeader,
   pricing,
   profileCard,
   searchResults,
   settings,
+  sidebarNav,
   signup,
   signupSocial,
   statCards,
   statsBand,
+  tabsPage,
   teamSection,
   testimonial,
+  themeSelector,
   wizard,
 ]
