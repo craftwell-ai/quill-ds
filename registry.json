@@ -559,7 +559,7 @@
       "name": "forgot-password",
       "type": "registry:block",
       "title": "Forgot password",
-      "description": "A password reset card with an email field, send-link action, and back-to-sign-in button.",
+      "description": "A password-reset request card — an email field, a send-link action, and a way back to sign in.",
       "meta": {
         "intent": [
           "auth"
@@ -579,7 +579,8 @@
           "type": "registry:component",
           "target": "components/quill/forgot-password.tsx"
         }
-      ]
+      ],
+      "docs": "A password-reset request card — an email field, a send-link action, and a way back to sign in. Do: Keep the ghost \"Back to sign in\" button so a user who clicked in by mistake isn't stuck. Don't: Ship this card as a dead end with no return path to sign-in. Use otp-verification when recovery works by a typed one-time code rather than an emailed link. Use login when the user hasn't actually forgotten anything — this card is only the detour reached from login's \"Forgot your password?\" link."
     },
     {
       "name": "hero",
@@ -686,7 +687,7 @@
       "name": "login",
       "type": "registry:block",
       "title": "Login",
-      "description": "A sign-in card with email and password fields, a remember-me checkbox, and primary and forgot-password actions.",
+      "description": "The standard email-and-password sign-in card, with remember-me and a forgot-password escape hatch.",
       "meta": {
         "intent": [
           "auth"
@@ -706,13 +707,14 @@
           "type": "registry:component",
           "target": "components/quill/login.tsx"
         }
-      ]
+      ],
+      "docs": "The standard email-and-password sign-in card, with remember-me and a forgot-password escape hatch. Do: Treat \"Remember me\" as extending session length, never as the only thing standing between a device and the account. Don't: Rely on the remember-me checkbox as a security boundary. Use login-split-panel when the sign-in is a full page, not an embedded card, and you want a branded testimonial panel alongside it. Use login-minimal when you want the leanest possible sign-in — a single email field for a one-time code, no password at all. Use login-oauth when most of your users sign in through Google, GitHub, or Apple rather than a password you store. Use forgot-password when the user has already clicked \"Forgot your password?\" — that's a separate card, not a state of this one."
     },
     {
       "name": "login-minimal",
       "type": "registry:block",
       "title": "Minimal login",
-      "description": "Bare centered login form with a logo mark and a single email field for one-time-code sign-in.",
+      "description": "The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code.",
       "meta": {
         "intent": [
           "auth"
@@ -731,13 +733,14 @@
           "type": "registry:component",
           "target": "components/quill/login-minimal.tsx"
         }
-      ]
+      ],
+      "docs": "The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code. Do: Reserve the bare, uncontained layout for cases where the surrounding page or modal already frames it. Don't: Drop this pattern directly onto a busy page background with nothing to separate it visually. Use login when you're collecting a password, not sending a one-time code — this pattern has no password field at all. Use login-oauth when you want a provider-first flow instead of email-only. Use otp-verification when the user already submitted their email and you're now showing the six-digit code entry — that's a separate step from this one."
     },
     {
       "name": "login-oauth",
       "type": "registry:block",
       "title": "Login with OAuth providers",
-      "description": "Provider-first sign-in — Google, GitHub and Apple buttons above a divider, with an email fallback below.",
+      "description": "Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback.",
       "registryDependencies": [
         "input",
         "label",
@@ -756,13 +759,14 @@
           "auth"
         ],
         "use_when": "Identity comes from a provider (Google, GitHub, Apple) rather than a password you store."
-      }
+      },
+      "docs": "Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback. Do: Treat the provider buttons as the primary path; keep the email form below the rule as a fallback, not the headline. Don't: Give the email field equal visual weight to the provider buttons when most users have a provider account. Do: Keep provider marks as their official inlined artwork, with GitHub and Apple taking currentColor so they invert correctly in Dusk. Don't: Restyle a provider mark to match your palette — that breaks the brand guidelines you agree to by using their sign-in. Use signup-social when this is account creation, not sign-in — signup-social also leads with OAuth providers. Use login when you store first-party passwords and don't want a provider-first order at all. Use login-minimal when you don't have OAuth providers configured and just need a single email field."
     },
     {
       "name": "login-split-panel",
       "type": "registry:block",
       "title": "Login with split panel",
-      "description": "Full-page login with a brand testimonial side panel and an email/password form with a magic-link option.",
+      "description": "A full-page, branded sign-in — a testimonial panel beside an email/password form with a magic-link option.",
       "meta": {
         "intent": [
           "auth",
@@ -783,7 +787,8 @@
           "type": "registry:component",
           "target": "components/quill/login-split-panel.tsx"
         }
-      ]
+      ],
+      "docs": "A full-page, branded sign-in — a testimonial panel beside an email/password form with a magic-link option. Do: Let the brand panel drop out on small viewports and let the form take the full width. Don't: Force the two-column grid at phone widths — the testimonial panel has no room to be legible. Use login when the sign-in is an embedded card inside an existing page shell, not its own full page. Use login-minimal when you don't have a testimonial or brand story worth the real estate — go bare instead."
     },
     {
       "name": "mail-shell",
@@ -967,7 +972,7 @@
       "name": "otp-verification",
       "type": "registry:block",
       "title": "OTP verification",
-      "description": "An email verification card with a six-digit one-time-passcode input and resend action.",
+      "description": "A six-digit one-time-passcode entry card for verifying an email, with expiry messaging and a resend action.",
       "meta": {
         "intent": [
           "auth"
@@ -986,7 +991,8 @@
           "type": "registry:component",
           "target": "components/quill/otp-verification.tsx"
         }
-      ]
+      ],
+      "docs": "A six-digit one-time-passcode entry card for verifying an email, with expiry messaging and a resend action. Do: State the code's expiry window in the card body (\"expires in 10 minutes\"), not just in the email. Don't: Leave users guessing why a code that worked a moment ago now fails. Use login-minimal when you're sending the initial one-time code, not verifying a code the user already received — that's a separate step upstream of this card. Use forgot-password when recovery works by emailed link, not a typed code."
     },
     {
       "name": "page-header",
@@ -1152,7 +1158,7 @@
       "name": "signup",
       "type": "registry:block",
       "title": "Sign up",
-      "description": "An account creation card with name, email, and password fields plus a sign-in link.",
+      "description": "Standard account-creation card — name, email, password, and a link back to sign-in.",
       "meta": {
         "intent": [
           "auth"
@@ -1171,13 +1177,14 @@
           "type": "registry:component",
           "target": "components/quill/signup.tsx"
         }
-      ]
+      ],
+      "docs": "Standard account-creation card — name, email, password, and a link back to sign-in. Do: Use the description line to state what happens next (trial length, no card required) so the form isn't just fields with no context. Don't: Leave the card as a bare field list with no framing for why someone would fill it out. Use signup-social when you want OAuth providers to lead instead of a bare email/password form. Use login when the user already has an account — this card is only for new ones."
     },
     {
       "name": "signup-social",
       "type": "registry:block",
       "title": "Signup — social first",
-      "description": "Signup card leading with GitHub and Google provider buttons, followed by an email and password fallback.",
+      "description": "Signup that leads with GitHub and Google provider buttons, falling back to an email/password form.",
       "meta": {
         "intent": [
           "auth"
@@ -1197,7 +1204,8 @@
           "type": "registry:component",
           "target": "components/quill/signup-social.tsx"
         }
-      ]
+      ],
+      "docs": "Signup that leads with GitHub and Google provider buttons, falling back to an email/password form. Do: Put the provider buttons above the divider and the email/password fields below it, matching login-oauth's provider-first order. Don't: Bury the provider buttons below a full email/password form — that defeats the point of offering them. Use signup when you don't have OAuth providers configured, or want email/password as the primary path, not a fallback. Use login-oauth when this is sign-in, not new-account creation — login-oauth is the matching pattern for returning users."
     },
     {
       "name": "stat-cards",

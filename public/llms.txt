@@ -63,15 +63,15 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 - [Feature section](https://www.quilldesignsystem.com/r/feature-section.json) — _[marketing]_ You need to present product features in an editorial multi-column grid.
 - [File upload](https://www.quilldesignsystem.com/r/file-upload.json) — _[form]_ You need drag-and-drop asset upload with a progress-tracked queue.
 - [Site footer](https://www.quilldesignsystem.com/r/footer.json) — _[marketing, navigation]_ You need a site-wide footer with link columns, a brand blurb, and legal links.
-- [Forgot password](https://www.quilldesignsystem.com/r/forgot-password.json) — _[auth]_ You need a password-reset request card that sends a recovery link.
+- [Forgot password](https://www.quilldesignsystem.com/r/forgot-password.json) — _[auth]_ You need a password-reset request card that sends a recovery link. · [usage guide](https://www.quilldesignsystem.com/usage/forgot-password.md)
 - [Hero](https://www.quilldesignsystem.com/r/hero.json) — _[marketing]_ You need the top-of-page marketing statement — headline, supporting copy, and calls to action.
 - [Invoice](https://www.quilldesignsystem.com/r/invoice.json) — _[commerce, data-display]_ You need a printable invoice with parties, line-item totals, and a download action.
 - [Kanban board](https://www.quilldesignsystem.com/r/kanban.json) — _[productivity]_ You need to manage work across status columns with draggable, tagged task cards.
 - [List + detail](https://www.quilldesignsystem.com/r/list-detail.json) — _[messaging, app-shell]_ You need an inbox-style split view pairing a selectable list with a detail pane.
-- [Login](https://www.quilldesignsystem.com/r/login.json) — _[auth]_ You need the standard email-and-password sign-in with remember-me and reset links.
-- [Minimal login](https://www.quilldesignsystem.com/r/login-minimal.json) — _[auth]_ You need the leanest possible sign-in — a single field for one-time-code entry.
-- [Login with OAuth providers](https://www.quilldesignsystem.com/r/login-oauth.json) — _[auth]_ Identity comes from a provider (Google, GitHub, Apple) rather than a password you store.
-- [Login with split panel](https://www.quilldesignsystem.com/r/login-split-panel.json) — _[auth, marketing]_ You need a branded full-page sign-in with a testimonial side panel and magic-link option.
+- [Login](https://www.quilldesignsystem.com/r/login.json) — _[auth]_ You need the standard email-and-password sign-in with remember-me and reset links. · [usage guide](https://www.quilldesignsystem.com/usage/login.md)
+- [Minimal login](https://www.quilldesignsystem.com/r/login-minimal.json) — _[auth]_ You need the leanest possible sign-in — a single field for one-time-code entry. · [usage guide](https://www.quilldesignsystem.com/usage/login-minimal.md)
+- [Login with OAuth providers](https://www.quilldesignsystem.com/r/login-oauth.json) — _[auth]_ Identity comes from a provider (Google, GitHub, Apple) rather than a password you store. · [usage guide](https://www.quilldesignsystem.com/usage/login-oauth.md)
+- [Login with split panel](https://www.quilldesignsystem.com/r/login-split-panel.json) — _[auth, marketing]_ You need a branded full-page sign-in with a testimonial side panel and magic-link option. · [usage guide](https://www.quilldesignsystem.com/usage/login-split-panel.md)
 - [Mail inbox shell](https://www.quilldesignsystem.com/r/mail-shell.json) — _[messaging, app-shell]_ You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply.
 - [Navbar](https://www.quilldesignsystem.com/r/navbar.json) — _[navigation]_ You need a top navigation bar with wordmark, links, and sign-in / get-started actions.
 - [Theme selector](https://www.quilldesignsystem.com/r/theme-selector.json) — _[settings]_ You need to let users switch among Quill's four themes and four accents, persisted to localStorage.
@@ -79,15 +79,15 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 - [Notifications](https://www.quilldesignsystem.com/r/notifications.json) — _[feedback, data-display]_ You need a notifications center with unread indicators and a mark-all-read action.
 - [Onboarding checklist](https://www.quilldesignsystem.com/r/onboarding.json) — _[productivity]_ You need a setup checklist that tracks progress and links to remaining steps.
 - [Order summary](https://www.quilldesignsystem.com/r/order-summary.json) — _[commerce]_ You need a cart-review card with line items, a promo field, a total, and a pay button.
-- [OTP verification](https://www.quilldesignsystem.com/r/otp-verification.json) — _[auth]_ You need to verify an email with a six-digit one-time passcode and resend.
+- [OTP verification](https://www.quilldesignsystem.com/r/otp-verification.json) — _[auth]_ You need to verify an email with a six-digit one-time passcode and resend. · [usage guide](https://www.quilldesignsystem.com/usage/otp-verification.md)
 - [Page header](https://www.quilldesignsystem.com/r/page-header.json) — _[navigation, app-shell]_ You need a screen header with breadcrumbs, title, description, and primary actions.
 - [Pricing](https://www.quilldesignsystem.com/r/pricing.json) — _[marketing, commerce]_ You need a tiered pricing grid with a highlighted plan and feature checklists.
 - [Profile card](https://www.quilldesignsystem.com/r/profile-card.json) — _[data-display]_ You need a compact user profile with avatar, role, stats, and follow / message actions.
 - [Search results](https://www.quilldesignsystem.com/r/search-results.json) — _[navigation, data-display]_ You need a search panel with a query input, result count, and a linked result list.
 - [Settings form](https://www.quilldesignsystem.com/r/settings.json) — _[settings, form]_ You need a profile settings form with name, bio, and notification preferences.
 - [Sidebar navigation shell](https://www.quilldesignsystem.com/r/sidebar-nav.json) — _[app-shell, navigation]_ You need a collapsible icon-sidebar app shell with grouped menus and a content area.
-- [Sign up](https://www.quilldesignsystem.com/r/signup.json) — _[auth]_ You need standard account creation — name, email, password, and a sign-in link.
-- [Signup — social first](https://www.quilldesignsystem.com/r/signup-social.json) — _[auth]_ You need signup that leads with OAuth providers and falls back to email/password.
+- [Sign up](https://www.quilldesignsystem.com/r/signup.json) — _[auth]_ You need standard account creation — name, email, password, and a sign-in link. · [usage guide](https://www.quilldesignsystem.com/usage/signup.md)
+- [Signup — social first](https://www.quilldesignsystem.com/r/signup-social.json) — _[auth]_ You need signup that leads with OAuth providers and falls back to email/password. · [usage guide](https://www.quilldesignsystem.com/usage/signup-social.md)
 - [Stat cards](https://www.quilldesignsystem.com/r/stat-cards.json) — _[data-display]_ You need a row of KPI cards showing values with period-over-period deltas.
 - [Stats band](https://www.quilldesignsystem.com/r/stats-band.json) — _[marketing]_ You need a marketing band of headline statistics separated by dividers.
 - [Tabs page](https://www.quilldesignsystem.com/r/tabs-page.json) — _[navigation, settings]_ You need a settings screen split into account, notifications, and security tabs.
