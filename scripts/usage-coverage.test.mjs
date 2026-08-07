@@ -9,7 +9,19 @@ import { ALL_USAGE } from '../src/usage/index.mjs'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const storiesDir = join(root, 'src/stories')
 
+// Story files where one file renders more than one registry block as separate
+// exported stories — the default name → PascalCase → filename derivation
+// (one usage name, one file) doesn't apply, so both directions of the
+// mapping are spelled out explicitly here.
+const MULTI_BLOCK_STORIES = {
+  'patterns/LoginVariants.stories.tsx': ['login-split-panel', 'login-minimal'],
+}
+const USAGE_NAME_TO_MULTI_BLOCK_STORY = Object.fromEntries(
+  Object.entries(MULTI_BLOCK_STORIES).flatMap(([file, names]) => names.map((n) => [n, file])),
+)
+
 export function storyFileFor(name) {
+  if (USAGE_NAME_TO_MULTI_BLOCK_STORY[name]) return join(storiesDir, USAGE_NAME_TO_MULTI_BLOCK_STORY[name])
   const pascal = name.split('-').map((s) => s[0].toUpperCase() + s.slice(1)).join('')
   const candidates = [
     join(storiesDir, `${name}.stories.tsx`),
@@ -155,6 +167,12 @@ test('every story outside the allowlist has a usage file', () => {
   const documented = new Set(ALL_USAGE.map((u) => u.name))
   for (const f of files) {
     if (KNOWN_UNDOCUMENTED.has(f)) continue
+    if (MULTI_BLOCK_STORIES[f]) {
+      for (const name of MULTI_BLOCK_STORIES[f]) {
+        assert.ok(documented.has(name), `story '${f}' has no usage file for '${name}' (expected src/usage/${name}.usage.mjs)`)
+      }
+      continue
+    }
     const base = f.replace(/^patterns\//, '').replace(/\.stories\.tsx$/, '')
     const kebab = base.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
     assert.ok(documented.has(kebab), `story '${f}' has no usage file (expected src/usage/${kebab}.usage.mjs)`)

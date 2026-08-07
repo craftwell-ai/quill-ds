@@ -4,7 +4,11 @@ import { readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
-import { renderUsagePage, usageDocsField, USAGE_DIR, REGISTRY_PATH } from './build-usage.mjs'
+import { renderUsagePage, renderModulesDts, usageDocsField, USAGE_DIR, REGISTRY_PATH, MODULES_DTS_PATH } from './build-usage.mjs'
+
+test('src/usage/modules.d.ts is generated and current (run `npm run build:usage`)', () => {
+  assert.equal(readFileSync(MODULES_DTS_PATH, 'utf8'), renderModulesDts(), 'src/usage/modules.d.ts is stale — run `npm run build:usage`')
+})
 
 test('every usage entry has a committed, current public usage page (run `npm run build:usage`)', () => {
   for (const u of ALL_USAGE) {
