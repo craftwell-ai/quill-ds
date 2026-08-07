@@ -46,12 +46,27 @@ declare module '@/usage/chat.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/checkout.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/contact-form.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/data-table.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
 
 declare module '@/usage/dialog.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/file-upload.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -91,6 +106,11 @@ declare module '@/usage/login-split-panel.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/newsletter.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/notifications.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -116,6 +136,11 @@ declare module '@/usage/search-results.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/settings.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/signup.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -127,6 +152,11 @@ declare module '@/usage/signup-social.usage.mjs' {
 }
 
 declare module '@/usage/stat-cards.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/wizard.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

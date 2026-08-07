@@ -9,12 +9,17 @@ import { ALL_USAGE } from '../src/usage/index.mjs'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const storiesDir = join(root, 'src/stories')
 
-// Story files where one file renders more than one registry block as separate
-// exported stories — the default name → PascalCase → filename derivation
-// (one usage name, one file) doesn't apply, so both directions of the
-// mapping are spelled out explicitly here.
+// Story files whose usage name(s) can't be derived from the filename by the
+// default kebab-case rule — either because one file renders more than one
+// registry block as separate exported stories (LoginVariants), or because
+// the filename itself diverges from the block's registry slug (e.g.
+// SettingsForm.stories.tsx documents 'settings', not 'settings-form'). Both
+// directions of the mapping are spelled out explicitly here.
 const MULTI_BLOCK_STORIES = {
   'patterns/LoginVariants.stories.tsx': ['login-split-panel', 'login-minimal'],
+  'patterns/SettingsForm.stories.tsx': ['settings'],
+  'patterns/DashboardShell.stories.tsx': ['dashboard'],
+  'patterns/Error404.stories.tsx': ['error-404'],
 }
 const USAGE_NAME_TO_MULTI_BLOCK_STORY = Object.fromEntries(
   Object.entries(MULTI_BLOCK_STORIES).flatMap(([file, names]) => names.map((n) => [n, file])),
@@ -89,33 +94,27 @@ const KNOWN_UNDOCUMENTED = new Set([
   'navigation-menu.stories.tsx',
   'pagination.stories.tsx',
   'patterns/AnnouncementBanner.stories.tsx',
-  'patterns/Checkout.stories.tsx',
   'patterns/CommandPalette.stories.tsx',
-  'patterns/ContactForm.stories.tsx',
   'patterns/CookieConsent.stories.tsx',
   'patterns/DashboardShell.stories.tsx',
   'patterns/EmptyState.stories.tsx',
   'patterns/Error404.stories.tsx',
   'patterns/Faq.stories.tsx',
   'patterns/FeatureSection.stories.tsx',
-  'patterns/FileUpload.stories.tsx',
   'patterns/Footer.stories.tsx',
   'patterns/Hero.stories.tsx',
   'patterns/ListDetail.stories.tsx',
   'patterns/MailShell.stories.tsx',
   'patterns/Navbar.stories.tsx',
-  'patterns/Newsletter.stories.tsx',
   'patterns/Onboarding.stories.tsx',
   'patterns/PageHeader.stories.tsx',
   'patterns/Pricing.stories.tsx',
-  'patterns/SettingsForm.stories.tsx',
   'patterns/SidebarNav.stories.tsx',
   'patterns/StatsBand.stories.tsx',
   'patterns/TabsPage.stories.tsx',
   'patterns/TeamSection.stories.tsx',
   'patterns/Testimonial.stories.tsx',
   'patterns/ThemeSelector.stories.tsx',
-  'patterns/Wizard.stories.tsx',
   'popover.stories.tsx',
   'progress.stories.tsx',
   'radio-group.stories.tsx',

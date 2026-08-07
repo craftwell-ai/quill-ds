@@ -269,7 +269,7 @@
       "name": "checkout",
       "type": "registry:block",
       "title": "Checkout",
-      "description": "Two-column checkout with payment method picker, card form, and an order summary sidebar.",
+      "description": "A two-column checkout — payment method picker and card form beside an order summary sidebar.",
       "meta": {
         "intent": [
           "commerce",
@@ -292,7 +292,8 @@
           "type": "registry:component",
           "target": "components/quill/checkout.tsx"
         }
-      ]
+      ],
+      "docs": "A two-column checkout — payment method picker and card form beside an order summary sidebar. Do: Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. Don't: Use checkboxes or a dropdown for a single mutually exclusive payment method. Use order-summary when you only need the cart-review card, not the full payment form beside it. Use wizard when payment is one step in a longer multi-step flow, not a single standalone page."
     },
     {
       "name": "command-palette",
@@ -321,7 +322,7 @@
       "name": "contact-form",
       "type": "registry:block",
       "title": "Contact form",
-      "description": "A get-in-touch card with name, email, topic select, and message fields.",
+      "description": "A get-in-touch card — name, email, a topic select, and a message field.",
       "meta": {
         "intent": [
           "form"
@@ -342,7 +343,8 @@
           "type": "registry:component",
           "target": "components/quill/contact-form.tsx"
         }
-      ]
+      ],
+      "docs": "A get-in-touch card — name, email, a topic select, and a message field. Do: State a response-time expectation in the description (\"We usually reply within one working day.\") so the form doesn't feel like it disappears into a void. Don't: Leave users with no sense of whether or when they'll hear back. Use newsletter when you only need a single email field to grow a list, not a full multi-field inquiry form. Use settings when the fields are updating an existing profile, not sending a one-off message."
     },
     {
       "name": "cookie-consent",
@@ -517,7 +519,7 @@
       "name": "file-upload",
       "type": "registry:block",
       "title": "File upload",
-      "description": "An asset upload card with a drag-and-drop dropzone and a progress-tracked upload queue.",
+      "description": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue.",
       "meta": {
         "intent": [
           "form"
@@ -537,7 +539,8 @@
           "type": "registry:component",
           "target": "components/quill/file-upload.tsx"
         }
-      ]
+      ],
+      "docs": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue. Do: Make the dropzone a real, focusable <button> that also opens a file picker on click/Enter — never make drag-and-drop the only way in. Don't: Ship a dropzone that only responds to a pointer drag gesture. Use contact-form when you need a single attachment inside a broader form, not a dedicated upload queue as the whole card."
     },
     {
       "name": "footer",
@@ -879,7 +882,7 @@
       "name": "newsletter",
       "type": "registry:block",
       "title": "Newsletter signup",
-      "description": "A centered newsletter signup section with an email form and social proof.",
+      "description": "A centered newsletter-signup section — an email field, subscribe action, and social proof.",
       "meta": {
         "intent": [
           "marketing",
@@ -899,7 +902,8 @@
           "type": "registry:component",
           "target": "components/quill/newsletter.tsx"
         }
-      ]
+      ],
+      "docs": "A centered newsletter-signup section — an email field, subscribe action, and social proof. Do: Say plainly what subscribers are signing up for and that they can leave any time (\"No spam, no noise — unsubscribe any time.\"). Don't: Ask for an email with no context on frequency or an easy way out. Use contact-form when you need more than an email — name, topic, a message — this pattern is intentionally a single field. Use footer when the signup is one small element within a full site footer, not its own standalone section."
     },
     {
       "name": "notifications",
@@ -1114,7 +1118,7 @@
       "name": "settings",
       "type": "registry:block",
       "title": "Settings form",
-      "description": "A profile settings card with name fields, bio textarea, and an email notification toggle.",
+      "description": "A profile settings card — name fields, a bio textarea, and an email-notification toggle.",
       "meta": {
         "intent": [
           "settings",
@@ -1137,7 +1141,8 @@
           "type": "registry:component",
           "target": "components/quill/settings.tsx"
         }
-      ]
+      ],
+      "docs": "A profile settings card — name fields, a bio textarea, and an email-notification toggle. Do: Keep Save changes and Cancel as two distinct, clearly differentiated actions (primary vs ghost). Don't: Make Cancel look as prominent as Save — the user should never mis-tap away unsaved changes as the default action. Use contact-form when you're sending a one-off message, not editing a persistent profile. Use wizard when setup needs multiple sequential steps, not a single settings page a user returns to and edits freely."
     },
     {
       "name": "sidebar-nav",
@@ -1344,7 +1349,7 @@
       "name": "wizard",
       "type": "registry:block",
       "title": "Setup wizard step",
-      "description": "A multi-step wizard card with a progress stepper, workspace fields, and back/continue actions.",
+      "description": "A multi-step setup card — a progress stepper, workspace fields, and back/continue navigation.",
       "meta": {
         "intent": [
           "form",
@@ -1365,7 +1370,8 @@
           "type": "registry:component",
           "target": "components/quill/wizard.tsx"
         }
-      ]
+      ],
+      "docs": "A multi-step setup card — a progress stepper, workspace fields, and back/continue navigation. Do: Show every step in the stepper up front (done/current/todo), so users know how much is left. Don't: Reveal steps one at a time with no sense of total progress. Use onboarding when the steps are a checklist of tasks to complete over time, not a linear form flow completed in one sitting. Use settings when there's only one step and no sequence to track — this is a single settings page, not a flow."
     }
   ]
 }
