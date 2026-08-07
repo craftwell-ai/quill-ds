@@ -352,7 +352,7 @@
       "name": "cookie-consent",
       "type": "registry:block",
       "title": "Cookie consent",
-      "description": "A cookie consent banner with accept, reject, and preferences actions.",
+      "description": "A cookie consent banner offering accept, reject, and preferences actions.",
       "meta": {
         "intent": [
           "feedback"
@@ -369,7 +369,8 @@
           "type": "registry:component",
           "target": "components/quill/cookie-consent.tsx"
         }
-      ]
+      ],
+      "docs": "A cookie consent banner offering accept, reject, and preferences actions. Do: \"Reject non-essential\" gets the same one-click ease as \"Accept all\" — both are top-level buttons, not one button plus a buried settings link. Don't: Make rejecting cookies harder to find or reach than accepting them — that's a dark pattern, not a real choice. Use announcement-banner when the message is informational only and doesn't require an explicit accept/reject decision. Use alerts when the message is a local, in-page status, not a site-wide compliance notice."
     },
     {
       "name": "dashboard",
@@ -447,13 +448,14 @@
           "type": "registry:component",
           "target": "components/quill/empty-state.tsx"
         }
-      ]
+      ],
+      "docs": "A dashed-border empty state with an icon, explanatory text, and a primary action. Do: Pair the explanation with a real, primary action button that actually fills the view (e.g. \"New project\"). Don't: Explain that a view is empty and leave the user with no way to act on it from that screen. Use error-404 when the view is empty because the resource doesn't exist or the route is wrong, not because the user hasn't created anything yet. Use onboarding when there's a multi-step setup to walk through, not a single action to take right now."
     },
     {
       "name": "error-404",
       "type": "registry:block",
       "title": "404 page",
-      "description": "A full-page 404 error state with go-back and home actions.",
+      "description": "A full-page 404 error state with go-back and home recovery actions.",
       "meta": {
         "intent": [
           "feedback"
@@ -470,7 +472,8 @@
           "type": "registry:component",
           "target": "components/quill/error-404.tsx"
         }
-      ]
+      ],
+      "docs": "A full-page 404 error state with go-back and home recovery actions. Do: Offer both a contextual escape (Go back) and an absolute one (Take me home) — never strand the user with only one recovery path. Don't: Leave a 404 page with no action at all, or only a single 'Home' link buried in a header the user has to hunt for. Use empty-state when the resource exists but is legitimately empty (no items yet), not missing or misrouted. Use alerts when the error is recoverable inline on the current page, not a full-page dead end that needs its own route."
     },
     {
       "name": "faq",
@@ -965,7 +968,8 @@
           "type": "registry:component",
           "target": "components/quill/onboarding.tsx"
         }
-      ]
+      ],
+      "docs": "A setup checklist card with a progress bar, completed and pending tasks, and start links for remaining steps. Do: Pair the visual progress bar with a text fraction (\"2 of 4 complete\") so the state isn't conveyed by bar width alone. Don't: Show only a progress bar with no numeric readout of how much is actually done. Use wizard when the steps must happen in a strict sequence in one sitting, not a checklist a user dips in and out of over time. Use empty-state when there's a single action to take, not a multi-step checklist to track."
     },
     {
       "name": "order-summary",

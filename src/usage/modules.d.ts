@@ -66,6 +66,11 @@ declare module '@/usage/contact-form.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/cookie-consent.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/dashboard.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -77,6 +82,16 @@ declare module '@/usage/data-table.usage.mjs' {
 }
 
 declare module '@/usage/dialog.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/empty-state.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/error-404.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -162,6 +177,11 @@ declare module '@/usage/newsletter.usage.mjs' {
 }
 
 declare module '@/usage/notifications.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/onboarding.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

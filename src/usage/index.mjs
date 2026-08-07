@@ -15,9 +15,12 @@ import { usage as chat } from './chat.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as commandPalette } from './command-palette.usage.mjs'
 import { usage as contactForm } from './contact-form.usage.mjs'
+import { usage as cookieConsent } from './cookie-consent.usage.mjs'
 import { usage as dashboard } from './dashboard.usage.mjs'
 import { usage as dataTable } from './data-table.usage.mjs'
 import { usage as dialog } from './dialog.usage.mjs'
+import { usage as emptyState } from './empty-state.usage.mjs'
+import { usage as error404 } from './error-404.usage.mjs'
 import { usage as faq } from './faq.usage.mjs'
 import { usage as featureSection } from './feature-section.usage.mjs'
 import { usage as fileUpload } from './file-upload.usage.mjs'
@@ -35,6 +38,7 @@ import { usage as mailShell } from './mail-shell.usage.mjs'
 import { usage as navbar } from './navbar.usage.mjs'
 import { usage as newsletter } from './newsletter.usage.mjs'
 import { usage as notifications } from './notifications.usage.mjs'
+import { usage as onboarding } from './onboarding.usage.mjs'
 import { usage as orderSummary } from './order-summary.usage.mjs'
 import { usage as otpVerification } from './otp-verification.usage.mjs'
 import { usage as pageHeader } from './page-header.usage.mjs'
@@ -66,9 +70,12 @@ export const ALL_USAGE = [
   checkout,
   commandPalette,
   contactForm,
+  cookieConsent,
   dashboard,
   dataTable,
   dialog,
+  emptyState,
+  error404,
   faq,
   featureSection,
   fileUpload,
@@ -86,6 +93,7 @@ export const ALL_USAGE = [
   navbar,
   newsletter,
   notifications,
+  onboarding,
   orderSummary,
   otpVerification,
   pageHeader,
