@@ -14,13 +14,20 @@ import { usage as chat } from './chat.usage.mjs'
 import { usage as dataTable } from './data-table.usage.mjs'
 import { usage as dialog } from './dialog.usage.mjs'
 import { usage as forgotPassword } from './forgot-password.usage.mjs'
+import { usage as invoice } from './invoice.usage.mjs'
+import { usage as kanban } from './kanban.usage.mjs'
 import { usage as login } from './login.usage.mjs'
 import { usage as loginMinimal } from './login-minimal.usage.mjs'
 import { usage as loginOauth } from './login-oauth.usage.mjs'
 import { usage as loginSplitPanel } from './login-split-panel.usage.mjs'
+import { usage as notifications } from './notifications.usage.mjs'
+import { usage as orderSummary } from './order-summary.usage.mjs'
 import { usage as otpVerification } from './otp-verification.usage.mjs'
+import { usage as profileCard } from './profile-card.usage.mjs'
+import { usage as searchResults } from './search-results.usage.mjs'
 import { usage as signup } from './signup.usage.mjs'
 import { usage as signupSocial } from './signup-social.usage.mjs'
+import { usage as statCards } from './stat-cards.usage.mjs'
 
 export const ALL_USAGE = [
   activityFeed,
@@ -34,11 +41,18 @@ export const ALL_USAGE = [
   dataTable,
   dialog,
   forgotPassword,
+  invoice,
+  kanban,
   login,
   loginMinimal,
   loginOauth,
   loginSplitPanel,
+  notifications,
+  orderSummary,
   otpVerification,
+  profileCard,
+  searchResults,
   signup,
   signupSocial,
+  statCards,
 ]

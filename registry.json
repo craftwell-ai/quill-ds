@@ -617,7 +617,7 @@
       "name": "invoice",
       "type": "registry:block",
       "title": "Invoice",
-      "description": "Invoice card with sender and recipient details, a line-item table with totals, and a download action.",
+      "description": "A printable invoice card — sender and recipient details, a line-item table with totals, and a download action.",
       "meta": {
         "intent": [
           "commerce",
@@ -639,13 +639,14 @@
           "type": "registry:component",
           "target": "components/quill/invoice.tsx"
         }
-      ]
+      ],
+      "docs": "A printable invoice card — sender and recipient details, a line-item table with totals, and a download action. Do: Keep the total in a table footer, visually distinct from line items (its own row, right-aligned). Don't: Let the total blend in as just another line item — it needs to read as the sum, not another charge. Use order-summary when you're showing a cart before payment, not a record of a completed transaction. Use data-table when you need a list of many invoices to browse, not the full detail of one."
     },
     {
       "name": "kanban",
       "type": "registry:block",
       "title": "Kanban board",
-      "description": "A three-column kanban board with card counts, tagged task cards, avatars, and an add-card affordance per column.",
+      "description": "A three-column kanban board with card counts, tagged task cards, and an add-card affordance per column.",
       "meta": {
         "intent": [
           "productivity"
@@ -662,7 +663,8 @@
           "type": "registry:component",
           "target": "components/quill/kanban.tsx"
         }
-      ]
+      ],
+      "docs": "A three-column kanban board with card counts, tagged task cards, and an add-card affordance per column. Do: Keep each column's card-count badge in sync with its actual card list — it's a running total, not a caption. Don't: Let the count badge drift out of sync when cards move between columns. Use data-table when status is one column among many sortable fields — a table reads better than columns once you need to sort or filter across many records. Use onboarding when the steps are a single sequential checklist, not parallel work items across independent columns."
     },
     {
       "name": "list-detail",
@@ -923,7 +925,8 @@
           "type": "registry:component",
           "target": "components/quill/notifications.tsx"
         }
-      ]
+      ],
+      "docs": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action. Do: Pair the unread dot with a real accessible label (role=\"img\" aria-label=\"Unread\"), as this block already does. Don't: Ship an unread indicator that's purely decorative with no accessible signal. Use activity-feed when the list is a read-only history with no read/unread state or mark-all action. Use sonner when the message is transient feedback about something that just happened — use a toast, not a persistent notifications list."
     },
     {
       "name": "onboarding",
@@ -953,7 +956,7 @@
       "name": "order-summary",
       "type": "registry:block",
       "title": "Order summary",
-      "description": "A checkout order summary card with line items, a promo code input, a total, and a pay-now button.",
+      "description": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button.",
       "meta": {
         "intent": [
           "commerce"
@@ -973,7 +976,8 @@
           "type": "registry:component",
           "target": "components/quill/order-summary.tsx"
         }
-      ]
+      ],
+      "docs": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button. Do: Recompute the total the instant a promo code applies or a line item changes — never leave a stale total on screen after an update. Don't: Require a page refresh or separate action to see the corrected total. Use invoice when you're showing a record of a completed, already-paid transaction, not a cart pending payment. Use checkout when you need the full payment form (card fields, billing address) alongside the summary, not just the review."
     },
     {
       "name": "otp-verification",
@@ -1056,7 +1060,7 @@
       "name": "profile-card",
       "type": "registry:block",
       "title": "Profile card",
-      "description": "A centered profile card with avatar initials, role, follower stats, and follow and message actions.",
+      "description": "A compact, centered profile card — avatar initials, role, follower stats, and follow/message actions.",
       "meta": {
         "intent": [
           "data-display"
@@ -1076,13 +1080,14 @@
           "type": "registry:component",
           "target": "components/quill/profile-card.tsx"
         }
-      ]
+      ],
+      "docs": "A compact, centered profile card — avatar initials, role, follower stats, and follow/message actions. Do: Label every stat (\"Followers\", \"Following\") directly beneath its number — a bare number has no meaning on its own. Don't: Show raw numbers with no label and expect position alone to convey what they mean. Use activity-feed when you want to show what someone did, not a static summary of who they are. Use data-table when you're listing many people at once — a table or list reads better than a full card per person."
     },
     {
       "name": "search-results",
       "type": "registry:block",
       "title": "Search results",
-      "description": "A docs search panel with a query input, result count, and a linked result list showing breadcrumbs and type badges.",
+      "description": "A docs search panel — query input, result count, and a linked result list with breadcrumbs and type badges.",
       "meta": {
         "intent": [
           "navigation",
@@ -1102,7 +1107,8 @@
           "type": "registry:component",
           "target": "components/quill/search-results.tsx"
         }
-      ]
+      ],
+      "docs": "A docs search panel — query input, result count, and a linked result list with breadcrumbs and type badges. Do: State the result count in visible text (\"4 results for \\\"token\\\"\") so users know the query actually ran. Don't: Leave users guessing whether zero results means the search hasn't run yet or genuinely found nothing. Use command-palette when search is a global, keyboard-triggered overlay (⌘K) rather than an inline panel on the page. Use data-table when results are structured records with multiple sortable columns, not a simple linked list."
     },
     {
       "name": "settings",
@@ -1218,7 +1224,7 @@
       "name": "stat-cards",
       "type": "registry:block",
       "title": "Stat cards",
-      "description": "A responsive grid of KPI cards showing values with delta badges versus last month.",
+      "description": "A responsive grid of KPI cards, each showing a value with a delta badge versus last month.",
       "meta": {
         "intent": [
           "data-display"
@@ -1235,7 +1241,8 @@
           "type": "registry:component",
           "target": "components/quill/stat-cards.tsx"
         }
-      ]
+      ],
+      "docs": "A responsive grid of KPI cards, each showing a value with a delta badge versus last month. Do: Match badge tone to whether the delta is actually good news for that metric (e.g. rising churn is bad, so it gets destructive tone even though the number itself looks like growth). Don't: Default every rising number to a positive tone — a rising \"Open tickets\" count is bad news, not good. Use analytics-charts when you need to show the trend shape over time, not just the current value and one delta. Use data-table when you have more metrics than fit comfortably in a card grid, or need to compare many rows at once."
     },
     {
       "name": "stats-band",

@@ -61,6 +61,16 @@ declare module '@/usage/forgot-password.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/invoice.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/kanban.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/login.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -81,7 +91,27 @@ declare module '@/usage/login-split-panel.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/notifications.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/order-summary.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/otp-verification.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/profile-card.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/search-results.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -92,6 +122,11 @@ declare module '@/usage/signup.usage.mjs' {
 }
 
 declare module '@/usage/signup-social.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/stat-cards.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
