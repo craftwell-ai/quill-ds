@@ -139,7 +139,7 @@
       "name": "announcement-banner",
       "type": "registry:block",
       "title": "Announcement banners",
-      "description": "Two dismissible announcement banners: an inline bordered page banner and a full-bleed primary-color variant.",
+      "description": "Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant.",
       "meta": {
         "intent": [
           "feedback",
@@ -158,7 +158,8 @@
           "type": "registry:component",
           "target": "components/quill/announcement-banner.tsx"
         }
-      ]
+      ],
+      "docs": "Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant. Do: Give every banner variant its own dismiss button with a specific aria-label (e.g. \"Dismiss workshop banner\"), not a generic one. Don't: Ship a banner with no way to dismiss it, or multiple banners sharing one ambiguous \"Dismiss\" label. Use alerts when the message is local to a page section and tied to system status, not a site-wide announcement. Use cookie-consent when the banner requires an explicit choice (accept/reject), not just a dismiss."
     },
     {
       "name": "badge-on-card",
@@ -473,7 +474,7 @@
       "name": "faq",
       "type": "registry:block",
       "title": "FAQ section",
-      "description": "Centered FAQ section with an accordion of common questions and a contact call-to-action footer.",
+      "description": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer.",
       "meta": {
         "intent": [
           "content",
@@ -491,7 +492,8 @@
           "type": "registry:component",
           "target": "components/quill/faq.tsx"
         }
-      ]
+      ],
+      "docs": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer. Do: Open the first question by default (defaultValue=['item-0']) so the section doesn't read as empty on load. Don't: Start every item collapsed and force a first click just to prove the section has content. Use accordion when you need a bare accordion with no marketing framing (heading, contact footer) around it. Use contact-form when the user needs to ask something not covered — this pattern only offers a CTA button, not the form itself."
     },
     {
       "name": "feature-section",
@@ -513,7 +515,8 @@
           "type": "registry:component",
           "target": "components/quill/feature-section.tsx"
         }
-      ]
+      ],
+      "docs": "A marketing section with an editorial heading and a three-column feature grid. Do: Keep the grid to three (or a multiple of three) features so it reads evenly across the row. Don't: Let an uneven feature count leave a dangling, unbalanced last row on wide screens. Use stats-band when you're presenting numbers, not descriptive feature callouts with icons and body text. Use pricing when the features are tied to specific paid tiers, not the product as a whole."
     },
     {
       "name": "file-upload",
@@ -563,7 +566,8 @@
           "type": "registry:component",
           "target": "components/quill/footer.tsx"
         }
-      ]
+      ],
+      "docs": "A marketing footer with brand blurb, link columns, and legal links. Do: Wrap each link column in its own <nav aria-label>, as this block already does, so screen-reader users can jump between them. Don't: Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block. Use sidebar-nav when the links are primary in-app navigation, not secondary site-wide links at the page's end. Use navbar when the links belong at the top of the page as primary navigation, not the bottom as reference."
     },
     {
       "name": "forgot-password",
@@ -596,7 +600,7 @@
       "name": "hero",
       "type": "registry:block",
       "title": "Hero",
-      "description": "A centered marketing hero with a release badge, serif headline, supporting copy, and primary/secondary call-to-action buttons.",
+      "description": "A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action.",
       "meta": {
         "intent": [
           "marketing"
@@ -614,7 +618,8 @@
           "type": "registry:component",
           "target": "components/quill/hero.tsx"
         }
-      ]
+      ],
+      "docs": "A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action. Do: Keep exactly one primary (default-variant) button — the single most important action — with any secondary action as outline/ghost. Don't: Give two calls-to-action equal visual weight; competing primaries dilute the one action that matters most. Use feature-section when you're past the opening statement and need to break down specific product capabilities. Use announcement-banner when the message is a small, dismissible update, not the page's primary opening statement."
     },
     {
       "name": "invoice",
@@ -1058,7 +1063,8 @@
           "type": "registry:component",
           "target": "components/quill/pricing.tsx"
         }
-      ]
+      ],
+      "docs": "A three-tier pricing grid with a highlighted popular plan, feature checklists, and per-plan calls to action. Do: Mark exactly one plan as featured (ring + Popular badge) to guide the decision. Don't: Feature more than one plan, or none — either dilutes the recommendation this pattern exists to make. Use feature-section when you're describing capabilities in general, not comparing specific paid tiers against each other. Use order-summary when the user has already chosen a plan and is now reviewing a specific purchase, not comparing options."
     },
     {
       "name": "profile-card",
@@ -1253,7 +1259,7 @@
       "name": "stats-band",
       "type": "registry:block",
       "title": "Stats band",
-      "description": "Marketing band of headline statistics separated by vertical dividers on a card background.",
+      "description": "A marketing band of headline statistics separated by vertical dividers on a card background.",
       "meta": {
         "intent": [
           "marketing"
@@ -1269,7 +1275,8 @@
           "type": "registry:component",
           "target": "components/quill/stats-band.tsx"
         }
-      ]
+      ],
+      "docs": "A marketing band of headline statistics separated by vertical dividers on a card background. Do: Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element. Don't: Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent. Use stat-cards when each number needs its own card with a period-over-period delta — this pattern is a single flat band with no per-item chrome or comparison. Use feature-section when you're describing capabilities, not reporting numbers."
     },
     {
       "name": "tabs-page",
@@ -1302,7 +1309,7 @@
       "name": "team-section",
       "type": "registry:block",
       "title": "Team section",
-      "description": "Marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action.",
+      "description": "A marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action.",
       "meta": {
         "intent": [
           "marketing"
@@ -1322,13 +1329,14 @@
           "type": "registry:component",
           "target": "components/quill/team-section.tsx"
         }
-      ]
+      ],
+      "docs": "A marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action. Do: Give every team member their own contact action, labeled with their name (e.g. \"Email Ada Lovelace\"). Don't: Ship one generic \"Contact us\" action for the whole grid — it defeats the point of a per-person team grid. Use profile-card when you're showing one person in detail (stats, follow/message), not a grid of many team members at a glance. Use testimonial when you're quoting what someone said, not introducing who's on the team."
     },
     {
       "name": "testimonial",
       "type": "registry:block",
       "title": "Testimonial",
-      "description": "A customer quote card with a serif pull-quote, avatar initials, and attribution.",
+      "description": "A customer-quote card with a serif pull-quote, avatar initials, and attribution.",
       "meta": {
         "intent": [
           "marketing",
@@ -1343,7 +1351,8 @@
           "type": "registry:component",
           "target": "components/quill/testimonial.tsx"
         }
-      ]
+      ],
+      "docs": "A customer-quote card with a serif pull-quote, avatar initials, and attribution. Do: Pair every quote with a real name, role, and organization — an anonymous quote reads as unverifiable. Don't: Ship a testimonial with no attribution, or attribution too small/muted to actually read. Use team-section when you're introducing people, not quoting what a customer said about the product. Use stats-band when the proof point is a number, not a quote."
     },
     {
       "name": "wizard",

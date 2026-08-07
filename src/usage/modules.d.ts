@@ -21,6 +21,11 @@ declare module '@/usage/analytics-charts.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/announcement-banner.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/badge-on-card.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -66,12 +71,32 @@ declare module '@/usage/dialog.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/faq.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/feature-section.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/file-upload.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
 
+declare module '@/usage/footer.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/forgot-password.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/hero.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -126,6 +151,11 @@ declare module '@/usage/otp-verification.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/pricing.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/profile-card.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -152,6 +182,21 @@ declare module '@/usage/signup-social.usage.mjs' {
 }
 
 declare module '@/usage/stat-cards.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/stats-band.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/team-section.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/testimonial.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
