@@ -60,7 +60,7 @@
       "name": "activity-feed",
       "type": "registry:block",
       "title": "Activity feed",
-      "description": "Card with a vertical timeline of recent events, each with an avatar, action text, and timestamp.",
+      "description": "A card timeline of recent events — avatar, action text, and a relative timestamp per entry.",
       "meta": {
         "intent": [
           "data-display"
@@ -79,7 +79,8 @@
           "type": "registry:component",
           "target": "components/quill/activity-feed.tsx"
         }
-      ]
+      ],
+      "docs": "A card timeline of recent events — avatar, action text, and a relative timestamp per entry. Do: Use relative timestamps (\"2 hours ago\") for recent activity — they read faster than absolute dates. Don't: Force users to parse a full timestamp for something that happened minutes ago. Use notifications when the events need an unread/read state and a mark-all-read action, not just a read-only history. Use data-table when the events are really records you need to filter, sort, or act on, not just skim chronologically."
     },
     {
       "name": "alerts",
@@ -109,7 +110,7 @@
       "name": "analytics-charts",
       "type": "registry:block",
       "title": "Analytics charts",
-      "description": "Dashboard pair of cards showing an area chart of audience growth and a bar chart of weekly sales.",
+      "description": "A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card.",
       "meta": {
         "intent": [
           "data-viz",
@@ -131,7 +132,8 @@
       ],
       "dependencies": [
         "recharts"
-      ]
+      ],
+      "docs": "A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card. Do: Color each series from the chart token set (--chart-1…--chart-5), assigned in a fixed order. Don't: Hardcode a raw accent pigment (--terracotta, --moss, --indigo…) for a series — some pairs are documented as failing colorblind-distinguishability. Use stat-cards when you need at-a-glance numbers, not a trend shape — a single KPI reads faster as a number than a chart. Use data-table when the audience needs to inspect exact values per row, not the shape of change over time."
     },
     {
       "name": "announcement-banner",
@@ -162,7 +164,7 @@
       "name": "badge-on-card",
       "type": "registry:block",
       "title": "Badges on card",
-      "description": "Default, secondary, and destructive badges displayed on a card surface.",
+      "description": "Default, secondary, and destructive badges shown together on a card surface.",
       "meta": {
         "intent": [
           "data-display"
@@ -179,13 +181,14 @@
           "type": "registry:component",
           "target": "components/quill/badge-on-card.tsx"
         }
-      ]
+      ],
+      "docs": "Default, secondary, and destructive badges shown together on a card surface. Do: Reserve the destructive variant for a status that actually needs attention (blocked, failed, overdue). Don't: Use destructive styling for emphasis on a badge that isn't actually a warning. Use tone-badge when you need a badge whose color is driven by a semantic tone token rather than the three fixed variants here. Use data-table when the badges are actually per-row status in a list of records, not a single card's labels."
     },
     {
       "name": "calendar-page",
       "type": "registry:block",
       "title": "Calendar page",
-      "description": "A studio schedule card pairing a single-date calendar with the selected day's session list.",
+      "description": "A single-date calendar paired with the selected day's session list, in one studio-schedule card.",
       "meta": {
         "intent": [
           "scheduling"
@@ -204,13 +207,14 @@
           "type": "registry:component",
           "target": "components/quill/calendar-page.tsx"
         }
-      ]
+      ],
+      "docs": "A single-date calendar paired with the selected day's session list, in one studio-schedule card. Do: Keep the session list in sync with whatever date is selected in the calendar — the two panes are one control, not two independent widgets. Don't: Let the calendar selection and the listed sessions fall out of sync (e.g. a static list that ignores the picked date). Use calendar-range when the user is booking a span of days, not viewing what's scheduled on one. Use activity-feed when you want a chronological history of past events, not a schedule of upcoming sessions tied to a picked date."
     },
     {
       "name": "calendar-range",
       "type": "registry:block",
       "title": "Calendar range picker",
-      "description": "Stateful two-month range calendar in a card for booking a span of days, with clear and reserve actions.",
+      "description": "A stateful two-month range calendar for booking a span of days, with clear and reserve actions.",
       "meta": {
         "intent": [
           "scheduling",
@@ -233,13 +237,14 @@
       ],
       "dependencies": [
         "react-day-picker"
-      ]
+      ],
+      "docs": "A stateful two-month range calendar for booking a span of days, with clear and reserve actions. Do: Keep the Clear action available whenever a range is selected, separate from Reserve. Don't: Force a user to re-click through the whole range to correct a mis-click — that's what Clear is for. Do: Disable Reserve until both a start and end date are selected. Don't: Let a half-made range (just a start date) submit as if it were a valid booking. Use calendar-page when the user is picking a single day to view, not a multi-day span to reserve. Use checkout when the range is just one field within a larger purchase flow, not the whole card."
     },
     {
       "name": "chat",
       "type": "registry:block",
       "title": "Chat panel",
-      "description": "A messaging panel with a contact header, message bubbles, and a composer input.",
+      "description": "A one-on-one messaging panel — contact header, message bubbles, and a composer input.",
       "meta": {
         "intent": [
           "messaging"
@@ -257,7 +262,8 @@
           "type": "registry:component",
           "target": "components/quill/chat.tsx"
         }
-      ]
+      ],
+      "docs": "A one-on-one messaging panel — contact header, message bubbles, and a composer input. Do: Align the current user's messages to one side (right) and the other party's to the other (left) — position is the primary cue for who said what. Don't: Rely on color alone to distinguish sender — pair it with consistent alignment. Use list-detail when you need a list of conversations alongside the open thread, not just the single open thread. Use notifications when the messages are one-way system alerts, not a two-way conversation with someone."
     },
     {
       "name": "checkout",
@@ -392,7 +398,7 @@
       "name": "data-table",
       "type": "registry:block",
       "title": "Data table",
-      "description": "A members table with filter toolbar, status badges, and per-row actions.",
+      "description": "A filterable members table with a toolbar, status badges, and a per-row actions menu.",
       "meta": {
         "intent": [
           "data-display"
@@ -412,7 +418,8 @@
           "type": "registry:component",
           "target": "components/quill/data-table.tsx"
         }
-      ]
+      ],
+      "docs": "A filterable members table with a toolbar, status badges, and a per-row actions menu. Do: Give every icon-only row-action button a per-row aria-label (e.g. \"Actions for Ada Lovelace\"), not a generic one. Don't: Ship a table full of icon-only buttons that all announce as the same unlabeled button to a screen reader. Use activity-feed when you want a read-only chronological list, not sortable/filterable records with row actions. Use kanban when the records are better organized by status columns than by table rows."
     },
     {
       "name": "empty-state",

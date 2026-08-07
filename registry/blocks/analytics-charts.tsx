@@ -25,8 +25,8 @@ const traffic = [
   { month: 'Jun', readers: 1481, subscribers: 618 },
 ]
 const trafficConfig = {
-  readers: { label: 'Readers', color: 'var(--terracotta)' },
-  subscribers: { label: 'Subscribers', color: 'var(--moss)' },
+  readers: { label: 'Readers', color: 'var(--chart-1)' },
+  subscribers: { label: 'Subscribers', color: 'var(--chart-2)' },
 }
 
 const sales = [
@@ -36,7 +36,7 @@ const sales = [
   { week: 'W4', prints: 26 },
 ]
 const salesConfig = {
-  prints: { label: 'Print sales', color: 'var(--indigo)' },
+  prints: { label: 'Print sales', color: 'var(--chart-3)' },
 }
 
 export function AnalyticsCharts() {
