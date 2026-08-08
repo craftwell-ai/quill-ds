@@ -9,6 +9,11 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.7.1] — 2026-08-08
+
+### Changed
+- chore(deps): Bump js-yaml from 4.3.0 to 4.3.1
+
 ## [0.7.0] — 2026-08-07
 
 ### Added
