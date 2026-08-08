@@ -9,6 +9,11 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.7.2] — 2026-08-08
+
+### Changed
+- docs(figma): Code Connect is not on the roadmap (no org plan) (#70)
+
 ## [0.7.1] — 2026-08-08
 
 ### Changed
