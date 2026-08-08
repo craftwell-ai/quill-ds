@@ -36,11 +36,12 @@ all type binds to a Figma variable or text style (no literal values). Built via 
   `fills = []` on every wrapper/group frame (and on `createNodeFromSvg` import frames), or
   the card interior renders white over the cream surface. Only bind fills you actually want.
 
-## Code Connect mapping (ready to publish on plan upgrade)
+## Code Connect mapping (reference only — not on the roadmap)
 
 Code Connect requires a **Dev/Full seat on a Figma Org/Enterprise plan** (blocks both the MCP
-`add_code_connect_map` and the `figma connect publish` CLI). Until then, this is the intended
-1:1 map — Figma component set (node id) ↔ code component — ready to wire up:
+`add_code_connect_map` and the `figma connect publish` CLI). This workspace is on a lower plan
+with no org-plan upgrade planned, so Code Connect stays off the roadmap. This 1:1 map — Figma
+component set (node id) ↔ code component — is kept for reference in case that ever changes:
 
 | Figma node | Code component | Source |
 |---|---|---|
@@ -60,8 +61,8 @@ Code Connect requires a **Dev/Full seat on a Figma Org/Enterprise plan** (blocks
 | `82:6` | Skeleton | `src/components/ui/skeleton.tsx` |
 | `81:8` | Progress | `src/components/ui/progress.tsx` |
 
-On upgrade: `npm i -D @figma/code-connect`, add `*.figma.tsx` per component (prop mappings from
-the variant properties above), `npx figma connect publish`.
+If this ever becomes relevant: `npm i -D @figma/code-connect`, add `*.figma.tsx` per component
+(prop mappings from the variant properties above), `npx figma connect publish`.
 
 ### Variable code syntax (done — the token-level 1:1, NOT plan-gated)
 
@@ -77,13 +78,12 @@ code a dev types (Figma names and CSS names are decoupled by design):
 | `type/base` | `var(--text-base)` |
 | `status/link` | `var(--link)` |
 
-This gives the token layer full design↔code parity without Code Connect. Code Connect remains an
-optional **component-level** enhancement (real `<Button>` code + props in Dev Mode), gated by plan.
-Re-apply after regenerating variables via the mapping in the foundations sync.
+This gives the token layer full design↔code parity without Code Connect — which is the intended
+end state, since Code Connect itself isn't planned (see above). Re-apply after regenerating
+variables via the mapping in the foundations sync.
 
 ## Remaining for Wave A
 
-- **Code Connect** — blocked by plan (mapping above is ready).
 - **Visual QA pass:** review each page in Figma; refine any spacing/rounding nuances.
 - Optional: add `Disabled` boolean + hover/focus states later (variant structure supports it).
 
@@ -204,5 +204,4 @@ as pattern).
 
 ## Next
 
-- Code Connect for Waves A–C — still blocked by plan (mappings ready).
 - Visual QA sweep of component + pattern pages in light/dark modes.
