@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "mail-shell",
   "title": "Mail inbox shell",
-  "description": "Two-pane mail client shell with a searchable message list and a reading pane with toolbar and inline reply.",
+  "description": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply.",
   "registryDependencies": [
     "badge",
     "button",
@@ -27,5 +27,6 @@
     ],
     "use_when": "You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply."
   },
+  "docs": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply. Do: Hide the reading pane on narrow viewports so the message list gets the full width instead of squeezing both panes. Don't: Force the two-pane layout at phone widths where neither pane has room to be usable. Use list-detail when you need the simpler read-and-select pattern with no search, toolbar, or reply composer. Use chat when the messaging is a live conversational thread, not discrete emails with subjects.",
   "type": "registry:block"
 }

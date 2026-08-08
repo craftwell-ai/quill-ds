@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "login-minimal",
   "title": "Minimal login",
-  "description": "Bare centered login form with a logo mark and a single email field for one-time-code sign-in.",
+  "description": "The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code.",
   "registryDependencies": [
     "input",
     "label",
@@ -23,5 +23,6 @@
     ],
     "use_when": "You need the leanest possible sign-in — a single field for one-time-code entry."
   },
+  "docs": "The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code. Do: Reserve the bare, uncontained layout for cases where the surrounding page or modal already frames it. Don't: Drop this pattern directly onto a busy page background with nothing to separate it visually. Use login when you're collecting a password, not sending a one-time code — this pattern has no password field at all. Use login-oauth when you want a provider-first flow instead of email-only. Use otp-verification when the user already submitted their email and you're now showing the six-digit code entry — that's a separate step from this one.",
   "type": "registry:block"
 }

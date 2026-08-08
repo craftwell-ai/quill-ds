@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "invoice",
   "title": "Invoice",
-  "description": "Invoice card with sender and recipient details, a line-item table with totals, and a download action.",
+  "description": "A printable invoice card — sender and recipient details, a line-item table with totals, and a download action.",
   "registryDependencies": [
     "card",
     "table",
@@ -26,5 +26,6 @@
     ],
     "use_when": "You need a printable invoice with parties, line-item totals, and a download action."
   },
+  "docs": "A printable invoice card — sender and recipient details, a line-item table with totals, and a download action. Do: Keep the total in a table footer, visually distinct from line items (its own row, right-aligned). Don't: Let the total blend in as just another line item — it needs to read as the sum, not another charge. Use order-summary when you're showing a cart before payment, not a record of a completed transaction. Use data-table when you need a list of many invoices to browse, not the full detail of one.",
   "type": "registry:block"
 }

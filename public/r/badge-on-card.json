@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "badge-on-card",
   "title": "Badges on card",
-  "description": "Default, secondary, and destructive badges displayed on a card surface.",
+  "description": "Default, secondary, and destructive badges shown together on a card surface.",
   "registryDependencies": [
     "card",
     "badge"
@@ -21,5 +21,6 @@
     ],
     "use_when": "You need to show status or category badges attached to a content card."
   },
+  "docs": "Default, secondary, and destructive badges shown together on a card surface. Do: Reserve the destructive variant for a status that actually needs attention (blocked, failed, overdue). Don't: Use destructive styling for emphasis on a badge that isn't actually a warning. Use tone-badge when you need a badge whose color is driven by a semantic tone token rather than the three fixed variants here. Use data-table when the badges are actually per-row status in a list of records, not a single card's labels.",
   "type": "registry:block"
 }

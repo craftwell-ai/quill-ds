@@ -2,14 +2,14 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "stats-band",
   "title": "Stats band",
-  "description": "Marketing band of headline statistics separated by vertical dividers on a card background.",
+  "description": "A marketing band of headline statistics separated by vertical dividers on a card background.",
   "registryDependencies": [
     "separator"
   ],
   "files": [
     {
       "path": "registry/blocks/stats-band.tsx",
-      "content": "import { Separator } from '@/components/ui/separator'\n\nconst stats = [\n  { value: '56', label: 'Components' },\n  { value: '40+', label: 'Patterns' },\n  { value: '2', label: 'Themes, light & dusk' },\n  { value: 'AA', label: 'WCAG 2.1 target' },\n]\n\nexport function StatsBand() {\n  return (\n    <section className=\"mx-auto w-full max-w-[880px] rounded-xl bg-card px-8 py-10 ring-1 ring-foreground/10\">\n      <div className=\"flex flex-col items-center gap-2 text-center\">\n        <span className=\"text-xs font-medium tracking-[0.15em] uppercase text-ink-muted\">\n          By the numbers\n        </span>\n        <h2 className=\"font-heading text-2xl text-foreground\">A system that keeps its promises</h2>\n      </div>\n      <div className=\"mt-8 flex items-stretch justify-between gap-6 max-sm:flex-col max-sm:items-center\">\n        {stats.map((s, i) => (\n          <div key={s.label} className=\"flex flex-1 items-center gap-6 max-sm:w-full max-sm:flex-col max-sm:gap-2\">\n            {i > 0 && <Separator orientation=\"vertical\" className=\"max-sm:hidden\" />}\n            <div className=\"flex flex-1 flex-col items-center gap-1 text-center\">\n              <span className=\"font-heading text-3xl leading-none text-terracotta\">{s.value}</span>\n              <span className=\"text-sm text-muted-foreground\">{s.label}</span>\n            </div>\n          </div>\n        ))}\n      </div>\n    </section>\n  )\n}\n",
+      "content": "import { Separator } from '@/components/ui/separator'\n\nconst stats = [\n  { value: '56', label: 'Components' },\n  { value: '40+', label: 'Patterns' },\n  { value: '2', label: 'Themes, light & dusk' },\n  { value: 'AA', label: 'WCAG 2.1 target' },\n]\n\nexport function StatsBand() {\n  return (\n    <section className=\"mx-auto w-full max-w-[880px] rounded-xl bg-card px-8 py-10 ring-1 ring-foreground/10\">\n      <div className=\"flex flex-col items-center gap-2 text-center\">\n        <span className=\"text-xs font-medium tracking-[0.15em] uppercase text-ink-muted\">\n          By the numbers\n        </span>\n        <h2 className=\"font-heading text-2xl text-foreground\">A system that keeps its promises</h2>\n      </div>\n      <div className=\"mt-8 flex items-stretch justify-between gap-6 max-sm:flex-col max-sm:items-center\">\n        {stats.map((s, i) => (\n          <div key={s.label} className=\"flex flex-1 items-center gap-6 max-sm:w-full max-sm:flex-col max-sm:gap-2\">\n            {i > 0 && <Separator orientation=\"vertical\" className=\"max-sm:hidden\" />}\n            <div className=\"flex flex-1 flex-col items-center gap-1 text-center\">\n              <span className=\"font-heading text-3xl leading-none text-[var(--accent-pigment)]\">{s.value}</span>\n              <span className=\"text-sm text-muted-foreground\">{s.label}</span>\n            </div>\n          </div>\n        ))}\n      </div>\n    </section>\n  )\n}\n",
       "type": "registry:component",
       "target": "components/quill/stats-band.tsx"
     }
@@ -20,5 +20,6 @@
     ],
     "use_when": "You need a marketing band of headline statistics separated by dividers."
   },
+  "docs": "A marketing band of headline statistics separated by vertical dividers on a card background. Do: Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element. Don't: Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent. Use stat-cards when each number needs its own card with a period-over-period delta — this pattern is a single flat band with no per-item chrome or comparison. Use feature-section when you're describing capabilities, not reporting numbers.",
   "type": "registry:block"
 }

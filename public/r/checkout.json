@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "checkout",
   "title": "Checkout",
-  "description": "Two-column checkout with payment method picker, card form, and an order summary sidebar.",
+  "description": "A two-column checkout — payment method picker and card form beside an order summary sidebar.",
   "registryDependencies": [
     "card",
     "input",
@@ -27,5 +27,6 @@
     ],
     "use_when": "You need to collect payment and card details alongside an order summary."
   },
+  "docs": "A two-column checkout — payment method picker and card form beside an order summary sidebar. Do: Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. Don't: Use checkboxes or a dropdown for a single mutually exclusive payment method. Use order-summary when you only need the cart-review card, not the full payment form beside it. Use wizard when payment is one step in a longer multi-step flow, not a single standalone page.",
   "type": "registry:block"
 }

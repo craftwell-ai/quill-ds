@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "page-header",
   "title": "Page header",
-  "description": "A page header with breadcrumb trail, title and description, and duplicate/new action buttons.",
+  "description": "A page header with a breadcrumb trail, title and description, and duplicate/new action buttons.",
   "registryDependencies": [
     "breadcrumb",
     "button",
@@ -23,5 +23,6 @@
     ],
     "use_when": "You need a screen header with breadcrumbs, title, description, and primary actions."
   },
+  "docs": "A page header with a breadcrumb trail, title and description, and duplicate/new action buttons. Do: Render the current page as BreadcrumbPage (plain text), not a link — you can't navigate to where you already are. Don't: Make every breadcrumb crumb, including the current page, a clickable link. Use sidebar-nav when you need the breadcrumb as part of a full app shell's top bar, not a standalone header block. Use hero when this is a marketing page's opening statement, not a utility screen's title bar.",
   "type": "registry:block"
 }

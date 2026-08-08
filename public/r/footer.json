@@ -21,5 +21,6 @@
     ],
     "use_when": "You need a site-wide footer with link columns, a brand blurb, and legal links."
   },
+  "docs": "A marketing footer with brand blurb, link columns, and legal links. Do: Wrap each link column in its own <nav aria-label>, as this block already does, so screen-reader users can jump between them. Don't: Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block. Use sidebar-nav when the links are primary in-app navigation, not secondary site-wide links at the page's end. Use navbar when the links belong at the top of the page as primary navigation, not the bottom as reference.",
   "type": "registry:block"
 }

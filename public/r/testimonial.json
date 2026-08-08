@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "testimonial",
   "title": "Testimonial",
-  "description": "A customer quote card with a serif pull-quote, avatar initials, and attribution.",
+  "description": "A customer-quote card with a serif pull-quote, avatar initials, and attribution.",
   "registryDependencies": [],
   "files": [
     {
@@ -19,5 +19,6 @@
     ],
     "use_when": "You need a customer-quote card with a serif pull-quote and attribution."
   },
+  "docs": "A customer-quote card with a serif pull-quote, avatar initials, and attribution. Do: Pair every quote with a real name, role, and organization — an anonymous quote reads as unverifiable. Don't: Ship a testimonial with no attribution, or attribution too small/muted to actually read. Use team-section when you're introducing people, not quoting what a customer said about the product. Use stats-band when the proof point is a number, not a quote.",
   "type": "registry:block"
 }

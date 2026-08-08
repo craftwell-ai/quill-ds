@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "faq",
   "title": "FAQ section",
-  "description": "Centered FAQ section with an accordion of common questions and a contact call-to-action footer.",
+  "description": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer.",
   "registryDependencies": [
     "accordion",
     "button"
@@ -22,5 +22,6 @@
     ],
     "use_when": "You need to answer common questions in an accordion with a contact fallback."
   },
+  "docs": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer. Do: Open the first question by default (defaultValue=['item-0']) so the section doesn't read as empty on load. Don't: Start every item collapsed and force a first click just to prove the section has content. Use accordion when you need a bare accordion with no marketing framing (heading, contact footer) around it. Use contact-form when the user needs to ask something not covered — this pattern only offers a CTA button, not the form itself.",
   "type": "registry:block"
 }
