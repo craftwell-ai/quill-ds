@@ -25,5 +25,6 @@
     ],
     "use_when": "You need a full application home — sidebar, search header, and KPI cards."
   },
+  "docs": "An app shell with sidebar navigation, a search header, and KPI stat cards. Do: Give the current nav item a distinct active state (background + text color), not just a subtle underline. Don't: Leave every nav item looking identical — users lose track of where they are. Use sidebar-nav when you need the collapsible icon-sidebar variant with grouped menus, not this fixed-width text sidebar. Use stat-cards when you only need the KPI row, not the full shell around it.",
   "type": "registry:block"
 }

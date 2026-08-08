@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "login-oauth",
   "title": "Login with OAuth providers",
-  "description": "Provider-first sign-in — Google, GitHub and Apple buttons above a divider, with an email fallback below.",
+  "description": "Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback.",
   "registryDependencies": [
     "input",
     "label",
@@ -23,5 +23,6 @@
     ],
     "use_when": "Identity comes from a provider (Google, GitHub, Apple) rather than a password you store."
   },
+  "docs": "Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback. Do: Treat the provider buttons as the primary path; keep the email form below the rule as a fallback, not the headline. Don't: Give the email field equal visual weight to the provider buttons when most users have a provider account. Do: Keep provider marks as their official inlined artwork, with GitHub and Apple taking currentColor so they invert correctly in Dusk. Don't: Restyle a provider mark to match your palette — that breaks the brand guidelines you agree to by using their sign-in. Use signup-social when this is account creation, not sign-in — signup-social also leads with OAuth providers. Use login when you store first-party passwords and don't want a provider-first order at all. Use login-minimal when you don't have OAuth providers configured and just need a single email field.",
   "type": "registry:block"
 }

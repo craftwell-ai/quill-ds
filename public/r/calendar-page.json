@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "calendar-page",
   "title": "Calendar page",
-  "description": "A studio schedule card pairing a single-date calendar with the selected day's session list.",
+  "description": "A single-date calendar paired with the selected day's session list, in one studio-schedule card.",
   "registryDependencies": [
     "card",
     "calendar",
@@ -23,5 +23,6 @@
     ],
     "use_when": "You need to pick a single date and show what's scheduled that day."
   },
+  "docs": "A single-date calendar paired with the selected day's session list, in one studio-schedule card. Do: Keep the session list in sync with whatever date is selected in the calendar — the two panes are one control, not two independent widgets. Don't: Let the calendar selection and the listed sessions fall out of sync (e.g. a static list that ignores the picked date). Use calendar-range when the user is booking a span of days, not viewing what's scheduled on one. Use activity-feed when you want a chronological history of past events, not a schedule of upcoming sessions tied to a picked date.",
   "type": "registry:block"
 }

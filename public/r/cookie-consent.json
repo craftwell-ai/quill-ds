@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "cookie-consent",
   "title": "Cookie consent",
-  "description": "A cookie consent banner with accept, reject, and preferences actions.",
+  "description": "A cookie consent banner offering accept, reject, and preferences actions.",
   "registryDependencies": [
     "button",
     "https://www.quilldesignsystem.com/r/icon.json"
@@ -21,5 +21,6 @@
     ],
     "use_when": "You need a compliance banner offering accept, reject, and preferences choices."
   },
+  "docs": "A cookie consent banner offering accept, reject, and preferences actions. Do: \"Reject non-essential\" gets the same one-click ease as \"Accept all\" — both are top-level buttons, not one button plus a buried settings link. Don't: Make rejecting cookies harder to find or reach than accepting them — that's a dark pattern, not a real choice. Use announcement-banner when the message is informational only and doesn't require an explicit accept/reject decision. Use alerts when the message is a local, in-page status, not a site-wide compliance notice.",
   "type": "registry:block"
 }

@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "sidebar-nav",
   "title": "Sidebar navigation shell",
-  "description": "Collapsible icon sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.",
+  "description": "A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.",
   "registryDependencies": [
     "sidebar",
     "breadcrumb",
@@ -26,5 +26,6 @@
     ],
     "use_when": "You need a collapsible icon-sidebar app shell with grouped menus and a content area."
   },
+  "docs": "A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area. Do: Group sidebar items under labeled sections (e.g. \"Workspace\", \"Studio\"), as this block already does, rather than one long flat list. Don't: List every nav item at the same level with no grouping once the count grows past a handful. Use dashboard when you need a simpler, fixed-width text sidebar without the icon-collapse behavior. Use mail-shell when the main content area is a two-pane message list/reading layout, not a card grid.",
   "type": "registry:block"
 }

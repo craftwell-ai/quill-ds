@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "data-table",
   "title": "Data table",
-  "description": "A members table with filter toolbar, status badges, and per-row actions.",
+  "description": "A filterable members table with a toolbar, status badges, and a per-row actions menu.",
   "registryDependencies": [
     "table",
     "badge",
@@ -24,5 +24,6 @@
     ],
     "use_when": "You need a filterable, actionable table of records with status badges and row actions."
   },
+  "docs": "A filterable members table with a toolbar, status badges, and a per-row actions menu. Do: Give every icon-only row-action button a per-row aria-label (e.g. \"Actions for Ada Lovelace\"), not a generic one. Don't: Ship a table full of icon-only buttons that all announce as the same unlabeled button to a screen reader. Use activity-feed when you want a read-only chronological list, not sortable/filterable records with row actions. Use kanban when the records are better organized by status columns than by table rows.",
   "type": "registry:block"
 }

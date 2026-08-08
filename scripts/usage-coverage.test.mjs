@@ -9,7 +9,24 @@ import { ALL_USAGE } from '../src/usage/index.mjs'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const storiesDir = join(root, 'src/stories')
 
+// Story files whose usage name(s) can't be derived from the filename by the
+// default kebab-case rule — either because one file renders more than one
+// registry block as separate exported stories (LoginVariants), or because
+// the filename itself diverges from the block's registry slug (e.g.
+// SettingsForm.stories.tsx documents 'settings', not 'settings-form'). Both
+// directions of the mapping are spelled out explicitly here.
+const MULTI_BLOCK_STORIES = {
+  'patterns/LoginVariants.stories.tsx': ['login-split-panel', 'login-minimal'],
+  'patterns/SettingsForm.stories.tsx': ['settings'],
+  'patterns/DashboardShell.stories.tsx': ['dashboard'],
+  'patterns/Error404.stories.tsx': ['error-404'],
+}
+const USAGE_NAME_TO_MULTI_BLOCK_STORY = Object.fromEntries(
+  Object.entries(MULTI_BLOCK_STORIES).flatMap(([file, names]) => names.map((n) => [n, file])),
+)
+
 export function storyFileFor(name) {
+  if (USAGE_NAME_TO_MULTI_BLOCK_STORY[name]) return join(storiesDir, USAGE_NAME_TO_MULTI_BLOCK_STORY[name])
   const pascal = name.split('-').map((s) => s[0].toUpperCase() + s.slice(1)).join('')
   const candidates = [
     join(storiesDir, `${name}.stories.tsx`),
@@ -72,59 +89,10 @@ const KNOWN_UNDOCUMENTED = new Set([
   'item.stories.tsx',
   'kbd.stories.tsx',
   'label.stories.tsx',
-  'login-oauth.stories.tsx',
   'menubar.stories.tsx',
   'native-select.stories.tsx',
   'navigation-menu.stories.tsx',
   'pagination.stories.tsx',
-  'patterns/ActivityFeed.stories.tsx',
-  'patterns/AnalyticsCharts.stories.tsx',
-  'patterns/AnnouncementBanner.stories.tsx',
-  'patterns/BadgeOnCard.stories.tsx',
-  'patterns/CalendarPage.stories.tsx',
-  'patterns/CalendarRange.stories.tsx',
-  'patterns/Chat.stories.tsx',
-  'patterns/Checkout.stories.tsx',
-  'patterns/CommandPalette.stories.tsx',
-  'patterns/ContactForm.stories.tsx',
-  'patterns/CookieConsent.stories.tsx',
-  'patterns/DashboardShell.stories.tsx',
-  'patterns/DataTable.stories.tsx',
-  'patterns/EmptyState.stories.tsx',
-  'patterns/Error404.stories.tsx',
-  'patterns/Faq.stories.tsx',
-  'patterns/FeatureSection.stories.tsx',
-  'patterns/FileUpload.stories.tsx',
-  'patterns/Footer.stories.tsx',
-  'patterns/ForgotPassword.stories.tsx',
-  'patterns/Hero.stories.tsx',
-  'patterns/Invoice.stories.tsx',
-  'patterns/Kanban.stories.tsx',
-  'patterns/ListDetail.stories.tsx',
-  'patterns/Login.stories.tsx',
-  'patterns/LoginVariants.stories.tsx',
-  'patterns/MailShell.stories.tsx',
-  'patterns/Navbar.stories.tsx',
-  'patterns/Newsletter.stories.tsx',
-  'patterns/Notifications.stories.tsx',
-  'patterns/Onboarding.stories.tsx',
-  'patterns/OrderSummary.stories.tsx',
-  'patterns/OtpVerification.stories.tsx',
-  'patterns/PageHeader.stories.tsx',
-  'patterns/Pricing.stories.tsx',
-  'patterns/ProfileCard.stories.tsx',
-  'patterns/SearchResults.stories.tsx',
-  'patterns/SettingsForm.stories.tsx',
-  'patterns/SidebarNav.stories.tsx',
-  'patterns/Signup.stories.tsx',
-  'patterns/SignupSocial.stories.tsx',
-  'patterns/StatCards.stories.tsx',
-  'patterns/StatsBand.stories.tsx',
-  'patterns/TabsPage.stories.tsx',
-  'patterns/TeamSection.stories.tsx',
-  'patterns/Testimonial.stories.tsx',
-  'patterns/ThemeSelector.stories.tsx',
-  'patterns/Wizard.stories.tsx',
   'popover.stories.tsx',
   'progress.stories.tsx',
   'radio-group.stories.tsx',
@@ -155,6 +123,12 @@ test('every story outside the allowlist has a usage file', () => {
   const documented = new Set(ALL_USAGE.map((u) => u.name))
   for (const f of files) {
     if (KNOWN_UNDOCUMENTED.has(f)) continue
+    if (MULTI_BLOCK_STORIES[f]) {
+      for (const name of MULTI_BLOCK_STORIES[f]) {
+        assert.ok(documented.has(name), `story '${f}' has no usage file for '${name}' (expected src/usage/${name}.usage.mjs)`)
+      }
+      continue
+    }
     const base = f.replace(/^patterns\//, '').replace(/\.stories\.tsx$/, '')
     const kebab = base.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
     assert.ok(documented.has(kebab), `story '${f}' has no usage file (expected src/usage/${kebab}.usage.mjs)`)

@@ -25,5 +25,6 @@
     ],
     "use_when": "You need a settings screen split into account, notifications, and security tabs."
   },
+  "docs": "A tabbed settings page with account, notifications, and security panels. Do: Set defaultValue to whichever tab users need most often (here, Account) so the page isn't blank on load. Don't: Leave no tab selected by default and force an extra click before any content shows. Use settings when everything fits on one page without needing to split into separate tabbed sections. Use wizard when the sections are sequential setup steps completed once, not independent settings a user revisits and edits freely.",
   "type": "registry:block"
 }

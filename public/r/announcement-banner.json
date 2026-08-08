@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "announcement-banner",
   "title": "Announcement banners",
-  "description": "Two dismissible announcement banners: an inline bordered page banner and a full-bleed primary-color variant.",
+  "description": "Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant.",
   "registryDependencies": [
     "badge",
     "button",
@@ -23,5 +23,6 @@
     ],
     "use_when": "You need to announce something site-wide with a dismissible banner, either inline or full-bleed."
   },
+  "docs": "Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant. Do: Give every banner variant its own dismiss button with a specific aria-label (e.g. \"Dismiss workshop banner\"), not a generic one. Don't: Ship a banner with no way to dismiss it, or multiple banners sharing one ambiguous \"Dismiss\" label. Use alerts when the message is local to a page section and tied to system status, not a site-wide announcement. Use cookie-consent when the banner requires an explicit choice (accept/reject), not just a dismiss.",
   "type": "registry:block"
 }

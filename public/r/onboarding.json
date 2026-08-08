@@ -22,5 +22,6 @@
     ],
     "use_when": "You need a setup checklist that tracks progress and links to remaining steps."
   },
+  "docs": "A setup checklist card with a progress bar, completed and pending tasks, and start links for remaining steps. Do: Pair the visual progress bar with a text fraction (\"2 of 4 complete\") so the state isn't conveyed by bar width alone. Don't: Show only a progress bar with no numeric readout of how much is actually done. Use wizard when the steps must happen in a strict sequence in one sitting, not a checklist a user dips in and out of over time. Use empty-state when there's a single action to take, not a multi-step checklist to track.",
   "type": "registry:block"
 }

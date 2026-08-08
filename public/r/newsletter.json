@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "newsletter",
   "title": "Newsletter signup",
-  "description": "A centered newsletter signup section with an email form and social proof.",
+  "description": "A centered newsletter-signup section — an email field, subscribe action, and social proof.",
   "registryDependencies": [
     "input",
     "label",
@@ -24,5 +24,6 @@
     ],
     "use_when": "You need an email-capture section with social proof to grow a list."
   },
+  "docs": "A centered newsletter-signup section — an email field, subscribe action, and social proof. Do: Say plainly what subscribers are signing up for and that they can leave any time (\"No spam, no noise — unsubscribe any time.\"). Don't: Ask for an email with no context on frequency or an easy way out. Use contact-form when you need more than an email — name, topic, a message — this pattern is intentionally a single field. Use footer when the signup is one small element within a full site footer, not its own standalone section.",
   "type": "registry:block"
 }

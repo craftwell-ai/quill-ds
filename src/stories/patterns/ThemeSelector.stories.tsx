@@ -6,10 +6,16 @@ import {
   type AccentValue,
   type ThemeValue,
 } from '@registry/blocks/theme-selector'
+import { usage } from '@/usage/theme-selector.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
 
 const meta = {
   title: 'Patterns / Nav / Theme selector',
-  parameters: { layout: 'centered' },
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+    docs: { description: { component: renderUsageDocs(usage) } },
+  },
 } satisfies Meta
 export default meta
 type Story = StoryObj

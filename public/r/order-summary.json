@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "order-summary",
   "title": "Order summary",
-  "description": "A checkout order summary card with line items, a promo code input, a total, and a pay-now button.",
+  "description": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button.",
   "registryDependencies": [
     "card",
     "button",
@@ -24,5 +24,6 @@
     ],
     "use_when": "You need a cart-review card with line items, a promo field, a total, and a pay button."
   },
+  "docs": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button. Do: Recompute the total the instant a promo code applies or a line item changes — never leave a stale total on screen after an update. Don't: Require a page refresh or separate action to see the corrected total. Use invoice when you're showing a record of a completed, already-paid transaction, not a cart pending payment. Use checkout when you need the full payment form (card fields, billing address) alongside the summary, not just the review.",
   "type": "registry:block"
 }

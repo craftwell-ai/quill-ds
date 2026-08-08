@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "signup",
   "title": "Sign up",
-  "description": "An account creation card with name, email, and password fields plus a sign-in link.",
+  "description": "Standard account-creation card — name, email, password, and a link back to sign-in.",
   "registryDependencies": [
     "card",
     "input",
@@ -23,5 +23,6 @@
     ],
     "use_when": "You need standard account creation — name, email, password, and a sign-in link."
   },
+  "docs": "Standard account-creation card — name, email, password, and a link back to sign-in. Do: Use the description line to state what happens next (trial length, no card required) so the form isn't just fields with no context. Don't: Leave the card as a bare field list with no framing for why someone would fill it out. Use signup-social when you want OAuth providers to lead instead of a bare email/password form. Use login when the user already has an account — this card is only for new ones.",
   "type": "registry:block"
 }

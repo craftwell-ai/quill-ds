@@ -21,7 +21,7 @@ export function StatsBand() {
           <div key={s.label} className="flex flex-1 items-center gap-6 max-sm:w-full max-sm:flex-col max-sm:gap-2">
             {i > 0 && <Separator orientation="vertical" className="max-sm:hidden" />}
             <div className="flex flex-1 flex-col items-center gap-1 text-center">
-              <span className="font-heading text-3xl leading-none text-terracotta">{s.value}</span>
+              <span className="font-heading text-3xl leading-none text-[var(--accent-pigment)]">{s.value}</span>
               <span className="text-sm text-muted-foreground">{s.label}</span>
             </div>
           </div>

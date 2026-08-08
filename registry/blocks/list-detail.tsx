@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator'
 const threads = [
   { from: 'Grace Hopper', subject: 'Re: Q3 roadmap', preview: 'Looks great — one note on timing…', time: '9:41', active: true },
   { from: 'Alan Turing', subject: 'Deploy window', preview: 'Can we push to Thursday?', time: '8:02' },
-  { from: 'Katherine J.', subject: 'Design review', preview: 'Left comments on the flows.', time: 'Yed' },
+  { from: 'Katherine J.', subject: 'Design review', preview: 'Left comments on the flows.', time: 'Yesterday' },
 ]
 
 export function ListDetail() {

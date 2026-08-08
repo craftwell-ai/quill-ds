@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "chat",
   "title": "Chat panel",
-  "description": "A messaging panel with a contact header, message bubbles, and a composer input.",
+  "description": "A one-on-one messaging panel — contact header, message bubbles, and a composer input.",
   "registryDependencies": [
     "input",
     "button",
@@ -22,5 +22,6 @@
     ],
     "use_when": "You need a one-on-one messaging panel with a contact header, bubbles, and a composer."
   },
+  "docs": "A one-on-one messaging panel — contact header, message bubbles, and a composer input. Do: Align the current user's messages to one side (right) and the other party's to the other (left) — position is the primary cue for who said what. Don't: Rely on color alone to distinguish sender — pair it with consistent alignment. Use list-detail when you need a list of conversations alongside the open thread, not just the single open thread. Use notifications when the messages are one-way system alerts, not a two-way conversation with someone.",
   "type": "registry:block"
 }

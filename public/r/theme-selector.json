@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "theme-selector",
   "title": "Theme selector",
-  "description": "A dropdown picker for the four Quill themes (Dawn, Dusk, Classic Light, Classic Dark) and the four pigment accents (terracotta, moss, indigo, gold) — sets data-theme/data-accent and persists both to localStorage.",
+  "description": "A dropdown picker for the four Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage.",
   "registryDependencies": [
     "button",
     "dropdown-menu",
@@ -22,5 +22,6 @@
     ],
     "use_when": "You need to let users switch among Quill's four themes and four accents, persisted to localStorage."
   },
+  "docs": "A dropdown picker for the four Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage. Do: Read the persisted theme/accent from localStorage in an effect, after mount — never during render, or prerendered markup mismatches the client. Don't: Read localStorage synchronously during render; that guarantees a hydration mismatch since the server always renders Dawn/moss. Use settings when theme choice is one field among many in a broader preferences form, not a standalone quick-switch control.",
   "type": "registry:block"
 }

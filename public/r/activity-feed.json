@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "activity-feed",
   "title": "Activity feed",
-  "description": "Card with a vertical timeline of recent events, each with an avatar, action text, and timestamp.",
+  "description": "A card timeline of recent events — avatar, action text, and a relative timestamp per entry.",
   "registryDependencies": [
     "card",
     "avatar",
@@ -23,5 +23,6 @@
     ],
     "use_when": "You need to show a chronological history of what happened — recent events with who, what, and when."
   },
+  "docs": "A card timeline of recent events — avatar, action text, and a relative timestamp per entry. Do: Use relative timestamps (\"2 hours ago\") for recent activity — they read faster than absolute dates. Don't: Force users to parse a full timestamp for something that happened minutes ago. Use notifications when the events need an unread/read state and a mark-all-read action, not just a read-only history. Use data-table when the events are really records you need to filter, sort, or act on, not just skim chronologically.",
   "type": "registry:block"
 }
