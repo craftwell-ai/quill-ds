@@ -14,6 +14,7 @@ A modal window over the page for focused, non-destructive tasks — forms, detai
 ### Rules
 - **Do:** Confirm destructive actions with AlertDialog. **Don't:** Use Dialog to confirm deletes or overwrites — it dismisses too easily.
 - **Do:** Keep the default close button, or pass showCloseButton={false} only when a footer button offers an explicit way out. **Don't:** Remove the close button and leave no visible way to dismiss.
+- **Do:** Style the Dialog trigger as outline, secondary, or default — Dialog is for non-destructive tasks. **Don't:** Style the Dialog trigger as destructive — that treatment belongs to AlertDialog's triggers, not Dialog's.
 
 ### Accessibility
 - Focus moves into the dialog on open and returns to the trigger on close.

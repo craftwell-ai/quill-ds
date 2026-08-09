@@ -24,6 +24,12 @@ export const usage = {
       dont: 'Remove the close button and leave no visible way to dismiss.',
       visual: false,
     },
+    {
+      id: 'trigger-not-destructive',
+      do: 'Style the Dialog trigger as outline, secondary, or default — Dialog is for non-destructive tasks.',
+      dont: 'Style the Dialog trigger as destructive — that treatment belongs to AlertDialog\'s triggers, not Dialog\'s.',
+      visual: true,
+    },
   ],
   a11y: [
     'Focus moves into the dialog on open and returns to the trigger on close.',

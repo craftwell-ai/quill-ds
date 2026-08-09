@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { usage } from '@/usage/dialog.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Dialog',
@@ -85,5 +86,25 @@ export const WithFooterClose: Story = {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="trigger-not-destructive"
+      doExample={
+        <Dialog>
+          <DialogTrigger render={<Button variant="outline">Edit profile</Button>} />
+        </Dialog>
+      }
+      dontExample={
+        <Dialog>
+          <DialogTrigger render={<Button variant="destructive">Edit profile</Button>} />
+        </Dialog>
+      }
+    />
   ),
 }

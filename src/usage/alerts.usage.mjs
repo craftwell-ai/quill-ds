@@ -15,7 +15,7 @@ export const usage = {
       id: 'severity-matches-consequence',
       do: 'Match severity to consequence: destructive for blocking errors, default for neutral information.',
       dont: 'Use destructive styling for emphasis on non-error messages.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [
