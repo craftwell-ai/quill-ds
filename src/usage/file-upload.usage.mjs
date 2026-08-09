@@ -15,6 +15,12 @@ export const usage = {
       dont: 'Ship a dropzone that only responds to a pointer drag gesture.',
       visual: false,
     },
+    {
+      id: 'progress-is-per-file',
+      do: "Give each in-progress file its own progress bar, so users can see exactly how far each individual upload has gotten.",
+      dont: "Show one shared progress bar for the whole queue — users can't tell which file it belongs to or how far any single file has gotten.",
+      visual: true,
+    },
   ],
   a11y: [
     'Each in-progress file\'s Progress has its own aria-label (e.g. "Uploading field-notes-issue-001.pdf"), not one shared label for the whole queue.',

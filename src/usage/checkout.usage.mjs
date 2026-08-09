@@ -16,6 +16,12 @@ export const usage = {
       dont: 'Use checkboxes or a dropdown for a single mutually exclusive payment method.',
       visual: false,
     },
+    {
+      id: 'lock-icon-signals-secure-submit',
+      do: 'Pair the payment submit button with a lock icon, so the action itself visibly reads as a secure transaction.',
+      dont: 'Ship the payment submit button with no lock icon — nothing on the button signals that submitting card data is secure.',
+      visual: true,
+    },
   ],
   a11y: [
     'The RadioGroup carries an explicit aria-label ("Payment method") since there is no visible fieldset legend for the icon-card options.',

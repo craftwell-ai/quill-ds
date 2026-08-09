@@ -11,6 +11,7 @@ A two-column checkout — payment method picker and card form beside an order su
 
 ### Rules
 - **Do:** Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. **Don't:** Use checkboxes or a dropdown for a single mutually exclusive payment method.
+- **Do:** Pair the payment submit button with a lock icon, so the action itself visibly reads as a secure transaction. **Don't:** Ship the payment submit button with no lock icon — nothing on the button signals that submitting card data is secure.
 
 ### Accessibility
 - The RadioGroup carries an explicit aria-label ("Payment method") since there is no visible fieldset legend for the icon-card options.

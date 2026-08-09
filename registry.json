@@ -295,7 +295,7 @@
           "target": "components/quill/checkout.tsx"
         }
       ],
-      "docs": "A two-column checkout — payment method picker and card form beside an order summary sidebar. Do: Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. Don't: Use checkboxes or a dropdown for a single mutually exclusive payment method. Use order-summary when you only need the cart-review card, not the full payment form beside it. Use wizard when payment is one step in a longer multi-step flow, not a single standalone page."
+      "docs": "A two-column checkout — payment method picker and card form beside an order summary sidebar. Do: Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. Don't: Use checkboxes or a dropdown for a single mutually exclusive payment method. Do: Pair the payment submit button with a lock icon, so the action itself visibly reads as a secure transaction. Don't: Ship the payment submit button with no lock icon — nothing on the button signals that submitting card data is secure. Use order-summary when you only need the cart-review card, not the full payment form beside it. Use wizard when payment is one step in a longer multi-step flow, not a single standalone page."
     },
     {
       "name": "command-palette",
@@ -549,7 +549,7 @@
           "target": "components/quill/file-upload.tsx"
         }
       ],
-      "docs": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue. Do: Make the dropzone a real, focusable <button> that also opens a file picker on click/Enter — never make drag-and-drop the only way in. Don't: Ship a dropzone that only responds to a pointer drag gesture. Use contact-form when you need a single attachment inside a broader form, not a dedicated upload queue as the whole card."
+      "docs": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue. Do: Make the dropzone a real, focusable <button> that also opens a file picker on click/Enter — never make drag-and-drop the only way in. Don't: Ship a dropzone that only responds to a pointer drag gesture. Do: Give each in-progress file its own progress bar, so users can see exactly how far each individual upload has gotten. Don't: Show one shared progress bar for the whole queue — users can't tell which file it belongs to or how far any single file has gotten. Use contact-form when you need a single attachment inside a broader form, not a dedicated upload queue as the whole card."
     },
     {
       "name": "footer",

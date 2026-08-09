@@ -14,7 +14,7 @@ export const usage = {
       id: 'set-response-expectations',
       do: 'State a response-time expectation in the description ("We usually reply within one working day.") so the form doesn\'t feel like it disappears into a void.',
       dont: "Leave users with no sense of whether or when they'll hear back.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

@@ -14,7 +14,7 @@ export const usage = {
       id: 'separate-save-from-cancel',
       do: 'Keep Save changes and Cancel as two distinct, clearly differentiated actions (primary vs ghost).',
       dont: 'Make Cancel look as prominent as Save — the user should never mis-tap away unsaved changes as the default action.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [
