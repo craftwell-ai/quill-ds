@@ -14,7 +14,7 @@ export const usage = {
       id: 'compose-the-slots',
       do: 'Compose Item from its slots — ItemMedia for the leading icon/avatar, ItemContent for title + description, ItemActions for the trailing control — as every story here does.',
       dont: "Drop an icon, text, and a button as loose siblings inside Item with no slot wrappers — the built-in gap and alignment rules key off those slot classes and stop working.",
-      visual: true,
+      visual: false,
     },
     {
       id: 'wrap-rows-in-itemgroup',

@@ -14,7 +14,7 @@ export const usage = {
       id: 'row-actions-need-labels',
       do: 'Give every icon-only row-action button a per-row aria-label (e.g. "Actions for Ada Lovelace"), not a generic one.',
       dont: "Ship a table full of icon-only buttons that all announce as the same unlabeled button to a screen reader.",
-      visual: true,
+      visual: false,
     },
   ],
   a11y: [

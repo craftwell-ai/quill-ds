@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { usage } from '@/usage/item.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Item',
@@ -244,35 +243,5 @@ export const AsLink: Story = {
         </ItemContent>
       </Item>
     </ItemGroup>
-  ),
-}
-
-export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
-  render: () => (
-    <DoDontPair
-      usage={usage}
-      id="compose-the-slots"
-      doExample={
-        <Item>
-          <ItemMedia><Icon name="menu_book" className="size-4 text-ink-muted" /></ItemMedia>
-          <ItemContent>
-            <ItemTitle>Watercolor Basics</ItemTitle>
-            <ItemDescription>12 lessons · Beginner</ItemDescription>
-          </ItemContent>
-          <ItemActions><Button variant="ghost" size="sm">Open</Button></ItemActions>
-        </Item>
-      }
-      dontExample={
-        <Item>
-          <Icon name="menu_book" className="size-4 text-ink-muted" />
-          <div>
-            <div className="text-sm font-medium">Watercolor Basics</div>
-            <div className="text-sm text-muted-foreground">12 lessons · Beginner</div>
-          </div>
-          <Button variant="ghost" size="sm">Open</Button>
-        </Item>
-      }
-    />
   ),
 }

@@ -15,7 +15,7 @@ export const usage = {
       id: 'pair-with-label',
       do: 'Always pair each RadioGroupItem with a Label via htmlFor/id.',
       dont: 'Render a bare RadioGroupItem next to unassociated text — screen readers announce no name for the option.',
-      visual: true,
+      visual: false,
     },
     {
       id: 'single-value-only',

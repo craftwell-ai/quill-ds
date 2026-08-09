@@ -4,7 +4,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { usage } from '@/usage/checkbox.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Checkbox',
@@ -90,27 +89,5 @@ export const AllVariants: Story = {
         </div>
       ))}
     </div>
-  ),
-}
-
-export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
-  render: () => (
-    <DoDontPair
-      usage={usage}
-      id="pair-with-label"
-      doExample={
-        <div className="flex items-center gap-2">
-          <Checkbox id="usage-checkbox-do" />
-          <Label htmlFor="usage-checkbox-do">Accept terms and conditions</Label>
-        </div>
-      }
-      dontExample={
-        <div className="flex items-center gap-2">
-          <Checkbox />
-          <span>Accept terms and conditions</span>
-        </div>
-      }
-    />
   ),
 }

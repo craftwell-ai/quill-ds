@@ -14,7 +14,7 @@ export const usage = {
       id: 'pair-with-label',
       do: 'Always pair Switch with a Label for an accessible name — the control itself renders no text.',
       dont: 'Ship a bare Switch with no Label — screen readers announce only "switch, off," not what it controls.',
-      visual: true,
+      visual: false,
     },
     {
       id: 'controlled-or-uncontrolled',
