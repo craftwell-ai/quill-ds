@@ -9,6 +9,46 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.0] — 2026-08-09
+
+### Added
+- **Usage documentation and Do/Don't visual pairs for the entire catalog
+  (Wave 3).** All 53 remaining top-level primitive components (accordion,
+  badge, button-group, calendar, card, checkbox, dialog's siblings, select,
+  tabs, tooltip, and the rest) now have a `src/usage/<name>.usage.mjs`
+  entry, closing the last gap after Wave 1's pilots (v0.6.0) and Wave 2's
+  pattern blocks (v0.7.0). Every one of the catalog's 105 documented
+  items — primitives, patterns, and blocks alike — now also has at least
+  one rule rendered as a live, side-by-side `DoDont` story wherever a rule
+  is genuinely showable as two rendered instances, not just described in
+  prose.
+
+### Fixed
+- **Nine already-shipped `DoDont` stories no longer fail the Storybook
+  accessibility gate.** Their "Don't" examples are intentional a11y
+  violations (an unlabeled toggle, a nameless icon-only button) — exactly
+  the kind of thing worth showing as a Don't — so they're now explicitly
+  exempted from the automatic axe assertion instead of failing CI.
+- **input-otp's `DoDont` "Do" example is now actually accessible.** Its a11y
+  exemption was masking a real gap — neither OTP field had an accessible
+  name — rather than the intended comparison. Both fields now carry a
+  proper `aria-label`, and the exemption was removed since there's no
+  longer a violation to suppress.
+- **navigation-menu's `DoDont` landmarks are now individually labeled**,
+  removing a `landmark-unique` violation that came from having two
+  unlabeled `<nav>` elements side by side.
+- **badge's documented `--radius-full` token corrected to `--radius-4xl`**,
+  the token the component actually consumes.
+
+### Known issues
+- Opening the Menubar or Combobox in the new `DoDont` stories surfaced two
+  real, pre-existing accessibility defects in those primitives themselves
+  (`aria-required-children` in both; `aria-hidden-focus` in Combobox) —
+  not introduced by this release, but newly visible because these are the
+  first stories in the catalog to actually open either component. Left
+  unfixed and exempted from the a11y gate with a traceability comment;
+  needs a dedicated follow-up.
+
 ## [0.7.2] — 2026-08-08
 
 ### Changed
