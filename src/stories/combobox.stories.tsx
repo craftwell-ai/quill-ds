@@ -240,35 +240,42 @@ export const DoDont: Story = {
       usage={usage}
       id="items-prop-required-for-filtering"
       doExample={
-        <Combobox items={frameworks} defaultOpen defaultInputValue="ast">
-          <ComboboxInput placeholder="Search framework…" className="w-52" aria-label="Search framework" showTrigger={false} />
-          <ComboboxContent className="min-w-(--anchor-width)">
-            <ComboboxList>
-              <ComboboxEmpty>No results found.</ComboboxEmpty>
-              <ComboboxCollection>
-                {(fw: string) => (
-                  <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
-                )}
-              </ComboboxCollection>
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
+        // pb-12 reserves room below the trigger for the defaultOpen popup
+        // (portal-rendered, positioned by floating-ui) so it doesn't cover
+        // the figcaption underneath.
+        <div className="pb-12">
+          <Combobox items={frameworks} defaultOpen defaultInputValue="ast">
+            <ComboboxInput placeholder="Search framework…" className="w-52" aria-label="Search framework" showTrigger={false} />
+            <ComboboxContent className="min-w-(--anchor-width)">
+              <ComboboxList>
+                <ComboboxEmpty>No results found.</ComboboxEmpty>
+                <ComboboxCollection>
+                  {(fw: string) => (
+                    <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+                  )}
+                </ComboboxCollection>
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
+        </div>
       }
       dontExample={
         // Deliberately omits `items` on the root to demonstrate the mistake.
-        <Combobox defaultOpen defaultInputValue="ast">
-          <ComboboxInput placeholder="Search framework…" className="w-52" aria-label="Search framework (broken)" showTrigger={false} />
-          <ComboboxContent className="min-w-(--anchor-width)">
-            <ComboboxList>
-              <ComboboxEmpty>No results found.</ComboboxEmpty>
-              <ComboboxCollection>
-                {(fw: string) => (
-                  <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
-                )}
-              </ComboboxCollection>
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
+        <div className="pb-12">
+          <Combobox defaultOpen defaultInputValue="ast">
+            <ComboboxInput placeholder="Search framework…" className="w-52" aria-label="Search framework (broken)" showTrigger={false} />
+            <ComboboxContent className="min-w-(--anchor-width)">
+              <ComboboxList>
+                <ComboboxEmpty>No results found.</ComboboxEmpty>
+                <ComboboxCollection>
+                  {(fw: string) => (
+                    <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+                  )}
+                </ComboboxCollection>
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
+        </div>
       }
     />
   ),

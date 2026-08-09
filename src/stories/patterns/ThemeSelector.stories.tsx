@@ -91,34 +91,41 @@ export const DoDont: Story = {
       usage={usage}
       id="accent-shows-a-swatch"
       doExample={
-        <DropdownMenu defaultOpen>
-          <DropdownMenuTrigger render={<Button variant="outline" size="sm">Accent</Button>} />
-          <DropdownMenuContent align="start" className="w-40">
-            <DropdownMenuRadioGroup defaultValue="moss">
-              <DropdownMenuLabel>Accent</DropdownMenuLabel>
-              <DropdownMenuRadioItem value="moss">
-                <span className="size-3.5 shrink-0 rounded-full border border-border bg-moss" aria-hidden />
-                Moss
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="terracotta">
-                <span className="size-3.5 shrink-0 rounded-full border border-border bg-terracotta" aria-hidden />
-                Terracotta
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        // pb-24 reserves room below the trigger for the defaultOpen menu
+        // (portal-rendered, positioned by floating-ui) so it doesn't cover
+        // the figcaption underneath.
+        <div className="pb-24">
+          <DropdownMenu defaultOpen>
+            <DropdownMenuTrigger render={<Button variant="outline" size="sm">Accent</Button>} />
+            <DropdownMenuContent align="start" className="w-40">
+              <DropdownMenuRadioGroup defaultValue="moss">
+                <DropdownMenuLabel>Accent</DropdownMenuLabel>
+                <DropdownMenuRadioItem value="moss">
+                  <span className="size-3.5 shrink-0 rounded-full border border-border bg-moss" aria-hidden />
+                  Moss
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="terracotta">
+                  <span className="size-3.5 shrink-0 rounded-full border border-border bg-terracotta" aria-hidden />
+                  Terracotta
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       }
       dontExample={
-        <DropdownMenu defaultOpen>
-          <DropdownMenuTrigger render={<Button variant="outline" size="sm">Accent</Button>} />
-          <DropdownMenuContent align="start" className="w-40">
-            <DropdownMenuRadioGroup defaultValue="moss">
-              <DropdownMenuLabel>Accent</DropdownMenuLabel>
-              <DropdownMenuRadioItem value="moss">Moss</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="terracotta">Terracotta</DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="pb-24">
+          <DropdownMenu defaultOpen>
+            <DropdownMenuTrigger render={<Button variant="outline" size="sm">Accent</Button>} />
+            <DropdownMenuContent align="start" className="w-40">
+              <DropdownMenuRadioGroup defaultValue="moss">
+                <DropdownMenuLabel>Accent</DropdownMenuLabel>
+                <DropdownMenuRadioItem value="moss">Moss</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="terracotta">Terracotta</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       }
     />
   ),
