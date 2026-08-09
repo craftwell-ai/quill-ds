@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { usage } from '@/usage/aspect-ratio.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / AspectRatio',
@@ -7,15 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-AspectRatio constrains any child to a given ratio. Commonly used for images, video embeds, and thumbnail containers.
-The \`ratio\` prop accepts a number (width/height), e.g. \`16/9\` = 1.77.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     ratio: {
@@ -81,5 +76,34 @@ export const AllVariants: Story = {
         </div>
       ))}
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  args: { ratio: 16 / 9 },
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="object-cover-for-images"
+      doExample={
+        <AspectRatio ratio={16 / 9} className="rounded-lg overflow-hidden bg-paper-deep">
+          <img
+            src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
+            alt="A mountain landscape at golden hour"
+            className="object-cover w-full h-full"
+          />
+        </AspectRatio>
+      }
+      dontExample={
+        <AspectRatio ratio={16 / 9} className="rounded-lg bg-paper-deep">
+          <img
+            src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
+            alt="A mountain landscape at golden hour"
+            className="w-full"
+          />
+        </AspectRatio>
+      }
+    />
   ),
 }

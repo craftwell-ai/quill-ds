@@ -4,6 +4,9 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from '@/components/ui/resizable'
+import { usage } from '@/usage/resizable.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Resizable',
@@ -11,16 +14,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component: `
-### Rules
-Resizable panels let users drag to resize. \`ResizablePanelGroup\` sets the direction.
-Each \`ResizablePanel\` takes a \`defaultSize\` (percentage). \`ResizableHandle\` renders the drag handle.
-Pass \`withHandle\` to \`ResizableHandle\` to show a visible grip indicator on the separator.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     orientation: {
@@ -92,5 +86,37 @@ export const ThreePanel: Story = {
         <div className="flex h-full items-center justify-center p-4 text-sm text-ink-muted">Preview</div>
       </ResizablePanel>
     </ResizablePanelGroup>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="withhandle-for-visible-grip"
+      doExample={
+        <ResizablePanelGroup orientation="horizontal" className="h-32 max-w-xs rounded-lg border border-border">
+          <ResizablePanel defaultSize={50}>
+            <div className="flex h-full items-center justify-center p-4 text-sm text-ink-muted">A</div>
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize={50}>
+            <div className="flex h-full items-center justify-center p-4 text-sm text-ink-muted">B</div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      }
+      dontExample={
+        <ResizablePanelGroup orientation="horizontal" className="h-32 max-w-xs rounded-lg border border-border">
+          <ResizablePanel defaultSize={50}>
+            <div className="flex h-full items-center justify-center p-4 text-sm text-ink-muted">A</div>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={50}>
+            <div className="flex h-full items-center justify-center p-4 text-sm text-ink-muted">B</div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      }
+    />
   ),
 }

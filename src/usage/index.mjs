@@ -3,12 +3,15 @@
  * stay synchronous; scripts/usage-schema.test.mjs fails if a *.usage.mjs file
  * on disk is missing here, so the two cannot drift.
  */
+import { usage as accordion } from './accordion.usage.mjs'
 import { usage as activityFeed } from './activity-feed.usage.mjs'
 import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
 import { usage as analyticsCharts } from './analytics-charts.usage.mjs'
 import { usage as announcementBanner } from './announcement-banner.usage.mjs'
+import { usage as aspectRatio } from './aspect-ratio.usage.mjs'
 import { usage as badgeOnCard } from './badge-on-card.usage.mjs'
+import { usage as breadcrumb } from './breadcrumb.usage.mjs'
 import { usage as button } from './button.usage.mjs'
 import { usage as buttonGroup } from './button-group.usage.mjs'
 import { usage as calendarPage } from './calendar-page.usage.mjs'
@@ -16,6 +19,7 @@ import { usage as calendarRange } from './calendar-range.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
+import { usage as collapsible } from './collapsible.usage.mjs'
 import { usage as combobox } from './combobox.usage.mjs'
 import { usage as command } from './command.usage.mjs'
 import { usage as commandPalette } from './command-palette.usage.mjs'
@@ -59,14 +63,19 @@ import { usage as onboarding } from './onboarding.usage.mjs'
 import { usage as orderSummary } from './order-summary.usage.mjs'
 import { usage as otpVerification } from './otp-verification.usage.mjs'
 import { usage as pageHeader } from './page-header.usage.mjs'
+import { usage as pagination } from './pagination.usage.mjs'
 import { usage as popover } from './popover.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as radioGroup } from './radio-group.usage.mjs'
+import { usage as resizable } from './resizable.usage.mjs'
+import { usage as scrollArea } from './scroll-area.usage.mjs'
 import { usage as searchResults } from './search-results.usage.mjs'
 import { usage as select } from './select.usage.mjs'
+import { usage as separator } from './separator.usage.mjs'
 import { usage as settings } from './settings.usage.mjs'
 import { usage as sheet } from './sheet.usage.mjs'
+import { usage as sidebar } from './sidebar.usage.mjs'
 import { usage as sidebarNav } from './sidebar-nav.usage.mjs'
 import { usage as signup } from './signup.usage.mjs'
 import { usage as signupSocial } from './signup-social.usage.mjs'
@@ -74,6 +83,7 @@ import { usage as slider } from './slider.usage.mjs'
 import { usage as statCards } from './stat-cards.usage.mjs'
 import { usage as statsBand } from './stats-band.usage.mjs'
 import { usage as switchUsage } from './switch.usage.mjs'
+import { usage as tabs } from './tabs.usage.mjs'
 import { usage as tabsPage } from './tabs-page.usage.mjs'
 import { usage as teamSection } from './team-section.usage.mjs'
 import { usage as testimonial } from './testimonial.usage.mjs'
@@ -85,12 +95,15 @@ import { usage as tooltip } from './tooltip.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
 export const ALL_USAGE = [
+  accordion,
   activityFeed,
   alertDialog,
   alerts,
   analyticsCharts,
   announcementBanner,
+  aspectRatio,
   badgeOnCard,
+  breadcrumb,
   button,
   buttonGroup,
   calendarPage,
@@ -98,6 +111,7 @@ export const ALL_USAGE = [
   chat,
   checkbox,
   checkout,
+  collapsible,
   combobox,
   command,
   commandPalette,
@@ -141,14 +155,19 @@ export const ALL_USAGE = [
   orderSummary,
   otpVerification,
   pageHeader,
+  pagination,
   popover,
   pricing,
   profileCard,
   radioGroup,
+  resizable,
+  scrollArea,
   searchResults,
   select,
+  separator,
   settings,
   sheet,
+  sidebar,
   sidebarNav,
   signup,
   signupSocial,
@@ -156,6 +175,7 @@ export const ALL_USAGE = [
   statCards,
   statsBand,
   switchUsage,
+  tabs,
   tabsPage,
   teamSection,
   testimonial,

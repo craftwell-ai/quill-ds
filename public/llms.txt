@@ -99,10 +99,14 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 
 Per-primitive usage rules — when to use, what to reach for instead, do/don't, accessibility:
 
+- [accordion](https://www.quilldesignsystem.com/usage/accordion.md) — A vertically stacked set of expand/collapse sections — one open at a time by default, with an option to allow several.
 - [alert-dialog](https://www.quilldesignsystem.com/usage/alert-dialog.md) — A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside.
+- [aspect-ratio](https://www.quilldesignsystem.com/usage/aspect-ratio.md) — Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails.
+- [breadcrumb](https://www.quilldesignsystem.com/usage/breadcrumb.md) — A trail of links showing the current page's position in a hierarchy — the last crumb is always the current, non-link page.
 - [button](https://www.quilldesignsystem.com/usage/button.md) — Buttons trigger actions. The default (primary) variant is the single most important action on a surface.
 - [button-group](https://www.quilldesignsystem.com/usage/button-group.md) — A structural wrapper that merges adjacent Buttons into one visually connected control — shared borders, no owned selection state.
 - [checkbox](https://www.quilldesignsystem.com/usage/checkbox.md) — A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox.
+- [collapsible](https://www.quilldesignsystem.com/usage/collapsible.md) — A single open/closed disclosure toggle — the lower-level primitive behind Accordion, with no item/trigger/content grouping or built-in styling.
 - [combobox](https://www.quilldesignsystem.com/usage/combobox.md) — A searchable dropdown — type to filter a list, or multi-select with removable chips.
 - [command](https://www.quilldesignsystem.com/usage/command.md) — A keyboard-first search palette — embed inline for settings search, or wrap in CommandDialog for a ⌘K-style command palette.
 - [context-menu](https://www.quilldesignsystem.com/usage/context-menu.md) — A menu that appears at the pointer on right-click or long-press — a secondary, discoverable-only-by-trying affordance, not a replacement for a visible trigger.
@@ -118,12 +122,18 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [menubar](https://www.quilldesignsystem.com/usage/menubar.md) — A desktop application-style menu strip — a row of always-visible top-level menus, each opening its own dropdown on click.
 - [native-select](https://www.quilldesignsystem.com/usage/native-select.md) — The browser's own `<select>`, restyled to match the theme — the OS-native picker, not a custom-rendered popover.
 - [navigation-menu](https://www.quilldesignsystem.com/usage/navigation-menu.md) — Top-level site navigation with mega-dropdown panels — for public/marketing navigation, not desktop application chrome.
+- [pagination](https://www.quilldesignsystem.com/usage/pagination.md) — Page navigation for splitting a long list of records into discrete numbered pages, with Previous/Next controls and an ellipsis for skipped ranges.
 - [popover](https://www.quilldesignsystem.com/usage/popover.md) — A small, click-triggered overlay anchored to its trigger — for inline forms, filters, and contextual editing, not a blocking task.
 - [radio-group](https://www.quilldesignsystem.com/usage/radio-group.md) — A set of mutually exclusive options rendered as visible radio buttons — pick exactly one from a short, always-visible list.
+- [resizable](https://www.quilldesignsystem.com/usage/resizable.md) — Drag-resizable split panels — the user controls how space is divided between two or more regions by dragging a handle between them.
+- [scroll-area](https://www.quilldesignsystem.com/usage/scroll-area.md) — A styled custom scrollbar over a fixed-size scrollable region — replaces the browser's native scrollbar chrome without changing scroll behavior.
 - [select](https://www.quilldesignsystem.com/usage/select.md) — A custom-rendered dropdown for choosing one option from a short list — the same look on every platform, unlike the OS-native picker.
+- [separator](https://www.quilldesignsystem.com/usage/separator.md) — A thin decorative divider line between stacked or inline content — horizontal by default, vertical for toolbars and inline groups.
 - [sheet](https://www.quilldesignsystem.com/usage/sheet.md) — A panel that slides in from a screen edge while the page stays visible behind it — the same Base UI dialog underneath Dialog, styled as an edge panel instead of a centered card.
+- [sidebar](https://www.quilldesignsystem.com/usage/sidebar.md) — The persistent side-rail navigation primitive — expands, collapses to icons, or slides in as an off-canvas sheet on mobile. `sidebar-nav` is this primitive already assembled into a full app shell with grouped menus and a breadcrumb header.
 - [slider](https://www.quilldesignsystem.com/usage/slider.md) — A draggable control for picking a numeric value, or range, within a bounded min/max — position matters as much as the exact figure.
 - [switch](https://www.quilldesignsystem.com/usage/switch.md) — An on/off control for a setting that takes effect immediately — no separate Save step.
+- [tabs](https://www.quilldesignsystem.com/usage/tabs.md) — A set of triggers that swap which panel is visible in place — content panels share the same position, only one shown at a time.
 - [textarea](https://www.quilldesignsystem.com/usage/textarea.md) — A styled native `<textarea>` for multi-line free text — descriptions, bios, comments.
 - [toggle](https://www.quilldesignsystem.com/usage/toggle.md) — A two-state icon or icon-plus-text button whose pressed state persists after the click — a formatting toggle inside a toolbar.
 - [toggle-group](https://www.quilldesignsystem.com/usage/toggle-group.md) — A row, or column, of Toggle buttons sharing selection, sizing, and spacing — single-select for exclusive choices, multi-select for independent ones.

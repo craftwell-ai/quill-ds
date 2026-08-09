@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Card, CardContent } from '@/components/ui/card'
+import { usage } from '@/usage/tabs.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Tabs',
@@ -8,19 +11,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--muted\` · \`--foreground\` · \`--ring\`
-
-### Rules
-\`TabsList\` accepts \`variant\`: \`"default"\` (pill/segment) or \`"line"\` (underline).
-\`Tabs\` accepts \`orientation\`: \`"horizontal"\` (default) or \`"vertical"\`.
-Always set \`defaultValue\` matching one of the \`TabsTrigger value\` strings.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     orientation: {
@@ -194,5 +185,43 @@ export const AllVariants: Story = {
         </Tabs>
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="match-defaultvalue-to-trigger"
+      doExample={
+        <Tabs defaultValue="overview">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview">
+            <p className="pt-2 text-sm text-ink-soft">Course overview goes here.</p>
+          </TabsContent>
+          <TabsContent value="curriculum">
+            <p className="pt-2 text-sm text-ink-soft">12 lessons, foundational to advanced.</p>
+          </TabsContent>
+        </Tabs>
+      }
+      dontExample={
+        <Tabs defaultValue="wrong-value">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview">
+            <p className="pt-2 text-sm text-ink-soft">Course overview goes here.</p>
+          </TabsContent>
+          <TabsContent value="curriculum">
+            <p className="pt-2 text-sm text-ink-soft">12 lessons, foundational to advanced.</p>
+          </TabsContent>
+        </Tabs>
+      }
+    />
   ),
 }

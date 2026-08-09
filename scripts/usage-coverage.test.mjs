@@ -60,31 +60,21 @@ test('every visual rule has a rendered DoDont pair in its story file', () => {
 // this list to empty. Entries may ONLY be removed, never added — a new
 // component must ship with a usage file.
 const KNOWN_UNDOCUMENTED = new Set([
-  'accordion.stories.tsx',
   'alert.stories.tsx',
-  'aspect-ratio.stories.tsx',
   'avatar.stories.tsx',
   'badge.stories.tsx',
-  'breadcrumb.stories.tsx',
   'calendar.stories.tsx',
   'card.stories.tsx',
   'carousel.stories.tsx',
   'chart.stories.tsx',
-  'collapsible.stories.tsx',
   'empty.stories.tsx',
   'item.stories.tsx',
   'kbd.stories.tsx',
-  'pagination.stories.tsx',
   'progress.stories.tsx',
-  'resizable.stories.tsx',
-  'scroll-area.stories.tsx',
-  'separator.stories.tsx',
-  'sidebar.stories.tsx',
   'skeleton.stories.tsx',
   'sonner.stories.tsx',
   'spinner.stories.tsx',
   'table.stories.tsx',
-  'tabs.stories.tsx',
   'tone-badge.stories.tsx',
 ])
 

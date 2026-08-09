@@ -5,6 +5,9 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion'
+import { usage } from '@/usage/accordion.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Accordion',
@@ -12,18 +15,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--paper-warm\` · \`--ink\` · \`--line-soft\` · \`--radius-lg\`
-
-### Rules
-Each item is separated by a hairline border. The trigger underlines on hover — no background fill — to stay light.
-Chevron swaps between up/down via \`data-open\`. Wrap in a fixed-width container (280–480px).
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     multiple: {
@@ -137,5 +129,47 @@ export const Dark: Story = {
         </AccordionContent>
       </AccordionItem>
     </Accordion>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="trigger-stays-light-on-hover"
+      doExample={
+        <Accordion>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>What is Quill?</AccordionTrigger>
+            <AccordionContent>
+              Quill is a design system — a platform for publishing hand-crafted skill courses.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Is there a dark mode?</AccordionTrigger>
+            <AccordionContent>
+              Components support a .dark class for consumer dark surfaces.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      }
+      dontExample={
+        <Accordion>
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="hover:bg-paper-deep hover:no-underline">What is Quill?</AccordionTrigger>
+            <AccordionContent>
+              Quill is a design system — a platform for publishing hand-crafted skill courses.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger className="hover:bg-paper-deep hover:no-underline">Is there a dark mode?</AccordionTrigger>
+            <AccordionContent>
+              Components support a .dark class for consumer dark surfaces.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      }
+    />
   ),
 }
