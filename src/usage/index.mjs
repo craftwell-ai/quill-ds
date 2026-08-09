@@ -4,6 +4,7 @@
  * on disk is missing here, so the two cannot drift.
  */
 import { usage as activityFeed } from './activity-feed.usage.mjs'
+import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
 import { usage as analyticsCharts } from './analytics-charts.usage.mjs'
 import { usage as announcementBanner } from './announcement-banner.usage.mjs'
@@ -16,12 +17,16 @@ import { usage as chat } from './chat.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as combobox } from './combobox.usage.mjs'
+import { usage as command } from './command.usage.mjs'
 import { usage as commandPalette } from './command-palette.usage.mjs'
 import { usage as contactForm } from './contact-form.usage.mjs'
+import { usage as contextMenu } from './context-menu.usage.mjs'
 import { usage as cookieConsent } from './cookie-consent.usage.mjs'
 import { usage as dashboard } from './dashboard.usage.mjs'
 import { usage as dataTable } from './data-table.usage.mjs'
 import { usage as dialog } from './dialog.usage.mjs'
+import { usage as drawer } from './drawer.usage.mjs'
+import { usage as dropdownMenu } from './dropdown-menu.usage.mjs'
 import { usage as emptyState } from './empty-state.usage.mjs'
 import { usage as error404 } from './error-404.usage.mjs'
 import { usage as faq } from './faq.usage.mjs'
@@ -31,6 +36,7 @@ import { usage as fileUpload } from './file-upload.usage.mjs'
 import { usage as footer } from './footer.usage.mjs'
 import { usage as forgotPassword } from './forgot-password.usage.mjs'
 import { usage as hero } from './hero.usage.mjs'
+import { usage as hoverCard } from './hover-card.usage.mjs'
 import { usage as input } from './input.usage.mjs'
 import { usage as inputGroup } from './input-group.usage.mjs'
 import { usage as inputOtp } from './input-otp.usage.mjs'
@@ -43,20 +49,24 @@ import { usage as loginMinimal } from './login-minimal.usage.mjs'
 import { usage as loginOauth } from './login-oauth.usage.mjs'
 import { usage as loginSplitPanel } from './login-split-panel.usage.mjs'
 import { usage as mailShell } from './mail-shell.usage.mjs'
+import { usage as menubar } from './menubar.usage.mjs'
 import { usage as nativeSelect } from './native-select.usage.mjs'
 import { usage as navbar } from './navbar.usage.mjs'
+import { usage as navigationMenu } from './navigation-menu.usage.mjs'
 import { usage as newsletter } from './newsletter.usage.mjs'
 import { usage as notifications } from './notifications.usage.mjs'
 import { usage as onboarding } from './onboarding.usage.mjs'
 import { usage as orderSummary } from './order-summary.usage.mjs'
 import { usage as otpVerification } from './otp-verification.usage.mjs'
 import { usage as pageHeader } from './page-header.usage.mjs'
+import { usage as popover } from './popover.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as radioGroup } from './radio-group.usage.mjs'
 import { usage as searchResults } from './search-results.usage.mjs'
 import { usage as select } from './select.usage.mjs'
 import { usage as settings } from './settings.usage.mjs'
+import { usage as sheet } from './sheet.usage.mjs'
 import { usage as sidebarNav } from './sidebar-nav.usage.mjs'
 import { usage as signup } from './signup.usage.mjs'
 import { usage as signupSocial } from './signup-social.usage.mjs'
@@ -71,10 +81,12 @@ import { usage as textarea } from './textarea.usage.mjs'
 import { usage as themeSelector } from './theme-selector.usage.mjs'
 import { usage as toggle } from './toggle.usage.mjs'
 import { usage as toggleGroup } from './toggle-group.usage.mjs'
+import { usage as tooltip } from './tooltip.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
 export const ALL_USAGE = [
   activityFeed,
+  alertDialog,
   alerts,
   analyticsCharts,
   announcementBanner,
@@ -87,12 +99,16 @@ export const ALL_USAGE = [
   checkbox,
   checkout,
   combobox,
+  command,
   commandPalette,
   contactForm,
+  contextMenu,
   cookieConsent,
   dashboard,
   dataTable,
   dialog,
+  drawer,
+  dropdownMenu,
   emptyState,
   error404,
   faq,
@@ -102,6 +118,7 @@ export const ALL_USAGE = [
   footer,
   forgotPassword,
   hero,
+  hoverCard,
   input,
   inputGroup,
   inputOtp,
@@ -114,20 +131,24 @@ export const ALL_USAGE = [
   loginOauth,
   loginSplitPanel,
   mailShell,
+  menubar,
   nativeSelect,
   navbar,
+  navigationMenu,
   newsletter,
   notifications,
   onboarding,
   orderSummary,
   otpVerification,
   pageHeader,
+  popover,
   pricing,
   profileCard,
   radioGroup,
   searchResults,
   select,
   settings,
+  sheet,
   sidebarNav,
   signup,
   signupSocial,
@@ -142,5 +163,6 @@ export const ALL_USAGE = [
   themeSelector,
   toggle,
   toggleGroup,
+  tooltip,
   wizard,
 ]

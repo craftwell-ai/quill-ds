@@ -3,6 +3,9 @@ import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitl
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { usage } from '@/usage/popover.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Popover',
@@ -10,18 +13,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--popover\` · \`--shadow-md\` · \`--radius-lg\`
-
-### Rules
-Popover opens on click (not hover — use HoverCard for hover).
-Use for inline forms, filters, and contextual editing. Max width 288px. Close button optional if click-outside closes.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     open: { control: 'boolean', description: 'Controlled open state' },
@@ -91,5 +83,42 @@ export const AllSides: Story = {
         </Popover>
       ))}
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="title-for-context"
+      doExample={
+        <Popover defaultOpen>
+          <PopoverTrigger render={<Button variant="outline">Rename workspace</Button>} />
+          <PopoverContent>
+            <div className="flex flex-col gap-3">
+              <PopoverHeader>
+                <PopoverTitle className="font-heading">Rename workspace</PopoverTitle>
+              </PopoverHeader>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="pop-do-name">Workspace name</Label>
+                <Input id="pop-do-name" placeholder="e.g. Design team" />
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      }
+      dontExample={
+        <Popover defaultOpen>
+          <PopoverTrigger render={<Button variant="outline">Rename workspace</Button>} />
+          <PopoverContent>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="pop-dont-name">Workspace name</Label>
+              <Input id="pop-dont-name" placeholder="e.g. Design team" />
+            </div>
+          </PopoverContent>
+        </Popover>
+      }
+    />
   ),
 }

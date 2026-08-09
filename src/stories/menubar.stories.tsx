@@ -16,6 +16,9 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from '@/components/ui/menubar'
+import { usage } from '@/usage/menubar.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Menubar',
@@ -23,15 +26,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component: `
-### Rules
-Menubar is a desktop application-style menu strip. Use for editor toolbars or desktop app chrome.
-Each \`MenubarMenu\` is one top-level item that opens its \`MenubarContent\` on click.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof Menubar>
@@ -110,4 +105,41 @@ function WithCheckboxAndRadioStory() {
 
 export const WithCheckboxAndRadio: Story = {
   render: () => <WithCheckboxAndRadioStory />,
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="group-with-separators"
+      doExample={
+        <Menubar>
+          <MenubarMenu defaultOpen>
+            <MenubarTrigger>File</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>New course</MenubarItem>
+              <MenubarItem>Open</MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem>Save</MenubarItem>
+              <MenubarItem>Export PDF</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      }
+      dontExample={
+        <Menubar>
+          <MenubarMenu defaultOpen>
+            <MenubarTrigger>File</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>New course</MenubarItem>
+              <MenubarItem>Open</MenubarItem>
+              <MenubarItem>Save</MenubarItem>
+              <MenubarItem>Export PDF</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      }
+    />
+  ),
 }

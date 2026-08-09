@@ -14,6 +14,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/command.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Command',
@@ -21,15 +24,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Command is a keyboard-first search palette. Embed inline for settings search or wrap in \`CommandDialog\` for ⌘K.
-Items support icons, keyboard shortcut labels, and keyboard navigation out of the box.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     className: { table: { disable: true } },
@@ -121,5 +116,60 @@ export const WithCheckedItem: Story = {
         </CommandGroup>
       </CommandList>
     </Command>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="group-with-headings"
+      doExample={
+        <Command className="rounded-lg border border-border w-72">
+          <CommandInput placeholder="Search commands…" />
+          <CommandList>
+            <CommandGroup heading="Files">
+              <CommandItem>
+                <Icon name="description" aria-hidden="true" />
+                Open file
+              </CommandItem>
+              <CommandItem>
+                <Icon name="search" aria-hidden="true" />
+                Find in files
+              </CommandItem>
+            </CommandGroup>
+            <CommandSeparator />
+            <CommandGroup heading="Settings">
+              <CommandItem>
+                <Icon name="settings" aria-hidden="true" />
+                Preferences
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      }
+      dontExample={
+        <Command className="rounded-lg border border-border w-72">
+          <CommandInput placeholder="Search commands…" />
+          <CommandList>
+            <CommandGroup>
+              <CommandItem>
+                <Icon name="description" aria-hidden="true" />
+                Open file
+              </CommandItem>
+              <CommandItem>
+                <Icon name="search" aria-hidden="true" />
+                Find in files
+              </CommandItem>
+              <CommandItem>
+                <Icon name="settings" aria-hidden="true" />
+                Preferences
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      }
+    />
   ),
 }

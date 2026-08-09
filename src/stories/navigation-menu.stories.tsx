@@ -8,6 +8,9 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
+import { usage } from '@/usage/navigation-menu.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / NavigationMenu',
@@ -15,16 +18,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component: `
-### Rules
-NavigationMenu is for top-level site navigation with mega-dropdown panels.
-Use \`NavigationMenuTrigger\` + \`NavigationMenuContent\` for dropdowns; use a plain \`NavigationMenuLink\` for direct links.
-Apply \`navigationMenuTriggerStyle()\` to plain \`NavigationMenuLink\` items so they match the visual weight of trigger buttons.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof NavigationMenu>
@@ -92,5 +86,55 @@ export const WithDirectLinks: Story = {
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="apply-trigger-style-to-plain-links"
+      doExample={
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Courses</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="p-4 w-48">
+                  <NavigationMenuLink href="#" className="flex flex-col rounded-lg p-3 hover:bg-muted">
+                    Browse all
+                  </NavigationMenuLink>
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#" className={navigationMenuTriggerStyle()}>
+                Community
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      }
+      dontExample={
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Courses</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="p-4 w-48">
+                  <NavigationMenuLink href="#" className="flex flex-col rounded-lg p-3 hover:bg-muted">
+                    Browse all
+                  </NavigationMenuLink>
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#">Community</NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      }
+    />
   ),
 }

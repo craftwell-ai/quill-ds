@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/tooltip.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Tooltip',
@@ -9,19 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--foreground\` · \`--background\` · \`--radius-md\`
-
-### Rules
-Wrap your tree with \`TooltipProvider\` (usually at app root).
-Tooltip appears on hover/focus — not on click. Use \`side\` on \`TooltipContent\` to control placement.
-Use the \`render\` prop on \`TooltipTrigger\` to forward to a custom element (Base UI pattern).
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {},
   decorators: [
@@ -71,5 +62,33 @@ export const AllVariants: Story = {
         </Tooltip>
       ))}
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="tooltip-is-supplementary"
+      doExample={
+        <Tooltip defaultOpen>
+          <TooltipTrigger render={<Button variant="outline">Save</Button>} />
+          <TooltipContent>Save your progress to the cloud</TooltipContent>
+        </Tooltip>
+      }
+      dontExample={
+        <Tooltip defaultOpen>
+          <TooltipTrigger
+            render={
+              <button className="rounded-full p-1 text-ink-muted hover:text-ink">
+                <Icon name="save" className="size-4" />
+              </button>
+            }
+          />
+          <TooltipContent>Save your progress to the cloud</TooltipContent>
+        </Tooltip>
+      }
+    />
   ),
 }

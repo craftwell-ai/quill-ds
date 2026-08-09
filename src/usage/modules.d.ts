@@ -11,6 +11,11 @@ declare module '@/usage/activity-feed.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/alert-dialog.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/alerts.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -71,12 +76,22 @@ declare module '@/usage/combobox.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/command.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/command-palette.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
 
 declare module '@/usage/contact-form.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/context-menu.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -97,6 +112,16 @@ declare module '@/usage/data-table.usage.mjs' {
 }
 
 declare module '@/usage/dialog.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/drawer.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/dropdown-menu.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -142,6 +167,11 @@ declare module '@/usage/forgot-password.usage.mjs' {
 }
 
 declare module '@/usage/hero.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/hover-card.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -206,12 +236,22 @@ declare module '@/usage/mail-shell.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/menubar.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/native-select.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
 
 declare module '@/usage/navbar.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/navigation-menu.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -246,6 +286,11 @@ declare module '@/usage/page-header.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/popover.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/pricing.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -272,6 +317,11 @@ declare module '@/usage/select.usage.mjs' {
 }
 
 declare module '@/usage/settings.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/sheet.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -342,6 +392,11 @@ declare module '@/usage/toggle.usage.mjs' {
 }
 
 declare module '@/usage/toggle-group.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/tooltip.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

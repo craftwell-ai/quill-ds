@@ -12,6 +12,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { usage } from '@/usage/drawer.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Drawer',
@@ -19,15 +22,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Drawer uses Vaul and slides up from the bottom on mobile. On desktop it behaves like a bottom sheet.
-Use for mobile-first interactions: filters, quick actions, secondary navigation.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {},
 } satisfies Meta<typeof Drawer>
@@ -96,5 +91,29 @@ export const SideDrawer: Story = {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="label-matches-direction"
+      doExample={
+        <Drawer direction="right">
+          <DrawerTrigger asChild>
+            <Button variant="outline">Open side panel</Button>
+          </DrawerTrigger>
+        </Drawer>
+      }
+      dontExample={
+        <Drawer direction="right">
+          <DrawerTrigger asChild>
+            <Button variant="outline">Open drawer</Button>
+          </DrawerTrigger>
+        </Drawer>
+      }
+    />
   ),
 }

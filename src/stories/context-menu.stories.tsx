@@ -16,6 +16,9 @@ import {
   ContextMenuTrigger,
   ContextMenuShortcut,
 } from '@/components/ui/context-menu'
+import { usage } from '@/usage/context-menu.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / ContextMenu',
@@ -23,15 +26,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-ContextMenu opens on right-click. Wrap the target element in \`ContextMenuTrigger\`.
-Keep menus short — group related actions, separate with \`ContextMenuSeparator\`. Max ~8 items.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {},
 } satisfies Meta<typeof ContextMenu>
@@ -167,4 +162,36 @@ export const AllVariants: Story = {
       </ContextMenu>
     )
   },
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="trigger-needs-discoverability-hint"
+      doExample={
+        <ContextMenu>
+          <ContextMenuTrigger className="flex h-24 w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-ink-muted">
+            Right-click here
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem>Open</ContextMenuItem>
+            <ContextMenuItem>Duplicate</ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      }
+      dontExample={
+        <ContextMenu>
+          <ContextMenuTrigger className="flex h-24 w-64 items-center justify-center rounded-lg text-sm text-ink">
+            Product card
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem>Open</ContextMenuItem>
+            <ContextMenuItem>Duplicate</ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      }
+    />
+  ),
 }
