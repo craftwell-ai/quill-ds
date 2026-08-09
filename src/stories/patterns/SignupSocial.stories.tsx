@@ -48,6 +48,14 @@ export const DoDont: Story = {
             <Label htmlFor="dodont-signupsocial-do-email">Email</Label>
             <Input id="dodont-signupsocial-do-email" type="email" placeholder="you@example.com" />
           </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="dodont-signupsocial-do-password">Password</Label>
+            <Input
+              id="dodont-signupsocial-do-password"
+              type="password"
+              placeholder="At least 12 characters"
+            />
+          </div>
         </div>
       }
       dontExample={
