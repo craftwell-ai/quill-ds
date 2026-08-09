@@ -25,7 +25,7 @@ export const usage = {
   ],
   a11y: [
     'TabsTrigger renders `role="tab"` with `aria-selected` and `aria-controls` pointing at its panel — Base UI wires the full ARIA tabs pattern automatically.',
-    'By default, moving focus to a tab with the arrow keys activates it immediately (`activateOnFocus`) — panel content changes as soon as focus lands, not on a separate Enter press.',
+    'By default, arrow keys only move focus between tabs (`activateOnFocus` is `false`) — the panel doesn\'t change until the focused tab is activated with Enter, Space, or a click.',
     '`orientation="vertical"` switches the roving arrow-key navigation to Up/Down, sets `aria-orientation="vertical"` on TabsList, and moves the active-state indicator bar from the underline at the bottom to a bar on the trailing edge.',
   ],
   tokens: ['--muted', '--foreground', '--ring', '--background'],
