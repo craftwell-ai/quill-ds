@@ -16,6 +16,12 @@ export const usage = {
       dont: 'Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block.',
       visual: false,
     },
+    {
+      id: 'separate-legal-row-with-a-divider',
+      do: 'Separate the bottom legal row (copyright, Privacy, Terms) from the link columns with a visible Separator, as this block does.',
+      dont: 'Rely on extra margin alone with no divider — the legal row reads as just another link column, not a distinct footer end-cap.',
+      visual: true,
+    },
   ],
   a11y: [
     'Each link column is a real <nav> with an aria-label matching its visible heading (e.g. "Product", "Resources"), not a generic landmark.',

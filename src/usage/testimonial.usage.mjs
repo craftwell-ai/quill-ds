@@ -14,7 +14,7 @@ export const usage = {
       id: 'attribute-every-quote',
       do: 'Pair every quote with a real name, role, and organization — an anonymous quote reads as unverifiable.',
       dont: 'Ship a testimonial with no attribution, or attribution too small/muted to actually read.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

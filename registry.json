@@ -573,7 +573,7 @@
           "target": "components/quill/footer.tsx"
         }
       ],
-      "docs": "A marketing footer with brand blurb, link columns, and legal links. Do: Wrap each link column in its own <nav aria-label>, as this block already does, so screen-reader users can jump between them. Don't: Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block. Use sidebar-nav when the links are primary in-app navigation, not secondary site-wide links at the page's end. Use navbar when the links belong at the top of the page as primary navigation, not the bottom as reference."
+      "docs": "A marketing footer with brand blurb, link columns, and legal links. Do: Wrap each link column in its own <nav aria-label>, as this block already does, so screen-reader users can jump between them. Don't: Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block. Do: Separate the bottom legal row (copyright, Privacy, Terms) from the link columns with a visible Separator, as this block does. Don't: Rely on extra margin alone with no divider — the legal row reads as just another link column, not a distinct footer end-cap. Use sidebar-nav when the links are primary in-app navigation, not secondary site-wide links at the page's end. Use navbar when the links belong at the top of the page as primary navigation, not the bottom as reference."
     },
     {
       "name": "forgot-password",
@@ -1289,7 +1289,7 @@
           "target": "components/quill/stats-band.tsx"
         }
       ],
-      "docs": "A marketing band of headline statistics separated by vertical dividers on a card background. Do: Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element. Don't: Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent. Use stat-cards when each number needs its own card with a period-over-period delta — this pattern is a single flat band with no per-item chrome or comparison. Use feature-section when you're describing capabilities, not reporting numbers."
+      "docs": "A marketing band of headline statistics separated by vertical dividers on a card background. Do: Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element. Don't: Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent. Do: Pair every headline number with its own visible label directly beneath it (e.g. \"Components\"), as every stat in this band does. Don't: Ship a bare number with no label — a viewer has no way to tell what it counts. Use stat-cards when each number needs its own card with a period-over-period delta — this pattern is a single flat band with no per-item chrome or comparison. Use feature-section when you're describing capabilities, not reporting numbers."
     },
     {
       "name": "tabs-page",

@@ -14,7 +14,7 @@ export const usage = {
       id: 'highlight-exactly-one-plan',
       do: 'Mark exactly one plan as featured (ring + Popular badge) to guide the decision.',
       dont: 'Feature more than one plan, or none — either dilutes the recommendation this pattern exists to make.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

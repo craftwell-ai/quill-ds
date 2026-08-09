@@ -14,7 +14,7 @@ export const usage = {
       id: 'always-dismissible',
       do: 'Give every banner variant its own dismiss button with a specific aria-label (e.g. "Dismiss workshop banner"), not a generic one.',
       dont: 'Ship a banner with no way to dismiss it, or multiple banners sharing one ambiguous "Dismiss" label.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

@@ -14,7 +14,7 @@ export const usage = {
       id: 'default-open-first-item',
       do: "Open the first question by default (defaultValue=['item-0']) so the section doesn't read as empty on load.",
       dont: 'Start every item collapsed and force a first click just to prove the section has content.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

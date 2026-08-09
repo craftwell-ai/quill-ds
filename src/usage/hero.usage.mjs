@@ -14,7 +14,7 @@ export const usage = {
       id: 'one-primary-cta',
       do: 'Keep exactly one primary (default-variant) button — the single most important action — with any secondary action as outline/ghost.',
       dont: 'Give two calls-to-action equal visual weight; competing primaries dilute the one action that matters most.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [
