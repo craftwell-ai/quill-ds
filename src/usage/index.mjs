@@ -13,6 +13,7 @@ import { usage as calendarPage } from './calendar-page.usage.mjs'
 import { usage as calendarRange } from './calendar-range.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
+import { usage as combobox } from './combobox.usage.mjs'
 import { usage as commandPalette } from './command-palette.usage.mjs'
 import { usage as contactForm } from './contact-form.usage.mjs'
 import { usage as cookieConsent } from './cookie-consent.usage.mjs'
@@ -23,18 +24,24 @@ import { usage as emptyState } from './empty-state.usage.mjs'
 import { usage as error404 } from './error-404.usage.mjs'
 import { usage as faq } from './faq.usage.mjs'
 import { usage as featureSection } from './feature-section.usage.mjs'
+import { usage as field } from './field.usage.mjs'
 import { usage as fileUpload } from './file-upload.usage.mjs'
 import { usage as footer } from './footer.usage.mjs'
 import { usage as forgotPassword } from './forgot-password.usage.mjs'
 import { usage as hero } from './hero.usage.mjs'
+import { usage as input } from './input.usage.mjs'
+import { usage as inputGroup } from './input-group.usage.mjs'
+import { usage as inputOtp } from './input-otp.usage.mjs'
 import { usage as invoice } from './invoice.usage.mjs'
 import { usage as kanban } from './kanban.usage.mjs'
+import { usage as label } from './label.usage.mjs'
 import { usage as listDetail } from './list-detail.usage.mjs'
 import { usage as login } from './login.usage.mjs'
 import { usage as loginMinimal } from './login-minimal.usage.mjs'
 import { usage as loginOauth } from './login-oauth.usage.mjs'
 import { usage as loginSplitPanel } from './login-split-panel.usage.mjs'
 import { usage as mailShell } from './mail-shell.usage.mjs'
+import { usage as nativeSelect } from './native-select.usage.mjs'
 import { usage as navbar } from './navbar.usage.mjs'
 import { usage as newsletter } from './newsletter.usage.mjs'
 import { usage as notifications } from './notifications.usage.mjs'
@@ -45,6 +52,7 @@ import { usage as pageHeader } from './page-header.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as searchResults } from './search-results.usage.mjs'
+import { usage as select } from './select.usage.mjs'
 import { usage as settings } from './settings.usage.mjs'
 import { usage as sidebarNav } from './sidebar-nav.usage.mjs'
 import { usage as signup } from './signup.usage.mjs'
@@ -54,6 +62,7 @@ import { usage as statsBand } from './stats-band.usage.mjs'
 import { usage as tabsPage } from './tabs-page.usage.mjs'
 import { usage as teamSection } from './team-section.usage.mjs'
 import { usage as testimonial } from './testimonial.usage.mjs'
+import { usage as textarea } from './textarea.usage.mjs'
 import { usage as themeSelector } from './theme-selector.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
@@ -68,6 +77,7 @@ export const ALL_USAGE = [
   calendarRange,
   chat,
   checkout,
+  combobox,
   commandPalette,
   contactForm,
   cookieConsent,
@@ -78,18 +88,24 @@ export const ALL_USAGE = [
   error404,
   faq,
   featureSection,
+  field,
   fileUpload,
   footer,
   forgotPassword,
   hero,
+  input,
+  inputGroup,
+  inputOtp,
   invoice,
   kanban,
+  label,
   listDetail,
   login,
   loginMinimal,
   loginOauth,
   loginSplitPanel,
   mailShell,
+  nativeSelect,
   navbar,
   newsletter,
   notifications,
@@ -100,6 +116,7 @@ export const ALL_USAGE = [
   pricing,
   profileCard,
   searchResults,
+  select,
   settings,
   sidebarNav,
   signup,
@@ -109,6 +126,7 @@ export const ALL_USAGE = [
   tabsPage,
   teamSection,
   testimonial,
+  textarea,
   themeSelector,
   wizard,
 ]

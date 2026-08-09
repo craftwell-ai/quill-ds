@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Input } from '@/components/ui/input'
+import { usage } from '@/usage/input.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Input',
@@ -7,18 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--input\` (border) · \`--ring\` (focus) · \`--radius-lg\`
-
-### Rules
-Input height is 32px (h-8). For validation errors, set \`aria-invalid="true"\` — this applies the destructive ring.
-Pair with \`Field\`, \`FieldLabel\`, and \`FieldError\` for form usage. Don't use placeholder as a label.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     type: {
@@ -65,5 +57,24 @@ export const AllVariants: Story = {
       <Input aria-invalid="true" defaultValue="Invalid" aria-label="Invalid input" />
       <Input type="password" placeholder="Enter password…" aria-label="Password" />
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="label-not-placeholder"
+      doExample={
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="dodont-email" className="text-sm font-medium leading-none">
+            Email address
+          </label>
+          <Input id="dodont-email" type="email" placeholder="you@example.com" />
+        </div>
+      }
+      dontExample={<Input type="email" placeholder="Email address" />}
+    />
   ),
 }

@@ -6,6 +6,9 @@ import {
   FieldError,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { usage } from '@/usage/field.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Field',
@@ -13,16 +16,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-\`Field\` is a form field wrapper that connects a \`Label\`, \`FieldDescription\`, and \`FieldError\` to a control.
-It uses CSS \`has-\` selectors to automatically dim the label when the input is disabled.
-Always use \`Field\` around inputs in forms — it handles aria associations and error display.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     className: { table: { disable: true } },
@@ -92,5 +86,27 @@ export const AllVariants: Story = {
         <FieldDescription>This field cannot be edited.</FieldDescription>
       </Field>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="data-disabled-dims-label"
+      doExample={
+        <Field data-disabled>
+          <FieldLabel htmlFor="dodont-username-do">Username</FieldLabel>
+          <Input id="dodont-username-do" disabled defaultValue="johndoe" />
+        </Field>
+      }
+      dontExample={
+        <Field>
+          <FieldLabel htmlFor="dodont-username-dont">Username</FieldLabel>
+          <Input id="dodont-username-dont" disabled defaultValue="johndoe" />
+        </Field>
+      }
+    />
   ),
 }

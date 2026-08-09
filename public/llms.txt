@@ -100,7 +100,16 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 Per-primitive usage rules — when to use, what to reach for instead, do/don't, accessibility:
 
 - [button](https://www.quilldesignsystem.com/usage/button.md) — Buttons trigger actions. The default (primary) variant is the single most important action on a surface.
+- [combobox](https://www.quilldesignsystem.com/usage/combobox.md) — A searchable dropdown — type to filter a list, or multi-select with removable chips.
 - [dialog](https://www.quilldesignsystem.com/usage/dialog.md) — A modal window over the page for focused, non-destructive tasks — forms, details, reversible confirmations.
+- [field](https://www.quilldesignsystem.com/usage/field.md) — A form field wrapper that connects a Label, FieldDescription, and FieldError to a control.
+- [input](https://www.quilldesignsystem.com/usage/input.md) — A styled native text input for free-form single-line entry — email, name, search, URL.
+- [input-group](https://www.quilldesignsystem.com/usage/input-group.md) — Merges an input (or textarea) with prefix/suffix addons — icons, buttons, plain text — inside one bordered control.
+- [input-otp](https://www.quilldesignsystem.com/usage/input-otp.md) — Digit-by-digit secure code entry — email verification, 2FA, PIN.
+- [label](https://www.quilldesignsystem.com/usage/label.md) — The accessible name for a form control — always associate it via htmlFor/id or co-location.
+- [native-select](https://www.quilldesignsystem.com/usage/native-select.md) — The browser's own `<select>`, restyled to match the theme — the OS-native picker, not a custom-rendered popover.
+- [select](https://www.quilldesignsystem.com/usage/select.md) — A custom-rendered dropdown for choosing one option from a short list — the same look on every platform, unlike the OS-native picker.
+- [textarea](https://www.quilldesignsystem.com/usage/textarea.md) — A styled native `<textarea>` for multi-line free text — descriptions, bios, comments.
 
 ## Links
 

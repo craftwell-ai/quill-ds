@@ -11,6 +11,9 @@ import {
   SelectSeparator,
 } from '@/components/ui/select'
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
+import { usage } from '@/usage/select.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Select',
@@ -18,18 +21,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--input\` · \`--popover\` · \`--radius-lg\`
-
-### Rules
-Use \`Select\` for ≤20 options without search. For longer or searchable lists use \`Combobox\`.
-Always provide a placeholder via \`<SelectValue placeholder="…" />\`.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     disabled: { control: 'boolean', description: 'Disable the select', table: { defaultValue: { summary: 'false' } } },
@@ -168,5 +160,37 @@ export const Disabled: Story = {
         <SelectItem value="watercolor">Watercolor</SelectItem>
       </SelectContent>
     </Select>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="always-provide-placeholder"
+      doExample={
+        <Select>
+          <SelectTrigger className="w-full" aria-label="Select category">
+            <SelectValue placeholder="Select category…" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="watercolor">Watercolor</SelectItem>
+            <SelectItem value="calligraphy">Calligraphy</SelectItem>
+          </SelectContent>
+        </Select>
+      }
+      dontExample={
+        <Select>
+          <SelectTrigger className="w-full" aria-label="Select category">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="watercolor">Watercolor</SelectItem>
+            <SelectItem value="calligraphy">Calligraphy</SelectItem>
+          </SelectContent>
+        </Select>
+      }
+    />
   ),
 }

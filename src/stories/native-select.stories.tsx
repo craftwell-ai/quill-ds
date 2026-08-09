@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { NativeSelect, NativeSelectOption, NativeSelectOptGroup } from '@/components/ui/native-select'
+import { usage } from '@/usage/native-select.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / NativeSelect',
@@ -7,17 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-NativeSelect renders a styled HTML \`<select>\`. Use for simple option lists where accessibility
-and mobile-native scrolling matter more than custom rendering. For searchable or complex options, use \`Select\` or \`Combobox\`.
-
-Use \`NativeSelectOption\` and \`NativeSelectOptGroup\` sub-components for consistent theming across light and dark modes.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     size: {
@@ -133,5 +126,28 @@ export const AllVariants: Story = {
         </NativeSelectOptGroup>
       </NativeSelect>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="placeholder-via-disabled-option"
+      doExample={
+        <NativeSelect defaultValue="" aria-label="Category">
+          <NativeSelectOption value="" disabled>Select category…</NativeSelectOption>
+          <NativeSelectOption value="art">Art & Drawing</NativeSelectOption>
+          <NativeSelectOption value="craft">Craft & Making</NativeSelectOption>
+        </NativeSelect>
+      }
+      dontExample={
+        <NativeSelect defaultValue="art" aria-label="Category">
+          <NativeSelectOption value="art">Art & Drawing</NativeSelectOption>
+          <NativeSelectOption value="craft">Craft & Making</NativeSelectOption>
+        </NativeSelect>
+      }
+    />
   ),
 }
