@@ -44,7 +44,7 @@
       "name": "tone-badge",
       "type": "registry:ui",
       "title": "Tone badge",
-      "description": "The Quill uppercase tag pill — pigment tones (moss/gold/terracotta/indigo/neutral/muted), tinted or solid, in the 20px badge and 16px count-pill sizes. One component so status chips never drift per call site.",
+      "description": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site.",
       "registryDependencies": [
         "badge"
       ],
@@ -54,7 +54,8 @@
           "target": "components/ui/tone-badge.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site. Do: Leave `solid` false (the tinted default) for regular status/tier labels — it is the visually quieter option and still hits AA contrast per tone. Don't: Set `solid` on every ToneBadge in a view — solid is reserved for the one strong cue (a \"current\" marker, a live state) and loses its signal once everything is solid. Do: Render every uppercase tag pill through ToneBadge, even one-off labels. Don't: Hand-roll a `rounded-full … uppercase` span with ad hoc tone colors — it drifts from the AA-checked tint/solid pairs and the two-size scale. Do: Use ToneBadge's own size scale — `md` (20px) or `sm` (16px, the count-pill scale). Don't: Shrink a pill by hand-tightening its tracking or padding instead of passing `size=\"sm\"` — type stays `--text-2xs` at 0.1em tracking in both sizes. Use badge when the label is a generic chip outside Quill's tag-pill vocabulary — use Badge directly instead of forcing it through a tone."
     },
     {
       "name": "activity-feed",
@@ -133,7 +134,7 @@
       "dependencies": [
         "recharts"
       ],
-      "docs": "A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card. Do: Color each series from the chart token set (--chart-1…--chart-5), assigned in a fixed order. Don't: Hardcode a raw accent pigment (--terracotta, --moss, --indigo…) for a series — some pairs are documented as failing colorblind-distinguishability. Use stat-cards when you need at-a-glance numbers, not a trend shape — a single KPI reads faster as a number than a chart. Use data-table when the audience needs to inspect exact values per row, not the shape of change over time."
+      "docs": "A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card. Do: Color each series from the chart token set (--chart-1…--chart-5), assigned in a fixed order. Don't: Hardcode a raw accent pigment (--terracotta, --moss, --indigo…) for a series — some pairs are documented as failing colorblind-distinguishability. Do: Pair a multi-series chart with a ChartLegend, as the Audience chart does — color is tied to a series name in text, never left for the reader to infer. Don't: Ship a multi-series chart with no legend — color becomes the only signal distinguishing readers from subscribers. Use stat-cards when you need at-a-glance numbers, not a trend shape — a single KPI reads faster as a number than a chart. Use data-table when the audience needs to inspect exact values per row, not the shape of change over time."
     },
     {
       "name": "announcement-banner",
@@ -294,7 +295,7 @@
           "target": "components/quill/checkout.tsx"
         }
       ],
-      "docs": "A two-column checkout — payment method picker and card form beside an order summary sidebar. Do: Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. Don't: Use checkboxes or a dropdown for a single mutually exclusive payment method. Use order-summary when you only need the cart-review card, not the full payment form beside it. Use wizard when payment is one step in a longer multi-step flow, not a single standalone page."
+      "docs": "A two-column checkout — payment method picker and card form beside an order summary sidebar. Do: Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. Don't: Use checkboxes or a dropdown for a single mutually exclusive payment method. Do: Pair the payment submit button with a lock icon, so the action itself visibly reads as a secure transaction. Don't: Ship the payment submit button with no lock icon — nothing on the button signals that submitting card data is secure. Use order-summary when you only need the cart-review card, not the full payment form beside it. Use wizard when payment is one step in a longer multi-step flow, not a single standalone page."
     },
     {
       "name": "command-palette",
@@ -548,7 +549,7 @@
           "target": "components/quill/file-upload.tsx"
         }
       ],
-      "docs": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue. Do: Make the dropzone a real, focusable <button> that also opens a file picker on click/Enter — never make drag-and-drop the only way in. Don't: Ship a dropzone that only responds to a pointer drag gesture. Use contact-form when you need a single attachment inside a broader form, not a dedicated upload queue as the whole card."
+      "docs": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue. Do: Make the dropzone a real, focusable <button> that also opens a file picker on click/Enter — never make drag-and-drop the only way in. Don't: Ship a dropzone that only responds to a pointer drag gesture. Do: Give each in-progress file its own progress bar, so users can see exactly how far each individual upload has gotten. Don't: Show one shared progress bar for the whole queue — users can't tell which file it belongs to or how far any single file has gotten. Use contact-form when you need a single attachment inside a broader form, not a dedicated upload queue as the whole card."
     },
     {
       "name": "footer",
@@ -572,7 +573,7 @@
           "target": "components/quill/footer.tsx"
         }
       ],
-      "docs": "A marketing footer with brand blurb, link columns, and legal links. Do: Wrap each link column in its own <nav aria-label>, as this block already does, so screen-reader users can jump between them. Don't: Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block. Use sidebar-nav when the links are primary in-app navigation, not secondary site-wide links at the page's end. Use navbar when the links belong at the top of the page as primary navigation, not the bottom as reference."
+      "docs": "A marketing footer with brand blurb, link columns, and legal links. Do: Wrap each link column in its own <nav aria-label>, as this block already does, so screen-reader users can jump between them. Don't: Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block. Do: Separate the bottom legal row (copyright, Privacy, Terms) from the link columns with a visible Separator, as this block does. Don't: Rely on extra margin alone with no divider — the legal row reads as just another link column, not a distinct footer end-cap. Use sidebar-nav when the links are primary in-app navigation, not secondary site-wide links at the page's end. Use navbar when the links belong at the top of the page as primary navigation, not the bottom as reference."
     },
     {
       "name": "forgot-password",
@@ -731,7 +732,7 @@
           "target": "components/quill/login.tsx"
         }
       ],
-      "docs": "The standard email-and-password sign-in card, with remember-me and a forgot-password escape hatch. Do: Treat \"Remember me\" as extending session length, never as the only thing standing between a device and the account. Don't: Rely on the remember-me checkbox as a security boundary. Use login-split-panel when the sign-in is a full page, not an embedded card, and you want a branded testimonial panel alongside it. Use login-minimal when you want the leanest possible sign-in — a single email field for a one-time code, no password at all. Use login-oauth when most of your users sign in through Google, GitHub, or Apple rather than a password you store. Use forgot-password when the user has already clicked \"Forgot your password?\" — that's a separate card, not a state of this one."
+      "docs": "The standard email-and-password sign-in card, with remember-me and a forgot-password escape hatch. Do: Treat \"Remember me\" as extending session length, never as the only thing standing between a device and the account. Don't: Rely on the remember-me checkbox as a security boundary. Do: Style \"Forgot your password?\" as a link beneath \"Sign in\" — one unmistakable primary action per card. Don't: Give \"Forgot your password?\" the same solid button treatment as \"Sign in\" — now two buttons compete to be primary. Use login-split-panel when the sign-in is a full page, not an embedded card, and you want a branded testimonial panel alongside it. Use login-minimal when you want the leanest possible sign-in — a single email field for a one-time code, no password at all. Use login-oauth when most of your users sign in through Google, GitHub, or Apple rather than a password you store. Use forgot-password when the user has already clicked \"Forgot your password?\" — that's a separate card, not a state of this one."
     },
     {
       "name": "login-minimal",
@@ -890,7 +891,7 @@
           "target": "components/quill/theme-selector.tsx"
         }
       ],
-      "docs": "A dropdown picker for the four Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage. Do: Read the persisted theme/accent from localStorage in an effect, after mount — never during render, or prerendered markup mismatches the client. Don't: Read localStorage synchronously during render; that guarantees a hydration mismatch since the server always renders Dawn/moss. Use settings when theme choice is one field among many in a broader preferences form, not a standalone quick-switch control."
+      "docs": "A dropdown picker for the four Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage. Do: Read the persisted theme/accent from localStorage in an effect, after mount — never during render, or prerendered markup mismatches the client. Don't: Read localStorage synchronously during render; that guarantees a hydration mismatch since the server always renders Dawn/moss. Do: Show a color swatch next to each accent option in the menu, as this picker does, so people see the actual hue before picking it. Don't: List accent names as plain text with no swatch, forcing a guess at what \"Terracotta\" or \"Indigo\" actually look like. Use settings when theme choice is one field among many in a broader preferences form, not a standalone quick-switch control."
     },
     {
       "name": "newsletter",
@@ -944,7 +945,7 @@
           "target": "components/quill/notifications.tsx"
         }
       ],
-      "docs": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action. Do: Pair the unread dot with a real accessible label (role=\"img\" aria-label=\"Unread\"), as this block already does. Don't: Ship an unread indicator that's purely decorative with no accessible signal. Use activity-feed when the list is a read-only history with no read/unread state or mark-all action. Use sonner when the message is transient feedback about something that just happened — use a toast, not a persistent notifications list."
+      "docs": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action. Do: Pair the unread dot with a real accessible label (role=\"img\" aria-label=\"Unread\"), as this block already does. Don't: Ship an unread indicator that's purely decorative with no accessible signal. Do: Give each notification an icon that matches its content (a person icon for membership events, a check for successful deploys) so the list can be scanned by icon alone. Don't: Reuse one generic bell icon for every notification regardless of type, forcing people to read each title just to tell them apart. Use activity-feed when the list is a read-only history with no read/unread state or mark-all action. Use sonner when the message is transient feedback about something that just happened — use a toast, not a persistent notifications list."
     },
     {
       "name": "onboarding",
@@ -996,7 +997,7 @@
           "target": "components/quill/order-summary.tsx"
         }
       ],
-      "docs": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button. Do: Recompute the total the instant a promo code applies or a line item changes — never leave a stale total on screen after an update. Don't: Require a page refresh or separate action to see the corrected total. Use invoice when you're showing a record of a completed, already-paid transaction, not a cart pending payment. Use checkout when you need the full payment form (card fields, billing address) alongside the summary, not just the review."
+      "docs": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button. Do: Recompute the total the instant a promo code applies or a line item changes — never leave a stale total on screen after an update. Don't: Require a page refresh or separate action to see the corrected total. Do: Show an applied promo as its own line item with the discount amount, so the line items and the total add up to the same number. Don't: Let the total drop after a promo applies with no corresponding line item — buyers can't verify what changed. Use invoice when you're showing a record of a completed, already-paid transaction, not a cart pending payment. Use checkout when you need the full payment form (card fields, billing address) alongside the summary, not just the review."
     },
     {
       "name": "otp-verification",
@@ -1288,7 +1289,7 @@
           "target": "components/quill/stats-band.tsx"
         }
       ],
-      "docs": "A marketing band of headline statistics separated by vertical dividers on a card background. Do: Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element. Don't: Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent. Use stat-cards when each number needs its own card with a period-over-period delta — this pattern is a single flat band with no per-item chrome or comparison. Use feature-section when you're describing capabilities, not reporting numbers."
+      "docs": "A marketing band of headline statistics separated by vertical dividers on a card background. Do: Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element. Don't: Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent. Do: Pair every headline number with its own visible label directly beneath it (e.g. \"Components\"), as every stat in this band does. Don't: Ship a bare number with no label — a viewer has no way to tell what it counts. Use stat-cards when each number needs its own card with a period-over-period delta — this pattern is a single flat band with no per-item chrome or comparison. Use feature-section when you're describing capabilities, not reporting numbers."
     },
     {
       "name": "tabs-page",
