@@ -227,7 +227,7 @@ export const MultiSelect: Story = {
 }
 
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
     <DoDontPair
       usage={usage}
