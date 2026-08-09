@@ -14,7 +14,7 @@ export const usage = {
       id: 'pair-with-label',
       do: 'Always pair Checkbox with a Label via htmlFor/id, or wrap both in one label — not just visual proximity to nearby text.',
       dont: 'Render a bare Checkbox next to plain text with no htmlFor/id association — screen readers announce no name.',
-      visual: true,
+      visual: false,
     },
     {
       id: 'aria-invalid-not-color',

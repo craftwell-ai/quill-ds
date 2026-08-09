@@ -4,7 +4,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { usage } from '@/usage/radio-group.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / RadioGroup',
@@ -160,31 +159,5 @@ export const AllVariants: Story = {
         </div>
       </div>
     </div>
-  ),
-}
-
-export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
-  render: () => (
-    <DoDontPair
-      usage={usage}
-      id="pair-with-label"
-      doExample={
-        <RadioGroup defaultValue="beginner">
-          <div className="flex items-center gap-2">
-            <RadioGroupItem value="beginner" id="usage-radio-do" />
-            <Label htmlFor="usage-radio-do">Beginner</Label>
-          </div>
-        </RadioGroup>
-      }
-      dontExample={
-        <RadioGroup defaultValue="beginner">
-          <div className="flex items-center gap-2">
-            <RadioGroupItem value="beginner" />
-            <span>Beginner</span>
-          </div>
-        </RadioGroup>
-      }
-    />
   ),
 }

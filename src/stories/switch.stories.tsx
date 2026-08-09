@@ -3,7 +3,6 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { usage } from '@/usage/switch.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Switch',
@@ -86,27 +85,5 @@ export const AllVariants: Story = {
         </div>
       ))}
     </div>
-  ),
-}
-
-export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
-  render: () => (
-    <DoDontPair
-      usage={usage}
-      id="pair-with-label"
-      doExample={
-        <div className="flex items-center gap-2">
-          <Switch id="usage-switch-do" defaultChecked />
-          <Label htmlFor="usage-switch-do">Email notifications</Label>
-        </div>
-      }
-      dontExample={
-        <div className="flex items-center gap-2">
-          <Switch defaultChecked />
-          <span>Email notifications</span>
-        </div>
-      }
-    />
   ),
 }
