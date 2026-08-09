@@ -27,5 +27,5 @@ export const usage = {
     'Badge renders a plain `<span>` by default — no role, no accessible name beyond its text content, and no keyboard focus.',
     "Passing `render={<a href=... />}` (as the AsLink story does) swaps the rendered tag via Base UI's useRender, merging Badge's classes onto the real anchor so focus, Enter, and href behavior all come from that native element.",
   ],
-  tokens: ['--primary', '--secondary', '--destructive', '--border', '--ring', '--radius-full'],
+  tokens: ['--primary', '--secondary', '--destructive', '--border', '--ring', '--radius-4xl'],
 }

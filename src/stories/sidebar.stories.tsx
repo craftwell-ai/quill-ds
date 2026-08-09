@@ -328,7 +328,7 @@ export const DoDont: Story = {
       usage={usage}
       id="use-menubadge-for-counts"
       doExample={
-        <SidebarProvider>
+        <SidebarProvider className="min-h-0">
           <div className="flex h-40 w-56 border border-border rounded-lg overflow-hidden">
             <Sidebar collapsible="none">
               <SidebarContent>
@@ -351,7 +351,7 @@ export const DoDont: Story = {
         </SidebarProvider>
       }
       dontExample={
-        <SidebarProvider>
+        <SidebarProvider className="min-h-0">
           <div className="flex h-40 w-56 border border-border rounded-lg overflow-hidden">
             <Sidebar collapsible="none">
               <SidebarContent>

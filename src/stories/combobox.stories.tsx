@@ -226,6 +226,13 @@ export const MultiSelect: Story = {
   },
 }
 
+// axe: aria-hidden-focus — an open Base UI Combobox marks sibling content
+// aria-hidden while it stays focusable.
+// axe: aria-required-children — ComboboxEmpty's role="status" is nested
+// inside role="listbox", which disallows it.
+// Both are real Combobox primitive defects, not the intentional Don't —
+// first surfaced by this story opening the combobox. Tracked separately;
+// not fixed here (out of scope for usage-docs wave 3).
 export const DoDont: Story = {
   parameters: { controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (

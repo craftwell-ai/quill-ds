@@ -90,13 +90,13 @@ export const WithDirectLinks: Story = {
 }
 
 export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
+  parameters: { controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}
       id="apply-trigger-style-to-plain-links"
       doExample={
-        <NavigationMenu>
+        <NavigationMenu aria-label="Do example">
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger>Courses</NavigationMenuTrigger>
@@ -117,7 +117,7 @@ export const DoDont: Story = {
         </NavigationMenu>
       }
       dontExample={
-        <NavigationMenu>
+        <NavigationMenu aria-label="Don't example">
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger>Courses</NavigationMenuTrigger>

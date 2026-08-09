@@ -119,13 +119,13 @@ export const Invalid: Story = {
 }
 
 export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
+  parameters: { controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}
       id="maxlength-matches-slot-count"
       doExample={
-        <InputOTP maxLength={6}>
+        <InputOTP maxLength={6} aria-label="One-time code">
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />
@@ -140,7 +140,7 @@ export const DoDont: Story = {
         </InputOTP>
       }
       dontExample={
-        <InputOTP maxLength={6}>
+        <InputOTP maxLength={6} aria-label="One-time code">
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />

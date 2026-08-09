@@ -18,5 +18,5 @@ A small, non-interactive label for status, category, or count — not a button o
 - Passing `render={<a href=... />}` (as the AsLink story does) swaps the rendered tag via Base UI's useRender, merging Badge's classes onto the real anchor so focus, Enter, and href behavior all come from that native element.
 
 ### Design tokens
-`--primary` · `--secondary` · `--destructive` · `--border` · `--ring` · `--radius-full`
+`--primary` · `--secondary` · `--destructive` · `--border` · `--ring` · `--radius-4xl`
 

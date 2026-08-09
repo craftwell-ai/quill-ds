@@ -107,6 +107,11 @@ export const WithCheckboxAndRadio: Story = {
   render: () => <WithCheckboxAndRadioStory />,
 }
 
+// axe: aria-required-children — Menubar's open-state DOM renders a
+// disallowed child under role="menubar" (span[aria-owns]). This is a real
+// Menubar primitive defect, not the intentional Don't — first surfaced by
+// this story opening a menu. Tracked separately; not fixed here (out of
+// scope for usage-docs wave 3).
 export const DoDont: Story = {
   parameters: { controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
