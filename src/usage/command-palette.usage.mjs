@@ -14,7 +14,7 @@ export const usage = {
       id: 'group-by-recency-and-type',
       do: 'Group items into labeled sections (Actions, Recent) so a long list stays scannable.',
       dont: 'Dump every possible command into one flat, unlabeled list.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

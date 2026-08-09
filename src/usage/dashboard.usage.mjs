@@ -14,7 +14,7 @@ export const usage = {
       id: 'mark-the-active-section',
       do: 'Give the current nav item a distinct active state (background + text color), not just a subtle underline.',
       dont: 'Leave every nav item looking identical — users lose track of where they are.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

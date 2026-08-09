@@ -2,12 +2,21 @@ import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Button } from '@/components/ui/button'
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
   ThemeSelector as ThemeSelectorBlock,
   type AccentValue,
   type ThemeValue,
 } from '@registry/blocks/theme-selector'
 import { usage } from '@/usage/theme-selector.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Nav / Theme selector',
@@ -73,4 +82,44 @@ function Demo() {
 
 export const ThemeSelector: Story = {
   render: () => <Demo />,
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="accent-shows-a-swatch"
+      doExample={
+        <DropdownMenu defaultOpen>
+          <DropdownMenuTrigger render={<Button variant="outline" size="sm">Accent</Button>} />
+          <DropdownMenuContent align="start" className="w-40">
+            <DropdownMenuRadioGroup defaultValue="moss">
+              <DropdownMenuLabel>Accent</DropdownMenuLabel>
+              <DropdownMenuRadioItem value="moss">
+                <span className="size-3.5 shrink-0 rounded-full border border-border bg-moss" aria-hidden />
+                Moss
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="terracotta">
+                <span className="size-3.5 shrink-0 rounded-full border border-border bg-terracotta" aria-hidden />
+                Terracotta
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      }
+      dontExample={
+        <DropdownMenu defaultOpen>
+          <DropdownMenuTrigger render={<Button variant="outline" size="sm">Accent</Button>} />
+          <DropdownMenuContent align="start" className="w-40">
+            <DropdownMenuRadioGroup defaultValue="moss">
+              <DropdownMenuLabel>Accent</DropdownMenuLabel>
+              <DropdownMenuRadioItem value="moss">Moss</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="terracotta">Terracotta</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      }
+    />
+  ),
 }
