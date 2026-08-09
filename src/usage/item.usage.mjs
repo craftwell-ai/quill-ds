@@ -28,11 +28,24 @@ export const usage = {
       dont: "Nest an `<a>` inside Item's content instead of using `render` — only part of the row becomes clickable and focusable, not the whole row.",
       visual: false,
     },
+    {
+      id: 'separator-for-visible-dividers',
+      do: 'Add ItemSeparator between Items when the rows need a visible dividing line, not just the vertical gap ItemGroup already provides.',
+      dont: 'Hand-roll a border or divider `<div>` between Items — ItemSeparator already renders the border-token line at the right spacing, with real separator semantics.',
+      visual: false,
+    },
+    {
+      id: 'header-footer-need-stacked-item',
+      do: 'Pair ItemHeader and ItemFooter with a stacked Item (`className="flex-col items-start"`, as WithHeaderAndFooter does) to build a multi-line row — ItemHeader for the top line (title + badge), ItemFooter for the bottom line (meta text + actions).',
+      dont: 'Drop ItemHeader or ItemFooter into the default Item layout expecting them to sit inline like ItemMedia or ItemActions — both are full-width (`basis-full`) rows meant to occupy their own line.',
+      visual: false,
+    },
   ],
   a11y: [
     'ItemGroup renders `role="group"`, grouping its Items for assistive tech without implying list or listbox semantics.',
     "Item renders a plain `<div>` by default; pass `render={<a href=... />}` (as the AsLink story does) to make the whole row a real, keyboard-focusable link via Base UI's useRender.",
     "ItemTitle and ItemDescription are styled `<div>`/`<p>` elements, not headings — add real heading markup inside ItemTitle if the row needs to appear in the page's heading outline.",
+    'ItemSeparator renders `role="separator"` with `aria-orientation="horizontal"` (via the underlying Separator primitive) — a real, announced divider. ItemHeader and ItemFooter, by contrast, are plain layout `<div>`s with no semantic role of their own.',
   ],
   tokens: ['--border', '--muted', '--ring'],
 }
