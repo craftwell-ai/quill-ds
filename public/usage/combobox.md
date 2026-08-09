@@ -12,7 +12,7 @@ A searchable dropdown — type to filter a list, or multi-select with removable 
 ### Rules
 - **Do:** Pass the full item array to `<Combobox items={…}>` on the root so ComboboxCollection can filter it. **Don't:** Omit items on the root — ComboboxCollection has nothing to filter, so the popup renders empty ("No results found") no matter what the user types.
 - **Do:** Wrap items in ComboboxCollection with a render-function child — it gets called once per filtered item. **Don't:** Render a static list of ComboboxItem elements outside ComboboxCollection — nothing gets filtered.
-- **Do:** Pass ComboboxValue as a direct child of ComboboxTrigger. **Don't:** Put ComboboxValue inside the render prop's JSX instead — keep it as an actual child of ComboboxTrigger so it stays in the accessible tree Base UI expects.
+- **Do:** Pass ComboboxValue as a direct child of ComboboxTrigger, and keep the render element (e.g. Button) childless. **Don't:** Nest content inside the render prop's own JSX (e.g. `<Button>…<ComboboxValue/></Button>`) — Base UI's prop merge gives the render element's own children priority over ComboboxTrigger's, so anything else passed as ComboboxTrigger's real children, including this wrapper's own dropdown chevron icon, is silently discarded rather than shown alongside it.
 
 ### Accessibility
 - The trigger/input exposes role="combobox" with aria-expanded/aria-controls wired to the popup listbox by Base UI.

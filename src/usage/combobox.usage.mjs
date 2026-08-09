@@ -24,8 +24,8 @@ export const usage = {
     },
     {
       id: 'value-as-trigger-child-not-render-prop',
-      do: 'Pass ComboboxValue as a direct child of ComboboxTrigger.',
-      dont: "Put ComboboxValue inside the render prop's JSX instead — keep it as an actual child of ComboboxTrigger so it stays in the accessible tree Base UI expects.",
+      do: 'Pass ComboboxValue as a direct child of ComboboxTrigger, and keep the render element (e.g. Button) childless.',
+      dont: "Nest content inside the render prop's own JSX (e.g. `<Button>…<ComboboxValue/></Button>`) — Base UI's prop merge gives the render element's own children priority over ComboboxTrigger's, so anything else passed as ComboboxTrigger's real children, including this wrapper's own dropdown chevron icon, is silently discarded rather than shown alongside it.",
       visual: false,
     },
   ],
