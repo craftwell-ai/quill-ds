@@ -9,6 +9,9 @@ import {
 } from '@/components/ui/empty'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/empty.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Empty',
@@ -16,15 +19,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Empty state component for zero-data surfaces. Always include a title, a short description, and a primary action.
-The icon/illustration in \`EmptyMedia\` should be contextual to the content type.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     className: { table: { disable: true } },
@@ -64,5 +59,35 @@ export const IconVariant: Story = {
         <Button variant="outline" className="w-full">Learn more</Button>
       </EmptyContent>
     </Empty>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="complete-empty-state"
+      doExample={
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia><Icon name="menu_book" className="size-8 text-ink-muted" /></EmptyMedia>
+            <EmptyTitle>No courses yet</EmptyTitle>
+            <EmptyDescription>You haven’t created any courses. Start building your first skill deck.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button>Create</Button>
+          </EmptyContent>
+        </Empty>
+      }
+      dontExample={
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia><Icon name="menu_book" className="size-8 text-ink-muted" /></EmptyMedia>
+            <EmptyTitle>No courses yet</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
+      }
+    />
   ),
 }

@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Badge } from '@/components/ui/badge'
+import { usage } from '@/usage/badge.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Badge',
@@ -7,18 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--primary\` · \`--secondary\` · \`--destructive\` · \`--border\` · \`--radius-full\`
-
-### Rules
-Badges are non-interactive status indicators. For clickable tags use a \`ghost\` or \`outline\` Badge wrapped in an anchor.
-Keep badge text to 1–3 words. Don't stack more than 3 badges in a row without a container with \`flex-wrap\`.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     variant: {
@@ -46,14 +38,6 @@ export const Link: Story = { args: { variant: 'link', children: 'View details' }
 
 export const AsLink: Story = {
   name: 'As anchor (interactive)',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Pass the `render` prop to swap the underlying element. Use this pattern when the badge must be keyboard-navigable or open a URL.',
-      },
-    },
-  },
   render: () => (
     <Badge variant="outline" render={<a href="#" />}>
       Release notes
@@ -69,5 +53,19 @@ export const AllVariants: Story = {
         <Badge key={v} variant={v}>{v}</Badge>
       ))}
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="short-label"
+      doExample={<Badge>Beta</Badge>}
+      dontExample={
+        <Badge className="max-w-28">This is a much longer badge label than the component was built for</Badge>
+      }
+    />
   ),
 }

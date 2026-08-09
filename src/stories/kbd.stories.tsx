@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Kbd, KbdGroup } from '@/components/ui/kbd'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/kbd.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Kbd',
@@ -8,18 +11,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--muted\` · \`--muted-foreground\` · \`--radius-sm\`
-
-### Rules
-\`Kbd\` renders a keyboard key badge. Use for hotkeys in tooltips, menus, and shortcut references.
-Wrap multiple keys in \`KbdGroup\` for compound shortcuts (⌘K, ⇧⌘P).
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     children: { control: 'text', description: 'Key label' },
@@ -92,5 +84,27 @@ export const AllVariants: Story = {
         </KbdGroup>
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="kbdgroup-for-combos"
+      doExample={
+        <KbdGroup>
+          <Kbd>⌘</Kbd>
+          <Kbd>K</Kbd>
+        </KbdGroup>
+      }
+      dontExample={
+        <div className="flex items-center gap-3">
+          <Kbd>⌘</Kbd>
+          <Kbd>K</Kbd>
+        </div>
+      }
+    />
   ),
 }

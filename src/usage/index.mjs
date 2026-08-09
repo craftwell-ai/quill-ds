@@ -10,12 +10,15 @@ import { usage as alerts } from './alerts.usage.mjs'
 import { usage as analyticsCharts } from './analytics-charts.usage.mjs'
 import { usage as announcementBanner } from './announcement-banner.usage.mjs'
 import { usage as aspectRatio } from './aspect-ratio.usage.mjs'
+import { usage as avatar } from './avatar.usage.mjs'
+import { usage as badge } from './badge.usage.mjs'
 import { usage as badgeOnCard } from './badge-on-card.usage.mjs'
 import { usage as breadcrumb } from './breadcrumb.usage.mjs'
 import { usage as button } from './button.usage.mjs'
 import { usage as buttonGroup } from './button-group.usage.mjs'
 import { usage as calendarPage } from './calendar-page.usage.mjs'
 import { usage as calendarRange } from './calendar-range.usage.mjs'
+import { usage as card } from './card.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
@@ -31,6 +34,7 @@ import { usage as dataTable } from './data-table.usage.mjs'
 import { usage as dialog } from './dialog.usage.mjs'
 import { usage as drawer } from './drawer.usage.mjs'
 import { usage as dropdownMenu } from './dropdown-menu.usage.mjs'
+import { usage as empty } from './empty.usage.mjs'
 import { usage as emptyState } from './empty-state.usage.mjs'
 import { usage as error404 } from './error-404.usage.mjs'
 import { usage as faq } from './faq.usage.mjs'
@@ -45,7 +49,9 @@ import { usage as input } from './input.usage.mjs'
 import { usage as inputGroup } from './input-group.usage.mjs'
 import { usage as inputOtp } from './input-otp.usage.mjs'
 import { usage as invoice } from './invoice.usage.mjs'
+import { usage as item } from './item.usage.mjs'
 import { usage as kanban } from './kanban.usage.mjs'
+import { usage as kbd } from './kbd.usage.mjs'
 import { usage as label } from './label.usage.mjs'
 import { usage as listDetail } from './list-detail.usage.mjs'
 import { usage as login } from './login.usage.mjs'
@@ -79,10 +85,12 @@ import { usage as sidebar } from './sidebar.usage.mjs'
 import { usage as sidebarNav } from './sidebar-nav.usage.mjs'
 import { usage as signup } from './signup.usage.mjs'
 import { usage as signupSocial } from './signup-social.usage.mjs'
+import { usage as skeleton } from './skeleton.usage.mjs'
 import { usage as slider } from './slider.usage.mjs'
 import { usage as statCards } from './stat-cards.usage.mjs'
 import { usage as statsBand } from './stats-band.usage.mjs'
 import { usage as switchUsage } from './switch.usage.mjs'
+import { usage as table } from './table.usage.mjs'
 import { usage as tabs } from './tabs.usage.mjs'
 import { usage as tabsPage } from './tabs-page.usage.mjs'
 import { usage as teamSection } from './team-section.usage.mjs'
@@ -91,6 +99,7 @@ import { usage as textarea } from './textarea.usage.mjs'
 import { usage as themeSelector } from './theme-selector.usage.mjs'
 import { usage as toggle } from './toggle.usage.mjs'
 import { usage as toggleGroup } from './toggle-group.usage.mjs'
+import { usage as toneBadge } from './tone-badge.usage.mjs'
 import { usage as tooltip } from './tooltip.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
@@ -102,12 +111,15 @@ export const ALL_USAGE = [
   analyticsCharts,
   announcementBanner,
   aspectRatio,
+  avatar,
+  badge,
   badgeOnCard,
   breadcrumb,
   button,
   buttonGroup,
   calendarPage,
   calendarRange,
+  card,
   chat,
   checkbox,
   checkout,
@@ -123,6 +135,7 @@ export const ALL_USAGE = [
   dialog,
   drawer,
   dropdownMenu,
+  empty,
   emptyState,
   error404,
   faq,
@@ -137,7 +150,9 @@ export const ALL_USAGE = [
   inputGroup,
   inputOtp,
   invoice,
+  item,
   kanban,
+  kbd,
   label,
   listDetail,
   login,
@@ -171,10 +186,12 @@ export const ALL_USAGE = [
   sidebarNav,
   signup,
   signupSocial,
+  skeleton,
   slider,
   statCards,
   statsBand,
   switchUsage,
+  table,
   tabs,
   tabsPage,
   teamSection,
@@ -183,6 +200,7 @@ export const ALL_USAGE = [
   themeSelector,
   toggle,
   toggleGroup,
+  toneBadge,
   tooltip,
   wizard,
 ]

@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { ToneBadge } from '../../registry/lib/tone-badge'
+import { usage } from '@/usage/tone-badge.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / ToneBadge',
@@ -7,19 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--moss\` · \`--gold\` · \`--terracotta\` · \`--indigo\` (+ their \`-deep\` shades) · \`--paper-deep\` · \`--text-2xs\` · \`--tracking-wide\`
-
-### Rules
-The one uppercase tag pill — status, tiers, labels. Tinted by default; \`solid\` only for the strong cue (a "current" marker, a live state).
-Two sizes and only two: \`md\` (20px) and \`sm\` (16px, the count-pill scale). Type stays \`--text-2xs\` at 0.1em tracking in both — never tighten tracking to shrink a pill.
-Hand-rolled \`rounded-full … uppercase\` spans are a contract violation; render every tag pill through ToneBadge.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     tone: {
@@ -72,5 +63,22 @@ export const AllTones: Story = {
         ))}
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  args: { tone: 'moss', children: 'trusted' },
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="no-hand-rolled-pills"
+      doExample={<ToneBadge tone="moss">trusted</ToneBadge>}
+      dontExample={
+        <span className="inline-flex items-center rounded-full bg-moss/20 px-2 py-0.5 text-xs font-medium text-moss-deep uppercase">
+          trusted
+        </span>
+      }
+    />
   ),
 }

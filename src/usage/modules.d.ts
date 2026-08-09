@@ -41,6 +41,16 @@ declare module '@/usage/aspect-ratio.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/avatar.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/badge.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/badge-on-card.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -67,6 +77,11 @@ declare module '@/usage/calendar-page.usage.mjs' {
 }
 
 declare module '@/usage/calendar-range.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/card.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -146,6 +161,11 @@ declare module '@/usage/dropdown-menu.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/empty.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/empty-state.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -216,7 +236,17 @@ declare module '@/usage/invoice.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/item.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/kanban.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/kbd.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -386,6 +416,11 @@ declare module '@/usage/signup-social.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/skeleton.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/slider.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -402,6 +437,11 @@ declare module '@/usage/stats-band.usage.mjs' {
 }
 
 declare module '@/usage/switch.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/table.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -442,6 +482,11 @@ declare module '@/usage/toggle.usage.mjs' {
 }
 
 declare module '@/usage/toggle-group.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/tone-badge.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

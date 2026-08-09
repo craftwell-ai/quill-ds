@@ -14,6 +14,9 @@ import {
 import { Icon } from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { usage } from '@/usage/item.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Item',
@@ -21,15 +24,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Item is a general-purpose list row — course card compact, search result, settings row.
-Compose with \`ItemMedia\` (icon/avatar), \`ItemContent\` (title + description), and \`ItemActions\` (right-side CTA).
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
   decorators: [(Story) => <div className="w-80"><Story /></div>],
@@ -249,5 +244,35 @@ export const AsLink: Story = {
         </ItemContent>
       </Item>
     </ItemGroup>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="compose-the-slots"
+      doExample={
+        <Item>
+          <ItemMedia><Icon name="menu_book" className="size-4 text-ink-muted" /></ItemMedia>
+          <ItemContent>
+            <ItemTitle>Watercolor Basics</ItemTitle>
+            <ItemDescription>12 lessons · Beginner</ItemDescription>
+          </ItemContent>
+          <ItemActions><Button variant="ghost" size="sm">Open</Button></ItemActions>
+        </Item>
+      }
+      dontExample={
+        <Item>
+          <Icon name="menu_book" className="size-4 text-ink-muted" />
+          <div>
+            <div className="text-sm font-medium">Watercolor Basics</div>
+            <div className="text-sm text-muted-foreground">12 lessons · Beginner</div>
+          </div>
+          <Button variant="ghost" size="sm">Open</Button>
+        </Item>
+      }
+    />
   ),
 }

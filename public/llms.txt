@@ -102,9 +102,12 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [accordion](https://www.quilldesignsystem.com/usage/accordion.md) — A vertically stacked set of expand/collapse sections — one open at a time by default, with an option to allow several.
 - [alert-dialog](https://www.quilldesignsystem.com/usage/alert-dialog.md) — A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside.
 - [aspect-ratio](https://www.quilldesignsystem.com/usage/aspect-ratio.md) — Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails.
+- [avatar](https://www.quilldesignsystem.com/usage/avatar.md) — A round image, initials, or icon representing a person or entity — reserves its shape immediately and swaps in the real photo once it loads.
+- [badge](https://www.quilldesignsystem.com/usage/badge.md) — A small, non-interactive label for status, category, or count — not a button or a link on its own.
 - [breadcrumb](https://www.quilldesignsystem.com/usage/breadcrumb.md) — A trail of links showing the current page's position in a hierarchy — the last crumb is always the current, non-link page.
 - [button](https://www.quilldesignsystem.com/usage/button.md) — Buttons trigger actions. The default (primary) variant is the single most important action on a surface.
 - [button-group](https://www.quilldesignsystem.com/usage/button-group.md) — A structural wrapper that merges adjacent Buttons into one visually connected control — shared borders, no owned selection state.
+- [card](https://www.quilldesignsystem.com/usage/card.md) — A bounded content container with header, body, and footer slots — paper-warm surface with a soft ring instead of a box-shadow border.
 - [checkbox](https://www.quilldesignsystem.com/usage/checkbox.md) — A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox.
 - [collapsible](https://www.quilldesignsystem.com/usage/collapsible.md) — A single open/closed disclosure toggle — the lower-level primitive behind Accordion, with no item/trigger/content grouping or built-in styling.
 - [combobox](https://www.quilldesignsystem.com/usage/combobox.md) — A searchable dropdown — type to filter a list, or multi-select with removable chips.
@@ -113,11 +116,14 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [dialog](https://www.quilldesignsystem.com/usage/dialog.md) — A modal window over the page for focused, non-destructive tasks — forms, details, reversible confirmations.
 - [drawer](https://www.quilldesignsystem.com/usage/drawer.md) — A bottom- or edge-anchored panel built on Vaul, with drag-to-dismiss — a mobile-first alternative to Dialog's centered modal.
 - [dropdown-menu](https://www.quilldesignsystem.com/usage/dropdown-menu.md) — A click-triggered list of actions anchored to a visible button, with full keyboard navigation and typeahead.
+- [empty](https://www.quilldesignsystem.com/usage/empty.md) — An empty-state block for zero-data surfaces — icon, title, description, and a primary action, centered in the available space.
 - [field](https://www.quilldesignsystem.com/usage/field.md) — A form field wrapper that connects a Label, FieldDescription, and FieldError to a control.
 - [hover-card](https://www.quilldesignsystem.com/usage/hover-card.md) — A glanceable preview that opens after a brief hover-intent delay on a link — a visual enhancement for sighted mouse and keyboard users, informational only.
 - [input](https://www.quilldesignsystem.com/usage/input.md) — A styled native text input for free-form single-line entry — email, name, search, URL.
 - [input-group](https://www.quilldesignsystem.com/usage/input-group.md) — Merges an input (or textarea) with prefix/suffix addons — icons, buttons, plain text — inside one bordered control.
 - [input-otp](https://www.quilldesignsystem.com/usage/input-otp.md) — Digit-by-digit secure code entry — email verification, 2FA, PIN.
+- [item](https://www.quilldesignsystem.com/usage/item.md) — A general-purpose list row — compose ItemMedia (icon or avatar), ItemContent (title + description), and ItemActions (trailing button) into a consistent row for lists, search results, and settings.
+- [kbd](https://www.quilldesignsystem.com/usage/kbd.md) — A keyboard key badge — a single label rendered as Kbd, or a compound shortcut via KbdGroup — for hotkeys in tooltips, menus, and shortcut references.
 - [label](https://www.quilldesignsystem.com/usage/label.md) — The accessible name for a form control — always associate it via htmlFor/id or co-location.
 - [menubar](https://www.quilldesignsystem.com/usage/menubar.md) — A desktop application-style menu strip — a row of always-visible top-level menus, each opening its own dropdown on click.
 - [native-select](https://www.quilldesignsystem.com/usage/native-select.md) — The browser's own `<select>`, restyled to match the theme — the OS-native picker, not a custom-rendered popover.
@@ -131,12 +137,15 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [separator](https://www.quilldesignsystem.com/usage/separator.md) — A thin decorative divider line between stacked or inline content — horizontal by default, vertical for toolbars and inline groups.
 - [sheet](https://www.quilldesignsystem.com/usage/sheet.md) — A panel that slides in from a screen edge while the page stays visible behind it — the same Base UI dialog underneath Dialog, styled as an edge panel instead of a centered card.
 - [sidebar](https://www.quilldesignsystem.com/usage/sidebar.md) — The persistent side-rail navigation primitive — expands, collapses to icons, or slides in as an off-canvas sheet on mobile. `sidebar-nav` is this primitive already assembled into a full app shell with grouped menus and a breadcrumb header.
+- [skeleton](https://www.quilldesignsystem.com/usage/skeleton.md) — An animate-pulse loading placeholder that reserves space and previews the shape of content while it loads.
 - [slider](https://www.quilldesignsystem.com/usage/slider.md) — A draggable control for picking a numeric value, or range, within a bounded min/max — position matters as much as the exact figure.
 - [switch](https://www.quilldesignsystem.com/usage/switch.md) — An on/off control for a setting that takes effect immediately — no separate Save step.
+- [table](https://www.quilldesignsystem.com/usage/table.md) — A data table for rows of tabular content — headers, cells, an optional footer for totals, and a caption for the accessible description.
 - [tabs](https://www.quilldesignsystem.com/usage/tabs.md) — A set of triggers that swap which panel is visible in place — content panels share the same position, only one shown at a time.
 - [textarea](https://www.quilldesignsystem.com/usage/textarea.md) — A styled native `<textarea>` for multi-line free text — descriptions, bios, comments.
 - [toggle](https://www.quilldesignsystem.com/usage/toggle.md) — A two-state icon or icon-plus-text button whose pressed state persists after the click — a formatting toggle inside a toolbar.
 - [toggle-group](https://www.quilldesignsystem.com/usage/toggle-group.md) — A row, or column, of Toggle buttons sharing selection, sizing, and spacing — single-select for exclusive choices, multi-select for independent ones.
+- [tone-badge](https://www.quilldesignsystem.com/usage/tone-badge.md) — Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site.
 - [tooltip](https://www.quilldesignsystem.com/usage/tooltip.md) — A short hint that appears on hover or focus — a supplementary visual label for sighted mouse and keyboard users, not a reliable way to deliver essential information.
 
 ## Links

@@ -61,21 +61,12 @@ test('every visual rule has a rendered DoDont pair in its story file', () => {
 // component must ship with a usage file.
 const KNOWN_UNDOCUMENTED = new Set([
   'alert.stories.tsx',
-  'avatar.stories.tsx',
-  'badge.stories.tsx',
   'calendar.stories.tsx',
-  'card.stories.tsx',
   'carousel.stories.tsx',
   'chart.stories.tsx',
-  'empty.stories.tsx',
-  'item.stories.tsx',
-  'kbd.stories.tsx',
   'progress.stories.tsx',
-  'skeleton.stories.tsx',
   'sonner.stories.tsx',
   'spinner.stories.tsx',
-  'table.stories.tsx',
-  'tone-badge.stories.tsx',
 ])
 
 test('every story outside the allowlist has a usage file', () => {
