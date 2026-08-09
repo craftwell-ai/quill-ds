@@ -9,6 +9,14 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.1] — 2026-08-09
+
+### Fixed
+- **Bumped `nanoid` and `brace-expansion`** to clear 3 Dependabot security
+  advisories (1 high DoS via zero-size custom generators in `nanoid`, 2 high
+  DoS via unbounded expansion in `brace-expansion`). Lockfile-only change,
+  no direct dependency version pins moved.
+
 ## [0.8.0] — 2026-08-09
 
 ### Added
