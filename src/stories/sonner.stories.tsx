@@ -2,7 +2,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Toaster } from '@/components/ui/sonner'
 import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/ui/icon'
 import { toast } from 'sonner'
+import { usage } from '@/usage/sonner.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Sonner',
@@ -12,18 +16,7 @@ const meta = {
   // A second toast region trips axe's landmark-unique rule (duplicate landmarks).
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--popover\` · \`--popover-foreground\` · \`--border\` · \`--radius\`
-
-### Rules
-Add a single \`<Toaster />\` at your app root. Trigger toasts with the \`toast()\` function from \`sonner\`.
-Use typed variants (\`toast.success\`, \`toast.error\`, etc.) for semantic meaning.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof Toaster>
@@ -68,5 +61,26 @@ export const WithAction: Story = {
     >
       Delete with undo
     </Button>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="typed-variant-matches-meaning"
+      doExample={
+        <Button variant="outline" onClick={() => toast.success('Course published.')}>
+          <Icon name="check_circle" className="size-4" />
+          Publish course
+        </Button>
+      }
+      dontExample={
+        <Button variant="outline" onClick={() => toast('Course published.')}>
+          Publish course
+        </Button>
+      }
+    />
   ),
 }

@@ -59,15 +59,7 @@ test('every visual rule has a rendered DoDont pair in its story file', () => {
 // Wave-1 allowlist: stories that predate the usage system. Waves 2-3 shrink
 // this list to empty. Entries may ONLY be removed, never added — a new
 // component must ship with a usage file.
-const KNOWN_UNDOCUMENTED = new Set([
-  'alert.stories.tsx',
-  'calendar.stories.tsx',
-  'carousel.stories.tsx',
-  'chart.stories.tsx',
-  'progress.stories.tsx',
-  'sonner.stories.tsx',
-  'spinner.stories.tsx',
-])
+const KNOWN_UNDOCUMENTED = new Set([])
 
 test('every story outside the allowlist has a usage file', () => {
   const files = [

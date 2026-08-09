@@ -4,6 +4,9 @@ import {
   ProgressLabel,
   ProgressValue,
 } from '@/components/ui/progress'
+import { usage } from '@/usage/progress.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Progress',
@@ -11,19 +14,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--primary\` · \`--muted\`
-
-### Rules
-Progress shows determinate completion. Pass \`value\` (0–100). For indeterminate loading, use \`Spinner\`.
-Label the value for screen readers via \`aria-label\` or \`aria-valuenow\`.
-Use \`ProgressLabel\` and \`ProgressValue\` to render a visible label and numeric readout above the track.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     value: { control: { type: 'range', min: 0, max: 100, step: 1 }, description: 'Completion percentage', table: { defaultValue: { summary: '0' } } },
@@ -83,5 +74,29 @@ export const AllVariants: Story = {
         </Progress>
       ))}
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  args: { value: 0 },
+  parameters: {
+    controls: { disable: true },
+    // The Don't example intentionally omits an accessible name (the rule it
+    // illustrates) — suppress just that one axe rule for this story so the
+    // deliberate anti-pattern doesn't fail the automated a11y test run.
+    a11y: { options: { rules: { 'aria-progressbar-name': { enabled: false } } } },
+  },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="label-with-progresslabel"
+      doExample={
+        <Progress value={60}>
+          <ProgressLabel>Uploading document.pdf</ProgressLabel>
+          <ProgressValue />
+        </Progress>
+      }
+      dontExample={<Progress value={60} />}
+    />
   ),
 }

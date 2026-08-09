@@ -3,6 +3,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Calendar } from '@/components/ui/calendar'
 import { useState } from 'react'
 import type { DateRange } from 'react-day-picker'
+import { usage } from '@/usage/calendar.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Calendar',
@@ -10,18 +13,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--paper-warm\` · \`--primary\` · \`--accent\` · \`--radius-lg\`
-
-### Rules
-Calendar uses react-day-picker v9. Selected day fills with \`--primary\` (ink).
-Today is indicated with a terracotta dot. For date range selection pass \`mode="range"\`.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     mode: {
@@ -95,6 +87,39 @@ export const WithDisabledDates: Story = {
         selected={date}
         onSelect={setDate}
         disabled={{ before: today }}
+      />
+    )
+  },
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => {
+    const today = new Date()
+    const midMonth = new Date(today.getFullYear(), today.getMonth(), 15)
+    return (
+      <DoDontPair
+        usage={usage}
+        id="today-vs-selected-distinct-tokens"
+        doExample={
+          <Calendar
+            mode="single"
+            selected={midMonth}
+            onSelect={() => {}}
+            defaultMonth={today}
+            labels={{ labelNav: () => 'Do example calendar navigation' }}
+          />
+        }
+        dontExample={
+          <Calendar
+            mode="single"
+            selected={midMonth}
+            onSelect={() => {}}
+            defaultMonth={today}
+            classNames={{ today: 'rounded-(--cell-radius) bg-primary text-primary-foreground' }}
+            labels={{ labelNav: () => "Don't example calendar navigation" }}
+          />
+        }
       />
     )
   },

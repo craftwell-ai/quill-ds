@@ -8,6 +8,9 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { Card, CardContent } from '@/components/ui/card'
+import { usage } from '@/usage/carousel.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Carousel',
@@ -15,15 +18,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Carousel wraps the Embla Carousel engine. \`CarouselItem\` accepts a \`basis\` class to control item width.
-Prev/Next buttons position outside the carousel track by default.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     orientation: {
@@ -103,4 +98,51 @@ export const Vertical: Story = {
   decorators: [
     (Story) => <div className="w-80 px-16 pt-16 pb-16"><Story /></div>,
   ],
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  decorators: [(Story) => <div className="w-[640px]"><Story /></div>],
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="always-pair-nav-controls"
+      doExample={
+        <div className="px-10">
+          <Carousel className="w-full" aria-label="Do example carousel">
+            <CarouselContent>
+              {Array.from({ length: 2 }, (_, i) => (
+                <CarouselItem key={i}>
+                  <Card>
+                    <CardContent className="flex aspect-square items-center justify-center p-4">
+                      <span className="text-2xl font-semibold text-ink">{i + 1}</span>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </div>
+      }
+      dontExample={
+        <div className="px-10">
+          <Carousel className="w-full" aria-label="Don't example carousel">
+            <CarouselContent>
+              {Array.from({ length: 2 }, (_, i) => (
+                <CarouselItem key={i}>
+                  <Card>
+                    <CardContent className="flex aspect-square items-center justify-center p-4">
+                      <span className="text-2xl font-semibold text-ink">{i + 1}</span>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
+      }
+    />
+  ),
 }

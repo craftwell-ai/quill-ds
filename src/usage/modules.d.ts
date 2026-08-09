@@ -16,6 +16,11 @@ declare module '@/usage/activity-feed.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/alert.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/alert-dialog.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -71,6 +76,11 @@ declare module '@/usage/button-group.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/calendar.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/calendar-page.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -82,6 +92,16 @@ declare module '@/usage/calendar-range.usage.mjs' {
 }
 
 declare module '@/usage/card.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/carousel.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/chart.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -356,6 +376,11 @@ declare module '@/usage/profile-card.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/progress.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/radio-group.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -422,6 +447,16 @@ declare module '@/usage/skeleton.usage.mjs' {
 }
 
 declare module '@/usage/slider.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/sonner.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/spinner.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

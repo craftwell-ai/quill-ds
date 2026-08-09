@@ -100,6 +100,7 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 Per-primitive usage rules — when to use, what to reach for instead, do/don't, accessibility:
 
 - [accordion](https://www.quilldesignsystem.com/usage/accordion.md) — A vertically stacked set of expand/collapse sections — one open at a time by default, with an option to allow several.
+- [alert](https://www.quilldesignsystem.com/usage/alert.md) — A single inline status box for a message tied to a specific area of the page. `alerts` is this primitive already assembled into a vertical stack of several.
 - [alert-dialog](https://www.quilldesignsystem.com/usage/alert-dialog.md) — A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside.
 - [aspect-ratio](https://www.quilldesignsystem.com/usage/aspect-ratio.md) — Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails.
 - [avatar](https://www.quilldesignsystem.com/usage/avatar.md) — A round image, initials, or icon representing a person or entity — reserves its shape immediately and swaps in the real photo once it loads.
@@ -107,7 +108,10 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [breadcrumb](https://www.quilldesignsystem.com/usage/breadcrumb.md) — A trail of links showing the current page's position in a hierarchy — the last crumb is always the current, non-link page.
 - [button](https://www.quilldesignsystem.com/usage/button.md) — Buttons trigger actions. The default (primary) variant is the single most important action on a surface.
 - [button-group](https://www.quilldesignsystem.com/usage/button-group.md) — A structural wrapper that merges adjacent Buttons into one visually connected control — shared borders, no owned selection state.
+- [calendar](https://www.quilldesignsystem.com/usage/calendar.md) — The date-picker primitive built on react-day-picker — supports single, multiple, and range selection modes. `calendar-page` and `calendar-range` are this primitive already composed into full scheduling and booking patterns.
 - [card](https://www.quilldesignsystem.com/usage/card.md) — A bounded content container with header, body, and footer slots — paper-warm surface with a soft ring instead of a box-shadow border.
+- [carousel](https://www.quilldesignsystem.com/usage/carousel.md) — A horizontally or vertically scrolling item viewport built on Embla Carousel, with Previous/Next controls and keyboard arrow-key support.
+- [chart](https://www.quilldesignsystem.com/usage/chart.md) — A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend.
 - [checkbox](https://www.quilldesignsystem.com/usage/checkbox.md) — A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox.
 - [collapsible](https://www.quilldesignsystem.com/usage/collapsible.md) — A single open/closed disclosure toggle — the lower-level primitive behind Accordion, with no item/trigger/content grouping or built-in styling.
 - [combobox](https://www.quilldesignsystem.com/usage/combobox.md) — A searchable dropdown — type to filter a list, or multi-select with removable chips.
@@ -130,6 +134,7 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [navigation-menu](https://www.quilldesignsystem.com/usage/navigation-menu.md) — Top-level site navigation with mega-dropdown panels — for public/marketing navigation, not desktop application chrome.
 - [pagination](https://www.quilldesignsystem.com/usage/pagination.md) — Page navigation for splitting a long list of records into discrete numbered pages, with Previous/Next controls and an ellipsis for skipped ranges.
 - [popover](https://www.quilldesignsystem.com/usage/popover.md) — A small, click-triggered overlay anchored to its trigger — for inline forms, filters, and contextual editing, not a blocking task.
+- [progress](https://www.quilldesignsystem.com/usage/progress.md) — A determinate progress bar for a real, measurable completion value — pass a numeric `value` and pair it with ProgressLabel/ProgressValue for a labeled, live-updating readout.
 - [radio-group](https://www.quilldesignsystem.com/usage/radio-group.md) — A set of mutually exclusive options rendered as visible radio buttons — pick exactly one from a short, always-visible list.
 - [resizable](https://www.quilldesignsystem.com/usage/resizable.md) — Drag-resizable split panels — the user controls how space is divided between two or more regions by dragging a handle between them.
 - [scroll-area](https://www.quilldesignsystem.com/usage/scroll-area.md) — A styled custom scrollbar over a fixed-size scrollable region — replaces the browser's native scrollbar chrome without changing scroll behavior.
@@ -139,6 +144,8 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [sidebar](https://www.quilldesignsystem.com/usage/sidebar.md) — The persistent side-rail navigation primitive — expands, collapses to icons, or slides in as an off-canvas sheet on mobile. `sidebar-nav` is this primitive already assembled into a full app shell with grouped menus and a breadcrumb header.
 - [skeleton](https://www.quilldesignsystem.com/usage/skeleton.md) — An animate-pulse loading placeholder that reserves space and previews the shape of content while it loads.
 - [slider](https://www.quilldesignsystem.com/usage/slider.md) — A draggable control for picking a numeric value, or range, within a bounded min/max — position matters as much as the exact figure.
+- [sonner](https://www.quilldesignsystem.com/usage/sonner.md) — A toast-notification stack for transient feedback about an action just taken — mount one Toaster at the app root, then trigger toasts imperatively with the `toast()` function from `sonner`.
+- [spinner](https://www.quilldesignsystem.com/usage/spinner.md) — An indeterminate loading indicator — a spinning icon that inherits its color from `currentColor`, for waits with no known duration or percentage.
 - [switch](https://www.quilldesignsystem.com/usage/switch.md) — An on/off control for a setting that takes effect immediately — no separate Save step.
 - [table](https://www.quilldesignsystem.com/usage/table.md) — A data table for rows of tabular content — headers, cells, an optional footer for totals, and a caption for the accessible description.
 - [tabs](https://www.quilldesignsystem.com/usage/tabs.md) — A set of triggers that swap which panel is visible in place — content panels share the same position, only one shown at a time.

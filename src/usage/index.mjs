@@ -5,6 +5,7 @@
  */
 import { usage as accordion } from './accordion.usage.mjs'
 import { usage as activityFeed } from './activity-feed.usage.mjs'
+import { usage as alert } from './alert.usage.mjs'
 import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
 import { usage as analyticsCharts } from './analytics-charts.usage.mjs'
@@ -16,9 +17,12 @@ import { usage as badgeOnCard } from './badge-on-card.usage.mjs'
 import { usage as breadcrumb } from './breadcrumb.usage.mjs'
 import { usage as button } from './button.usage.mjs'
 import { usage as buttonGroup } from './button-group.usage.mjs'
+import { usage as calendar } from './calendar.usage.mjs'
 import { usage as calendarPage } from './calendar-page.usage.mjs'
 import { usage as calendarRange } from './calendar-range.usage.mjs'
 import { usage as card } from './card.usage.mjs'
+import { usage as carousel } from './carousel.usage.mjs'
+import { usage as chart } from './chart.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
@@ -73,6 +77,7 @@ import { usage as pagination } from './pagination.usage.mjs'
 import { usage as popover } from './popover.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
+import { usage as progress } from './progress.usage.mjs'
 import { usage as radioGroup } from './radio-group.usage.mjs'
 import { usage as resizable } from './resizable.usage.mjs'
 import { usage as scrollArea } from './scroll-area.usage.mjs'
@@ -87,6 +92,8 @@ import { usage as signup } from './signup.usage.mjs'
 import { usage as signupSocial } from './signup-social.usage.mjs'
 import { usage as skeleton } from './skeleton.usage.mjs'
 import { usage as slider } from './slider.usage.mjs'
+import { usage as sonner } from './sonner.usage.mjs'
+import { usage as spinner } from './spinner.usage.mjs'
 import { usage as statCards } from './stat-cards.usage.mjs'
 import { usage as statsBand } from './stats-band.usage.mjs'
 import { usage as switchUsage } from './switch.usage.mjs'
@@ -106,6 +113,7 @@ import { usage as wizard } from './wizard.usage.mjs'
 export const ALL_USAGE = [
   accordion,
   activityFeed,
+  alert,
   alertDialog,
   alerts,
   analyticsCharts,
@@ -117,9 +125,12 @@ export const ALL_USAGE = [
   breadcrumb,
   button,
   buttonGroup,
+  calendar,
   calendarPage,
   calendarRange,
   card,
+  carousel,
+  chart,
   chat,
   checkbox,
   checkout,
@@ -174,6 +185,7 @@ export const ALL_USAGE = [
   popover,
   pricing,
   profileCard,
+  progress,
   radioGroup,
   resizable,
   scrollArea,
@@ -188,6 +200,8 @@ export const ALL_USAGE = [
   signupSocial,
   skeleton,
   slider,
+  sonner,
+  spinner,
   statCards,
   statsBand,
   switchUsage,
