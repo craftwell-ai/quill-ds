@@ -100,6 +100,16 @@ export const LinkPreview: Story = {
   ),
 }
 
+// `defaultOpen` alone isn't enough here: HoverCard's open state is driven by
+// floating-ui's hover-tracking interactions (safePolygon mouse-leave
+// tracking), and since nothing is really hovering the trigger in this static
+// story, that interaction logic schedules an auto-close ~300ms after mount.
+// A controlled `open` + an `onOpenChange` that cancels every close attempt
+// (per Base UI's event-details `cancel()` API) pins the card open instead.
+function pinOpen(open: boolean, eventDetails: { cancel: () => void }) {
+  if (!open) eventDetails.cancel()
+}
+
 export const DoDont: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
@@ -107,30 +117,37 @@ export const DoDont: Story = {
       usage={usage}
       id="informational-only"
       doExample={
-        <HoverCard defaultOpen>
-          <HoverCardTrigger href="#" className="text-sm underline-offset-4 hover:underline">
-            @janedoe
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <div className="flex flex-col gap-1">
-              <p className="font-heading text-sm font-medium text-ink">Jane Doe</p>
-              <p className="text-xs text-ink-muted">Product designer, Quill Design System</p>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
+        // pb-20 reserves room below the trigger for the pinned-open card
+        // (portal-rendered, positioned by floating-ui) so it doesn't cover
+        // the figcaption underneath.
+        <div className="pb-20">
+          <HoverCard open onOpenChange={pinOpen}>
+            <HoverCardTrigger href="#" className="text-sm underline-offset-4 hover:underline">
+              @janedoe
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div className="flex flex-col gap-1">
+                <p className="font-heading text-sm font-medium text-ink">Jane Doe</p>
+                <p className="text-xs text-ink-muted">Product designer, Quill Design System</p>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
       }
       dontExample={
-        <HoverCard defaultOpen>
-          <HoverCardTrigger href="#" className="text-sm underline-offset-4 hover:underline">
-            @janedoe
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <div className="flex flex-col gap-2">
-              <p className="font-heading text-sm font-medium text-ink">Jane Doe</p>
-              <Button size="sm">Follow</Button>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
+        <div className="pb-20">
+          <HoverCard open onOpenChange={pinOpen}>
+            <HoverCardTrigger href="#" className="text-sm underline-offset-4 hover:underline">
+              @janedoe
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div className="flex flex-col gap-2">
+                <p className="font-heading text-sm font-medium text-ink">Jane Doe</p>
+                <Button size="sm">Follow</Button>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
       }
     />
   ),

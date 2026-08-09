@@ -119,31 +119,38 @@ export const DoDont: Story = {
       usage={usage}
       id="group-with-separators"
       doExample={
-        <Menubar>
-          <MenubarMenu defaultOpen>
-            <MenubarTrigger>File</MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem>New course</MenubarItem>
-              <MenubarItem>Open</MenubarItem>
-              <MenubarSeparator />
-              <MenubarItem>Save</MenubarItem>
-              <MenubarItem>Export PDF</MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
+        // pb-36 reserves room below the trigger for the defaultOpen File
+        // menu (portal-rendered, positioned by floating-ui) so it doesn't
+        // cover the figcaption underneath.
+        <div className="pb-36">
+          <Menubar>
+            <MenubarMenu defaultOpen>
+              <MenubarTrigger>File</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>New course</MenubarItem>
+                <MenubarItem>Open</MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem>Save</MenubarItem>
+                <MenubarItem>Export PDF</MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
       }
       dontExample={
-        <Menubar>
-          <MenubarMenu defaultOpen>
-            <MenubarTrigger>File</MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem>New course</MenubarItem>
-              <MenubarItem>Open</MenubarItem>
-              <MenubarItem>Save</MenubarItem>
-              <MenubarItem>Export PDF</MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
+        <div className="pb-36">
+          <Menubar>
+            <MenubarMenu defaultOpen>
+              <MenubarTrigger>File</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>New course</MenubarItem>
+                <MenubarItem>Open</MenubarItem>
+                <MenubarItem>Save</MenubarItem>
+                <MenubarItem>Export PDF</MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
       }
     />
   ),

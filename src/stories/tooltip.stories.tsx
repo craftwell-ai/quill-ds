@@ -72,22 +72,29 @@ export const DoDont: Story = {
       usage={usage}
       id="tooltip-is-supplementary"
       doExample={
-        <Tooltip defaultOpen>
-          <TooltipTrigger render={<Button variant="outline">Save</Button>} />
-          <TooltipContent>Save your progress to the cloud</TooltipContent>
-        </Tooltip>
+        // pt-8 reserves room above the trigger for the defaultOpen tooltip
+        // (portal-rendered above the trigger by default, positioned by
+        // floating-ui) so it doesn't spill past the card's own top border.
+        <div className="pt-8">
+          <Tooltip defaultOpen>
+            <TooltipTrigger render={<Button variant="outline">Save</Button>} />
+            <TooltipContent>Save your progress to the cloud</TooltipContent>
+          </Tooltip>
+        </div>
       }
       dontExample={
-        <Tooltip defaultOpen>
-          <TooltipTrigger
-            render={
-              <button className="rounded-full p-1 text-ink-muted hover:text-ink">
-                <Icon name="save" className="size-4" />
-              </button>
-            }
-          />
-          <TooltipContent>Save your progress to the cloud</TooltipContent>
-        </Tooltip>
+        <div className="pt-8">
+          <Tooltip defaultOpen>
+            <TooltipTrigger
+              render={
+                <button className="rounded-full p-1 text-ink-muted hover:text-ink">
+                  <Icon name="save" className="size-4" />
+                </button>
+              }
+            />
+            <TooltipContent>Save your progress to the cloud</TooltipContent>
+          </Tooltip>
+        </div>
       }
     />
   ),

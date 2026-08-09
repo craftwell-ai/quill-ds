@@ -93,31 +93,38 @@ export const DoDont: Story = {
       usage={usage}
       id="title-for-context"
       doExample={
-        <Popover defaultOpen>
-          <PopoverTrigger render={<Button variant="outline">Rename workspace</Button>} />
-          <PopoverContent>
-            <div className="flex flex-col gap-3">
-              <PopoverHeader>
-                <PopoverTitle className="font-heading">Rename workspace</PopoverTitle>
-              </PopoverHeader>
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="pop-do-name">Workspace name</Label>
-                <Input id="pop-do-name" placeholder="e.g. Design team" />
+        // pb-28 reserves room below the trigger for the defaultOpen popover
+        // (portal-rendered, positioned by floating-ui) so it doesn't cover
+        // the figcaption underneath or bleed past the card's own border.
+        <div className="pb-28">
+          <Popover defaultOpen>
+            <PopoverTrigger render={<Button variant="outline">Rename workspace</Button>} />
+            <PopoverContent>
+              <div className="flex flex-col gap-3">
+                <PopoverHeader>
+                  <PopoverTitle className="font-heading">Rename workspace</PopoverTitle>
+                </PopoverHeader>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="pop-do-name">Workspace name</Label>
+                  <Input id="pop-do-name" placeholder="e.g. Design team" />
+                </div>
               </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverContent>
+          </Popover>
+        </div>
       }
       dontExample={
-        <Popover defaultOpen>
-          <PopoverTrigger render={<Button variant="outline">Rename workspace</Button>} />
-          <PopoverContent>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="pop-dont-name">Workspace name</Label>
-              <Input id="pop-dont-name" placeholder="e.g. Design team" />
-            </div>
-          </PopoverContent>
-        </Popover>
+        <div className="pb-28">
+          <Popover defaultOpen>
+            <PopoverTrigger render={<Button variant="outline">Rename workspace</Button>} />
+            <PopoverContent>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="pop-dont-name">Workspace name</Label>
+                <Input id="pop-dont-name" placeholder="e.g. Design team" />
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       }
     />
   ),

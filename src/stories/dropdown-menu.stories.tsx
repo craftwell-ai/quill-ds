@@ -158,25 +158,32 @@ export const DoDont: Story = {
       usage={usage}
       id="destructive-items-last"
       doExample={
-        <DropdownMenu defaultOpen>
-          <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><Icon name="more_horiz" /></Button>} />
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Duplicate</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        // pb-28 reserves room below the trigger for the defaultOpen menu
+        // (portal-rendered, positioned by floating-ui) so it doesn't cover
+        // the figcaption underneath.
+        <div className="pb-28">
+          <DropdownMenu defaultOpen>
+            <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><Icon name="more_horiz" /></Button>} />
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       }
       dontExample={
-        <DropdownMenu defaultOpen>
-          <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><Icon name="more_horiz" /></Button>} />
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Duplicate</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="pb-28">
+          <DropdownMenu defaultOpen>
+            <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><Icon name="more_horiz" /></Button>} />
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       }
     />
   ),
