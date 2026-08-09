@@ -64,6 +64,7 @@ export const IconVariant: Story = {
 
 export const DoDont: Story = {
   parameters: { controls: { disable: true } },
+  decorators: [(Story) => <div className="w-[640px]"><Story /></div>],
   render: () => (
     <DoDontPair
       usage={usage}
