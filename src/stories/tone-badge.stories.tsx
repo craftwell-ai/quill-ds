@@ -68,14 +68,21 @@ export const AllTones: Story = {
 
 export const DoDont: Story = {
   args: { tone: 'moss', children: 'trusted' },
-  parameters: { controls: { disable: true } },
+  // The Don't example is a deliberately low-contrast hand-rolled pill (the
+  // point of the rule) — same convention as checkbox/combobox/menubar/etc.
+  // DoDont stories whose Don't example is intentionally a11y-deficient.
+  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
     <DoDontPair
       usage={usage}
       id="no-hand-rolled-pills"
       doExample={<ToneBadge tone="moss">trusted</ToneBadge>}
       dontExample={
-        <span className="inline-flex items-center rounded-full bg-moss/20 px-2 py-0.5 text-xs font-medium text-moss-deep uppercase">
+        // Ad hoc Tailwind green (not the moss/moss-deep tokens) with a low-contrast
+        // pairing — the plausible hand-rolled mistake this rule warns against: it
+        // both drifts in hue from Quill's muted olive `moss` pigment and skips the
+        // AA-checked contrast the real tint pairs guarantee.
+        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-400 uppercase">
           trusted
         </span>
       }

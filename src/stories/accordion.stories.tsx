@@ -157,13 +157,16 @@ export const DoDont: Story = {
       dontExample={
         <Accordion>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="hover:bg-paper-deep hover:no-underline">What is Quill?</AccordionTrigger>
+            {/* Frozen into its "as-if-hovered" state (bg-paper-deep, no-underline
+                applied unconditionally, not behind hover:) so the anti-pattern
+                reads in a static screenshot — a real hover only fires on interaction. */}
+            <AccordionTrigger className="bg-paper-deep no-underline">What is Quill?</AccordionTrigger>
             <AccordionContent>
               Quill is a design system — a platform for publishing hand-crafted skill courses.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger className="hover:bg-paper-deep hover:no-underline">Is there a dark mode?</AccordionTrigger>
+            <AccordionTrigger className="bg-paper-deep no-underline">Is there a dark mode?</AccordionTrigger>
             <AccordionContent>
               Components support a .dark class for consumer dark surfaces.
             </AccordionContent>
