@@ -16,6 +16,12 @@ export const usage = {
       dont: "Ship an unread indicator that's purely decorative with no accessible signal.",
       visual: false,
     },
+    {
+      id: 'icon-matches-type',
+      do: 'Give each notification an icon that matches its content (a person icon for membership events, a check for successful deploys) so the list can be scanned by icon alone.',
+      dont: 'Reuse one generic bell icon for every notification regardless of type, forcing people to read each title just to tell them apart.',
+      visual: true,
+    },
   ],
   a11y: [
     'The unread dot uses role="img" and aria-label="Unread" — the state is announced, not just shown as a colored dot.',

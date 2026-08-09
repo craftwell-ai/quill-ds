@@ -14,7 +14,7 @@ export const usage = {
       id: 'total-is-unambiguous',
       do: 'Keep the total in a table footer, visually distinct from line items (its own row, right-aligned).',
       dont: "Let the total blend in as just another line item — it needs to read as the sum, not another charge.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

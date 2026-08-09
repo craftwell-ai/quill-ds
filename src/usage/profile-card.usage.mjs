@@ -14,7 +14,7 @@ export const usage = {
       id: 'stats-need-context',
       do: 'Label every stat ("Followers", "Following") directly beneath its number — a bare number has no meaning on its own.',
       dont: 'Show raw numbers with no label and expect position alone to convey what they mean.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

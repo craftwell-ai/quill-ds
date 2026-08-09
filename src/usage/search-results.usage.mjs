@@ -14,7 +14,7 @@ export const usage = {
       id: 'announce-result-count',
       do: 'State the result count in visible text ("4 results for \\"token\\"") so users know the query actually ran.',
       dont: "Leave users guessing whether zero results means the search hasn't run yet or genuinely found nothing.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

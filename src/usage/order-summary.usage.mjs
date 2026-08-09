@@ -16,6 +16,12 @@ export const usage = {
       dont: 'Require a page refresh or separate action to see the corrected total.',
       visual: false,
     },
+    {
+      id: 'promo-discount-is-a-visible-line',
+      do: 'Show an applied promo as its own line item with the discount amount, so the line items and the total add up to the same number.',
+      dont: "Let the total drop after a promo applies with no corresponding line item — buyers can't verify what changed.",
+      visual: true,
+    },
   ],
   a11y: [
     'The total is set apart with a larger font size and its own row, not just bolded inline with the line items.',

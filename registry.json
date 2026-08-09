@@ -945,7 +945,7 @@
           "target": "components/quill/notifications.tsx"
         }
       ],
-      "docs": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action. Do: Pair the unread dot with a real accessible label (role=\"img\" aria-label=\"Unread\"), as this block already does. Don't: Ship an unread indicator that's purely decorative with no accessible signal. Use activity-feed when the list is a read-only history with no read/unread state or mark-all action. Use sonner when the message is transient feedback about something that just happened — use a toast, not a persistent notifications list."
+      "docs": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action. Do: Pair the unread dot with a real accessible label (role=\"img\" aria-label=\"Unread\"), as this block already does. Don't: Ship an unread indicator that's purely decorative with no accessible signal. Do: Give each notification an icon that matches its content (a person icon for membership events, a check for successful deploys) so the list can be scanned by icon alone. Don't: Reuse one generic bell icon for every notification regardless of type, forcing people to read each title just to tell them apart. Use activity-feed when the list is a read-only history with no read/unread state or mark-all action. Use sonner when the message is transient feedback about something that just happened — use a toast, not a persistent notifications list."
     },
     {
       "name": "onboarding",
@@ -997,7 +997,7 @@
           "target": "components/quill/order-summary.tsx"
         }
       ],
-      "docs": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button. Do: Recompute the total the instant a promo code applies or a line item changes — never leave a stale total on screen after an update. Don't: Require a page refresh or separate action to see the corrected total. Use invoice when you're showing a record of a completed, already-paid transaction, not a cart pending payment. Use checkout when you need the full payment form (card fields, billing address) alongside the summary, not just the review."
+      "docs": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button. Do: Recompute the total the instant a promo code applies or a line item changes — never leave a stale total on screen after an update. Don't: Require a page refresh or separate action to see the corrected total. Do: Show an applied promo as its own line item with the discount amount, so the line items and the total add up to the same number. Don't: Let the total drop after a promo applies with no corresponding line item — buyers can't verify what changed. Use invoice when you're showing a record of a completed, already-paid transaction, not a cart pending payment. Use checkout when you need the full payment form (card fields, billing address) alongside the summary, not just the review."
     },
     {
       "name": "otp-verification",
