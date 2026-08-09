@@ -10,7 +10,7 @@ A set of triggers that swap which panel is visible in place — content panels s
 - **toggle-group** — when the control only changes a display filter with no distinct panel content per option, not full content sections.
 
 ### Rules
-- **Do:** Set `defaultValue` on Tabs to exactly one of its TabsTrigger `value` strings, as every story here does, so a tab is selected and its panel shows content on first render. **Don't:** Set `defaultValue` to a value that doesn't match any TabsTrigger — no trigger renders as active and the content area shows nothing until the user clicks one.
+- **Do:** Give every TabsTrigger a matching TabsContent with the exact same `value` string, as every story here does, so the active tab always has a panel to show. **Don't:** Let a TabsTrigger's `value` drift out of sync with its TabsContent's `value` (a rename in one place but not the other) — the trigger still renders as active since its own value matches, but the panel area shows nothing because no TabsContent shares that value.
 - **Do:** Use the `default` (segmented/pill) variant for a self-contained content switcher, and `line` (underline) for a lighter-weight filter row. **Don't:** Mix both TabsList variants inconsistently for the same kind of switcher across a page — pick one variant per context so tabs read as one predictable pattern.
 
 ### Accessibility

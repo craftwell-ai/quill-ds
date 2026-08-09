@@ -6,7 +6,7 @@ A thin decorative divider line between stacked or inline content — horizontal 
 - You need a plain visual divider between grouped content — stacked sections, or inline items in a toolbar — with no label or content of its own.
 
 ### Rules
-- **Do:** Give a vertical Separator an explicit height (e.g. `h-4`), as every vertical story here does. **Don't:** Add `orientation="vertical"` with no height class and expect it to reach the row's full height automatically — inside an `items-center` row it collapses to zero height and disappears.
+- **Do:** Give a vertical Separator an explicit height (e.g. `h-4`), as every vertical story here does — it renders correctly regardless of the parent layout. **Don't:** Rely on `self-stretch` alone by dropping `orientation="vertical"` into a wrapper that isn't a flex container — with no flex ancestor to stretch against and no explicit height class, the separator collapses to zero height and disappears.
 - **Do:** Use the default `orientation="horizontal"` between stacked content, and `orientation="vertical"` between inline items in a row. **Don't:** Use a horizontal Separator inside an inline row expecting it to divide items side-by-side — it renders as a full-width line, not a thin vertical rule.
 
 ### Accessibility
