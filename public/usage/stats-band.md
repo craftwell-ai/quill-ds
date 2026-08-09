@@ -11,6 +11,7 @@ A marketing band of headline statistics separated by vertical dividers on a card
 
 ### Rules
 - **Do:** Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element. **Don't:** Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent.
+- **Do:** Pair every headline number with its own visible label directly beneath it (e.g. "Components"), as every stat in this band does. **Don't:** Ship a bare number with no label — a viewer has no way to tell what it counts.
 
 ### Accessibility
 - Dividers between stats are decorative and hidden on narrow viewports where the layout stacks — the numbers and labels alone carry the meaning.

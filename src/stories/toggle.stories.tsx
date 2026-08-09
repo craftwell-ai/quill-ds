@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Toggle } from '@/components/ui/toggle'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/toggle.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Toggle',
@@ -8,18 +11,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--muted\` · \`--foreground\` · \`--ring\`
-
-### Rules
-Toggle is a two-state button (on/off). Use \`defaultPressed\` for uncontrolled, \`pressed\` + \`onPressedChange\` for controlled.
-Use \`variant="outline"\` for bordered style. Available sizes: \`sm\`, \`default\`, \`lg\`.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     variant: {
@@ -104,5 +96,17 @@ export const AllVariants: Story = {
         <Toggle disabled aria-label="Bold"><Icon name="format_bold" /></Toggle>
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="standalone-needs-outline"
+      doExample={<Toggle variant="outline" aria-label="Bold"><Icon name="format_bold" /></Toggle>}
+      dontExample={<Toggle aria-label="Bold"><Icon name="format_bold" /></Toggle>}
+    />
   ),
 }

@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, AvatarGroupCount } from '@/components/ui/avatar'
+import { usage } from '@/usage/avatar.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Avatar',
@@ -7,18 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--paper-deep\` · \`--ink-muted\` · \`--line-soft\`
-
-### Rules
-Always provide an \`AvatarFallback\` — it renders when the image fails or hasn't loaded.
-Fallback text should be initials (1–2 chars). Size variants: \`sm\` (24px), \`default\` (32px), \`lg\` (40px).
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     size: {
@@ -134,5 +126,26 @@ export const Dark: Story = {
         <AvatarFallback>RP</AvatarFallback>
       </Avatar>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="always-fallback"
+      doExample={
+        <Avatar>
+          <AvatarImage src="/no-image.jpg" alt="User" />
+          <AvatarFallback>RP</AvatarFallback>
+        </Avatar>
+      }
+      dontExample={
+        <Avatar>
+          <AvatarImage src="/no-image.jpg" alt="User" />
+        </Avatar>
+      }
+    />
   ),
 }

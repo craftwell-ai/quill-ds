@@ -14,7 +14,7 @@ export const usage = {
       id: 'contact-action-is-per-person',
       do: 'Give every team member their own contact action, labeled with their name (e.g. "Email Ada Lovelace").',
       dont: "Ship one generic \"Contact us\" action for the whole grid — it defeats the point of a per-person team grid.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

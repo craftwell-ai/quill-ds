@@ -16,6 +16,12 @@ export const usage = {
       dont: 'Hardcode a raw accent pigment (--terracotta, --moss, --indigo…) for a series — some pairs are documented as failing colorblind-distinguishability.',
       visual: false,
     },
+    {
+      id: 'legend-ties-color-to-name',
+      do: 'Pair a multi-series chart with a ChartLegend, as the Audience chart does — color is tied to a series name in text, never left for the reader to infer.',
+      dont: 'Ship a multi-series chart with no legend — color becomes the only signal distinguishing readers from subscribers.',
+      visual: true,
+    },
   ],
   a11y: [
     'Each chart has a ChartTooltip that surfaces exact values on hover/focus — the visual shape alone is never the only way to read the data.',

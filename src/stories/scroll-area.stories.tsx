@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import { usage } from '@/usage/scroll-area.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const courses = ['Watercolor Basics', 'Calligraphy for Beginners', 'Lino Printing', 'Natural Dyeing', 'Pottery Fundamentals', 'Bookbinding', 'Screen Printing', 'Macramé', 'Weaving Basics', 'Leather Tooling']
 
@@ -10,15 +13,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-ScrollArea provides a styled custom scrollbar. Set explicit height/width to constrain the scrollable area.
-For horizontal scroll add \`<ScrollBar orientation="horizontal" />\`.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof ScrollArea>
@@ -68,5 +63,39 @@ export const Horizontal: Story = {
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="set-explicit-size"
+      doExample={
+        <ScrollArea className="h-40 w-48 rounded-lg border border-border">
+          <div className="p-3">
+            {courses.slice(0, 6).map((course, i) => (
+              <div key={course}>
+                <div className="py-2 text-sm text-ink-soft">{course}</div>
+                {i < 5 && <Separator />}
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      }
+      dontExample={
+        <ScrollArea className="rounded-lg border border-border">
+          <div className="p-3">
+            {courses.slice(0, 6).map((course, i) => (
+              <div key={course}>
+                <div className="py-2 text-sm text-ink-soft">{course}</div>
+                {i < 5 && <Separator />}
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      }
+    />
   ),
 }

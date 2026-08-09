@@ -11,6 +11,7 @@ A dashboard pair — an area chart of audience growth beside a bar chart of week
 
 ### Rules
 - **Do:** Color each series from the chart token set (--chart-1…--chart-5), assigned in a fixed order. **Don't:** Hardcode a raw accent pigment (--terracotta, --moss, --indigo…) for a series — some pairs are documented as failing colorblind-distinguishability.
+- **Do:** Pair a multi-series chart with a ChartLegend, as the Audience chart does — color is tied to a series name in text, never left for the reader to infer. **Don't:** Ship a multi-series chart with no legend — color becomes the only signal distinguishing readers from subscribers.
 
 ### Accessibility
 - Each chart has a ChartTooltip that surfaces exact values on hover/focus — the visual shape alone is never the only way to read the data.

@@ -8,6 +8,9 @@ import {
   InputGroupTextarea,
 } from '@/components/ui/input-group'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/input-group.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / InputGroup',
@@ -15,17 +18,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-InputGroup merges an input with prefix/suffix addons (icons, buttons, text).
-Use \`InputGroupAddon\` for non-interactive prefixes/suffixes (icons, labels).
-Use \`InputGroupButton\` for interactive suffix actions (search, copy, clear).
-Use \`InputGroupText\` for plain text spans inside an addon.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
   decorators: [(Story) => <div className="w-80"><Story /></div>],
@@ -120,5 +113,33 @@ export const AllVariants: Story = {
         <InputGroupTextarea placeholder="Multiline input…" rows={2} aria-label="Note" />
       </InputGroup>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="suffix-addon-needs-inline-end"
+      doExample={
+        <InputGroup>
+          <InputGroupAddon><Icon name="attach_money" /></InputGroupAddon>
+          <InputGroupInput placeholder="0.00" aria-label="Amount in USD" />
+          <InputGroupAddon align="inline-end">
+            <InputGroupText>USD</InputGroupText>
+          </InputGroupAddon>
+        </InputGroup>
+      }
+      dontExample={
+        <InputGroup>
+          <InputGroupAddon><Icon name="attach_money" /></InputGroupAddon>
+          <InputGroupInput placeholder="0.00" aria-label="Amount in USD" />
+          <InputGroupAddon>
+            <InputGroupText>USD</InputGroupText>
+          </InputGroupAddon>
+        </InputGroup>
+      }
+    />
   ),
 }

@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Alert, AlertTitle, AlertDescription, AlertAction } from '@/components/ui/alert'
 import { Icon } from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
+import { usage } from '@/usage/alert.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Alert',
@@ -9,18 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--card\` · \`--ink\` · \`--destructive\` · \`--radius-lg\`
-
-### Rules
-Use \`variant="default"\` for informational and success alerts.
-Use \`variant="destructive"\` only for errors. Include an icon when possible — it improves scannability.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     variant: {
@@ -120,5 +112,29 @@ export const AllVariants: Story = {
         </AlertAction>
       </Alert>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="severity-matches-variant"
+      doExample={
+        <Alert variant="destructive">
+          <Icon name="warning" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Unable to save changes. Please try again.</AlertDescription>
+        </Alert>
+      }
+      dontExample={
+        <Alert variant="default">
+          <Icon name="warning" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Unable to save changes. Please try again.</AlertDescription>
+        </Alert>
+      }
+    />
   ),
 }

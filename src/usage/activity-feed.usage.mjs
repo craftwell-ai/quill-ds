@@ -14,7 +14,7 @@ export const usage = {
       id: 'time-is-relative',
       do: 'Use relative timestamps ("2 hours ago") for recent activity — they read faster than absolute dates.',
       dont: "Force users to parse a full timestamp for something that happened minutes ago.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

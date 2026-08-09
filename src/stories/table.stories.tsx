@@ -11,6 +11,9 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { expect } from 'storybook/test'
+import { usage } from '@/usage/table.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const courses = [
   { name: 'Watercolor Basics', instructor: 'Ana Rivera', enrolled: 42, status: 'Active' },
@@ -25,20 +28,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--border\` · \`--muted\`
-
-### Rules
-Use \`TableHead\` inside \`TableHeader > TableRow\` for column headings.
-Use \`TableCell\` inside \`TableBody > TableRow\` for data cells.
-\`TableFooter\` is optional — use for totals or summary rows.
-\`TableCaption\` provides an accessible description above the table.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof Table>
@@ -142,5 +132,52 @@ export const Simple: Story = {
         ))}
       </TableBody>
     </Table>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="always-caption"
+      doExample={
+        <Table>
+          <TableCaption>Design token colour values</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Value</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[['Primary', '#C4684B'], ['Paper', '#F5EDDD']].map(([name, value]) => (
+              <TableRow key={name}>
+                <TableCell>{name}</TableCell>
+                <TableCell className="font-mono text-xs">{value}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      }
+      dontExample={
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Value</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[['Primary', '#C4684B'], ['Paper', '#F5EDDD']].map(([name, value]) => (
+              <TableRow key={name}>
+                <TableCell>{name}</TableCell>
+                <TableCell className="font-mono text-xs">{value}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      }
+    />
   ),
 }

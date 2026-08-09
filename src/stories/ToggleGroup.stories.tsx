@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/toggle-group.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / ToggleGroup',
@@ -8,20 +11,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--muted\` · \`--foreground\` · \`--input\` · \`--ring\`
-
-### Rules
-Use \`multiple\` for multi-select (e.g. text formatting), omit it (defaults false) for single-select (e.g. alignment).
-\`defaultValue\` is an array of selected item values.
-Inherits \`variant\` and \`size\` from the group — set on \`ToggleGroup\`, not individual items.
-Use \`spacing={0}\` for a connected/segmented button appearance.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     variant: {
@@ -77,13 +67,6 @@ export const Outline: Story = {
 }
 
 export const Connected: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: 'Use `spacing={0}` for a connected segmented-button appearance. Works with both `default` and `outline` variants.',
-      },
-    },
-  },
   render: () => (
     <div className="flex flex-col gap-4 items-start">
       <ToggleGroup spacing={0} defaultValue={['center']}>
@@ -153,5 +136,29 @@ export const AllVariants: Story = {
         </ToggleGroup>
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="connected-spacing"
+      doExample={
+        <ToggleGroup spacing={0} defaultValue={['center']}>
+          <ToggleGroupItem value="left" aria-label="Align left"><Icon name="format_align_left" /></ToggleGroupItem>
+          <ToggleGroupItem value="center" aria-label="Align center"><Icon name="format_align_center" /></ToggleGroupItem>
+          <ToggleGroupItem value="right" aria-label="Align right"><Icon name="format_align_right" /></ToggleGroupItem>
+        </ToggleGroup>
+      }
+      dontExample={
+        <ToggleGroup defaultValue={['center']}>
+          <ToggleGroupItem value="left" aria-label="Align left"><Icon name="format_align_left" /></ToggleGroupItem>
+          <ToggleGroupItem value="center" aria-label="Align center"><Icon name="format_align_center" /></ToggleGroupItem>
+          <ToggleGroupItem value="right" aria-label="Align right"><Icon name="format_align_right" /></ToggleGroupItem>
+        </ToggleGroup>
+      }
+    />
   ),
 }

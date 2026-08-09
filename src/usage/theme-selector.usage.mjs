@@ -15,6 +15,12 @@ export const usage = {
       dont: 'Read localStorage synchronously during render; that guarantees a hydration mismatch since the server always renders Dawn/moss.',
       visual: false,
     },
+    {
+      id: 'accent-shows-a-swatch',
+      do: 'Show a color swatch next to each accent option in the menu, as this picker does, so people see the actual hue before picking it.',
+      dont: 'List accent names as plain text with no swatch, forcing a guess at what "Terracotta" or "Indigo" actually look like.',
+      visual: true,
+    },
   ],
   a11y: [
     'The trigger button\'s aria-label states the current theme by name (e.g. "Theme: Dusk"), not just an icon with no accessible name.',

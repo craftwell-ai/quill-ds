@@ -8,6 +8,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { useState } from 'react'
+import { usage } from '@/usage/collapsible.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Collapsible',
@@ -15,15 +18,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Collapsible is a lower-level primitive than Accordion — use it when you need a single toggle
-without the item/trigger/content structure. Pair with a chevron icon that rotates on open.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     open: { control: 'boolean', description: 'Controlled open state' },
@@ -76,4 +71,40 @@ export const DefaultOpen: Story = {
       </Collapsible>
     )
   },
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="pair-trigger-with-icon-rotation"
+      doExample={
+        <Collapsible defaultOpen>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-ink">Repositories (3)</span>
+            <CollapsibleTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Toggle repositories" />}>
+              <Icon name="keyboard_arrow_down" className="rotate-180 transition-transform" />
+            </CollapsibleTrigger>
+          </div>
+          <CollapsibleContent className="mt-2 space-y-1">
+            <div className="text-sm text-ink-soft px-2 py-1.5 rounded-md bg-paper-deep">quill-ds</div>
+          </CollapsibleContent>
+        </Collapsible>
+      }
+      dontExample={
+        <Collapsible defaultOpen>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-ink">Repositories (3)</span>
+            <CollapsibleTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Toggle repositories" />}>
+              Toggle
+            </CollapsibleTrigger>
+          </div>
+          <CollapsibleContent className="mt-2 space-y-1">
+            <div className="text-sm text-ink-soft px-2 py-1.5 rounded-md bg-paper-deep">quill-ds</div>
+          </CollapsibleContent>
+        </Collapsible>
+      }
+    />
+  ),
 }

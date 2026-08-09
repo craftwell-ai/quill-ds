@@ -14,7 +14,7 @@ export const usage = {
       id: 'one-primary-cta',
       do: 'Keep "Get started" as the one default-variant (primary) button; "Sign in" stays ghost so it doesn\'t compete.',
       dont: 'Style both actions as equally prominent primary buttons.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

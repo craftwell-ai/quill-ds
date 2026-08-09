@@ -19,6 +19,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
+import { usage } from '@/usage/dropdown-menu.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / DropdownMenu',
@@ -26,18 +29,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--popover\` · \`--shadow-sm\` · \`--radius-lg\`
-
-### Rules
-Dropdown opens on click. For contextual actions on a row or item, use a \`MoreHorizontalIcon\` icon trigger.
-Max ~8 items; use separators and labels to group. Destructive items go last.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {},
 } satisfies Meta<typeof DropdownMenu>
@@ -157,4 +149,35 @@ export const WithRadioGroup: Story = {
       </DropdownMenu>
     )
   },
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="destructive-items-last"
+      doExample={
+        <DropdownMenu defaultOpen>
+          <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><Icon name="more_horiz" /></Button>} />
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      }
+      dontExample={
+        <DropdownMenu defaultOpen>
+          <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More actions"><Icon name="more_horiz" /></Button>} />
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      }
+    />
+  ),
 }

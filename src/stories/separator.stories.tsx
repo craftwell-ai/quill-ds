@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Separator } from '@/components/ui/separator'
+import { usage } from '@/usage/separator.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Separator',
@@ -7,17 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--border\`
-
-### Rules
-Separator is a thin decorative divider. Use \`orientation="horizontal"\` (default) between stacked content and \`orientation="vertical"\` between inline items.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     orientation: {
@@ -91,5 +84,29 @@ export const AllVariants: Story = {
         </div>
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="vertical-needs-explicit-height"
+      doExample={
+        <div className="flex items-center gap-3 text-sm text-ink-soft">
+          <span>Edit</span>
+          <Separator orientation="vertical" className="h-4" />
+          <span>Preview</span>
+        </div>
+      }
+      dontExample={
+        <div className="flex items-center gap-3 text-sm text-ink-soft">
+          <span>Edit</span>
+          <Separator orientation="vertical" />
+          <span>Preview</span>
+        </div>
+      }
+    />
   ),
 }

@@ -14,7 +14,7 @@ export const usage = {
       id: 'always-offer-two-ways-out',
       do: 'Offer both a contextual escape (Go back) and an absolute one (Take me home) — never strand the user with only one recovery path.',
       dont: "Leave a 404 page with no action at all, or only a single 'Home' link buried in a header the user has to hunt for.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

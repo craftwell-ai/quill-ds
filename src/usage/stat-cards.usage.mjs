@@ -14,7 +14,7 @@ export const usage = {
       id: 'delta-tone-matches-meaning',
       do: "Match badge tone to whether the delta is actually good news for that metric (e.g. rising churn is bad, so it gets destructive tone even though the number itself looks like growth).",
       dont: "Default every rising number to a positive tone — a rising \"Open tickets\" count is bad news, not good.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

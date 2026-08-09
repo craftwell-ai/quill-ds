@@ -14,7 +14,7 @@ export const usage = {
       id: 'selected-item-stays-visible',
       do: "Keep the selected thread visually marked in the list (background fill) while its detail is open, so context isn't lost.",
       dont: "Let the list's selection state go stale or unmarked once a thread is open in the detail pane.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

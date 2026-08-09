@@ -12,6 +12,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { usage } from '@/usage/sheet.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Sheet',
@@ -19,18 +22,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--background\` · \`--border\` · \`--radius-lg\`
-
-### Rules
-Sheet slides in from an edge. Use \`side\` on \`SheetContent\` to pick \`right\` (settings/detail), \`left\` (navigation), or \`bottom\` (mobile actions).
-Always include \`SheetTitle\` for accessibility. Use \`SheetClose\` for cancel/dismiss actions.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {},
 } satisfies Meta<typeof Sheet>
@@ -101,5 +93,25 @@ export const BottomSheet: Story = {
         </div>
       </SheetContent>
     </Sheet>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="descriptive-trigger-label"
+      doExample={
+        <Sheet>
+          <SheetTrigger render={<Button variant="outline">Open Settings</Button>} />
+        </Sheet>
+      }
+      dontExample={
+        <Sheet>
+          <SheetTrigger render={<Button variant="outline">Open</Button>} />
+        </Sheet>
+      }
+    />
   ),
 }

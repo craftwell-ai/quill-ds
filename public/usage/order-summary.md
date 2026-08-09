@@ -11,6 +11,7 @@ A checkout order-summary card — line items, a promo code field, a total, and a
 
 ### Rules
 - **Do:** Recompute the total the instant a promo code applies or a line item changes — never leave a stale total on screen after an update. **Don't:** Require a page refresh or separate action to see the corrected total.
+- **Do:** Show an applied promo as its own line item with the discount amount, so the line items and the total add up to the same number. **Don't:** Let the total drop after a promo applies with no corresponding line item — buyers can't verify what changed.
 
 ### Accessibility
 - The total is set apart with a larger font size and its own row, not just bolded inline with the line items.

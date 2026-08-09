@@ -18,6 +18,12 @@ export const usage = {
       dont: 'Rely on the remember-me checkbox as a security boundary.',
       visual: false,
     },
+    {
+      id: 'forgot-password-stays-secondary',
+      do: 'Style "Forgot your password?" as a link beneath "Sign in" — one unmistakable primary action per card.',
+      dont: 'Give "Forgot your password?" the same solid button treatment as "Sign in" — now two buttons compete to be primary.',
+      visual: true,
+    },
   ],
   a11y: [
     'Email and password inputs are each labeled via <Label htmlFor>, not placeholder text alone.',

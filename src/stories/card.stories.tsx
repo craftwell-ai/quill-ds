@@ -5,6 +5,9 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { usage } from '@/usage/card.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Card',
@@ -12,18 +15,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--card\` (paper-warm) · \`--line-soft\` · \`--shadow-sm\` · \`--radius-xl\`
-
-### Rules
-Cards use \`paper-warm\` background with a 1px ring instead of a border, giving them lift without a box-shadow.
-\`size="sm"\` reduces padding — use for compact lists. \`CardAction\` is placed in \`CardHeader\` for top-right actions.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     size: {
@@ -146,5 +138,39 @@ export const Dark: Story = {
         <p className="text-sm text-ink-soft">Card body content in dark mode.</p>
       </CardContent>
     </Card>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="card-footer-for-actions"
+      doExample={
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick note</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-ink-soft">Actions live in CardFooter.</p>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full">Save</Button>
+          </CardFooter>
+        </Card>
+      }
+      dontExample={
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick note</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-ink-soft">Actions stuffed into CardContent.</p>
+            <Button className="w-full mt-3">Save</Button>
+          </CardContent>
+        </Card>
+      }
+    />
   ),
 }

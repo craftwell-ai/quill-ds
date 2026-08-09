@@ -8,6 +8,9 @@ import {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 } from '@/components/ui/breadcrumb'
+import { usage } from '@/usage/breadcrumb.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Breadcrumb',
@@ -15,20 +18,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--ink-muted\` · \`--ink\` · \`--line-soft\`
-
-### Rules
-The last item is always \`BreadcrumbPage\` (non-link, current). Previous items use \`BreadcrumbLink\`.
-Use \`BreadcrumbEllipsis\` when path exceeds 4 items deep.
-Use \`BreadcrumbSeparator\` children to override the default chevron with a custom separator character.
-\`BreadcrumbLink\` accepts a \`render\` prop (Base UI \`useRender\`) for router-aware link components.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {},
 } satisfies Meta<typeof Breadcrumb>
@@ -107,5 +97,33 @@ export const WithRenderProp: Story = {
         <BreadcrumbItem><BreadcrumbPage>Watercolor Basics</BreadcrumbPage></BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="last-item-is-page-not-link"
+      doExample={
+        <Breadcrumb aria-label="breadcrumb (do example)">
+          <BreadcrumbList>
+            <BreadcrumbItem><BreadcrumbLink href="/">Home</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem><BreadcrumbPage>Watercolor Basics</BreadcrumbPage></BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      }
+      dontExample={
+        <Breadcrumb aria-label="breadcrumb (don't example)">
+          <BreadcrumbList>
+            <BreadcrumbItem><BreadcrumbLink href="/">Home</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem><BreadcrumbLink href="/courses/watercolor-basics">Watercolor Basics</BreadcrumbLink></BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      }
+    />
   ),
 }

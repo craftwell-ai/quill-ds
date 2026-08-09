@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { usage } from '@/usage/textarea.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Textarea',
@@ -8,18 +11,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--input\` · \`--ring\` · \`--radius-lg\`
-
-### Rules
-Textarea is a styled HTML \`<textarea>\`. Always pair with a \`Label\`.
-Use \`aria-invalid\` for validation error styling. Set \`rows\` to control initial height.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     disabled: { control: 'boolean', description: 'Disable the textarea' },
@@ -82,5 +74,22 @@ export const AllVariants: Story = {
         <Textarea id="av-disabled" defaultValue="Not editable." rows={2} disabled />
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="pair-with-label"
+      doExample={
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="dodont-bio">Bio</Label>
+          <Textarea id="dodont-bio" placeholder="Tell us about yourself…" rows={3} />
+        </div>
+      }
+      dontExample={<Textarea placeholder="Tell us about yourself…" rows={3} />}
+    />
   ),
 }

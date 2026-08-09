@@ -14,7 +14,7 @@ export const usage = {
       id: 'reading-pane-hides-on-narrow',
       do: 'Hide the reading pane on narrow viewports so the message list gets the full width instead of squeezing both panes.',
       dont: 'Force the two-pane layout at phone widths where neither pane has room to be usable.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

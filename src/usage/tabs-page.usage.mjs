@@ -14,7 +14,7 @@ export const usage = {
       id: 'default-to-the-most-common-tab',
       do: "Set defaultValue to whichever tab users need most often (here, Account) so the page isn't blank on load.",
       dont: 'Leave no tab selected by default and force an extra click before any content shows.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

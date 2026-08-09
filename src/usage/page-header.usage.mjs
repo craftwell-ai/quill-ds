@@ -14,7 +14,7 @@ export const usage = {
       id: 'current-page-is-not-a-link',
       do: "Render the current page as BreadcrumbPage (plain text), not a link — you can't navigate to where you already are.",
       dont: 'Make every breadcrumb crumb, including the current page, a clickable link.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

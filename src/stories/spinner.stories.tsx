@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Spinner } from '@/components/ui/spinner'
+import { usage } from '@/usage/spinner.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Spinner',
@@ -7,16 +10,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Spinner is an indeterminate loading indicator. It inherits its color from \`currentColor\` so it adapts to any text color context.
-Use \`className\` to control size (\`size-4\`, \`size-6\`, \`size-8\`) and color (\`text-primary\`, \`text-ink-muted\`).
-For determinate progress use \`Progress\` instead.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof Spinner>
@@ -63,5 +57,26 @@ export const AllVariants: Story = {
         </div>
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="pair-with-context-text"
+      doExample={
+        <div className="flex items-center gap-2 text-sm text-ink-soft">
+          <Spinner className="size-4" />
+          <span>Saving changes…</span>
+        </div>
+      }
+      dontExample={
+        <div className="flex items-center gap-2 text-sm text-ink-soft">
+          <Spinner className="size-4" />
+        </div>
+      }
+    />
   ),
 }

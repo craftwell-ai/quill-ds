@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { AnnouncementBanner as AnnouncementBannerBlock } from '@registry/blocks/announcement-banner'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/ui/icon'
 import { usage } from '@/usage/announcement-banner.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Marketing / Announcement banner',
@@ -16,4 +20,33 @@ type Story = StoryObj
 
 export const AnnouncementBanner: Story = {
   render: () => <AnnouncementBannerBlock />,
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="always-dismissible"
+      doExample={
+        <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg border border-border bg-card px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Badge>New</Badge>
+            <p className="text-sm text-foreground">Field Notes issue № 004 just shipped.</p>
+          </div>
+          <Button variant="ghost" size="icon-sm" aria-label="Dismiss announcement">
+            <Icon name="close" size={16} />
+          </Button>
+        </div>
+      }
+      dontExample={
+        <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg border border-border bg-card px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Badge>New</Badge>
+            <p className="text-sm text-foreground">Field Notes issue № 004 just shipped.</p>
+          </div>
+        </div>
+      }
+    />
+  ),
 }

@@ -8,6 +8,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+import { usage } from '@/usage/pagination.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Pagination',
@@ -15,15 +18,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Pagination renders page navigation. \`PaginationLink\` accepts an \`isActive\` prop to highlight the current page.
-Use \`PaginationEllipsis\` when skipping page ranges. Include \`PaginationPrevious\` and \`PaginationNext\` always.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof Pagination>
@@ -98,5 +93,36 @@ export const ManyPages: Story = {
         <PaginationItem><PaginationNext href="#" /></PaginationItem>
       </PaginationContent>
     </Pagination>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="always-show-prev-next"
+      doExample={
+        <Pagination aria-label="pagination (do example)">
+          <PaginationContent>
+            <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+            <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationNext href="#" /></PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      }
+      dontExample={
+        <Pagination aria-label="pagination (don't example)">
+          <PaginationContent>
+            <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationNext href="#" /></PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      }
+    />
   ),
 }

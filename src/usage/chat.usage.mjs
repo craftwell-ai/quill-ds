@@ -14,7 +14,7 @@ export const usage = {
       id: 'align-by-sender',
       do: "Align the current user's messages to one side (right) and the other party's to the other (left) — position is the primary cue for who said what.",
       dont: 'Rely on color alone to distinguish sender — pair it with consistent alignment.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

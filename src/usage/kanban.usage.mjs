@@ -14,7 +14,7 @@ export const usage = {
       id: 'column-count-is-live',
       do: "Keep each column's card-count badge in sync with its actual card list — it's a running total, not a caption.",
       dont: 'Let the count badge drift out of sync when cards move between columns.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

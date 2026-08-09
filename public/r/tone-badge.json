@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "tone-badge",
   "title": "Tone badge",
-  "description": "The Quill uppercase tag pill — pigment tones (moss/gold/terracotta/indigo/neutral/muted), tinted or solid, in the 20px badge and 16px count-pill sizes. One component so status chips never drift per call site.",
+  "description": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site.",
   "registryDependencies": [
     "badge"
   ],
@@ -14,5 +14,6 @@
       "target": "components/ui/tone-badge.tsx"
     }
   ],
+  "docs": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site. Do: Leave `solid` false (the tinted default) for regular status/tier labels — it is the visually quieter option and still hits AA contrast per tone. Don't: Set `solid` on every ToneBadge in a view — solid is reserved for the one strong cue (a \"current\" marker, a live state) and loses its signal once everything is solid. Do: Render every uppercase tag pill through ToneBadge, even one-off labels. Don't: Hand-roll a `rounded-full … uppercase` span with ad hoc tone colors — it drifts from the AA-checked tint/solid pairs and the two-size scale. Do: Use ToneBadge's own size scale — `md` (20px) or `sm` (16px, the count-pill scale). Don't: Shrink a pill by hand-tightening its tracking or padding instead of passing `size=\"sm\"` — type stays `--text-2xs` at 0.1em tracking in both sizes. Use badge when the label is a generic chip outside Quill's tag-pill vocabulary — use Badge directly instead of forcing it through a tone.",
   "type": "registry:ui"
 }

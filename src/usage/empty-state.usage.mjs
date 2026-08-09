@@ -14,7 +14,7 @@ export const usage = {
       id: 'always-pair-with-an-action',
       do: 'Pair the explanation with a real, primary action button that actually fills the view (e.g. "New project").',
       dont: 'Explain that a view is empty and leave the user with no way to act on it from that screen.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

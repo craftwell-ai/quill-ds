@@ -14,7 +14,7 @@ export const usage = {
       id: 'communicate-expiry',
       do: 'State the code\'s expiry window in the card body ("expires in 10 minutes"), not just in the email.',
       dont: 'Leave users guessing why a code that worked a moment ago now fails.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

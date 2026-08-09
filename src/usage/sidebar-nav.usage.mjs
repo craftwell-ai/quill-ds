@@ -14,7 +14,7 @@ export const usage = {
       id: 'group-related-items',
       do: 'Group sidebar items under labeled sections (e.g. "Workspace", "Studio"), as this block already does, rather than one long flat list.',
       dont: 'List every nav item at the same level with no grouping once the count grows past a handful.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

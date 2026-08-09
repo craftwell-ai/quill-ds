@@ -21,6 +21,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { Icon } from '@/components/ui/icon'
 import type { IconName } from '@/components/ui/icon'
+import { usage } from '@/usage/sidebar.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const navItems: { label: string; icon: IconName; badge?: string }[] = [
   { label: 'Dashboard', icon: 'dashboard' },
@@ -41,21 +44,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--sidebar\` · \`--sidebar-foreground\` · \`--sidebar-border\`
-
-### Rules
-Always wrap in \`SidebarProvider\`. Use \`SidebarTrigger\` to toggle collapse.
-\`SidebarGroup\` + \`SidebarGroupLabel\` + \`SidebarGroupContent\` creates a labelled section.
-\`SidebarMenuButton\` accepts \`isActive\` for the current page and \`tooltip\` for collapsed icon mode.
-\`SidebarRail\` adds a hover-to-collapse drag rail on the sidebar edge.
-\`SidebarMenuBadge\` overlays a count badge on a menu item.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
 } satisfies Meta<typeof Sidebar>
@@ -329,5 +318,60 @@ export const WithNotifications: Story = {
         </div>
       </div>
     </SidebarProvider>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true }, layout: 'padded' },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="use-menubadge-for-counts"
+      doExample={
+        <SidebarProvider className="min-h-0">
+          <div className="flex h-40 w-56 border border-border rounded-lg overflow-hidden">
+            <Sidebar collapsible="none">
+              <SidebarContent>
+                <SidebarGroup>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton>
+                          <Icon name="group" />
+                          <span>Community</span>
+                        </SidebarMenuButton>
+                        <SidebarMenuBadge>3</SidebarMenuBadge>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              </SidebarContent>
+            </Sidebar>
+          </div>
+        </SidebarProvider>
+      }
+      dontExample={
+        <SidebarProvider className="min-h-0">
+          <div className="flex h-40 w-56 border border-border rounded-lg overflow-hidden">
+            <Sidebar collapsible="none">
+              <SidebarContent>
+                <SidebarGroup>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton>
+                          <Icon name="group" />
+                          <span>Community (3)</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              </SidebarContent>
+            </Sidebar>
+          </div>
+        </SidebarProvider>
+      }
+    />
   ),
 }

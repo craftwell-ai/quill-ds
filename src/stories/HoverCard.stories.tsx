@@ -5,7 +5,11 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
+import { usage } from '@/usage/hover-card.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / HoverCard',
@@ -13,18 +17,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--popover\` · \`--shadow-sm\` · \`--radius-lg\`
-
-### Rules
-HoverCard shows on mouse hover (not click). Use for preview info — author bios, link previews, expanded metadata.
-Never use for interactive actions — hover is unreliable on touch devices.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
 } satisfies Meta<typeof HoverCard>
 
@@ -104,5 +97,41 @@ export const LinkPreview: Story = {
         </div>
       </HoverCardContent>
     </HoverCard>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="informational-only"
+      doExample={
+        <HoverCard defaultOpen>
+          <HoverCardTrigger href="#" className="text-sm underline-offset-4 hover:underline">
+            @janedoe
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <div className="flex flex-col gap-1">
+              <p className="font-heading text-sm font-medium text-ink">Jane Doe</p>
+              <p className="text-xs text-ink-muted">Product designer, Quill Design System</p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      }
+      dontExample={
+        <HoverCard defaultOpen>
+          <HoverCardTrigger href="#" className="text-sm underline-offset-4 hover:underline">
+            @janedoe
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <div className="flex flex-col gap-2">
+              <p className="font-heading text-sm font-medium text-ink">Jane Doe</p>
+              <Button size="sm">Follow</Button>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      }
+    />
   ),
 }

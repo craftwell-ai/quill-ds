@@ -14,7 +14,7 @@ export const usage = {
       id: 'state-the-no-spam-promise',
       do: 'Say plainly what subscribers are signing up for and that they can leave any time ("No spam, no noise — unsubscribe any time.").',
       dont: 'Ask for an email with no context on frequency or an easy way out.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

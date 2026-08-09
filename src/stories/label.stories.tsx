@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
+import { usage } from '@/usage/label.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Label',
@@ -9,18 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--ink\` · \`--ink-muted\` (disabled)
-
-### Rules
-Always associate Label with its control via \`htmlFor\`/\`id\` or co-location.
-Label automatically dims when its associated peer input is disabled.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     children: { control: 'text', description: 'Label text' },
@@ -62,5 +54,27 @@ export const DisabledState: Story = {
       <Input id="disabled-input" className="peer" disabled defaultValue="read-only" />
       <Label htmlFor="disabled-input">Locked field</Label>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="peer-disabled-needs-input-first-in-dom"
+      doExample={
+        <div className="flex flex-col-reverse gap-1.5 w-64">
+          <Input id="dodont-locked-do" className="peer" disabled defaultValue="read-only" />
+          <Label htmlFor="dodont-locked-do">Locked field</Label>
+        </div>
+      }
+      dontExample={
+        <div className="flex flex-col gap-1.5 w-64">
+          <Label htmlFor="dodont-locked-dont">Locked field</Label>
+          <Input id="dodont-locked-dont" className="peer" disabled defaultValue="read-only" />
+        </div>
+      }
+    />
   ),
 }

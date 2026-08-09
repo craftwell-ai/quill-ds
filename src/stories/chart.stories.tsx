@@ -8,6 +8,9 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { Bar, BarChart, Line, LineChart, XAxis, YAxis } from 'recharts'
+import { usage } from '@/usage/chart.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const chartData = [
   { month: 'Jan', lessons: 18 },
@@ -36,29 +39,21 @@ const multiSeriesConfig = {
   completions: { label: 'Completions', color: 'var(--chart-2)' },
 }
 
+// Deliberately wrong: raw UI pigments instead of the chart-only token cuts.
+// terracotta/moss is the exact adjacency the source code calls out as failing
+// deuteranopia separation (src/tokens/quill.tokens.mjs, chart-token comment).
+const rawPigmentConfig = {
+  lessons: { label: 'Lessons', color: 'var(--terracotta)' },
+  completions: { label: 'Completions', color: 'var(--moss)' },
+}
+
 const meta = {
   title: 'Components / Chart',
   component: ChartContainer,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-Series colors come from the chart-only cuts \`--chart-1\` … \`--chart-5\` (aliases of
-\`--chart-series-1..5\`) — **never raw pigments**, which fail colorblind-safety checks as data
-marks. Magnitude ramps (\`--chart-seq-1..5\`) and polarity ramps (\`--chart-div-1..5\`) are
-documented in **Foundations / Colors**. All chart tokens re-cut per theme automatically.
-
-### Rules
-Assign series colors in fixed order (\`--chart-1\` first, then \`2\`, …) and never reorder the
-survivors when a filter drops a series. Prefer \`color: "var(--chart-N)"\` in the config — the
-\`theme\` field only distinguishes light/dark schemes, not all four Quill themes.
-Always include \`ChartTooltip\` for accessibility.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     className: { table: { disable: true } },
@@ -109,5 +104,35 @@ export const WithLegend: Story = {
         <ChartLegend content={<ChartLegendContent />} />
       </BarChart>
     </ChartContainer>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="chart-tokens-fixed-order"
+      doExample={
+        <ChartContainer config={multiSeriesConfig} className="h-40 w-full">
+          <BarChart data={multiSeriesData}>
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Bar dataKey="lessons" fill="var(--color-lessons)" radius={4} />
+            <Bar dataKey="completions" fill="var(--color-completions)" radius={4} />
+          </BarChart>
+        </ChartContainer>
+      }
+      dontExample={
+        <ChartContainer config={rawPigmentConfig} className="h-40 w-full">
+          <BarChart data={multiSeriesData}>
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Bar dataKey="lessons" fill="var(--color-lessons)" radius={4} />
+            <Bar dataKey="completions" fill="var(--color-completions)" radius={4} />
+          </BarChart>
+        </ChartContainer>
+      }
+    />
   ),
 }

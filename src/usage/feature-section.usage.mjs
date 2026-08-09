@@ -14,7 +14,7 @@ export const usage = {
       id: 'three-is-the-target',
       do: 'Keep the grid to three (or a multiple of three) features so it reads evenly across the row.',
       dont: 'Let an uneven feature count leave a dangling, unbalanced last row on wide screens.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

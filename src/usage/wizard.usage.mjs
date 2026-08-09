@@ -14,7 +14,7 @@ export const usage = {
       id: 'always-show-full-sequence',
       do: 'Show every step in the stepper up front (done/current/todo), so users know how much is left.',
       dont: 'Reveal steps one at a time with no sense of total progress.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

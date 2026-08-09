@@ -14,7 +14,7 @@ export const usage = {
       id: 'reserve-destructive',
       do: 'Reserve the destructive variant for a status that actually needs attention (blocked, failed, overdue).',
       dont: "Use destructive styling for emphasis on a badge that isn't actually a warning.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

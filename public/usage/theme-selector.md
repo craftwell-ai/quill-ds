@@ -10,6 +10,7 @@ A dropdown picker for the four Quill themes and four pigment accents — sets da
 
 ### Rules
 - **Do:** Read the persisted theme/accent from localStorage in an effect, after mount — never during render, or prerendered markup mismatches the client. **Don't:** Read localStorage synchronously during render; that guarantees a hydration mismatch since the server always renders Dawn/moss.
+- **Do:** Show a color swatch next to each accent option in the menu, as this picker does, so people see the actual hue before picking it. **Don't:** List accent names as plain text with no swatch, forcing a guess at what "Terracotta" or "Indigo" actually look like.
 
 ### Accessibility
 - The trigger button's aria-label states the current theme by name (e.g. "Theme: Dusk"), not just an icon with no accessible name.

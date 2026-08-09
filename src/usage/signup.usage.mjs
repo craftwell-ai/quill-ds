@@ -14,7 +14,7 @@ export const usage = {
       id: 'state-the-offer',
       do: "Use the description line to state what happens next (trial length, no card required) so the form isn't just fields with no context.",
       dont: 'Leave the card as a bare field list with no framing for why someone would fill it out.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

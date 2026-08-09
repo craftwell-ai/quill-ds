@@ -13,6 +13,9 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/alert-dialog.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / AlertDialog',
@@ -20,18 +23,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--card\` · \`--ink\` · \`--destructive\` · \`--shadow-lg\` · \`--radius-xl\`
-
-### Rules
-AlertDialog is for **destructive confirmation only** — deleting, overwriting, irreversible actions.
-For informational modals use Dialog. The action button should state the consequence ("Delete course", not "Confirm").
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {},
 } satisfies Meta<typeof AlertDialog>
@@ -99,5 +91,25 @@ export const Compact: Story = {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="destructive-trigger-signals-risk"
+      doExample={
+        <AlertDialog>
+          <AlertDialogTrigger render={<Button variant="destructive">Delete course</Button>} />
+        </AlertDialog>
+      }
+      dontExample={
+        <AlertDialog>
+          <AlertDialogTrigger render={<Button>Delete course</Button>} />
+        </AlertDialog>
+      }
+    />
   ),
 }

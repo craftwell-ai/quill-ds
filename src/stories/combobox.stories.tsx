@@ -21,6 +21,9 @@ import {
   useComboboxAnchor,
 } from '@/components/ui/combobox'
 import { Button } from '@/components/ui/button'
+import { usage } from '@/usage/combobox.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const frameworks = ['Next.js', 'Remix', 'Astro', 'SvelteKit', 'Nuxt', 'TanStack Start']
 
@@ -33,24 +36,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-Base UI's Combobox has two wiring requirements for filtering to work:
-
-1. Pass the full item array to \`<Combobox items={…}>\` on the root.
-2. Wrap items in \`<ComboboxCollection>\` with a **render-function** child — the collection calls it for each filtered item.
-
-Without \`items\` on the root, filtering never runs and all items always show.
-
-**Inline pattern** — \`ComboboxInput\` is the trigger itself.
-**Button + popup pattern** — a \`ComboboxTrigger\` button opens a popup containing \`ComboboxInput\`.
-
-> Note on \`render=\`: Base UI's \`render\` prop replaces the root element but uses the *component's* children, not the render element's children. Pass \`ComboboxValue\` as a child of \`ComboboxTrigger\`, not inside the \`render\` prop's JSX.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     disabled: { control: 'boolean', description: 'Disable the combobox', table: { defaultValue: { summary: 'false' } } },
@@ -238,4 +224,52 @@ export const MultiSelect: Story = {
     expect(canvas.getByText('Next.js')).toBeInTheDocument()
     expect(canvas.getByText('Astro')).toBeInTheDocument()
   },
+}
+
+// axe: aria-hidden-focus — an open Base UI Combobox marks sibling content
+// aria-hidden while it stays focusable.
+// axe: aria-required-children — ComboboxEmpty's role="status" is nested
+// inside role="listbox", which disallows it.
+// Both are real Combobox primitive defects, not the intentional Don't —
+// first surfaced by this story opening the combobox. Tracked separately;
+// not fixed here (out of scope for usage-docs wave 3).
+export const DoDont: Story = {
+  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="items-prop-required-for-filtering"
+      doExample={
+        <Combobox items={frameworks} defaultOpen defaultInputValue="ast">
+          <ComboboxInput placeholder="Search framework…" className="w-52" aria-label="Search framework" showTrigger={false} />
+          <ComboboxContent className="min-w-(--anchor-width)">
+            <ComboboxList>
+              <ComboboxEmpty>No results found.</ComboboxEmpty>
+              <ComboboxCollection>
+                {(fw: string) => (
+                  <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+                )}
+              </ComboboxCollection>
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      }
+      dontExample={
+        // Deliberately omits `items` on the root to demonstrate the mistake.
+        <Combobox defaultOpen defaultInputValue="ast">
+          <ComboboxInput placeholder="Search framework…" className="w-52" aria-label="Search framework (broken)" showTrigger={false} />
+          <ComboboxContent className="min-w-(--anchor-width)">
+            <ComboboxList>
+              <ComboboxEmpty>No results found.</ComboboxEmpty>
+              <ComboboxCollection>
+                {(fw: string) => (
+                  <ComboboxItem key={fw} value={fw}>{fw}</ComboboxItem>
+                )}
+              </ComboboxCollection>
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      }
+    />
+  ),
 }

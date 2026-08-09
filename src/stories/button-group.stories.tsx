@@ -3,6 +3,9 @@ import { useState } from 'react'
 import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from '@/components/ui/button-group'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/button-group.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / ButtonGroup',
@@ -10,15 +13,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Rules
-ButtonGroup collapses adjacent buttons into a single compound control, merging their borders.
-Use for mutually exclusive options (alignment, view mode) or sequential actions (prev/next).
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     className: { table: { disable: true } },
@@ -145,5 +140,27 @@ export const AllVariants: Story = {
         <Button variant="outline">Name</Button>
       </ButtonGroup>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="use-outline-variant"
+      doExample={
+        <ButtonGroup>
+          <Button variant="outline">Previous</Button>
+          <Button variant="outline">Next</Button>
+        </ButtonGroup>
+      }
+      dontExample={
+        <ButtonGroup>
+          <Button>Previous</Button>
+          <Button>Next</Button>
+        </ButtonGroup>
+      }
+    />
   ),
 }
