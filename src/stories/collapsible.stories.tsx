@@ -96,7 +96,7 @@ export const DoDont: Story = {
         <Collapsible defaultOpen>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-ink">Repositories (3)</span>
-            <CollapsibleTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Toggle repositories" />}>
+            <CollapsibleTrigger render={<Button variant="ghost" size="sm" aria-label="Toggle repositories" />}>
               Toggle
             </CollapsibleTrigger>
           </div>
