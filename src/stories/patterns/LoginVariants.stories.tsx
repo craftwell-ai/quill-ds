@@ -88,21 +88,19 @@ export const MinimalDoDont: Story = {
       usage={minimalUsage}
       id="no-card-chrome"
       doExample={
-        <div className="w-[280px] rounded-xl border bg-card p-6 shadow-sm">
-          <form className="flex flex-col items-center gap-4" onSubmit={(e) => e.preventDefault()}>
-            <div className="flex flex-col items-center gap-2 text-center">
-              <span className="flex size-9 items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground">
-                Q
-              </span>
-              <h3 className="font-heading text-lg text-foreground">Sign in to Quill</h3>
-            </div>
-            <div className="flex w-full flex-col gap-1.5">
-              <Label htmlFor="dodont-minimal-do-email">Email</Label>
-              <Input id="dodont-minimal-do-email" type="email" placeholder="you@example.com" />
-            </div>
-            <Button className="w-full">Continue</Button>
-          </form>
-        </div>
+        <form className="flex w-[280px] flex-col items-center gap-4" onSubmit={(e) => e.preventDefault()}>
+          <div className="flex flex-col items-center gap-2 text-center">
+            <span className="flex size-9 items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground">
+              Q
+            </span>
+            <h3 className="font-heading text-lg text-foreground">Sign in to Quill</h3>
+          </div>
+          <div className="flex w-full flex-col gap-1.5">
+            <Label htmlFor="dodont-minimal-do-email">Email</Label>
+            <Input id="dodont-minimal-do-email" type="email" placeholder="you@example.com" />
+          </div>
+          <Button className="w-full">Continue</Button>
+        </form>
       }
       dontExample={
         <div className="relative isolate flex h-[320px] w-[320px] items-center justify-center overflow-hidden rounded-md">

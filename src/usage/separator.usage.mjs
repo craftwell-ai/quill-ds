@@ -8,9 +8,9 @@ export const usage = {
   alternatives: [],
   rules: [
     {
-      id: 'vertical-needs-explicit-height',
-      do: 'Give a vertical Separator an explicit height (e.g. `h-4`), as every vertical story here does.',
-      dont: 'Add `orientation="vertical"` with no height class and expect it to reach the row\'s full height automatically — inside an `items-center` row it collapses to zero height and disappears.',
+      id: 'vertical-needs-flex-ancestor',
+      do: 'Give a vertical Separator an explicit height (e.g. `h-4`), as every vertical story here does — it renders correctly regardless of the parent layout.',
+      dont: 'Rely on `self-stretch` alone by dropping `orientation="vertical"` into a wrapper that isn\'t a flex container — with no flex ancestor to stretch against and no explicit height class, the separator collapses to zero height and disappears.',
       visual: true,
     },
     {

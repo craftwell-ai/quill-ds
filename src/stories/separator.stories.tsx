@@ -92,7 +92,7 @@ export const DoDont: Story = {
   render: () => (
     <DoDontPair
       usage={usage}
-      id="vertical-needs-explicit-height"
+      id="vertical-needs-flex-ancestor"
       doExample={
         <div className="flex items-center gap-3 text-sm text-ink-soft">
           <span>Edit</span>
@@ -101,7 +101,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex items-center gap-3 text-sm text-ink-soft">
+        <div className="items-center gap-3 text-sm text-ink-soft">
           <span>Edit</span>
           <Separator orientation="vertical" />
           <span>Preview</span>

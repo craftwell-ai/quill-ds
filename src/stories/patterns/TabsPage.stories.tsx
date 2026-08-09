@@ -25,7 +25,7 @@ export const DoDont: Story = {
   render: () => (
     <DoDontPair
       usage={usage}
-      id="default-to-the-most-common-tab"
+      id="trigger-value-matches-content"
       doExample={
         <div className="w-64">
           <Tabs defaultValue="account">
@@ -44,7 +44,7 @@ export const DoDont: Story = {
       }
       dontExample={
         <div className="w-64">
-          <Tabs defaultValue="wrong-value">
+          <Tabs defaultValue="notifications">
             <TabsList>
               <TabsTrigger value="account">Account</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -52,7 +52,7 @@ export const DoDont: Story = {
             <TabsContent value="account">
               <p className="pt-2 text-sm text-muted-foreground">Update your account details.</p>
             </TabsContent>
-            <TabsContent value="notifications">
+            <TabsContent value="alerts">
               <p className="pt-2 text-sm text-muted-foreground">Choose what you hear about.</p>
             </TabsContent>
           </Tabs>

@@ -64,23 +64,27 @@ export const WithAction: Story = {
   ),
 }
 
+// Static mocks of a fired Sonner toast — matching the real markup's box model
+// (16px padding, 6px icon gap, popover surface, border, shadow-md) so the
+// DoDont pair can show the icon-vs-no-icon contrast without a transient,
+// click-triggered toast that DoDontPair's static render can't capture.
+function MockToast({ withIcon }: { withIcon: boolean }) {
+  return (
+    <div className="flex items-center gap-1.5 rounded-lg border border-border bg-popover p-4 text-[13px] text-popover-foreground shadow-md">
+      {withIcon && <Icon name="check_circle" className="size-4 shrink-0" />}
+      <span>Course published.</span>
+    </div>
+  )
+}
+
 export const DoDont: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}
       id="typed-variant-matches-meaning"
-      doExample={
-        <Button variant="outline" onClick={() => toast.success('Course published.')}>
-          <Icon name="check_circle" className="size-4" />
-          Publish course
-        </Button>
-      }
-      dontExample={
-        <Button variant="outline" onClick={() => toast('Course published.')}>
-          Publish course
-        </Button>
-      }
+      doExample={<MockToast withIcon />}
+      dontExample={<MockToast withIcon={false} />}
     />
   ),
 }

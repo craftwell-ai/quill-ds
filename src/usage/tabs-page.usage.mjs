@@ -11,9 +11,9 @@ export const usage = {
   ],
   rules: [
     {
-      id: 'default-to-the-most-common-tab',
-      do: "Set defaultValue to whichever tab users need most often (here, Account) so the page isn't blank on load.",
-      dont: 'Leave no tab selected by default and force an extra click before any content shows.',
+      id: 'trigger-value-matches-content',
+      do: "Keep each TabsTrigger's `value` identical to its TabsContent's `value` when you rename a section (here, `account`/`notifications`), so the tab a user lands on always has a panel to show.",
+      dont: "Rename a TabsTrigger's `value` (e.g. Notifications → Alerts) without updating its TabsContent to match — the renamed tab still highlights as active since its own value is valid, but the panel underneath renders empty because no content shares that value anymore.",
       visual: true,
     },
   ],

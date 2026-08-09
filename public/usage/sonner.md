@@ -11,7 +11,7 @@ A toast-notification stack for transient feedback about an action just taken —
 
 ### Rules
 - **Do:** Mount exactly one Toaster at the app root — Quill's Storybook preview does this globally, so individual stories never render their own. **Don't:** Add a second local Toaster inside a page or story — two toast regions trip axe's landmark-unique rule and can double-render the same toast.
-- **Do:** Call the typed variant that matches the outcome (`toast.success`, `toast.error`, `toast.info`, `toast.warning`, `toast.loading`) — each ships its own icon, so meaning reads before the copy does. **Don't:** Call the untyped `toast()` for a message that's really a success or an error — it renders with no icon and no semantic color, so the outcome is buried in the text.
+- **Do:** Call the typed variant that matches the outcome (`toast.success`, `toast.error`, `toast.info`, `toast.warning`, `toast.loading`) — each ships its own icon, so meaning reads before the copy does. **Don't:** Call the untyped `toast()` for a message that's really a success or an error — it renders with no icon at all, so the outcome is buried in the text.
 - **Do:** Keep toast copy to one short sentence — a status update, not an explanation. **Don't:** Pack a paragraph of detail into a toast — it auto-dismisses before anyone can finish reading it.
 
 ### Accessibility

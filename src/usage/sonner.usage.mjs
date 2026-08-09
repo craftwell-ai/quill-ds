@@ -19,7 +19,7 @@ export const usage = {
     {
       id: 'typed-variant-matches-meaning',
       do: 'Call the typed variant that matches the outcome (`toast.success`, `toast.error`, `toast.info`, `toast.warning`, `toast.loading`) — each ships its own icon, so meaning reads before the copy does.',
-      dont: "Call the untyped `toast()` for a message that's really a success or an error — it renders with no icon and no semantic color, so the outcome is buried in the text.",
+      dont: "Call the untyped `toast()` for a message that's really a success or an error — it renders with no icon at all, so the outcome is buried in the text.",
       visual: true,
     },
     {
