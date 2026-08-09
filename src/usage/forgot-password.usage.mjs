@@ -14,7 +14,7 @@ export const usage = {
       id: 'always-offer-a-way-back',
       do: 'Keep the ghost "Back to sign in" button so a user who clicked in by mistake isn\'t stuck.',
       dont: 'Ship this card as a dead end with no return path to sign-in.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

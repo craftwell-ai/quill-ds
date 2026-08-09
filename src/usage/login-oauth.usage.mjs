@@ -15,7 +15,7 @@ export const usage = {
       id: 'providers-are-primary',
       do: 'Treat the provider buttons as the primary path; keep the email form below the rule as a fallback, not the headline.',
       dont: 'Give the email field equal visual weight to the provider buttons when most users have a provider account.',
-      visual: false,
+      visual: true,
     },
     {
       id: 'brand-marks-are-fixed',

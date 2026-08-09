@@ -14,7 +14,7 @@ export const usage = {
       id: 'panel-collapses-on-mobile',
       do: 'Let the brand panel drop out on small viewports and let the form take the full width.',
       dont: 'Force the two-column grid at phone widths — the testimonial panel has no room to be legible.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

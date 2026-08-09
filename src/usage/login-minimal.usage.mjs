@@ -15,7 +15,7 @@ export const usage = {
       id: 'no-card-chrome',
       do: 'Reserve the bare, uncontained layout for cases where the surrounding page or modal already frames it.',
       dont: 'Drop this pattern directly onto a busy page background with nothing to separate it visually.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

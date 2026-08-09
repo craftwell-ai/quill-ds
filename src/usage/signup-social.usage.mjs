@@ -14,7 +14,7 @@ export const usage = {
       id: 'providers-lead-fallback-follows',
       do: "Put the provider buttons above the divider and the email/password fields below it, matching login-oauth's provider-first order.",
       dont: 'Bury the provider buttons below a full email/password form — that defeats the point of offering them.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [
