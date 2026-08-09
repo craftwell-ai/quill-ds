@@ -2,6 +2,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { usage } from '@/usage/checkbox.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Checkbox',
@@ -9,19 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--primary\` · \`--input\` · \`--ring\` · \`--radius-sm\`
-
-### Rules
-Always pair Checkbox with a \`Label\` using \`htmlFor\`/\`id\` or wrapping composition.
-Checked state fills with \`--primary\` (ink). Focus ring is \`--ring\` (ink). Invalid state uses \`--destructive\`.
-Use \`aria-invalid\` for validation errors, not a separate color prop.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     disabled: {
@@ -99,5 +90,27 @@ export const AllVariants: Story = {
         </div>
       ))}
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="pair-with-label"
+      doExample={
+        <div className="flex items-center gap-2">
+          <Checkbox id="usage-checkbox-do" />
+          <Label htmlFor="usage-checkbox-do">Accept terms and conditions</Label>
+        </div>
+      }
+      dontExample={
+        <div className="flex items-center gap-2">
+          <Checkbox />
+          <span>Accept terms and conditions</span>
+        </div>
+      }
+    />
   ),
 }

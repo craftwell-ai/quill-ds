@@ -2,6 +2,9 @@ import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
+import { usage } from '@/usage/radio-group.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / RadioGroup',
@@ -9,18 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--primary\` · \`--input\` · \`--ring\`
-
-### Rules
-Always pair \`RadioGroupItem\` with a \`Label\`. Set \`defaultValue\` for uncontrolled, \`value\` + \`onValueChange\` for controlled.
-One selection per group — for multi-select use Checkboxes.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     defaultValue: { control: 'text', description: 'Default selected value' },
@@ -168,5 +160,31 @@ export const AllVariants: Story = {
         </div>
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="pair-with-label"
+      doExample={
+        <RadioGroup defaultValue="beginner">
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="beginner" id="usage-radio-do" />
+            <Label htmlFor="usage-radio-do">Beginner</Label>
+          </div>
+        </RadioGroup>
+      }
+      dontExample={
+        <RadioGroup defaultValue="beginner">
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="beginner" />
+            <span>Beginner</span>
+          </div>
+        </RadioGroup>
+      }
+    />
   ),
 }

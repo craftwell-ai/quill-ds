@@ -9,9 +9,11 @@ import { usage as analyticsCharts } from './analytics-charts.usage.mjs'
 import { usage as announcementBanner } from './announcement-banner.usage.mjs'
 import { usage as badgeOnCard } from './badge-on-card.usage.mjs'
 import { usage as button } from './button.usage.mjs'
+import { usage as buttonGroup } from './button-group.usage.mjs'
 import { usage as calendarPage } from './calendar-page.usage.mjs'
 import { usage as calendarRange } from './calendar-range.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
+import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as combobox } from './combobox.usage.mjs'
 import { usage as commandPalette } from './command-palette.usage.mjs'
@@ -51,19 +53,24 @@ import { usage as otpVerification } from './otp-verification.usage.mjs'
 import { usage as pageHeader } from './page-header.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
+import { usage as radioGroup } from './radio-group.usage.mjs'
 import { usage as searchResults } from './search-results.usage.mjs'
 import { usage as select } from './select.usage.mjs'
 import { usage as settings } from './settings.usage.mjs'
 import { usage as sidebarNav } from './sidebar-nav.usage.mjs'
 import { usage as signup } from './signup.usage.mjs'
 import { usage as signupSocial } from './signup-social.usage.mjs'
+import { usage as slider } from './slider.usage.mjs'
 import { usage as statCards } from './stat-cards.usage.mjs'
 import { usage as statsBand } from './stats-band.usage.mjs'
+import { usage as switchUsage } from './switch.usage.mjs'
 import { usage as tabsPage } from './tabs-page.usage.mjs'
 import { usage as teamSection } from './team-section.usage.mjs'
 import { usage as testimonial } from './testimonial.usage.mjs'
 import { usage as textarea } from './textarea.usage.mjs'
 import { usage as themeSelector } from './theme-selector.usage.mjs'
+import { usage as toggle } from './toggle.usage.mjs'
+import { usage as toggleGroup } from './toggle-group.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
 export const ALL_USAGE = [
@@ -73,9 +80,11 @@ export const ALL_USAGE = [
   announcementBanner,
   badgeOnCard,
   button,
+  buttonGroup,
   calendarPage,
   calendarRange,
   chat,
+  checkbox,
   checkout,
   combobox,
   commandPalette,
@@ -115,18 +124,23 @@ export const ALL_USAGE = [
   pageHeader,
   pricing,
   profileCard,
+  radioGroup,
   searchResults,
   select,
   settings,
   sidebarNav,
   signup,
   signupSocial,
+  slider,
   statCards,
   statsBand,
+  switchUsage,
   tabsPage,
   teamSection,
   testimonial,
   textarea,
   themeSelector,
+  toggle,
+  toggleGroup,
   wizard,
 ]

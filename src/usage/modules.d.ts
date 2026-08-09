@@ -36,6 +36,11 @@ declare module '@/usage/button.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/button-group.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/calendar-page.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -47,6 +52,11 @@ declare module '@/usage/calendar-range.usage.mjs' {
 }
 
 declare module '@/usage/chat.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/checkbox.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -246,6 +256,11 @@ declare module '@/usage/profile-card.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/radio-group.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/search-results.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -276,12 +291,22 @@ declare module '@/usage/signup-social.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/slider.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/stat-cards.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
 
 declare module '@/usage/stats-band.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/switch.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -307,6 +332,16 @@ declare module '@/usage/textarea.usage.mjs' {
 }
 
 declare module '@/usage/theme-selector.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/toggle.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/toggle-group.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

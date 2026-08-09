@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Slider } from '@/components/ui/slider'
+import { usage } from '@/usage/slider.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
 
 const meta = {
   title: 'Components / Slider',
@@ -8,18 +11,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: `
-### Design tokens
-\`--primary\` · \`--input\` · \`--ring\`
-
-### Rules
-\`defaultValue\` is an array — pass a single-element array for a single handle, two elements for a range.
-Use \`step\` for discrete increments. \`min\` and \`max\` default to 0 and 100.
-        `,
-      },
-    },
+    docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: {
     disabled: { control: 'boolean', description: 'Disable the slider', table: { defaultValue: { summary: 'false' } } },
@@ -83,5 +75,29 @@ export const AllVariants: Story = {
         <Slider defaultValue={[60]} disabled />
       </div>
     </div>
+  ),
+}
+
+export const DoDont: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <DoDontPair
+      usage={usage}
+      id="pair-with-visible-readout"
+      doExample={
+        <div className="flex flex-col gap-1.5 w-full">
+          <div className="flex justify-between text-xs text-ink-muted">
+            <span>Volume</span>
+            <span>50</span>
+          </div>
+          <Slider defaultValue={[50]} />
+        </div>
+      }
+      dontExample={
+        <div className="w-full">
+          <Slider defaultValue={[50]} />
+        </div>
+      }
+    />
   ),
 }
