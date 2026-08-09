@@ -14,7 +14,7 @@ export const usage = {
       id: 'show-progress-as-a-fraction-and-a-bar',
       do: 'Pair the visual progress bar with a text fraction ("2 of 4 complete") so the state isn\'t conveyed by bar width alone.',
       dont: 'Show only a progress bar with no numeric readout of how much is actually done.',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [

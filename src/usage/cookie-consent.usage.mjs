@@ -14,7 +14,7 @@ export const usage = {
       id: 'reject-is-equally-easy',
       do: '"Reject non-essential" gets the same one-click ease as "Accept all" — both are top-level buttons, not one button plus a buried settings link.',
       dont: "Make rejecting cookies harder to find or reach than accepting them — that's a dark pattern, not a real choice.",
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [
