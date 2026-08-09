@@ -14,7 +14,7 @@ export const usage = {
       id: 'always-offer-clear',
       do: 'Keep the Clear action available whenever a range is selected, separate from Reserve.',
       dont: "Force a user to re-click through the whole range to correct a mis-click — that's what Clear is for.",
-      visual: false,
+      visual: true,
     },
     {
       id: 'disable-incomplete-range',

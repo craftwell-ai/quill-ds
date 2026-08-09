@@ -14,7 +14,7 @@ export const usage = {
       id: 'sync-list-to-selection',
       do: 'Keep the session list in sync with whatever date is selected in the calendar — the two panes are one control, not two independent widgets.',
       dont: 'Let the calendar selection and the listed sessions fall out of sync (e.g. a static list that ignores the picked date).',
-      visual: false,
+      visual: true,
     },
   ],
   a11y: [
