@@ -125,7 +125,10 @@ export const DoDont: Story = {
       usage={usage}
       id="maxlength-matches-slot-count"
       doExample={
-        <InputOTP maxLength={6} aria-label="One-time code">
+        // Pre-filled with the same 6-digit code as the Don't example so the
+        // comparison shows real behavior, not just a box-count difference:
+        // 6 rendered slots for maxLength=6 means every typed digit is visible.
+        <InputOTP maxLength={6} value="123456" aria-label="One-time code">
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />
@@ -140,7 +143,9 @@ export const DoDont: Story = {
         </InputOTP>
       }
       dontExample={
-        <InputOTP maxLength={6} aria-label="One-time code">
+        // Same typed code, but only 4 of the 6 maxLength slots are rendered —
+        // digits 5 and 6 are still in the field's value, just silently invisible.
+        <InputOTP maxLength={6} value="123456" aria-label="One-time code">
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />

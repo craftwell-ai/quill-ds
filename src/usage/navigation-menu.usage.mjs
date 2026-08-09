@@ -19,7 +19,7 @@ export const usage = {
       id: 'apply-trigger-style-to-plain-links',
       do: 'Apply navigationMenuTriggerStyle() to a plain NavigationMenuLink so it matches the visual weight of the dropdown triggers next to it.',
       dont: 'Leave a plain NavigationMenuLink unstyled next to NavigationMenuTrigger buttons — it reads smaller and less clickable, breaking the row\'s visual rhythm.',
-      visual: true,
+      visual: false,
     },
   ],
   a11y: [
