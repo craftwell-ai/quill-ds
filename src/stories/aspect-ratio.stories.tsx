@@ -81,7 +81,7 @@ export const AllVariants: Story = {
 
 export const DoDont: Story = {
   args: { ratio: 16 / 9 },
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

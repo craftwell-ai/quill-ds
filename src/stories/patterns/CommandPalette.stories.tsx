@@ -29,7 +29,7 @@ export const CommandPalette: Story = {
 }
 
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

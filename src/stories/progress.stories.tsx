@@ -79,7 +79,7 @@ export const AllVariants: Story = {
 
 export const DoDont: Story = {
   args: { value: 0 },
-  parameters: {
+  parameters: { layout: 'padded',
     controls: { disable: true },
     // The Don't example intentionally omits an accessible name (the rule it
     // illustrates) — suppress just that one axe rule for this story so the

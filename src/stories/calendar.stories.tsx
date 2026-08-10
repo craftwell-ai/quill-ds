@@ -93,7 +93,7 @@ export const WithDisabledDates: Story = {
 }
 
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => {
     const today = new Date()
     const midMonth = new Date(today.getFullYear(), today.getMonth(), 15)

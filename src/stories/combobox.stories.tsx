@@ -234,7 +234,7 @@ export const MultiSelect: Story = {
 // first surfaced by this story opening the combobox. Tracked separately;
 // not fixed here (out of scope for usage-docs wave 3).
 export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
+  parameters: { layout: 'padded', controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
     <DoDontPair
       usage={usage}

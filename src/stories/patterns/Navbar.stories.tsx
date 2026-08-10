@@ -25,7 +25,7 @@ export const Navbar: Story = {
 // the variable this pair tests, and two unlabeled <nav> regions side by side
 // would itself trip the a11y gate (landmark-unique).
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

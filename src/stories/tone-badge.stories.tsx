@@ -71,7 +71,7 @@ export const DoDont: Story = {
   // The Don't example is a deliberately low-contrast hand-rolled pill (the
   // point of the rule) — same convention as checkbox/combobox/menubar/etc.
   // DoDont stories whose Don't example is intentionally a11y-deficient.
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
+  parameters: { layout: 'padded', controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
     <DoDontPair
       usage={usage}
