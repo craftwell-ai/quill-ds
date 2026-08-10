@@ -110,8 +110,12 @@ export const WithCheckboxAndRadio: Story = {
 // axe: aria-required-children — Menubar's open-state DOM renders a
 // disallowed child under role="menubar" (span[aria-owns]). This is a real
 // Menubar primitive defect, not the intentional Don't — first surfaced by
-// this story opening a menu. Tracked separately; not fixed here (out of
-// scope for usage-docs wave 3).
+// this story opening a menu. Confirmed upstream in Base UI, root cause
+// traced (a Menu nested in Menubar is forced non-modal so arrow-key
+// navigation works between siblings, which is what makes FloatingPortal
+// render the aria-owns focus-guard span in the first place):
+// https://github.com/mui/base-ui/issues/4004
+// Not fixable in this codebase; not fixed here.
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
