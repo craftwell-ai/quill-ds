@@ -9,6 +9,11 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.11] — 2026-08-10
+
+### Changed
+- docs(figma): record 2026-08-10 sync audit — Button/Toggle/Tabs fixed
+
 ## [0.8.10] — 2026-08-10
 
 ### Changed
