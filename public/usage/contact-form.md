@@ -13,7 +13,7 @@ A get-in-touch card — name, email, a topic select, and a message field.
 - **Do:** State a response-time expectation in the description ("We usually reply within one working day.") so the form doesn't feel like it disappears into a void. **Don't:** Leave users with no sense of whether or when they'll hear back.
 
 ### Accessibility
-- Every field, including the Select, has its own <Label htmlFor>, and the topic Select's trigger id matches its label's htmlFor.
+- Every field, including the Select, has its own &lt;Label htmlFor>, and the topic Select's trigger id matches its label's htmlFor.
 - The markdown hint under Message is supplementary text, not a replacement for the field's own label.
 
 ### Design tokens

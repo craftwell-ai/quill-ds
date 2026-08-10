@@ -10,11 +10,11 @@ A marketing footer with brand blurb, link columns, and legal links.
 - **navbar** — when the links belong at the top of the page as primary navigation, not the bottom as reference.
 
 ### Rules
-- **Do:** Wrap each link column in its own <nav aria-label>, as this block already does, so screen-reader users can jump between them. **Don't:** Render link columns as bare, unlabeled <div> lists that all announce as one undifferentiated block.
+- **Do:** Wrap each link column in its own &lt;nav aria-label>, as this block already does, so screen-reader users can jump between them. **Don't:** Render link columns as bare, unlabeled &lt;div> lists that all announce as one undifferentiated block.
 - **Do:** Separate the bottom legal row (copyright, Privacy, Terms) from the link columns with a visible Separator, as this block does. **Don't:** Rely on extra margin alone with no divider — the legal row reads as just another link column, not a distinct footer end-cap.
 
 ### Accessibility
-- Each link column is a real <nav> with an aria-label matching its visible heading (e.g. "Product", "Resources"), not a generic landmark.
+- Each link column is a real &lt;nav> with an aria-label matching its visible heading (e.g. "Product", "Resources"), not a generic landmark.
 - The bottom legal row (copyright, Privacy, Terms) is visually and structurally separated from the link columns by a Separator, not just extra margin.
 
 ### Design tokens

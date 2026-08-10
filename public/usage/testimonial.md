@@ -13,7 +13,7 @@ A customer-quote card with a serif pull-quote, avatar initials, and attribution.
 - **Do:** Pair every quote with a real name, role, and organization — an anonymous quote reads as unverifiable. **Don't:** Ship a testimonial with no attribution, or attribution too small/muted to actually read.
 
 ### Accessibility
-- The pattern uses real <figure>/<blockquote>/<figcaption> semantics, so the quote and its attribution stay programmatically linked, not just visually adjacent.
+- The pattern uses real &lt;figure>/&lt;blockquote>/&lt;figcaption> semantics, so the quote and its attribution stay programmatically linked, not just visually adjacent.
 - The avatar's initials are real text content, matching the fallback pattern used everywhere else in the catalog (profile-card, team-section, activity-feed).
 
 ### Design tokens

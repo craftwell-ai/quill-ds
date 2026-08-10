@@ -17,7 +17,7 @@ Buttons trigger actions. The default (primary) variant is the single most import
 - **Do:** Give every icon-only button an explicit aria-label. **Don't:** Ship an icon-only button with no accessible name.
 
 ### Accessibility
-- Native <button> semantics: Enter and Space activate; disabled removes it from the tab order.
+- Native &lt;button> semantics: Enter and Space activate; disabled removes it from the tab order.
 - Icon-only sizes (icon, icon-xs, icon-sm, icon-lg) require an aria-label.
 - The focus ring uses --ring and must stay visible on every theme ground.
 

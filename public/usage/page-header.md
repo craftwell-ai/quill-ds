@@ -13,7 +13,7 @@ A page header with a breadcrumb trail, title and description, and duplicate/new 
 - **Do:** Render the current page as BreadcrumbPage (plain text), not a link — you can't navigate to where you already are. **Don't:** Make every breadcrumb crumb, including the current page, a clickable link.
 
 ### Accessibility
-- The breadcrumb trail uses real <nav>/<ol> semantics (via the Breadcrumb primitive), not a row of plain text separated by slashes.
+- The breadcrumb trail uses real &lt;nav>/&lt;ol> semantics (via the Breadcrumb primitive), not a row of plain text separated by slashes.
 - Duplicate and New are two distinct, separately labeled buttons, not one ambiguous combined action.
 
 ### Design tokens

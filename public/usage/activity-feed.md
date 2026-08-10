@@ -13,7 +13,7 @@ A card timeline of recent events — avatar, action text, and a relative timesta
 - **Do:** Use relative timestamps ("2 hours ago") for recent activity — they read faster than absolute dates. **Don't:** Force users to parse a full timestamp for something that happened minutes ago.
 
 ### Accessibility
-- The timeline is a real <ol> — event order is semantic, not just visual.
+- The timeline is a real &lt;ol> — event order is semantic, not just visual.
 - Each avatar's initials are the accessible fallback content; the icon next to the timestamp is decorative (aria-hidden).
 
 ### Design tokens

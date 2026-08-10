@@ -14,7 +14,7 @@ A password-reset request card — an email field, a send-link action, and a way 
 
 ### Accessibility
 - The back-to-sign-in icon is decorative (aria-hidden by default); the button's accessible name comes from its visible text, not the arrow glyph.
-- The email field uses a real <Label htmlFor>, same as every other auth card in this set.
+- The email field uses a real &lt;Label htmlFor>, same as every other auth card in this set.
 
 ### Design tokens
 `--card` · `--input` · `--primary` · `--muted-foreground`

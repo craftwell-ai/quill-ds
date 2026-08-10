@@ -31,3 +31,22 @@ test('empty optional sections are omitted entirely', () => {
   assert.ok(!md.includes('### Accessibility'))
   assert.ok(!md.includes('### Design tokens'))
 })
+
+test('raw tag-like text outside backticks survives rendering, escaped', () => {
+  const md = renderUsageDocs({
+    ...sample,
+    summary: 'Wraps a <button> element.',
+    a11y: ['Native <button> semantics: Enter and Space activate.'],
+  })
+  assert.ok(md.includes('Wraps a &lt;button> element.'))
+  assert.ok(md.includes('Native &lt;button> semantics: Enter and Space activate.'))
+  assert.ok(!md.includes('Wraps a <button>'))
+})
+
+test('tag-like text inside backticks is left untouched', () => {
+  const md = renderUsageDocs({
+    ...sample,
+    a11y: ['Use `<input type="radio">` for each option.'],
+  })
+  assert.ok(md.includes('Use `<input type="radio">` for each option.'))
+})

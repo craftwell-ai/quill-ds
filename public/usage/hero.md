@@ -13,8 +13,8 @@ A centered marketing hero — a release badge, serif headline, supporting copy, 
 - **Do:** Keep exactly one primary (default-variant) button — the single most important action — with any secondary action as outline/ghost. **Don't:** Give two calls-to-action equal visual weight; competing primaries dilute the one action that matters most.
 
 ### Accessibility
-- The headline is a real <h1> — a hero is typically the page's first heading and its accessible name.
-- The release badge ("New — v2.0 is here") is supplementary context, not the page's only way to communicate the headline's message — it is not a substitute for the <h1>.
+- The headline is a real &lt;h1> — a hero is typically the page's first heading and its accessible name.
+- The release badge ("New — v2.0 is here") is supplementary context, not the page's only way to communicate the headline's message — it is not a substitute for the &lt;h1>.
 
 ### Design tokens
 `--background` · `--foreground` · `--primary` · `--secondary`

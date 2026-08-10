@@ -14,7 +14,7 @@ A docs search panel — query input, result count, and a linked result list with
 
 ### Accessibility
 - The search input has an explicit aria-label ("Search") since its visible placeholder text is not a substitute for a label.
-- Each result is a single focusable <a> wrapping its full content (title, breadcrumb, badge) — not a div with a separate, hard-to-target link inside.
+- Each result is a single focusable &lt;a> wrapping its full content (title, breadcrumb, badge) — not a div with a separate, hard-to-target link inside.
 
 ### Design tokens
 `--border` · `--muted` · `--accent`

@@ -14,7 +14,7 @@ Signup that leads with GitHub and Google provider buttons, falling back to an em
 
 ### Accessibility
 - Provider marks (GitHub, Google) are decorative; button accessible names come from the visible "Continue with X" text.
-- Email and password fields keep real <Label htmlFor> pairs even though they're the fallback path, not the headline.
+- Email and password fields keep real &lt;Label htmlFor> pairs even though they're the fallback path, not the headline.
 
 ### Design tokens
 `--card` · `--input` · `--primary` · `--border`

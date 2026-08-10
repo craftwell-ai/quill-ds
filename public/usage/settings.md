@@ -13,7 +13,7 @@ A profile settings card — name fields, a bio textarea, and an email-notificati
 - **Do:** Keep Save changes and Cancel as two distinct, clearly differentiated actions (primary vs ghost). **Don't:** Make Cancel look as prominent as Save — the user should never mis-tap away unsaved changes as the default action.
 
 ### Accessibility
-- The notification toggle's <Label> and the Switch share the same id/htmlFor pairing, so clicking the label text also toggles the switch.
+- The notification toggle's &lt;Label> and the Switch share the same id/htmlFor pairing, so clicking the label text also toggles the switch.
 - The switch's current state (on/off) is exposed through its own semantics, not conveyed by color alone.
 
 ### Design tokens

@@ -14,7 +14,7 @@ A dashed-border empty state with an icon, explanatory text, and a primary action
 
 ### Accessibility
 - The icon and dashed border are decorative framing; the heading and body text carry the actual meaning, not the visual style alone.
-- The heading uses a real <h3>, giving the empty state its own accessible name within the surrounding page structure.
+- The heading uses a real &lt;h3>, giving the empty state its own accessible name within the surrounding page structure.
 
 ### Design tokens
 `--card` · `--border` · `--muted` · `--primary`
