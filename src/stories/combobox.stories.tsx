@@ -227,12 +227,17 @@ export const MultiSelect: Story = {
 }
 
 // axe: aria-hidden-focus — an open Base UI Combobox marks sibling content
-// aria-hidden while it stays focusable.
+// aria-hidden while it stays focusable. Verified this is a demo-only
+// artifact of this story specifically (two independent comboboxes,
+// both defaultOpen, side by side): with a single open combobox, no
+// sibling content gets aria-hidden. Not a real Combobox defect — real
+// usage never has two comboboxes open at once. No upstream issue filed.
 // axe: aria-required-children — ComboboxEmpty's role="status" is nested
-// inside role="listbox", which disallows it.
-// Both are real Combobox primitive defects, not the intentional Don't —
-// first surfaced by this story opening the combobox. Tracked separately;
-// not fixed here (out of scope for usage-docs wave 3).
+// inside role="listbox", which disallows it. This IS a genuine, real
+// Combobox primitive defect — reproduces with a single combobox instance
+// (confirmed), unrelated to the aria-hidden-focus issue above. Filed
+// upstream: https://github.com/mui/base-ui/issues/5443
+// Neither is fixable in this codebase; not fixed here.
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
