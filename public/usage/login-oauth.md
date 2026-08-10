@@ -16,7 +16,7 @@ Provider-first sign-in — Google, GitHub, and Apple buttons above an email fall
 
 ### Accessibility
 - Provider marks are decorative (aria-hidden); each button's accessible name comes from its visible "Continue with X" text, not the icon.
-- The email fallback still uses a real <Label htmlFor>, same as every other password/email pattern in this set.
+- The email fallback still uses a real &lt;Label htmlFor>, same as every other password/email pattern in this set.
 
 ### Design tokens
 `--primary` · `--muted-foreground` · `--border` · `--radius`

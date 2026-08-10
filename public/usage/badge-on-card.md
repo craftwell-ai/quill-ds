@@ -13,7 +13,7 @@ Default, secondary, and destructive badges shown together on a card surface.
 - **Do:** Reserve the destructive variant for a status that actually needs attention (blocked, failed, overdue). **Don't:** Use destructive styling for emphasis on a badge that isn't actually a warning.
 
 ### Accessibility
-- Badges are inline <span> elements with no independent accessible name beyond their visible text — never ship an icon-only badge without one.
+- Badges are inline &lt;span> elements with no independent accessible name beyond their visible text — never ship an icon-only badge without one.
 - Destructive badges on a card surface must clear the same 4.5:1 text contrast as any other text (a past regression here hit 4.45:1).
 
 ### Design tokens

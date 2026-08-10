@@ -13,7 +13,7 @@ An inbox-style split view — a selectable message list beside a detail pane wit
 - **Do:** Keep the selected thread visually marked in the list (background fill) while its detail is open, so context isn't lost. **Don't:** Let the list's selection state go stale or unmarked once a thread is open in the detail pane.
 
 ### Accessibility
-- Each thread in the list is a real, focusable <button>, not a clickable <div> with no keyboard access.
+- Each thread in the list is a real, focusable &lt;button>, not a clickable &lt;div> with no keyboard access.
 - Archive and Delete are icon-only buttons with explicit aria-labels, not bare icons with no accessible name.
 
 ### Design tokens

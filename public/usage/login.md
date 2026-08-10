@@ -16,8 +16,8 @@ The standard email-and-password sign-in card, with remember-me and a forgot-pass
 - **Do:** Style "Forgot your password?" as a link beneath "Sign in" — one unmistakable primary action per card. **Don't:** Give "Forgot your password?" the same solid button treatment as "Sign in" — now two buttons compete to be primary.
 
 ### Accessibility
-- Email and password inputs are each labeled via <Label htmlFor>, not placeholder text alone.
-- The remember-me checkbox has its own <Label>, so its accessible name doesn't depend on proximity.
+- Email and password inputs are each labeled via &lt;Label htmlFor>, not placeholder text alone.
+- The remember-me checkbox has its own &lt;Label>, so its accessible name doesn't depend on proximity.
 
 ### Design tokens
 `--card` · `--input` · `--primary` · `--ring` · `--radius-xl`

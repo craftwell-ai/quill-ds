@@ -13,7 +13,7 @@ A one-on-one messaging panel — contact header, message bubbles, and a composer
 - **Do:** Align the current user's messages to one side (right) and the other party's to the other (left) — position is the primary cue for who said what. **Don't:** Rely on color alone to distinguish sender — pair it with consistent alignment.
 
 ### Accessibility
-- The composer's Input has an explicit aria-label ("Message") since there's no visible <label> in this compact layout.
+- The composer's Input has an explicit aria-label ("Message") since there's no visible &lt;label> in this compact layout.
 - The send button is icon-only with an aria-label ("Send") — never ship it without one.
 
 ### Design tokens
