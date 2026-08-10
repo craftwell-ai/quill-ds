@@ -200,7 +200,45 @@ Deferred with reasons: Navigation Menu (complex marketing nav, low app value),
 Calendar (already mocked in two pattern pages), Carousel/Chart (SVG-heavy; charts
 live in the Analytics pattern), Scroll Area/Resizable/Collapsible (interaction-only),
 Empty/Item (trivial wrappers), Native Select (visually = Select), Sidebar (exists
-as pattern).
+as pattern), AspectRatio (trivial CSS wrapper — sets an aspect-ratio custom property
+on a plain div, no fill/border/token binding of its own; nothing to represent as a
+Figma component).
+
+## Sync audit (2026-08-10)
+
+A full live-file audit (every page enumerated via the Plugin API, every
+component's `variantGroupProperties` diffed against its current `.tsx` source —
+not against this doc, which had drifted) found 3 components whose Figma variant
+structure had fallen behind code as the components evolved after their original
+build date. All 3 fixed and re-verified against live Storybook renders:
+
+- **Button** — was `Variant(6) × Size(default/sm/lg)` = 18. Code had grown to 8
+  sizes (`xs`, `icon`, `icon-xs`, `icon-sm`, `icon-lg` added). Now `Variant(6) ×
+  Size(8)` = 48, matching `buttonVariants` in `button.tsx` exactly. Also fixed a
+  pre-existing bug found along the way: the `destructive` variant's fill was
+  fully opaque with same-color text (invisible) instead of the `/10`-opacity
+  tint `bg-destructive/10 text-destructive` actually renders — same class of
+  issue the original build notes flagged for Badge, missed here. Fixed on all
+  8 destructive size variants.
+- **Toggle** — was `Pressed: off/on` only (2 variants), a leftover from before
+  `toggle.tsx` grew a `variant`/`size` axis. Now `Variant(default/outline) ×
+  Size(default/sm/lg) × Pressed(off/on)` = 12. Also fixed a pre-existing binding
+  error: the two original variants were bound to `corner-radius/md` (6px) but
+  code actually renders 8px (`corner-radius/lg`) for the default/lg size tier —
+  corrected across all default/lg-tier variants.
+- **Tabs** — was a single component, no variant axis. `tabs.tsx` has a real
+  `variant: default/line` prop (segmented-pill vs. underline style) with no
+  Figma counterpart. Added the `line` variant, built from a live Storybook
+  screenshot of `LineVariant` rather than guessed from source, since Tailwind's
+  cascade order isn't always obvious from the class strings alone.
+
+Everything else audited (Badge, Alert, Checkbox/Switch/Radio, Field, Button
+group, Input group, Sheet, Toast) already matched current code exactly.
+
+**Lesson for future syncs:** this doc is a build log, not a live source of
+truth — always verify against the file directly (`figma.variables`,
+`variantGroupProperties`, live Storybook screenshots) before trusting what's
+written here or assuming "built" means "still current."
 
 ## Next
 
