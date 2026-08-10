@@ -66,7 +66,7 @@ export const AllVariants: Story = {
 }
 
 export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
+  parameters: { layout: 'padded', controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
     <DoDontPair
       usage={usage}

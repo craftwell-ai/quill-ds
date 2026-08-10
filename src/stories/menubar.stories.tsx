@@ -113,7 +113,7 @@ export const WithCheckboxAndRadio: Story = {
 // this story opening a menu. Tracked separately; not fixed here (out of
 // scope for usage-docs wave 3).
 export const DoDont: Story = {
-  parameters: { controls: { disable: true }, a11y: { test: 'off' } },
+  parameters: { layout: 'padded', controls: { disable: true }, a11y: { test: 'off' } },
   render: () => (
     <DoDontPair
       usage={usage}

@@ -30,7 +30,7 @@ export const PageHeader: Story = {
 // Two distinct aria-labels on the nested <nav> (Breadcrumb renders one) so
 // the pair doesn't trip the a11y gate's landmark-unique check.
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

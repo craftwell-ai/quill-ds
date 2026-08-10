@@ -25,7 +25,7 @@ export const Footer: Story = {
 // identically-labeled nav landmarks side by side would itself trip the
 // a11y gate (landmark-unique), and it isn't the variable this pair tests.
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

@@ -23,7 +23,7 @@ export const Wizard: Story = {
 const wizardSteps = ['Account', 'Workspace', 'Invite'] as const
 
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

@@ -24,7 +24,7 @@ export const MailShell: Story = {
 // Both examples fixed at a phone-narrow width so the difference is the pane
 // count, not the width itself.
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

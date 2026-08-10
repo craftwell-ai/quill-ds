@@ -29,7 +29,7 @@ export const Dashboard: Story = {
 // Plain <div> nav rows here, not the full <aside> shell — that landmark
 // wiring isn't the variable this pair tests.
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

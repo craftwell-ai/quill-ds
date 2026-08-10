@@ -24,7 +24,7 @@ export const Error404: Story = {
 // Plain <p> heading text here, not the full-page <h1> — this pair isolates
 // the recovery-actions row, not the page's heading structure.
 export const DoDont: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={usage}

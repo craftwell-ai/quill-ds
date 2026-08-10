@@ -26,7 +26,7 @@ export const SplitPanel: Story = {
 }
 
 export const SplitPanelDoDont: Story = {
-  parameters: { layout: 'centered', controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={splitPanelUsage}
@@ -82,7 +82,7 @@ export const Minimal: Story = {
 }
 
 export const MinimalDoDont: Story = {
-  parameters: { layout: 'centered', controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair
       usage={minimalUsage}
