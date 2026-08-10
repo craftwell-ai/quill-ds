@@ -9,6 +9,12 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.12] — 2026-08-10
+
+### Changed
+- chore(deps): Bump the minor-and-patch group across 1 directory with 4 updates
+- chore(deps): Bump the storybook group with 4 updates
+
 ## [0.8.11] — 2026-08-10
 
 ### Changed
