@@ -240,6 +240,14 @@ truth — always verify against the file directly (`figma.variables`,
 `variantGroupProperties`, live Storybook screenshots) before trusting what's
 written here or assuming "built" means "still current."
 
+## Sync fixture (2026-08-12)
+
+`❖ Test` (component node `371:7`) is the **bi-directional sync fixture** — its code twin
+is `src/components/ui/test-card.tsx` (story `Sandbox / Test`). Both directions proven:
+Figma edit pulled into code (~2 min), code edit pushed onto the node in place (~1 min).
+Keep the pair in sync when testing the workflow; procedure in `../README.md`
+("Component sync — pull & push"). Code is the ultimate source of truth.
+
 ## Next
 
 - Visual QA sweep of component + pattern pages in light/dark modes.
