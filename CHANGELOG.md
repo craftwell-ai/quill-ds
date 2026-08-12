@@ -9,6 +9,15 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.14] — 2026-08-12
+
+### Added
+- feat(skills): `/figma-pull` and `/figma-push` project commands — the
+  bi-directional component sync procedure (code is the ultimate source of
+  truth) as repeatable slash commands under `.claude/skills/`, encoding the
+  binding→class translation table and the upsert-never-recreate rules proven
+  on the Test fixture.
+
 ## [0.8.13] — 2026-08-12
 
 ### Added

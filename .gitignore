@@ -57,7 +57,9 @@ storybook-static
 public/axe.min.js
 
 # agent tooling / scratch
-.claude/
+# Claude Code: local settings stay ignored; shared project skills are committed
+.claude/*
+!.claude/skills/
 .superpowers/
 docs/superpowers/plans/
 src/components/ui/icons.all.generated.mjs
