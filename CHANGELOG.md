@@ -9,6 +9,15 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.13] — 2026-08-12
+
+### Added
+- feat(figma): bi-directional component sync, proven both directions — `TestCard`
+  sync fixture (`Sandbox / Test` story ↔ Figma `❖ Test` page, node 371:7) and the
+  documented pull/push procedure in `figma/README.md`. Code is the ultimate source
+  of truth: Figma edits land as reviewable code changes; code changes upsert the
+  Figma twin in place.
+
 ## [0.8.12] — 2026-08-10
 
 ### Changed

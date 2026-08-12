@@ -61,6 +61,13 @@ test('every visual rule has a rendered DoDont pair in its story file', () => {
 // component must ship with a usage file.
 const KNOWN_UNDOCUMENTED = new Set([])
 
+// Sandbox fixtures: infrastructure stories that are deliberately NOT
+// consumable components and must stay out of the usage/llms catalog — a
+// usage file here would advertise a fake component to agents. Currently
+// only the Figma bi-directional sync fixture (see figma/README.md,
+// "Component sync — pull & push").
+const SANDBOX_FIXTURES = new Set(['test-card.stories.tsx'])
+
 test('every story outside the allowlist has a usage file', () => {
   const files = [
     ...readdirSync(storiesDir).filter((f) => f.endsWith('.stories.tsx')),
@@ -68,7 +75,7 @@ test('every story outside the allowlist has a usage file', () => {
   ]
   const documented = new Set(ALL_USAGE.map((u) => u.name))
   for (const f of files) {
-    if (KNOWN_UNDOCUMENTED.has(f)) continue
+    if (KNOWN_UNDOCUMENTED.has(f) || SANDBOX_FIXTURES.has(f)) continue
     if (MULTI_BLOCK_STORIES[f]) {
       for (const name of MULTI_BLOCK_STORIES[f]) {
         assert.ok(documented.has(name), `story '${f}' has no usage file for '${name}' (expected src/usage/${name}.usage.mjs)`)
