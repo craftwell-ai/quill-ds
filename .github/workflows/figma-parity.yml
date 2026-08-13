@@ -1,0 +1,125 @@
+name: Figma parity
+
+# Daily Figma↔code component parity: detection AND deterministic repair.
+# scripts/figma-drift.mjs --repair diffs each synced component's live Figma
+# node (REST file read — works headless on the Pro plan) against the committed
+# baseline in figma/sync-state.json:
+#
+#   value-level drift (re-bound token, changed text) → repaired in place here,
+#     opened as an auto-merging PR — same bar as self-heal: a deterministic
+#     edit with a provably correct answer, gated by the required check;
+#   structural drift → exit 2, this job fails and emails: run /figma-pull;
+#   code moved without a mirror → exit 2 as well: run /figma-push (Figma has
+#     no headless node-write API on any plan, so that direction is never a bot).
+#
+# Skips cleanly until a FIGMA_TOKEN secret exists (Figma PAT, file read scope).
+
+on:
+  schedule:
+    - cron: '0 13 * * *' # daily 13:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: figma-parity
+  cancel-in-progress: false
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BRANCH: auto/figma-pull
+      HAS_PAT: ${{ secrets.AUTOMATION_TOKEN != '' }}
+      GH_TOKEN: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+      FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      # The script is dependency-free (node builtins + fetch); no npm ci.
+      - name: Parity check + deterministic repair
+        id: parity
+        run: |
+          set +e
+          node scripts/figma-drift.mjs --repair
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Detect repairs
+        id: drift
+        run: |
+          if git diff --quiet; then
+            echo "repaired=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "repaired=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Value-level Figma edits pulled into code"
+              echo
+              echo '```'
+              git diff --stat
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Close a repair PR that reality already fixed
+        if: steps.drift.outputs.repaired == 'false'
+        run: |
+          set -euo pipefail
+          N="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')"
+          if [ -n "$N" ]; then
+            gh pr comment "$N" --body 'Superseded — the Figma file and code no longer drift (an interactive /figma-pull or /figma-push likely synced them first). Closing automatically.'
+            gh pr close "$N" --delete-branch
+            echo "Closed obsolete repair PR #$N." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Open (or update) the auto-pull PR
+        if: steps.drift.outputs.repaired == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git checkout -B "$BRANCH"
+          git add -u
+          git commit \
+            -m 'fix(figma-sync): pull value-level Figma edits into code' \
+            -m 'Opened automatically by .github/workflows/figma-parity.yml. Every edit here is a deterministic token-binding or text translation from the Figma component (see the run summary) — structural changes are never auto-pulled. Baseline updated in figma/sync-state.json.'
+          git push --force-with-lease origin "$BRANCH"
+
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            printf '%s\n' \
+              'A designer changed value-level properties (token bindings / text) on a synced component in Figma. `figma-parity.yml` translated them into the code twin deterministically and updated the parity baseline.' \
+              '' \
+              'Only edits with a provably correct answer are auto-pulled — structural changes fail the workflow instead and ask for an interactive `/figma-pull`. Merges itself once the required check is green.' \
+              > /tmp/pr-body.md
+            gh pr create --base main --head "$BRANCH" \
+              --title 'fix(figma-sync): pull value-level Figma edits into code' \
+              --body-file /tmp/pr-body.md
+          fi
+
+          gh pr merge --auto --merge "$BRANCH" || true
+
+      - name: Fail on drift that needs a human
+        if: steps.parity.outputs.code == '2'
+        run: |
+          echo 'Unrepairable drift remains — see the parity step log for the /figma-pull or /figma-push command to run.' >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Warn when the PR cannot self-merge
+        if: steps.drift.outputs.repaired == 'true' && env.HAS_PAT != 'true'
+        run: |
+          {
+            echo
+            echo '> [!WARNING]'
+            echo '> Opened with the default `GITHUB_TOKEN`, so **CI will not run on this PR**'
+            echo '> and auto-merge cannot complete. Add an `AUTOMATION_TOKEN` secret to close'
+            echo '> the loop — see scripts/DRIFT-AUDIT.md.'
+          } >> "$GITHUB_STEP_SUMMARY"
