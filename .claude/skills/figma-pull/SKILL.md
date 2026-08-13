@@ -54,7 +54,12 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
 5. **Verify**: Storybook (`npm run storybook`, port 6006) side-by-side with the
    step-3 screenshot. Iterate until they match.
 
-6. **Ship** per repo convention: branch → version bump + CHANGELOG →
+6. **Update the parity baseline** — rewrite this component's entry in
+   `figma/sync-state.json` (bindings, raws, texts, childSignature, code.classes,
+   lastSynced) so the scheduled `figma-parity` drift job measures from the new
+   agreed state. New variables encountered go into the `variables` id→name map.
+
+7. **Ship** per repo convention: branch → version bump + CHANGELOG →
    `npm run build:llms` (llms.txt embeds the version) → PR → CI green → merge.
    Skip only if the user asked for local-only.
 

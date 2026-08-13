@@ -9,6 +9,18 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.15] — 2026-08-13
+
+### Added
+- feat(drift): scheduled Figma↔code component parity — the `figma-parity` job
+  in the weekly drift audit runs `scripts/figma-drift.mjs` against the
+  committed baseline (`figma/sync-state.json`), failing with "run
+  /figma-pull <name>" when Figma moved and "run /figma-push <name>" when code
+  moved. Detection is scheduled; repair stays on-demand (Figma has no headless
+  node-write API on any plan). Skips cleanly until a `FIGMA_TOKEN` secret
+  exists. `/figma-pull` and `/figma-push` now rewrite the baseline as their
+  final step.
+
 ## [0.8.14] — 2026-08-12
 
 ### Added

@@ -46,6 +46,11 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
    property that has no Figma representation (motion, variable-font axes,
    responsive behavior — see `figma/README.md` "Not representable in Figma").
 
+7. **Update the parity baseline** — rewrite this component's entry in
+   `figma/sync-state.json` (bindings, raws, texts, childSignature, code.classes,
+   lastSynced) so the scheduled `figma-parity` drift job measures from the new
+   agreed state. New variables encountered go into the `variables` id→name map.
+
 ## Gotchas proven in practice
 
 - `setBoundVariableForPaint` returns a new paint object — capture and reassign,
