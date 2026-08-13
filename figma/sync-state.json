@@ -1,0 +1,66 @@
+{
+  "$comment": "Baseline for the scheduled Figma↔code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry.",
+  "fileKey": "Dcf8lEB7Ash71iNl7WN4Jq",
+  "variables": {
+    "VariableID:4:2": "corner-radius/xs",
+    "VariableID:4:3": "corner-radius/sm",
+    "VariableID:4:4": "corner-radius/md",
+    "VariableID:4:5": "corner-radius/lg",
+    "VariableID:4:6": "corner-radius/xl",
+    "VariableID:4:7": "corner-radius/2xl",
+    "VariableID:4:8": "corner-radius/3xl",
+    "VariableID:4:9": "corner-radius/4xl",
+    "VariableID:5:21": "shadcn/card",
+    "VariableID:5:22": "shadcn/card-foreground",
+    "VariableID:5:25": "shadcn/primary",
+    "VariableID:5:30": "shadcn/muted-foreground",
+    "VariableID:5:34": "shadcn/border",
+    "VariableID:17:2": "spacing/1",
+    "VariableID:17:3": "spacing/2",
+    "VariableID:17:4": "spacing/3",
+    "VariableID:17:5": "spacing/4",
+    "VariableID:17:6": "spacing/5",
+    "VariableID:17:7": "spacing/6",
+    "VariableID:17:8": "spacing/8",
+    "VariableID:17:9": "spacing/10",
+    "VariableID:17:10": "spacing/12",
+    "VariableID:17:11": "spacing/16",
+    "VariableID:17:12": "spacing/20",
+    "VariableID:17:13": "spacing/24",
+    "VariableID:17:14": "border-width/0",
+    "VariableID:17:15": "border-width/1",
+    "VariableID:17:16": "border-width/2",
+    "VariableID:17:17": "border-width/3",
+    "VariableID:17:18": "border-width/4",
+    "VariableID:70:2": "spacing/7",
+    "VariableID:70:3": "spacing/9",
+    "VariableID:70:4": "spacing/0_5",
+    "VariableID:70:5": "spacing/1_5",
+    "VariableID:70:6": "spacing/2_5"
+  },
+  "components": [
+    {
+      "name": "Test",
+      "nodeId": "371:7",
+      "codeFile": "src/components/ui/test-card.tsx",
+      "lastSynced": "2026-08-12",
+      "figma": {
+        "fill": { "var": "shadcn/card", "raw": "#EFE4CE" },
+        "stroke": { "var": "shadcn/border", "raw": "#2A2622" },
+        "strokeWeight": { "var": "border-width/1", "raw": 1 },
+        "cornerRadius": { "var": "corner-radius/2xl", "raw": 24 },
+        "padding": { "var": "spacing/8", "raw": 32 },
+        "itemSpacing": { "var": "spacing/3", "raw": 12 },
+        "effectStyle": "Elevation/lg",
+        "texts": {
+          "Title": "Acknowledgement № 001",
+          "Body": "Do you agree that this is the best looking design system that has ever existed?"
+        },
+        "childSignature": ["Title:TEXT", "Body:TEXT", "Frame 1:FRAME"]
+      },
+      "code": {
+        "classes": "flex w-72 flex-col gap-3 rounded-2xl border bg-card p-8 text-card-foreground shadow-lg"
+      }
+    }
+  ]
+}

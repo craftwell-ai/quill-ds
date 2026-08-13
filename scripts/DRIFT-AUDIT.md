@@ -49,9 +49,24 @@ grouped so a partial bump — which would simply be broken — cannot be propose
 Minor and patch bumps now merge themselves once green (see Automation below);
 majors are commented on and left for a human.
 
-## Tier 3 — Figma ↔ code parity (on-demand, interactive)
+## Tier 3 — Figma ↔ code parity (scheduled detection + on-demand repair)
 
-The one check that needs interactive Figma MCP auth, so it is never scheduled —
+**Component parity is scheduled since v0.8.15**: the `figma-parity` job in
+`drift-audit.yml` (same Monday cron) runs `scripts/figma-drift.mjs`, which
+compares each synced component's live Figma node — via the REST file API, which
+works headless on the Pro plan — against the committed baseline in
+`figma/sync-state.json`, in both directions:
+
+- Figma moved → the job fails naming the component → run `/figma-pull <name>`;
+- code moved without a mirror → run `/figma-push <name>`.
+
+Repair is never scheduled: Figma has no headless node-write API on any plan,
+and structural pulls need judgment — both go through the slash commands, which
+rewrite the baseline as their last step. The job skips cleanly until a
+`FIGMA_TOKEN` repo secret exists (Figma personal access token, file read scope).
+
+The **variable/style-level** check below still needs interactive Figma MCP auth
+(variable definitions are Enterprise-gated over REST), so it stays on-demand —
 run it in an interactive session (e.g. ask Claude to "run the Figma parity
 check") when doing Figma work. It compares the live Figma variables against the
 repo's source of truth:
