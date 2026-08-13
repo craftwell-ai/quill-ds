@@ -5,10 +5,9 @@ name: Drift audit
 # per-PR CI can't catch (dependency freshness, security advisories, release
 # housekeeping) to the run's step summary. Fails — and so emails — only on an
 # actionable high/critical advisory. Per-PR deterministic invariants live in the
-# test suite. Figma↔code COMPONENT parity is the figma-parity job below —
-# detection on schedule, repair on demand via /figma-pull and /figma-push
-# (Figma has no headless node-write API on any plan). It skips cleanly until
-# a FIGMA_TOKEN secret (Figma PAT, file read scope) exists.
+# test suite. Figma↔code COMPONENT parity lives in its own daily workflow,
+# figma-parity.yml — detection + deterministic value-level repair PRs there;
+# structural repair stays on-demand via /figma-pull and /figma-push.
 
 on:
   schedule:
@@ -35,21 +34,3 @@ jobs:
 
       - name: Audit
         run: npm run drift-audit
-
-  figma-parity:
-    name: Figma component parity
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-
-      # Detection only — repair is /figma-pull (Figma moved) or /figma-push
-      # (code moved). Skips cleanly while the FIGMA_TOKEN secret is absent.
-      - name: Component parity (Figma ↔ code)
-        env:
-          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
-        run: node scripts/figma-drift.mjs

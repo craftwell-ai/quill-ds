@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex } from './figma-drift.mjs'
+import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex, classFor, planRepair, applyRepair } from './figma-drift.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -80,6 +80,81 @@ test('text and structure changes are drift', () => {
 test('boundVariables array form and hex conversion both normalize', () => {
   assert.equal(boundName([{ id: 'VariableID:1:1' }], VARS), 'shadcn/card')
   assert.equal(rgbToHex({ r: 1, g: 1, b: 1 }), '#FFFFFF')
+})
+
+// ---- auto-repair ----
+
+const COMPONENT = () => ({
+  name: 'Test',
+  codeFile: 'src/components/ui/test-card.tsx',
+  figma: structuredClone(snapshot),
+  code: { classes: 'flex gap-3 rounded-2xl bg-card p-8 shadow-lg' },
+})
+const SOURCE = 'className={cn("flex gap-3 rounded-2xl bg-card p-8 shadow-lg")}\n<div>Acknowledgement № 001</div>'
+
+test('classFor maps every repairable key and rejects unknowns', () => {
+  assert.equal(classFor('fill', 'shadcn/muted'), 'bg-muted')
+  assert.equal(classFor('cornerRadius', 'corner-radius/2xl'), 'rounded-2xl')
+  assert.equal(classFor('padding', 'spacing/2_5'), 'p-2.5')
+  assert.equal(classFor('itemSpacing', 'spacing/3'), 'gap-3')
+  assert.equal(classFor('effectStyle', 'Elevation/base'), 'shadow-md')
+  assert.equal(classFor('fill', 'unknown(VariableID:9:9)'), undefined)
+  assert.equal(classFor('cornerRadius', 'corner-radius/weird'), undefined)
+})
+
+test('a rebound radius is a repairable one-class edit that rewrites source and baseline', () => {
+  const bundle = cleanBundle()
+  bundle.document.boundVariables.topLeftRadius.id = 'VariableID:1:4'
+  const vars = { ...VARS, 'VariableID:1:4': 'corner-radius/lg' }
+  bundle.document.cornerRadius = 8
+  const component = COMPONENT()
+  const live = extractComponent(bundle, vars)
+  const plan = planRepair(component, live, SOURCE)
+  assert.ok(plan.repairable, plan.reasons.join('; '))
+  const { source, component: next } = applyRepair(component, plan, SOURCE, '2026-08-13')
+  assert.ok(source.includes('rounded-lg') && !source.includes('rounded-2xl'))
+  assert.equal(next.figma.cornerRadius.var, 'corner-radius/lg')
+  assert.equal(next.figma.cornerRadius.raw, 8)
+  assert.equal(next.code.classes, 'flex gap-3 rounded-lg bg-card p-8 shadow-lg')
+  assert.equal(next.lastSynced, '2026-08-13')
+})
+
+test('a text change is repairable when the old value is unique in source', () => {
+  const bundle = cleanBundle()
+  bundle.document.children[0].characters = 'Acknowledgement № 002'
+  const component = COMPONENT()
+  const plan = planRepair(component, extractComponent(bundle, VARS), SOURCE)
+  assert.ok(plan.repairable, plan.reasons.join('; '))
+  const { source, component: next } = applyRepair(component, plan, SOURCE, '2026-08-13')
+  assert.ok(source.includes('№ 002'))
+  assert.equal(next.figma.texts.Title, 'Acknowledgement № 002')
+})
+
+test('structural drift, unknown variables, and removed texts are never auto-repaired', () => {
+  const structural = cleanBundle()
+  structural.document.children.push({ name: 'Extra', type: 'FRAME', children: [] })
+  assert.equal(planRepair(COMPONENT(), extractComponent(structural, VARS), SOURCE).repairable, false)
+
+  const unknown = cleanBundle()
+  unknown.document.boundVariables.topLeftRadius.id = 'VariableID:9:9'
+  unknown.document.cornerRadius = 999
+  const plan = planRepair(COMPONENT(), extractComponent(unknown, VARS), SOURCE)
+  assert.equal(plan.repairable, false)
+  assert.ok(plan.reasons.some((r) => r.includes('no class mapping')))
+
+  const removed = cleanBundle()
+  removed.document.children = []
+  assert.equal(planRepair(COMPONENT(), extractComponent(removed, VARS), SOURCE).repairable, false)
+})
+
+test('applyRepair refuses a source where the baseline classes are not unique', () => {
+  const component = COMPONENT()
+  const doubled = SOURCE + '\n' + SOURCE
+  const bundle = cleanBundle()
+  bundle.document.boundVariables.topLeftRadius.id = 'VariableID:1:4'
+  const vars = { ...VARS, 'VariableID:1:4': 'corner-radius/lg' }
+  const plan = planRepair(component, extractComponent(bundle, vars), doubled)
+  assert.throws(() => applyRepair(component, plan, doubled, '2026-08-13'), /not found exactly once/)
 })
 
 test('the shipped sync-state baseline is valid and its pairs exist on disk', () => {

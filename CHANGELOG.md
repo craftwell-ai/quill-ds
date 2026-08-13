@@ -9,6 +9,18 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.16] — 2026-08-13
+
+### Added
+- feat(drift): auto-pull tier — Figma component parity moves to its own daily
+  workflow (`figma-parity.yml`) and now REPAIRS value-level drift itself: a
+  re-bound token or changed text is translated deterministically
+  (binding→class) and opened as an auto-merging `auto/figma-pull` PR,
+  self-heal style. Structural drift and code-side drift still fail the run
+  naming the interactive command to use (`/figma-pull` / `/figma-push` — the
+  push direction can never be a bot; Figma has no headless node-write API).
+  The weekly drift audit no longer carries the parity job.
+
 ## [0.8.15] — 2026-08-13
 
 ### Added

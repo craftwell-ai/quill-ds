@@ -51,19 +51,26 @@ majors are commented on and left for a human.
 
 ## Tier 3 — Figma ↔ code parity (scheduled detection + on-demand repair)
 
-**Component parity is scheduled since v0.8.15**: the `figma-parity` job in
-`drift-audit.yml` (same Monday cron) runs `scripts/figma-drift.mjs`, which
-compares each synced component's live Figma node — via the REST file API, which
-works headless on the Pro plan — against the committed baseline in
+**Component parity is scheduled since v0.8.15, with auto-repair since v0.8.16**:
+`figma-parity.yml` (daily, 13:00 UTC) runs `scripts/figma-drift.mjs --repair`,
+which compares each synced component's live Figma node — via the REST file API,
+which works headless on the Pro plan — against the committed baseline in
 `figma/sync-state.json`, in both directions:
 
-- Figma moved → the job fails naming the component → run `/figma-pull <name>`;
-- code moved without a mirror → run `/figma-push <name>`.
+- **Value-level Figma drift** (a re-bound token, changed text) has a provably
+  correct translation, so the workflow repairs it itself — a deterministic
+  binding→class rewrite committed to the `auto/figma-pull` branch as an
+  auto-merging PR, self-heal style. Baseline updated in the same commit.
+- **Structural Figma drift** (children added/removed, strokes, unknown
+  variables) needs judgment → the job fails naming the fix: run
+  `/figma-pull <name>` in an interactive session.
+- **Code moved without a mirror** → run `/figma-push <name>`. This direction is
+  never a bot: Figma has no headless node-write API on any plan.
 
-Repair is never scheduled: Figma has no headless node-write API on any plan,
-and structural pulls need judgment — both go through the slash commands, which
-rewrite the baseline as their last step. The job skips cleanly until a
-`FIGMA_TOKEN` repo secret exists (Figma personal access token, file read scope).
+The slash commands rewrite the baseline as their last step, which is also how
+an obsolete `auto/figma-pull` PR gets closed (the workflow closes it when drift
+disappears). The job skips cleanly until a `FIGMA_TOKEN` repo secret exists
+(Figma personal access token, file read scope).
 
 The **variable/style-level** check below still needs interactive Figma MCP auth
 (variable definitions are Enterprise-gated over REST), so it stays on-demand —
