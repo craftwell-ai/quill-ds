@@ -53,8 +53,8 @@
         "itemSpacing": { "var": "spacing/3", "raw": 12 },
         "effectStyle": "Elevation/lg",
         "texts": {
-          "Title": "Acknowledgement № 001",
-          "Body": "Do you agree that this is the best looking design system that has ever existed?"
+          "Title": "Title",
+          "Body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit duis auctor ex ac molestie blandit."
         },
         "childSignature": ["Title:TEXT", "Body:TEXT", "Frame 1:FRAME"]
       },
