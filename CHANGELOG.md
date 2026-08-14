@@ -9,6 +9,20 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.18] — 2026-08-13
+
+### Changed
+- `/figma-pull`: designer text edits on `❖ Test` landed in `test-card.tsx` —
+  title, body and both button labels now read as they do in Figma. Token
+  bindings needed no translation; the pull read fill, stroke × border-width,
+  radius, padding, gap, elevation and both Button instance variants straight off
+  the node and every one already matched code. Baseline re-stamped.
+- The fixture's body copy is deliberately kept on ONE source line. The daily
+  `figma-parity` bot can only auto-repair a text change when the old value
+  appears exactly once in the file, and JSX line-wrapping had been hiding the
+  body string from that check — so text drift on this component previously fell
+  through to a manual `/figma-pull`. It can now self-repair.
+
 ## [0.8.17] — 2026-08-13
 
 ### Fixed
