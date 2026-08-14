@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Sync-proof fixture: this card exists in code and as a token-bound component on the ❖ Test page in Figma. Edit it in Figma (fill, border, radius, spacing, elevation), then ask Claude to pull the change — it should land here.',
+          'This is a demonstration of an agentic design system running an automation to ensure parity between design and code.',
       },
     },
   },

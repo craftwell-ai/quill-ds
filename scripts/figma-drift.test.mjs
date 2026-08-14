@@ -57,6 +57,21 @@ test('a dropped binding with an unchanged raw value is parity noise, not drift',
   assert.deepEqual(drift, [])
 })
 
+test('per-side stroke weights resolve the strokeWeight binding by name', () => {
+  const vars = { ...VARS, 'VariableID:1:4': 'border-width/1', 'VariableID:1:5': 'border-width/2' }
+  const bundle = cleanBundle()
+  bundle.document.boundVariables.strokeTopWeight = { type: 'VARIABLE_ALIAS', id: 'VariableID:1:4' }
+  bundle.document.strokeTopWeight = 1
+  assert.deepEqual(extractComponent(bundle, vars).strokeWeight, { var: 'border-width/1', raw: 1 })
+
+  // A rebind to a heavier border is named, not reported as a bare number.
+  const snap = { strokeWeight: { var: 'border-width/1', raw: 1 } }
+  bundle.document.boundVariables.strokeTopWeight.id = 'VariableID:1:5'
+  bundle.document.strokeTopWeight = 2
+  const { drift } = diffComponent(snap, extractComponent(bundle, vars))
+  assert.deepEqual(drift, ['strokeWeight: expected border-width/1, found border-width/2'])
+})
+
 test('a property invisible to the REST response is unverifiable, never clean or drift', () => {
   const bundle = cleanBundle()
   delete bundle.document.boundVariables.paddingLeft
