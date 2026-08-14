@@ -9,6 +9,26 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.17] — 2026-08-13
+
+### Fixed
+- fix(drift): the parity checker read only the uniform `strokeWeight` binding, so
+  a node whose stroke weight is bound per-side (`strokeTopWeight` and friends —
+  which is how `❖ Test` is built) always extracted `var: null`. Drift on those
+  nodes could only ever be reported as a bare number; it is now named by
+  variable (`expected border-width/1, found border-width/2`). Detection itself
+  is unchanged — `diffComponent` still passes a property when either the binding
+  or the raw value matches.
+
+### Changed
+- `❖ Test` pushed back into parity with `test-card.tsx`: the Figma twin's title,
+  body and button labels had drifted back to placeholder copy. Bindings were
+  never lost (the per-side reading above was the confusion). Baseline
+  `lastSynced` → 2026-08-13.
+- `Sandbox / Test` docs description now says what the fixture demonstrates.
+- `/figma-push` skill records the per-side stroke-weight gotcha, so a future run
+  doesn't misread it as a dropped binding and "repair" a no-op.
+
 ## [0.8.16] — 2026-08-13
 
 ### Added

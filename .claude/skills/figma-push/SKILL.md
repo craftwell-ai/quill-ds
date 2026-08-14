@@ -63,3 +63,8 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
   token-bound, per the build pattern in `figma/components/README.md`.
 - New wrapper frames ship with a default white fill — clear `fills = []` unless
   a fill is intended.
+- **Stroke weight binds per-side.** A node with per-side weights has NO
+  `boundVariables.strokeWeight` — it has `strokeTopWeight`/`Bottom`/`Left`/`Right`.
+  Reading only the uniform key reports a false "dropped binding" and tempts a
+  pointless repair; `setBoundVariable('strokeWeight', v)` is then a silent no-op.
+  Always check the per-side keys before concluding a binding was lost.

@@ -43,7 +43,7 @@
       "name": "Test",
       "nodeId": "371:7",
       "codeFile": "src/components/ui/test-card.tsx",
-      "lastSynced": "2026-08-12",
+      "lastSynced": "2026-08-13",
       "figma": {
         "fill": { "var": "shadcn/card", "raw": "#EFE4CE" },
         "stroke": { "var": "shadcn/border", "raw": "#2A2622" },

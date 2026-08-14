@@ -59,7 +59,14 @@ export function extractComponent(bundle, varNames) {
   return {
     fill: { var: boundName(fill?.boundVariables?.color, varNames), raw: rgbToHex(fill?.color) },
     stroke: { var: boundName(stroke?.boundVariables?.color, varNames), raw: rgbToHex(stroke?.color) },
-    strokeWeight: { var: boundName(bv.strokeWeight, varNames), raw: doc.strokeWeight ?? null },
+    // Uniform stroke weights bind to `strokeWeight`, but a node with per-side
+    // weights binds four separate keys instead. Without the fallback `var` is
+    // permanently null for those nodes, so drift on them can only ever be
+    // reported by raw number — the fallback lets it be named by variable.
+    strokeWeight: {
+      var: boundName(bv.strokeWeight ?? bv.strokeTopWeight, varNames),
+      raw: doc.strokeWeight ?? doc.strokeTopWeight ?? null,
+    },
     cornerRadius: {
       var: boundName(bv.topLeftRadius ?? bv.rectangleCornerRadii, varNames),
       raw: doc.cornerRadius ?? doc.rectangleCornerRadii?.[0] ?? null,
