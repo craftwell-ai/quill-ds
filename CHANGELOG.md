@@ -9,6 +9,23 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.21] — 2026-08-22
+
+### Fixed
+- `src/components/ui/icons.generated.d.ts` was stale on `main`. The
+  `@material-symbols/svg-400` bump to 0.46.0 (v0.8.19, Dependabot) changed the
+  icon set — `display_add`, `drive_fusiontable`, `globe_clock` and `terminal_add`
+  arrived, `file_map` went away — but Dependabot only edits `package.json` and
+  the lockfile, so the `IconName` union was never rebuilt. Regenerated here
+  (3896 → 3899 names). Nothing referenced `file_map`, so no call site changed.
+- The generated-files gate could not catch it. `ci.yml` and `self-heal.yml` both
+  diffed `icons.core.mjs` but not `icons.generated.d.ts`, even though
+  `scripts/build-icons.mjs` writes both and both are committed. Added the path to
+  both lists, so an icon-library bump that skips the rebuild now fails CI and
+  self-heal repairs it. (The script's three other outputs — the per-icon
+  directory, `icons.tail.mjs`, `icons.all.generated.mjs` — are gitignored by
+  design and correctly stay out of the gate.)
+
 ## [0.8.20] — 2026-08-17
 
 ### Changed
