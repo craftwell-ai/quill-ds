@@ -24,6 +24,26 @@ test('readRegistryItems returns every indexed item with writable files', () => {
   }
 })
 
+// The sync's write surface, pinned. Downstream, craftwell-command-center's
+// qa-review gate exempts `quill-sync/*` PRs only when every changed file is
+// one of these (scripts/qaReviewCheck.ts, SYNC_PATHS). A new non-block target
+// here therefore means the next sync PR there is refused — fail-closed by
+// design, but silently so. This test makes the upstream change loud: add the
+// new target to this list AND to the downstream SYNC_PATHS, in that order.
+test('non-block registry targets are exactly the five the downstream gate knows', () => {
+  const items = readRegistryItems(root)
+  const targets = new Set()
+  for (const item of items) for (const f of item.files ?? []) targets.add(f.target)
+  const nonBlock = [...targets].filter((t) => !t.startsWith('components/quill/')).sort()
+  assert.deepEqual(nonBlock, [
+    'app/quill-theme.css',
+    'components/ui/icon.tsx',
+    'components/ui/icons.core.d.mts',
+    'components/ui/icons.core.mjs',
+    'components/ui/tone-badge.tsx',
+  ])
+})
+
 // --- Planning ---
 
 const ITEMS = [
