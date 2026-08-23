@@ -43,7 +43,8 @@ jobs:
       # Must stay in step with the "Generated files in sync" paths in ci.yml.
       GENERATED: >-
         src/app/globals.css src/tokens/generated registry/themes tokens
-        src/components/ui/icons.core.mjs public/r public/llms.txt
+        src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts
+        public/r public/llms.txt
       # AUTOMATION_TOKEN (a PAT) is what makes an opened PR trigger CI. With the
       # default GITHUB_TOKEN the PR opens but no check ever runs, so auto-merge
       # waits forever. Surfaced by the last step rather than failing silently.
