@@ -34,7 +34,7 @@ jobs:
           npm run build:icons
           npm run build:registry
           npm run build:llms
-          git diff --exit-code -- src/app/globals.css src/tokens/generated registry/themes tokens src/components/ui/icons.core.mjs public/r public/llms.txt
+          git diff --exit-code -- src/app/globals.css src/tokens/generated registry/themes tokens src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts public/r public/llms.txt
 
       - name: Lint
         run: npm run lint
