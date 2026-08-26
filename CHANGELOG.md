@@ -9,6 +9,12 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.25] — 2026-08-26
+
+### Changed
+- fix(generated): restore generated files to match source
+- feat(tokens): Intelligent theme — cockpit grounds, teal working status, instrument fonts
+
 ## [0.8.24] — 2026-08-24
 
 ### Changed
