@@ -15,6 +15,7 @@ export const MODES = [
   { key: 'dark', prefix: 'dk', attr: 'dark', colorScheme: 'dark', figmaMode: 'Dark' },
   { key: 'classicLight', prefix: 'cl', attr: 'classic-light', colorScheme: 'light', figmaMode: 'Classic Light' },
   { key: 'classicDark', prefix: 'cd', attr: 'classic-dark', colorScheme: 'dark', figmaMode: 'Classic Dark' },
+  { key: 'intelligent', prefix: 'int', attr: 'intelligent', colorScheme: 'dark', figmaMode: 'Intelligent' },
 ]
 
 // The accent that ships unset: `--accent-pigment` at :root and the Figma DTCG
@@ -103,6 +104,8 @@ export function renderCss(t) {
   themeLines.push(`  --font-display: ${t.font.display};`)
   themeLines.push(`  --font-heading: ${t.font.heading};`)
   themeLines.push(`  --font-mono: ${t.font.mono};`)
+  themeLines.push(`  --font-ui: ${t.font.ui};`)
+  themeLines.push(`  --font-data: ${t.font.data};`)
   for (const k of Object.keys(t.shadcn)) themeLines.push(`  --color-${k}: var(--${k});`)
   const paletteMap = {
     paper: '--paper', 'paper-warm': '--paper-warm', 'paper-deep': '--paper-deep',
@@ -111,6 +114,7 @@ export function renderCss(t) {
     moss: '--moss', 'moss-deep': '--moss-deep',
     'indigo-brand': '--indigo', 'indigo-brand-deep': '--indigo-deep',
     gold: '--gold', 'gold-deep': '--gold-deep',
+    teal: '--teal', 'teal-deep': '--teal-deep',
   }
   for (const [k, v] of Object.entries(paletteMap)) themeLines.push(`  --color-${k}: ${`var(${v})`};`)
   for (const [k, v] of Object.entries(t.radius)) themeLines.push(`  --radius-${k}: ${v};`)

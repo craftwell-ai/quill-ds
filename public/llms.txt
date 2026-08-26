@@ -6,7 +6,7 @@ Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/
 
 ## Theming
 
-- **Themes** — set `data-theme` on `<html>`: `light` → Dawn (light, default), `dark` → Dusk (dark), `classic-light` → Classic Light, `classic-dark` → Classic Dark. Consumers must match one of these values; the token layer re-declares aliases so scoped `data-theme` islands work, not just the root switch.
+- **Themes** — set `data-theme` on `<html>`: `light` → Dawn (light, default), `dark` → Dusk (dark), `classic-light` → Classic Light, `classic-dark` → Classic Dark, `intelligent` → undefined. Consumers must match one of these values; the token layer re-declares aliases so scoped `data-theme` islands work, not just the root switch.
 - **Accents** — set `data-accent` on `<html>`: terracotta, moss (default), indigo, gold. The accent drives links, eyebrows, focus rings (`--ring`), and accent italics; it defaults to moss when unset.
 - Both attributes are independent of the color-scheme; dark grounds and accent are separate axes.
 

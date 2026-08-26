@@ -12,7 +12,8 @@
                 "Light": "#F5EDDD",
                 "Dark": "#20180E",
                 "Classic Light": "#FFFFFF",
-                "Classic Dark": "#000000"
+                "Classic Dark": "#000000",
+                "Intelligent": "#0E100D"
               }
             }
           }
@@ -26,7 +27,8 @@
                 "Light": "#EFE4CE",
                 "Dark": "#2A2014",
                 "Classic Light": "#F7F7F7",
-                "Classic Dark": "#111111"
+                "Classic Dark": "#111111",
+                "Intelligent": "#171A14"
               }
             }
           }
@@ -40,7 +42,8 @@
                 "Light": "#E8DCC0",
                 "Dark": "#352A1A",
                 "Classic Light": "#EFEFEF",
-                "Classic Dark": "#1C1C1C"
+                "Classic Dark": "#1C1C1C",
+                "Intelligent": "#1D2117"
               }
             }
           }
@@ -56,7 +59,8 @@
                 "Light": "#2A2622",
                 "Dark": "#F1E7D3",
                 "Classic Light": "#171717",
-                "Classic Dark": "#F5F5F5"
+                "Classic Dark": "#F5F5F5",
+                "Intelligent": "#E9E5D6"
               }
             }
           }
@@ -70,7 +74,8 @@
                 "Light": "#5C524A",
                 "Dark": "#C8B9A0",
                 "Classic Light": "#454545",
-                "Classic Dark": "#C9C9C9"
+                "Classic Dark": "#C9C9C9",
+                "Intelligent": "#A9A791"
               }
             }
           }
@@ -84,7 +89,8 @@
                 "Light": "#675F58",
                 "Dark": "#A89880",
                 "Classic Light": "#5E5E5E",
-                "Classic Dark": "#A0A0A0"
+                "Classic Dark": "#A0A0A0",
+                "Intelligent": "#93927C"
               }
             }
           }
@@ -101,7 +107,8 @@
                   "Light": "#C4684B",
                   "Dark": "#DB8568",
                   "Classic Light": "#DE501B",
-                  "Classic Dark": "#F57345"
+                  "Classic Dark": "#F57345",
+                  "Intelligent": "#C96F4C"
                 }
               }
             }
@@ -115,7 +122,8 @@
                   "Light": "#8A4530",
                   "Dark": "#E89A80",
                   "Classic Light": "#9D3209",
-                  "Classic Dark": "#FE8D67"
+                  "Classic Dark": "#FE8D67",
+                  "Intelligent": "#E08A66"
                 }
               }
             }
@@ -131,7 +139,8 @@
                   "Light": "#7A8C5C",
                   "Dark": "#A2B57E",
                   "Classic Light": "#758F43",
-                  "Classic Dark": "#9DB962"
+                  "Classic Dark": "#9DB962",
+                  "Intelligent": "#7FAE5A"
                 }
               }
             }
@@ -145,7 +154,8 @@
                   "Light": "#4C5936",
                   "Dark": "#B6C896",
                   "Classic Light": "#516526",
-                  "Classic Dark": "#B1CC7E"
+                  "Classic Dark": "#B1CC7E",
+                  "Intelligent": "#9BC47D"
                 }
               }
             }
@@ -161,7 +171,8 @@
                   "Light": "#5B6B8A",
                   "Dark": "#92A2C2",
                   "Classic Light": "#536A99",
-                  "Classic Dark": "#8AA2D2"
+                  "Classic Dark": "#8AA2D2",
+                  "Intelligent": "#8B8FD8"
                 }
               }
             }
@@ -175,7 +186,8 @@
                   "Light": "#44516D",
                   "Dark": "#AAB8D4",
                   "Classic Light": "#3D507A",
-                  "Classic Dark": "#A3B8E2"
+                  "Classic Dark": "#A3B8E2",
+                  "Intelligent": "#A6AAE3"
                 }
               }
             }
@@ -191,7 +203,8 @@
                   "Light": "#B89968",
                   "Dark": "#D6BA86",
                   "Classic Light": "#C49544",
-                  "Classic Dark": "#E2B764"
+                  "Classic Dark": "#E2B764",
+                  "Intelligent": "#E0A340"
                 }
               }
             }
@@ -205,7 +218,8 @@
                   "Light": "#9A7D4E",
                   "Dark": "#E2CA9E",
                   "Classic Light": "#A57928",
-                  "Classic Dark": "#ECC883"
+                  "Classic Dark": "#ECC883",
+                  "Intelligent": "#E8BC72"
                 }
               }
             }
@@ -219,7 +233,40 @@
                   "Light": "#68522D",
                   "Dark": "#E2CA9E",
                   "Classic Light": "#7C5814",
-                  "Classic Dark": "#ECC883"
+                  "Classic Dark": "#ECC883",
+                  "Intelligent": "#E8BC72"
+                }
+              }
+            }
+          }
+        },
+        "teal": {
+          "base": {
+            "$type": "color",
+            "$value": "#4E938B",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#4E938B",
+                  "Dark": "#4AA9A0",
+                  "Classic Light": "#178F84",
+                  "Classic Dark": "#3DBDB1",
+                  "Intelligent": "#4AA9A0"
+                }
+              }
+            }
+          },
+          "deep": {
+            "$type": "color",
+            "$value": "#2F6B64",
+            "$extensions": {
+              "com.figma": {
+                "modes": {
+                  "Light": "#2F6B64",
+                  "Dark": "#63BCB2",
+                  "Classic Light": "#0E6B61",
+                  "Classic Dark": "#5FD3C7",
+                  "Intelligent": "#63BCB2"
                 }
               }
             }
@@ -237,7 +284,8 @@
                   "Light": "#BC6751",
                   "Dark": "#C66F59",
                   "Classic Light": "#C44829",
-                  "Classic Dark": "#D25436"
+                  "Classic Dark": "#D25436",
+                  "Intelligent": "#C66F59"
                 }
               }
             }
@@ -251,7 +299,8 @@
                   "Light": "#345799",
                   "Dark": "#4265A9",
                   "Classic Light": "#194AAC",
-                  "Classic Dark": "#2A5DBF"
+                  "Classic Dark": "#2A5DBF",
+                  "Intelligent": "#4265A9"
                 }
               }
             }
@@ -265,7 +314,8 @@
                   "Light": "#A27B1C",
                   "Dark": "#B58D34",
                   "Classic Light": "#B18401",
-                  "Classic Dark": "#BA8B01"
+                  "Classic Dark": "#BA8B01",
+                  "Intelligent": "#B58D34"
                 }
               }
             }
@@ -279,7 +329,8 @@
                   "Light": "#79376C",
                   "Dark": "#924E84",
                   "Classic Light": "#852076",
-                  "Classic Dark": "#993588"
+                  "Classic Dark": "#993588",
+                  "Intelligent": "#924E84"
                 }
               }
             }
@@ -293,7 +344,8 @@
                   "Light": "#688838",
                   "Dark": "#6C8D3D",
                   "Classic Light": "#659102",
-                  "Classic Dark": "#6D9C03"
+                  "Classic Dark": "#6D9C03",
+                  "Intelligent": "#6C8D3D"
                 }
               }
             }
@@ -309,7 +361,8 @@
                   "Light": "#C7D8B5",
                   "Dark": "#303D20",
                   "Classic Light": "#CCE0B6",
-                  "Classic Dark": "#2A3815"
+                  "Classic Dark": "#2A3815",
+                  "Intelligent": "#303D20"
                 }
               }
             }
@@ -323,7 +376,8 @@
                   "Light": "#A1B787",
                   "Dark": "#475A2E",
                   "Classic Light": "#A0BC7E",
-                  "Classic Dark": "#41591D"
+                  "Classic Dark": "#41591D",
+                  "Intelligent": "#475A2E"
                 }
               }
             }
@@ -337,7 +391,8 @@
                   "Light": "#7C975A",
                   "Dark": "#5F793D",
                   "Classic Light": "#779A45",
-                  "Classic Dark": "#5A7B25"
+                  "Classic Dark": "#5A7B25",
+                  "Intelligent": "#5F793D"
                 }
               }
             }
@@ -351,7 +406,8 @@
                   "Light": "#567428",
                   "Dark": "#79994D",
                   "Classic Light": "#527602",
-                  "Classic Dark": "#749F2B"
+                  "Classic Dark": "#749F2B",
+                  "Intelligent": "#79994D"
                 }
               }
             }
@@ -365,7 +421,8 @@
                   "Light": "#375101",
                   "Dark": "#97B86B",
                   "Classic Light": "#375101",
-                  "Classic Dark": "#95C352"
+                  "Classic Dark": "#95C352",
+                  "Intelligent": "#97B86B"
                 }
               }
             }
@@ -381,7 +438,8 @@
                   "Light": "#903F2B",
                   "Dark": "#DC836D",
                   "Classic Light": "#A22801",
-                  "Classic Dark": "#FA7959"
+                  "Classic Dark": "#FA7959",
+                  "Intelligent": "#DC836D"
                 }
               }
             }
@@ -395,7 +453,8 @@
                   "Light": "#BB8273",
                   "Dark": "#986153",
                   "Classic Light": "#C77B68",
-                  "Classic Dark": "#A75D4B"
+                  "Classic Dark": "#A75D4B",
+                  "Intelligent": "#986153"
                 }
               }
             }
@@ -409,7 +468,8 @@
                   "Light": "#CFC9C5",
                   "Dark": "#403C39",
                   "Classic Light": "#D4D0CD",
-                  "Classic Dark": "#3A3735"
+                  "Classic Dark": "#3A3735",
+                  "Intelligent": "#403C39"
                 }
               }
             }
@@ -423,7 +483,8 @@
                   "Light": "#7993C1",
                   "Dark": "#59729E",
                   "Classic Light": "#7092D0",
-                  "Classic Dark": "#5474AF"
+                  "Classic Dark": "#5474AF",
+                  "Intelligent": "#59729E"
                 }
               }
             }
@@ -437,7 +498,8 @@
                   "Light": "#36589B",
                   "Dark": "#779EE6",
                   "Classic Light": "#2253B5",
-                  "Classic Dark": "#71A3FF"
+                  "Classic Dark": "#71A3FF",
+                  "Intelligent": "#779EE6"
                 }
               }
             }
@@ -454,7 +516,8 @@
                 "Light": "rgba(42, 38, 34, 0.08)",
                 "Dark": "rgba(241, 231, 211, 0.07)",
                 "Classic Light": "rgba(0, 0, 0, 0.07)",
-                "Classic Dark": "rgba(255, 255, 255, 0.08)"
+                "Classic Dark": "rgba(255, 255, 255, 0.08)",
+                "Intelligent": "rgba(233, 229, 214, 0.07)"
               }
             }
           }
@@ -468,7 +531,8 @@
                 "Light": "rgba(42, 38, 34, 0.12)",
                 "Dark": "rgba(241, 231, 211, 0.11)",
                 "Classic Light": "rgba(0, 0, 0, 0.11)",
-                "Classic Dark": "rgba(255, 255, 255, 0.12)"
+                "Classic Dark": "rgba(255, 255, 255, 0.12)",
+                "Intelligent": "rgba(233, 229, 214, 0.11)"
               }
             }
           }
@@ -482,7 +546,8 @@
                 "Light": "rgba(42, 38, 34, 0.15)",
                 "Dark": "rgba(241, 231, 211, 0.15)",
                 "Classic Light": "rgba(0, 0, 0, 0.14)",
-                "Classic Dark": "rgba(255, 255, 255, 0.16)"
+                "Classic Dark": "rgba(255, 255, 255, 0.16)",
+                "Intelligent": "rgba(233, 229, 214, 0.15)"
               }
             }
           }
@@ -496,7 +561,8 @@
                 "Light": "rgba(42, 38, 34, 0.20)",
                 "Dark": "rgba(241, 231, 211, 0.22)",
                 "Classic Light": "rgba(0, 0, 0, 0.20)",
-                "Classic Dark": "rgba(255, 255, 255, 0.24)"
+                "Classic Dark": "rgba(255, 255, 255, 0.24)",
+                "Intelligent": "rgba(233, 229, 214, 0.22)"
               }
             }
           }
@@ -510,7 +576,8 @@
                 "Light": "#8A7F6E",
                 "Dark": "#746B5D",
                 "Classic Light": "#858585",
-                "Classic Dark": "#757575"
+                "Classic Dark": "#757575",
+                "Intelligent": "#767663"
               }
             }
           }
@@ -533,6 +600,14 @@
       "mono": {
         "$type": "fontFamily",
         "$value": "ui-monospace, \"SF Mono\", Menlo, monospace"
+      },
+      "ui": {
+        "$type": "fontFamily",
+        "$value": "\"Inter\", -apple-system, BlinkMacSystemFont, sans-serif"
+      },
+      "data": {
+        "$type": "fontFamily",
+        "$value": "\"JetBrains Mono\", \"SF Mono\", ui-monospace, monospace"
       }
     },
     "spacing": {
@@ -713,7 +788,8 @@
               "Light": "0 1px 2px -1px rgba(42, 38, 34, 0.12), 0 0 0 1px rgba(42, 38, 34, 0.05)",
               "Dark": "0 1px 2px -1px rgba(8, 5, 3, 0.40), 0 0 0 1px rgba(8, 5, 3, 0.18)",
               "Classic Light": "0 1px 2px -1px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05)",
-              "Classic Dark": "0 1px 2px -1px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.06)"
+              "Classic Dark": "0 1px 2px -1px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.06)",
+              "Intelligent": "0 1px 2px -1px rgba(8, 5, 3, 0.40), 0 0 0 1px rgba(8, 5, 3, 0.18)"
             }
           }
         }
@@ -727,7 +803,8 @@
               "Light": "0 2px 4px -1px rgba(42, 38, 34, 0.14), 0 1px 2px -1px rgba(42, 38, 34, 0.08)",
               "Dark": "0 2px 4px -1px rgba(8, 5, 3, 0.48), 0 1px 2px -1px rgba(8, 5, 3, 0.30)",
               "Classic Light": "0 2px 4px -1px rgba(0, 0, 0, 0.14), 0 1px 2px -1px rgba(0, 0, 0, 0.08)",
-              "Classic Dark": "0 2px 4px -1px rgba(0, 0, 0, 0.55), 0 1px 2px -1px rgba(0, 0, 0, 0.35)"
+              "Classic Dark": "0 2px 4px -1px rgba(0, 0, 0, 0.55), 0 1px 2px -1px rgba(0, 0, 0, 0.35)",
+              "Intelligent": "0 2px 4px -1px rgba(8, 5, 3, 0.48), 0 1px 2px -1px rgba(8, 5, 3, 0.30)"
             }
           }
         }
@@ -741,7 +818,8 @@
               "Light": "0 4px 8px -2px rgba(42, 38, 34, 0.16), 0 2px 4px -2px rgba(42, 38, 34, 0.10)",
               "Dark": "0 4px 8px -2px rgba(8, 5, 3, 0.54), 0 2px 4px -2px rgba(8, 5, 3, 0.36)",
               "Classic Light": "0 4px 8px -2px rgba(0, 0, 0, 0.16), 0 2px 4px -2px rgba(0, 0, 0, 0.10)",
-              "Classic Dark": "0 4px 8px -2px rgba(0, 0, 0, 0.60), 0 2px 4px -2px rgba(0, 0, 0, 0.40)"
+              "Classic Dark": "0 4px 8px -2px rgba(0, 0, 0, 0.60), 0 2px 4px -2px rgba(0, 0, 0, 0.40)",
+              "Intelligent": "0 4px 8px -2px rgba(8, 5, 3, 0.54), 0 2px 4px -2px rgba(8, 5, 3, 0.36)"
             }
           }
         }
@@ -755,7 +833,8 @@
               "Light": "0 12px 20px -4px rgba(42, 38, 34, 0.18), 0 4px 8px -4px rgba(42, 38, 34, 0.10)",
               "Dark": "0 12px 20px -4px rgba(8, 5, 3, 0.62), 0 4px 8px -4px rgba(8, 5, 3, 0.40)",
               "Classic Light": "0 12px 20px -4px rgba(0, 0, 0, 0.18), 0 4px 8px -4px rgba(0, 0, 0, 0.10)",
-              "Classic Dark": "0 12px 20px -4px rgba(0, 0, 0, 0.68), 0 4px 8px -4px rgba(0, 0, 0, 0.44)"
+              "Classic Dark": "0 12px 20px -4px rgba(0, 0, 0, 0.68), 0 4px 8px -4px rgba(0, 0, 0, 0.44)",
+              "Intelligent": "0 12px 20px -4px rgba(8, 5, 3, 0.62), 0 4px 8px -4px rgba(8, 5, 3, 0.40)"
             }
           }
         }
@@ -769,7 +848,8 @@
               "Light": "0 20px 32px -6px rgba(42, 38, 34, 0.22), 0 8px 12px -6px rgba(42, 38, 34, 0.12)",
               "Dark": "0 20px 32px -6px rgba(8, 5, 3, 0.72), 0 8px 12px -6px rgba(8, 5, 3, 0.48)",
               "Classic Light": "0 20px 32px -6px rgba(0, 0, 0, 0.22), 0 8px 12px -6px rgba(0, 0, 0, 0.12)",
-              "Classic Dark": "0 20px 32px -6px rgba(0, 0, 0, 0.78), 0 8px 12px -6px rgba(0, 0, 0, 0.52)"
+              "Classic Dark": "0 20px 32px -6px rgba(0, 0, 0, 0.78), 0 8px 12px -6px rgba(0, 0, 0, 0.52)",
+              "Intelligent": "0 20px 32px -6px rgba(8, 5, 3, 0.72), 0 8px 12px -6px rgba(8, 5, 3, 0.48)"
             }
           }
         }
@@ -890,6 +970,12 @@
       },
       "info": {
         "$value": "{Primitives.color.pigment.indigo.base}"
+      },
+      "working": {
+        "$value": "{Primitives.color.pigment.teal.deep}"
+      },
+      "queued": {
+        "$value": "{Primitives.color.ink.muted}"
       }
     },
     "shadcn": {

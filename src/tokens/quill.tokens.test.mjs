@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { tokens } from './quill.tokens.mjs'
-import { renderManager } from '../../scripts/build-tokens.mjs'
+import { MODES, renderManager } from '../../scripts/build-tokens.mjs'
 
 test('primitive color values match current globals.css', () => {
   assert.equal(tokens.color.paper.base.light, '#F5EDDD')
@@ -30,7 +30,7 @@ test('accent aliases follow data-accent, defaulting to moss (a11y)', () => {
   assert.equal(tokens.semantic.warning, 'var(--gold-deep)')
 })
 
-test('every accent text cut clears WCAG 4.5:1 on every theme ground (16 combos)', () => {
+test('every accent text cut clears WCAG 4.5:1 on every theme ground (20 combos)', () => {
   const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
   const lum = (hex) =>
     [1, 3, 5]
@@ -45,7 +45,7 @@ test('every accent text cut clears WCAG 4.5:1 on every theme ground (16 combos)'
     const [pigment, ...cut] = ref.replace(/^var\(--|\)$/g, '').split('-')
     return tokens.color.pigment[pigment][cut.join('-') || 'base'][mode]
   }
-  for (const mode of ['light', 'dark', 'classicLight', 'classicDark']) {
+  for (const mode of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
     const ground = tokens.color.paper.base[mode]
     for (const [name, accent] of Object.entries(tokens.accents)) {
       const textCut = resolve(accent.text, mode)
@@ -72,7 +72,7 @@ test('classic themes: pure grounds, +50%-chroma pigments, AA control borders', (
   const assertLeaves = (obj, path) => {
     for (const [k, v] of Object.entries(obj)) {
       if (v && typeof v === 'object' && 'light' in v) {
-        for (const mode of ['light', 'dark', 'classicLight', 'classicDark']) {
+        for (const mode of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
           assert.equal(typeof v[mode], 'string', `${path}.${k} missing mode '${mode}'`)
         }
       } else if (v && typeof v === 'object') assertLeaves(v, `${path}.${k}`)
@@ -110,7 +110,7 @@ test('chart tokens: series are CVD-safe chart cuts, ramps behave (WCAG 1.4.11 + 
   for (const n of [1, 2, 3, 4, 5]) {
     assert.equal(tokens.shadcn[`chart-${n}`], `var(--chart-series-${n})`)
   }
-  for (const mode of ['light', 'dark', 'classicLight', 'classicDark']) {
+  for (const mode of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
     const ground = tokens.color.paper.base[mode]
     // every series color clears non-text 3:1 on its ground
     for (const [n, cut] of Object.entries(tokens.color.chart.series)) {
@@ -135,4 +135,35 @@ test('chart tokens: series are CVD-safe chart cuts, ramps behave (WCAG 1.4.11 + 
       `diverging midpoint should recede vs poles on ${mode}`,
     )
   }
+})
+
+test('intelligent theme: cockpit grounds, teal working status, instrument fonts (Mission Control v14)', () => {
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+  const lum = (hex) =>
+    [1, 3, 5]
+      .map((i) => lin(parseInt(hex.slice(i, i + 2), 16) / 255))
+      .reduce((acc, c, i) => acc + c * [0.2126, 0.7152, 0.0722][i], 0)
+  const contrast = (a, b) => {
+    const [x, y] = [lum(a) + 0.05, lum(b) + 0.05]
+    return Math.max(x, y) / Math.min(x, y)
+  }
+  // The mode is wired into the build (generated CSS gets a [data-theme="intelligent"] block).
+  const mode = MODES.find((m) => m.attr === 'intelligent')
+  assert.ok(mode, 'MODES must include the intelligent theme')
+  assert.equal(mode.colorScheme, 'dark')
+  // Grounds come from the approved Mission Control v14 comp (green-tinted near-black).
+  assert.equal(tokens.color.paper.base.intelligent, '#0E100D')
+  assert.equal(tokens.color.ink.base.intelligent, '#E9E5D6')
+  // Teal is a full pigment (the "working" status hue) — present in every mode,
+  // and its deep text cut clears 4.5:1 on every theme ground.
+  for (const m of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
+    const ratio = contrast(tokens.color.pigment.teal.deep[m], tokens.color.paper.base[m])
+    assert.ok(ratio >= 4.5, `teal deep ${tokens.color.pigment.teal.deep[m]} is ${ratio.toFixed(2)}:1 on ${m} ground`)
+  }
+  // Run-status semantics: working = teal text cut; queued = muted ink (recedes, never signals).
+  assert.equal(tokens.semantic.working, 'var(--teal-deep)')
+  assert.equal(tokens.semantic.queued, 'var(--ink-muted)')
+  // Instrument faces for dense operational surfaces (additive — sans/heading untouched).
+  assert.ok(tokens.font.ui.includes('Inter'))
+  assert.ok(tokens.font.data.includes('JetBrains Mono'))
 })

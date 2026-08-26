@@ -1,10 +1,13 @@
 /**
- * @typedef {{ light: string, dark: string, classicLight: string, classicDark: string }} ModeValue
+ * @typedef {{ light: string, dark: string, classicLight: string, classicDark: string, intelligent: string }} ModeValue
  * Single source of truth for Quill tokens. Edit here, then run `npm run build:tokens`.
  *
- * Four themes: light (Dawn, the default), dark (Dusk), classicLight (Classic Light,
- * pure white) and classicDark (Classic Dark, pure black). The classic pair runs the
- * same pigment hues pushed +50% chroma in OKLCH (gamut-clamped) on neutral grounds.
+ * Five themes: light (Dawn, the default), dark (Dusk), classicLight (Classic Light,
+ * pure white), classicDark (Classic Dark, pure black) and intelligent (the operational
+ * "cockpit" surface for agent dashboards — green-tinted near-black grounds from the
+ * Mission Control v14 comp, teal working status, Inter/JetBrains Mono instrument faces).
+ * The classic pair runs the same pigment hues pushed +50% chroma in OKLCH
+ * (gamut-clamped) on neutral grounds.
  */
 export const tokens = {
   font: {
@@ -12,38 +15,52 @@ export const tokens = {
     display: '"Fraunces", Georgia, serif',
     heading: '"Fraunces", Georgia, serif',
     mono: 'ui-monospace, "SF Mono", Menlo, monospace',
+    // Instrument faces for dense operational surfaces (the intelligent theme's
+    // native voice; usable from any theme): ui carries labels and controls,
+    // data carries figures, timestamps, and micro-labels.
+    ui: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
+    data: '"JetBrains Mono", "SF Mono", ui-monospace, monospace',
   },
   color: {
     paper: {
-      base: { light: '#F5EDDD', dark: '#20180E', classicLight: '#FFFFFF', classicDark: '#000000' },
-      warm: { light: '#EFE4CE', dark: '#2A2014', classicLight: '#F7F7F7', classicDark: '#111111' },
-      deep: { light: '#E8DCC0', dark: '#352A1A', classicLight: '#EFEFEF', classicDark: '#1C1C1C' },
+      base: { light: '#F5EDDD', dark: '#20180E', classicLight: '#FFFFFF', classicDark: '#000000', intelligent: '#0E100D' },
+      warm: { light: '#EFE4CE', dark: '#2A2014', classicLight: '#F7F7F7', classicDark: '#111111', intelligent: '#171A14' },
+      deep: { light: '#E8DCC0', dark: '#352A1A', classicLight: '#EFEFEF', classicDark: '#1C1C1C', intelligent: '#1D2117' },
     },
     ink: {
-      base: { light: '#2A2622', dark: '#F1E7D3', classicLight: '#171717', classicDark: '#F5F5F5' },
-      soft: { light: '#5C524A', dark: '#C8B9A0', classicLight: '#454545', classicDark: '#C9C9C9' },
-      muted: { light: '#675F58', dark: '#A89880', classicLight: '#5E5E5E', classicDark: '#A0A0A0' },
+      base: { light: '#2A2622', dark: '#F1E7D3', classicLight: '#171717', classicDark: '#F5F5F5', intelligent: '#E9E5D6' },
+      // intelligent soft is lifted from the comp's #93927C — that cut passes AA but is
+      // thin for body duty; the comp value survives as the muted/meta cut below.
+      soft: { light: '#5C524A', dark: '#C8B9A0', classicLight: '#454545', classicDark: '#C9C9C9', intelligent: '#A9A791' },
+      muted: { light: '#675F58', dark: '#A89880', classicLight: '#5E5E5E', classicDark: '#A0A0A0', intelligent: '#93927C' },
     },
     pigment: {
       terracotta: {
-        base: { light: '#C4684B', dark: '#DB8568', classicLight: '#DE501B', classicDark: '#F57345' },
-        deep: { light: '#8A4530', dark: '#E89A80', classicLight: '#9D3209', classicDark: '#FE8D67' },
+        base: { light: '#C4684B', dark: '#DB8568', classicLight: '#DE501B', classicDark: '#F57345', intelligent: '#C96F4C' },
+        deep: { light: '#8A4530', dark: '#E89A80', classicLight: '#9D3209', classicDark: '#FE8D67', intelligent: '#E08A66' },
       },
       moss: {
-        base: { light: '#7A8C5C', dark: '#A2B57E', classicLight: '#758F43', classicDark: '#9DB962' },
-        deep: { light: '#4C5936', dark: '#B6C896', classicLight: '#516526', classicDark: '#B1CC7E' },
+        base: { light: '#7A8C5C', dark: '#A2B57E', classicLight: '#758F43', classicDark: '#9DB962', intelligent: '#7FAE5A' },
+        deep: { light: '#4C5936', dark: '#B6C896', classicLight: '#516526', classicDark: '#B1CC7E', intelligent: '#9BC47D' },
       },
       indigo: {
-        base: { light: '#5B6B8A', dark: '#92A2C2', classicLight: '#536A99', classicDark: '#8AA2D2' },
-        deep: { light: '#44516D', dark: '#AAB8D4', classicLight: '#3D507A', classicDark: '#A3B8E2' },
+        base: { light: '#5B6B8A', dark: '#92A2C2', classicLight: '#536A99', classicDark: '#8AA2D2', intelligent: '#8B8FD8' },
+        deep: { light: '#44516D', dark: '#AAB8D4', classicLight: '#3D507A', classicDark: '#A3B8E2', intelligent: '#A6AAE3' },
       },
       gold: {
-        base: { light: '#B89968', dark: '#D6BA86', classicLight: '#C49544', classicDark: '#E2B764' },
-        deep: { light: '#9A7D4E', dark: '#E2CA9E', classicLight: '#A57928', classicDark: '#ECC883' },
+        base: { light: '#B89968', dark: '#D6BA86', classicLight: '#C49544', classicDark: '#E2B764', intelligent: '#E0A340' },
+        deep: { light: '#9A7D4E', dark: '#E2CA9E', classicLight: '#A57928', classicDark: '#ECC883', intelligent: '#E8BC72' },
         // Gold is the one pigment whose deep cut can't carry TEXT duty on light
         // grounds (3.3:1 on Dawn paper, 3.9:1 on white). This darker text cut
         // clears 4.5:1 there; dark grounds reuse the deep cut (11:1+).
-        text: { light: '#68522D', dark: '#E2CA9E', classicLight: '#7C5814', classicDark: '#ECC883' },
+        text: { light: '#68522D', dark: '#E2CA9E', classicLight: '#7C5814', classicDark: '#ECC883', intelligent: '#E8BC72' },
+      },
+      // The "working" status hue (agent actively running) — teal sits between moss
+      // (success) and indigo (info) so live activity reads as its own signal. Light
+      // and classic cuts follow the house recipes (classic = +50% OKLCH chroma).
+      teal: {
+        base: { light: '#4E938B', dark: '#4AA9A0', classicLight: '#178F84', classicDark: '#3DBDB1', intelligent: '#4AA9A0' },
+        deep: { light: '#2F6B64', dark: '#63BCB2', classicLight: '#0E6B61', classicDark: '#5FD3C7', intelligent: '#63BCB2' },
       },
     },
     chart: {
@@ -54,43 +71,46 @@ export const tokens = {
       // moss 128° + a chart-only plum 335° replacing ink-soft) per ground, validated
       // against all six palette checks per theme. Assign series colors in this fixed
       // order — never cycle or reorder survivors when a filter drops a series.
+      // The intelligent theme reuses the Dusk chart cuts for now: its ground (#0E100D)
+      // is darker than Dusk's, so every check passes with margin (series 3.3:1+,
+      // seq monotonic, div poles 6.8:1+). Bespoke cuts come with the first data surface.
       series: {
-        1: { light: '#BC6751', dark: '#C66F59', classicLight: '#C44829', classicDark: '#D25436' },
-        2: { light: '#345799', dark: '#4265A9', classicLight: '#194AAC', classicDark: '#2A5DBF' },
-        3: { light: '#A27B1C', dark: '#B58D34', classicLight: '#B18401', classicDark: '#BA8B01' },
-        4: { light: '#79376C', dark: '#924E84', classicLight: '#852076', classicDark: '#993588' },
-        5: { light: '#688838', dark: '#6C8D3D', classicLight: '#659102', classicDark: '#6D9C03' },
+        1: { light: '#BC6751', dark: '#C66F59', classicLight: '#C44829', classicDark: '#D25436', intelligent: '#C66F59' },
+        2: { light: '#345799', dark: '#4265A9', classicLight: '#194AAC', classicDark: '#2A5DBF', intelligent: '#4265A9' },
+        3: { light: '#A27B1C', dark: '#B58D34', classicLight: '#B18401', classicDark: '#BA8B01', intelligent: '#B58D34' },
+        4: { light: '#79376C', dark: '#924E84', classicLight: '#852076', classicDark: '#993588', intelligent: '#924E84' },
+        5: { light: '#688838', dark: '#6C8D3D', classicLight: '#659102', classicDark: '#6D9C03', intelligent: '#6C8D3D' },
       },
       // Sequential (magnitude): one hue — moss — light→dark on light grounds,
       // dark→light on dark grounds; 1 = low emphasis (near ground), 5 = high.
       seq: {
-        1: { light: '#C7D8B5', dark: '#303D20', classicLight: '#CCE0B6', classicDark: '#2A3815' },
-        2: { light: '#A1B787', dark: '#475A2E', classicLight: '#A0BC7E', classicDark: '#41591D' },
-        3: { light: '#7C975A', dark: '#5F793D', classicLight: '#779A45', classicDark: '#5A7B25' },
-        4: { light: '#567428', dark: '#79994D', classicLight: '#527602', classicDark: '#749F2B' },
-        5: { light: '#375101', dark: '#97B86B', classicLight: '#375101', classicDark: '#95C352' },
+        1: { light: '#C7D8B5', dark: '#303D20', classicLight: '#CCE0B6', classicDark: '#2A3815', intelligent: '#303D20' },
+        2: { light: '#A1B787', dark: '#475A2E', classicLight: '#A0BC7E', classicDark: '#41591D', intelligent: '#475A2E' },
+        3: { light: '#7C975A', dark: '#5F793D', classicLight: '#779A45', classicDark: '#5A7B25', intelligent: '#5F793D' },
+        4: { light: '#567428', dark: '#79994D', classicLight: '#527602', classicDark: '#749F2B', intelligent: '#79994D' },
+        5: { light: '#375101', dark: '#97B86B', classicLight: '#375101', classicDark: '#95C352', intelligent: '#97B86B' },
       },
       // Diverging (polarity): terracotta pole ↔ indigo pole (warm/cool — never
       // red/green) around a near-neutral warm-gray midpoint; 1 = strong negative,
       // 3 = midpoint, 5 = strong positive.
       div: {
-        1: { light: '#903F2B', dark: '#DC836D', classicLight: '#A22801', classicDark: '#FA7959' },
-        2: { light: '#BB8273', dark: '#986153', classicLight: '#C77B68', classicDark: '#A75D4B' },
-        3: { light: '#CFC9C5', dark: '#403C39', classicLight: '#D4D0CD', classicDark: '#3A3735' },
-        4: { light: '#7993C1', dark: '#59729E', classicLight: '#7092D0', classicDark: '#5474AF' },
-        5: { light: '#36589B', dark: '#779EE6', classicLight: '#2253B5', classicDark: '#71A3FF' },
+        1: { light: '#903F2B', dark: '#DC836D', classicLight: '#A22801', classicDark: '#FA7959', intelligent: '#DC836D' },
+        2: { light: '#BB8273', dark: '#986153', classicLight: '#C77B68', classicDark: '#A75D4B', intelligent: '#986153' },
+        3: { light: '#CFC9C5', dark: '#403C39', classicLight: '#D4D0CD', classicDark: '#3A3735', intelligent: '#403C39' },
+        4: { light: '#7993C1', dark: '#59729E', classicLight: '#7092D0', classicDark: '#5474AF', intelligent: '#59729E' },
+        5: { light: '#36589B', dark: '#779EE6', classicLight: '#2253B5', classicDark: '#71A3FF', intelligent: '#779EE6' },
       },
     },
     line: {
-      faint: { light: 'rgba(42, 38, 34, 0.08)', dark: 'rgba(241, 231, 211, 0.07)', classicLight: 'rgba(0, 0, 0, 0.07)', classicDark: 'rgba(255, 255, 255, 0.08)' },
-      soft: { light: 'rgba(42, 38, 34, 0.12)', dark: 'rgba(241, 231, 211, 0.11)', classicLight: 'rgba(0, 0, 0, 0.11)', classicDark: 'rgba(255, 255, 255, 0.12)' },
-      base: { light: 'rgba(42, 38, 34, 0.15)', dark: 'rgba(241, 231, 211, 0.15)', classicLight: 'rgba(0, 0, 0, 0.14)', classicDark: 'rgba(255, 255, 255, 0.16)' },
-      strong: { light: 'rgba(42, 38, 34, 0.20)', dark: 'rgba(241, 231, 211, 0.22)', classicLight: 'rgba(0, 0, 0, 0.20)', classicDark: 'rgba(255, 255, 255, 0.24)' },
+      faint: { light: 'rgba(42, 38, 34, 0.08)', dark: 'rgba(241, 231, 211, 0.07)', classicLight: 'rgba(0, 0, 0, 0.07)', classicDark: 'rgba(255, 255, 255, 0.08)', intelligent: 'rgba(233, 229, 214, 0.07)' },
+      soft: { light: 'rgba(42, 38, 34, 0.12)', dark: 'rgba(241, 231, 211, 0.11)', classicLight: 'rgba(0, 0, 0, 0.11)', classicDark: 'rgba(255, 255, 255, 0.12)', intelligent: 'rgba(233, 229, 214, 0.11)' },
+      base: { light: 'rgba(42, 38, 34, 0.15)', dark: 'rgba(241, 231, 211, 0.15)', classicLight: 'rgba(0, 0, 0, 0.14)', classicDark: 'rgba(255, 255, 255, 0.16)', intelligent: 'rgba(233, 229, 214, 0.15)' },
+      strong: { light: 'rgba(42, 38, 34, 0.20)', dark: 'rgba(241, 231, 211, 0.22)', classicLight: 'rgba(0, 0, 0, 0.20)', classicDark: 'rgba(255, 255, 255, 0.24)', intelligent: 'rgba(233, 229, 214, 0.22)' },
       // Solid boundary for interactive controls (switch/slider tracks, field & checkbox/radio
       // borders). Alpha lines never reach WCAG 1.4.11 non-text 3:1 on paper; these solids do:
       // 3.38:1 (light) / 3.34:1 (dark) / 3.69:1 (classic light) / 4.56:1 (classic dark)
       // against the page. Used by the shadcn `input` token.
-      control: { light: '#8A7F6E', dark: '#746B5D', classicLight: '#858585', classicDark: '#757575' },
+      control: { light: '#8A7F6E', dark: '#746B5D', classicLight: '#858585', classicDark: '#757575', intelligent: '#767663' },
     },
   },
   radius: {
@@ -115,30 +135,35 @@ export const tokens = {
     xs: {
       light: '0 1px 2px -1px rgba(42, 38, 34, 0.12), 0 0 0 1px rgba(42, 38, 34, 0.05)',
       dark: '0 1px 2px -1px rgba(8, 5, 3, 0.40), 0 0 0 1px rgba(8, 5, 3, 0.18)',
+      intelligent: '0 1px 2px -1px rgba(8, 5, 3, 0.40), 0 0 0 1px rgba(8, 5, 3, 0.18)',
       classicLight: '0 1px 2px -1px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05)',
       classicDark: '0 1px 2px -1px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.06)',
     },
     sm: {
       light: '0 2px 4px -1px rgba(42, 38, 34, 0.14), 0 1px 2px -1px rgba(42, 38, 34, 0.08)',
       dark: '0 2px 4px -1px rgba(8, 5, 3, 0.48), 0 1px 2px -1px rgba(8, 5, 3, 0.30)',
+      intelligent: '0 2px 4px -1px rgba(8, 5, 3, 0.48), 0 1px 2px -1px rgba(8, 5, 3, 0.30)',
       classicLight: '0 2px 4px -1px rgba(0, 0, 0, 0.14), 0 1px 2px -1px rgba(0, 0, 0, 0.08)',
       classicDark: '0 2px 4px -1px rgba(0, 0, 0, 0.55), 0 1px 2px -1px rgba(0, 0, 0, 0.35)',
     },
     base: {
       light: '0 4px 8px -2px rgba(42, 38, 34, 0.16), 0 2px 4px -2px rgba(42, 38, 34, 0.10)',
       dark: '0 4px 8px -2px rgba(8, 5, 3, 0.54), 0 2px 4px -2px rgba(8, 5, 3, 0.36)',
+      intelligent: '0 4px 8px -2px rgba(8, 5, 3, 0.54), 0 2px 4px -2px rgba(8, 5, 3, 0.36)',
       classicLight: '0 4px 8px -2px rgba(0, 0, 0, 0.16), 0 2px 4px -2px rgba(0, 0, 0, 0.10)',
       classicDark: '0 4px 8px -2px rgba(0, 0, 0, 0.60), 0 2px 4px -2px rgba(0, 0, 0, 0.40)',
     },
     lg: {
       light: '0 12px 20px -4px rgba(42, 38, 34, 0.18), 0 4px 8px -4px rgba(42, 38, 34, 0.10)',
       dark: '0 12px 20px -4px rgba(8, 5, 3, 0.62), 0 4px 8px -4px rgba(8, 5, 3, 0.40)',
+      intelligent: '0 12px 20px -4px rgba(8, 5, 3, 0.62), 0 4px 8px -4px rgba(8, 5, 3, 0.40)',
       classicLight: '0 12px 20px -4px rgba(0, 0, 0, 0.18), 0 4px 8px -4px rgba(0, 0, 0, 0.10)',
       classicDark: '0 12px 20px -4px rgba(0, 0, 0, 0.68), 0 4px 8px -4px rgba(0, 0, 0, 0.44)',
     },
     pop: {
       light: '0 20px 32px -6px rgba(42, 38, 34, 0.22), 0 8px 12px -6px rgba(42, 38, 34, 0.12)',
       dark: '0 20px 32px -6px rgba(8, 5, 3, 0.72), 0 8px 12px -6px rgba(8, 5, 3, 0.48)',
+      intelligent: '0 20px 32px -6px rgba(8, 5, 3, 0.72), 0 8px 12px -6px rgba(8, 5, 3, 0.48)',
       classicLight: '0 20px 32px -6px rgba(0, 0, 0, 0.22), 0 8px 12px -6px rgba(0, 0, 0, 0.12)',
       classicDark: '0 20px 32px -6px rgba(0, 0, 0, 0.78), 0 8px 12px -6px rgba(0, 0, 0, 0.52)',
     },
@@ -186,6 +211,10 @@ export const tokens = {
     'warning': 'var(--gold-deep)',
     'danger': 'var(--terracotta-deep)',
     'info': 'var(--indigo)',
+    // Run-status semantics (agent surfaces): working = live activity (teal's
+    // AA text cut); queued = waiting its turn — muted ink, recedes, never signals.
+    'working': 'var(--teal-deep)',
+    'queued': 'var(--ink-muted)',
   },
   shadcn: {
     'background': 'var(--paper)', 'foreground': 'var(--ink)',
