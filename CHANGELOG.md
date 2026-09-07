@@ -9,6 +9,13 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.28] — 2026-09-07
+
+### Changed
+- chore(deps): Bump the storybook group across 1 directory with 6 updates
+- chore(deps): Bump the next group across 1 directory with 2 updates
+- chore(deps): Bump @types/react-dom in the react group
+
 ## [0.8.27] — 2026-09-03
 
 ### Changed
