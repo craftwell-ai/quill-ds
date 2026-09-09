@@ -9,6 +9,30 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.2] — 2026-09-09
+
+### Fixed
+- **An app the sync cannot merge is no longer treated as a failed sync.** Two of
+  the four Quill-styled apps require no checks at all. That gives GitHub nothing
+  to wait for, so `gh pr merge --auto` is refused, and the poll it falls back to
+  cannot read `CheckRun` results because **fine-grained PATs can no longer be
+  granted `Checks: read`** — verified 2026-09-09 against the live permission
+  picker, which offers no such permission and jumps from "Attestations" straight
+  to "Code quality". Neither route being open was fatal, so every release turned
+  red for those two apps forever. The update is still written, pushed and
+  proposed; only the merge waits for a human, which is exactly what the script's
+  own contract already says about a red check: "reported, never fatal". Those
+  apps now report `PR open — no auto-merge available and check status
+  unreadable, left for review` and are counted in a separate
+  "delivered but waiting on a human" line rather than failing the run.
+
+### Notes
+- The real fix for an affected app is to make one of its existing checks
+  required; that restores `--auto` and the sync completes unattended. Applied to
+  `tech-careers` (branch protection) and `craftwell-command-center` (ruleset) by
+  enabling auto-merge — both now report "auto-merge armed". `god-sent` and
+  `commanddeck` require nothing and are deliberately left as review-only.
+
 ## [0.9.1] — 2026-09-09
 
 ### Fixed
