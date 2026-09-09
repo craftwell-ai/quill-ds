@@ -9,6 +9,54 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.0] — 2026-09-09
+
+Minor, not patch: this changes the colour of every chart in every consuming app.
+Per the routine above, a breaking token change bumps minor while pre-1.0.
+
+### Fixed
+- **The categorical chart palette called itself colourblind-safe and was not.**
+  `quill.tokens.mjs` stated the UI pigments were rejected for series duty partly
+  because "terracotta↔moss adjacency fails deuteranopia separation (ΔE 3.2 on
+  Dawn; target ≥8)", and that the replacement cuts were "validated against all
+  six palette checks per theme". Simulating protanopia, deuteranopia and
+  tritanopia across all 5 themes × 10 pairs says otherwise:
+
+  | Theme | Deficiency | Pair | ΔE2000 |
+  |---|---|---|---|
+  | classic-dark | protanopia | 3 ↔ 5 | **0.34** |
+  | classic-light | protanopia | 3 ↔ 5 | **0.88** |
+  | classic-light | deuteranopia | 1 ↔ 5 | **0.98** |
+  | classic-dark | deuteranopia | 1 ↔ 5 | **2.00** |
+  | Dawn | protanopia | 3 ↔ 5 | 3.93 |
+  | Dawn | deuteranopia | 1 ↔ 5 | 4.78 |
+
+  Two things follow. The documented fix never reached its own target — it moved
+  terracotta↔moss from 3.2 to 4.78, not to 8. And it introduced a worse gold↔moss
+  collision, invisible in a 2-series chart and certain in a 5-series one.
+
+  **Cause.** Three of the five hues — terracotta 35°, gold 84°, moss 128° — sit in
+  the red-yellow-green arc, which is exactly the arc red-green deficiency
+  collapses. The cuts held all five at roughly ONE lightness (Dawn: 0.606 / 0.605 /
+  0.584 for series 1/3/5) and separated them by hue alone. Beautiful for normal
+  vision; identical for roughly 8% of men.
+
+  **Fix.** The series are now a lightness ramp as well as a hue wheel, because
+  under dichromacy hue collapses and lightness is what survives. Worst pair across
+  all 5 themes × 3 deficiencies × 10 pairs is now **ΔE 8.53**, against the target
+  of 8. Constraints held throughout:
+  - **hues unchanged** — max drift 0.4°, so the brand identity is untouched
+  - **chroma never raised** above each cut's previous value, so nothing gets louder
+  - **contrast ≥ 3:1** on page, card and well in every theme (worst 3.05)
+  - **normal-vision separation improves** in 4 of 5 themes
+
+### Added
+- **Colour-vision simulation in the token tests** (Viénot–Brettel–Mollon 1999 +
+  ΔE2000), covering 10 pairs × 3 deficiencies × 5 themes = 150 assertions. The
+  previous chart tests checked contrast and ramp monotonicity only, so no amount
+  of running them could have caught this. Confirmed to fail against the pre-fix
+  palette before being committed.
+
 ## [0.8.30] — 2026-09-09
 
 ### Fixed
