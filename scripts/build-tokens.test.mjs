@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { transform } from 'lightningcss'
-import { renderCss, injectMarkers, cssVarName, registryBlock, renderManager, renderDtcg } from './build-tokens.mjs'
+import { renderCss, injectMarkers, cssVarName, registryBlock, renderManager, renderDtcg, darkVariant, MODES } from './build-tokens.mjs'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 
 test('generated CSS survives strict minification (LightningCSS) with light primitives intact', () => {
@@ -156,5 +156,44 @@ test('DTCG export types + modes + Figma-friendly grouping', () => {
         `Theme.${bucket}['${tokenName}'] alias '${tokenObj.$value}' does not resolve to a leaf with $type`,
       )
     }
+  }
+})
+
+// Two guards for the same class of bug: a value added to the token source but
+// not to a hand-kept list beside it. That is how `text-gold-text` compiled to
+// nothing (no palette entry) and how 80 `dark:` utilities went dead on the
+// intelligent theme (selector named two of three dark themes).
+test('every pigment cut has a --color-* utility mapping', () => {
+  const { theme } = renderCss(tokens)
+  const mapped = new Set([...theme.matchAll(/--color-[a-z0-9-]+:\s*var\((--[a-z0-9-]+)\)/g)].map((m) => m[1]))
+  const missing = []
+  for (const [family, cuts] of Object.entries(tokens.color.pigment)) {
+    for (const cut of Object.keys(cuts)) {
+      const cssVar = cut === 'base' ? `--${family}` : `--${family}-${cut}`
+      if (!mapped.has(cssVar)) missing.push(cssVar)
+    }
+  }
+  assert.deepEqual(
+    missing,
+    [],
+    `pigment cuts with no Tailwind utility — classes referencing them compile to nothing: ${missing.join(', ')}`,
+  )
+  // Anti-vacuity: fail if the regex stops matching rather than silently passing.
+  assert.ok(mapped.size >= 15, `expected the palette map to cover 15+ vars, matched ${mapped.size}`)
+})
+
+test('the dark: variant covers every theme whose color-scheme is dark', () => {
+  const selector = darkVariant()
+  const dark = MODES.filter((m) => m.colorScheme === 'dark')
+  const light = MODES.filter((m) => m.colorScheme !== 'dark')
+  assert.ok(dark.length >= 3, `expected 3+ dark modes, found ${dark.length}`)
+  for (const m of dark) {
+    assert.ok(
+      selector.includes(`[data-theme="${m.attr}"]`),
+      `dark theme '${m.attr}' is missing from the dark: variant — every dark: utility renders its light treatment there`,
+    )
+  }
+  for (const m of light) {
+    assert.ok(!selector.includes(`[data-theme="${m.attr}"]`), `light theme '${m.attr}' must not trigger dark: utilities`)
   }
 })

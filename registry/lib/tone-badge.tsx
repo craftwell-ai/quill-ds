@@ -24,7 +24,7 @@ const TINT: Record<Tone, string> = {
   // tint fails AA in light themes.
   gold: 'bg-gold/25 text-gold-text',
   terracotta: 'bg-terracotta/16 text-terracotta-deep',
-  indigo: 'bg-indigo/20 text-indigo-deep',
+  indigo: 'bg-indigo-brand/20 text-indigo-brand-deep',
   neutral: 'bg-paper-deep text-ink-soft',
   muted: 'bg-paper-deep text-ink-muted',
 }
@@ -34,7 +34,7 @@ const SOLID: Record<Tone, string> = {
   // gold-text, not gold-deep: paper on gold-deep is 3.3:1 — under AA.
   gold: 'bg-gold-text text-paper',
   terracotta: 'bg-terracotta-deep text-paper',
-  indigo: 'bg-indigo-deep text-paper',
+  indigo: 'bg-indigo-brand-deep text-paper',
   neutral: 'bg-ink text-paper',
   muted: 'bg-ink-muted text-paper',
 }

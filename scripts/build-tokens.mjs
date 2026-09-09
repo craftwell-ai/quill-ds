@@ -113,7 +113,10 @@ export function renderCss(t) {
     terracotta: '--terracotta', 'terracotta-deep': '--terracotta-deep',
     moss: '--moss', 'moss-deep': '--moss-deep',
     'indigo-brand': '--indigo', 'indigo-brand-deep': '--indigo-deep',
-    gold: '--gold', 'gold-deep': '--gold-deep',
+    // gold-text is a third cut, not a shade: gold-deep can't carry TEXT duty on
+    // light grounds (3.3:1 on Dawn). Without a utility here, `text-gold-text` in
+    // ToneBadge compiled to nothing and the AA fix was inert.
+    gold: '--gold', 'gold-deep': '--gold-deep', 'gold-text': '--gold-text',
     teal: '--teal', 'teal-deep': '--teal-deep',
   }
   for (const [k, v] of Object.entries(paletteMap)) themeLines.push(`  --color-${k}: ${`var(${v})`};`)
@@ -160,6 +163,22 @@ export function injectMarkers(source, block) {
   const e = source.indexOf(END)
   if (s === -1 || e === -1) throw new Error('markers not found')
   return source.slice(0, s + START.length) + '\n' + block + '\n' + source.slice(e)
+}
+
+// Tailwind's `dark:` variant must fire on EVERY theme whose color-scheme is
+// dark, and this list is derived from MODES rather than hand-kept. It was
+// hand-kept once: the intelligent theme shipped with 80 `dark:` utilities
+// silently rendering their light treatment on a near-black ground, because the
+// selector still named only two of the three dark themes. A sixth theme now
+// joins automatically.
+// NOTE: this is site-only. The registry cut is imported from a layout rather
+// than the Tailwind entry, so an @custom-variant there would never be processed
+// — consumers get no data-theme→dark: bridge until the token layer ships
+// through shadcn's cssVars/css fields (see docs/audits/2026-09-09, item 6).
+export function darkVariant(modes = MODES) {
+  const dark = modes.filter((m) => m.colorScheme === 'dark')
+  const selector = dark.map((m) => `[data-theme="${m.attr}"] *`).join(', ')
+  return `@custom-variant dark (&:is(${selector}));`
 }
 
 export function registryBlock(css) {
@@ -258,7 +277,7 @@ export function renderDtcg(t) {
 
 // --- main (not exercised by unit tests) ---
 function globalsBlock(css) {
-  return `@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}`
+  return `${darkVariant()}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}`
 }
 
 export function main() {
