@@ -2,10 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Classic Dark is a dark theme too — dark: utilities apply under both. */
-@custom-variant dark (&:is([data-theme="dark"] *, [data-theme="classic-dark"] *));
-
 /* @quill-tokens:start */
+@custom-variant dark (&:is([data-theme="dark"] *, [data-theme="classic-dark"] *, [data-theme="intelligent"] *));
+
 @theme inline {
   --font-sans: "Raleway", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: "Fraunces", Georgia, serif;
@@ -58,6 +57,7 @@
   --color-indigo-brand-deep: var(--indigo-deep);
   --color-gold: var(--gold);
   --color-gold-deep: var(--gold-deep);
+  --color-gold-text: var(--gold-text);
   --color-teal: var(--teal);
   --color-teal-deep: var(--teal-deep);
   --radius-xs: 0.125rem;
@@ -156,9 +156,9 @@
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
   --success: var(--moss-deep);
-  --warning: var(--gold-deep);
+  --warning: var(--gold-text);
   --danger: var(--terracotta-deep);
-  --info: var(--indigo);
+  --info: var(--indigo-deep);
   --working: var(--teal-deep);
   --queued: var(--ink-muted);
   --radius: 0.5rem;
@@ -445,9 +445,9 @@
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
   --success: var(--moss-deep);
-  --warning: var(--gold-deep);
+  --warning: var(--gold-text);
   --danger: var(--terracotta-deep);
-  --info: var(--indigo);
+  --info: var(--indigo-deep);
   --working: var(--teal-deep);
   --queued: var(--ink-muted);
   --background: var(--paper);
@@ -543,9 +543,9 @@
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
   --success: var(--moss-deep);
-  --warning: var(--gold-deep);
+  --warning: var(--gold-text);
   --danger: var(--terracotta-deep);
-  --info: var(--indigo);
+  --info: var(--indigo-deep);
   --working: var(--teal-deep);
   --queued: var(--ink-muted);
   --background: var(--paper);
@@ -641,9 +641,9 @@
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
   --success: var(--moss-deep);
-  --warning: var(--gold-deep);
+  --warning: var(--gold-text);
   --danger: var(--terracotta-deep);
-  --info: var(--indigo);
+  --info: var(--indigo-deep);
   --working: var(--teal-deep);
   --queued: var(--ink-muted);
   --background: var(--paper);
@@ -739,9 +739,9 @@
   --border-field: var(--line-control);
   --border-divider: var(--line-faint);
   --success: var(--moss-deep);
-  --warning: var(--gold-deep);
+  --warning: var(--gold-text);
   --danger: var(--terracotta-deep);
-  --info: var(--indigo);
+  --info: var(--indigo-deep);
   --working: var(--teal-deep);
   --queued: var(--ink-muted);
   --background: var(--paper);

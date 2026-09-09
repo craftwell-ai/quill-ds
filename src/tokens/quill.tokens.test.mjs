@@ -27,7 +27,7 @@ test('accent aliases follow data-accent, defaulting to moss (a11y)', () => {
   assert.equal(tokens.accents.terracotta.text, 'var(--terracotta-deep)')
   // status colors do NOT follow the accent
   assert.equal(tokens.shadcn.destructive, 'var(--terracotta-deep)')
-  assert.equal(tokens.semantic.warning, 'var(--gold-deep)')
+  assert.equal(tokens.semantic.warning, 'var(--gold-text)')
 })
 
 test('every accent text cut clears WCAG 4.5:1 on every theme ground (20 combos)', () => {
@@ -166,4 +166,45 @@ test('intelligent theme: cockpit grounds, teal working status, instrument fonts 
   // Instrument faces for dense operational surfaces (additive — sans/heading untouched).
   assert.ok(tokens.font.ui.includes('Inter'))
   assert.ok(tokens.font.data.includes('JetBrains Mono'))
+})
+
+// Status colors are read as TEXT, and they are read on cards and wells, not
+// only on the page. Checking the page alone is what let --warning ship at
+// 3.33:1 on Dawn and --info at 3.94:1 on a Dawn well: both passed a
+// page-only check and failed everywhere a status label actually sits.
+test('every status token clears WCAG 4.5:1 on page, card AND well in all 5 themes', () => {
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+  const lum = (hex) =>
+    [1, 3, 5]
+      .map((i) => lin(parseInt(hex.slice(i, i + 2), 16) / 255))
+      .reduce((acc, c, i) => acc + c * [0.2126, 0.7152, 0.0722][i], 0)
+  const contrast = (a, b) => {
+    const [x, y] = [lum(a) + 0.05, lum(b) + 0.05]
+    return Math.max(x, y) / Math.min(x, y)
+  }
+  // 'var(--gold-text)' → tokens.color.pigment.gold.text; 'var(--ink-muted)' → color.ink.muted
+  const resolve = (ref, mode) => {
+    const parts = ref.replace(/^var\(--|\)$/g, '').split('-')
+    const cut = parts.slice(1).join('-') || 'base'
+    const family = tokens.color.pigment[parts[0]] ?? tokens.color[parts[0]]
+    return family[cut][mode]
+  }
+  const STATUS = ['success', 'warning', 'danger', 'info', 'working', 'queued']
+  const GROUNDS = { page: 'base', card: 'warm', well: 'deep' }
+  let checked = 0
+  for (const mode of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
+    for (const name of STATUS) {
+      const cut = resolve(tokens.semantic[name], mode)
+      for (const [label, paperCut] of Object.entries(GROUNDS)) {
+        const ground = tokens.color.paper[paperCut][mode]
+        const ratio = contrast(cut, ground)
+        assert.ok(
+          ratio >= 4.5,
+          `status '${name}' (${cut}) is ${ratio.toFixed(2)}:1 on ${mode} ${label} ${ground} — a status label would fail AA`,
+        )
+        checked++
+      }
+    }
+  }
+  assert.equal(checked, 90, 'expected 6 status tokens x 3 grounds x 5 themes')
 })

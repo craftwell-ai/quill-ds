@@ -208,9 +208,14 @@ export const tokens = {
     'border-field': 'var(--line-control)',
     'border-divider': 'var(--line-faint)',
     'success': 'var(--moss-deep)',
-    'warning': 'var(--gold-deep)',
+    // gold-text, not gold-deep: gold-deep is 3.33:1 on Dawn paper and 3.91:1 on
+    // Classic Light — under AA for text. gold-text IS gold-deep on every dark
+    // theme, so this is a light-theme-only correction.
+    'warning': 'var(--gold-text)',
     'danger': 'var(--terracotta-deep)',
-    'info': 'var(--indigo)',
+    // indigo-deep, not the base cut: base is 4.26:1 on a Dawn card and 3.94:1
+    // on a well. Every other status token already points at a deep cut.
+    'info': 'var(--indigo-deep)',
     // Run-status semantics (agent surfaces): working = live activity (teal's
     // AA text cut); queued = waiting its turn — muted ink, recedes, never signals.
     'working': 'var(--teal-deep)',

@@ -9,6 +9,52 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.29] — 2026-09-09
+
+### Fixed
+- **ToneBadge's `gold` and `indigo` tones produced no styling at all.** Both
+  referenced Tailwind colour names the theme never defined, so the utilities
+  were never generated. `indigo` asked for `bg-indigo`/`text-indigo-deep`; the
+  registered names are `indigo-brand`/`indigo-brand-deep` (the plain `indigo`
+  name is deliberately left to Tailwind's own palette). `gold` asked for
+  `text-gold-text`, which had no `--color-*` entry despite `--gold-text`
+  existing as a variable. The two solid variants were the worst case:
+  tailwind-merge dropped `Badge`'s default `bg-primary` because `bg-gold-text`
+  *looks* like a background utility, then that utility compiled to nothing —
+  leaving cream `text-paper` on an unstyled chip, ~1.06:1 on a Dawn card.
+  The comment at `tone-badge.tsx:23` explaining why `gold-text` carries text
+  duty was correct all along; only the plumbing was missing.
+- **`--warning` and `--info` failed WCAG AA as text on light grounds.**
+  `--warning` pointed at `gold-deep` (3.33:1 on Dawn paper, 3.08:1 on a card,
+  2.85:1 on a well; 3.91/3.65/3.40 on Classic Light) even though `gold-text`
+  exists precisely because gold's deep cut cannot carry text duty on light
+  grounds. `--info` was the only status token on a base pigment cut rather than
+  a deep one (4.26:1 on a Dawn card, 3.94:1 on a well). Now `gold-text` and
+  `indigo-deep` respectively — eight failures resolved, and no visual change on
+  any dark theme, where `gold-text` and `gold-deep` are the same hex.
+- **80 `dark:` utilities were dead on the `intelligent` theme.** The
+  `@custom-variant dark` selector in `globals.css` was hand-kept and still named
+  only two of the three dark themes, so `dark:bg-input/30`, `dark:hidden` and
+  every other `dark:` utility silently rendered its *light* treatment on a
+  near-black ground. The selector is now generated from `MODES`, so a sixth
+  theme joins automatically. (Site-only: the registry cut is imported from a
+  layout rather than the Tailwind entry, so an `@custom-variant` there would
+  never be processed. Consumers still get no `data-theme`→`dark:` bridge until
+  the token layer ships through shadcn's `cssVars`/`css` fields.)
+
+### Added
+- Three regression guards for the class of bug all three fixes share — a value
+  added to the token source but not to a hand-kept list beside it:
+  - every status token must clear 4.5:1 on page, card **and** well in all five
+    themes (90 combinations). The previous contrast tests only checked the page
+    ground, which is exactly how `--warning` shipped failing on cards and wells.
+  - every pigment cut must have a `--color-*` utility mapping, so a cut like
+    `gold-text` can never again exist as a variable with no class.
+  - the `dark:` variant must name every theme whose `color-scheme` is dark, and
+    no light one.
+  All three were confirmed to fail against the pre-fix values before being
+  committed.
+
 ## [0.8.28] — 2026-09-07
 
 ### Changed

@@ -963,13 +963,13 @@
         "$value": "{Primitives.color.pigment.moss.deep}"
       },
       "warning": {
-        "$value": "{Primitives.color.pigment.gold.deep}"
+        "$value": "{Primitives.color.pigment.gold.text}"
       },
       "danger": {
         "$value": "{Primitives.color.pigment.terracotta.deep}"
       },
       "info": {
-        "$value": "{Primitives.color.pigment.indigo.base}"
+        "$value": "{Primitives.color.pigment.indigo.deep}"
       },
       "working": {
         "$value": "{Primitives.color.pigment.teal.deep}"
