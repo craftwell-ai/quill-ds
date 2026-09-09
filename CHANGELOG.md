@@ -9,6 +9,25 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.3] — 2026-09-09
+
+### Fixed
+- **The force-with-lease fix in 0.9.1 was incomplete.** Fetching the sync branch
+  into a tracking ref is not enough: the bare `--force-with-lease` still rejects
+  with **"stale info"**, because it wants a reflog it considers authoritative and
+  a shallow explicit-refspec fetch does not give it one. Verified against a real
+  clone of an app — the tracking ref was present, the reflog had an entry, and
+  the push was still refused. The lease is now taken against the exact object
+  fetched (`--force-with-lease=<branch>:<oid>`), which is deterministic and does
+  not depend on reflog interpretation. The same clone accepts that push. The
+  bare form is kept for the case where the branch is new upstream, where it is
+  correct.
+- **The per-app summary truncated the error to its first line**, which threw away
+  the stderr `run()` had just been taught to capture. That is why a "stale info"
+  rejection was reported as a bare "Command failed: git … push" with no reason
+  attached, and why 0.9.1 looked like it had worked. The whole message is now
+  reported, newlines collapsed, capped at 400 characters.
+
 ## [0.9.2] — 2026-09-09
 
 ### Fixed

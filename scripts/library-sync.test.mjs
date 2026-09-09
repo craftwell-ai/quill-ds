@@ -151,7 +151,7 @@ test('syncApps: one app failing does not stop the others', async () => {
     apps,
     async (app) => {
       attempted.push(app.name)
-      if (app.name === 'alpha') throw new Error('cannot read check status\nsecond line ignored')
+      if (app.name === 'alpha') throw new Error('cannot read check status\nstderr: stale info')
       if (app.name === 'charlie') throw new Error('clone refused')
     },
     (line) => said.push(line),
@@ -162,9 +162,15 @@ test('syncApps: one app failing does not stop the others', async () => {
     'every app must be attempted even when an earlier one throws',
   )
   assert.deepEqual(failed, ['alpha', 'charlie'])
-  // Only the first line of the message — a GraphQL error is a wall of text.
+  // The WHOLE message, newlines collapsed. Truncating to line 1 threw away the
+  // stderr run() captures, which is exactly how a "stale info" push rejection
+  // got reported as a bare "Command failed: git … push" with no reason.
   assert.ok(said.some((l) => l.includes('alpha') && l.includes('SYNC FAILED: cannot read check status')))
-  assert.ok(said.every((l) => !l.includes('second line ignored')))
+  assert.ok(
+    said.some((l) => l.includes('stderr: stale info')),
+    'the reason lives in stderr on later lines — it must survive into the summary',
+  )
+  assert.ok(said.some((l) => l.includes('cannot read check status · stderr: stale info')))
 })
 
 test('syncApps: an all-clean run reports no failures', async () => {

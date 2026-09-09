@@ -308,7 +308,10 @@ export async function syncApps(apps, syncOne, say = () => {}) {
       await syncOne(app)
     } catch (err) {
       failed.push(app.name)
-      say(`- \`${app.name}\` — SYNC FAILED: ${String(err?.message ?? err).split('\n')[0]}`)
+      // Keep the stderr run() attaches — truncating to line 1 hid the real
+      // reason, which is why a "stale info" rejection read as a bare failure.
+      const why = String(err?.message ?? err).split('\n').map((l) => l.trim()).filter(Boolean).join(' · ')
+      say(`- \`${app.name}\` — SYNC FAILED: ${why.slice(0, 400)}`)
     }
   }
   return failed
@@ -387,19 +390,29 @@ export async function main() {
         run('git', ['-C', dir, 'checkout', '-B', branch])
         run('git', ['-C', dir, 'add', '--', ...changed])
         run('git', ['-C', dir, 'commit', '-m', `chore(quill): sync design system to v${version}`])
-        // `--force-with-lease` needs a remote-tracking ref to lease against. The
-        // clone is `--depth 1` of the default branch only, so when the sync
-        // branch ALREADY exists upstream — a re-run, or a previous release whose
-        // PR is still open — there is no `refs/remotes/origin/<branch>` and git
-        // rejects the push with "stale info" rather than comparing anything.
-        // Fetching it first restores the lease; the catch covers the ordinary
-        // case where the branch does not exist upstream yet.
+        // `--force-with-lease` needs to know what we last saw upstream. The clone
+        // is `--depth 1` of the default branch only, so when the sync branch
+        // ALREADY exists upstream — a re-run, or a previous release whose PR is
+        // still open — there is nothing to compare against and git rejects the
+        // push with "stale info" without looking at anything.
+        //
+        // Fetching the branch into a tracking ref is NOT enough on its own: the
+        // bare `--force-with-lease` still rejects, because it wants a reflog it
+        // considers authoritative and a shallow explicit-refspec fetch does not
+        // give it one. Verified against a real clone on 2026-09-09. So lease
+        // against the exact object we fetched instead, which is deterministic.
+        let lease = null
         try {
           run('git', ['-C', dir, 'fetch', '--depth', '1', 'origin', `${branch}:refs/remotes/origin/${branch}`])
+          lease = run('git', ['-C', dir, 'rev-parse', `refs/remotes/origin/${branch}`]).trim()
         } catch {
-          /* branch is new upstream — nothing to lease against, push creates it */
+          /* branch is new upstream — the bare form is correct, it creates it */
         }
-        run('git', ['-C', dir, 'push', '--force-with-lease', 'origin', branch])
+        run('git', [
+          '-C', dir, 'push',
+          lease ? `--force-with-lease=${branch}:${lease}` : '--force-with-lease',
+          'origin', branch,
+        ])
 
         // A stale sync PR from an EARLIER release is superseded, not stacked:
         // close it so the app never holds two competing updates.
