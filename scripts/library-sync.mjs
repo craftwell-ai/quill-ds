@@ -234,19 +234,38 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
  * for a human. Returns one word for the summary.
  */
 async function mergeWhenGreen(repo, branch) {
+  let autoMergeErr = ''
   try {
     run('gh', ['pr', 'merge', branch, '--repo', repo, '--auto', '--merge'])
     return 'auto-merge armed'
-  } catch {
-    /* no branch protection — watch the checks ourselves */
+  } catch (err) {
+    // Usually "no branch protection here, watch the checks ourselves" — but it
+    // is also what a token that cannot merge looks like. Keep the reason so the
+    // poll can report both causes if it fails too.
+    autoMergeErr = err.message.split('\n')[0]
   }
   const started = Date.now()
   const deadline = started + 15 * 60_000
   const grace = started + 90_000
   while (Date.now() < deadline) {
-    const rollup = JSON.parse(
-      run('gh', ['pr', 'view', branch, '--repo', repo, '--json', 'statusCheckRollup']),
-    ).statusCheckRollup
+    let rollup
+    try {
+      rollup = JSON.parse(
+        run('gh', ['pr', 'view', branch, '--repo', repo, '--json', 'statusCheckRollup']),
+      ).statusCheckRollup
+    } catch (err) {
+      // Being unable to READ check status is a broken sync, not a red app, and
+      // the two must never be confused. The usual cause is a token missing
+      // Checks: read — which is exactly what failed silently here for 16 days.
+      // Throw a diagnosis rather than the raw GraphQL error; the caller records
+      // it against this app and carries on to the next one.
+      throw new Error(
+        `cannot read check status for ${repo} — PR left open. ` +
+          `Most likely LIBRARY_SYNC_TOKEN is missing the Checks: read permission. ` +
+          `gh said: ${err.message.split('\n')[0]}` +
+          (autoMergeErr ? ` (auto-merge also unavailable: ${autoMergeErr})` : ''),
+      )
+    }
     const verdict = checkVerdict(rollup)
     if (verdict === 'fail') return 'checks failed — PR left open'
     if (verdict === 'pass' || (verdict === 'none' && Date.now() > grace)) {
@@ -256,6 +275,25 @@ async function mergeWhenGreen(repo, branch) {
     await sleep(20_000)
   }
   return 'checks still pending after 15m — PR left open'
+}
+
+// Exported for testing. One app's failure must never abort the fleet: each app
+// is attempted independently, failures are collected, and the caller decides the
+// exit code. This existed as a bare loop inside the outer try until 2026-09-09,
+// so the first throw unwound everything — when LIBRARY_SYNC_TOKEN lost
+// Checks: read, app #1 threw and apps #2-4 were never touched. 29 consecutive
+// releases failed that way, each reporting "4 repos examined" and zero results.
+export async function syncApps(apps, syncOne, say = () => {}) {
+  const failed = []
+  for (const app of apps) {
+    try {
+      await syncOne(app)
+    } catch (err) {
+      failed.push(app.name)
+      say(`- \`${app.name}\` — SYNC FAILED: ${String(err?.message ?? err).split('\n')[0]}`)
+    }
+  }
+  return failed
 }
 
 export async function main() {
@@ -296,84 +334,98 @@ export async function main() {
     say()
 
     tmp = mkdtempSync(join(tmpdir(), 'library-sync-'))
-    for (const app of apps) {
-      const dir = cloneShallow(app, token, tmp)
-      const appPaths = run('git', ['-C', dir, 'ls-files']).split('\n').filter(Boolean)
-      const plan = planSync(items, appPaths)
-      const changed = applyPlan(dir, plan.writes, { dryRun })
-      if (changed.length === 0) {
-        say(`- \`${app.name}\` — already in sync (${plan.itemNames.length} items checked)`)
-        continue
-      }
-      if (dryRun) {
-        say(`- \`${app.name}\` — WOULD update ${changed.length} file(s): ${changed.join(', ')}`)
-        continue
-      }
+    // One app must never abort the fleet. The per-app body used to sit bare
+    // inside the outer try, so the first failure unwound the whole loop: when
+    // LIBRARY_SYNC_TOKEN lost Checks: read, app #1 threw and apps #2-4 were
+    // never touched — 29 consecutive failed releases reported "4 repos",
+    // "0 results". Failures are collected and reported together instead.
+    const failed = await syncApps(
+      apps,
+      async (app) => {
+        const dir = cloneShallow(app, token, tmp)
+        const appPaths = run('git', ['-C', dir, 'ls-files']).split('\n').filter(Boolean)
+        const plan = planSync(items, appPaths)
+        const changed = applyPlan(dir, plan.writes, { dryRun })
+        if (changed.length === 0) {
+          say(`- \`${app.name}\` — already in sync (${plan.itemNames.length} items checked)`)
+          return
+        }
+        if (dryRun) {
+          say(`- \`${app.name}\` — WOULD update ${changed.length} file(s): ${changed.join(', ')}`)
+          return
+        }
 
-      run('git', ['-C', dir, 'config', 'user.name', 'github-actions[bot]'])
-      run('git', [
-        '-C',
-        dir,
-        'config',
-        'user.email',
-        '41898282+github-actions[bot]@users.noreply.github.com',
-      ])
-      run('git', ['-C', dir, 'checkout', '-B', branch])
-      run('git', ['-C', dir, 'add', '--', ...changed])
-      run('git', ['-C', dir, 'commit', '-m', `chore(quill): sync design system to v${version}`])
-      run('git', ['-C', dir, 'push', '--force-with-lease', 'origin', branch])
+        run('git', ['-C', dir, 'config', 'user.name', 'github-actions[bot]'])
+        run('git', [
+          '-C',
+          dir,
+          'config',
+          'user.email',
+          '41898282+github-actions[bot]@users.noreply.github.com',
+        ])
+        run('git', ['-C', dir, 'checkout', '-B', branch])
+        run('git', ['-C', dir, 'add', '--', ...changed])
+        run('git', ['-C', dir, 'commit', '-m', `chore(quill): sync design system to v${version}`])
+        run('git', ['-C', dir, 'push', '--force-with-lease', 'origin', branch])
 
-      // A stale sync PR from an EARLIER release is superseded, not stacked:
-      // close it so the app never holds two competing updates.
-      const open = JSON.parse(
-        run('gh', ['pr', 'list', '--repo', app.full, '--state', 'open', '--json', 'number,headRefName']),
-      )
-      for (const pr of open) {
-        if (pr.headRefName.startsWith('quill-sync/') && pr.headRefName !== branch) {
+        // A stale sync PR from an EARLIER release is superseded, not stacked:
+        // close it so the app never holds two competing updates.
+        const open = JSON.parse(
+          run('gh', ['pr', 'list', '--repo', app.full, '--state', 'open', '--json', 'number,headRefName']),
+        )
+        for (const pr of open) {
+          if (pr.headRefName.startsWith('quill-sync/') && pr.headRefName !== branch) {
+            run('gh', [
+              'pr',
+              'close',
+              String(pr.number),
+              '--repo',
+              app.full,
+              '--comment',
+              `Superseded by the v${version} sync.`,
+              '--delete-branch',
+            ])
+          }
+        }
+
+        if (!open.some((pr) => pr.headRefName === branch)) {
+          const deps = plan.npmDeps.length
+            ? `\n\n> [!NOTE]\n> The updated items declare these npm packages: ${plan.npmDeps
+                .map((d) => `\`${d}\``)
+                .join(', ')}. An already-installed app has them; if this PR's build fails on a missing module, add the package.\n`
+            : ''
+          const body =
+            `Re-pulls the Quill items this app already uses, updated in ` +
+            `[quill-ds v${version}](https://github.com/craftwell-ai/${SELF_NAME}/releases/tag/v${version}).\n\n` +
+            `Items: ${plan.itemNames.map((n) => `\`${n}\``).join(', ')}\n` +
+            `Files: ${changed.map((c) => `\`${c}\``).join(', ')}${deps}\n\n` +
+            `Opened by \`library-sync.yml\` in ${SELF_NAME}. Merges itself once this repo's checks pass; ` +
+            `a red check leaves it open for a human.`
           run('gh', [
             'pr',
-            'close',
-            String(pr.number),
+            'create',
             '--repo',
             app.full,
-            '--comment',
-            `Superseded by the v${version} sync.`,
-            '--delete-branch',
+            '--base',
+            app.defaultBranch,
+            '--head',
+            branch,
+            '--title',
+            `chore(quill): sync design system to v${version}`,
+            '--body',
+            body,
           ])
         }
-      }
 
-      if (!open.some((pr) => pr.headRefName === branch)) {
-        const deps = plan.npmDeps.length
-          ? `\n\n> [!NOTE]\n> The updated items declare these npm packages: ${plan.npmDeps
-              .map((d) => `\`${d}\``)
-              .join(', ')}. An already-installed app has them; if this PR's build fails on a missing module, add the package.\n`
-          : ''
-        const body =
-          `Re-pulls the Quill items this app already uses, updated in ` +
-          `[quill-ds v${version}](https://github.com/craftwell-ai/${SELF_NAME}/releases/tag/v${version}).\n\n` +
-          `Items: ${plan.itemNames.map((n) => `\`${n}\``).join(', ')}\n` +
-          `Files: ${changed.map((c) => `\`${c}\``).join(', ')}${deps}\n\n` +
-          `Opened by \`library-sync.yml\` in ${SELF_NAME}. Merges itself once this repo's checks pass; ` +
-          `a red check leaves it open for a human.`
-        run('gh', [
-          'pr',
-          'create',
-          '--repo',
-          app.full,
-          '--base',
-          app.defaultBranch,
-          '--head',
-          branch,
-          '--title',
-          `chore(quill): sync design system to v${version}`,
-          '--body',
-          body,
-        ])
-      }
-
-      const outcome = await mergeWhenGreen(app.full, branch)
-      say(`- \`${app.name}\` — ${changed.length} file(s) updated → ${outcome}`)
+        const outcome = await mergeWhenGreen(app.full, branch)
+        say(`- \`${app.name}\` — ${changed.length} file(s) updated → ${outcome}`)
+      },
+      say,
+    )
+    if (failed.length) {
+      say()
+      say(`${failed.length} of ${apps.length} app(s) failed to sync: ${failed.join(', ')}`)
+      process.exitCode = 1
     }
   } catch (err) {
     // Non-zero means the SYNC is broken, never "an app's checks are red".
