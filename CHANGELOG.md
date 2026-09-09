@@ -9,6 +9,26 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.1] — 2026-09-09
+
+### Fixed
+- **The library sync could not push to an app whose sync branch already existed.**
+  `--force-with-lease` needs a remote-tracking ref to lease against, and the app
+  is cloned `--depth 1` of its default branch only — so on a re-run, or when a
+  previous release left its PR open, there is no
+  `refs/remotes/origin/quill-sync/vX.Y.Z` and git rejects the push with
+  **"stale info"** without comparing anything. Reproduced directly: the same push
+  is rejected before a fetch and succeeds after one. The branch is now fetched
+  into a tracking ref first, with the failure path covering the ordinary case
+  where the branch is new upstream. (Same defect class the 2026-09-09 audit found
+  in `self-heal.yml` and `figma-parity.yml`, which check out without
+  `fetch-depth` and then force-push.)
+- **`run()` dropped the reason a command failed.** `execFileSync`'s error message
+  is only the command line; the cause lives in stderr, which was discarded. A
+  push rejected for "stale info" and one rejected for "permission denied" read
+  identically in the per-app summary — that ambiguity cost a debugging cycle
+  today. stderr is now attached to the thrown error, first four lines.
+
 ## [0.9.0] — 2026-09-09
 
 Minor, not patch: this changes the colour of every chart in every consuming app.

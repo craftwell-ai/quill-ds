@@ -155,12 +155,22 @@ export function checkVerdict(rollup) {
 
 // --- I/O shell ---
 
-function run(cmd, args, opts = {}) {
-  return execFileSync(cmd, args, {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-    ...opts,
-  })
+export function run(cmd, args, opts = {}) {
+  try {
+    return execFileSync(cmd, args, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+      ...opts,
+    })
+  } catch (err) {
+    // execFileSync's message is only the command line — the REASON lives in
+    // stderr, which was being dropped. A push rejected for "stale info" and a
+    // push rejected for "permission denied" looked identical in the summary,
+    // which cost a debugging cycle on 2026-09-09. Attach stderr, trimmed.
+    const stderr = String(err?.stderr ?? '').trim()
+    if (stderr) err.message = `${err.message}\n${stderr.split('\n').slice(0, 4).join('\n')}`
+    throw err
+  }
 }
 
 async function gh(path, token) {
@@ -366,6 +376,18 @@ export async function main() {
         run('git', ['-C', dir, 'checkout', '-B', branch])
         run('git', ['-C', dir, 'add', '--', ...changed])
         run('git', ['-C', dir, 'commit', '-m', `chore(quill): sync design system to v${version}`])
+        // `--force-with-lease` needs a remote-tracking ref to lease against. The
+        // clone is `--depth 1` of the default branch only, so when the sync
+        // branch ALREADY exists upstream — a re-run, or a previous release whose
+        // PR is still open — there is no `refs/remotes/origin/<branch>` and git
+        // rejects the push with "stale info" rather than comparing anything.
+        // Fetching it first restores the lease; the catch covers the ordinary
+        // case where the branch does not exist upstream yet.
+        try {
+          run('git', ['-C', dir, 'fetch', '--depth', '1', 'origin', `${branch}:refs/remotes/origin/${branch}`])
+        } catch {
+          /* branch is new upstream — nothing to lease against, push creates it */
+        }
         run('git', ['-C', dir, 'push', '--force-with-lease', 'origin', branch])
 
         // A stale sync PR from an EARLIER release is superseded, not stacked:

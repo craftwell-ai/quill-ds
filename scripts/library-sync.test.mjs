@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { readRegistryItems, planSync, applyPlan, checkVerdict, syncApps } from './library-sync.mjs'
+import { readRegistryItems, planSync, applyPlan, checkVerdict, syncApps, run } from './library-sync.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -177,4 +177,23 @@ test('syncApps: a non-Error throw is still recorded, not swallowed', async () =>
     throw 'a bare string'
   })
   assert.deepEqual(failed, ['alpha'])
+})
+
+// run() used to throw execFileSync's bare message — the command line and nothing
+// else — so "push rejected: stale info" and "push rejected: permission denied"
+// were indistinguishable in the per-app summary. That cost a debugging cycle on
+// 2026-09-09, when a force-with-lease rejection read as a credentials problem.
+test('run() attaches stderr to the thrown error', () => {
+  let msg = ''
+  try {
+    // `git -C <missing dir> status` fails and writes the reason to stderr.
+    run('git', ['-C', join(tmpdir(), 'library-sync-does-not-exist-' + Date.now()), 'status'])
+  } catch (err) {
+    msg = String(err.message)
+  }
+  assert.ok(msg, 'expected the command to fail')
+  assert.ok(
+    /cannot change to|No such file|not a git repository/i.test(msg),
+    `error message should carry git's stderr, got: ${msg}`,
+  )
 })
