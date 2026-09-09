@@ -65,21 +65,34 @@ export const tokens = {
     },
     chart: {
       // Chart-only cuts. The UI pigments can't do series duty: their OKLCH chroma
-      // sits below the 0.10 "reads gray" floor for data marks, and terracotta↔moss
-      // adjacency fails deuteranopia separation (ΔE 3.2 on Dawn; target ≥8).
+      // sits below the 0.10 "reads gray" floor for data marks.
+      //
       // These re-step the same brand hues (terracotta 35°, indigo 262°, gold 84°,
-      // moss 128° + a chart-only plum 335° replacing ink-soft) per ground, validated
-      // against all six palette checks per theme. Assign series colors in this fixed
-      // order — never cycle or reorder survivors when a filter drops a series.
-      // The intelligent theme reuses the Dusk chart cuts for now: its ground (#0E100D)
-      // is darker than Dusk's, so every check passes with margin (series 3.3:1+,
-      // seq monotonic, div poles 6.8:1+). Bespoke cuts come with the first data surface.
+      // moss 128° + a chart-only plum 335° replacing ink-soft) — hues are brand and
+      // never move. What DOES move is lightness, and that is the whole design:
+      //
+      // Three of the five hues (terracotta, gold, moss) sit in the red-yellow-green
+      // arc, which is exactly the arc red-green colour blindness collapses. The
+      // original cuts held all five at roughly ONE lightness (Dawn: 0.606 / 0.605 /
+      // 0.584 for series 1/3/5) and separated them by hue alone — beautiful for
+      // normal vision, and indistinguishable for ~8% of men. Measured worst pair was
+      // ΔE2000 0.34 on Classic Dark under protanopia, against a stated target of 8.
+      //
+      // So the series are now a LIGHTNESS ramp as well as a hue wheel. Under
+      // dichromacy hue collapses and lightness is what survives, so lightness is
+      // what has to carry the separation. Chroma is never raised above the previous
+      // cut, so the palette stays as muted as it was.
+      //
+      // Enforced, not asserted: quill.tokens.test.mjs simulates protanopia,
+      // deuteranopia and tritanopia (Viénot-Brettel-Mollon) and fails if any pair in
+      // any theme drops below ΔE2000 8. Current worst: 8.53. Assign series colors in
+      // this fixed order — never cycle or reorder survivors when a filter drops one.
       series: {
-        1: { light: '#BC6751', dark: '#C66F59', classicLight: '#C44829', classicDark: '#D25436', intelligent: '#C66F59' },
-        2: { light: '#345799', dark: '#4265A9', classicLight: '#194AAC', classicDark: '#2A5DBF', intelligent: '#4265A9' },
-        3: { light: '#A27B1C', dark: '#B58D34', classicLight: '#B18401', classicDark: '#BA8B01', intelligent: '#B58D34' },
-        4: { light: '#79376C', dark: '#924E84', classicLight: '#852076', classicDark: '#993588', intelligent: '#924E84' },
-        5: { light: '#688838', dark: '#6C8D3D', classicLight: '#659102', classicDark: '#6D9C03', intelligent: '#6C8D3D' },
+        1: { light: '#732510', dark: '#CA725C', classicLight: '#7C1C01', classicDark: '#C75E45', intelligent: '#C66F59' },
+        2: { light: '#345799', dark: '#5175BA', classicLight: '#194AAC', classicDark: '#3966B9', intelligent: '#466AAE' },
+        3: { light: '#9D7614', dark: '#A17A1B', classicLight: '#AD8214', classicDark: '#BA8B01', intelligent: '#BF973F' },
+        4: { light: '#79376C', dark: '#CC83BB', classicLight: '#8D297E', classicDark: '#F086DA', intelligent: '#EEA3DD' },
+        5: { light: '#4F6D1A', dark: '#9ABE6D', classicLight: '#577A16', classicDark: '#8CB258', intelligent: '#A0C473' },
       },
       // Sequential (magnitude): one hue — moss — light→dark on light grounds,
       // dark→light on dark grounds; 1 = low emphasis (near ground), 5 = high.
