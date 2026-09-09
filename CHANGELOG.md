@@ -9,6 +9,36 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.8.30] — 2026-09-09
+
+### Fixed
+- **One app's failure no longer aborts the whole library sync.** The per-app
+  body sat bare inside `main`'s outer `try`, so the first throw unwound the
+  entire loop. When `LIBRARY_SYNC_TOKEN` lost its `Checks: read` permission,
+  app #1 threw and apps #2-4 were never touched — 29 consecutive releases
+  failed this way since 2026-08-24, each reporting "4 Quill-styled repos
+  examined" followed by zero per-app result lines. Each app is now attempted
+  independently (`syncApps`, exported and tested); failures are collected,
+  named together in the summary, and the run still exits non-zero so a broken
+  sync is never mistaken for a clean one.
+- **The status-check poll no longer converts a permissions error into a fatal.**
+  `mergeWhenGreen`'s poll called `gh pr view --json statusCheckRollup` bare, so
+  "I cannot READ the checks" and "the checks are RED" were indistinguishable —
+  the former killed the run. It now throws a diagnosis naming the likely cause
+  (a token missing `Checks: read`) instead of a raw GraphQL error, which the
+  per-app handler records against that app before moving on.
+- **A failed `--auto` arm is no longer discarded.** The bare `catch {}` around
+  `gh pr merge --auto` could not tell "this repo has no branch protection" (the
+  intended case) from "this token cannot merge here". The reason is now kept and
+  included in the poll's error if that also fails, so both causes surface
+  together rather than one masking the other.
+
+### Notes
+- This is the script half of the fix. The other half is an account action: the
+  `LIBRARY_SYNC_TOKEN` PAT still needs the **Checks: read** permission. Until
+  that is granted, syncs will continue to fail — but they will now fail per app,
+  with a message naming the cause, instead of silently stopping after the first.
+
 ## [0.8.29] — 2026-09-09
 
 ### Fixed

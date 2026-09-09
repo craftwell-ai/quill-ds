@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { readRegistryItems, planSync, applyPlan, checkVerdict } from './library-sync.mjs'
+import { readRegistryItems, planSync, applyPlan, checkVerdict, syncApps } from './library-sync.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -137,4 +137,44 @@ test('checkVerdict: the four outcomes', () => {
     'one red check blocks regardless of the rest',
   )
   assert.equal(checkVerdict([{ state: 'ERROR' }]), 'fail')
+})
+
+// The regression that cost 16 days of releases: the per-app body sat bare inside
+// the outer try, so the first throw unwound the whole loop. LIBRARY_SYNC_TOKEN
+// lost Checks: read, app #1 threw, and apps #2-4 were never attempted — while
+// the summary still said "4 Quill-styled repos examined".
+test('syncApps: one app failing does not stop the others', async () => {
+  const attempted = []
+  const said = []
+  const apps = [{ name: 'alpha' }, { name: 'bravo' }, { name: 'charlie' }, { name: 'delta' }]
+  const failed = await syncApps(
+    apps,
+    async (app) => {
+      attempted.push(app.name)
+      if (app.name === 'alpha') throw new Error('cannot read check status\nsecond line ignored')
+      if (app.name === 'charlie') throw new Error('clone refused')
+    },
+    (line) => said.push(line),
+  )
+  assert.deepEqual(
+    attempted,
+    ['alpha', 'bravo', 'charlie', 'delta'],
+    'every app must be attempted even when an earlier one throws',
+  )
+  assert.deepEqual(failed, ['alpha', 'charlie'])
+  // Only the first line of the message — a GraphQL error is a wall of text.
+  assert.ok(said.some((l) => l.includes('alpha') && l.includes('SYNC FAILED: cannot read check status')))
+  assert.ok(said.every((l) => !l.includes('second line ignored')))
+})
+
+test('syncApps: an all-clean run reports no failures', async () => {
+  const failed = await syncApps([{ name: 'alpha' }, { name: 'bravo' }], async () => {})
+  assert.deepEqual(failed, [], 'a clean run must not fabricate failures')
+})
+
+test('syncApps: a non-Error throw is still recorded, not swallowed', async () => {
+  const failed = await syncApps([{ name: 'alpha' }], async () => {
+    throw 'a bare string'
+  })
+  assert.deepEqual(failed, ['alpha'])
 })
