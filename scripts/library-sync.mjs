@@ -301,6 +301,49 @@ async function mergeWhenGreen(repo, branch) {
 // so the first throw unwound everything — when LIBRARY_SYNC_TOKEN lost
 // Checks: read, app #1 threw and apps #2-4 were never touched. 29 consecutive
 // releases failed that way, each reporting "4 repos examined" and zero results.
+/**
+ * How far behind is an app, from its own sync-PR history?
+ *
+ * No state file and no commit-back: the app's `quill-sync/*` pull requests ARE
+ * the record of what it has taken. Give it that list (newest first) and it
+ * returns the last version that actually merged, plus how many releases since
+ * were delivered and did not.
+ *
+ * Why this exists: tech-careers took no Quill release for six consecutive
+ * versions (v0.8.30 -> v0.9.4). Every run reported "auto-merge armed" and every
+ * PR was closed by the next release as superseded. The bot was behaving exactly
+ * as designed — green merges, red waits for a human — but the only place that
+ * showed was a PR nobody opens, so nobody looked for seventeen days.
+ *
+ * One missed release is normal: the PR is in flight, or its checks are still
+ * running. Two consecutive is a pattern, and that is what gets shouted about.
+ */
+export function staleness(prs, currentVersion) {
+  // Must anchor on the branch prefix: a bare `.replace()` returns an unrelated
+  // ref unchanged, which is truthy, so `feature/whatever` would be counted as a
+  // missed release. Caught by test, not by reading.
+  const versionOf = (pr) => (pr.head?.ref ?? '').match(/^quill-sync\/v?(.+)$/)?.[1] ?? null
+  const sorted = [...prs].filter((pr) => versionOf(pr))
+  const mergedIdx = sorted.findIndex((pr) => pr.merged_at)
+  const lastMerged = mergedIdx === -1 ? null : versionOf(sorted[mergedIdx])
+  // Everything newer than the last merged one was delivered and not taken —
+  // excluding the release happening right now, which has not had its chance yet.
+  const missed = (mergedIdx === -1 ? sorted : sorted.slice(0, mergedIdx))
+    .map(versionOf)
+    .filter((v) => v !== currentVersion)
+  return { lastMerged, missed }
+}
+
+const STALE_AFTER = 2 // consecutive missed releases before this turns loud
+
+export async function appStaleness(app, token, currentVersion) {
+  const prs = await gh(
+    `/repos/${app.full_name}/pulls?state=all&per_page=30&sort=created&direction=desc`,
+    token,
+  )
+  return staleness(Array.isArray(prs) ? prs : [], currentVersion)
+}
+
 export async function syncApps(apps, syncOne, say = () => {}) {
   const failed = []
   for (const app of apps) {
@@ -472,6 +515,38 @@ export async function main() {
     if (needsReview.length) {
       say()
       say(`${needsReview.length} app(s) delivered but waiting on a human: ${needsReview.join(', ')}`)
+    }
+
+    // The alarm. Delivering is not the same as landing, and until now the only
+    // record of the difference was a PR in someone else's repo. An app that has
+    // skipped STALE_AFTER releases gets shouted about in the run summary, where
+    // a human actually looks. Still never fatal: a red check is the safety net
+    // working, and failing the run for it turned every release red for two apps
+    // (see scripts/DRIFT-AUDIT.md on recurring false alarms).
+    const behind = []
+    for (const app of apps) {
+      try {
+        const { lastMerged, missed } = await appStaleness(app, token, version)
+        if (missed.length >= STALE_AFTER) behind.push({ app: app.name, lastMerged, missed })
+      } catch (err) {
+        say(`- could not read \`${app.name}\`'s sync history — ${String(err?.message ?? err).slice(0, 120)}`)
+      }
+    }
+    if (behind.length) {
+      say()
+      say('> [!WARNING]')
+      say('> **Apps are falling behind.** These were delivered a release and did not take it,')
+      say(`> for at least ${STALE_AFTER} consecutive versions. Each sync closes the last PR as`)
+      say('> superseded, so the backlog is invisible unless someone opens that repo:')
+      say('>')
+      for (const b of behind) {
+        say(
+          `> - \`${b.app}\` — last took **v${b.lastMerged ?? '(never)'}**, ` +
+            `missed ${b.missed.length}: ${b.missed.map((v) => `v${v}`).join(', ')}`,
+        )
+      }
+      say('>')
+      say("> Check that app's own CI on the open `quill-sync/*` PR — the sync itself is fine.")
     }
     if (failed.length) {
       say()

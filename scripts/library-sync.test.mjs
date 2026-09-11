@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { readRegistryItems, planSync, applyPlan, checkVerdict, syncApps, run } from './library-sync.mjs'
+import { readRegistryItems, planSync, applyPlan, checkVerdict, syncApps, staleness, run } from './library-sync.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -202,4 +202,46 @@ test('run() attaches stderr to the thrown error', () => {
     /cannot change to|No such file|not a git repository/i.test(msg),
     `error message should carry git's stderr, got: ${msg}`,
   )
+})
+
+// --- Staleness: how far behind an app is, read from its own sync PRs ---
+
+const pr = (v, merged) => ({ head: { ref: `quill-sync/v${v}` }, merged_at: merged ? '2026-01-01' : null })
+
+test('an app that merged the previous release is not behind', () => {
+  const { lastMerged, missed } = staleness([pr('0.9.9', false), pr('0.9.8', true)], '0.9.9')
+  assert.equal(lastMerged, '0.9.8')
+  assert.deepEqual(missed, [])
+})
+
+test('the release being delivered right now never counts as missed', () => {
+  // Otherwise every run would report itself behind before the PR could merge.
+  const { missed } = staleness([pr('0.9.9', false)], '0.9.9')
+  assert.deepEqual(missed, [])
+})
+
+test('one skipped release stays quiet; two is the pattern worth shouting about', () => {
+  const one = staleness([pr('0.9.9', false), pr('0.9.8', false), pr('0.9.7', true)], '0.9.9')
+  assert.deepEqual(one.missed, ['0.9.8'])
+
+  // The real tech-careers case: six delivered, none taken.
+  const many = staleness(
+    ['0.9.4', '0.9.3', '0.9.2', '0.9.1', '0.9.0', '0.8.30'].map((v) => pr(v, false)).concat(pr('0.8.29', true)),
+    '0.9.4',
+  )
+  assert.equal(many.lastMerged, '0.8.29')
+  assert.deepEqual(many.missed, ['0.9.3', '0.9.2', '0.9.1', '0.9.0', '0.8.30'])
+})
+
+test('an app that has never merged a sync is reported, not crashed on', () => {
+  const { lastMerged, missed } = staleness([pr('0.9.9', false), pr('0.9.8', false)], '0.9.9')
+  assert.equal(lastMerged, null)
+  assert.deepEqual(missed, ['0.9.8'])
+})
+
+test('unrelated pull requests in the app are ignored', () => {
+  const noise = [{ head: { ref: 'feature/whatever' }, merged_at: null }, { head: {}, merged_at: null }]
+  const { lastMerged, missed } = staleness([...noise, pr('0.9.8', true)], '0.9.9')
+  assert.equal(lastMerged, '0.9.8')
+  assert.deepEqual(missed, [])
 })
