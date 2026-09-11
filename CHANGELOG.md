@@ -9,6 +9,29 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.6] — 2026-09-11
+
+### Added
+- **The Intelligent theme is now selectable in both theme pickers.** It shipped
+  in v0.8.25 but neither picker knew about it, so no user could reach it without
+  hand-writing `data-theme="intelligent"` — `registry/blocks/theme-selector.tsx`
+  (the block consumers install) and the homepage's own `THEME_OPTIONS`. Both now
+  offer all five. Icon is `star_shine`, Material's sparkle — the glyph older
+  releases called `auto_awesome` — chosen as the AI cue for the cockpit theme.
+  Verified in a browser in both pickers.
+
+  No new icon plumbing was needed: `coreNames()` in `scripts/build-icons.mjs`
+  derives the sync core map by grepping `icon: '…'` across `src` **and**
+  `registry`, so adding it to a block pulled it into the map consumers receive
+  (89 → 90 icons). The homepage keeps hand-inlined weight-500 paths, so its
+  sparkle was taken at the same weight rather than the 400 the repo installs —
+  a 400-weight glyph would have sat visibly lighter beside its four neighbours.
+
+### Fixed
+- `theme-selector`'s usage doc described "the four Quill themes" in its summary
+  and `use_when`. That summary is also the registry item's `description` and its
+  llms.txt entry, so the miscount reached consumers and agents both.
+
 ## [0.9.5] — 2026-09-11
 
 ### Fixed

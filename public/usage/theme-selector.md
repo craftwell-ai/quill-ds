@@ -1,9 +1,9 @@
 # theme-selector (pattern)
 
-A dropdown picker for the four Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage.
+A dropdown picker for the five Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage.
 
 ### When to use
-- You need to let users switch among Quill's four themes and four accents, persisted to localStorage.
+- You need to let users switch among Quill's five themes and four accents, persisted to localStorage.
 
 ### Reach for instead
 - **settings** — when theme choice is one field among many in a broader preferences form, not a standalone quick-switch control.
