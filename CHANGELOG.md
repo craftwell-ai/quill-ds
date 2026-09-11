@@ -9,6 +9,31 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.10] — 2026-09-11
+
+### Added
+- **library-sync now shouts when an app falls behind.** Delivering a release is
+  not the same as an app taking it, and until now the only record of the
+  difference was a pull request in someone else's repository. `tech-careers` was
+  delivered six consecutive releases and merged none of them; every run reported
+  "auto-merge armed", every PR was closed by the next release as superseded, and
+  nobody looked for seventeen days.
+
+  `staleness()` reads an app's own `quill-sync/*` pull requests — no state file
+  and no commit-back, because that history *is* the record — and reports the last
+  version it actually merged plus how many releases since were delivered and not
+  taken. Two consecutive misses raises a `> [!WARNING]` block in the run summary
+  naming the app, the last version it took, and every version it skipped.
+
+  One miss stays quiet: the PR may still be in flight. The run is never failed
+  for it either — a red check in an app is the safety net working, and failing
+  the release for that is the recurring false alarm `scripts/DRIFT-AUDIT.md`
+  exists to prevent.
+
+  Replayed against tech-careers' real pull-request history, it would have fired
+  at **v0.9.1** on 2026-09-09 — the second miss — and stays correctly silent at
+  the first, and today.
+
 ## [0.9.9] — 2026-09-11
 
 ### Added
