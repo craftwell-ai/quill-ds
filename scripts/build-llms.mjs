@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 import { tokens } from '../src/tokens/quill.tokens.mjs'
-import { MODES, DEFAULT_ACCENT } from './build-tokens.mjs'
+import { ALL_MODES, DEFAULT_ACCENT } from './build-tokens.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
 
@@ -22,10 +22,17 @@ const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const registry = JSON.parse(readFileSync(join(root, 'registry.json'), 'utf8'))
 const HOME = registry.homepage.replace(/\/$/, '')
 
-const THEME_NAMES = { light: 'Dawn (light, default)', dark: 'Dusk (dark)', classicLight: 'Classic Light', classicDark: 'Classic Dark' }
-// Dawn is the default mode that lives at :root; MODES lists the attr-switched rest.
-const themeLine = [`\`light\` → ${THEME_NAMES.light}`, ...MODES.map((m) => `\`${m.attr}\` → ${THEME_NAMES[m.key]}`)].join(', ')
-const accentList = Object.keys(tokens.accents).map((a) => (a === DEFAULT_ACCENT ? `${a} (default)` : a)).join(', ')
+// Both lists are derived, never restated. A hand-kept copy of the theme names
+// beside this line is what published `intelligent → undefined` from v0.8.25
+// until it was caught three weeks later.
+const themeLine = ALL_MODES.map((m) => `\`${m.attr}\` → ${m.label}`).join(', ')
+const accents = Object.keys(tokens.accents)
+const accentList = accents.map((a) => (a === DEFAULT_ACCENT ? `${a} (default)` : a)).join(', ')
+
+// Counts are spelled out in prose, so they are derived too — "four-theme" was
+// still in the summary line a fortnight after the fifth theme shipped.
+const COUNT_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
+const countWord = (n) => COUNT_WORDS[n] ?? String(n)
 
 export function renderLlms(t = tokens) {
   const blocks = registry.items.filter((i) => i.type === 'registry:block')
@@ -35,7 +42,7 @@ export function renderLlms(t = tokens) {
 
   p(`# ${registry.name === 'quill-ds' ? 'Quill Design System' : registry.name}`)
   p()
-  p(`> ${registry.items.find((i) => i.name === 'quill').description} A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and ${blocks.length} composable blocks. Version ${pkg.version}.`)
+  p(`> ${registry.items.find((i) => i.name === 'quill').description} A self-hosted shadcn registry with a ${countWord(ALL_MODES.length)}-theme, ${countWord(accents.length)}-accent token layer, WCAG 2.1 AA targets, and ${blocks.length} composable blocks. Version ${pkg.version}.`)
   p()
   p(`Install any item with the shadcn CLI against \`${HOME}/r/<name>.json\` (e.g. \`npx shadcn@latest add ${HOME}/r/quill.json\` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.`)
   p()

@@ -9,6 +9,46 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.4] — 2026-09-11
+
+### Fixed
+- **`llms.txt` published `intelligent → undefined` for sixteen days.** The
+  Intelligent theme shipped in v0.8.25 and `MODES` gained it, but `THEME_NAMES`
+  in `build-llms.mjs` was a hand-typed object with four keys sitting beside the
+  generator — so the fifth theme interpolated as the literal string `undefined`
+  into the file every coding agent reads to learn how to theme Quill. The same
+  line also still described a "four-theme" token layer. Theme display names now
+  live on `MODES` itself as `label`, and both the theme list and the spelled-out
+  counts are derived rather than restated. Three guards added, each confirmed to
+  fail against the pre-fix output: every mode must carry a non-empty label,
+  `llms.txt` must contain no `undefined` and must name every mode, and the prose
+  count must match the real number of themes.
+- **The theme file told consumers the wrong install URL.** `registry/themes/quill.css`
+  line 2 — the copy-paste command at the top of the file every consumer installs —
+  still named `quill-ds.vercel.app` after the move to `www.quilldesignsystem.com`.
+  The header sits above the `@quill-tokens` markers, so no generator was ever
+  going to correct it. Fixed, and pinned to `registry.json`'s `homepage` by a test.
+
+### Changed
+- **README replaced.** It was untouched `create-next-app` boilerplate — it told
+  readers to edit `app/page.tsx` (the file is at `src/app/page.tsx`) and described
+  the Geist font (Quill uses Fraunces and Raleway). Now documents what Quill is,
+  how to install it from the registry, the five themes and four accents, the
+  generated layer and its build commands, and the repo's conventions. Every URL
+  in it was checked live.
+
+### Removed
+- `src/components/ui/direction.tsx` — a six-line re-export of Base UI's
+  `DirectionProvider` with no importer, no story, no usage file, and no registry
+  entry. Stock shadcn scaffolding that was never used; the only orphaned file in
+  the repo.
+- `~/.claude/commands/quill-setup.md` and `quill-app.md` (outside this repo,
+  archived to `~/.claude/commands-archive/`) — retired per decision D3 in
+  `docs/superpowers/specs/2026-09-08-agent-readability-design.md`. Both loaded
+  Inter as the body font where the theme ships Raleway, and both pointed at the
+  retired `quill-ds.vercel.app` registry domain, so any new app scaffolded with
+  them started miswired. `/web-app-setup` is the current path.
+
 ## [0.9.3] — 2026-09-09
 
 ### Fixed

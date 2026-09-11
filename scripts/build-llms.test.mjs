@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 import { renderLlms, LLMS_PATH } from './build-llms.mjs'
-import { DEFAULT_ACCENT } from './build-tokens.mjs'
+import { DEFAULT_ACCENT, ALL_MODES } from './build-tokens.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
 
 const committed = readFileSync(LLMS_PATH, 'utf8')
@@ -34,4 +34,33 @@ test('llms.txt links every usage guide', () => {
   for (const u of ALL_USAGE) {
     assert.ok(committed.includes(`/usage/${u.name}.md`), `llms.txt is missing the usage-guide link for '${u.name}'`)
   }
+})
+
+// The three guards below exist because llms.txt shipped `intelligent → undefined`
+// for three weeks after v0.8.25 added a fifth theme: MODES gained the mode, the
+// hand-kept name map beside the generator did not, and nothing failed.
+test('every theme has a display name, so llms.txt can never print undefined', () => {
+  for (const m of ALL_MODES) {
+    assert.equal(typeof m.label, 'string', `theme '${m.attr}' has no label`)
+    assert.ok(m.label.length > 0, `theme '${m.attr}' has an empty label`)
+  }
+})
+
+test('llms.txt names every theme and contains no undefined', () => {
+  assert.doesNotMatch(committed, /undefined/, 'llms.txt contains the literal string "undefined"')
+  for (const m of ALL_MODES) {
+    assert.ok(
+      committed.includes(`\`${m.attr}\` → ${m.label}`),
+      `llms.txt does not name the '${m.attr}' theme`,
+    )
+  }
+})
+
+test('the theme and accent counts in prose match the real counts', () => {
+  const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
+  assert.match(
+    committed,
+    new RegExp(`${words[ALL_MODES.length]}-theme`),
+    `llms.txt prose does not say "${words[ALL_MODES.length]}-theme" for ${ALL_MODES.length} themes`,
+  )
 })

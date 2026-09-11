@@ -1,12 +1,12 @@
 # Quill Design System
 
-> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a four-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.3.
+> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.4.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
 ## Theming
 
-- **Themes** — set `data-theme` on `<html>`: `light` → Dawn (light, default), `dark` → Dusk (dark), `classic-light` → Classic Light, `classic-dark` → Classic Dark, `intelligent` → undefined. Consumers must match one of these values; the token layer re-declares aliases so scoped `data-theme` islands work, not just the root switch.
+- **Themes** — set `data-theme` on `<html>`: `light` → Dawn (light, default), `dark` → Dusk (dark), `classic-light` → Classic Light, `classic-dark` → Classic Dark, `intelligent` → Intelligent. Consumers must match one of these values; the token layer re-declares aliases so scoped `data-theme` islands work, not just the root switch.
 - **Accents** — set `data-accent` on `<html>`: terracotta, moss (default), indigo, gold. The accent drives links, eyebrows, focus rings (`--ring`), and accent italics; it defaults to moss when unset.
 - Both attributes are independent of the color-scheme; dark grounds and accent are separate axes.
 

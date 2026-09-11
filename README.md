@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quill Design System
 
-## Getting Started
+A handcrafted design system for editorial and creative applications — warm parchment
+surfaces, rich ink tones, Fraunces display type, and four botanical accent pigments.
 
-First, run the development server:
+Built by [Craftwell](https://github.com/craftwell-ai). Live at
+**[quilldesignsystem.com](https://www.quilldesignsystem.com)** · component catalog at
+**[/storybook](https://www.quilldesignsystem.com/storybook/)**.
+
+## Using Quill in an app
+
+Quill is a self-hosted [shadcn registry](https://ui.shadcn.com/docs/registry), not an npm
+package. Items are **copied into** your app at install time, so nothing upstream can change
+under you — and nothing arrives until you pull it.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npx shadcn@latest init -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Add the namespace to `components.json`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```json
+{ "registries": { "@quill": "https://www.quilldesignsystem.com/r/{name}.json" } }
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Then install the theme, and any blocks you want:
 
-## Learn More
+```bash
+npx shadcn@latest add @quill/quill          # the token layer (registry:base)
+npx shadcn@latest add @quill/tone-badge     # a component
+npx shadcn@latest add @quill/dashboard      # a block
+npx shadcn@latest view @quill/registry      # list everything
+```
 
-To learn more about Next.js, take a look at the following resources:
+**Primitives are stock shadcn, restyled by the token layer.** Quill does not re-ship its own
+copies of Button, Card or Dialog — install those from shadcn as usual and the theme restyles
+them. Quill ships the theme, two components (`icon`, `tone-badge`), and 51 composable blocks.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Machine-readable summary for coding agents: **[llms.txt](https://www.quilldesignsystem.com/llms.txt)**.
+Per-component usage guides live at `/usage/<name>.md`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Theming
 
-## Deploy on Vercel
+Five themes, set with `data-theme` on `<html>`:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| `data-theme` | Name | Ground |
+|---|---|---|
+| *(unset)* or `light` | Dawn | warm paper |
+| `dark` | Dusk | walnut |
+| `classic-light` | Classic Light | pure white |
+| `classic-dark` | Classic Dark | pure black |
+| `intelligent` | Intelligent | cockpit near-black |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Four accents, set independently with `data-accent`: `moss` (default), `terracotta`, `indigo`,
+`gold`. The accent drives links, eyebrows, focus rings and accent italics. The two attributes
+are separate axes — a dark ground and an accent choice do not constrain each other.
+
+Every text cut is checked against **WCAG 2.1 AA** (4.5:1) on every theme ground, and
+interactive borders against 3:1, by the token test suite.
+
+## Working on Quill itself
+
+Requires Node 24.
+
+```bash
+npm install
+npm run storybook          # the component catalog, localhost:6006
+npm run dev                # the marketing site, localhost:3000
+```
+
+Tests and checks:
+
+```bash
+npm run test:tokens        # token contracts, WCAG, generator output
+npm run test-storybook     # every story rendered + axe accessibility checks
+npx tsc --noEmit
+npm run lint
+```
+
+### The generated layer
+
+`src/tokens/quill.tokens.mjs` is the single source of truth for colour, type, spacing,
+radius, shadow and motion. Everything below is generated from it and committed — CI
+regenerates all of it on every PR and fails on any diff, so never hand-edit these:
+
+| Command | Writes |
+|---|---|
+| `npm run build:tokens` | `src/app/globals.css`, `registry/themes/quill.css`, `tokens/quill.figma.json` |
+| `npm run build:icons` | `src/components/ui/icons.core.mjs`, per-icon modules, the `IconName` union |
+| `npm run build:usage` | `public/usage/*.md`, registry `docs`/`description` fields |
+| `npm run build:registry` | `public/r/*.json` |
+| `npm run build:llms` | `public/llms.txt` |
+
+Component guidance is written once per component in `src/usage/<name>.usage.mjs` and flows
+from there into Storybook, the published usage pages, the registry item, and llms.txt.
+
+### Conventions
+
+- Every feature or fix PR bumps `version` in `package.json` and adds a `CHANGELOG.md` entry.
+  Tagging and the GitHub release happen automatically after merge.
+- `main` is protected; changes land through a PR with CI green.
+- Scheduled bots handle dependency bumps, generated-file drift, releases, Figma parity, and
+  pushing each release out to the apps built on Quill. See `scripts/DRIFT-AUDIT.md`.
