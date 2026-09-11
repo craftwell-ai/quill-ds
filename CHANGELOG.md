@@ -9,6 +9,17 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.12] — 2026-09-11
+
+### Changed
+- **Recorded the Figma theme-mode decision** in `figma/README.md`. The DTCG export
+  is generated from `MODES` and now carries five modes; a Figma variable collection
+  on the Professional plan holds four. Figma mirrors the four editorial themes and
+  Intelligent stays code-only — it was built from an approved Mission Control comp
+  rather than designed in the library, and has never depended on a Figma mode.
+  Written down so the next person treats it as a deliberate line rather than drift,
+  and so the foundations sync skips the fifth mode instead of failing on it.
+
 ## [0.9.11] — 2026-09-11
 
 ### Added

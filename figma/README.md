@@ -47,6 +47,27 @@ besides the one genuinely new variable — idempotency verified.
   text styles use base Fraunces (Regular/Italic), which is the closest available.
 Both are marked `$type: other` / CSS-only in the DTCG and documented on the Storybook Tokens page.
 
+## Theme modes: Figma mirrors four, code has five (decided 2026-09-11)
+
+`tokens/quill.figma.json` is generated from `MODES` and now carries **five** modes on
+all 42 themed tokens — Light, Dark, Classic Light, Classic Dark and **Intelligent**.
+The Figma file can hold **four**: that is the Professional-plan ceiling on a variable
+collection (see `components/README.md`, "Variable modes").
+
+**Decision: accept the gap. Figma mirrors the four editorial themes; Intelligent is
+code-only.** It was built from an approved Mission Control comp rather than designed
+in the library, it exists for one internal app, and it has never depended on a Figma
+mode. This is a deliberate line, not drift — do not "fix" it by adding a fifth.
+
+The foundations sync (`sync-foundations.figma.js`) should therefore skip the
+Intelligent mode rather than fail on it, and a parity checker must not report its
+absence as drift.
+
+Revisit only if a second app adopts Intelligent, or if Code Connect returns to the
+roadmap — both need an Org plan, so they pay for the ceiling together. The
+alternative that stays on the current plan is a second single-mode collection
+(`Quill Intelligent`), at the cost of designers picking from two collections.
+
 ## Publish as a library (manual — required)
 
 The Plugin API / MCP cannot publish a team library. In Figma, open the file → **Assets** panel → **Publish** (or the file menu → Publish library) → confirm. Later phases (components, patterns) consume the published library.
