@@ -9,6 +9,28 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.9] — 2026-09-11
+
+### Added
+- **A guard against half-propagated theme changes.** `scripts/theme-enumeration.test.mjs`
+  asserts that every hand-typed theme or accent list agrees with the token
+  source. The Intelligent theme shipped on 2026-08-26 and was still missing from
+  five such lists sixteen days later — everything *generated* from `MODES` had it
+  from day one, only the typed copies lagged, and nothing failed.
+
+  Three checks, each verified by deliberately breaking it:
+  - the four remaining lists (`quillThemes`, `quillAccents`, `THEME_OPTIONS`,
+    `ACCENT_OPTIONS`) must match `ALL_MODES` / `tokens.accents` exactly. These
+    four cannot be derived — each entry carries an icon name, a swatch class or
+    an inlined SVG path the token source does not own.
+  - no default theme or accent may be restated as a literal in the Storybook
+    preview config. That is how every story previewed on terracotta for months
+    after the shipped default became moss.
+  - **an unregistered list naming 2+ members of a known set must name them all.**
+    A guard that only checks the sites someone remembered to register would miss
+    the next one, so this sweeps `src/`, `registry/` and `.storybook/` for any
+    partial enumeration.
+
 ## [0.9.8] — 2026-09-11
 
 ### Fixed
