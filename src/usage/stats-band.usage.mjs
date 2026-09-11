@@ -12,8 +12,8 @@ export const usage = {
   rules: [
     {
       id: 'follow-the-accent-not-a-fixed-pigment',
-      do: "Color headline numbers from the accent-driven token (--accent-pigment), so they follow the page's data-accent like every other emphasis element.",
-      dont: 'Hardcode a fixed pigment (e.g. --terracotta) for the numbers — that breaks when a consumer sets a different accent.',
+      do: "Color headline numbers from the accent's TEXT cut (--accent-pigment-text), so they follow the page's data-accent and still clear WCAG contrast on every ground.",
+      dont: "Use --accent-pigment for text. That is the decorative cut: on a Dawn card it is 2.9:1 for moss (the default accent) and 2.1:1 for gold, both under the 3:1 large-text minimum. It is also what --link and --ring already avoid. And never hardcode a fixed pigment (e.g. --terracotta) — that breaks the moment a consumer sets a different accent.",
       visual: false,
     },
     {
@@ -26,6 +26,7 @@ export const usage = {
   a11y: [
     'Dividers between stats are decorative and hidden on narrow viewports where the layout stacks — the numbers and labels alone carry the meaning.',
     'Every number is paired with its own visible label directly beneath it ("Components", "Patterns") — a bare number is never left to speak for itself.',
+    'Headline numbers use --accent-pigment-text, not --accent-pigment: the decorative cut fails the 3:1 large-text minimum on light grounds for the moss and gold accents.',
   ],
-  tokens: ['--card', '--accent-pigment', '--muted-foreground'],
+  tokens: ['--card', '--accent-pigment-text', '--muted-foreground'],
 }

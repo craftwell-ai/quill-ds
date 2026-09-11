@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 import { tokens } from '../src/tokens/quill.tokens.mjs'
-import { ALL_MODES, DEFAULT_ACCENT } from './build-tokens.mjs'
+import { ALL_MODES, DEFAULT_MODE, DEFAULT_ACCENT } from './build-tokens.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
 
@@ -25,7 +25,9 @@ const HOME = registry.homepage.replace(/\/$/, '')
 // Both lists are derived, never restated. A hand-kept copy of the theme names
 // beside this line is what published `intelligent → undefined` from v0.8.25
 // until it was caught three weeks later.
-const themeLine = ALL_MODES.map((m) => `\`${m.attr}\` → ${m.label}`).join(', ')
+const themeLine = ALL_MODES.map(
+  (m) => `\`${m.attr}\` → ${m.label}${m.attr === DEFAULT_MODE.attr ? ' (default)' : ''}`,
+).join(', ')
 const accents = Object.keys(tokens.accents)
 const accentList = accents.map((a) => (a === DEFAULT_ACCENT ? `${a} (default)` : a)).join(', ')
 

@@ -9,6 +9,37 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.5] — 2026-09-11
+
+### Fixed
+- **Storybook could not show the Intelligent theme, and the catalog previewed
+  every story on the wrong accent.** `.storybook/preview.tsx` kept three separate
+  hand-typed copies of the theme set — the canvas-ground map, the toolbar items,
+  and the `ThemeProvider` list — and all three stopped at four when the fifth
+  theme shipped in v0.8.25. So it could not be selected, and would have rendered
+  on Dawn cream if it had been. Separately, the accent default still read
+  `terracotta` after the shipped default became `moss` at v0.2.6, so the entire
+  catalog had been previewing a variant rather than the default for months.
+  All four lists now derive from the token source. Verified in a browser: the
+  toolbar offers five themes and a story renders on the cockpit ground.
+- **The stats band failed WCAG on its headline numbers, in every consumer app.**
+  `registry/blocks/stats-band.tsx` colored them with `--accent-pigment`, the
+  *decorative* cut. On a Dawn card that is 2.9:1 for moss — the default accent —
+  and 2.1:1 for gold, against a 3:1 large-text minimum. It passed review only
+  because Storybook was previewing terracotta, the one accent that squeaks by at
+  3.07:1. Now uses `--accent-pigment-text`, the same cut `--link` and `--ring`
+  already take, which clears 5.97:1 on moss. The usage guidance said to use the
+  decorative cut too; corrected, with the reason recorded.
+
+### Changed
+- Theme and accent metadata moved from `scripts/build-tokens.mjs` to
+  `src/tokens/themes.mjs`, and `MODES.label` is now the short human name with
+  prose composing its own qualifiers. `build-tokens.mjs` imports `node:fs`, so it
+  could never be read by a browser — which is precisely why five hand-typed
+  copies of the theme list grew up around it. The new module is pure data and is
+  imported directly by Storybook; `build-tokens.mjs` re-exports it, so every
+  existing caller is unchanged.
+
 ## [0.9.4] — 2026-09-11
 
 ### Fixed
