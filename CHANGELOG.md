@@ -9,6 +9,28 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.7] — 2026-09-11
+
+### Added
+- **A guard for the gap between what Quill renders and what Quill ships.**
+  `scripts/consumer-reachability.test.mjs` enumerates every Tailwind utility used
+  in `registry/**` and asserts each one resolves from what a consumer actually
+  receives — the built `public/r/quill.json`, Tailwind v4's own theme, and the
+  variables `shadcn init` writes. It deliberately never reads
+  `src/app/globals.css`: reading the site's stylesheet is precisely the mistake
+  that let the ToneBadge fix be declared done while reaching no consumer.
+
+  It reads the **built registry item** rather than `registry/themes/quill.css`
+  so that it survives the cssVars/css migration untouched — and so turning its
+  known-gap list empty becomes the proof that migration worked.
+
+  20 utilities are unreachable today and are recorded in a `KNOWN_UNREACHABLE`
+  list that may only shrink: the 17 Quill-only pigments, `font-heading` (used in
+  10 blocks) and `text-2xs`. Both directions were verified by deliberately
+  breaking them — injecting a bogus utility fails the first test naming the file,
+  and simulating a fixed token fails the staleness test until the entry is
+  deleted. A stale entry cannot silently stop guarding.
+
 ## [0.9.6] — 2026-09-11
 
 ### Added
