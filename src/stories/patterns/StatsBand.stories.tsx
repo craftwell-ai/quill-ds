@@ -24,7 +24,7 @@ export const StatsBand: Story = {
 function Stat({ value, label }: { value: string; label?: string }) {
   return (
     <div className="flex flex-col items-center gap-1 text-center">
-      <span className="font-heading text-3xl leading-none text-[var(--accent-pigment)]">{value}</span>
+      <span className="font-heading text-3xl leading-none text-[var(--accent-pigment-text)]">{value}</span>
       {label && <span className="text-sm text-muted-foreground">{label}</span>}
     </div>
   )

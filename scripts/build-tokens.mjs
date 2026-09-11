@@ -2,6 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
+import { MODES, DEFAULT_ACCENT } from '../src/tokens/themes.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const START = '/* @quill-tokens:start */'
@@ -11,26 +12,11 @@ const END = '/* @quill-tokens:end */'
 // each mode here gets prefixed copies of every color/shadow token in :root plus a
 // [data-theme="<attr>"] block that remaps the base vars — so every alias downstream
 // (semantic, shadcn, Tailwind utilities) resolves per-theme for free.
-// `label` is the human name used in agent-facing docs (llms.txt). It lives here
-// rather than beside the doc generator because a hand-kept list next to MODES is
-// exactly how llms.txt came to publish `intelligent → undefined` for three weeks.
-export const MODES = [
-  { key: 'dark', prefix: 'dk', attr: 'dark', colorScheme: 'dark', figmaMode: 'Dark', label: 'Dusk (dark)' },
-  { key: 'classicLight', prefix: 'cl', attr: 'classic-light', colorScheme: 'light', figmaMode: 'Classic Light', label: 'Classic Light' },
-  { key: 'classicDark', prefix: 'cd', attr: 'classic-dark', colorScheme: 'dark', figmaMode: 'Classic Dark', label: 'Classic Dark' },
-  { key: 'intelligent', prefix: 'int', attr: 'intelligent', colorScheme: 'dark', figmaMode: 'Intelligent', label: 'Intelligent' },
-]
+// Theme metadata moved to src/tokens/themes.mjs so the browser can read it too
+// (this file imports node:fs, so Storybook and app UI can never import it).
+// Re-exported here because every existing caller imports MODES from this module.
+export { MODES, DEFAULT_MODE, ALL_MODES, DEFAULT_ACCENT } from '../src/tokens/themes.mjs'
 
-// Dawn is the default: it lives directly in :root rather than behind a
-// [data-theme] block, so it is not in MODES. Named here so callers counting or
-// listing themes have one place to read, and none has to remember the +1.
-export const DEFAULT_MODE = { key: 'light', attr: 'light', label: 'Dawn (light, default)' }
-export const ALL_MODES = [DEFAULT_MODE, ...MODES]
-
-// The accent that ships unset: `--accent-pigment` at :root and the Figma DTCG
-// pin both resolve to this pigment. Single source of truth so downstream docs
-// and drift checks read the default from here rather than restating it.
-export const DEFAULT_ACCENT = 'moss'
 
 // 'pigment' is a grouping namespace, not part of the CSS var name.
 // Trailing 'base' is the default leaf — also dropped.
