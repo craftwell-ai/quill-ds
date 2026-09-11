@@ -51,6 +51,12 @@ const RING_500_PATH =
 const DISK_500_PATH =
   "M480.03-74.02q-83.46 0-157.54-31.88-74.07-31.88-129.39-87.2-55.32-55.32-87.2-129.36-31.88-74.04-31.88-157.51 0-84.46 31.88-158.54 31.88-74.07 87.16-128.9 55.28-54.84 129.34-86.82 74.06-31.99 157.55-31.99 84.48 0 158.59 31.97 74.1 31.97 128.91 86.77 54.82 54.8 86.79 128.88 31.98 74.08 31.98 158.6 0 83.5-31.99 157.57-31.98 74.07-86.82 129.36-54.83 55.29-128.87 87.17-74.04 31.88-158.51 31.88Z";
 
+// star_shine — Material's sparkle (older releases called it auto_awesome).
+// Weight 500 to match the four above; @material-symbols/svg-500 is not a
+// dependency, so this was taken from the published package, same as they were.
+const SPARK_500_PATH =
+  "M855.59-225.52 745.52-335.59l47.98-47.98L903.57-273.5l-47.98 47.98ZM709.91-702.17l-47.98-47.98L772-860.22l47.98 47.74-110.07 110.31Zm-459.58 0L140.02-812.48 188-860.22l110.07 110.07-47.74 47.98ZM104.65-225.52 56.67-273.5l110.07-110.07 47.98 47.98-110.07 110.07Zm227.44-30.96L480-345.22l148.15 89.74-39.61-167.72 130.59-113.78-171.96-15.04L480-710.7l-66.93 157.68-171.96 15.28L371.7-424.2l-39.61 167.72ZM229.17-114.02l66.44-285.31L74.02-591.67l292.31-25.24L480-886.22l113.91 269.31 292.31 25.24-221.59 192.34 66.2 285.31L480-265.65 229.17-114.02ZM480-483.09Z";
+
 const CARET_500_PATH = "M480-338.26 234.26-584 283-632.74l197 197 197-197L725.74-584 480-338.26Z";
 
 const THEME_OPTIONS = [
@@ -58,6 +64,7 @@ const THEME_OPTIONS = [
   { value: "dark", label: "Dusk", path: MOON_500_PATH },
   { value: "classic-light", label: "Classic Light", path: RING_500_PATH },
   { value: "classic-dark", label: "Classic Dark", path: DISK_500_PATH },
+  { value: "intelligent", label: "Intelligent", path: SPARK_500_PATH },
 ] as const;
 type ThemeValue = (typeof THEME_OPTIONS)[number]["value"];
 const isTheme = (v: unknown): v is ThemeValue => THEME_OPTIONS.some((t) => t.value === v);

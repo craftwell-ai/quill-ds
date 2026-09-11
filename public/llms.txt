@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.5.
+> Warm parchment surfaces, moss accents, Fraunces display type, and rich ink tones. A handcrafted theme for editorial and creative applications. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.6.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -74,7 +74,7 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 - [Login with split panel](https://www.quilldesignsystem.com/r/login-split-panel.json) — _[auth, marketing]_ You need a branded full-page sign-in with a testimonial side panel and magic-link option. · [usage guide](https://www.quilldesignsystem.com/usage/login-split-panel.md)
 - [Mail inbox shell](https://www.quilldesignsystem.com/r/mail-shell.json) — _[messaging, app-shell]_ You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply. · [usage guide](https://www.quilldesignsystem.com/usage/mail-shell.md)
 - [Navbar](https://www.quilldesignsystem.com/r/navbar.json) — _[navigation]_ You need a top navigation bar with wordmark, links, and sign-in / get-started actions. · [usage guide](https://www.quilldesignsystem.com/usage/navbar.md)
-- [Theme selector](https://www.quilldesignsystem.com/r/theme-selector.json) — _[settings]_ You need to let users switch among Quill's four themes and four accents, persisted to localStorage. · [usage guide](https://www.quilldesignsystem.com/usage/theme-selector.md)
+- [Theme selector](https://www.quilldesignsystem.com/r/theme-selector.json) — _[settings]_ You need to let users switch among Quill's five themes and four accents, persisted to localStorage. · [usage guide](https://www.quilldesignsystem.com/usage/theme-selector.md)
 - [Newsletter signup](https://www.quilldesignsystem.com/r/newsletter.json) — _[marketing, form]_ You need an email-capture section with social proof to grow a list. · [usage guide](https://www.quilldesignsystem.com/usage/newsletter.md)
 - [Notifications](https://www.quilldesignsystem.com/r/notifications.json) — _[feedback, data-display]_ You need a notifications center with unread indicators and a mark-all-read action. · [usage guide](https://www.quilldesignsystem.com/usage/notifications.md)
 - [Onboarding checklist](https://www.quilldesignsystem.com/r/onboarding.json) — _[productivity]_ You need a setup checklist that tracks progress and links to remaining steps. · [usage guide](https://www.quilldesignsystem.com/usage/onboarding.md)

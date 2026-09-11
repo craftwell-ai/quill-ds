@@ -17,6 +17,11 @@ export const quillThemes = [
   { value: 'dark', label: 'Dusk', icon: 'dark_mode' },
   { value: 'classic-light', label: 'Classic Light', icon: 'radio_button_unchecked' },
   { value: 'classic-dark', label: 'Classic Dark', icon: 'disk' },
+  // star_shine is Material's sparkle (the glyph older releases called
+  // auto_awesome) — the AI cue for the cockpit theme. Pulled into the sync
+  // core map automatically: coreNames() in build-icons.mjs greps `icon: '…'`
+  // across src AND registry, so a block's icons always ship to consumers.
+  { value: 'intelligent', label: 'Intelligent', icon: 'star_shine' },
 ] as const
 
 // Swatch classes are static strings so Tailwind can see them.
