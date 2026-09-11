@@ -1,0 +1,101 @@
+name: Dependabot regenerate
+
+# The hole in the self-healing loop. Some dependencies ARE inputs to the
+# generators — `@material-symbols/svg-400` is the icon library, so bumping it
+# changes `icons.core.mjs` and the `IconName` union. Dependabot only edits
+# package.json and the lockfile, so CI's "Generated files in sync" gate reports
+# drift, correctly refuses to merge, and the PR sits red forever.
+#
+# Nothing else reached this case: dependabot-auto-merge only flips the switch,
+# self-heal.yml only regenerates on main, and claude-repair.yml triggers on main
+# too (and is off). Three tiers of automation, none of which could help.
+#
+# Guardrail: this pushes ONLY when regenerating produces a diff confined to the
+# generated paths. Any other change means the bump broke something real, and
+# that is a human's problem — it says so and stops.
+
+on:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+
+permissions:
+  contents: read # the push goes through AUTOMATION_TOKEN, not this
+
+concurrency:
+  group: dependabot-regenerate-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  regenerate:
+    if: >-
+      github.event.workflow_run.conclusion == 'failure' &&
+      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Must stay in step with the "Generated files in sync" paths in ci.yml.
+      GENERATED: >-
+        src/app/globals.css src/tokens/generated registry/themes tokens
+        src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts
+        registry.json public/r public/llms.txt
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          # A PAT, so the resulting push starts CI on the PR. With the default
+          # GITHUB_TOKEN the commit lands and no check ever runs, leaving the PR
+          # just as stuck as before — the same trap self-heal.yml documents.
+          token: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Regenerate from source
+        run: |
+          npm run build:tokens
+          npm run build:icons
+          npm run build:registry
+          npm run build:llms
+
+      - name: Push, but only if the drift is purely generated output
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No drift — this failure was not stale generated output. Nothing to do." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # Anything outside GENERATED means the bump changed real behaviour.
+          OTHER="$(git diff --name-only -- . $(printf ':(exclude)%s ' $GENERATED))"
+          if [ -n "$OTHER" ]; then
+            {
+              echo '> [!WARNING]'
+              echo '> Regenerating changed files **outside** the generated set, so this was not'
+              echo '> simply stale output. Left alone for a human:'
+              echo '>'
+              echo '> ```'
+              echo "$OTHER" | sed 's/^/> /'
+              echo '> ```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- $GENERATED
+          git commit -m 'chore(generated): rebuild after dependency bump' \
+            -m 'The bumped package is an input to the generators, so its output moved with it. Dependabot cannot run them; this workflow does. Opened automatically by .github/workflows/dependabot-regenerate.yml.'
+          git push origin "HEAD:${{ github.event.workflow_run.head_branch }}"
+
+          {
+            echo "## Regenerated after a dependency bump"
+            echo
+            echo '```'
+            git show --stat --oneline HEAD | tail -n +2
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

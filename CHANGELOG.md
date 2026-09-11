@@ -9,6 +9,33 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.11] — 2026-09-11
+
+### Added
+- **Dependency bumps that move generated output now heal themselves.** Some
+  dependencies are *inputs* to the generators — `@material-symbols/svg-400` is
+  the icon library, so bumping it changes `icons.core.mjs` and the `IconName`
+  union. Dependabot only edits `package.json` and the lockfile, so the
+  "Generated files in sync" gate reported drift, correctly refused to merge, and
+  the PR sat red permanently. PR #135 has been stuck that way since 2026-09-09,
+  and every future icon bump would have been too.
+
+  Nothing else could reach it: `dependabot-auto-merge` only flips the switch,
+  `self-heal.yml` regenerates on `main` only, and `claude-repair.yml` triggers on
+  `main` too (and is disabled). Three tiers of automation, none applicable.
+
+  `.github/workflows/dependabot-regenerate.yml` rebuilds on the dependabot branch
+  and pushes — **but only when the resulting diff is confined to the generated
+  paths**. Anything outside them means the bump changed real behaviour, and it
+  says so and stops rather than committing over a genuine failure.
+
+### Fixed
+- **`registry.json` was missing from the generated-files gate.** v0.9.8 made
+  `build-tokens.mjs` write the `cssVars`/`css` payload onto it, which quietly made
+  a committed file generated without the gate knowing. Drift would only have been
+  caught indirectly, via the `public/r` output built from it. Added to the path
+  list in both `ci.yml` and `self-heal.yml`.
+
 ## [0.9.10] — 2026-09-11
 
 ### Added
