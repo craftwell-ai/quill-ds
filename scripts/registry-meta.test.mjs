@@ -58,3 +58,18 @@ test('the base theme description names the current default accent (drift guard)'
     )
   }
 })
+
+test('the theme file tells consumers the real install URL (drift guard)', () => {
+  // `registry/themes/quill.css` line 2 is the copy-paste command sitting at the
+  // top of the file every consumer installs, and it is hand-maintained (it lives
+  // above the @quill-tokens markers, so no generator rewrites it). It went on
+  // naming `quill-ds.vercel.app` for weeks after the move to the real domain.
+  const theme = readFileSync(join(root, 'registry/themes/quill.css'), 'utf8')
+  const home = registry.homepage.replace(/\/$/, '')
+  const installLine = theme.split('\n').find((l) => l.includes('Install:'))
+  assert.ok(installLine, 'registry/themes/quill.css has no `Install:` line for consumers to copy')
+  assert.ok(
+    installLine.includes(`${home}/r/quill.json`),
+    `the install URL must match registry.json homepage (${home}); found: "${installLine.trim()}"`,
+  )
+})

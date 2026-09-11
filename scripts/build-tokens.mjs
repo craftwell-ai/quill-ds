@@ -11,12 +11,21 @@ const END = '/* @quill-tokens:end */'
 // each mode here gets prefixed copies of every color/shadow token in :root plus a
 // [data-theme="<attr>"] block that remaps the base vars — so every alias downstream
 // (semantic, shadcn, Tailwind utilities) resolves per-theme for free.
+// `label` is the human name used in agent-facing docs (llms.txt). It lives here
+// rather than beside the doc generator because a hand-kept list next to MODES is
+// exactly how llms.txt came to publish `intelligent → undefined` for three weeks.
 export const MODES = [
-  { key: 'dark', prefix: 'dk', attr: 'dark', colorScheme: 'dark', figmaMode: 'Dark' },
-  { key: 'classicLight', prefix: 'cl', attr: 'classic-light', colorScheme: 'light', figmaMode: 'Classic Light' },
-  { key: 'classicDark', prefix: 'cd', attr: 'classic-dark', colorScheme: 'dark', figmaMode: 'Classic Dark' },
-  { key: 'intelligent', prefix: 'int', attr: 'intelligent', colorScheme: 'dark', figmaMode: 'Intelligent' },
+  { key: 'dark', prefix: 'dk', attr: 'dark', colorScheme: 'dark', figmaMode: 'Dark', label: 'Dusk (dark)' },
+  { key: 'classicLight', prefix: 'cl', attr: 'classic-light', colorScheme: 'light', figmaMode: 'Classic Light', label: 'Classic Light' },
+  { key: 'classicDark', prefix: 'cd', attr: 'classic-dark', colorScheme: 'dark', figmaMode: 'Classic Dark', label: 'Classic Dark' },
+  { key: 'intelligent', prefix: 'int', attr: 'intelligent', colorScheme: 'dark', figmaMode: 'Intelligent', label: 'Intelligent' },
 ]
+
+// Dawn is the default: it lives directly in :root rather than behind a
+// [data-theme] block, so it is not in MODES. Named here so callers counting or
+// listing themes have one place to read, and none has to remember the +1.
+export const DEFAULT_MODE = { key: 'light', attr: 'light', label: 'Dawn (light, default)' }
+export const ALL_MODES = [DEFAULT_MODE, ...MODES]
 
 // The accent that ships unset: `--accent-pigment` at :root and the Figma DTCG
 // pin both resolve to this pigment. Single source of truth so downstream docs
