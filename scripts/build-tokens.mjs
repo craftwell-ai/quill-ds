@@ -180,6 +180,41 @@ export function registryBlock(css) {
   return `:root {\n${css.root}\n}\n\n${modeBlocks(css)}`
 }
 
+// --- shadcn registry payload (the channel that actually reaches an app) ---
+//
+// A Tailwind v4 `@theme` block only produces utilities when it sits in the SAME
+// stylesheet as `@import "tailwindcss"`. The theme file we ship is imported
+// separately from the consumer's layout.tsx, so an `@theme` block inside it is
+// inert — verified in a clean Next 16 + Tailwind v4 app, three wirings.
+//
+// shadcn's own delivery channel does not have that problem: the CLI merges
+// `cssVars` and `css` into the app's MAIN stylesheet. `cssVars.theme` IS the
+// `@theme` block. `cssVars` has only three buckets though (theme/light/dark) and
+// Quill has five [data-theme] modes and four [data-accent] blocks, so those ride
+// in `css`, which takes arbitrary selectors.
+//
+// Spec item W19 / decision D8. Verified end-to-end: installed into a scaffolded
+// app with the real CLI, `font-heading`, `text-2xs` and every pigment compile.
+function decls(block) {
+  return Object.fromEntries(
+    block
+      .split('\n')
+      .map((l) => l.match(/^\s*--([a-z0-9-]+)\s*:\s*(.+);\s*$/))
+      .filter(Boolean)
+      .map((m) => [m[1], m[2]]),
+  )
+}
+
+export function registryPayload(css) {
+  return {
+    cssVars: { theme: decls(css.theme), light: decls(css.root) },
+    css: Object.fromEntries([
+      ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body)]),
+      ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body)]),
+    ]),
+  }
+}
+
 export function renderManager(t) {
   const L = (mv) => mv.light
   return {
@@ -288,6 +323,16 @@ export function main() {
   )
   mkdirSync(join(root, 'tokens'), { recursive: true })
   writeFileSync(join(root, 'tokens/quill.figma.json'), JSON.stringify(renderDtcg(tokens), null, 2) + '\n')
+
+  // The `quill` registry item carries the token layer through shadcn's own
+  // channel. registry.json is committed and partly generated (build-usage writes
+  // docs/description the same way); no trailing newline, matching that writer.
+  const registryPath = join(root, 'registry.json')
+  const registry = JSON.parse(readFileSync(registryPath, 'utf8'))
+  const base = registry.items.find((i) => i.name === 'quill')
+  if (!base) throw new Error('registry.json has no `quill` base item to attach the token payload to')
+  Object.assign(base, registryPayload(css))
+  writeFileSync(registryPath, JSON.stringify(registry, null, 2))
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) main()

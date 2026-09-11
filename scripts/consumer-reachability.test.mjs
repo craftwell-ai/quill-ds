@@ -147,35 +147,14 @@ export function resolves(util, available) {
   return false
 }
 
-// The gap as it stands today, pending CRA-175 / spec item W19. Every entry is a
-// utility Quill's own shipped code uses that no consumer can resolve, because the
-// site's `@theme` block never reaches the registry item.
+// EMPTY, as of W19 — every utility Quill's shipped code uses is now reachable by
+// a consumer. It held 20 entries (17 pigments, `font-heading`, `text-2xs`) for as
+// long as the site's `@theme` block never reached the registry item.
 //
-// **Entries may only be removed, never added.** A new unreachable utility fails
-// the first test below; a fixed one fails the second until it is deleted from
-// here. W19 should empty this list entirely.
-const KNOWN_UNREACHABLE = new Set([
-  'bg-gold',
-  'bg-gold-text',
-  'bg-indigo-brand',
-  'bg-indigo-brand-deep',
-  'bg-ink',
-  'bg-ink-muted',
-  'bg-moss',
-  'bg-moss-deep',
-  'bg-paper-deep',
-  'bg-terracotta',
-  'bg-terracotta-deep',
-  'font-heading',
-  'text-2xs',
-  'text-gold-text',
-  'text-indigo-brand-deep',
-  'text-ink-muted',
-  'text-ink-soft',
-  'text-moss-deep',
-  'text-paper',
-  'text-terracotta-deep',
-])
+// **Entries may only be added back over someone's dead body.** A newly unreachable
+// utility fails the first test below and should be fixed, not listed here; the
+// second test deletes anything listed that has since been fixed.
+const KNOWN_UNREACHABLE = new Set([])
 
 // ---------------------------------------------------------------- the guard
 

@@ -9,6 +9,40 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.8] — 2026-09-11
+
+### Fixed
+- **The token layer now actually reaches consumer apps.** The `quill` registry
+  item carries `cssVars.theme` (79 entries), `cssVars.light` (292) and `css`
+  (the five `[data-theme]` and four `[data-accent]` blocks), so the shadcn CLI
+  merges them into the app's *main* stylesheet. Until now the site's
+  `@theme inline` block was never shipped at all: 17 Quill-only pigments,
+  `font-heading` (used in 10 blocks) and `text-2xs` compiled to nothing
+  downstream, so `ToneBadge` — one of only two components Quill ships — rendered
+  unstyled in every consumer app.
+
+  Spec item **W19**, decision **D8**. The obvious cheaper fix does not work and
+  was ruled out by experiment first: a Tailwind v4 `@theme` block only produces
+  utilities when it sits in the same stylesheet as `@import "tailwindcss"`, and
+  the theme file is imported separately from the consumer's `layout.tsx`. Adding
+  `@theme` to `registry/themes/quill.css` leaves it inert. `cssVars` does not
+  have that problem because the CLI merges it into the main stylesheet.
+
+  `cssVars` offers only three buckets (`theme`/`light`/`dark`) and Quill has five
+  themes and four accents, so the mode and accent blocks ride in `css`, which
+  takes arbitrary selectors. All nine survive intact.
+
+  Verified end-to-end, not inferred: the generated item was installed into a
+  scaffolded Next 16 + Tailwind v4 app with the real `shadcn add`, and every
+  previously-dead utility compiles — `font-heading` → `Fraunces, Georgia, serif`,
+  `text-2xs` → `.7rem`, `bg-moss/20` → `color-mix(in oklab, var(--moss) 20%,
+  transparent)`. `consumer-reachability.test.mjs`'s known-gap list went from 20
+  entries to **empty**, which is the machine-checkable version of the same claim.
+
+  The item still ships `app/quill-theme.css` as well, so apps that already have
+  that file keep receiving updates through `library-sync`. Retiring the file, and
+  the hand-written token mirror in `craftwell-command-center`, is follow-up work.
+
 ## [0.9.7] — 2026-09-11
 
 ### Added
