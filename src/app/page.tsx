@@ -152,7 +152,7 @@ function Accent({ children }: { children: React.ReactNode }) {
   return <em className="italic text-[var(--accent-pigment)] [font-variation-settings:var(--fraunces-accent)]">{children}</em>;
 }
 
-function PlateLabel({ children, className }: { children: React.ReactNode; className?: string }) {
+function SpecimenLabel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <span className={`text-2xs font-medium tracking-[0.2em] uppercase text-[var(--text-muted-color)] ${className ?? ""}`}>
       {children}
@@ -326,7 +326,7 @@ export default function Home() {
         />
         <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] lg:pt-[68px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-[15px] max-sm:pb-16">
           <div className="flex flex-col items-start gap-7 max-sm:gap-5">
-            <Eyebrow dash>The Quill design system · Issue № 001</Eyebrow>
+            <Eyebrow dash>The Quill design system · Issue 001</Eyebrow>
             <h1 className="m-0 font-display text-5xl font-normal leading-[1.05] tracking-[-0.03em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
               A design system, made for <Accent>people</Accent>.
             </h1>
@@ -367,7 +367,7 @@ export default function Home() {
           <div className="grid grid-cols-4 gap-6 max-lg:grid-cols-2 max-sm:grid-cols-1">
             <Card className="bg-paper">
               <CardContent className="flex h-full flex-col gap-[18px]">
-                <PlateLabel>Color</PlateLabel>
+                <SpecimenLabel>Color</SpecimenLabel>
                 {/* Vars, not hexes, so the plate re-cuts with the active theme
                     (same convention as the accent dropdown swatches). */}
                 <div className="flex flex-col gap-2.5">
@@ -395,7 +395,7 @@ export default function Home() {
             </Card>
             <Card className="bg-paper">
               <CardContent className="flex h-full flex-col gap-[18px]">
-                <PlateLabel>Type</PlateLabel>
+                <SpecimenLabel>Type</SpecimenLabel>
                 <div className="flex items-baseline gap-3.5">
                   <span className="font-display text-[64px] leading-none text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)]">Aa</span>
                   <span className="font-sans text-[30px] font-medium leading-none text-[var(--text-muted-color)]">Aa</span>
@@ -407,7 +407,7 @@ export default function Home() {
             </Card>
             <Card className="bg-paper">
               <CardContent className="flex h-full flex-col gap-[18px]">
-                <PlateLabel>Texture &amp; elevation</PlateLabel>
+                <SpecimenLabel>Texture &amp; elevation</SpecimenLabel>
                 <div className="flex items-end gap-4 px-0.5 pt-2 pb-3">
                   <span className="h-[52px] w-[52px] rounded-sm border border-[var(--line-faint)] bg-paper-warm shadow-sm" />
                   <span className="h-[52px] w-[52px] rounded-lg border border-[var(--line-faint)] bg-paper-warm shadow-md" />
@@ -420,7 +420,7 @@ export default function Home() {
             </Card>
             <Card className="bg-paper">
               <CardContent className="flex h-full flex-col gap-[18px]">
-                <PlateLabel>The mark</PlateLabel>
+                <SpecimenLabel>The mark</SpecimenLabel>
                 <div className="flex items-center gap-[18px]">
                   <span className="inline-flex rounded-sm border border-[var(--line-soft)] p-1.5">
                     <QuillMark size={64} />
@@ -439,7 +439,7 @@ export default function Home() {
                   </div>
                 </div>
                 <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
-                  The quill, set in sepia ink. Ships as SVG, a full favicon set, and lock-ups in three sizes.
+                  The quill, set in ink. Ships as SVG, a full favicon set, and lock-ups in three sizes.
                 </p>
                 <a href={storyUrl("foundations-brand--docs")} className="text-sm font-medium text-[var(--link)] no-underline transition-colors duration-200 hover:text-[var(--accent-pigment)]">
                   View the lock-ups →
@@ -460,12 +460,12 @@ export default function Home() {
           />
           <div className="grid grid-cols-[400px_minmax(0,1fr)] items-start gap-6 max-lg:grid-cols-1">
             <div className="flex flex-col gap-3">
-              <PlateLabel>Plate № 01 · Card</PlateLabel>
+              <SpecimenLabel>Specimen 01 · Card</SpecimenLabel>
               <Card>
                 <CardHeader>
                   <CardTitle className="[font-variation-settings:var(--fraunces-text)]">Meeting Mapper</CardTitle>
                   <CardAction>
-                    <Badge variant="outline">№ 004</Badge>
+                    <Badge variant="outline">004</Badge>
                   </CardAction>
                   <CardDescription>
                     Turns a rambling hour into a tidy map of decisions, owners, and loose threads.
@@ -481,7 +481,7 @@ export default function Home() {
                   </a>
                 </CardFooter>
               </Card>
-              <PlateLabel className="mt-3">Plate № 02 · Avatar</PlateLabel>
+              <SpecimenLabel className="mt-3">Specimen 02 · Avatar</SpecimenLabel>
               <Card>
                 <CardContent className="flex items-center gap-4 p-1 px-5">
                   <Avatar size="lg">
@@ -496,7 +496,7 @@ export default function Home() {
                   <span className="ml-auto text-xs text-muted-foreground">lg · default · sm</span>
                 </CardContent>
               </Card>
-              <PlateLabel className="mt-3">Plate № 03 · Switch</PlateLabel>
+              <SpecimenLabel className="mt-3">Specimen 03 · Switch</SpecimenLabel>
               <Card>
                 <CardContent className="flex items-center gap-6 p-1 px-5">
                   <Label className="cursor-pointer gap-2">
@@ -509,7 +509,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
-                <PlateLabel>Plate № 04 · Button — all variants</PlateLabel>
+                <SpecimenLabel>Specimen 04 · Button — all variants</SpecimenLabel>
                 <Card>
                   <CardContent className="flex flex-wrap items-center gap-2 p-1 px-5">
                     <Button>default</Button>
@@ -522,7 +522,7 @@ export default function Home() {
                 </Card>
               </div>
               <div className="flex flex-col gap-3">
-                <PlateLabel>Plate № 05 · Badge — all variants</PlateLabel>
+                <SpecimenLabel>Specimen 05 · Badge — all variants</SpecimenLabel>
                 <Card>
                   <CardContent className="flex flex-wrap items-center gap-2 p-1 px-5">
                     <Badge>New</Badge>
@@ -535,7 +535,7 @@ export default function Home() {
                 </Card>
               </div>
               <div className="flex flex-col gap-3">
-                <PlateLabel>Plate № 06 · Field</PlateLabel>
+                <SpecimenLabel>Specimen 06 · Field</SpecimenLabel>
                 <Card>
                   <CardContent className="p-1 px-5">
                     <div className="flex max-w-[420px] flex-col gap-2">
@@ -559,7 +559,7 @@ export default function Home() {
       {/* ── Principles ──────────────────────────────────────────────────── */}
       <section id="principles" className="border-y border-[var(--border-divider)] bg-paper-warm">
         <div className="mx-auto flex max-w-[800px] flex-col items-center gap-7 px-12 pt-24 pb-[72px] text-center max-sm:px-6 max-sm:pt-14 max-sm:pb-10">
-          <span className="font-display text-3xl leading-none text-[var(--accent-pigment)]">¶</span>
+          <span className="font-display text-3xl leading-none text-[var(--accent-pigment)]">&mdash;</span>
           <p className="m-0 font-display text-2xl font-normal leading-[1.45] tracking-[-0.02em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:pretty] max-sm:text-xl">
             &ldquo;People sit at the core of our design system and shape what good looks like: distinctive yet
             familiar, with a flair of style that makes it easy to come back to every day.&rdquo;
@@ -568,9 +568,9 @@ export default function Home() {
         <div className="mx-auto max-w-[1400px] px-12 pb-24 max-sm:px-6 max-sm:pb-14">
           <div className="grid grid-cols-3 gap-12 border-t border-[var(--line-soft)] pt-12 max-md:grid-cols-1 max-sm:gap-8 max-sm:pt-8">
             {[
-              ["№ 01", "Paper first", "Every surface, a texture you can almost feel with a typeset that has an unhurried editorial rhythm."],
-              ["№ 02", "One italic word", "Emphasis is earned. A single accented italic per headline — never two, never shouted."],
-              ["№ 03", "A gentle settle", "Hovers lift, presses set down. Nothing bounces, nothing loops, nothing hurries you along."],
+              ["01", "Paper first", "Every surface, a texture you can almost feel with a typeset that has an unhurried editorial rhythm."],
+              ["02", "One italic word", "Emphasis is earned. A single accented italic per headline — never two, never shouted."],
+              ["03", "A gentle settle", "Hovers lift, presses set down. Nothing bounces, nothing loops, nothing hurries you along."],
             ].map(([num, title, body]) => (
               <div key={num} className="flex flex-col gap-2.5">
                 <span className="font-display text-base italic text-[var(--accent-pigment)] [font-variation-settings:var(--fraunces-caption)]">{num}</span>

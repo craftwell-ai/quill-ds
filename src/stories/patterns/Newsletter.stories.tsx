@@ -30,9 +30,9 @@ export const DoDont: Story = {
       id="state-the-no-spam-promise"
       doExample={
         <div className="flex w-[320px] flex-col items-center gap-3 rounded-xl bg-card p-6 text-center ring-1 ring-foreground/10">
-          <h3 className="font-heading text-lg text-foreground">The Field Notes</h3>
+          <h3 className="font-heading text-lg text-foreground">The Brief</h3>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            One letter a month on design systems, drawn by hand. No spam, no noise — unsubscribe
+            One letter a month on design systems and the teams that ship them. No spam — unsubscribe
             any time.
           </p>
           <div className="flex w-full gap-2">
@@ -46,9 +46,9 @@ export const DoDont: Story = {
       }
       dontExample={
         <div className="flex w-[320px] flex-col items-center gap-3 rounded-xl bg-card p-6 text-center ring-1 ring-foreground/10">
-          <h3 className="font-heading text-lg text-foreground">The Field Notes</h3>
+          <h3 className="font-heading text-lg text-foreground">The Brief</h3>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            One letter a month on design systems, drawn by hand.
+            One letter a month on design systems and the teams that ship them.
           </p>
           <div className="flex w-full gap-2">
             <Label htmlFor="dodont-newsletter-dont-email" className="sr-only">

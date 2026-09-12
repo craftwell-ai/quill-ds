@@ -15,10 +15,10 @@ export function CalendarRange() {
     <Card className="w-fit">
       <CardHeader>
         <div className="flex items-center justify-between gap-4">
-          <CardTitle>Book studio time</CardTitle>
+          <CardTitle>Book a session</CardTitle>
           <Badge variant="secondary">5 days selected</Badge>
         </div>
-        <CardDescription>Pick the days you want at the letterpress bench.</CardDescription>
+        <CardDescription>Pick the days you want with the product team.</CardDescription>
       </CardHeader>
       <CardContent>
         <Calendar

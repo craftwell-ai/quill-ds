@@ -325,8 +325,8 @@ render every tag pill through ToneBadge.
 Uppercase tracked kicker above a heading. Default moss with a leading dash;
 `muted` for plain ink-muted section labels.
 ```jsx
-<Eyebrow>Issue №001 · Spring Collection</Eyebrow>
-<Eyebrow muted>The First Drawing</Eyebrow>
+<Eyebrow>Issue 001 · Spring Collection</Eyebrow>
+<Eyebrow muted>Foundations</Eyebrow>
 ```
 
 ### Avatar — `components/display/Avatar.jsx`
@@ -345,8 +345,8 @@ clips children for full-bleed media.
 ```
 
 ### ProductCard — `components/surfaces/ProductCard.jsx`
-A collectible portrait card — hand-drawn item card with number, title, blurb,
-category, and tier (composes Badge). Lifts on hover; portrait scales 1.02.
+A collectible item card with number, title, blurb, category, and tier (composes
+Badge). Lifts on hover; the image scales 1.02.
 ```jsx
 <ProductCard title="Critique Companion" description="…" portrait="…"
   number="001" category="Design" tier="heirloom" />
@@ -356,13 +356,11 @@ category, and tier (composes Badge). Lifts on hover; portrait scales 1.02.
 
 ## 8. Iconography
 
-Deliberately **icon-light** — visual interest comes from hand-drawn portraits and
-type, not an icon set.
-- **Typographic marks as icons:** arrow `→` (CTAs, slides on hover), pilcrow `¶`
-  (the manifesto mark), numero `№` (catalog numbers), middot `·` (separator).
-  Use real Unicode glyphs in the brand fonts — prefer over SVG icons.
-- **Tier initials:** a single italic Fraunces letter (E / F / S / H) in a
-  pigment-tinted circle.
+Deliberately **icon-light** — visual interest comes from illustration and type,
+not an icon set.
+- **Typographic marks as icons:** arrow `→` (CTAs, slides on hover) and middot
+  `·` (separator). Use real Unicode glyphs in the brand fonts — prefer over SVG
+  icons. No decorative or ornamental marks.
 - **No icon font, no emoji** in the source.
 - **UI icons: Material Symbols (Outlined, weight 400)** — the actual Google
   symbols, rendered as inline SVG through the source-owned `<Icon>` component

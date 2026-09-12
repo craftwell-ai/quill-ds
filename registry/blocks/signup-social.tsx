@@ -66,7 +66,7 @@ export function SignupSocial() {
       <CardFooter className="flex-col gap-3">
         <Button className="w-full">Create account</Button>
         <p className="text-center text-xs leading-relaxed text-muted-foreground">
-          By continuing you agree to the studio terms and privacy note.
+          By continuing you agree to the team terms and privacy note.
         </p>
       </CardFooter>
     </Card>

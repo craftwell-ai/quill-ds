@@ -10,7 +10,7 @@ export function AnnouncementBanner() {
         <div className="flex items-center gap-3">
           <Badge>New</Badge>
           <p className="text-sm text-foreground">
-            Issue № 004 of the Field Notes just shipped — botanical pigments, from seed to swatch.
+            Issue 004 of The Brief just shipped — how we scope a design system engagement.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
@@ -25,7 +25,7 @@ export function AnnouncementBanner() {
       {/* Full-bleed ink banner */}
       <div className="flex items-center justify-between gap-4 rounded-lg bg-primary px-4 py-3 text-primary-foreground max-sm:flex-col max-sm:items-start">
         <p className="text-sm">
-          <span className="font-medium">Workshop:</span> Letterpress for interfaces — Saturday,
+          <span className="font-medium">Workshop:</span> Design systems for product teams — Saturday,
           July 26. Twelve seats.
         </p>
         <div className="flex shrink-0 items-center gap-1">

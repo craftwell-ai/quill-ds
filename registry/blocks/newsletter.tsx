@@ -11,9 +11,9 @@ export function Newsletter() {
         <Icon name="mail" size={20} aria-hidden />
       </span>
       <div className="flex flex-col gap-1">
-        <h2 className="font-heading text-xl text-foreground">The Field Notes</h2>
+        <h2 className="font-heading text-xl text-foreground">The Brief</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          One letter a month on design systems, drawn by hand. No spam, no noise —
+          One letter a month on design systems and the teams that ship them. No spam, no noise —
           unsubscribe any time.
         </p>
       </div>

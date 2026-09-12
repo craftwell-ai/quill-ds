@@ -5,20 +5,20 @@ import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 
 const team = [
-  { initials: 'JD', name: 'John Doe', role: 'Founder & Principal', badge: 'Studio' },
+  { initials: 'JD', name: 'John Doe', role: 'Founder & Principal', badge: 'Strategy' },
   { initials: 'AL', name: 'Ada Lovelace', role: 'Engineering', badge: 'Systems' },
-  { initials: 'WM', name: 'William Morris', role: 'Pattern Design', badge: 'Print' },
-  { initials: 'BP', name: 'Beatrix Potter', role: 'Illustration', badge: 'Botanical' },
+  { initials: 'NO', name: 'Nadia Okonjo', role: 'Product Design', badge: 'Design' },
+  { initials: 'MR', name: 'Marcus Reed', role: 'Research', badge: 'Research' },
 ]
 
 export function TeamSection() {
   return (
     <section className="mx-auto flex w-full max-w-[880px] flex-col gap-8">
       <div className="flex flex-col items-center gap-2 text-center">
-        <span className="text-xs font-medium tracking-[0.15em] uppercase text-ink-muted">The studio</span>
+        <span className="text-xs font-medium tracking-[0.15em] uppercase text-ink-muted">The team</span>
         <h2 className="font-heading text-2xl text-foreground">Curated collections, crafted by intelligence</h2>
         <p className="max-w-[480px] text-sm leading-relaxed text-muted-foreground">
-          A small bench of makers who believe interfaces should feel like well-kept notebooks.
+          A small team who believe interfaces should feel like well-kept notebooks.
         </p>
       </div>
       <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1">

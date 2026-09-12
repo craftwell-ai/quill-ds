@@ -6,9 +6,9 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 
 const sessions = [
-  { time: '9:00', title: 'Sketchbook review', kind: 'Studio' },
-  { time: '11:30', title: 'Token sync with Inkwell Press', kind: 'Call' },
-  { time: '15:00', title: 'Letterpress workshop', kind: 'Workshop' },
+  { time: '9:00', title: 'Design review', kind: 'Internal' },
+  { time: '11:30', title: 'Token sync with Northwind', kind: 'Call' },
+  { time: '15:00', title: 'Working session', kind: 'Workshop' },
 ]
 
 export function CalendarPage() {
@@ -16,7 +16,7 @@ export function CalendarPage() {
   return (
     <Card className="w-fit">
       <CardHeader>
-        <CardTitle>Studio schedule</CardTitle>
+        <CardTitle>Week ahead</CardTitle>
         <CardDescription>Pick a day to see its sessions.</CardDescription>
       </CardHeader>
       <CardContent className="flex items-start gap-6 max-md:flex-col">

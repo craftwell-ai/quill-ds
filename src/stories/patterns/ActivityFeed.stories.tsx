@@ -39,7 +39,7 @@ export const DoDont: Story = {
                   <p className="text-sm">
                     <span className="font-medium text-foreground">Ada Lovelace</span>{' '}
                     <span className="text-muted-foreground">published</span>{' '}
-                    <span className="font-medium text-foreground">Field Notes · Issue № 004</span>
+                    <span className="font-medium text-foreground">The Brief · 004</span>
                   </p>
                   <span className="text-xs text-muted-foreground">2 hours ago</span>
                 </div>
@@ -52,7 +52,7 @@ export const DoDont: Story = {
                   <p className="text-sm">
                     <span className="font-medium text-foreground">John Doe</span>{' '}
                     <span className="text-muted-foreground">commented on</span>{' '}
-                    <span className="font-medium text-foreground">Botanical pigment studies</span>
+                    <span className="font-medium text-foreground">Discovery findings</span>
                   </p>
                   <span className="text-xs text-muted-foreground">Yesterday</span>
                 </div>
@@ -73,7 +73,7 @@ export const DoDont: Story = {
                   <p className="text-sm">
                     <span className="font-medium text-foreground">Ada Lovelace</span>{' '}
                     <span className="text-muted-foreground">published</span>{' '}
-                    <span className="font-medium text-foreground">Field Notes · Issue № 004</span>
+                    <span className="font-medium text-foreground">The Brief · 004</span>
                   </p>
                   <span className="text-xs text-muted-foreground">July 12, 2026, 9:14 AM</span>
                 </div>
@@ -86,7 +86,7 @@ export const DoDont: Story = {
                   <p className="text-sm">
                     <span className="font-medium text-foreground">John Doe</span>{' '}
                     <span className="text-muted-foreground">commented on</span>{' '}
-                    <span className="font-medium text-foreground">Botanical pigment studies</span>
+                    <span className="font-medium text-foreground">Discovery findings</span>
                   </p>
                   <span className="text-xs text-muted-foreground">July 11, 2026, 3:00 PM</span>
                 </div>
