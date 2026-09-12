@@ -159,8 +159,8 @@ got rebuilt from scratch anyway (a findability problem, not a gap).
 Two rules gate every candidate. **Origination:** the app must carry Quill's token
 layer, which is how the app list is built in the first place, so an app without
 Quill styling is never scanned and nothing from it can ever be suggested. That
-also excludes the repos that merely *mention* Quill — `retail-ds` and `scaffold`
-carry its script lineage but no styling, and 3 of 7 naive matches were false
+also excludes the repos that merely *mention* Quill — `scaffold` carries its
+script lineage but no styling, and 3 of 7 naive matches were false
 positives. **Repetition:** built independently in at least two apps, or one app's
 domain work qualifies (without it, one app's bespoke assets are a
 candidate).

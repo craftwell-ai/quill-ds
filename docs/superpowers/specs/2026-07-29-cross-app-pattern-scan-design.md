@@ -41,9 +41,9 @@ colors-and-fonts file
 URL). Found → scanned. Not found → skipped entirely.
 
 This makes the origination rule mechanical rather than a convention someone has
-to remember. It also handles a real trap: `retail-ds` and `scaffold` both
-mention Quill, but only because they were generated from the same template — they
-carry no Quill styling, so they are correctly ignored. `design_handoff_portfolio_site`
+to remember. It also handles a real trap: `scaffold` mentions Quill, but only
+because it was generated from the same template — it carries no Quill styling,
+so it is correctly ignored. `design_handoff_portfolio_site`
 showcases Quill but renders no product UI, and is likewise ignored.
 
 The scan covers two consumer apps, which is enough — all four current
@@ -207,7 +207,7 @@ mute them or pollute that signal.
   findability list, not the candidate list.
 - Origination gate: a repo without a Quill marker is never scanned, asserted
   against a fixture that mentions Quill but has no token layer — the
-  `retail-ds`/`scaffold` case.
+  `scaffold` case.
 - The decided-list moves a candidate into the "already decided" section rather
   than dropping it, and an empty or missing file is treated as "nothing decided
   yet", never an error.

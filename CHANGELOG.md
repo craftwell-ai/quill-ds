@@ -38,10 +38,12 @@ displayed version updates with the bump.
   this changelog, and `scripts/DRIFT-AUDIT.md`. Decision attributions keep every
   date and decision and now read "the owner"; a candidates table's per-app
   columns became App A / App B, matching the generic placeholders
-  `pattern-scan.mjs` already documents. Repo slugs that live code and tests
-  depend on (`retail-ds` in the scan's exclusion list, sync targets in
-  `library-sync.test.mjs`) are untouched, as are the consumer apps named as
-  verification evidence in the agent-readability spec.
+  `pattern-scan.mjs` already documents. One more repo slug was removed from
+  five comments and spec lines describing the origination gate — the gate keys
+  off the presence of `app/quill-theme.css`, never a name, so nothing changed
+  behaviourally. The sync target in `library-sync.test.mjs` stays, as do the
+  consumer apps named as verification evidence in the agent-readability spec,
+  where the names *are* the finding rather than a for-instance.
 
 ## [0.9.12] — 2026-09-11
 
@@ -898,9 +900,9 @@ Per the routine above, a breaking token change bumps minor while pre-1.0.
     Tier 4 in `scripts/DRIFT-AUDIT.md`.
   - The app list is built by checking each org repo for Quill's token layer,
     which makes the origination rule mechanical rather than a convention. It
-    also excludes the repos that merely *mention* Quill: `retail-ds` and
-    `scaffold` carry its script lineage but no styling, and 3 of 7 naive
-    matches were false positives.
+    also excludes the repos that merely *mention* Quill: `scaffold` carries
+    its script lineage but no styling, and 3 of 7 naive matches were false
+    positives.
   - Candidates need two independent builds. Without that rule one app's
     trading-card artwork qualifies — real Quill-styled work with no business in
     a design system.
