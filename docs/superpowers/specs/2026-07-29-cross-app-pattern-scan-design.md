@@ -26,7 +26,7 @@ Two conditions, both required, before anything is even a candidate:
   "wouldn't it be nice if."
 - **Repetition.** It must have been built independently in **at least two** of
   those apps. Origination proves it belongs stylistically; repetition proves it
-  is general rather than one app's domain. Without this second rule, SkillDecks'
+  is general rather than one app's domain. Without this second rule, one app's
   trading-card artwork qualifies — real Quill-styled work that has no business
   in a design system.
 
@@ -46,10 +46,8 @@ mention Quill, but only because they were generated from the same template — t
 carry no Quill styling, so they are correctly ignored. `design_handoff_portfolio_site`
 showcases Quill but renders no product UI, and is likewise ignored.
 
-SkillDecks is currently under the `phillipsry` account and will appear in the
-scan automatically once it moves to `craftwell-ai`. No code change needed. Until
-then the scan covers Command Deck and Craftwell Command Center, which is already
-enough — all four current candidates appear in both.
+The scan covers two consumer apps, which is enough — all four current
+candidates appear in both.
 
 ### 2. Reading an app
 
@@ -119,7 +117,7 @@ respectively. Seeing that side by side is what reveals they share a name and
 little else, and that the honest promotion may be a status dot on the existing
 avatar rather than a new `AgentAvatar` block.
 
-### 6. How it reaches Ryan
+### 6. How it reaches the owner
 
 **Every Monday, whether or not anything is new.**
 
@@ -127,7 +125,7 @@ A passing scheduled workflow emails nobody — GitHub only notifies on failure. 
 "fail the run to get an email" would mean a red check every week, which trains
 everyone to ignore red. Instead the scan posts the report as a **comment on one
 long-lived tracking issue**, found by the `pattern-scan` label and created on
-first run if absent. Ryan is assigned to that issue, so he is subscribed and
+first run if absent. The owner is assigned to that issue, so they are subscribed and
 every comment notifies him.
 
 One issue with 52 comments rather than 52 issues: the history stays in one
@@ -249,14 +247,14 @@ than by guessing at paths. It also clustered `app-shell` with `AppBar` on the wo
 and are now stopwords, which also stopped `app-shell` appearing in two clusters at
 once.
 
-**Candidates (in both Command Deck and Craftwell Command Center):**
+**Candidates (in both scanned apps):**
 
-| Pattern | Command Deck | Craftwell CC | SkillDecks |
-|---|---|---|---|
-| agent avatar | `deck/agent-avatar` | `AgentAvatar` | `agents/agent-avatar` |
-| autonomy ladder | `deck/autonomy-ladder` | `AutonomyLadder` | — |
-| approval / review queue | `approval-card`, `approval-queue` | `QueueCard`, `ReviewActions`, `DecisionActions` | — |
-| crew roster | `deck/crew-rail` | `CrewMap` | — |
+| Pattern | App A | App B |
+|---|---|---|
+| agent avatar | `agent-avatar` | `AgentAvatar` |
+| autonomy ladder | `autonomy-ladder` | `AutonomyLadder` |
+| approval / review queue | `approval-card`, `approval-queue` | `QueueCard`, `ReviewActions`, `DecisionActions` |
+| crew roster | `crew-rail` | `CrewMap` |
 
 **Already in Quill but rebuilt:**
 
@@ -270,8 +268,6 @@ once.
 | `OpsCharts` | `analytics-charts` |
 | `vitals-strip` | `stat-cards`, `stats-band` |
 
-The SkillDecks column and the last three findability rows only appear once
-SkillDecks has moved to `craftwell-ai`.
 
 ## Deliberately not in scope
 
@@ -286,7 +282,7 @@ SkillDecks has moved to `craftwell-ai`.
 - **Opening PRs for candidates.** Given three same-named agent avatars that share
   almost no implementation, a scaffolded component would encode a judgement the
   scan has not earned.
-- **Promoting anything.** A separate manual act, on Ryan's call, following the
+- **Promoting anything.** A separate manual act, on the owner's call, following the
   normal branch → PR → CI → merge flow with a version bump and CHANGELOG entry.
 
 ## Where a promoted pattern lands

@@ -1,10 +1,10 @@
 # Agent Readability — Design Spec
 
 **Date:** 2026-09-08
-**Status:** Draft v2. Independently verified line by line (see §7). Pending Ryan's decisions D1–D7.
+**Status:** Draft v2. Independently verified line by line (see §7). Pending the owner's decisions D1–D7.
 **Goal:** Every agent that touches Quill, through any channel shadcn defines, receives the usage rules, intent, theming rules, foundations, and composition guidance it needs to build on-brand without guessing.
 
-**Constraint (Ryan):** Work *with* the shadcn framework. Do not create a parallel or conflicting pathway for agents. Every deliverable below rides a channel shadcn already documents.
+**Constraint (the owner):** Work *with* the shadcn framework. Do not create a parallel or conflicting pathway for agents. Every deliverable below rides a channel shadcn already documents.
 
 ---
 
@@ -57,7 +57,7 @@ Rules-files-via-registry is a shadcn-anticipated pattern, not a side door.
 
 ## 3. Work items
 
-Each item: **What** · **Why** (finding) · **Mechanism** (the shadcn channel) · **Files** · **Verify** · **Decision** (only where Ryan must choose). Items marked *(v2)* changed after verification.
+Each item: **What** · **Why** (finding) · **Mechanism** (the shadcn channel) · **Files** · **Verify** · **Decision** (only where the owner must choose). Items marked *(v2)* changed after verification.
 
 ### Channel A — Registry item fields
 
@@ -205,7 +205,7 @@ B precedes C and D because both embed the generated foundations. If D8 chooses t
 - No restating shadcn primitive APIs (props, variants). Agents already have `ui.shadcn.com/docs/components/*.md`.
 - No hand-written copies of rules anywhere. Every new artifact is generated from `src/usage`, `scripts/build-tokens.mjs`, or marked spans in DESIGN.md/PRODUCT.md.
 
-## 6. Decisions for Ryan
+## 6. Decisions for the owner
 
 - **D1** Rules file as a separate item (recommended) or attached to the theme item.
 - **D2** Which PRODUCT.md sections go to agents (recommended: Anti-references + Design Principles).
@@ -222,4 +222,4 @@ Answered 2026-09-08: **D1** separate item. **D3** delete the old commands. **D6*
 
 - 2026-09-08, pass 1 (author): F1–F15, W1–W16 drafted.
 - 2026-09-08, pass 2 (independent agent, no shared context): F1–F15 confirmed, F13 corrected (seven paths, commands auto-loaded); F16–F18 added; W3 source and placement corrected; W5 dependency syntax, target, tests, and content corrected; W7 blocked on DESIGN.md accuracy; W9 `Vary` placement and rewrite shape corrected; W10 library-sync gap and `--yes` semantics added; W12 cause corrected; W14 assertion target corrected; W17, W18 added; D6–D8 added.
-- 2026-09-08, pass 3 (author, after Ryan asked "what fixes it for good"): root causes traced. F19 (`registryBlock()` omits the `@theme inline` block the site gets), F20 (layout-imported theme vs shadcn `cssVars` delivery), F21 (theme's literal font names make the `next/font` copy dead weight), F22 (shadcn `registry:font` lacks `style`/`axes`). W18 rewritten with options A/B; W19 added (cssVars delivery + generated foundations); D6 and D8 revised; phasing re-cut into A–E. D1 and D3 answered by Ryan.
+- 2026-09-08, pass 3 (author, after the owner asked "what fixes it for good"): root causes traced. F19 (`registryBlock()` omits the `@theme inline` block the site gets), F20 (layout-imported theme vs shadcn `cssVars` delivery), F21 (theme's literal font names make the `next/font` copy dead weight), F22 (shadcn `registry:font` lacks `style`/`axes`). W18 rewritten with options A/B; W19 added (cssVars delivery + generated foundations); D6 and D8 revised; phasing re-cut into A–E. D1 and D3 answered by the owner.

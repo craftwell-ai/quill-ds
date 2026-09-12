@@ -9,6 +9,40 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.13] — 2026-09-12
+
+### Changed
+- **Retired the artisanal brand voice for the editorial one.** The brand moved
+  from maker to curator — an exclusive, premium and trusted product agency
+  rather than a letterpress shop. DESIGN.md led the change; PRODUCT.md, README,
+  the site metadata, the homepage copy and `registry.json`'s description still
+  carried handcrafted / parchment / botanical / sepia / drawn-by-hand, and
+  PRODUCT.md cited DESIGN.md for a line that had been deleted. The base item's
+  description ships to consumers, so `public/r/quill.json` and `llms.txt` are
+  regenerated with it.
+- **Documented what the pigments have always done.** The colour table said
+  terracotta was "the signature" and later "optional tier" while
+  `quill.tokens.mjs` had moss as the default accent and terracotta as
+  `danger`/`destructive` all along. Moss is now named as the signature and
+  terracotta as danger/destructive, with both diverging chart poles noted.
+- **Deleted the tier ladder** (Everyday/Featured/Signed/Heirloom). No tokens
+  backed it, `ToneBadge` takes `tone` rather than `tier`, and a commerce
+  taxonomy is product content — the design system is product-agnostic.
+- **§9 imagery rewritten.** It named three portrait assets that do not exist
+  and banned photography; both are gone, replaced by the illustration sourcing
+  rule. The "never photographic" and stock-photo bans are lifted.
+
+### Removed
+- **Product and personal identifiers from the docs.** A retired product's name,
+  the owner's name, and another app's name appeared across eight spec files,
+  this changelog, and `scripts/DRIFT-AUDIT.md`. Decision attributions keep every
+  date and decision and now read "the owner"; a candidates table's per-app
+  columns became App A / App B, matching the generic placeholders
+  `pattern-scan.mjs` already documents. Repo slugs that live code and tests
+  depend on (`retail-ds` in the scan's exclusion list, sync targets in
+  `library-sync.test.mjs`) are untouched, as are the consumer apps named as
+  verification evidence in the agent-readability spec.
+
 ## [0.9.12] — 2026-09-11
 
 ### Changed
@@ -867,7 +901,7 @@ Per the routine above, a breaking token change bumps minor while pre-1.0.
     also excludes the repos that merely *mention* Quill: `retail-ds` and
     `scaffold` carry its script lineage but no styling, and 3 of 7 naive
     matches were false positives.
-  - Candidates need two independent builds. Without that rule SkillDecks'
+  - Candidates need two independent builds. Without that rule one app's
     trading-card artwork qualifies — real Quill-styled work with no business in
     a design system.
   - **It reports, and promotes nothing.** All three apps have an "agent avatar"

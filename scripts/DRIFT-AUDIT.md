@@ -162,7 +162,7 @@ Quill styling is never scanned and nothing from it can ever be suggested. That
 also excludes the repos that merely *mention* Quill — `retail-ds` and `scaffold`
 carry its script lineage but no styling, and 3 of 7 naive matches were false
 positives. **Repetition:** built independently in at least two apps, or one app's
-domain work qualifies (without it, SkillDecks' trading-card artwork is a
+domain work qualifies (without it, one app's bespoke assets are a
 candidate).
 
 Read-only. It opens no PRs and promotes nothing, because name matching cannot
