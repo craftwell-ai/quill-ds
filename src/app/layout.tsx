@@ -17,9 +17,9 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Quill — a design system drawn by hand",
+  title: "Quill — an editorial design system for digital products",
   description:
-    "Pressed digital paper, sepia ink, and four botanical pigments. The Quill Design System by Craftwell.",
+    "Warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning. The Quill Design System by Craftwell.",
   icons: {
     icon: [
       { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },

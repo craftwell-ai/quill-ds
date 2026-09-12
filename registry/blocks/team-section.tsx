@@ -16,7 +16,7 @@ export function TeamSection() {
     <section className="mx-auto flex w-full max-w-[880px] flex-col gap-8">
       <div className="flex flex-col items-center gap-2 text-center">
         <span className="text-xs font-medium tracking-[0.15em] uppercase text-ink-muted">The studio</span>
-        <h2 className="font-heading text-2xl text-foreground">Drawn by hand, by these hands</h2>
+        <h2 className="font-heading text-2xl text-foreground">Curated collections, crafted by intelligence</h2>
         <p className="max-w-[480px] text-sm leading-relaxed text-muted-foreground">
           A small bench of makers who believe interfaces should feel like well-kept notebooks.
         </p>

@@ -331,7 +331,7 @@ export default function Home() {
               A design system, made for <Accent>people</Accent>.
             </h1>
             <p className="m-0 max-w-[540px] text-lg leading-[1.7] text-[var(--text-body)]">
-              Textured digital paper, sepia ink, and four botanical pigments. Quill is designed for making interfaces
+              Warm neutral grounds, ink-toned type, and a narrow accent palette. Quill is designed for making interfaces
               feel approachable, delightful, and premium — crafted for everyday use.
             </p>
             <div className="mt-2 flex items-center gap-4">

@@ -10,12 +10,12 @@ web
 
 ## Users
 
-Primary: Ryan (solopreneur product/UX designer) and his AI agents, who build Craftwell apps on top of Quill — the system exists so agentic builds come out on-brand without re-deciding design each time.
-Secondary: visitors to quilldesignsystem.com — developers, designers, and potential clients evaluating the system (and, by extension, Ryan's craft) before installing it or working with him.
+Primary: the design team and its AI agents, who build Craftwell apps on top of Quill — the system exists so agentic builds come out on-brand without re-deciding design each time.
+Secondary: visitors to quilldesignsystem.com — developers, designers, and potential clients evaluating the system, and the craft behind it, before installing it or getting in touch.
 
 ## Product Purpose
 
-Quill is a complete design system — tokens, four themes, components, blocks, docs — distributed as a shadcn registry and consumed by Ryan's own apps (SkillDecks and others). Success is twofold: (1) every app built on Quill ships fast and looks finished with near-zero per-app design effort, and (2) the system itself is a public showcase of that success that others can see, browse, and install.
+Quill is a complete design system — tokens, four themes, components, blocks, docs — distributed as a shadcn registry and consumed by Craftwell's own apps. Success is twofold: (1) every app built on Quill ships fast and looks finished with near-zero per-app design effort, and (2) the system itself is a public showcase of that success that others can see, browse, and install.
 
 ## Positioning
 
@@ -31,12 +31,12 @@ One designer's taste, turned into a system that people and AI agents can ship: w
 
 ## Brand Personality
 
-Warm, unhurried, quietly confident — "a letterpress shop that sells apps" (DESIGN.md). The brand feels printed, collected, and kept: a naturalist's sketchbook of pressed cream paper, sepia ink, and a small cast of botanical pigments used sparingly.
+Warm, unhurried, quietly confident — the voice of "an exclusive, premium and trusted product agency that sells apps" (DESIGN.md §1). The brand feels editorial, collected, and curated: a well-kept notebook of low-contrast warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning.
 
 ## Anti-references
 
 - The generic SaaS/shadcn default look: white cards, blue accents, hero-metric rows, identical card grids.
-- Cold gray enterprise-dashboard flavor — the opposite of the letterpress voice.
+- Cold gray enterprise-dashboard flavor — a dashboard where a notebook belongs.
 - Loud startup maximalism: neon gradients, glassmorphism, purple-glow dark mode.
 - Standing visual bans from DESIGN.md: no pure white, no pure black (Classic themes excepted), no emoji, no decorative gradients.
 
