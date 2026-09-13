@@ -25,5 +25,9 @@
     "use_when": "You need an inbox-style split view pairing a selectable list with a detail pane."
   },
   "docs": "An inbox-style split view — a selectable message list beside a detail pane with archive and delete actions. Do: Keep the selected thread visually marked in the list (background fill) while its detail is open, so context isn't lost. Don't: Let the list's selection state go stale or unmarked once a thread is open in the detail pane. Use mail-shell when you need a fuller mail client — search, reply composer, forward — not just list-and-read. Use chat when the conversation is a live back-and-forth thread, not discrete messages you select and read one at a time.",
+  "categories": [
+    "messaging",
+    "app-shell"
+  ],
   "type": "registry:block"
 }

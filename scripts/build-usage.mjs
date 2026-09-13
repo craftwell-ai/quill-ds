@@ -3,8 +3,12 @@
  *   - public/usage/<name>.md            one full usage page per entry
  *   - registry.json                     `docs` field (shadcn CLI prints it at
  *                                       install time), `description`
- *                                       (:= summary), and `meta.use_when`
- *                                       (:= useWhen[0]) for documented items
+ *                                       (:= summary), `meta.use_when`
+ *                                       (:= useWhen[0]) and `categories`
+ *                                       (:= meta.intent) for documented items.
+ *                                       The base `quill` item has no usage
+ *                                       module: its docs come from
+ *                                       src/usage/theme-docs.mjs.
  * The usage module is the single source; `scripts/build-usage.test.mjs` fails
  * CI when a committed output is stale. Run `npm run build:usage` after
  * touching any usage file.
@@ -15,6 +19,7 @@ import { dirname, join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
 import { renderUsageDocs } from '../src/usage/render.mjs'
+import { renderThemeDocs } from '../src/usage/theme-docs.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const USAGE_DIR = join(root, 'public/usage')
@@ -55,11 +60,25 @@ export function usageDocsField(u) {
 export function injectRegistryDocs(registry, all = ALL_USAGE) {
   const byName = new Map(all.map((u) => [u.name, u]))
   for (const item of registry.items) {
+    // The base theme item has no usage module — its docs are the theming
+    // contract, generated from the token source. This is the one item every app
+    // installs, so it is the only place the CLI can hand an app the rules.
+    if (item.name === 'quill') {
+      item.docs = renderThemeDocs()
+      continue
+    }
     const u = byName.get(item.name)
     if (!u) continue
     item.docs = usageDocsField(u)
     item.description = u.summary
-    if (item.type === 'registry:block') item.meta = { ...item.meta, use_when: u.useWhen[0] }
+    // `categories` is shadcn's own schema-level taxonomy and survives
+    // `shadcn build`; `meta` does not survive the MCP, which strips it before
+    // search. Same source, published through both so future tooling reading
+    // schema fields finds the intent too.
+    if (item.type === 'registry:block') {
+      item.meta = { ...item.meta, use_when: u.useWhen[0] }
+      if (item.meta.intent?.length) item.categories = [...item.meta.intent]
+    }
   }
   return registry
 }

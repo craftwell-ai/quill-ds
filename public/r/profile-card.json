@@ -25,5 +25,8 @@
     "use_when": "You need a compact user profile with avatar, role, stats, and follow / message actions."
   },
   "docs": "A compact, centered profile card — avatar initials, role, follower stats, and follow/message actions. Do: Label every stat (\"Followers\", \"Following\") directly beneath its number — a bare number has no meaning on its own. Don't: Show raw numbers with no label and expect position alone to convey what they mean. Use activity-feed when you want to show what someone did, not a static summary of who they are. Use data-table when you're listing many people at once — a table or list reads better than a full card per person.",
+  "categories": [
+    "data-display"
+  ],
   "type": "registry:block"
 }

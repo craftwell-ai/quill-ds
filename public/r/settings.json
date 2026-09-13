@@ -28,5 +28,9 @@
     "use_when": "You need a profile settings form with name, bio, and notification preferences."
   },
   "docs": "A profile settings card — name fields, a bio textarea, and an email-notification toggle. Do: Keep Save changes and Cancel as two distinct, clearly differentiated actions (primary vs ghost). Don't: Make Cancel look as prominent as Save — the user should never mis-tap away unsaved changes as the default action. Use contact-form when you're sending a one-off message, not editing a persistent profile. Use wizard when setup needs multiple sequential steps, not a single settings page a user returns to and edits freely.",
+  "categories": [
+    "settings",
+    "form"
+  ],
   "type": "registry:block"
 }
