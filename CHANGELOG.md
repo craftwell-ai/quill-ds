@@ -9,6 +9,31 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.14] — 2026-09-13
+
+### Changed
+- **"Sepia" retired; "ink-toned" is the word.** The token is `--ink` and §2 groups
+  them as Inks, so "sepia" was only a qualifier meaning *warm brown-black, not
+  neutral black*. Six references are gone — the colour table now says "warm
+  near-black", and the Storybook Colors, Elevation and Brand pages describe ink
+  rather than a sepia formula.
+- **`ink-toned type` is now consistent across all six surfaces.** The base registry
+  item's description said "ink-toned text" while DESIGN.md, PRODUCT.md, README, the
+  site metadata and the homepage all said "type" — and the registry description is
+  the one consumer apps and their agents actually read. It ships, so `public/r/*`
+  and `llms.txt` are regenerated.
+
+### Removed
+- **The rest of the tier ladder.** 0.9.13 deleted the §2 table but missed three
+  more: the §3 Dusk tier-tints table, and the `Badge` and `ProductCard` component
+  entries that carried `tier="heirloom"`. Both of those entries documented files
+  that do not exist (`components/display/Badge.jsx`,
+  `components/surfaces/ProductCard.jsx`) and `ToneBadge` — the component that does
+  ship — sits directly below with the correct `tone` vocabulary. Two of the seven
+  stale `.jsx` paths in §7 go with them.
+- **Six numero glyphs in `scripts/figma-drift.test.mjs`** fixture strings, missed
+  because earlier sweeps covered `src/` and `registry/` but never `scripts/`.
+
 ## [0.9.13] — 2026-09-12
 
 ### Changed
