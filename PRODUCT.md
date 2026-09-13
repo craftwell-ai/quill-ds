@@ -10,16 +10,16 @@ web
 
 ## Users
 
-Primary: the design team and its AI agents, who build Craftwell apps on top of Quill — the system exists so agentic builds come out on-brand without re-deciding design each time.
-Secondary: visitors to quilldesignsystem.com — developers, designers, and potential clients evaluating the system, and the craft behind it, before installing it or getting in touch.
+Primary: AI agents, who build Craftwell apps on top of Quill — the system exists so agentic builds come out on-brand without re-deciding design each time.
+Secondary: visitors to quilldesignsystem.com — developers, designers, and potential clients evaluating the system before installing it or working with Craftwell.
 
 ## Product Purpose
 
-Quill is a complete design system — tokens, four themes, components, blocks, docs — distributed as a shadcn registry and consumed by Craftwell's own apps. Success is twofold: (1) every app built on Quill ships fast and looks finished with near-zero per-app design effort, and (2) the system itself is a public showcase of that success that others can see, browse, and install.
+Quill is a complete design system — tokens, five themes, components, blocks, docs — distributed as a shadcn registry and consumed by Craftwell apps. Success is twofold: (1) every app built on Quill ships fast and looks finished with near-zero per-app design effort, and (2) the system itself is a public showcase of that success that others can see, browse, and install.
 
 ## Positioning
 
-One designer's taste, turned into a system that people and AI agents can ship: warm, printed, accessible by default.
+Taste turned into a system that people and AI agents can ship: warm, editorial, accessible by default.
 
 ## Conversion & proof
 
@@ -27,7 +27,7 @@ One designer's taste, turned into a system that people and AI agents can ship: w
 - Secondary CTA: install it — `npx shadcn add https://www.quilldesignsystem.com/r/quill.json`.
 - The line a visitor remembers: "A design system, made for people."
 - Belief ladder: this looks genuinely crafted → it's a real system (tokens, themes, foundations), not a skin → the components are comprehensive, tested, and accessible → I can have it in my project with one command.
-- Proof on hand: the site itself is built from Quill components; a live Storybook with tested, WCAG-checked components; 49 installable blocks; four switchable themes; version-stamped releases.
+- Proof on hand: the site itself is built from Quill components; a live Storybook with tested, WCAG-checked components; 51 installable blocks; five switchable themes; version-stamped releases.
 
 ## Brand Personality
 
