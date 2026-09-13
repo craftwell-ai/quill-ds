@@ -15,14 +15,14 @@ export function SplitPanel() {
             &ldquo;The most crafted-feeling system we&rsquo;ve ever shipped on. It reads like a
             notebook, not a dashboard.&rdquo;
           </p>
-          <footer className="text-sm opacity-80">Sofia Almeida — Head of Product, Inkwell Press</footer>
+          <footer className="text-sm opacity-80">Sofia Almeida — Head of Product, Northwind</footer>
         </blockquote>
       </div>
       <div className="flex items-center justify-center p-8">
         <form className="flex w-full max-w-[340px] flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
           <div className="flex flex-col gap-1 text-center">
             <h1 className="font-heading text-xl text-foreground">Welcome back</h1>
-            <p className="text-sm text-muted-foreground">Sign in to your studio account.</p>
+            <p className="text-sm text-muted-foreground">Sign in to your team account.</p>
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="split-email">Email</Label>

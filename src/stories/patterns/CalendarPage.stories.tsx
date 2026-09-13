@@ -23,8 +23,8 @@ export const CalendarPage: Story = {
 }
 
 const dodontSessions = [
-  { time: '9:00', title: 'Sketchbook review', kind: 'Studio' },
-  { time: '11:30', title: 'Token sync with Inkwell Press', kind: 'Call' },
+  { time: '9:00', title: 'Design review', kind: 'Internal' },
+  { time: '11:30', title: 'Token sync with Northwind', kind: 'Call' },
 ]
 
 export const DoDont: Story = {

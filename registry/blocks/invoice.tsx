@@ -25,7 +25,7 @@ export function Invoice() {
       <CardHeader className="gap-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <span className="font-heading text-lg text-foreground">Invoice № 0042</span>
+            <span className="font-heading text-lg text-foreground">Invoice 0042</span>
             <span className="text-sm text-muted-foreground">Issued June 30, 2026 · Due July 14, 2026</span>
           </div>
           <Badge>Paid</Badge>
@@ -34,13 +34,13 @@ export function Invoice() {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex flex-col gap-0.5">
             <span className="text-xs tracking-[0.1em] uppercase text-muted-foreground">From</span>
-            <span className="font-medium text-foreground">Craftwell Studio</span>
+            <span className="font-medium text-foreground">Craftwell</span>
             <span className="text-muted-foreground">hello@craftwell.ai</span>
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="text-xs tracking-[0.1em] uppercase text-muted-foreground">Billed to</span>
-            <span className="font-medium text-foreground">Inkwell Press Ltd.</span>
-            <span className="text-muted-foreground">accounts@inkwellpress.com</span>
+            <span className="font-medium text-foreground">Northwind Ltd.</span>
+            <span className="text-muted-foreground">accounts@northwind.com</span>
           </div>
         </div>
       </CardHeader>

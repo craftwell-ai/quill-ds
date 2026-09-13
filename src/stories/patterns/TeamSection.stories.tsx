@@ -50,14 +50,14 @@ export const DoDont: Story = {
       doExample={
         <div className="flex gap-3">
           <TeamCard initials="AL" name="Ada Lovelace" showAction />
-          <TeamCard initials="WM" name="William Morris" showAction />
+          <TeamCard initials="NO" name="Nadia Okonjo" showAction />
         </div>
       }
       dontExample={
         <div className="flex flex-col items-center gap-3">
           <div className="flex gap-3">
             <TeamCard initials="AL" name="Ada Lovelace" showAction={false} />
-            <TeamCard initials="WM" name="William Morris" showAction={false} />
+            <TeamCard initials="NO" name="Nadia Okonjo" showAction={false} />
           </div>
           <Button variant="outline" size="sm">
             Contact us

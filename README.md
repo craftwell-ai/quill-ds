@@ -1,7 +1,7 @@
 # Quill Design System
 
-A handcrafted design system for editorial and creative applications — warm parchment
-surfaces, rich ink tones, Fraunces display type, and four botanical accent pigments.
+An editorial design system for digital products — low-contrast warm neutral grounds,
+ink-toned type, Fraunces display, and a narrow accent palette reserved for meaning.
 
 Built by [Craftwell](https://github.com/craftwell-ai). Live at
 **[quilldesignsystem.com](https://www.quilldesignsystem.com)** · component catalog at

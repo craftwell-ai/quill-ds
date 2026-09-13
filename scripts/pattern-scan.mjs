@@ -251,7 +251,7 @@ export function buildReport({ apps, clusters, duplicates, decided, unreadable, s
  * The marker that makes an app Quill-styled. This IS the origination rule,
  * mechanised: an app without the token layer is never scanned, so nothing from
  * it can ever be suggested. It also correctly excludes repos that merely mention
- * Quill — `retail-ds` and `scaffold` carry its script lineage but no styling.
+ * Quill — `scaffold` carries its script lineage but no styling.
  */
 const QUILL_MARKERS = ['app/quill-theme.css', 'src/app/quill-theme.css']
 

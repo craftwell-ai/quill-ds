@@ -1,7 +1,7 @@
 # Component Usage Documentation — Wave 3 (Primitives + Visual Pairs) — Design
 
 **Date:** 2026-08-08
-**Status:** Approved (brainstorm with Ryan, 2026-08-08)
+**Status:** Approved (brainstorm with the owner, 2026-08-08)
 
 ## Purpose
 
@@ -19,7 +19,7 @@ half of the catalog. Wave 3 closes the rest, in two parts:
    the `DoDont` story, rule id `one-primary`) and proves the mechanism works;
    every other documented item in the catalog currently has zero. Originally
    deferred to a hypothetical "Wave 4" in the Wave 2 spec's Out of scope
-   section — pulled forward and combined with Wave 3 per Ryan's explicit
+   section — pulled forward and combined with Wave 3 per the owner's explicit
    request ("is it possible to do that for every component, pattern and
    block").
 
@@ -30,7 +30,7 @@ section of the rendered docs page. That was investigated during brainstorming
 `<Markdown>`), which cannot embed a live React component. Doing so for real
 would require a shared custom `docs.page` component replacing the current
 `renderUsageDocs` markdown-string pipeline for every documented item — a
-real architecture change. Ryan decided against it: the existing mechanism
+real architecture change. The owner decided against it: the existing mechanism
 (a separate `DoDont` story per item, same as `button` already does) is what
 ships in Wave 3.
 
@@ -182,5 +182,5 @@ and every new visual pair automatically.
   correctly in both themes — same discipline Wave 2 used.
 - Any real bugs found while grounding docs against source (Wave 2 found two:
   a colorblind-accessibility issue in `analytics-charts`, an accent-token
-  bug in `stats-band`) get flagged to Ryan the same way, not silently
+  bug in `stats-band`) get flagged to the owner the same way, not silently
   documented around.

@@ -1,7 +1,7 @@
 # Component Usage Documentation — Design
 
 **Date:** 2026-08-04
-**Status:** Approved (brainstorm with Ryan, 2026-08-04)
+**Status:** Approved (brainstorm with the owner, 2026-08-04)
 
 ## Purpose
 

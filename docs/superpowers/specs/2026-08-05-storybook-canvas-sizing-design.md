@@ -1,7 +1,7 @@
 # Storybook Canvas Sizing — Design
 
 **Date:** 2026-08-05
-**Status:** Approved (brainstorm with Ryan, 2026-08-05)
+**Status:** Approved (brainstorm with the owner, 2026-08-05)
 
 ## Purpose
 
@@ -9,7 +9,7 @@ Every Storybook story canvas (the preview box around a rendered component, both 
 autodocs pages and the standalone Canvas/story view) is forced to a minimum height
 of a full viewport, regardless of how small the actual component is. A tiny Select
 trigger sits in a box hundreds of pixels taller than it needs, with a small top
-margin and a huge, effectively unbounded bottom margin. Ryan asked for containers
+margin and a huge, effectively unbounded bottom margin. The owner asked for containers
 that hug their content with equal top/bottom margin — and, for components that
 reveal a dropdown/popup (Select, Combobox, etc.), for that margin to stay equal
 even once the popup is open, rather than the popup visually overlapping whatever
@@ -77,7 +77,7 @@ on stories with nothing to observe, so it's safe to call for every story,
 
 ### 3. Why this approach over the alternatives considered
 
-- **Fixed per-component padding guess** (rejected by Ryan during brainstorming):
+- **Fixed per-component padding guess** (rejected by the owner during brainstorming):
   simpler, but a guess — a long option list could still overflow a hand-picked
   number, and every new dropdown-style component needs someone to remember to add
   one.

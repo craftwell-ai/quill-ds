@@ -46,7 +46,7 @@ export function Faq() {
       <div className="flex items-center justify-center gap-3 rounded-lg bg-card p-4 ring-1 ring-foreground/10">
         <span className="text-sm text-muted-foreground">Still curious?</span>
         <Button variant="outline" size="sm">
-          Talk to the studio
+          Talk to the team
         </Button>
       </div>
     </section>

@@ -332,8 +332,8 @@ test('hasQuillMarker recognises the token layer and rejects template lineage', (
   // The real Quill-styled apps all carry this file.
   assert.equal(hasQuillMarker(['app/quill-theme.css', 'package.json']), 'app/quill-theme.css')
   assert.equal(hasQuillMarker(['components.json']), null)
-  // retail-ds and scaffold mention Quill only because they share its script
-  // lineage — no token layer, so they must never be scanned.
+  // scaffold mentions Quill only because it shares its script lineage —
+  // no token layer, so it must never be scanned.
   assert.equal(hasQuillMarker(['scripts/build-tokens.mjs', 'scripts/drift-audit.mjs']), null)
   assert.equal(hasQuillMarker([]), null)
 })

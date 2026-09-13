@@ -10,29 +10,29 @@ const messages = [
   {
     from: 'Ada Lovelace',
     initials: 'AL',
-    subject: 'Proofs for Issue № 004',
-    preview: 'The terracotta plate came out beautifully — see the attached scans…',
+    subject: 'Scope for the Q3 engagement',
+    preview: 'Revised deliverables are in the shared folder — see the summary…',
     time: '9:12',
     unread: true,
-    tag: 'Studio',
+    tag: 'Client',
   },
   {
-    from: 'William Morris',
-    initials: 'WM',
-    subject: 'Border pattern revisions',
-    preview: 'I reworked the vine motif so it tiles cleanly at three scales…',
+    from: 'Nadia Okonjo',
+    initials: 'NO',
+    subject: 'Component API revisions',
+    preview: 'I reworked the variant props so they compose cleanly at three scales…',
     time: 'Yesterday',
     unread: true,
-    tag: 'Print',
+    tag: 'Design',
   },
   {
-    from: 'Beatrix Potter',
-    initials: 'BP',
-    subject: 'Botanical studies, second pass',
-    preview: 'Moss and indigo swatches are drying — photos tomorrow morning…',
+    from: 'Marcus Reed',
+    initials: 'MR',
+    subject: 'Discovery findings, second pass',
+    preview: 'Interview notes are synthesised — summary tomorrow morning…',
     time: 'Tue',
     unread: false,
-    tag: 'Botanical',
+    tag: 'Research',
   },
 ] as const
 
@@ -97,23 +97,23 @@ export function MailShell() {
           </Avatar>
           <div className="flex flex-col gap-0.5">
             <span className="text-sm font-medium text-foreground">Ada Lovelace</span>
-            <span className="text-xs text-muted-foreground">to Studio · 9:12</span>
+            <span className="text-xs text-muted-foreground">to Client · 9:12</span>
           </div>
           <Badge variant="outline" className="ml-auto">
-            Studio
+            Client
           </Badge>
         </div>
         <Separator />
         <div className="min-h-0 flex-1 overflow-auto px-6 py-5">
-          <h3 className="font-heading text-lg text-foreground">Proofs for Issue № 004</h3>
+          <h3 className="font-heading text-lg text-foreground">Scope for the Q3 engagement</h3>
           <div className="mt-3 flex flex-col gap-3 text-sm leading-relaxed text-muted-foreground">
             <p>
-              The terracotta plate came out beautifully — the grain held even at the smallest
-              caption size, and the dusk variants read exactly as we hoped under lamplight.
+              Revised deliverables are in the shared folder — the component inventory held up
+              even at the smallest breakpoint, and the dark variants read exactly as we hoped.
             </p>
             <p>
-              I&rsquo;ve queued the moss and indigo runs for tomorrow. If the humidity holds we
-              should have the full set scanned by Thursday.
+              I&rsquo;ve queued the remaining two flows for tomorrow. If review lands on time we
+              should have the full set ready by Thursday.
             </p>
             <p>— A.</p>
           </div>

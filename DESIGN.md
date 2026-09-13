@@ -5,10 +5,8 @@ Everything an agent or developer needs to design on-brand: voice, color, type,
 spacing, effects, components, iconography, and assets. Distilled from the live
 token files and component sources in this project.
 
-> **Brand in one line:** a naturalist's sketchbook — pressed cream digital paper,
-> soft sepia ink, hand-drawn portraits, and a small cast of botanical pigments used
-> sparingly. **No pure white, no pure black (Classic themes excepted — §3), no
-> emoji, no decorative gradients.**
+> **Brand in one line:** A low-contrast, editorial-derived visual language. Warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning. No
+> emoji, no decorative gradients.
 
 **Related files**
 - `styles.css` — the single entry point consumers link (imports every token + font).
@@ -22,8 +20,8 @@ token files and component sources in this project.
 
 ## 1. Brand & product context
 
-**Quill** is the design system for digital products. The brand feels printed, collected, and kept. The voice is
-that of a letterpress shop that sells apps — warm, unhurried, quietly confident.
+**Quill** is the design system for digital products. The brand feels editorial, collected, and curated. The voice is
+that of an exclusive, premium and trusted product agency that sells apps — warm, unhurried and quietly confident.
 
 Source of truth for all token values: `src/tokens/quill.tokens.mjs` — edit
 there, then `npm run build:tokens` regenerates the CSS token blocks, the Figma
@@ -33,10 +31,9 @@ token JSON, and the generated exports.
 
 ## 2. Color
 
-No true white or black in the brand themes — everything sits on digital paper.
+Everything sits on digital paper.
 The values below are **Dawn**, the default theme. Three **digital papers**
-(grounds), three **inks** (text), four **pigments** (accents, used like a single
-colored pencil on a graphite page). The Classic themes (§3) deliberately swap
+(grounds), three **inks** (text), four **pigments** (accents, carefully selected pigments that bring a creative warmth and feel to each page). The Classic themes (§3) deliberately swap
 this palette for pure neutrals.
 
 ### Digital papers — surfaces / grounds
@@ -56,9 +53,9 @@ this palette for pure neutrals.
 ### Pigments — accents (each has a `-deep` press/hover shade)
 | Token | Hex | Deep | Use |
 |---|---|---|---|
-| `--terracotta` | `#C4684B` | `#944A33` | **the signature** — the one italic word, CTAs, accent |
-| `--moss` | `#7A8C5C` | `#5E6E43` | "signed" tier, success, growth |
-| `--indigo` | `#5B6B8A` | `#44516D` | "featured" tier, links, info |
+| `--moss` | `#7A8C5C` | `#5E6E43` | **the signature** — the default accent: the one italic word, CTAs, focus; success |
+| `--terracotta` | `#C4684B` | `#944A33` | danger / destructive; the warm pole in diverging charts |
+| `--indigo` | `#5B6B8A` | `#44516D` | links, info; the cool pole in diverging charts |
 | `--gold` | `#B89968` | `#9A7D4E` | highlight, warning |
 
 ### Hairlines — ink at low alpha over digital paper
@@ -72,19 +69,9 @@ Borders are always ink-at-alpha, never a solid grey.
 - **Borders:** `--border-card` (line-soft) · `--border-field` (line) · `--border-divider` (line-faint)
 - **Feedback:** `--success` (moss-deep) · `--warning` (gold-deep) · `--danger` (terracotta-deep) · `--info` (indigo)
 
-### Tier pigments (the collection ladder)
-| Tier | Bg | Fg | Meaning |
-|---|---|---|---|
-| Everyday | `--paper-deep` | `--ink-soft` | free staples |
-| Featured | indigo @22% | `--indigo-deep` | editor's picks, rotated |
-| Signed | moss @22% | `--moss-deep` | attributed, dated, crafted |
-| Heirloom | terracotta @16% | `--terracotta-deep` | limited, numbered |
-
----
-
 ## 3. Dusk — the dark theme
 
-The sketchbook, closed at dusk and opened again under a desk lamp — hence the
+The notebook, closed at dusk and opened again under a desk lamp — hence the
 name. **Dusk** is an added theme, not the default (**Dawn**) — grounds become
 **dark walnut** (deep, warm, low-chroma browns, like oiled wood and aged leather)
 and the sepia ink inverts to a warm **cream** that sits on the wood the way chalk
@@ -174,7 +161,7 @@ in components; reintroduce pure `#000`/`#FFF`; darken pigments for Dusk (they
 lift); keep the multiply grain (it disappears).
 
 ### Classic themes — the sanctioned exception
-`classic-light` and `classic-dark` trade the sketchbook palette for conventional
+`classic-light` and `classic-dark` trade the notebook palette for conventional
 neutrals: pure `#FFFFFF` / `#000000` grounds, neutral greys, and no digital paper
 grain (both texture overlays are disabled). Use them where the brand look isn't
 wanted; the no-pure-white/black rule applies only to Dawn & Dusk. Values live in
@@ -300,7 +287,7 @@ Sizes `sm`/`md`/`lg`. Props: `withArrow` (sliding "→"), `href` (renders as lin
 `disabled`. `rounded-sm`, Raleway medium.
 ```jsx
 <Button variant="primary" withArrow>Start your collection</Button>
-<Button variant="accent">Save me a deck</Button>
+<Button variant="accent">Save to collection</Button>
 <Button variant="link" href="#journal">Read the journal</Button>
 ```
 
@@ -310,7 +297,7 @@ Text field / textarea on paper-warm. **Ink** focus ring (neutral), terracotta
 input attributes. `box-sizing: border-box` is built in.
 ```jsx
 <Input label="Email" type="email" placeholder="your@email.com" />
-<Input label="Notes" multiline placeholder="What's this deck for?" />
+<Input label="Notes" multiline placeholder="What's this for?" />
 <Input label="Email" invalid hint="That doesn't look right" />
 ```
 
@@ -335,11 +322,11 @@ render every tag pill through ToneBadge.
 ```
 
 ### Eyebrow — `components/display/Eyebrow.jsx`
-Uppercase tracked kicker above a heading. Default terracotta with a leading dash;
+Uppercase tracked kicker above a heading. Default moss with a leading dash;
 `muted` for plain ink-muted section labels.
 ```jsx
-<Eyebrow>Issue №001 · Spring Collection</Eyebrow>
-<Eyebrow muted>The First Drawing</Eyebrow>
+<Eyebrow>Issue 001 · Spring Collection</Eyebrow>
+<Eyebrow muted>Foundations</Eyebrow>
 ```
 
 ### Avatar — `components/display/Avatar.jsx`
@@ -358,8 +345,8 @@ clips children for full-bleed media.
 ```
 
 ### ProductCard — `components/surfaces/ProductCard.jsx`
-A collectible portrait card — hand-drawn item card with number, title, blurb,
-category, and tier (composes Badge). Lifts on hover; portrait scales 1.02.
+A collectible item card with number, title, blurb, category, and tier (composes
+Badge). Lifts on hover; the image scales 1.02.
 ```jsx
 <ProductCard title="Critique Companion" description="…" portrait="…"
   number="001" category="Design" tier="heirloom" />
@@ -369,13 +356,11 @@ category, and tier (composes Badge). Lifts on hover; portrait scales 1.02.
 
 ## 8. Iconography
 
-Deliberately **icon-light** — visual interest comes from hand-drawn portraits and
-type, not an icon set.
-- **Typographic marks as icons:** arrow `→` (CTAs, slides on hover), pilcrow `¶`
-  (the manifesto mark), numero `№` (catalog numbers), middot `·` (separator).
-  Use real Unicode glyphs in the brand fonts — prefer over SVG icons.
-- **Tier initials:** a single italic Fraunces letter (E / F / S / H) in a
-  pigment-tinted circle.
+Deliberately **icon-light** — visual interest comes from illustration and type,
+not an icon set.
+- **Typographic marks as icons:** arrow `→` (CTAs, slides on hover) and middot
+  `·` (separator). Use real Unicode glyphs in the brand fonts — prefer over SVG
+  icons. No decorative or ornamental marks.
 - **No icon font, no emoji** in the source.
 - **UI icons: Material Symbols (Outlined, weight 400)** — the actual Google
   symbols, rendered as inline SVG through the source-owned `<Icon>` component
@@ -387,41 +372,36 @@ type, not an icon set.
 
 ## 9. Imagery & assets
 
-**Hand-drawn portrait illustrations** — graphite linework with soft watercolor
-washes on cream, warm and naturalist, **never photographic**. Each card has one.
-- `assets/portraits/critique-companion.jpg`
-- `assets/portraits/spec-sharpener.jpg`
-- `assets/portraits/research-synthesist.jpg`
+**Illustrations** — when illustrations are used, source them from
+https://getillustrations.com/. Selections always match page-level or content-level
+context. Imagery and illustrations are never mixed — it's one or the other.
 
-When mocking new surfaces, reuse these — don't invent new portraits. For a needed
-placeholder, use a paper-deep block, not a stock photo.
+For a needed placeholder, use a `--paper-deep` block.
 
 ---
 
 ## 10. Voice & content
 
-Warm, unhurried, a little romantic about craft. **"We"** for the studio, **"you"**
-for the reader. Metaphors of drawing / printing / collecting / keeping. Short
-declaratives, the occasional fragment for rhythm (*"No spam. Just drawings."*).
-- **Casing:** sentence case; UPPERCASE only for tiny eyebrows.
-- **One emphasized word**, italic + terracotta, per headline.
-- **Numbering:** the numero glyph `№` (e.g. `№ 001`), not "No." or "#".
-- **No emoji, no hype punctuation.** The pilcrow `¶` is a quiet brand mark.
-- **Tiers as vocabulary:** Everyday / Featured / Signed / Heirloom — never Free/Pro/Enterprise.
-
-Sample microcopy: headline *"Tools, made by **hand**."* · CTA *"Save me a deck"*
-· note *"No spam. Just drawings."*
+Warm, unhurried, and obsessed about the quality of design craft. **"We"** for the agency, **"you"**
+for the user and reader. Metaphors of editorial work, collecting, curating, and keeping.
+Short, punchy declaratives, with the occasional fragment for rhythm (*"Building for
+quality. One customer at a time."*).
+- **Casing:** sentence case throughout. Uppercase reserved for eyebrow labels.
+- **Emphasis:** at most one emphasized word per headline, italic + moss.
+- **Documentation pattern:** state the decision, then the reason for it. No
+  hedging, no second-person coaching, no hype or hype punctuation, no emoji.
+Sample microcopy: headline *"Products, crafted with **intelligence**."* · CTA *"Our services"*
+· note *"Quality design is our specialty."*
 
 ---
 
 ## 11. Do / Don't
 
-**Do** — sit everything on digital paper; reserve terracotta for the one accent word, the
+**Do** — sit everything on digital paper; reserve moss for the one accent word, the
 primary CTA's hover, and the hero `accent` button; use **ink** for primary actions
-and focus; warm layered shadows; Fraunces light + tight for headings; hand-drawn
-portraits; typographic glyphs over icons.
+and focus; warm layered shadows; Fraunces light + tight for headings.
 
 **Don't** — pure white (`#FFF`) or pure black (`#000`) in Dawn & Dusk (the
 Classic themes use them by design); terracotta focus rings
 (reads as error); terracotta on every hover; blue-purple gradients; emoji; heavy
-or bold Fraunces; tight body leading; bouncy or looping motion; stock photography.
+or bold Fraunces; tight body leading; bouncy or looping motion.

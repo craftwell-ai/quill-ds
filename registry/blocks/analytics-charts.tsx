@@ -79,7 +79,7 @@ export function AnalyticsCharts() {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Print editions</CardTitle>
+          <CardTitle>Engagements</CardTitle>
           <CardDescription>Weekly sales this month.</CardDescription>
         </CardHeader>
         <CardContent>

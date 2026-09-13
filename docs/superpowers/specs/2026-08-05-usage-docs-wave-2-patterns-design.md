@@ -1,7 +1,7 @@
 # Component Usage Documentation — Wave 2 (Patterns) — Design
 
 **Date:** 2026-08-05
-**Status:** Approved (brainstorm with Ryan, 2026-08-05)
+**Status:** Approved (brainstorm with the owner, 2026-08-05)
 
 ## Purpose
 

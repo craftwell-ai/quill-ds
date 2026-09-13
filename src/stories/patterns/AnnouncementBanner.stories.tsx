@@ -32,7 +32,7 @@ export const DoDont: Story = {
         <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg border border-border bg-card px-4 py-3">
           <div className="flex items-center gap-3">
             <Badge>New</Badge>
-            <p className="text-sm text-foreground">Field Notes issue № 004 just shipped.</p>
+            <p className="text-sm text-foreground">Issue 004 of The Brief just shipped.</p>
           </div>
           <Button variant="ghost" size="icon-sm" aria-label="Dismiss announcement">
             <Icon name="close" size={16} />
@@ -43,7 +43,7 @@ export const DoDont: Story = {
         <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg border border-border bg-card px-4 py-3">
           <div className="flex items-center gap-3">
             <Badge>New</Badge>
-            <p className="text-sm text-foreground">Field Notes issue № 004 just shipped.</p>
+            <p className="text-sm text-foreground">Issue 004 of The Brief just shipped.</p>
           </div>
         </div>
       }

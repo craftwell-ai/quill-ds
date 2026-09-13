@@ -70,11 +70,11 @@ export function Checkout() {
         </CardHeader>
         <CardContent className="flex flex-col gap-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Field Notes annual</span>
+            <span className="text-muted-foreground">The Brief, annual</span>
             <span className="text-foreground">$48.00</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Print edition add-on</span>
+            <span className="text-muted-foreground">Additional seats</span>
             <span className="text-foreground">$14.00</span>
           </div>
           <div className="flex justify-between">

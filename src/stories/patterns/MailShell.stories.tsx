@@ -38,7 +38,7 @@ export const DoDont: Story = {
           <Separator />
           <div className="flex flex-col gap-1 border-b border-border px-3 py-2 text-left">
             <span className="text-sm font-semibold text-foreground">Ada Lovelace</span>
-            <span className="text-sm font-medium text-foreground">Proofs for Issue № 004</span>
+            <span className="text-sm font-medium text-foreground">Scope for the Q3 engagement</span>
           </div>
         </div>
       }
@@ -52,7 +52,7 @@ export const DoDont: Story = {
             </div>
           </div>
           <div className="p-2 text-[10px] text-muted-foreground">
-            Proofs for Issue № 004 — the terracotta plate came out beautifully…
+            Scope for the Q3 engagement — revised deliverables are in the shared folder…
           </div>
         </div>
       }

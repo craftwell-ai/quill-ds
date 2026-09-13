@@ -29,12 +29,12 @@ import { Card, CardContent } from '@/components/ui/card'
 
 const workspace = [
   { icon: 'space_dashboard', label: 'Overview', badge: '', active: true },
-  { icon: 'ink_pen', label: 'Issues', badge: '4', active: false },
-  { icon: 'palette', label: 'Pigments', badge: '', active: false },
-  { icon: 'photo_library', label: 'Plates', badge: '12', active: false },
+  { icon: 'ink_pen', label: 'Engagements', badge: '4', active: false },
+  { icon: 'palette', label: 'Clients', badge: '', active: false },
+  { icon: 'photo_library', label: 'Deliverables', badge: '12', active: false },
 ] as const
 
-const studio = [
+const team = [
   { icon: 'group', label: 'Collaborators' },
   { icon: 'settings', label: 'Settings' },
 ] as const
@@ -50,7 +50,7 @@ export function SidebarNav() {
                 Q
               </span>
               <span className="font-heading text-sm font-medium text-foreground group-data-[collapsible=icon]:hidden">
-                Quill Studio
+                Quill
               </span>
             </div>
           </SidebarHeader>
@@ -73,10 +73,10 @@ export function SidebarNav() {
               </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup>
-              <SidebarGroupLabel>Studio</SidebarGroupLabel>
+              <SidebarGroupLabel>Team</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {studio.map((item) => (
+                  {team.map((item) => (
                     <SidebarMenuItem key={item.label}>
                       <SidebarMenuButton tooltip={item.label}>
                         <Icon name={item.icon as never} />
@@ -96,7 +96,7 @@ export function SidebarNav() {
               </Avatar>
               <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                 <span className="text-xs font-medium text-foreground">John Doe</span>
-                <span className="text-xs text-muted-foreground">Studio plan</span>
+                <span className="text-xs text-muted-foreground">Team plan</span>
               </div>
             </div>
           </SidebarFooter>
@@ -119,7 +119,7 @@ export function SidebarNav() {
             </Breadcrumb>
           </header>
           <main className="grid flex-1 grid-cols-3 gap-4 overflow-auto p-4 max-lg:grid-cols-1">
-            {['Morning proofs', 'Pigment queue', 'Reader notes'].map((title) => (
+            {['Active engagements', 'Review queue', 'Client notes'].map((title) => (
               <Card key={title} size="sm">
                 <CardContent className="flex h-32 flex-col gap-1">
                   <span className="text-sm font-medium text-foreground">{title}</span>
