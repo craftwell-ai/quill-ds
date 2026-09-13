@@ -16,7 +16,7 @@ const snapshot = {
   cornerRadius: { var: 'corner-radius/2xl', raw: 24 },
   padding: { var: 'spacing/8', raw: 32 },
   effectStyle: 'Elevation/lg',
-  texts: { Title: 'Acknowledgement № 001' },
+  texts: { Title: 'Acknowledgement 001' },
   childSignature: ['Title:TEXT'],
 }
 const cleanBundle = () => ({
@@ -30,7 +30,7 @@ const cleanBundle = () => ({
     cornerRadius: 24,
     paddingLeft: 32,
     styles: { effect: 'S:aa' },
-    children: [{ name: 'Title', type: 'TEXT', characters: 'Acknowledgement № 001' }],
+    children: [{ name: 'Title', type: 'TEXT', characters: 'Acknowledgement 001' }],
   },
   styles: { 'S:aa': { name: 'Elevation/lg', styleType: 'EFFECT' } },
 })
@@ -105,7 +105,7 @@ const COMPONENT = () => ({
   figma: structuredClone(snapshot),
   code: { classes: 'flex gap-3 rounded-2xl bg-card p-8 shadow-lg' },
 })
-const SOURCE = 'className={cn("flex gap-3 rounded-2xl bg-card p-8 shadow-lg")}\n<div>Acknowledgement № 001</div>'
+const SOURCE = 'className={cn("flex gap-3 rounded-2xl bg-card p-8 shadow-lg")}\n<div>Acknowledgement 001</div>'
 
 test('classFor maps every repairable key and rejects unknowns', () => {
   assert.equal(classFor('fill', 'shadcn/muted'), 'bg-muted')
@@ -136,13 +136,13 @@ test('a rebound radius is a repairable one-class edit that rewrites source and b
 
 test('a text change is repairable when the old value is unique in source', () => {
   const bundle = cleanBundle()
-  bundle.document.children[0].characters = 'Acknowledgement № 002'
+  bundle.document.children[0].characters = 'Acknowledgement 002'
   const component = COMPONENT()
   const plan = planRepair(component, extractComponent(bundle, VARS), SOURCE)
   assert.ok(plan.repairable, plan.reasons.join('; '))
   const { source, component: next } = applyRepair(component, plan, SOURCE, '2026-08-13')
-  assert.ok(source.includes('№ 002'))
-  assert.equal(next.figma.texts.Title, 'Acknowledgement № 002')
+  assert.ok(source.includes('Acknowledgement 002'))
+  assert.equal(next.figma.texts.Title, 'Acknowledgement 002')
 })
 
 test('structural drift, unknown variables, and removed texts are never auto-repaired', () => {

@@ -7,3 +7,78 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Quill
+
+A self-hosted [shadcn registry](https://ui.shadcn.com/docs/registry) — a token layer, two components (`icon`, `tone-badge`), and 51 blocks — installed into consumer apps with `npx shadcn add`. Primitives are stock shadcn restyled by the token layer; Quill does not re-ship its own Button or Card. The Next.js app at the repo root is the marketing site and Storybook host.
+
+**Before changing anything visual, read `PRODUCT.md` and `DESIGN.md`.** Reuse documented components and tokens. If the system does not cover a design need, ask before inventing a pattern.
+
+## Never hand-edit generated output
+
+`src/tokens/quill.tokens.mjs` is the single source of truth for colour, type, spacing, radius, shadow and motion. CI regenerates and diffs these paths on every PR (`ci.yml:33-37`) — hand-editing any of them fails the build:
+
+```
+src/app/globals.css   src/tokens/generated   registry/themes   tokens
+src/components/ui/icons.core.mjs   src/components/ui/icons.generated.d.ts
+registry.json   public/r   public/llms.txt
+```
+
+Regenerate in this order — later steps read earlier output:
+
+```bash
+npm run build:tokens && npm run build:usage && npm run build:registry && npm run build:llms && npm run build:icons
+```
+
+## Where things live
+
+| Path | Role |
+|---|---|
+| `src/tokens/quill.tokens.mjs` | token source of truth |
+| `src/tokens/themes.mjs` | `ALL_MODES`, `DEFAULT_MODE`, `DEFAULT_ACCENT` — import theme lists, never type them |
+| `registry/themes/quill.css` | the **shipped** token layer, what consumers receive |
+| `src/app/globals.css` | the **site's** cut — has an `@theme` block the shipped one does not |
+| `registry/blocks/*.tsx` | block source of truth |
+| `registry/lib/*.tsx` | the consumer-facing `icon` and `tone-badge` |
+| `src/usage/<name>.usage.mjs` | component guidance, written once |
+| `public/usage/`, `public/r/`, `public/llms.txt` | generated agent-facing output |
+
+Usage modules are single-sourced: one `.usage.mjs` flows into Storybook, the published usage page, the registry item's `docs`, and `llms.txt`. Edit the module, not the outputs.
+
+Pattern stories import blocks via the `@registry/*` alias — **edit the block, not the story**. The exception is the Do/Don't visual-pair stories, which hand-build their variants and carry their own copy; those need changing alongside the block.
+
+## Commands
+
+```bash
+npm run dev              # site, :3000
+npm run storybook        # component catalog, :6006
+npm run test:tokens      # token contracts, WCAG, generator output, repo invariants
+npm run test-storybook   # every story rendered + axe
+npm run lint
+npx tsc --noEmit
+```
+
+`test:tokens` is the fast gate — run it after any token, registry, or usage change. Node 24.
+
+## Conventions that are easy to violate
+
+- **Every feature/fix PR bumps `version` in `package.json` and adds a `## [x.y.z] — date` CHANGELOG entry.** `repo-invariants.test.mjs` fails on one without the other.
+- **A version bump needs `npm run build:llms`** — `llms.txt` embeds the version string, so the bump alone leaves it stale and fails CI.
+- **Shipped code may only use tokens consumers receive.** `consumer-reachability.test.mjs` enumerates every utility in shipped code and checks it resolves from `registry/themes/quill.css`. A utility that works on the site but is not in the shipped theme fails.
+- **Five themes, four accents, two separate axes.** `data-theme` on `<html>`: unset/`light` → Dawn (default), `dark` → Dusk, `classic-light`, `classic-dark`, `intelligent`. `data-accent`: `moss` (default), `terracotta`, `indigo`, `gold`. Derive both from `ALL_MODES`/`DEFAULT_ACCENT`; `theme-enumeration.test.mjs` fails on a hand-typed list that disagrees.
+- **The base item's description must name the default accent** (`moss accents`) — `registry-meta.test.mjs` guards it.
+- **Merge `main` before any release-bump task.** Bots move `main` under long-running branches.
+
+## Hard constraints
+
+- `main` is protected. The required check is `Lint · types · tests · build`. Land work through a PR.
+- **Never tag or publish a release manually.** The release bot tags and publishes after merge — it fires within a minute, and a manual tag races it.
+- Ten workflows run automation (`drift-audit`, `self-heal`, `library-sync`, `figma-parity`, `pattern-scan`, `release`, `dependabot-*`, `claude-repair`). They all open PRs; nothing writes to `main` directly. See `scripts/DRIFT-AUDIT.md`.
+- Releases are pushed downstream into consumer apps by `library-sync`. A change to the shipped theme reaches real apps — treat `registry/themes/quill.css` and `registry.json` as public API.
+
+## Skills and commands
+
+- `/figma-pull` — bring a component's Figma edits into its code twin
+- `/figma-push` — push a code component's state onto its Figma twin
+
+Four commands route a prompt to the shadcn-studio MCP server and follow the instructions it returns: `/cui` (create), `/rui` (refine), `/iui` (inspire), `/ftc` (Figma-to-code). They generate UI from outside Quill's own system, so anything they produce still has to be reconciled against `DESIGN.md` and the documented tokens before it lands.

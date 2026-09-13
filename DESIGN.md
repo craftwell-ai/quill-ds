@@ -46,7 +46,7 @@ this palette for pure neutrals.
 ### Inks — text / strokes
 | Token | Hex | Use |
 |---|---|---|
-| `--ink` | `#2A2622` | primary text, near-black sepia |
+| `--ink` | `#2A2622` | primary text, warm near-black |
 | `--ink-soft` | `#5C524A` | secondary text, body at ease |
 | `--ink-muted` | `#675F58` | captions, meta, disabled |
 
@@ -74,7 +74,7 @@ Borders are always ink-at-alpha, never a solid grey.
 The notebook, closed at dusk and opened again under a desk lamp — hence the
 name. **Dusk** is an added theme, not the default (**Dawn**) — grounds become
 **dark walnut** (deep, warm, low-chroma browns, like oiled wood and aged leather)
-and the sepia ink inverts to a warm **cream** that sits on the wood the way chalk
+and the ink inverts to a warm **cream** that sits on the wood the way chalk
 or gouache would. The warmth of Dawn is preserved, just turned down for the
 evening. **Still no pure black, no pure white, no cold greys.** Source of truth:
 `src/tokens/quill.tokens.mjs` (`npm run build:tokens` regenerates
@@ -131,13 +131,6 @@ vanish on walnut.
 Same principle as light (ink-at-alpha), inverted to cream-at-alpha.
 
 ### Tier tints (lifted pigment over walnut)
-| Tier | Bg | Fg |
-|---|---|---|
-| Everyday | `--paper-deep` (`#352A1A`) | `--ink-soft` |
-| Featured | indigo @18% | `--indigo-deep` (lifted) |
-| Signed | moss @18% | `--moss-deep` (lifted) |
-| Heirloom | terracotta @15% | `--terracotta-deep` (lifted) |
-
 ### Elevation — deeper, warmer near-black
 Shadows rebuild on warm near-black `rgba(8,5,3,…)` at higher alpha than Dawn
 (walnut needs more contrast to lift a surface): `--shadow-xs` 0.40 →
@@ -242,7 +235,7 @@ right-aligned italic caption.
 (tier badges, avatars).
 
 ### Elevation — warm, ink-tinted, layered (never a hard black drop)
-Shadows are built from sepia ink `rgba(42,38,34,…)` at low alpha with negative spread.
+Shadows are built from ink `rgba(42,38,34,…)` at low alpha with negative spread.
 - `--shadow-xs` — hairline lift.
 - `--shadow-sm` — resting cards.
 - `--shadow` — raised cards / popovers.
@@ -301,13 +294,6 @@ input attributes. `box-sizing: border-box` is built in.
 <Input label="Email" invalid hint="That doesn't look right" />
 ```
 
-### Badge — `components/display/Badge.jsx`
-The tier pill — uppercase capsule. `tier`: `everyday` / `featured` / `signed` /
-`heirloom` / `neutral`; label defaults to the tier name, override with children.
-```jsx
-<Badge tier="heirloom" />
-```
-
 ### ToneBadge — registry `tone-badge` → `components/ui/tone-badge.tsx`
 The generic uppercase tag pill for app status/tier/label chips — pigment
 `tone` (`moss` positive · `gold` caution · `terracotta` attention · `indigo`
@@ -342,14 +328,6 @@ Base digital paper surface. `interactive` adds the hover-lift; `flush` removes p
 clips children for full-bleed media.
 ```jsx
 <Card interactive>…</Card>
-```
-
-### ProductCard — `components/surfaces/ProductCard.jsx`
-A collectible item card with number, title, blurb, category, and tier (composes
-Badge). Lifts on hover; the image scales 1.02.
-```jsx
-<ProductCard title="Critique Companion" description="…" portrait="…"
-  number="001" category="Design" tier="heirloom" />
 ```
 
 ---
