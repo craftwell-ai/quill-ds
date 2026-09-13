@@ -368,7 +368,7 @@ export default function Home() {
             <Card className="bg-paper">
               <CardContent className="flex h-full flex-col gap-[18px]">
                 <SpecimenLabel>Color</SpecimenLabel>
-                {/* Vars, not hexes, so the plate re-cuts with the active theme
+                {/* Vars, not hexes, so the specimen re-renders with the active theme
                     (same convention as the accent dropdown swatches). */}
                 <div className="flex flex-col gap-2.5">
                   <div className="flex gap-2">
@@ -475,7 +475,7 @@ export default function Home() {
                   <Avatar>
                     <AvatarFallback>MM</AvatarFallback>
                   </Avatar>
-                  <span className="text-sm text-muted-foreground">Drawn by the studio</span>
+                  <span className="text-sm text-muted-foreground">Built by the team</span>
                   <a href={storyUrl("components-card--docs")} className="ml-auto text-sm font-medium text-primary no-underline hover:underline hover:underline-offset-4">
                     View →
                   </a>
@@ -541,7 +541,7 @@ export default function Home() {
                     <div className="flex max-w-[420px] flex-col gap-2">
                       <Label htmlFor="specimen-email">Your email</Label>
                       <Input id="specimen-email" type="email" placeholder="your@email.com" />
-                      <span className="text-xs text-muted-foreground">No spam. Just drawings.</span>
+                      <span className="text-xs text-muted-foreground">No spam. Unsubscribe any time.</span>
                     </div>
                   </CardContent>
                 </Card>
