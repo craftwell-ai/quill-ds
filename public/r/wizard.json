@@ -26,5 +26,9 @@
     "use_when": "You need a multi-step setup flow with a progress stepper and back/continue navigation."
   },
   "docs": "A multi-step setup card — a progress stepper, workspace fields, and back/continue navigation. Do: Show every step in the stepper up front (done/current/todo), so users know how much is left. Don't: Reveal steps one at a time with no sense of total progress. Use onboarding when the steps are a checklist of tasks to complete over time, not a linear form flow completed in one sitting. Use settings when there's only one step and no sequence to track — this is a single settings page, not a flow.",
+  "categories": [
+    "form",
+    "productivity"
+  ],
   "type": "registry:block"
 }

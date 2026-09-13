@@ -9,6 +9,37 @@ entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`)
 publish a GitHub release. The homepage footer reads `package.json` directly, so the
 displayed version updates with the bump.
 
+## [0.9.15] — 2026-09-13
+
+### Added
+- **The base `quill` item now ships install-time docs** (W2 of the agent-readability
+  spec). This is the one item every consuming app installs and the only moment the
+  shadcn CLI prints guidance — and it shipped with no `docs` field at all. Apps
+  received the token layer with nothing said about the five `data-theme` values, the
+  four `data-accent` values and which is default, the chart-token rule, the fonts
+  already being `@import`ed, or where `llms.txt` is.
+  Generated from `src/tokens/themes.mjs` and the token source by
+  `src/usage/theme-docs.mjs`, never hand-written: DESIGN.md's own Activation section
+  had drifted a whole theme out of date, which is the failure this avoids.
+  **It also states the update rule.** `--yes` does not overwrite a changed file —
+  only `--overwrite` does; `--yes` prompts in a terminal and silently skips when
+  non-interactive. A consumer app's CLAUDE.md has been telling agents to update
+  Quill with `--yes`, so those updates have been no-ops that reported nothing.
+- **Every block publishes its intent through `categories`** (W4), shadcn's own
+  schema-level field, alongside the existing `meta.intent`. The shadcn MCP strips
+  `meta` before search, so `meta.intent` alone never reaches an agent browsing the
+  registry. `meta.intent` stays the source; a test guards the copy from drifting.
+
+### Notes
+- **W1 was considered and skipped.** The spec has `description` become
+  `summary + " Use when: " + useWhen[0]`. Measured against the real data, the two
+  fields are near-paraphrases for most items ("The standard email-and-password
+  sign-in card…" vs "You need the standard email-and-password sign-in…"), so
+  appending would roughly double every description — printed on every MCP `list`
+  call — for almost no added signal. The existing descriptions already discriminate
+  between siblings. Worth revisiting only as a hand-picked subset where `use_when`
+  states a criterion the description does not.
+
 ## [0.9.14] — 2026-09-13
 
 ### Changed

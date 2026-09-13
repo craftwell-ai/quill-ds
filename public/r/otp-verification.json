@@ -24,5 +24,8 @@
     "use_when": "You need to verify an email with a six-digit one-time passcode and resend."
   },
   "docs": "A six-digit one-time-passcode entry card for verifying an email, with expiry messaging and a resend action. Do: State the code's expiry window in the card body (\"expires in 10 minutes\"), not just in the email. Don't: Leave users guessing why a code that worked a moment ago now fails. Use login-minimal when you're sending the initial one-time code, not verifying a code the user already received — that's a separate step upstream of this card. Use forgot-password when recovery works by emailed link, not a typed code.",
+  "categories": [
+    "auth"
+  ],
   "type": "registry:block"
 }

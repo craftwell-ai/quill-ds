@@ -22,5 +22,8 @@
     "use_when": "You need a searchable ⌘K launcher for actions and quick navigation."
   },
   "docs": "A searchable ⌘K command palette with grouped actions, recent items, and keyboard shortcuts. Do: Group items into labeled sections (Actions, Recent) so a long list stays scannable. Don't: Dump every possible command into one flat, unlabeled list. Use search-results when search results should live inline on the page, not in a global keyboard-triggered overlay. Use dropdown-menu when the list of options is small and tied to a specific trigger element, not a global searchable launcher.",
+  "categories": [
+    "navigation"
+  ],
   "type": "registry:block"
 }

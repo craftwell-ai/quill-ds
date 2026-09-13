@@ -22,5 +22,8 @@
     "use_when": "You need a top navigation bar with wordmark, links, and sign-in / get-started actions."
   },
   "docs": "A top navigation bar with brand wordmark, a responsive link list, and sign-in / get-started actions. Do: Keep \"Get started\" as the one default-variant (primary) button; \"Sign in\" stays ghost so it doesn't compete. Don't: Style both actions as equally prominent primary buttons. Use sidebar-nav when primary navigation belongs in a persistent side rail for an app, not a top bar for a marketing site. Use command-palette when navigation is keyboard-driven and searchable, not a fixed row of links.",
+  "categories": [
+    "navigation"
+  ],
   "type": "registry:block"
 }

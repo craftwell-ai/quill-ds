@@ -73,3 +73,17 @@ test('the theme file tells consumers the real install URL (drift guard)', () => 
     `the install URL must match registry.json homepage (${home}); found: "${installLine.trim()}"`,
   )
 })
+
+test('every block publishes its intent through `categories`, shadcn\'s own schema field', () => {
+  // `meta` is stripped by the shadcn MCP before search, so meta.intent alone
+  // never reaches an agent browsing the registry. `categories` is a real schema
+  // field that survives `shadcn build`. meta.intent stays the source; this
+  // guards the copy from drifting away from it.
+  for (const b of blocks) {
+    assert.deepEqual(
+      b.categories,
+      b.meta?.intent,
+      `block '${b.name}' categories does not match meta.intent — run \`npm run build:usage\``,
+    )
+  }
+})
