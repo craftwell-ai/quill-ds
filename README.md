@@ -95,6 +95,11 @@ regenerates all of it on every PR and fails on any diff, so never hand-edit thes
 | `npm run build:registry` | `public/r/*.json` |
 | `npm run build:llms` | `public/llms.txt`, and the generated spans in `DESIGN.md` |
 
+One generated file sits outside that chain: `scripts/icons.manifest.mjs`, the list of ~1000
+popular Material Symbols that `build:icons` lazy-loads when Google's metadata file is not on
+disk. Regenerate it on demand — download the metadata, then
+`npm run build:icon-manifest -- /tmp/ms-meta.json` followed by `npm run build:icons`.
+
 Component guidance is written once per component in `src/usage/<name>.usage.mjs` and flows
 from there into Storybook, the published usage pages, the registry item, and llms.txt.
 

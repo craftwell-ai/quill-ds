@@ -1,12 +1,14 @@
-// Re-runnable Figma Plugin-API sync for Quill icons (Material Symbols Outlined 200).
+// Re-runnable Figma Plugin-API sync for Quill icons (Material Symbols Outlined 400).
 //
 // Executed via the Figma MCP `use_figma` on file Dcf8lEB7Ash71iNl7WN4Jq with an
-// `ICONS` object in scope — the `icons` export of src/components/ui/icons.generated.mjs
-// reshaped to { name: { viewBox, paths } }. Idempotent: clears the prior gallery +
-// icon/* components and rebuilds, so a re-run creates no duplicates.
+// `ICONS` object in scope — the `icons` export of src/components/ui/icons.core.mjs
+// (the sync core written by `npm run build:icons`; the gitignored
+// icons.all.generated.mjs holds the whole library in the same shape), i.e.
+// { name: { viewBox, paths } }. Idempotent: clears the prior gallery + icon/*
+// components and rebuilds, so a re-run creates no duplicates.
 //
-// Source of truth is code (scripts/build-icons.mjs → icons.generated.mjs). Do not
-// edit icon geometry here. See figma/README.md to re-run.
+// Source of truth is code (scripts/build-icons.mjs → icons.core.mjs). Do not
+// edit icon geometry here. See figma/README.md, "Re-run the icon sync".
 //
 // Design rules honored:
 //   - fill-rule="evenodd" on every path — required so hollow-ring icons (info, help,

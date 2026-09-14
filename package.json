@@ -19,6 +19,7 @@
     "build:llms": "node scripts/build-llms.mjs",
     "build:usage": "node scripts/build-usage.mjs",
     "build:icons": "node scripts/build-icons.mjs",
+    "build:icon-manifest": "node scripts/build-manifest.mjs",
     "build:agent-rules": "node scripts/build-agent-rules.mjs",
     "drift-audit": "node scripts/drift-audit.mjs",
     "pattern-scan": "node scripts/pattern-scan.mjs",
@@ -54,7 +55,6 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^5.3.1",
     "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/addon-mcp": "^0.7.0",
