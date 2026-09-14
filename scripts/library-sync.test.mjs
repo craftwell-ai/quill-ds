@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { readRegistryItems, planSync, applyPlan, checkVerdict, syncApps, staleness, run } from './library-sync.mjs'
+import { readRegistryItems, planSync, applyPlan, checkVerdict, syncApps, staleness, appStaleness, mergedTokenLayer, detectMergedTokenLayer, run } from './library-sync.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -244,4 +244,53 @@ test('unrelated pull requests in the app are ignored', () => {
   const { lastMerged, missed } = staleness([...noise, pr('0.9.8', true)], '0.9.9')
   assert.equal(lastMerged, '0.9.8')
   assert.deepEqual(missed, [])
+})
+
+// ---- the staleness alarm reads the app shape discoverApps() actually builds ----
+
+test('appStaleness asks GitHub for the app by its `full` owner/name', async () => {
+  // v0.9.10–v0.9.20 read `app.full_name`, which discoverApps never sets, so
+  // every run requested /repos/undefined/pulls and the alarm never fired.
+  const asked = []
+  const fake = async (path) => { asked.push(path); return [pr('0.9.19', true)] }
+  const app = { full: 'craftwell-ai/tech-careers', name: 'tech-careers' }
+  const { lastMerged } = await appStaleness(app, 'tok', '0.9.20', fake)
+  assert.equal(asked.length, 1)
+  assert.match(asked[0], /^\/repos\/craftwell-ai\/tech-careers\/pulls\?/)
+  assert.ok(!asked[0].includes('undefined'))
+  assert.equal(lastMerged, '0.9.19')
+})
+
+// ---- CLI-merged token layer: detect it, never assume it ----
+
+const BASE = { name: 'quill', cssVars: { light: { paper: '#F5EDDD', 'paper-warm': '#EFE4CF', ink: '#2A2622', 'ink-soft': '#5A524A' } }, files: [{ target: 'app/quill-theme.css' }] }
+const CJ = { tailwind: { css: 'app/globals.css' } }
+
+test('mergedTokenLayer: a stylesheet carrying the cssVars-merged layer is detected', () => {
+  const css = '@import "tailwindcss";\n:root {\n  --paper: #F5EDDD;\n  --paper-warm: #EFE4CF;\n  --ink: #2A2622;\n  --ink-soft: #5A524A;\n}\n'
+  assert.deepEqual(mergedTokenLayer(CJ, css, BASE), { present: 4, total: 4 })
+})
+
+test('mergedTokenLayer: an app that only imports the theme file, or declares a few same-named vars itself, is not merged', () => {
+  const fileOnly = '@import "tailwindcss";\n@import "./quill-theme.css";\n:root {\n  --my-own: 1;\n}\n'
+  assert.equal(mergedTokenLayer(CJ, fileOnly, BASE), null)
+  const ownRoot = ':root {\n  --paper: red;\n}\n' // one of four — an app's own token, not the merged layer
+  assert.equal(mergedTokenLayer(CJ, ownRoot, BASE), null)
+  assert.equal(mergedTokenLayer(null, fileOnly, BASE), null)
+  assert.equal(mergedTokenLayer(CJ, null, BASE), null)
+  assert.equal(mergedTokenLayer(CJ, fileOnly, { name: 'quill' }), null)
+})
+
+test('detectMergedTokenLayer reads components.json for the stylesheet and returns its path', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'quill-sync-merged-'))
+  try {
+    assert.equal(detectMergedTokenLayer(dir, BASE), null, 'no components.json → null')
+    writeFileSync(join(dir, 'components.json'), JSON.stringify(CJ))
+    assert.equal(detectMergedTokenLayer(dir, BASE), null, 'stylesheet missing → null')
+    mkdirSync(join(dir, 'app'))
+    writeFileSync(join(dir, 'app/globals.css'), ':root {\n  --paper: #F5EDDD;\n  --paper-warm: #EFE4CF;\n  --ink: #2A2622;\n}\n')
+    assert.deepEqual(detectMergedTokenLayer(dir, BASE), { cssPath: 'app/globals.css', present: 3, total: 4 })
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
 })
