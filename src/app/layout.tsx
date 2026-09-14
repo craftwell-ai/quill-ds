@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Raleway } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { LLMS_URL } from "@/usage/theme-docs.mjs";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -17,6 +18,7 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(new URL(LLMS_URL).origin),
   title: "Quill — an editorial design system for digital products",
   description:
     "Warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning. The Quill Design System by Craftwell.",
@@ -27,6 +29,9 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-180.png",
   },
+  // The agent-facing overview, discoverable from the page head as well as from
+  // the footer and robots.txt: `<link rel="alternate" type="text/plain">`.
+  alternates: { types: { "text/plain": "/llms.txt" } },
 };
 
 export default function RootLayout({

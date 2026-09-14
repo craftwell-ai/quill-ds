@@ -12,6 +12,44 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.23] — 2026-09-14
+
+### Added
+- **llms.txt now carries Foundations, Principles and an Agent quick start**
+  (spec items W7, W8, W9). An agent reading Quill from outside got the
+  mechanics — themes, tokens, blocks — and none of the point of view; the
+  2026-09-09 cold-read test had it guess six of twelve design decisions and
+  build the hero-metric-row dashboard the system exists to avoid. The new
+  sections give it type, spacing, layout, radii, elevation and motion; the
+  three named principles (paper first, one italic word, a gentle settle) with
+  the rules underneath them; the do/don't list and the anti-references; and a
+  six-step quick start that ends with the update rule (`--overwrite`, never
+  `--yes`) and the verification commands.
+- **Those sections are rendered from the token source, not typed.**
+  `src/usage/foundations.mjs` is the one renderer, and it now also fills the
+  generated spans in `DESIGN.md` (§4 Typography, §5 Spacing & layout, §6 radii /
+  elevation / motion, §11 principles) on `npm run build:llms`, so the human doc
+  and the agent doc cannot disagree. The hand-written prose it replaces named
+  `--text-md`, `--container`, `--gutter*`, `--radius-pill` and a whole
+  `--leading-*` / `--tracking-*` scale that never shipped, and said hover and
+  accent italics were terracotta when the accent axis owns them. Only rules
+  that transfer to an app built with Quill are included; Quill's own product
+  identity stays in PRODUCT.md.
+- **A token-truth test** (`scripts/token-truth.test.mjs`, spec W17): every
+  `--token` named in the usage modules, the foundations, the principles and
+  llms.txt must be a custom property the built theme item actually delivers.
+- **llms.txt is discoverable**: `public/robots.txt` points at it, the page head
+  carries `<link rel="alternate" type="text/plain" href="/llms.txt">`, and the
+  homepage footer links it. The spec's optional root content negotiation
+  (serving the registry index at `/` to the shadcn user agent) is deliberately
+  not done: it costs CDN cache fragmentation on the homepage for a convenience
+  the documented `@quill/<name>` and `/r/<name>.json` paths already cover.
+
+### Changed
+- `DESIGN.md` joins the generated-files gate in CI, self-heal and
+  dependabot-regenerate (only the marked spans are rewritten; the prose around
+  them stays hand-written).
+
 ## [0.9.22] — 2026-09-14
 
 ### Changed

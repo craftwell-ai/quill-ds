@@ -4,7 +4,10 @@ A single-file reference for the **Quill** design system.
 Everything an agent or developer needs to design on-brand: voice, color, type,
 spacing, effects, components, iconography, and assets. Distilled from the live
 token source and component files in this repo; every path named here exists,
-and `scripts/repo-invariants.test.mjs` fails CI when one stops existing.
+and `scripts/repo-invariants.test.mjs` fails CI when one stops existing. The
+spans between `<!-- generated:… -->` markers (§4, §5, §6, §11) are rendered from
+the token source by `npm run build:llms` — edit `src/usage/foundations.mjs`, not
+the text between the markers; the same renderer feeds llms.txt.
 
 > **Brand in one line:** A low-contrast, editorial-derived visual language. Warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning. No
 > emoji, no decorative gradients.
@@ -174,91 +177,80 @@ the `--cl-*` / `--cd-*` sets.
 
 ## 4. Typography
 
-Two voices. **Fraunces** (variable display serif) is the brand voice; **Raleway**
-handles body and UI.
+<!-- generated:type:start -->
+Two voices. **Fraunces** (variable display serif) is the brand voice; **Raleway** does the work.
 
 ### Families
-- `--font-display`: `'Fraunces', Georgia, serif` — headings, wordmark, captions.
-- `--font-body`: `'Raleway', -apple-system, sans-serif` — body, UI, labels.
-- `--font-mono`: `ui-monospace, 'SF Mono', Menlo, monospace` — token/code specimens.
+- `--font-display`: `"Fraunces", Georgia, serif` — headings, wordmark, captions. `--font-heading` is the same face, behind the `font-heading` utility.
+- `--font-sans`: `"Raleway", -apple-system, BlinkMacSystemFont, sans-serif` — body, UI, labels.
+- `--font-mono`: `ui-monospace, "SF Mono", Menlo, monospace` — code and token specimens.
+- `--font-ui` / `--font-data` — the Intelligent theme's instrument faces (`"Inter"`, `"JetBrains Mono"`); leave them to that theme.
 
-Loaded from Google Fonts by the `@import` at the top of `registry/themes/quill.css`
-(the token layer apps install); the site loads the same families through Next's
-font loader in `src/app/layout.tsx`. Weights used: **400 / 500 / 600**.
+Loaded from Google Fonts by the `@import` at the top of the shipped theme file. Never load the families again under another name: the theme matches them by their literal names. Weights used: **400 / 500 / 600**.
 
-### Fraunces variable axes (the expressive work)
-- `opsz` 9–144 — match optical size to render size.
-- `SOFT` 0–100 — rounder terminals as size grows.
-- `WONK` 0 | 1 — the playful off-kilter glyphs; **accents only**.
-
-Presets: `--fraunces-display` (`SOFT 50, opsz 144, WONK 0`) ·
-`--fraunces-accent` (`SOFT 100, opsz 144, WONK 1` — the italic emphasis) ·
-`--fraunces-text` (`SOFT 50, opsz 24`) · `--fraunces-caption` (`SOFT 100, opsz 14`).
+### Fraunces variable axes
+- `opsz` 9–144 matches optical size to render size · `SOFT` 0–100 rounds terminals as size grows · `WONK` 0 | 1 is the off-kilter glyph set, **accents only**.
+- Presets: `--fraunces-display` (`"opsz" 144, "SOFT" 50, "WONK" 0`) · `--fraunces-accent` (`"opsz" 144, "SOFT" 100, "WONK" 1`, the italic emphasis) · `--fraunces-text` (`"opsz" 24, "SOFT" 50`) · `--fraunces-caption` (`"opsz" 14, "SOFT" 100`).
 
 ### Type scale
 | Token | Size | Use |
 |---|---|---|
-| `--text-2xs` | 11.2px | micro labels, tier badges |
-| `--text-xs` | 12px | meta, eyebrows |
-| `--text-sm` | 13.6px | captions, fine print |
-| `--text-base` | 15.2px | UI text, buttons |
-| `--text-md` | 16px | comfortable body |
-| `--text-lg` | 18.4px | lead paragraphs |
-| `--text-xl` | 24px | card titles, wordmark |
-| `--text-2xl` | 32px | sub-headings |
-| `--text-3xl` | 48px | section titles |
-| `--text-4xl` | 64px | page heads |
-| `--text-5xl` | 88px | hero display |
+| `--text-2xs` | 0.7rem (11.2px) | micro labels, tag pills |
+| `--text-xs` | 0.75rem (12px) | meta, eyebrows |
+| `--text-sm` | 0.85rem (13.6px) | captions, fine print |
+| `--text-base` | 0.95rem (15.2px) | UI text, buttons |
+| `--text-lg` | 1.15rem (18.4px) | lead paragraphs |
+| `--text-xl` | 1.5rem (24px) | card titles |
+| `--text-2xl` | 2rem (32px) | sub-headings |
+| `--text-3xl` | 3rem (48px) | section titles |
+| `--text-4xl` | 4rem (64px) | page heads |
+| `--text-5xl` | 5.5rem (88px) | hero display |
 
-### Line height & tracking
-- Leading: `--leading-tight` 1.05 (display) · `--leading-snug` 1.2 · `--leading-normal` 1.5 · `--leading-relaxed` 1.7 (body).
-- Tracking: `--tracking-display` −0.03em · `--tracking-tight` −0.02em · `--tracking-wide` 0.1em · `--tracking-wider` 0.15em (eyebrows) · `--tracking-widest` 0.2em (section labels).
-
-### Rules
-- **Headings** → Fraunces, **light (400)**, tight tracking, large; use `--fraunces-display`.
-- **The one accent word.** Italicize exactly **one** word per headline, color it terracotta, `--fraunces-accent`. Never two.
-- **Body / UI** → Raleway 400/500/600, `--leading-relaxed` for reading copy.
-- **Eyebrows / labels** → Raleway, **UPPERCASE**, `--text-xs`, `--tracking-wider`, ink-muted; the terracotta variant carries a short leading dash.
-- **Captions** → small **Fraunces italic** in ink-muted.
-- Casing: sentence case in prose & headings; UPPERCASE only for tiny eyebrows.
+### Leading, tracking, rules
+- No leading or tracking tokens ship; set them as values. Leading: 1.05 display · 1.2 snug · 1.5 UI · 1.7 reading copy (`leading-[1.7]`). Tracking: −0.03em display · −0.02em tight · 0.1em wide · 0.15em eyebrows (`tracking-[0.15em]`) · 0.2em section labels.
+- **Headings** — Fraunces at weight 400 (never heavy or bold), tight tracking, `--fraunces-display`.
+- **The one accent word** — italicize exactly one word per headline in the accent (`--accent-pigment-text`, moss by default) with `--fraunces-accent`. Never two.
+- **Body / UI** — Raleway 400/500/600; relaxed leading for reading copy.
+- **Eyebrows / labels** — Raleway, uppercase, `--text-xs`, 0.15em tracking, `--ink-muted`; the accent variant carries a short leading dash.
+- **Captions** — small Fraunces italic in `--ink-muted` with `--fraunces-caption`.
+- Sentence case in prose and headings; uppercase only for eyebrows.
+<!-- generated:type:end -->
 
 ---
 
 ## 5. Spacing & layout
 
+<!-- generated:spacing:start -->
 A **4px base step** (`--space-1` = 0.25rem). Editorial rhythm — sections breathe.
 
-`--space-1` 4 · `-2` 8 · `-3` 12 · `-4` 16 · `-5` 20 · `-6` 24 · `-8` 32 · `-10` 40 · `-12` 48 · `-16` 64 · `-20` 80 · `-24` 96 (px).
+`--space-1` 4px · `--space-2` 8px · `--space-3` 12px · `--space-4` 16px · `--space-5` 20px · `--space-6` 24px · `--space-7` 28px · `--space-8` 32px · `--space-9` 36px · `--space-10` 40px · `--space-12` 48px · `--space-16` 64px · `--space-20` 80px · `--space-24` 96px
 
-Components sit on `--space-4`/`--space-6`; sections breathe with `--space-24`.
+Components sit on `--space-4` / `--space-6`; sections breathe with `--space-24`.
 
-**Layout:** `--container` 1400px (marketing max-width) · `--container-prose` 800px
-(manifesto / reading column) · `--gutter` 48px (desktop side padding) ·
-`--gutter-mobile` 24px. Recurring section header pattern: eyebrow → headline →
-right-aligned italic caption.
+### Layout
+No layout tokens ship; use the values the site uses. Marketing max-width **1400px** (`max-w-[1400px]`), reading column **800px**, side padding **48px** on desktop (`px-12`) and **24px** on mobile (`px-6`), vertical section rhythm **96px** (`py-24`; `py-14` on mobile).
+
+### Composition
+- Recurring section header: eyebrow → headline (one accent word) → right-aligned italic caption.
+- One idea per section: a heading plus one composition (a grid of cards, a table, a form), never a stack of unrelated widgets.
+- No hero-metric row above an identical card grid — that is the generic dashboard Quill exists to avoid. Lead with the thing the page is about; let numbers sit inside it.
+<!-- generated:spacing:end -->
 
 ---
 
 ## 6. Effects — radii, elevation, motion, texture
 
+<!-- generated:effects:start -->
 ### Corner radii
-`--radius-xs` 2px · `--radius-sm` 4px (buttons, inputs, badges) · `--radius` 8px
-(the default card) · `--radius-lg` 16px (large panels) · `--radius-pill` 999px
-(tier badges, avatars).
+`--radius-xs` 2px · `--radius-sm` 4px · `--radius-md` 6px · `--radius-lg` 8px · `--radius-xl` 16px · `--radius-2xl` 24px · `--radius-3xl` 32px · `--radius-4xl` 40px; `--radius` (0.5rem) is the shadcn base.
+Cards use `rounded-xl`, buttons and inputs `rounded-lg`, pills `rounded-full`.
 
-### Elevation — warm, ink-tinted, layered (never a hard black drop)
-Shadows are built from ink `rgba(42,38,34,…)` at low alpha with negative spread.
-- `--shadow-xs` — hairline lift.
-- `--shadow-sm` — resting cards.
-- `--shadow` — raised cards / popovers.
-- `--shadow-lg` — dialogs, modals, hover-lifted cards.
-- `--shadow-pop` — strongest hover/lifted state.
+### Elevation
+Shadows are ink-tinted, layered and re-cut per theme — never a hard black drop. `--shadow-xs` hairline lift · `--shadow-sm` low surfaces · `--shadow` raised popovers and menus · `--shadow-lg` dialogs · `--shadow-pop` the strongest lifted state. Cards sit flat on the paper with a hairline ring, no shadow.
 
-### Motion — restrained and tactile
-- House easing `--ease-out` `cubic-bezier(0.4,0,0.2,1)`; soft `--ease-soft` `cubic-bezier(0.22,1,0.36,1)`.
-- Durations `--dur-fast` 0.2s · `--dur` 0.3s · `--dur-slow` 0.5s.
-- `--lift` `translateY(-4px)` (card hover) · `--lift-sm` `translateY(-2px)` (button hover).
-- No bounces, no infinite loops, no parallax. Arrows slide `+4px` on hover.
+### Motion
+House easing `--ease-out` (`cubic-bezier(0.4, 0, 0.2, 1)`); soft `--ease-soft` (`cubic-bezier(0.22, 1, 0.36, 1)`). Durations `--dur-fast` 0.2s · `--dur` 0.3s · `--dur-slow` 0.5s. Lifts `--lift` (translateY(-4px)) and `--lift-sm` (translateY(-2px)) for hover on interactive surfaces; presses settle 1px down. Nothing bounces, nothing loops; respect `prefers-reduced-motion`.
+<!-- generated:effects:end -->
 
 ### Texture — the tooth of the page
 Two fixed, pointer-events-none overlays give surfaces digital paper grain:
@@ -415,14 +407,29 @@ Sample microcopy: headline *"Products, crafted with **intelligence**."* · CTA *
 
 ---
 
-## 11. Do / Don't
+## 11. Principles, Do / Don't
 
-**Do** — sit everything on digital paper; reserve the accent pigment (moss by
-default) for the one accent word, eyebrows, links and the focus ring; use **ink**
-for primary actions; warm layered shadows; Fraunces light + tight for headings.
+<!-- generated:principles:start -->
+Three principles name the point of view; the rules underneath are how they show up in code.
 
-**Don't** — pure white (`#FFF`) or pure black (`#000`) in Dawn & Dusk (the
-Classic themes use them by design); a hand-set focus colour (the ring follows
-`--ring`, which the accent axis owns); terracotta on hover (it is the danger
-pigment); blue-purple gradients; emoji; heavy or bold Fraunces; tight body
-leading; bouncy or looping motion.
+- **Paper first.** Every surface, a texture you can almost feel, with a typeset that has an unhurried editorial rhythm. Everything sits on digital paper (`--paper`, `--paper-warm`, `--paper-deep`); warmth comes from the material, not decoration.
+- **One italic word.** Emphasis is earned. A single accented italic per headline — never two, never shouted.
+- **A gentle settle.** Hovers lift, presses set down. Nothing bounces, nothing loops, nothing hurries you along.
+
+### Rules
+- **Author against semantic tokens** — `--paper`, `--ink`, `--card`, `--primary`, `--ring` and the rest; never the per-theme `dk-*` / `cl-*` / `cd-*` / `int-*` sets and never a raw hex. That is what makes every theme free.
+- **Ink for actions, accent for meaning** — primary actions are ink (`--primary`). The accent pigment (moss by default; `--accent-pigment-text` for text, `--link`, `--ring`) is reserved for the one accent word, eyebrows, links and the focus ring. Terracotta is the danger pigment: never a hover colour, and a focus ring only when it is the chosen accent.
+- **Reach for a block before building one** — the registry ships 51 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands.
+- **Made for people** — WCAG 2.1 AA is a feature, not a checkbox: text cuts clear 4.5:1 on every theme ground, interactive borders clear 3:1, charts use the CVD-safe chart tokens in fixed order, motion has a reduced-motion path.
+- **Content** — sentence case everywhere (uppercase only for eyebrows); state the decision, then the reason; no hype punctuation, no emoji.
+
+### Do / Don't
+**Do** — sit everything on digital paper; reserve the accent for the one accent word, eyebrows, links and the focus ring; use ink for primary actions; warm layered shadows; Fraunces light and tight for headings.
+
+**Don't** — pure white or pure black in Dawn and Dusk (the Classic themes use them by design); a hand-set focus colour (`--ring` belongs to the accent axis); terracotta on hover; blue-purple gradients; glassmorphism or purple-glow dark mode; emoji; heavy or bold Fraunces; tight body leading; bouncy or looping motion.
+
+### Anti-references
+- The generic SaaS/shadcn default look: white cards, blue accents, hero-metric rows, identical card grids.
+- The cold gray enterprise dashboard — a dashboard where a notebook belongs.
+- Loud startup maximalism: neon gradients, glassmorphism, purple-glow dark mode.
+<!-- generated:principles:end -->

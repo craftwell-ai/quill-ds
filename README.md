@@ -89,7 +89,7 @@ regenerates all of it on every PR and fails on any diff, so never hand-edit thes
 | `npm run build:icons` | `src/components/ui/icons.core.mjs`, per-icon modules, the `IconName` union |
 | `npm run build:usage` | `public/usage/*.md`, registry `docs`/`description` fields |
 | `npm run build:registry` | `public/r/*.json` |
-| `npm run build:llms` | `public/llms.txt` |
+| `npm run build:llms` | `public/llms.txt`, and the generated spans in `DESIGN.md` |
 
 Component guidance is written once per component in `src/usage/<name>.usage.mjs` and flows
 from there into Storybook, the published usage pages, the registry item, and llms.txt.

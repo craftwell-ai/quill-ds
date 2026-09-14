@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
-import { renderLlms, LLMS_PATH } from './build-llms.mjs'
+import { renderLlms, LLMS_PATH, DESIGN_PATH, designSpans, readSpan } from './build-llms.mjs'
 import { DEFAULT_ACCENT, ALL_MODES } from './build-tokens.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
 
@@ -63,4 +63,21 @@ test('the theme and accent counts in prose match the real counts', () => {
     new RegExp(`${words[ALL_MODES.length]}-theme`),
     `llms.txt prose does not say "${words[ALL_MODES.length]}-theme" for ${ALL_MODES.length} themes`,
   )
+})
+
+test('llms.txt carries the agent quick start, foundations and principles', () => {
+  for (const h of ['## Agent quick start', '## Foundations', '## Principles']) {
+    assert.ok(committed.includes(`\n${h}\n`), `llms.txt has no "${h}" section`)
+  }
+  assert.match(committed, /--overwrite/, 'the update rule (--overwrite, not --yes) must reach agents')
+  assert.match(committed, /Paper first/, 'the principles must name the point of view')
+})
+
+test('the generated spans in DESIGN.md are in sync with the foundations module (run `npm run build:llms`)', () => {
+  const design = readFileSync(DESIGN_PATH, 'utf8')
+  for (const [name, block] of Object.entries(designSpans())) {
+    const current = readSpan(design, name)
+    assert.ok(current !== null, `DESIGN.md is missing the generated:${name} markers`)
+    assert.equal(current, block, `DESIGN.md generated:${name} span is stale — run \`npm run build:llms\``)
+  }
 })
