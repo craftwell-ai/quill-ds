@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
+import { ToneBadge } from '@/components/ui/tone-badge'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { Separator } from '@/components/ui/separator'
@@ -28,7 +28,7 @@ export function Invoice() {
             <span className="font-heading text-lg text-foreground">Invoice 0042</span>
             <span className="text-sm text-muted-foreground">Issued June 30, 2026 · Due July 14, 2026</span>
           </div>
-          <Badge>Paid</Badge>
+          <ToneBadge tone="moss">Paid</ToneBadge>
         </div>
         <Separator />
         <div className="grid grid-cols-2 gap-4 text-sm">
