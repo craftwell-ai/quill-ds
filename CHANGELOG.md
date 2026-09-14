@@ -12,6 +12,20 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.31] — 2026-09-14
+
+### Changed
+- **Dead-file sweep.** `scripts/build-manifest.mjs` takes its in-use icon list
+  from the same scanner `build:icons` uses (the inline `git grep` it carried had
+  a branch that could never match) and is exposed as `npm run
+  build:icon-manifest`; the manifest is regenerated with it. `figma/sync-icons.figma.js`
+  names the modules that exist (`icons.core.mjs`, weight 400) and `figma/README.md`
+  gains the re-run procedure it pointed at. The unused `@chromatic-com/storybook`
+  addon, five create-next-app SVGs and the unreferenced `quill-logo.svg` are
+  removed. `icon.tsx` drops an unused catch binding, so lint is warning-free for
+  it. The Figma-parity fixture story stays published, with a comment saying
+  why and how to hide it. (CRA-211)
+
 ## [0.9.30] — 2026-09-14
 
 ### Changed
