@@ -40,7 +40,7 @@ const META_PATH = process.env.MS_META || '/tmp/ms-meta.json'
 // the full ~7.8k per-icon chunks (which stresses the bundler). Widen if needed.
 const LAZY_COUNT = 2000
 
-const has = (n) => existsSync(join(SRC, `${n}.svg`))
+export const has = (n) => existsSync(join(SRC, `${n}.svg`))
 
 // Curated common UI icons — union'd into the sync core so typical app chrome
 // (nav, status, actions) renders instantly even if a component doesn't use it yet.
@@ -66,21 +66,36 @@ function parseSvg(name) {
   return { viewBox: vb[1], paths }
 }
 
-// Icons referenced in the codebase — `<Icon name="…">` and `icon: '…'` literals.
+// Every icon name a piece of source text references. Three forms occur in
+// shipped and site code:
+//   <Icon name="check" />                          a literal prop
+//   { icon: 'check' }                              data tables handed to <Icon name={x.icon}>
+//   <Icon name={done ? 'check' : 'draft'} />       any quoted name inside a name={…} expression
+// The third form is why file-upload's `draft` was missing from the core set
+// until v0.9.17: the scan saw only name="literal", so consumer apps drew an
+// empty box where the site (which lazy-loads the whole library) drew a glyph.
+// Over-capturing is safe — callers filter through has(), so a non-icon string
+// costs nothing unless it happens to be a real Material Symbol name.
+export function referencedIconNames(text) {
+  const names = new Set()
+  for (const m of text.matchAll(/name="([a-z][a-z0-9_]+)"/g)) names.add(m[1])
+  for (const m of text.matchAll(/icon: ?['"]([a-z][a-z0-9_]+)['"]/g)) names.add(m[1])
+  for (const m of text.matchAll(/name=\{([^}]*)\}/g)) {
+    for (const q of m[1].matchAll(/['"]([a-z][a-z0-9_]+)['"]/g)) names.add(q[1])
+  }
+  return [...names]
+}
+
+// Icons referenced in the codebase (site + shipped registry code).
 export function usedInSrc() {
-  // Coarse shell filter (git grep ERE has no \x hex escapes — the old
-  // icon: branch silently never matched); the JS regexes below do the
-  // precise extraction for both quote styles.
+  // Coarse shell filter (git grep ERE has no \x hex escapes — an earlier
+  // icon: branch silently never matched); referencedIconNames() does the
+  // precise extraction.
   const srcText = execSync(
-    'git grep -h -E \'name="|icon:\' -- src registry',
+    'git grep -h -E \'name=|icon:\' -- src registry',
     { cwd: root, encoding: 'utf8' }
   )
-  return [
-    ...new Set([
-      ...[...srcText.matchAll(/name="([a-z][a-z0-9_]+)"/g)].map((m) => m[1]),
-      ...[...srcText.matchAll(/icon: ?['"]([a-z][a-z0-9_]+)['"]/g)].map((m) => m[1]),
-    ]),
-  ].filter(has)
+  return referencedIconNames(srcText).filter(has)
 }
 
 // The sync CORE set = usage-derived ∪ curated common.

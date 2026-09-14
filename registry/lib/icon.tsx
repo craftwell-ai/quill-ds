@@ -19,6 +19,20 @@ type IconName = string
 
 const coreIcons = icons as Record<string, IconData>
 
+// Dev-only: an unknown name is a silent empty box in production, which is the
+// right failure for an app's users and the wrong one for its developers. Warn
+// once per name so a typo, or an icon outside the shipped core set, shows up in
+// the console instead of as a blank the size of an icon.
+const warned = new Set<string>()
+function warnUnknown(name: string) {
+  if (process.env.NODE_ENV === 'production' || warned.has(name)) return
+  warned.add(name)
+  console.warn(
+    `[quill] <Icon name="${name}"> is not in the bundled core set (components/ui/icons.core.mjs), ` +
+      'so it renders as an empty box. Use a core name, or add the icon to the core set in the design system.'
+  )
+}
+
 function Icon({
   name,
   size = '1em',
@@ -27,6 +41,7 @@ function Icon({
   ...props
 }: React.SVGProps<SVGSVGElement> & { name: IconName; size?: number | string }) {
   const data = coreIcons[name]
+  if (!data) warnUnknown(name)
   const viewBox = data?.viewBox ?? '0 0 24 24'
 
   return (
