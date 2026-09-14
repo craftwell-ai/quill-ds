@@ -12,6 +12,16 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.25] — 2026-09-14
+
+### Changed
+- **The registry is named `quill`, matching its `@quill` namespace.** shadcn
+  derives a listed registry's namespace from `registry.json`'s `name` and its
+  health check scores a "matching registry name", so `quill-ds` (the repo's
+  name) would have listed as `@quill-ds` and failed that check. Both consumer
+  apps already install from `@quill`. llms.txt's title no longer depends on the
+  slug. Groundwork for listing Quill in the shadcn registry directory.
+
 ## [0.9.24] — 2026-09-14
 
 ### Added
