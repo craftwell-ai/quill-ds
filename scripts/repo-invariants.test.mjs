@@ -38,7 +38,7 @@ test('every path the agent-facing docs name exists, or is a registry install tar
   // placeholder or scope characters) must exist in the repo, or be a `target`
   // a registry item writes into a consumer app.
   const targets = new Set(
-    registry.items.flatMap((i) => (i.files ?? []).map((f) => f.target).filter(Boolean)),
+    registry.items.flatMap((i) => (i.files ?? []).map((f) => f.target).filter(Boolean)).flatMap((t) => [t, t.replace(/^~\//, '')]),
   )
   const offenders = []
   for (const doc of ['DESIGN.md', 'PRODUCT.md', 'AGENTS.md']) {

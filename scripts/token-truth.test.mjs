@@ -38,6 +38,7 @@ const sources = {
   'src/usage/foundations.mjs (foundations)': renderFoundations(),
   'src/usage/foundations.mjs (principles)': renderPrinciples({ blockCount: 51 }),
   'public/llms.txt': readFileSync(join(root, 'public/llms.txt'), 'utf8'),
+  'registry/agent-rules/quill.md': readFileSync(join(root, 'registry/agent-rules/quill.md'), 'utf8'),
 }
 
 test('the built theme item defines a meaningful number of custom properties', () => {

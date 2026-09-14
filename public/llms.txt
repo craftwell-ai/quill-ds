@@ -7,11 +7,12 @@ Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/
 ## Agent quick start
 
 1. Install the token layer: `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` — or add `"@quill": "https://www.quilldesignsystem.com/r/{name}.json"` to `components.json` `registries` and run `npx shadcn@latest add @quill/quill`. Read what the CLI prints: it is the theming contract.
-2. Set `data-theme` and `data-accent` on `<html>` (see Theming). The `theme-selector` block owns both at runtime.
-3. Before hand-building a section, pick a block from Components below by its intent and install it: `npx shadcn@latest add @quill/<name>`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme.
-4. Read the usage guide for everything you use — `https://www.quilldesignsystem.com/usage/<name>.md` — for the rules, what to reach for instead, and the accessibility notes.
-5. Update an item with `npx shadcn@latest add @quill/<name> --overwrite`. `--yes` does not overwrite a changed file: it prompts in a terminal and silently skips when non-interactive.
-6. Verify in the app: `npx tsc --noEmit`, `npm run lint`; then switch `data-theme` and `data-accent` and confirm both take effect.
+2. Install the rules file for AI agents: `npx shadcn@latest add @quill/agent-rules` writes `.claude/rules/quill.md` at the project root, which Claude Code loads every session (theming contract, foundations, principles, icon names, block index).
+3. Set `data-theme` and `data-accent` on `<html>` (see Theming). The `theme-selector` block owns both at runtime.
+4. Before hand-building a section, pick a block from Components below by its intent and install it: `npx shadcn@latest add @quill/<name>`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme.
+5. Read the usage guide for everything you use — `https://www.quilldesignsystem.com/usage/<name>.md` — for the rules, what to reach for instead, and the accessibility notes.
+6. Update an item with `npx shadcn@latest add @quill/<name> --overwrite`. `--yes` does not overwrite a changed file: it prompts in a terminal and silently skips when non-interactive.
+7. Verify in the app: `npx tsc --noEmit`, `npm run lint`; then switch `data-theme` and `data-accent` and confirm both take effect.
 
 Machine-readable: the registry index at `https://www.quilldesignsystem.com/r/registry.json`, one item per `https://www.quilldesignsystem.com/r/<name>.json`.
 
@@ -264,4 +265,5 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 
 - [Storybook](https://www.quilldesignsystem.com/storybook/) — live components, foundations, and patterns
 - [Theme item](https://www.quilldesignsystem.com/r/quill.json) — the token layer (install first)
+- [Agent rules item](https://www.quilldesignsystem.com/r/agent-rules.json) — `.claude/rules/quill.md` for the app's AI agents
 - [Full registry index](https://www.quilldesignsystem.com/r/registry.json)

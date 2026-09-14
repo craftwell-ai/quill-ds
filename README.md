@@ -27,6 +27,7 @@ Then install the theme, and any blocks you want:
 
 ```bash
 npx shadcn@latest add @quill/quill          # the token layer (registry:base)
+npx shadcn@latest add @quill/agent-rules    # rules for the app's AI agents (.claude/rules/quill.md)
 npx shadcn@latest add @quill/tone-badge     # a component
 npx shadcn@latest add @quill/dashboard      # a block
 npx shadcn@latest view @quill/registry      # list everything
@@ -88,6 +89,7 @@ regenerates all of it on every PR and fails on any diff, so never hand-edit thes
 | `npm run build:tokens` | `src/app/globals.css`, `registry/themes/quill.css`, `tokens/quill.figma.json` |
 | `npm run build:icons` | `src/components/ui/icons.core.mjs`, per-icon modules, the `IconName` union |
 | `npm run build:usage` | `public/usage/*.md`, registry `docs`/`description` fields |
+| `npm run build:agent-rules` | `registry/agent-rules/quill.md` — the rules file the `@quill/agent-rules` item installs into apps |
 | `npm run build:registry` | `public/r/*.json` |
 | `npm run build:llms` | `public/llms.txt`, and the generated spans in `DESIGN.md` |
 

@@ -32,9 +32,10 @@ jobs:
         run: |
           npm run build:tokens
           npm run build:icons
+          npm run build:agent-rules
           npm run build:registry
           npm run build:llms
-          git diff --exit-code -- src/app/globals.css src/tokens/generated registry/themes tokens src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts registry.json public/r public/llms.txt DESIGN.md
+          git diff --exit-code -- src/app/globals.css src/tokens/generated registry/themes tokens src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts registry.json registry/agent-rules public/r public/llms.txt DESIGN.md
 
       - name: Lint
         run: npm run lint

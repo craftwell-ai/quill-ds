@@ -38,7 +38,7 @@ jobs:
       GENERATED: >-
         src/app/globals.css src/tokens/generated registry/themes tokens
         src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts
-        registry.json public/r public/llms.txt DESIGN.md
+        registry.json registry/agent-rules public/r public/llms.txt DESIGN.md
     steps:
       - uses: actions/checkout@v7
         with:
@@ -59,6 +59,7 @@ jobs:
         run: |
           npm run build:tokens
           npm run build:icons
+          npm run build:agent-rules
           npm run build:registry
           npm run build:llms
 
