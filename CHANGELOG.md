@@ -12,6 +12,26 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.17] — 2026-09-14
+
+### Fixed
+- **`file-upload` rendered a blank where its pending-file icon should be, in
+  every consumer app.** The core icon set that ships with the `icon` item was
+  derived from `name="literal"` props only, so the block's
+  `name={done ? 'check' : 'draft'}` never registered `draft`, and the consumer
+  `<Icon>` draws an unknown name as an empty, size-reserved box. The site never
+  noticed because it lazy-loads the whole library. The scanner
+  (`scripts/build-icons.mjs`) now sees every quoted name inside a `name={…}`
+  expression, `draft` is in `icons.core.mjs` and `public/r/icon.json`, and a new
+  test fails whenever a shipped file references an icon the core set lacks.
+
+### Added
+- **The consumer `<Icon>` warns once per unknown name in development**
+  (`registry/lib/icon.tsx`, spec decision D5). Production still renders the
+  size-reserved blank; developers now see
+  `[quill] <Icon name="…"> is not in the bundled core set` in the console
+  instead of hunting for a missing glyph.
+
 ## [0.9.16] — 2026-09-14
 
 ### Fixed
