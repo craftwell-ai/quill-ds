@@ -6,7 +6,7 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
+import { ToneBadge, type Tone } from '@/components/ui/tone-badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Icon } from '@/components/ui/icon'
@@ -17,6 +17,10 @@ const rows = [
   { name: 'Grace Hopper', email: 'grace@example.com', role: 'Editor', status: 'Invited' as const },
   { name: 'Katherine Johnson', email: 'kat@example.com', role: 'Viewer', status: 'Active' as const },
 ]
+
+// Status → pigment, decided once so every row reads from the same vocabulary:
+// moss for a live membership, gold for one still developing.
+const STATUS_TONE: Record<(typeof rows)[number]['status'], Tone> = { Active: 'moss', Invited: 'gold' }
 
 export function DataTable() {
   return (
@@ -55,7 +59,7 @@ export function DataTable() {
                 </TableCell>
                 <TableCell className="text-muted-foreground">{r.role}</TableCell>
                 <TableCell>
-                  <Badge variant={r.status === 'Active' ? 'secondary' : 'outline'}>{r.status}</Badge>
+                  <ToneBadge tone={STATUS_TONE[r.status]}>{r.status}</ToneBadge>
                 </TableCell>
                 <TableCell>
                   <Button variant="ghost" size="icon" aria-label={`Actions for ${r.name}`}>

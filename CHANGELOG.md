@@ -12,6 +12,18 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.30] — 2026-09-14
+
+### Changed
+- **Two blocks now render their status through ToneBadge.** `invoice` marks
+  "Paid" on the moss tint and `data-table` maps Active → moss and Invited → gold
+  through one `STATUS_TONE` table, so the shipped `tone-badge` finally has
+  in-repo consumers: a copyable single-status example and a copyable
+  status-column mapping, both rendered in Storybook and covered by the
+  accessibility run. The two items declare `@quill/tone-badge` as a registry
+  dependency in place of `badge` (ToneBadge brings Badge in itself), and their
+  usage docs name the tones they use. (CRA-210)
+
 ## [0.9.29] — 2026-09-14
 
 ### Fixed

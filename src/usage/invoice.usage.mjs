@@ -1,7 +1,7 @@
 export const usage = {
   name: 'invoice',
   kind: 'pattern',
-  summary: 'A printable invoice card — sender and recipient details, a line-item table with totals, and a download action.',
+  summary: 'A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action.',
   useWhen: [
     'You need a printable invoice with parties, line-item totals, and a download action.',
   ],
@@ -19,7 +19,7 @@ export const usage = {
   ],
   a11y: [
     'The line-item table uses real <TableHeader>/<TableFooter> semantics, so the total is programmatically distinguishable from a line item, not just visually styled differently.',
-    'The paid/unpaid status is a Badge with visible text ("Paid"), not a color-only indicator.',
+    'The paid/unpaid status is a ToneBadge with visible text ("Paid") on the moss tint, not a color-only indicator.',
   ],
-  tokens: ['--card', '--border', '--muted-foreground'],
+  tokens: ['--card', '--border', '--muted-foreground', '--moss', '--moss-deep'],
 }

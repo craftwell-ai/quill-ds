@@ -1240,16 +1240,16 @@
       "name": "data-table",
       "type": "registry:block",
       "title": "Data table",
-      "description": "A filterable members table with a toolbar, status badges, and a per-row actions menu.",
+      "description": "A filterable members table with a toolbar, ToneBadge status pills, and a per-row actions menu.",
       "meta": {
         "intent": [
           "data-display"
         ],
-        "use_when": "You need a filterable, actionable table of records with status badges and row actions."
+        "use_when": "You need a filterable, actionable table of records with tone-mapped status pills and row actions."
       },
       "registryDependencies": [
         "table",
-        "badge",
+        "https://www.quilldesignsystem.com/r/tone-badge.json",
         "button",
         "input",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -1261,7 +1261,7 @@
           "target": "components/quill/data-table.tsx"
         }
       ],
-      "docs": "A filterable members table with a toolbar, status badges, and a per-row actions menu. Do: Give every icon-only row-action button a per-row aria-label (e.g. \"Actions for Ada Lovelace\"), not a generic one. Don't: Ship a table full of icon-only buttons that all announce as the same unlabeled button to a screen reader. Use activity-feed when you want a read-only chronological list, not sortable/filterable records with row actions. Use kanban when the records are better organized by status columns than by table rows.",
+      "docs": "A filterable members table with a toolbar, ToneBadge status pills, and a per-row actions menu. Do: Give every icon-only row-action button a per-row aria-label (e.g. \"Actions for Ada Lovelace\"), not a generic one. Don't: Ship a table full of icon-only buttons that all announce as the same unlabeled button to a screen reader. Use activity-feed when you want a read-only chronological list, not sortable/filterable records with row actions. Use kanban when the records are better organized by status columns than by table rows.",
       "categories": [
         "data-display"
       ]
@@ -1495,7 +1495,7 @@
       "name": "invoice",
       "type": "registry:block",
       "title": "Invoice",
-      "description": "A printable invoice card — sender and recipient details, a line-item table with totals, and a download action.",
+      "description": "A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action.",
       "meta": {
         "intent": [
           "commerce",
@@ -1506,7 +1506,7 @@
       "registryDependencies": [
         "card",
         "table",
-        "badge",
+        "https://www.quilldesignsystem.com/r/tone-badge.json",
         "button",
         "separator",
         "https://www.quilldesignsystem.com/r/icon.json"
@@ -1518,7 +1518,7 @@
           "target": "components/quill/invoice.tsx"
         }
       ],
-      "docs": "A printable invoice card — sender and recipient details, a line-item table with totals, and a download action. Do: Keep the total in a table footer, visually distinct from line items (its own row, right-aligned). Don't: Let the total blend in as just another line item — it needs to read as the sum, not another charge. Use order-summary when you're showing a cart before payment, not a record of a completed transaction. Use data-table when you need a list of many invoices to browse, not the full detail of one.",
+      "docs": "A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action. Do: Keep the total in a table footer, visually distinct from line items (its own row, right-aligned). Don't: Let the total blend in as just another line item — it needs to read as the sum, not another charge. Use order-summary when you're showing a cart before payment, not a record of a completed transaction. Use data-table when you need a list of many invoices to browse, not the full detail of one.",
       "categories": [
         "commerce",
         "data-display"
