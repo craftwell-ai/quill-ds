@@ -195,22 +195,30 @@ export function registryBlock(css) {
 //
 // Spec item W19 / decision D8. Verified end-to-end: installed into a scaffolded
 // app with the real CLI, `font-heading`, `text-2xs` and every pigment compile.
-function decls(block) {
+// Two key shapes, and the difference is load-bearing. `cssVars` keys are
+// written BARE (`paper`) because the CLI prepends `--` when it merges them into
+// `:root` / `@theme`. `css` keys are literal property names the CLI writes
+// verbatim, so they must carry the `--` themselves — with bare keys the CLI
+// emitted `paper: var(--dk-paper);` inside every [data-theme] and [data-accent]
+// block, which browsers drop, so a CLI-installed app could not switch theme or
+// accent through the merged CSS (verified with the real CLI, 2026-09-14).
+function decls(block, { keepPrefix = false } = {}) {
   return Object.fromEntries(
     block
       .split('\n')
       .map((l) => l.match(/^\s*--([a-z0-9-]+)\s*:\s*(.+);\s*$/))
       .filter(Boolean)
-      .map((m) => [m[1], m[2]]),
+      .map((m) => [keepPrefix ? `--${m[1]}` : m[1], m[2]]),
   )
 }
 
 export function registryPayload(css) {
+  const literal = { keepPrefix: true }
   return {
     cssVars: { theme: decls(css.theme), light: decls(css.root) },
     css: Object.fromEntries([
-      ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body)]),
-      ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body)]),
+      ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body, literal)]),
+      ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body, literal)]),
     ]),
   }
 }
