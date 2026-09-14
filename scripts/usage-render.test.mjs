@@ -50,3 +50,13 @@ test('tag-like text inside backticks is left untouched', () => {
   })
   assert.ok(md.includes('Use `<input type="radio">` for each option.'))
 })
+
+test('the markdown format keeps tag-like text readable in backticks, never as &lt;', () => {
+  const md = renderUsageDocs(
+    { ...sample, summary: 'Wraps a <button> element.', a11y: ['Native <button> semantics; use `<input type="radio">` per option; keep gaps < 8px.'] },
+    { format: 'markdown' },
+  )
+  assert.ok(md.includes('Wraps a `<button>` element.'))
+  assert.ok(md.includes('Native `<button>` semantics; use `<input type="radio">` per option; keep gaps < 8px.'))
+  assert.ok(!md.includes('&lt;'))
+})

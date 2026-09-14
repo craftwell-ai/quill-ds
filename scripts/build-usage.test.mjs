@@ -59,3 +59,12 @@ test('the base `quill` item ships install-time docs naming every theme and the d
   assert.match(docs, /never raw pigments/, 'install docs must state the chart-token rule')
   assert.ok(docs.includes(LLMS_URL), 'install docs must point agents at llms.txt')
 })
+
+test('no published usage page carries an HTML entity where an agent should read a tag', () => {
+  // 26 of 106 pages printed literal `&lt;` for weeks because the Storybook
+  // escaper was reused for the markdown pages.
+  for (const u of ALL_USAGE) {
+    const page = readFileSync(join(USAGE_DIR, `${u.name}.md`), 'utf8')
+    assert.ok(!page.includes('&lt;'), `public/usage/${u.name}.md contains &lt; — the markdown format must wrap tags in backticks instead`)
+  }
+})

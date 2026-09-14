@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "pattern": "shell",
+    "decision": "declined",
+    "date": "2026-09-14",
+    "why": "An app shell is composition, not a block: Quill ships sidebar-nav, dashboard and mail-shell as the parts. The two implementations share only the word (253 lines on next/navigation vs a 130-line mobile shell)."
+  },
+  {
+    "pattern": "queue",
+    "decision": "declined",
+    "date": "2026-09-14",
+    "why": "Approval and work queues are product-domain objects; Quill ships the parts they compose (data-table, list-detail, activity-feed), not the domain."
+  },
+  {
+    "pattern": "crew",
+    "decision": "declined",
+    "date": "2026-09-14",
+    "why": "Domain-specific to one product (an agent crew rail and a 1088-line map); one app's feature is not a pattern."
+  },
+  {
+    "pattern": "link",
+    "decision": "declined",
+    "date": "2026-09-14",
+    "why": "Both are thin wrappers over next/link (58 and 16 lines); link colour and hover already come from the accent tokens, so there is nothing for a block to add."
+  },
+  {
+    "pattern": "logo",
+    "decision": "declined",
+    "date": "2026-09-14",
+    "why": "Brand marks and company logos are per-app assets by definition; Quill's own mark is not a consumer component."
+  },
+  {
+    "pattern": "brand",
+    "decision": "declined",
+    "date": "2026-09-14",
+    "why": "Same as logo: a brand icon set belongs to the app that owns the brand."
+  }
+]

@@ -27,7 +27,7 @@ export const REGISTRY_PATH = join(root, 'registry.json')
 export const MODULES_DTS_PATH = join(root, 'src/usage/modules.d.ts')
 
 export function renderUsagePage(u) {
-  return `# ${u.name} (${u.kind})\n\n${renderUsageDocs(u)}\n`
+  return `# ${u.name} (${u.kind})\n\n${renderUsageDocs(u, { format: 'markdown' })}\n`
 }
 
 export function renderModulesDts(all = ALL_USAGE) {
@@ -46,7 +46,7 @@ export function renderModulesDts(all = ALL_USAGE) {
   )
   const renderBlock = `declare module '@/usage/render.mjs' {
   import type { Usage } from '@/usage/types'
-  export function renderUsageDocs(usage: Usage): string
+  export function renderUsageDocs(usage: Usage, options?: { format?: 'mdx' | 'markdown' }): string
 }`
   return [header, ...usageBlocks, renderBlock].join('\n\n') + '\n'
 }

@@ -83,4 +83,4 @@ npx tsc --noEmit
 - `/figma-pull` — bring a component's Figma edits into its code twin
 - `/figma-push` — push a code component's state onto its Figma twin
 
-Four commands route a prompt to the shadcn-studio MCP server and follow the instructions it returns: `/cui` (create), `/rui` (refine), `/iui` (inspire), `/ftc` (Figma-to-code). They generate UI from outside Quill's own system, so anything they produce still has to be reconciled against `DESIGN.md` and the documented tokens before it lands.
+Four commands in `.claude/commands` route a prompt to the shadcn-studio MCP server and follow the instructions it returns: `/cui` (create), `/rui` (refine), `/iui` (inspire), `/ftc` (Figma-to-code). That server lives in your own Claude Code settings, not in this repo, and the `@ss-*` registries in `components.json` need a shadcn-studio licence (`EMAIL` and `LICENSE_KEY` in `.env`), so the commands only work where both are set up. They generate UI from outside Quill's own system, so anything they produce still has to be reconciled against `DESIGN.md` and the documented tokens before it lands.
