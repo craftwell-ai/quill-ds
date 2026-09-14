@@ -88,19 +88,20 @@ the live-file comparison is manual, and it naturally coincides with Figma edits.
 
 ## Automation — the loop that closes itself
 
-Five workflows. All but `claude-repair` are deterministic: each has a provably
+Six workflows. All but `claude-repair` are deterministic: each has a provably
 correct answer, so a green required check genuinely means "correct".
 `claude-repair` is not, and is fenced accordingly.
 
 | Workflow | Does | Merges itself? |
 | --- | --- | --- |
 | `dependabot-auto-merge.yml` | Enables auto-merge on Dependabot minor/patch PRs; comments on majors and leaves them | yes, once green |
+| `dependabot-unstick.yml` | After every push to `main` (and 6-hourly), asks Dependabot to `recreate` any of its PRs left BEHIND or DIRTY once the regenerate step pushed to it | comments only |
 | `self-heal.yml` | Rebuilds generated files; opens a PR if the committed output drifted | yes, once green |
 | `release.yml` | Tags + publishes a version that has none; opens a bump PR when commits pile up untagged | yes, once green |
 | `library-sync.yml` | On every published release, re-pulls the items each Quill-styled app already uses — one PR per app | yes, once **that app's** checks pass |
 | `claude-repair.yml` | On a red `main`, has Claude diagnose and open a fix PR | **no** — human merges |
 
-Two properties hold across all five:
+Two properties hold across all six:
 
 - **Nothing writes to a default branch.** Every change arrives as a PR that the
   target repo's checks must pass — here the required `Lint · types · tests ·

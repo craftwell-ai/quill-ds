@@ -10,6 +10,9 @@ name: Dependabot regenerate
 # self-heal.yml only regenerates on main, and claude-repair.yml triggers on main
 # too (and is off). Three tiers of automation, none of which could help.
 #
+# After this pushes, Dependabot stops rebasing the branch (a foreign commit is
+# on it); dependabot-unstick.yml asks it to recreate the PR when main moves on.
+#
 # Guardrail: this pushes ONLY when regenerating produces a diff confined to the
 # generated paths. Any other change means the bump broke something real, and
 # that is a human's problem — it says so and stops.

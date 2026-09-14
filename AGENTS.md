@@ -75,7 +75,7 @@ npx tsc --noEmit
 
 - `main` is protected. The required check is `Lint · types · tests · build`. Land work through a PR.
 - **Never tag or publish a release manually.** The release bot tags and publishes after merge — it fires within a minute, and a manual tag races it.
-- Ten workflows run automation (`drift-audit`, `self-heal`, `library-sync`, `figma-parity`, `pattern-scan`, `release`, `dependabot-*`, `claude-repair`). They all open PRs; nothing writes to `main` directly. See `scripts/DRIFT-AUDIT.md`.
+- Eleven workflows run automation (`drift-audit`, `self-heal`, `library-sync`, `figma-parity`, `pattern-scan`, `release`, `dependabot-*`, `claude-repair`). They all open PRs; nothing writes to `main` directly. See `scripts/DRIFT-AUDIT.md`.
 - Releases are pushed downstream into consumer apps by `library-sync`. A change to the shipped theme reaches real apps — treat `registry/themes/quill.css` and `registry.json` as public API.
 
 ## Skills and commands

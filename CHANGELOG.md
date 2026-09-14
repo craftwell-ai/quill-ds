@@ -12,6 +12,22 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.28] — 2026-09-14
+
+### Fixed
+- **Dependabot pull requests no longer strand after the regenerate step.** Once
+  `dependabot-regenerate.yml` pushes rebuilt files onto a dependency PR,
+  Dependabot stops rebasing that branch. Every release then moves `main`, the
+  PR turns BEHIND (protection requires up-to-date branches) or DIRTY, GitHub
+  runs no `pull_request` workflow on a conflicting PR, and auto-merge waits
+  forever — #135 sat that way for days and its recreation #162 was conflicting
+  again within hours. New `dependabot-unstick.yml` runs after every push to
+  `main` and six-hourly: for each open Dependabot PR that is BEHIND or DIRTY,
+  settled for ten minutes and not already asked since its last commit, it
+  comments `@dependabot recreate` with `AUTOMATION_TOKEN` (Dependabot honours
+  commands only from a user with write access). Comments only; the decision
+  logic is pure and tested. (CRA-207)
+
 ## [0.9.27] — 2026-09-14
 
 ### Fixed
