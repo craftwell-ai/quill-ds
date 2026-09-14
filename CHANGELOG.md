@@ -12,6 +12,31 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.27] — 2026-09-14
+
+### Fixed
+- **Published usage pages no longer print `&lt;`.** The Storybook escaper,
+  which must turn `<button>` into `&lt;button>` so MDX does not swallow it, was
+  reused for `public/usage/*.md`, so 26 of 106 pages read "Native &lt;button>
+  semantics" to every agent that fetched them. The renderer now takes a
+  target: `mdx` keeps the entity, `markdown` wraps tag-like text in backticks.
+  A test fails if an entity ever reaches a published page again.
+
+### Changed
+- **The four shadcn-studio commands ship with the repo.**
+  `.claude/commands/{cui,rui,iui,ftc}.md` were gitignored, so `AGENTS.md`
+  documented commands that existed on one machine only. They are committed,
+  and `AGENTS.md` now says what they need: the shadcn-studio MCP server in your
+  own Claude Code settings, and a licence for the `@ss-*` registries in
+  `components.json`.
+- **Pattern-scan decisions are recorded.** `scripts/pattern-scan.decided.json`
+  had been empty since July, so the weekly report re-raised the same six
+  candidates every Monday. All six (`shell`, `queue`, `crew`, `link`, `logo`,
+  `brand`) are declined with a reason and move to the report's "Already
+  decided" section. The "already in Quill but rebuilt" findings are a
+  findability problem, which the agent-rules file (0.9.24) now addresses inside
+  each app.
+
 ## [0.9.26] — 2026-09-14
 
 ### Added
