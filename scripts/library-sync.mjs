@@ -20,6 +20,15 @@
  *   CI. The one thing a direct write cannot deliver — an item that GAINED an
  *   npm dependency — is named in the PR body, and the app's own CI fails the
  *   PR if the gap is real.
+ * - One exception, detected and never assumed: an app that holds the token
+ *   layer MERGED INTO its main stylesheet — the shape `npx shadcn add
+ *   @quill/quill` leaves behind (cssVars → :root/@theme, css → the
+ *   [data-theme]/[data-accent] blocks) — also gets the real CLI run against the
+ *   released `public/r/quill.json` with --overwrite. Rewriting only the shipped
+ *   `app/quill-theme.css` would leave that merged copy stale, and it wins the
+ *   cascade. The CLI upserts every value in place (verified idempotent,
+ *   2026-09-14). Apps that only import the file, like both current ones, never
+ *   take this path.
  * - Only items the app already has are touched. The sync updates; it never
  *   installs anything new into an app.
  * - Merging defers to each app: `--auto` where the repo's protection supports
@@ -135,6 +144,58 @@ export function applyPlan(appDir, writes, { dryRun = false } = {}) {
     changed.push(w.path)
   }
   return changed
+}
+
+/**
+ * Does this app hold Quill's token layer merged INTO its main stylesheet — the
+ * shape `npx shadcn add @quill/quill` leaves behind — rather than only the
+ * shipped `app/quill-theme.css` file? Pure: takes the app's parsed
+ * components.json (or null), the text of the stylesheet it names (or null), and
+ * the released base item. "Merged" means at least half of the item's
+ * `cssVars.light` custom properties are declared in that stylesheet; an app's
+ * own `:root` with a handful of same-named vars does not qualify.
+ */
+export function mergedTokenLayer(componentsJson, stylesheet, baseItem) {
+  if (!componentsJson || typeof stylesheet !== 'string') return null
+  const keys = Object.keys(baseItem?.cssVars?.light ?? {})
+  if (keys.length === 0) return null
+  const present = keys.filter((k) => new RegExp(`--${k}\\s*:`).test(stylesheet)).length
+  return present * 2 >= keys.length ? { present, total: keys.length } : null
+}
+
+/** File-reading wrapper over mergedTokenLayer: null unless the app has a components.json naming a readable stylesheet that carries the merged layer. */
+export function detectMergedTokenLayer(appDir, baseItem) {
+  let cj = null
+  try {
+    cj = JSON.parse(readFileSync(join(appDir, 'components.json'), 'utf8'))
+  } catch {
+    return null
+  }
+  const cssPath = cj?.tailwind?.css
+  if (typeof cssPath !== 'string') return null
+  let stylesheet = null
+  try {
+    stylesheet = readFileSync(join(appDir, cssPath), 'utf8')
+  } catch {
+    return null
+  }
+  const merged = mergedTokenLayer(cj, stylesheet, baseItem)
+  return merged ? { cssPath, ...merged } : null
+}
+
+/**
+ * Re-merge the released base item into the app's stylesheet with the real CLI.
+ * `shadcn add` accepts a local item file, needs no node_modules in the app, and
+ * upserts :root, @theme and every [data-theme]/[data-accent] declaration in
+ * place — a tampered stylesheet comes back byte-identical (verified against the
+ * v0.9.20 item). `--overwrite` because `--yes` alone silently skips a changed
+ * file; `--yes` because the runner has no TTY to answer the prompt.
+ */
+export function remergeTokenLayer(appDir, itemPath) {
+  run('npx', ['--yes', 'shadcn@latest', 'add', itemPath, '--overwrite', '--yes', '--cwd', appDir], {
+    timeout: 180_000,
+    env: { ...process.env, CI: '1' },
+  })
 }
 
 /**
@@ -336,9 +397,14 @@ export function staleness(prs, currentVersion) {
 
 const STALE_AFTER = 2 // consecutive missed releases before this turns loud
 
-export async function appStaleness(app, token, currentVersion) {
-  const prs = await gh(
-    `/repos/${app.full_name}/pulls?state=all&per_page=30&sort=created&direction=desc`,
+// `app.full` is the owner/name discoverApps() builds (line ~225). This read
+// `app.full_name` from v0.9.10 to v0.9.20 — undefined — so every run asked
+// GitHub for `/repos/undefined/pulls`, got a 404, logged "could not read sync
+// history" for each app, and the alarm below could never fire. The fetcher is
+// injectable so a test can pin the URL to the real app shape.
+export async function appStaleness(app, token, currentVersion, fetchJson = gh) {
+  const prs = await fetchJson(
+    `/repos/${app.full}/pulls?state=all&per_page=30&sort=created&direction=desc`,
     token,
   )
   return staleness(Array.isArray(prs) ? prs : [], currentVersion)
@@ -417,9 +483,25 @@ export async function main() {
           say(`- \`${app.name}\` — already in sync (${plan.itemNames.length} items checked)`)
           return
         }
+        // The token layer's file is the base item's only file; if it moved, an
+        // app holding the CLI-merged copy needs that copy refreshed too.
+        const base = items.find((i) => i.name === 'quill')
+        const baseTargets = new Set((base?.files ?? []).map((f) => f.target))
+        const themeChanged = changed.some((c) => baseTargets.has(c) || baseTargets.has(c.replace(/^src\//, '')))
+        const merged = base && themeChanged ? detectMergedTokenLayer(dir, base) : null
         if (dryRun) {
           say(`- \`${app.name}\` — WOULD update ${changed.length} file(s): ${changed.join(', ')}`)
+          if (merged) say(`  and re-merge the token layer into \`${merged.cssPath}\` (holds ${merged.present}/${merged.total} merged vars)`)
           return
+        }
+        let remerged = null
+        if (merged) {
+          remergeTokenLayer(dir, join(root, 'public/r', 'quill.json'))
+          for (const line of run('git', ['-C', dir, 'status', '--porcelain']).split('\n')) {
+            const path = line.slice(3).trim()
+            if (path && !changed.includes(path)) changed.push(path)
+          }
+          remerged = merged.cssPath
         }
 
         run('git', ['-C', dir, 'config', 'user.name', 'github-actions[bot]'])
@@ -483,11 +565,14 @@ export async function main() {
                 .map((d) => `\`${d}\``)
                 .join(', ')}. An already-installed app has them; if this PR's build fails on a missing module, add the package.\n`
             : ''
+          const merge = remerged
+            ? `\nToken layer re-merged into \`${remerged}\` with \`shadcn add --overwrite\` — this app holds the cssVars-merged layer, so the file alone would have left it stale.\n`
+            : ''
           const body =
             `Re-pulls the Quill items this app already uses, updated in ` +
             `[quill-ds v${version}](https://github.com/craftwell-ai/${SELF_NAME}/releases/tag/v${version}).\n\n` +
             `Items: ${plan.itemNames.map((n) => `\`${n}\``).join(', ')}\n` +
-            `Files: ${changed.map((c) => `\`${c}\``).join(', ')}${deps}\n\n` +
+            `Files: ${changed.map((c) => `\`${c}\``).join(', ')}${deps}${merge}\n\n` +
             `Opened by \`library-sync.yml\` in ${SELF_NAME}. Merges itself once this repo's checks pass; ` +
             `a red check leaves it open for a human.`
           run('gh', [
@@ -508,7 +593,7 @@ export async function main() {
 
         const outcome = await mergeWhenGreen(app.full, branch)
         if (outcome.startsWith('PR open') || outcome.startsWith('checks failed')) needsReview.push(app.name)
-        say(`- \`${app.name}\` — ${changed.length} file(s) updated → ${outcome}`)
+        say(`- \`${app.name}\` — ${changed.length} file(s) updated${remerged ? ` (token layer re-merged into \`${remerged}\`)` : ''} → ${outcome}`)
       },
       say,
     )

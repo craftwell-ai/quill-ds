@@ -12,6 +12,29 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.21] — 2026-09-14
+
+### Fixed
+- **The sync now refreshes the token layer in apps that hold it merged into
+  their main stylesheet.** `library-sync` rewrote only the shipped
+  `app/quill-theme.css`. An app installed with `npx shadcn add @quill/quill`
+  also carries the `cssVars`/`css` layer merged into its `globals.css`, and that
+  copy — which wins the cascade — went stale on every release. The sync now
+  detects that shape from the app's `components.json` and stylesheet (at least
+  half of the item's `cssVars.light` properties declared there; never assumed)
+  and, when the theme file changed, runs the real CLI against the released
+  `public/r/quill.json` with `--overwrite`, which upserts every value in place
+  (a tampered stylesheet comes back byte-identical). Neither current app holds
+  the merged layer, so their syncs are unchanged; a dry run against the real
+  fleet confirmed it.
+- **The "apps are falling behind" alarm can fire now.** It read `app.full_name`,
+  a key the app discovery never sets, so every run since 0.9.10 asked GitHub for
+  `/repos/undefined/pulls`, logged "could not read sync history" for each app,
+  and stayed silent. It reads `app.full`; the fetcher is injectable and a test
+  pins the URL. The first dry run with the fix reported command-center two
+  releases behind — its sync PRs were superseded by the next release before
+  that app's checks could finish.
+
 ## [0.9.20] — 2026-09-14
 
 ### Fixed
