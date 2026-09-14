@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { decide, COMMAND, SETTLE_MS } from './dependabot-unstick.mjs'
+import { decide, settledList, COMMAND, SETTLE_MS } from './dependabot-unstick.mjs'
 
 const NOW = Date.parse('2026-09-14T12:00:00Z')
 const ago = (ms) => new Date(NOW - ms).toISOString()
@@ -47,4 +47,29 @@ test('a recreate already requested since the last commit is not repeated', () =>
   // …but a request older than the head commit is stale: Dependabot acted, and it stuck again.
   const stale = pr({ comments: [{ body: COMMAND, createdAt: ago(5 * SETTLE_MS) }] })
   assert.equal(decide(stale, NOW).action, 'recreate')
+})
+
+test('the listing is polled while GitHub still reports UNKNOWN, then acted on', async () => {
+  // The first live run fired seconds after a push to main and saw every PR as
+  // UNKNOWN — mergeability is recomputed lazily, so the first answer is no answer.
+  const answers = [[pr({ mergeStateStatus: 'UNKNOWN' })], [pr({ mergeStateStatus: 'UNKNOWN' })], [pr({ mergeStateStatus: 'DIRTY' })]]
+  const naps = []
+  const prs = await settledList(() => answers.shift(), { retries: 8, waitMs: 15, sleep: async (ms) => naps.push(ms) })
+  assert.deepEqual(prs.map((p) => p.mergeStateStatus), ['DIRTY'])
+  assert.deepEqual(naps, [15, 15])
+})
+
+test('polling stops at its budget and leaves a still-UNKNOWN PR to the next run', async () => {
+  let listings = 0
+  const naps = []
+  const prs = await settledList(() => (listings++, [pr({ mergeStateStatus: 'UNKNOWN' })]), { retries: 3, waitMs: 1, sleep: async (ms) => naps.push(ms) })
+  assert.equal(listings, 4)
+  assert.equal(naps.length, 3)
+  assert.equal(decide(prs[0], NOW).action, 'skip')
+})
+
+test('a listing with every state known is not polled at all', async () => {
+  const naps = []
+  await settledList(() => [pr(), pr({ mergeStateStatus: 'CLEAN' })], { sleep: async (ms) => naps.push(ms) })
+  assert.equal(naps.length, 0)
 })

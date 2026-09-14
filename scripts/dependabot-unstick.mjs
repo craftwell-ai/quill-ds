@@ -25,6 +25,13 @@
  * workflow may still be running). Never fatal for an app-level reason; the run
  * summary says what was asked and what was skipped.
  *
+ * A push to `main` is exactly the moment GitHub is recomputing every open PR's
+ * mergeability, so the first listing after one reports UNKNOWN for all of them
+ * — the first live run (34902578041) saw two stuck PRs that way and could not
+ * act. The listing is therefore polled until every state is known, within a
+ * budget of about two minutes; whatever is still UNKNOWN after that is left to
+ * the scheduled run.
+ *
  * Dry run: DRY_RUN=1 GH_TOKEN="$(gh auth token)" node scripts/dependabot-unstick.mjs
  */
 import { appendFileSync } from 'node:fs'
@@ -34,6 +41,13 @@ import { run } from './library-sync.mjs'
 export const COMMAND = '@dependabot recreate'
 export const STUCK = new Set(['DIRTY', 'BEHIND'])
 export const SETTLE_MS = 10 * 60_000
+export const UNKNOWN_RETRIES = 8
+export const UNKNOWN_WAIT_MS = 15_000
+
+const PR_FIELDS = 'number,title,mergeStateStatus,commits,comments'
+const listPrs = () => JSON.parse(run('gh', ['pr', 'list', '--author', 'app/dependabot', '--state', 'open', '--json', PR_FIELDS]))
+const unknown = (pr) => !pr.mergeStateStatus || pr.mergeStateStatus === 'UNKNOWN'
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const isDependabot = (commit) => (commit?.authors ?? []).some((a) => /dependabot/i.test(a?.login ?? ''))
 
@@ -54,7 +68,20 @@ export function decide(pr, now = Date.now()) {
   return { action: 'recreate', why: `${pr.mergeStateStatus}${foreign}` }
 }
 
-export function main() {
+/**
+ * Re-lists while any PR's mergeability is still UNKNOWN (GitHub computes it
+ * lazily after a push), up to `retries` extra listings `waitMs` apart.
+ */
+export async function settledList(list = listPrs, { retries = UNKNOWN_RETRIES, waitMs = UNKNOWN_WAIT_MS, sleep = wait } = {}) {
+  let prs = list()
+  for (let attempt = 0; attempt < retries && prs.some(unknown); attempt++) {
+    await sleep(waitMs)
+    prs = list()
+  }
+  return prs
+}
+
+export async function main() {
   const dryRun = Boolean(process.env.DRY_RUN)
   const lines = ['# Dependabot unstick', '']
   const say = (s = '') => {
@@ -62,9 +89,7 @@ export function main() {
     console.log(s)
   }
   try {
-    const prs = JSON.parse(
-      run('gh', ['pr', 'list', '--author', 'app/dependabot', '--state', 'open', '--json', 'number,title,mergeStateStatus,commits,comments']),
-    )
+    const prs = await settledList()
     if (prs.length === 0) say('No open Dependabot pull requests.')
     for (const pr of prs) {
       const d = decide(pr)
@@ -94,4 +119,4 @@ export function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main()
+if (import.meta.url === `file://${process.argv[1]}`) await main()
