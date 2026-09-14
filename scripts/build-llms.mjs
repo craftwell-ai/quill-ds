@@ -139,6 +139,7 @@ export function renderLlms(t = tokens) {
   p(`- [Theme item](${HOME}/r/quill.json) — the token layer (install first)`)
   p(`- [Agent rules item](${HOME}/r/agent-rules.json) — \`.claude/rules/quill.md\` for the app's AI agents`)
   p(`- [Full registry index](${HOME}/r/registry.json)`)
+  p('- License: MIT (https://github.com/craftwell-ai/quill-ds/blob/main/LICENSE) — copy, modify and ship without asking')
   p()
 
   return L.join('\n')

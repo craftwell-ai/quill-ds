@@ -40,6 +40,8 @@ them. Quill ships the theme, two components (`icon`, `tone-badge`), and 51 compo
 Machine-readable summary for coding agents: **[llms.txt](https://www.quilldesignsystem.com/llms.txt)**.
 Per-component usage guides live at `/usage/<name>.md`.
 
+Quill is released under the [MIT License](LICENSE).
+
 ## Theming
 
 Five themes, set with `data-theme` on `<html>`:

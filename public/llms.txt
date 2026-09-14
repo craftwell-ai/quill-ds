@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.25.
+> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.26.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -267,3 +267,4 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [Theme item](https://www.quilldesignsystem.com/r/quill.json) — the token layer (install first)
 - [Agent rules item](https://www.quilldesignsystem.com/r/agent-rules.json) — `.claude/rules/quill.md` for the app's AI agents
 - [Full registry index](https://www.quilldesignsystem.com/r/registry.json)
+- License: MIT (https://github.com/craftwell-ai/quill-ds/blob/main/LICENSE) — copy, modify and ship without asking
