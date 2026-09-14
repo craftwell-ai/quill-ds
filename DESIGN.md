@@ -1,20 +1,27 @@
 # Quill — Design System Spec
 
-A single-file reference for the **Quill** brand and its flagship app.
+A single-file reference for the **Quill** design system.
 Everything an agent or developer needs to design on-brand: voice, color, type,
 spacing, effects, components, iconography, and assets. Distilled from the live
-token files and component sources in this project.
+token source and component files in this repo; every path named here exists,
+and `scripts/repo-invariants.test.mjs` fails CI when one stops existing.
 
 > **Brand in one line:** A low-contrast, editorial-derived visual language. Warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning. No
 > emoji, no decorative gradients.
 
 **Related files**
-- `styles.css` — the single entry point consumers link (imports every token + font).
-- `tokens/*.css` — the source of truth for all values below.
-- `readme.md` — the long-form design guide (context, content & visual foundations).
-- `design.shadcn.md` — this spec re-mapped onto shadcn/ui's variable contract.
-- `components/**` — the React primitives (with `.d.ts` + `.prompt.md` each).
-- `ui_kits/marketplace/` — a full interactive recreation of the marketplace app.
+- `src/tokens/quill.tokens.mjs` — the source of truth for every value below;
+  `src/tokens/themes.mjs` names the themes and accents.
+- `registry/themes/quill.css` — the shipped token layer an app installs (it lands
+  as `app/quill-theme.css`); `src/app/globals.css` is the site's cut of the same
+  source.
+- `registry/blocks` and `registry/lib` — the 51 blocks and the two shipped
+  components (`icon`, `tone-badge`).
+- `src/components/ui` — the stock shadcn primitives the token layer restyles
+  (apps install these from shadcn, not from Quill).
+- `public/usage` — one usage page per component and block, generated from
+  `src/usage`; `public/llms.txt` is the agent index.
+- `PRODUCT.md` — Quill's own product brief; `AGENTS.md` — how to work in this repo.
 
 ---
 
@@ -82,9 +89,12 @@ evening. **Still no pure black, no pure white, no cold greys.** Source of truth:
 
 ### Activation
 Themes are **token remaps under `data-theme`** on a parent (usually `<html>`):
-no attribute = **Dawn** (default), `data-theme="dark"` = **Dusk**, plus
-`data-theme="classic-light"` / `data-theme="classic-dark"`. Set the attribute and
-the whole token layer flips, **no JS required**. In apps, the `ThemeSelector`
+no attribute (or `light`) = **Dawn** (default), `data-theme="dark"` = **Dusk**,
+`data-theme="classic-light"` / `data-theme="classic-dark"` = the Classic pair, and
+`data-theme="intelligent"` = the cockpit theme (near-black grounds, teal working
+status, instrument fonts). The canonical list is `ALL_MODES` in
+`src/tokens/themes.mjs`; every hand-typed list is checked against it in CI. Set
+the attribute and the whole token layer flips, **no JS required**. In apps, the `ThemeSelector`
 block (`registry/blocks/theme-selector.tsx`) owns the attribute: after hydration
 it reads the stored choice from `localStorage` (`quill-theme`, plus `quill-accent`
 for the accent pigment) and stamps `<html>` — prerendered markup is always
@@ -96,7 +106,7 @@ Dawn/moss.
 > truth** per dark color and every component inherits Dusk for free — author
 > against the semantic tokens (`--paper`, `--ink`, `--terracotta`…), never the
 > `--dk-*` values directly. The Classic themes follow the same pattern with
-> `--cl-*` / `--cd-*` sets.
+> `--cl-*` / `--cd-*` sets, and Intelligent with `--int-*`.
 
 ### Walnut grounds — surfaces
 | Token | Dawn | Dusk | Use |
@@ -172,7 +182,9 @@ handles body and UI.
 - `--font-body`: `'Raleway', -apple-system, sans-serif` — body, UI, labels.
 - `--font-mono`: `ui-monospace, 'SF Mono', Menlo, monospace` — token/code specimens.
 
-Loaded from Google Fonts in `tokens/fonts.css`. Weights used: **400 / 500 / 600**.
+Loaded from Google Fonts by the `@import` at the top of `registry/themes/quill.css`
+(the token layer apps install); the site loads the same families through Next's
+font loader in `src/app/layout.tsx`. Weights used: **400 / 500 / 600**.
 
 ### Fraunces variable axes (the expressive work)
 - `opsz` 9–144 — match optical size to render size.
@@ -255,43 +267,60 @@ Two fixed, pointer-events-none overlays give surfaces digital paper grain:
 Place both as fixed siblings in the app shell (skip on dense dashboards).
 
 ### States (the interaction language)
-- **Hover:** primary button warms ink → terracotta; secondary fills ink; ghost/links turn terracotta; cards lift −4px and deepen shadow; portraits scale 1.02.
-- **Press / active:** transform returns to 0, shadow drops (a gentle "set down").
-- **Focus:** **neutral ink** — 2px ink outline (buttons) or ink border + soft ink ring (inputs). **Never terracotta** (that reads as error).
-- **Invalid:** terracotta-deep border + terracotta ring + helper text in terracotta-deep.
-- **Disabled:** ~45% opacity, `not-allowed`.
+Read from the shipped primitives (`src/components/ui/button.tsx`,
+`src/components/ui/input.tsx`), not from memory:
+- **Hover:** the default (ink) button drops to 80% (`hover:bg-primary/80`);
+  `outline` and `ghost` take the muted wash (`hover:bg-muted`); `link` underlines.
+  Nothing turns terracotta on hover, and cards do not move.
+- **Press / active:** buttons settle 1px down (`active:translate-y-px`).
+- **Focus:** a 3px ring in the accent pigment at 50% plus a ring-coloured border
+  (`focus-visible:ring-3 focus-visible:ring-ring/50`), the same on buttons and
+  inputs. `--ring` follows `data-accent`, so it is moss by default and terracotta
+  only when terracotta is the chosen accent. Never hand-set a focus colour.
+- **Invalid:** `aria-invalid` sets a destructive (terracotta) border and a 3px
+  destructive ring at 20%.
+- **Disabled:** 50% opacity with pointer events off (buttons) or `cursor:
+  not-allowed` (inputs).
 
 ### Cards (the recurring object)
-`--paper-warm` stock, 1px hairline border (ink ~12%), `--radius` (8px), soft
-layered shadow. Interactive cards lift −4px on hover and deepen the shadow.
+`--card` (paper-warm) stock, a 10% ink hairline ring, `rounded-xl` corners, no
+shadow and no hover lift — cards are paper, not buttons. Parts in §7.
 
 ---
 
-## 7. Components (React primitives)
+## 7. Components
 
-Consume from the compiled bundle: `const { Button, … } = window.QuillDesignSystem_a37217`.
-Each lives in `components/<group>/` with a `.d.ts` (props) and `.prompt.md` (usage).
+Primitives are **stock shadcn** (Base UI + Tailwind) restyled by the token layer —
+Quill does not re-ship its own Button, Card or Input. Apps install them with
+`npx shadcn@latest add button …`; the site's copies live in `src/components/ui`
+and are what the entries below describe. Quill ships two components of its own
+through the registry — `icon` (`registry/lib/icon.tsx`) and `tone-badge`
+(`registry/lib/tone-badge.tsx`) — plus 51 blocks under `registry/blocks`. The
+per-component rules live in `public/usage` (one page per name), written once in
+`src/usage`.
 
-### Button — `components/forms/Button.jsx`
-Variants: `primary` (solid ink → warms to terracotta on hover), `secondary`
-(ink outline, fills ink on hover), `ghost` (text, terracotta on hover), `accent`
-(terracotta, for the one hero CTA), `link` (underlined inline text, no chrome).
-Sizes `sm`/`md`/`lg`. Props: `withArrow` (sliding "→"), `href` (renders as link),
-`disabled`. `rounded-sm`, Raleway medium.
+### Button — `src/components/ui/button.tsx`
+Variants: `default` (solid ink — the primary action), `outline`, `secondary`,
+`ghost`, `destructive` (terracotta tint), `link` (underlined inline text). Sizes
+`xs` / `sm` / `default` / `lg`, plus the square `icon-xs` / `icon-sm` / `icon` /
+`icon-lg`. It renders as a link through Base UI's `render` prop. There is no
+`href`, `withArrow` or `accent` prop: an arrow is a trailing glyph in the label,
+and the accent pigment is never a button fill.
 ```jsx
-<Button variant="primary" withArrow>Start your collection</Button>
-<Button variant="accent">Save to collection</Button>
-<Button variant="link" href="#journal">Read the journal</Button>
+<Button size="lg" render={<a href="/storybook/" />}>Open the Storybook <span aria-hidden>→</span></Button>
+<Button variant="outline">Read the foundations</Button>
+<Button variant="link">Read the journal</Button>
 ```
 
-### Input — `components/forms/Input.jsx`
-Text field / textarea on paper-warm. **Ink** focus ring (neutral), terracotta
-**invalid** state. Props: `label`, `hint`, `invalid`, `multiline`, plus native
-input attributes. `box-sizing: border-box` is built in.
+### Input — `src/components/ui/input.tsx`
+The stock text field: `--input` border, the accent focus ring, the destructive
+invalid state. It takes native `<input>` attributes only — a label is a `Label`
+(`src/components/ui/label.tsx`) or the `FieldLabel` / `FieldDescription` /
+`FieldError` parts of `src/components/ui/field.tsx`, the invalid state is
+`aria-invalid`, and multi-line text is `Textarea` (`src/components/ui/textarea.tsx`).
 ```jsx
-<Input label="Email" type="email" placeholder="your@email.com" />
-<Input label="Notes" multiline placeholder="What's this for?" />
-<Input label="Email" invalid hint="That doesn't look right" />
+<Label htmlFor="email">Email</Label>
+<Input id="email" type="email" placeholder="your@email.com" aria-invalid={hasError} />
 ```
 
 ### ToneBadge — registry `tone-badge` → `components/ui/tone-badge.tsx`
@@ -307,27 +336,40 @@ render every tag pill through ToneBadge.
 <ToneBadge tone="moss" solid size="sm">current</ToneBadge>
 ```
 
-### Eyebrow — `components/display/Eyebrow.jsx`
-Uppercase tracked kicker above a heading. Default moss with a leading dash;
-`muted` for plain ink-muted section labels.
+### Eyebrow — a recipe, not a component
+The uppercase tracked kicker above a heading. In blocks it is a plain `<span>`:
+`text-xs font-medium tracking-[0.15em] uppercase text-ink-muted` for the quiet
+section label (as in `registry/blocks/faq.tsx`), or
+`text-[var(--accent-pigment-text)]` — the AA text cut of the accent — for the
+editorial flavour, optionally with a leading dash. There is no `Eyebrow`
+component and none is planned.
+
+### Avatar — `src/components/ui/avatar.tsx`
+`Avatar` (sizes `sm` 24px / `default` 32px / `lg` 40px) wraps `AvatarImage` and
+`AvatarFallback` (initials in `text-sm` on the muted surface); `AvatarBadge`,
+`AvatarGroup` and `AvatarGroupCount` handle status dots and stacks. There are no
+`src` or `initials` props on the root and no italic Fraunces fallback.
 ```jsx
-<Eyebrow>Issue 001 · Spring Collection</Eyebrow>
-<Eyebrow muted>Foundations</Eyebrow>
+<Avatar size="lg">
+  <AvatarImage src="/team/rp.jpg" alt="" />
+  <AvatarFallback>RP</AvatarFallback>
+</Avatar>
 ```
 
-### Avatar — `components/display/Avatar.jsx`
-Round portrait (`src`) or italic Fraunces `initials` fallback on paper-deep.
-Sizes `sm` (32) / `md` (44) / `lg` (64).
+### Card — `src/components/ui/card.tsx`
+`Card` (`size` `default` / `sm`) with `CardHeader`, `CardTitle`, `CardDescription`,
+`CardAction`, `CardContent` and `CardFooter`. Paper-warm stock, a 10% ink hairline
+ring, `rounded-xl`, no shadow, no hover lift. Full-bleed media needs no prop: an
+`<img>` as the first or last child takes the card's corners and drops the padding
+on that edge. There are no `interactive` or `flush` props.
 ```jsx
-<Avatar src="assets/portraits/critique-companion.jpg" size="lg" />
-<Avatar initials="RP" size="sm" />
-```
-
-### Card — `components/surfaces/Card.jsx`
-Base digital paper surface. `interactive` adds the hover-lift; `flush` removes padding and
-clips children for full-bleed media.
-```jsx
-<Card interactive>…</Card>
+<Card>
+  <CardHeader>
+    <CardTitle>Meeting Mapper</CardTitle>
+    <CardDescription>…</CardDescription>
+  </CardHeader>
+  <CardContent>…</CardContent>
+</Card>
 ```
 
 ---
@@ -375,11 +417,12 @@ Sample microcopy: headline *"Products, crafted with **intelligence**."* · CTA *
 
 ## 11. Do / Don't
 
-**Do** — sit everything on digital paper; reserve moss for the one accent word, the
-primary CTA's hover, and the hero `accent` button; use **ink** for primary actions
-and focus; warm layered shadows; Fraunces light + tight for headings.
+**Do** — sit everything on digital paper; reserve the accent pigment (moss by
+default) for the one accent word, eyebrows, links and the focus ring; use **ink**
+for primary actions; warm layered shadows; Fraunces light + tight for headings.
 
 **Don't** — pure white (`#FFF`) or pure black (`#000`) in Dawn & Dusk (the
-Classic themes use them by design); terracotta focus rings
-(reads as error); terracotta on every hover; blue-purple gradients; emoji; heavy
-or bold Fraunces; tight body leading; bouncy or looping motion.
+Classic themes use them by design); a hand-set focus colour (the ring follows
+`--ring`, which the accent axis owns); terracotta on hover (it is the danger
+pigment); blue-purple gradients; emoji; heavy or bold Fraunces; tight body
+leading; bouncy or looping motion.

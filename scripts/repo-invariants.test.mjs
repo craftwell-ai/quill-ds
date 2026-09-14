@@ -30,3 +30,25 @@ test('every registry item points at files that exist on disk', () => {
     }
   }
 })
+
+test('every path the agent-facing docs name exists, or is a registry install target', () => {
+  // DESIGN.md cited five component files and a font stylesheet that had not
+  // existed for months, and AGENTS.md sends every agent there before any
+  // visual change. A backticked, path-like string (has a slash; no glob,
+  // placeholder or scope characters) must exist in the repo, or be a `target`
+  // a registry item writes into a consumer app.
+  const targets = new Set(
+    registry.items.flatMap((i) => (i.files ?? []).map((f) => f.target).filter(Boolean)),
+  )
+  const offenders = []
+  for (const doc of ['DESIGN.md', 'PRODUCT.md', 'AGENTS.md']) {
+    readFileSync(join(root, doc), 'utf8').split('\n').forEach((line, i) => {
+      for (const m of line.matchAll(/`([^`\n]+)`/g)) {
+        const s = m[1]
+        if (!/^[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)+$/.test(s)) continue
+        if (!existsSync(join(root, s)) && !targets.has(s)) offenders.push(`${doc}:${i + 1} ${s}`)
+      }
+    })
+  }
+  assert.deepEqual(offenders, [], `agent-facing docs name paths that do not exist:\n${offenders.join('\n')}`)
+})

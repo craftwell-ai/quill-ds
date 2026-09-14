@@ -12,6 +12,31 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.18] — 2026-09-14
+
+### Fixed
+- **`DESIGN.md` described a component library that does not exist.** §7 cited
+  `components/forms/Button.jsx` and four more `.jsx` files, a `window.QuillDesignSystem_…`
+  bundle, and props (`withArrow`, `accent`, `label`/`invalid`/`multiline`,
+  `initials`, `interactive`) that the stock shadcn primitives never had; §4 named
+  `tokens/fonts.css`; §6 said hover turns terracotta and focus is a 2px ink
+  outline, which `button.tsx` and `input.tsx` contradict; §3 listed four themes.
+  `AGENTS.md` sends every agent to this file before a visual change, and no test
+  read it. §7 now documents the real Button, Input, Avatar and Card APIs at their
+  paths, Eyebrow as the recipe it is, States and Cards match the shipped
+  classes, Activation names Intelligent (with `--int-*` alongside `--dk-*` /
+  `--cl-*` / `--cd-*`), the fonts line points at the theme's `@import`, and the
+  "related files" block points at the token source, the shipped theme, the
+  registry and the usage pages instead of five files that were never here.
+  Spec item W13; this was the precondition for W5, W7 and W10.
+
+### Added
+- **A path guard for the agent-facing docs.** `scripts/repo-invariants.test.mjs`
+  now fails when `DESIGN.md`, `PRODUCT.md` or `AGENTS.md` names a path (in
+  backticks) that neither exists in the repo nor is a registry install target —
+  the same hand-maintained-list failure that `theme-enumeration` and
+  `consumer-reachability` guard elsewhere.
+
 ## [0.9.17] — 2026-09-14
 
 ### Fixed
