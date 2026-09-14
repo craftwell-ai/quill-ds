@@ -21,7 +21,7 @@ A self-hosted [shadcn registry](https://ui.shadcn.com/docs/registry) — a token
 ```
 src/app/globals.css   src/tokens/generated   registry/themes   tokens
 src/components/ui/icons.core.mjs   src/components/ui/icons.generated.d.ts
-registry.json   public/r   public/llms.txt
+registry.json   public/r   public/llms.txt   DESIGN.md (the spans between generated:… markers)
 ```
 
 Regenerate in this order — later steps read earlier output (`build:icons` before `build:registry`: the `icon` item inlines `icons.core.mjs`; `build:usage` before it too, because it writes `registry.json` docs fields):
@@ -41,6 +41,7 @@ npm run build:tokens && npm run build:icons && npm run build:usage && npm run bu
 | `registry/blocks/*.tsx` | block source of truth |
 | `registry/lib/*.tsx` | the consumer-facing `icon` and `tone-badge` |
 | `src/usage/<name>.usage.mjs` | component guidance, written once |
+| `src/usage/foundations.mjs` | type, spacing, effects and principles, rendered into DESIGN.md's generated spans, llms.txt and the agent-rules file |
 | `public/usage/`, `public/r/`, `public/llms.txt` | generated agent-facing output |
 
 Usage modules are single-sourced: one `.usage.mjs` flows into Storybook, the published usage page, the registry item's `docs`, and `llms.txt`. Edit the module, not the outputs.

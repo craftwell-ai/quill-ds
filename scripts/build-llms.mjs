@@ -1,10 +1,14 @@
 /**
- * Generates public/llms.txt — the machine-readable reasoning layer for Quill.
+ * Generates public/llms.txt — the machine-readable reasoning layer for Quill —
+ * and refreshes the generated spans in DESIGN.md (type, spacing, effects,
+ * principles), which render from the same foundations module so the human doc
+ * and the agent doc cannot disagree.
  *
  * Everything here is derived from the single sources (token module, registry,
- * intent vocabulary, package version) so the file cannot drift from the system
- * it describes. `scripts/build-llms.test.mjs` fails CI if the committed file is
- * stale. Run `npm run build:llms` after touching tokens or the registry.
+ * intent vocabulary, package version, src/usage/foundations.mjs) so the outputs
+ * cannot drift from the system they describe. `scripts/build-llms.test.mjs`
+ * fails CI if a committed output is stale. Run `npm run build:llms` after
+ * touching tokens, the registry, or the foundations module.
  *
  * Follows the llms.txt convention (llmstxt.org): H1 + blockquote + H2 sections.
  */
@@ -16,6 +20,13 @@ import { tokens } from '../src/tokens/quill.tokens.mjs'
 import { ALL_MODES, DEFAULT_MODE, DEFAULT_ACCENT } from './build-tokens.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
+import {
+  renderFoundations,
+  renderPrinciples,
+  renderTypeSection,
+  renderSpacingSection,
+  renderEffectsSection,
+} from '../src/usage/foundations.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -49,6 +60,18 @@ export function renderLlms(t = tokens) {
   p(`Install any item with the shadcn CLI against \`${HOME}/r/<name>.json\` (e.g. \`npx shadcn@latest add ${HOME}/r/quill.json\` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.`)
   p()
 
+  p('## Agent quick start')
+  p()
+  p(`1. Install the token layer: \`npx shadcn@latest add ${HOME}/r/quill.json\` — or add \`"@quill": "${HOME}/r/{name}.json"\` to \`components.json\` \`registries\` and run \`npx shadcn@latest add @quill/quill\`. Read what the CLI prints: it is the theming contract.`)
+  p('2. Set `data-theme` and `data-accent` on `<html>` (see Theming). The `theme-selector` block owns both at runtime.')
+  p('3. Before hand-building a section, pick a block from Components below by its intent and install it: `npx shadcn@latest add @quill/<name>`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme.')
+  p(`4. Read the usage guide for everything you use — \`${HOME}/usage/<name>.md\` — for the rules, what to reach for instead, and the accessibility notes.`)
+  p('5. Update an item with `npx shadcn@latest add @quill/<name> --overwrite`. `--yes` does not overwrite a changed file: it prompts in a terminal and silently skips when non-interactive.')
+  p('6. Verify in the app: `npx tsc --noEmit`, `npm run lint`; then switch `data-theme` and `data-accent` and confirm both take effect.')
+  p()
+  p(`Machine-readable: the registry index at \`${HOME}/r/registry.json\`, one item per \`${HOME}/r/<name>.json\`.`)
+  p()
+
   p('## Theming')
   p()
   p(`- **Themes** — set \`data-theme\` on \`<html>\`: ${themeLine}. Consumers must match one of these values; the token layer re-declares aliases so scoped \`data-theme\` islands work, not just the root switch.`)
@@ -65,6 +88,18 @@ export function renderLlms(t = tokens) {
   p(`  - Magnitude: \`--chart-seq-1\`…\`--chart-seq-5\` (one-hue sequential ramp).`)
   p(`  - Polarity: \`--chart-div-1\`…\`--chart-div-5\` (diverging ramp, neutral midpoint — never red/green).`)
   p('- **Accessibility** — WCAG 2.1 AA: text cuts clear 4.5:1 on every theme ground; interactive control borders clear non-text 3:1.')
+  p()
+
+  p('## Foundations')
+  p()
+  p('Type, spacing, radii, elevation and motion, rendered from the token source. Every custom property named here ships in the theme item; a name that does not exist cannot appear.')
+  p()
+  p(renderFoundations(t))
+  p()
+
+  p('## Principles')
+  p()
+  p(renderPrinciples({ blockCount: blocks.length }))
   p()
 
   p('## Component intents')
@@ -106,8 +141,49 @@ export function renderLlms(t = tokens) {
 }
 
 export const LLMS_PATH = join(root, 'public/llms.txt')
+export const DESIGN_PATH = join(root, 'DESIGN.md')
+
+/** The generated spans DESIGN.md carries, keyed by marker name. */
+export function designSpans(t = tokens) {
+  const blocks = registry.items.filter((i) => i.type === 'registry:block')
+  return {
+    type: renderTypeSection(t),
+    spacing: renderSpacingSection(t),
+    effects: renderEffectsSection(t),
+    principles: renderPrinciples({ blockCount: blocks.length }),
+  }
+}
+
+const marker = (name, edge) => `<!-- generated:${name}:${edge} -->`
+
+/** Replace the text between a span's start and end markers; throws if either is missing. */
+export function injectSpan(source, name, block) {
+  const start = marker(name, 'start')
+  const end = marker(name, 'end')
+  const s = source.indexOf(start)
+  const e = source.indexOf(end)
+  if (s === -1 || e === -1 || e < s) throw new Error(`DESIGN.md is missing the ${start} … ${end} markers`)
+  return source.slice(0, s + start.length) + '\n' + block + '\n' + source.slice(e)
+}
+
+/** Read the text currently between a span's markers (null when the markers are missing). */
+export function readSpan(source, name) {
+  const start = marker(name, 'start')
+  const end = marker(name, 'end')
+  const s = source.indexOf(start)
+  const e = source.indexOf(end)
+  if (s === -1 || e === -1 || e < s) return null
+  return source.slice(s + start.length, e).replace(/^\n/, '').replace(/\n$/, '')
+}
+
+export function refreshDesign(source, t = tokens) {
+  let out = source
+  for (const [name, block] of Object.entries(designSpans(t))) out = injectSpan(out, name, block)
+  return out
+}
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   writeFileSync(LLMS_PATH, renderLlms())
-  console.log('wrote public/llms.txt')
+  writeFileSync(DESIGN_PATH, refreshDesign(readFileSync(DESIGN_PATH, 'utf8')))
+  console.log('wrote public/llms.txt and the generated spans in DESIGN.md')
 }

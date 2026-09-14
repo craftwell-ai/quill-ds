@@ -38,7 +38,7 @@ jobs:
       GENERATED: >-
         src/app/globals.css src/tokens/generated registry/themes tokens
         src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts
-        registry.json public/r public/llms.txt
+        registry.json public/r public/llms.txt DESIGN.md
     steps:
       - uses: actions/checkout@v7
         with:
