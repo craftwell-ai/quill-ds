@@ -24,10 +24,10 @@ src/components/ui/icons.core.mjs   src/components/ui/icons.generated.d.ts
 registry.json   public/r   public/llms.txt
 ```
 
-Regenerate in this order — later steps read earlier output:
+Regenerate in this order — later steps read earlier output (`build:icons` before `build:registry`: the `icon` item inlines `icons.core.mjs`; `build:usage` before it too, because it writes `registry.json` docs fields):
 
 ```bash
-npm run build:tokens && npm run build:usage && npm run build:registry && npm run build:llms && npm run build:icons
+npm run build:tokens && npm run build:icons && npm run build:usage && npm run build:registry && npm run build:llms
 ```
 
 ## Where things live
