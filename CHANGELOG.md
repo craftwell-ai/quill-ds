@@ -5,9 +5,29 @@ breaking token/API changes bump major (minor while pre-1.0), new features bump m
 fixes bump patch.
 
 **Release routine (every feature/fix PR):** bump `version` in `package.json`, add an
-entry here, and after merge tag the commit (`git tag vX.Y.Z && git push --tags`) and
-publish a GitHub release. The homepage footer reads `package.json` directly, so the
-displayed version updates with the bump.
+entry here, and run `npm run build:llms` (llms.txt embeds the version). **Never tag or
+publish a release by hand.** After the PR merges, the release bot
+(`.github/workflows/release.yml`) tags the commit and publishes the GitHub release
+within a minute, and that release is what triggers `library-sync` into the apps; a
+manual tag races the bot and can leave a tag with no release behind it. The homepage
+footer reads `package.json` directly, so the displayed version updates with the bump.
+
+## [0.9.16] — 2026-09-14
+
+### Fixed
+- **The changelog header told contributors to tag releases by hand.** It said to
+  `git tag vX.Y.Z && git push --tags` and publish a GitHub release after merge,
+  which `AGENTS.md` forbids: the release bot tags and publishes within a minute of
+  a merge, skips a version whose tag already exists, and `library-sync` only fires
+  on a *published release*. An agent following the header would either race the
+  bot or leave a tag with no release and no downstream sync. The header now
+  describes the bot-owned routine (bump, entry, `build:llms`, nothing else).
+- **The documented regenerate order built the registry before the icons.**
+  `AGENTS.md` and the `prebuild-storybook` script ran `build:registry` before
+  `build:icons`, while CI and self-heal run icons first. The `icon` registry item
+  inlines `icons.core.mjs`, so the documented order shipped a stale
+  `public/r/icon.json` after any icon-set change and cost a red CI run. Both now
+  use the CI order: tokens → icons → usage → registry → llms.
 
 ## [0.9.15] — 2026-09-13
 
