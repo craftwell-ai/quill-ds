@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { transform } from 'lightningcss'
-import { renderCss, injectMarkers, cssVarName, registryBlock, renderManager, renderDtcg, darkVariant, MODES } from './build-tokens.mjs'
+import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES } from './build-tokens.mjs'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 
 test('generated CSS survives strict minification (LightningCSS) with light primitives intact', () => {
@@ -196,4 +196,28 @@ test('the dark: variant covers every theme whose color-scheme is dark', () => {
   for (const m of light) {
     assert.ok(!selector.includes(`[data-theme="${m.attr}"]`), `light theme '${m.attr}' must not trigger dark: utilities`)
   }
+})
+
+test('registry payload: cssVars keys are bare, css block keys carry the -- prefix', () => {
+  // shadcn's CLI prepends `--` to cssVars keys but writes `css` keys verbatim.
+  // With bare `css` keys it emitted `paper: var(--dk-paper);` in every theme
+  // and accent block — invalid CSS, silently dropped — so a CLI-installed app
+  // could not switch theme or accent. Caught with the real CLI on 2026-09-14.
+  const css = renderCss(tokens)
+  const payload = registryPayload(css)
+  for (const [bucket, vars] of Object.entries(payload.cssVars)) {
+    for (const k of Object.keys(vars)) assert.ok(!k.startsWith('--'), `cssVars.${bucket} key '${k}' must be bare`)
+  }
+  const selectors = Object.keys(payload.css)
+  assert.equal(selectors.length, css.modes.length + css.accents.length)
+  for (const [selector, block] of Object.entries(payload.css)) {
+    const keys = Object.keys(block)
+    assert.ok(keys.length > 0, `${selector} has no declarations`)
+    for (const k of keys) assert.match(k, /^--[a-z0-9-]+$/, `${selector} key '${k}' must be a custom-property name`)
+  }
+  // Nothing lost in translation: the dark block carries every --var its CSS body declares.
+  const darkBody = css.modes.find((m) => m.attr === 'dark').body
+  const declared = [...darkBody.matchAll(/^\s*--([a-z0-9-]+)\s*:/gm)].length
+  assert.equal(Object.keys(payload.css['[data-theme="dark"]']).length, declared)
+  assert.equal(payload.css['[data-theme="dark"]']['--paper'], 'var(--dk-paper)')
 })

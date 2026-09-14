@@ -12,6 +12,23 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.20] — 2026-09-14
+
+### Fixed
+- **A CLI install could not switch theme or accent: the registry `css` blocks
+  shipped keys without `--`.** shadcn's CLI prepends `--` to `cssVars` keys but
+  writes `css` keys verbatim, and `scripts/build-tokens.mjs` reused the same
+  stripped-key helper for both. In an app installed with
+  `npx shadcn add @quill/quill`, every declaration inside the four `[data-theme]`
+  and four `[data-accent]` blocks landed as `paper: var(--dk-paper);` — invalid
+  CSS that browsers drop — so `data-theme` and `data-accent` did nothing through
+  the merged stylesheet; only the still-shipped `app/quill-theme.css` file made
+  them work, and only when the app imported it. The blocks now carry proper `--`
+  keys. Verified with the real CLI in a scratch app, including that re-running
+  with `--overwrite` upserts every value in place and leaves the stylesheet
+  byte-identical. A new test pins the two key shapes. Neither existing app was
+  affected: both predate the `cssVars` delivery and import the file.
+
 ## [0.9.19] — 2026-09-14
 
 ### Added
