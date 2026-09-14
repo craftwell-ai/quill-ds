@@ -12,6 +12,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.22] — 2026-09-14
+
+### Changed
+- chore(deps): Bump the react group with 4 updates
+
 ## [0.9.21] — 2026-09-14
 
 ### Fixed
