@@ -49,6 +49,7 @@ import { usage as footer } from './footer.usage.mjs'
 import { usage as forgotPassword } from './forgot-password.usage.mjs'
 import { usage as hero } from './hero.usage.mjs'
 import { usage as hoverCard } from './hover-card.usage.mjs'
+import { usage as icon } from './icon.usage.mjs'
 import { usage as input } from './input.usage.mjs'
 import { usage as inputGroup } from './input-group.usage.mjs'
 import { usage as inputOtp } from './input-otp.usage.mjs'
@@ -157,6 +158,7 @@ export const ALL_USAGE = [
   forgotPassword,
   hero,
   hoverCard,
+  icon,
   input,
   inputGroup,
   inputOtp,

@@ -236,6 +236,11 @@ declare module '@/usage/hover-card.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/icon.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/input.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
