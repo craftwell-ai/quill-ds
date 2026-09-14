@@ -543,5 +543,5 @@ declare module '@/usage/wizard.usage.mjs' {
 
 declare module '@/usage/render.mjs' {
   import type { Usage } from '@/usage/types'
-  export function renderUsageDocs(usage: Usage): string
+  export function renderUsageDocs(usage: Usage, options?: { format?: 'mdx' | 'markdown' }): string
 }
