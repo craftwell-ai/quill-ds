@@ -1,0 +1,51 @@
+name: Dependabot unstick
+
+# The step the self-healing loop was missing (CRA-207). A dependency PR that
+# fails CI on generated-file drift gets its files rebuilt and pushed by
+# dependabot-regenerate.yml — and from that moment Dependabot stops rebasing
+# the branch, because another actor has committed to it. main keeps moving
+# with every release, so the PR turns BEHIND (protection requires up-to-date
+# branches) or DIRTY (conflicting), GitHub runs no pull_request workflow on a
+# conflicting PR, and auto-merge waits forever. #135 sat that way for days.
+#
+# This asks Dependabot to `recreate` such a PR: it rebuilds it on the current
+# base, CI runs, the regenerate step pushes again if needed, and auto-merge
+# lands it once main holds still. Runs after every push to main (that is when
+# open PRs fall behind) and on a schedule as a backstop. Comments only; it
+# never pushes, merges or closes anything.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '41 */6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: dependabot-unstick
+  cancel-in-progress: false
+
+jobs:
+  unstick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      # No npm ci: the script leans on node stdlib and the gh CLI only.
+      # Dependabot honours commands only from a user with write access, so a
+      # comment posted with the default GITHUB_TOKEN is ignored. AUTOMATION_TOKEN
+      # is a user PAT (see scripts/DRIFT-AUDIT.md); the fallback keeps the job
+      # green rather than useful, and the run summary names what it asked.
+      - name: Ask Dependabot to recreate stuck pull requests
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+        run: node scripts/dependabot-unstick.mjs
