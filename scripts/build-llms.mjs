@@ -53,7 +53,9 @@ export function renderLlms(t = tokens) {
   const L = []
   const p = (s = '') => L.push(s)
 
-  p(`# ${registry.name === 'quill-ds' ? 'Quill Design System' : registry.name}`)
+  // registry.name is the namespace slug shadcn derives (`quill` → `@quill`),
+  // not a display name; the H1 stays the human title.
+  p('# Quill Design System')
   p()
   p(`> ${registry.items.find((i) => i.name === 'quill').description} A self-hosted shadcn registry with a ${countWord(ALL_MODES.length)}-theme, ${countWord(accents.length)}-accent token layer, WCAG 2.1 AA targets, and ${blocks.length} composable blocks. Version ${pkg.version}.`)
   p()
