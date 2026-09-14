@@ -41,7 +41,21 @@ test('non-block registry targets are exactly the five the downstream gate knows'
     'components/ui/icons.core.d.mts',
     'components/ui/icons.core.mjs',
     'components/ui/tone-badge.tsx',
+    '~/.claude/rules/quill.md',
   ])
+})
+
+test('planSync writes a ~/ target at the project root, never under src/', () => {
+  const rules = {
+    name: 'agent-rules',
+    files: [{ target: '~/.claude/rules/quill.md', content: 'rules v2' }],
+  }
+  // installed at the root of a src/-rooted app: refreshed in place, not relocated
+  const plan = planSync([rules], ['src/components/ui/button.tsx', '.claude/rules/quill.md'])
+  assert.deepEqual(plan.writes, [{ path: '.claude/rules/quill.md', content: 'rules v2' }])
+  assert.deepEqual(plan.itemNames, ['agent-rules'])
+  // never installed: left alone, like every other item
+  assert.deepEqual(planSync([rules], ['app/quill-theme.css']).writes, [])
 })
 
 // --- Planning ---

@@ -835,6 +835,20 @@
       "docs": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site. Do: Leave `solid` false (the tinted default) for regular status/tier labels — it is the visually quieter option and still hits AA contrast per tone. Don't: Set `solid` on every ToneBadge in a view — solid is reserved for the one strong cue (a \"current\" marker, a live state) and loses its signal once everything is solid. Do: Render every uppercase tag pill through ToneBadge, even one-off labels. Don't: Hand-roll a `rounded-full … uppercase` span with ad hoc tone colors — it drifts from the AA-checked tint/solid pairs and the two-size scale. Do: Use ToneBadge's own size scale — `md` (20px) or `sm` (16px, the count-pill scale). Don't: Shrink a pill by hand-tightening its tracking or padding instead of passing `size=\"sm\"` — type stays `--text-2xs` at 0.1em tracking in both sizes. Use badge when the label is a generic chip outside Quill's tag-pill vocabulary — use Badge directly instead of forcing it through a tone."
     },
     {
+      "name": "agent-rules",
+      "type": "registry:file",
+      "title": "Quill agent rules",
+      "description": "Claude Code project rules so AI agents build on-brand with Quill — the theming contract, foundations, principles, icon names and the block index, generated from the design system.",
+      "docs": "Installed to .claude/rules/quill.md at the project root, where Claude Code loads it every session. Re-run `npx shadcn@latest add @quill/agent-rules --overwrite` after each Quill release to update it; the library-sync bot does this for apps that carry the file.",
+      "files": [
+        {
+          "path": "registry/agent-rules/quill.md",
+          "type": "registry:file",
+          "target": "~/.claude/rules/quill.md"
+        }
+      ]
+    },
+    {
       "name": "activity-feed",
       "type": "registry:block",
       "title": "Activity feed",

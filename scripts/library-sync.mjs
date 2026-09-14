@@ -98,7 +98,17 @@ export function readRegistryItems(repoRoot) {
  */
 export function planSync(items, appPaths) {
   const present = new Set(appPaths)
-  const resolve = (t) => (present.has(`src/${t}`) ? `src/${t}` : present.has(t) ? t : null)
+  // A `~/`-prefixed target is shadcn's "project root" — the CLI resolves it
+  // before any src/ relocation, so the agent-rules file lands at
+  // `.claude/rules/quill.md` in every app. Matching the target literally
+  // would never find it, and the release bot would never refresh it (spec F17).
+  const rooted = (t) => t.startsWith('~/')
+  const norm = (t) => t.replace(/^~\//, '')
+  const resolve = (t) => {
+    const n = norm(t)
+    if (rooted(t)) return present.has(n) ? n : null
+    return present.has(`src/${n}`) ? `src/${n}` : present.has(n) ? n : null
+  }
   const writes = []
   const itemNames = []
   const npmDeps = []
@@ -113,7 +123,7 @@ export function planSync(items, appPaths) {
     const useSrc = anchors[0].startsWith('src/')
     for (const f of files) {
       writes.push({
-        path: resolve(f.target) ?? (useSrc ? `src/${f.target}` : f.target),
+        path: resolve(f.target) ?? (rooted(f.target) ? norm(f.target) : useSrc ? `src/${f.target}` : f.target),
         content: f.content,
       })
     }

@@ -44,7 +44,7 @@ jobs:
       GENERATED: >-
         src/app/globals.css src/tokens/generated registry/themes tokens
         src/components/ui/icons.core.mjs src/components/ui/icons.generated.d.ts
-        registry.json public/r public/llms.txt DESIGN.md
+        registry.json registry/agent-rules public/r public/llms.txt DESIGN.md
       # AUTOMATION_TOKEN (a PAT) is what makes an opened PR trigger CI. With the
       # default GITHUB_TOKEN the PR opens but no check ever runs, so auto-merge
       # waits forever. Surfaced by the last step rather than failing silently.
@@ -66,6 +66,7 @@ jobs:
         run: |
           npm run build:tokens
           npm run build:icons
+          npm run build:agent-rules
           npm run build:registry
           npm run build:llms
 

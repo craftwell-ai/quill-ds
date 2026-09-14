@@ -27,7 +27,8 @@ export function chartSeriesCount() {
  * One paragraph-per-topic string. Kept as prose rather than markdown headings
  * because the CLI prints it into a terminal, not a renderer.
  */
-export function renderThemeDocs() {
+/** The theming contract as separate paragraphs (the rules file renders them as bullets). */
+export function themeDocsParagraphs() {
   const themes = ALL_MODES.map((m) =>
     m.attr === DEFAULT_MODE.attr
       ? `unset (or data-theme="${m.attr}") → ${m.label} (default)`
@@ -52,5 +53,9 @@ export function renderThemeDocs() {
     `Updating — re-run with --overwrite, not --yes. On a file you have changed, --yes does not overwrite: it prompts in a terminal and silently skips when non-interactive.`,
 
     `Full machine-readable reference for agents: ${LLMS_URL}. Per-component usage guides at /usage/<name>.md.`,
-  ].join(' ')
+  ]
+}
+
+export function renderThemeDocs() {
+  return themeDocsParagraphs().join(' ')
 }
