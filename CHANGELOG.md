@@ -12,6 +12,18 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.29] — 2026-09-14
+
+### Fixed
+- **The Dependabot unstick run fired by a push to `main` could never act.** A push
+  is exactly the moment GitHub is still recomputing every open PR's
+  mergeability, so the first listing reported UNKNOWN for all of them and the
+  run left them alone — seen on its first live run, minutes after the previous
+  release landed. `scripts/dependabot-unstick.mjs` now re-lists while any state
+  is UNKNOWN, up to eight times fifteen seconds apart, and leaves whatever is
+  still undetermined to the six-hourly run. Three tests cover the poll, its
+  budget, and the no-poll case.
+
 ## [0.9.28] — 2026-09-14
 
 ### Fixed
