@@ -12,6 +12,16 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.26] — 2026-09-14
+
+### Added
+- **MIT license.** The repo had no LICENSE file, which made it "all rights
+  reserved" by default even though the registry model copies code into every
+  consuming app. `LICENSE` (MIT, Ryan Phillips / Craftwell), `"license": "MIT"`
+  in `package.json`, a line in the README, and a License entry in llms.txt's
+  Links so agents can see the terms. Required for listing in the shadcn
+  registry directory, which only accepts open-source registries.
+
 ## [0.9.25] — 2026-09-14
 
 ### Changed
