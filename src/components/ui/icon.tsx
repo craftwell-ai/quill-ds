@@ -74,7 +74,7 @@ function Icon({
                 err: new Error(`Unknown icon: ${String(name)}`, { cause: perIconErr }),
               })
           }
-        } catch (tailErr: unknown) {
+        } catch {
           if (active)
             setError({
               name,

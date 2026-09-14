@@ -14,6 +14,16 @@
 3. The sync **upserts by name**: existing variables/styles update in place; nothing duplicates.
    Running it a second time creates zero new objects.
 
+## Re-run the icon sync
+
+1. Build the icon modules: `npm run build:icons` — `src/components/ui/icons.core.mjs` is the sync core.
+2. Load the `figma-use` skill, then call the Figma MCP `use_figma` on file `Dcf8lEB7Ash71iNl7WN4Jq` with:
+   - `const ICONS = <the `icons` export of src/components/ui/icons.core.mjs>;` prepended, followed by the
+     contents of `figma/sync-icons.figma.js`, then `await syncIcons(ICONS)`.
+3. The sync clears the previous gallery and `icon/*` components and rebuilds them, so a re-run creates
+   no duplicates. Every icon's fill is bound to the `text/strong` variable; nothing is hardcoded.
+   Last run: 2026-07-02 (33cd83b).
+
 ## What this manages
 
 - Variables: `Quill Primitives` collection (modes: Light, Dark) + `Quill Semantic` collection (aliases → Primitives).

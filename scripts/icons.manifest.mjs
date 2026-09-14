@@ -1,5 +1,5 @@
 // GENERATED — top ~1000 Material Symbols (Outlined) by Google popularity, union'd with in-use icons.
-// Regenerate: node scripts/build-manifest.mjs /tmp/ms-meta.json  (then npm run build:icons)
+// Regenerate: npm run build:icon-manifest -- /tmp/ms-meta.json  (then npm run build:icons)
 export const MANIFEST = [
   '123',
   '360',
@@ -468,6 +468,7 @@ export const MANIFEST = [
   'inbox',
   'indeterminate_check_box',
   'info',
+  'ink_pen',
   'input',
   'insert_chart',
   'integration_instructions',
@@ -843,6 +844,7 @@ export const MANIFEST = [
   'star',
   'star_half',
   'star_rate',
+  'star_shine',
   'stars',
   'start',
   'sticky_note_2',
