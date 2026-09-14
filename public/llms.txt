@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.18.
+> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.19.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -123,6 +123,7 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [empty](https://www.quilldesignsystem.com/usage/empty.md) — An empty-state block for zero-data surfaces — icon, title, description, and a primary action, centered in the available space.
 - [field](https://www.quilldesignsystem.com/usage/field.md) — A form field wrapper that connects a Label, FieldDescription, and FieldError to a control.
 - [hover-card](https://www.quilldesignsystem.com/usage/hover-card.md) — A glanceable preview that opens after a brief hover-intent delay on a link — a visual enhancement for sighted mouse and keyboard users, informational only.
+- [icon](https://www.quilldesignsystem.com/usage/icon.md) — The Quill icon component — Material Symbols Outlined at weight 400, shipped as a self-contained core set of 91 names covering every icon the Quill blocks use.
 - [input](https://www.quilldesignsystem.com/usage/input.md) — A styled native text input for free-form single-line entry — email, name, search, URL.
 - [input-group](https://www.quilldesignsystem.com/usage/input-group.md) — Merges an input (or textarea) with prefix/suffix addons — icons, buttons, plain text — inside one bordered control.
 - [input-otp](https://www.quilldesignsystem.com/usage/input-otp.md) — Digit-by-digit secure code entry — email verification, 2FA, PIN.

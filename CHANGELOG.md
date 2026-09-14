@@ -12,6 +12,22 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.19] — 2026-09-14
+
+### Added
+- **The `icon` item now ships install-time docs, a usage page and the list of
+  names it actually contains** (spec item W3). It was the only registry item
+  with no `docs` and no usage module, so an agent installing `@quill/icon` had
+  no guidance and no way to know which names exist — and the consumer `<Icon>`
+  draws an unknown name as a blank box. `src/usage/icon.usage.mjs` derives the
+  core-set list from `icons.core.mjs` (never hand-typed), so
+  `public/usage/icon.md`, the item's `docs` and llms.txt always name exactly
+  what ships; `src/stories/icon.stories.tsx` adds the story the usage system
+  requires plus a gallery of the core set.
+- **Every registry item must carry install-time docs.** `scripts/registry-meta.test.mjs`
+  now fails on any item without a substantive `docs` field (the W14 half that
+  would have caught the undocumented `icon` item).
+
 ## [0.9.18] — 2026-09-14
 
 ### Fixed

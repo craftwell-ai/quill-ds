@@ -87,3 +87,15 @@ test('every block publishes its intent through `categories`, shadcn\'s own schem
     )
   }
 })
+
+test('every registry item carries install-time docs', () => {
+  // `docs` is the only prose the shadcn CLI prints at install time. The `icon`
+  // item shipped without one until a usage module was written for it — an
+  // agent installing @quill/icon got no guidance and no list of valid names.
+  for (const item of registry.items) {
+    assert.ok(
+      typeof item.docs === 'string' && item.docs.trim().length >= 40,
+      `registry item '${item.name}' has no install-time docs — add src/usage/${item.name}.usage.mjs and run \`npm run build:usage\``,
+    )
+  }
+})
