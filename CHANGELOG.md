@@ -12,6 +12,17 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.39] — 2026-09-15
+
+### Changed
+- **Adopted parity entries no longer carry the keys the REST response could
+  not fill.** A property with neither a binding nor a raw value (Separator's
+  stroke, radius, padding and gap, for instance) warned "not verifiable" on
+  every daily run without saying anything. `pruneSnapshot` drops such keys —
+  and a null effect style — from every adopted entry, and the ten entries
+  already in `figma/sync-state.json` are cleaned the same way once. The check
+  skips absent keys, so nothing that could be verified is lost. (CRA-179)
+
 ## [0.9.38] — 2026-09-15
 
 ### Changed

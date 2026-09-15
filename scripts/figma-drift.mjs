@@ -304,6 +304,22 @@ export function matchCode(source, classes) {
   return { classes: main, missing, detectionOnly: false }
 }
 
+// Keys the REST response could not fill (binding and raw both null) carry no
+// information and would warn on every daily run as "not verifiable"; a null
+// effect style likewise. Drop them from an adopted snapshot — diffComponent
+// skips absent keys, and a property that later gains a binding shows up as
+// drift by raw value the next time the entry is rewritten.
+export function pruneSnapshot(figma) {
+  const out = {}
+  for (const [key, value] of Object.entries(figma)) {
+    const pair = value && typeof value === 'object' && !Array.isArray(value) && 'var' in value && 'raw' in value
+    if (pair && value.var == null && value.raw == null) continue
+    if (key === 'effectStyle' && value == null) continue
+    out[key] = value
+  }
+  return out
+}
+
 // One candidate → either a baseline entry or a reason. Pure; the caller does I/O.
 export function adoptCandidate(candidate, bundle, varNames, source, today) {
   if (!bundle?.document) return { adopted: null, why: `node ${candidate.nodeId} not found in file` }
@@ -330,7 +346,7 @@ export function adoptCandidate(candidate, bundle, varNames, source, today) {
     ...(variant ? { variantOf: candidate.nodeId, variant } : {}),
     codeFile: candidate.codeFile,
     lastSynced: today,
-    figma,
+    figma: pruneSnapshot(figma),
     code: { classes: match.classes },
   }
   const notes = []
