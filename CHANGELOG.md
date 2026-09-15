@@ -12,6 +12,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.32] — 2026-09-15
+
+### Changed
+- chore(deps): Bump @storybook/addon-mcp from 0.7.0 to 10.6.0
+
 ## [0.9.31] — 2026-09-14
 
 ### Changed
