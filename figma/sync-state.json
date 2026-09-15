@@ -1,5 +1,5 @@
 {
-  "$comment": "Baseline for the scheduled Figma\u2194code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry. `candidates` lists Figma twins not yet under the check (Wave A, from figma/components/README.md); `figma-drift.mjs --adopt` (the figma-parity workflow's `adopt` input) moves each into `components` once Figma and code agree, and reports the ones that do not.",
+  "$comment": "Baseline for the scheduled Figma↔code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry. `candidates` lists Figma twins not yet under the check (Wave A, from figma/components/README.md); `figma-drift.mjs --adopt` (the figma-parity workflow's `adopt` input) moves each into `components` once Figma and code agree, and reports the ones that do not.",
   "fileKey": "Dcf8lEB7Ash71iNl7WN4Jq",
   "variables": {
     "VariableID:4:2": "corner-radius/xs",
@@ -100,11 +100,6 @@
       "codeFile": "src/components/ui/spinner.tsx"
     },
     {
-      "name": "Separator",
-      "nodeId": "82:3",
-      "codeFile": "src/components/ui/separator.tsx"
-    },
-    {
       "name": "Skeleton",
       "nodeId": "82:6",
       "codeFile": "src/components/ui/skeleton.tsx"
@@ -159,6 +154,44 @@
       },
       "code": {
         "classes": "flex w-72 flex-col gap-3 rounded-2xl border bg-card p-8 text-card-foreground shadow-lg"
+      }
+    },
+    {
+      "name": "Separator",
+      "nodeId": "82:3",
+      "codeFile": "src/components/ui/separator.tsx",
+      "lastSynced": "2026-09-15",
+      "figma": {
+        "fill": {
+          "var": "shadcn/border",
+          "raw": "#2A2622"
+        },
+        "stroke": {
+          "var": null,
+          "raw": null
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": null
+        },
+        "padding": {
+          "var": null,
+          "raw": null
+        },
+        "itemSpacing": {
+          "var": null,
+          "raw": null
+        },
+        "effectStyle": null,
+        "texts": {},
+        "childSignature": []
+      },
+      "code": {
+        "classes": "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch"
       }
     }
   ]
