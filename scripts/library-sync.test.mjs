@@ -30,11 +30,14 @@ test('readRegistryItems returns every indexed item with writable files', () => {
 // here therefore means the next sync PR there is refused — fail-closed by
 // design, but silently so. This test makes the upstream change loud: add the
 // new target to this list AND to the downstream SYNC_PATHS, in that order.
-test('non-block registry targets are exactly the five the downstream gate knows', () => {
+// Two directories are the sync's own: blocks under `components/quill/` and
+// the page compositions under `components/examples/` (CRA-205), which an app
+// only ever receives after installing one, like a block.
+test('non-block registry targets are exactly the six the downstream gate knows', () => {
   const items = readRegistryItems(root)
   const targets = new Set()
   for (const item of items) for (const f of item.files ?? []) targets.add(f.target)
-  const nonBlock = [...targets].filter((t) => !t.startsWith('components/quill/')).sort()
+  const nonBlock = [...targets].filter((t) => !t.startsWith('components/quill/') && !t.startsWith('components/examples/')).sort()
   assert.deepEqual(nonBlock, [
     'app/quill-theme.css',
     'components/ui/icon.tsx',

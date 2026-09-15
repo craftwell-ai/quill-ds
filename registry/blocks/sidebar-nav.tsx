@@ -39,8 +39,8 @@ const team = [
   { icon: 'settings', label: 'Settings' },
 ] as const
 
-/** A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area. */
-export function SidebarNav() {
+/** A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in. */
+export function SidebarNav({ children }: { children?: React.ReactNode }) {
   return (
     <SidebarProvider>
       <div className="flex h-[560px] w-full">
@@ -107,27 +107,37 @@ export function SidebarNav() {
           <header className="flex items-center gap-3 border-b border-border px-4 py-3">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="#">Workspace</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Overview</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            {children ? (
+              // A page passed in brings its own page-header breadcrumb, so the
+              // shell keeps the top bar to the trigger and the workspace name.
+              <span className="text-sm text-muted-foreground">Workspace</span>
+            ) : (
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="#">Workspace</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Overview</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            )}
           </header>
-          <main className="grid flex-1 grid-cols-3 gap-4 overflow-auto p-4 max-lg:grid-cols-1">
-            {['Active engagements', 'Review queue', 'Client notes'].map((title) => (
-              <Card key={title} size="sm">
-                <CardContent className="flex h-32 flex-col gap-1">
-                  <span className="text-sm font-medium text-foreground">{title}</span>
-                  <span className="text-xs text-muted-foreground">Nothing pressing.</span>
-                </CardContent>
-              </Card>
-            ))}
+          <main className="flex flex-1 flex-col gap-6 overflow-auto p-4">
+            {children ?? (
+              <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-1">
+                {['Active engagements', 'Review queue', 'Client notes'].map((title) => (
+                  <Card key={title} size="sm">
+                    <CardContent className="flex h-32 flex-col gap-1">
+                      <span className="text-sm font-medium text-foreground">{title}</span>
+                      <span className="text-xs text-muted-foreground">Nothing pressing.</span>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </main>
         </div>
       </div>

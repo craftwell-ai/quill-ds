@@ -1,6 +1,6 @@
 # sidebar-nav (pattern)
 
-A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.
+A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in.
 
 ### When to use
 - You need a collapsible icon-sidebar app shell with grouped menus and a content area.

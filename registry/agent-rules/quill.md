@@ -181,6 +181,13 @@ Install: `npx shadcn@latest add @quill/<name>`. Update: add `--overwrite`. Group
   - `theme-selector` — Theme selector
   - `settings` — Settings form
 
+## Examples — start from a page
+
+Whole pages composed from the blocks above. Install one (`npx shadcn@latest add @quill/<name>`) and replace the sample content instead of composing from scratch; keep the order and the spacing.
+- `example-app-page` — sidebar-nav → page-header → stat-cards → data-table
+- `example-marketing-page` — navbar → hero → feature-section → pricing → testimonial → footer
+- `example-auth-page` — login-split-panel
+
 ## Primitives
 
 Stock shadcn components restyled by the token layer — install them from shadcn (`npx shadcn@latest add button`), never hand-roll them. Quill-specific usage rules exist at `https://www.quilldesignsystem.com/usage/<name>.md` for: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox, collapsible, combobox, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card, icon, input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group, tone-badge, tooltip.

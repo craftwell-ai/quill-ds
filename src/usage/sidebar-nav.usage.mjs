@@ -1,7 +1,7 @@
 export const usage = {
   name: 'sidebar-nav',
   kind: 'pattern',
-  summary: 'A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.',
+  summary: 'A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in.',
   useWhen: [
     'You need a collapsible icon-sidebar app shell with grouped menus and a content area.',
   ],

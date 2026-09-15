@@ -20,6 +20,7 @@ import { tokens } from '../src/tokens/quill.tokens.mjs'
 import { ALL_MODES, DEFAULT_MODE, DEFAULT_ACCENT } from './build-tokens.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
+import { EXAMPLES } from '../src/usage/examples.mjs'
 import {
   renderFoundations,
   renderPrinciples,
@@ -121,6 +122,13 @@ export function renderLlms(t = tokens) {
     const guide = usageByName.has(b.name) ? ` · [usage guide](${HOME}/usage/${b.name}.md)` : ''
     p(`- [${b.title ?? b.name}](${HOME}/r/${b.name}.json) — _[${intent}]_ ${b.meta?.use_when ?? b.description}${guide}`)
   }
+  p()
+
+  p('## Examples — start from a page, not from scratch')
+  p()
+  p('Each example is a whole page composed from the blocks above; its docs carry the composition order and the spacing rules. Install one and replace the sample content: `npx shadcn@latest add @quill/<name>`.')
+  p()
+  for (const e of EXAMPLES) p(`- [${e.title}](${HOME}/r/${e.name}.json) — ${e.description} Composition: ${e.blocks.join(' → ')}.`)
   p()
 
   const primitives = ALL_USAGE.filter((u) => u.kind === 'component')

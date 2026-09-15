@@ -20,6 +20,7 @@ import { dirname, join } from 'node:path'
 import { ALL_USAGE } from '../src/usage/index.mjs'
 import { renderUsageDocs } from '../src/usage/render.mjs'
 import { renderThemeDocs } from '../src/usage/theme-docs.mjs'
+import { EXAMPLES, renderExampleDocs } from '../src/usage/examples.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const USAGE_DIR = join(root, 'public/usage')
@@ -65,6 +66,17 @@ export function injectRegistryDocs(registry, all = ALL_USAGE) {
     // installs, so it is the only place the CLI can hand an app the rules.
     if (item.name === 'quill') {
       item.docs = renderThemeDocs()
+      continue
+    }
+    // Page compositions: every field an agent reads comes from src/usage/examples.mjs
+    // (order, description, docs); the entry in registry.json only names the file.
+    const example = EXAMPLES.find((e) => e.name === item.name)
+    if (example) {
+      const home = registry.homepage.replace(/\/$/, '')
+      item.title = example.title
+      item.description = example.description
+      item.docs = renderExampleDocs(example)
+      item.registryDependencies = example.blocks.map((b) => `${home}/r/${b}.json`)
       continue
     }
     const u = byName.get(item.name)

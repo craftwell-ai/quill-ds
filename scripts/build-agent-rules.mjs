@@ -24,6 +24,7 @@ import { icons } from '../src/components/ui/icons.core.mjs'
 import { themeDocsParagraphs, LLMS_URL } from '../src/usage/theme-docs.mjs'
 import { renderFoundations, renderPrinciples } from '../src/usage/foundations.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
+import { EXAMPLES } from '../src/usage/examples.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -89,6 +90,12 @@ export function renderAgentRules() {
     p(`- **${tag}**`)
     for (const b of list) p(`  - \`${b.name}\` — ${b.title ?? b.name}`)
   }
+  p()
+
+  p('## Examples — start from a page')
+  p()
+  p('Whole pages composed from the blocks above. Install one (`npx shadcn@latest add @quill/<name>`) and replace the sample content instead of composing from scratch; keep the order and the spacing.')
+  for (const e of EXAMPLES) p(`- \`${e.name}\` — ${e.blocks.join(' → ')}`)
   p()
 
   const primitives = ALL_USAGE.filter((u) => u.kind === 'component').map((u) => u.name)

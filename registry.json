@@ -835,6 +835,65 @@
       "docs": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site. Do: Leave `solid` false (the tinted default) for regular status/tier labels — it is the visually quieter option and still hits AA contrast per tone. Don't: Set `solid` on every ToneBadge in a view — solid is reserved for the one strong cue (a \"current\" marker, a live state) and loses its signal once everything is solid. Do: Render every uppercase tag pill through ToneBadge, even one-off labels. Don't: Hand-roll a `rounded-full … uppercase` span with ad hoc tone colors — it drifts from the AA-checked tint/solid pairs and the two-size scale. Do: Use ToneBadge's own size scale — `md` (20px) or `sm` (16px, the count-pill scale). Don't: Shrink a pill by hand-tightening its tracking or padding instead of passing `size=\"sm\"` — type stays `--text-2xs` at 0.1em tracking in both sizes. Use badge when the label is a generic chip outside Quill's tag-pill vocabulary — use Badge directly instead of forcing it through a tone."
     },
     {
+      "name": "example-app-page",
+      "type": "registry:component",
+      "title": "Example: app page",
+      "description": "An example showing how to compose an app page: the sidebar-nav shell wrapping a page-header, then stat-cards, then a data-table — the page leads with what it is about, and the numbers sit inside it.",
+      "files": [
+        {
+          "path": "registry/examples/example-app-page.tsx",
+          "type": "registry:component",
+          "target": "components/examples/example-app-page.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "https://www.quilldesignsystem.com/r/sidebar-nav.json",
+        "https://www.quilldesignsystem.com/r/page-header.json",
+        "https://www.quilldesignsystem.com/r/stat-cards.json",
+        "https://www.quilldesignsystem.com/r/data-table.json"
+      ],
+      "docs": "Composition, top to bottom: sidebar-nav → page-header → stat-cards → data-table. Install it, then replace the blocks' sample content with your own; keep the order and the spacing.\n\nA **4px base step** (`--space-1` = 0.25rem). Editorial rhythm — sections breathe.\n\n`--space-1` 4px · `--space-2` 8px · `--space-3` 12px · `--space-4` 16px · `--space-5` 20px · `--space-6` 24px · `--space-7` 28px · `--space-8` 32px · `--space-9` 36px · `--space-10` 40px · `--space-12` 48px · `--space-16` 64px · `--space-20` 80px · `--space-24` 96px\n\nComponents sit on `--space-4` / `--space-6`; sections breathe with `--space-24`.\n\n### Layout\nNo layout tokens ship; use the values the site uses. Marketing max-width **1400px** (`max-w-[1400px]`), reading column **800px**, side padding **48px** on desktop (`px-12`) and **24px** on mobile (`px-6`), vertical section rhythm **96px** (`py-24`; `py-14` on mobile).\n\n### Composition\n- Recurring section header: eyebrow → headline (one accent word) → right-aligned italic caption.\n- One idea per section: a heading plus one composition (a grid of cards, a table, a form), never a stack of unrelated widgets.\n- No hero-metric row above an identical card grid — that is the generic dashboard Quill exists to avoid. Lead with the thing the page is about; let numbers sit inside it."
+    },
+    {
+      "name": "example-marketing-page",
+      "type": "registry:component",
+      "title": "Example: marketing page",
+      "description": "An example showing how to compose a marketing page: navbar, hero, feature-section, pricing, testimonial and footer — one idea per section, breathing at the 96px rhythm.",
+      "files": [
+        {
+          "path": "registry/examples/example-marketing-page.tsx",
+          "type": "registry:component",
+          "target": "components/examples/example-marketing-page.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "https://www.quilldesignsystem.com/r/navbar.json",
+        "https://www.quilldesignsystem.com/r/hero.json",
+        "https://www.quilldesignsystem.com/r/feature-section.json",
+        "https://www.quilldesignsystem.com/r/pricing.json",
+        "https://www.quilldesignsystem.com/r/testimonial.json",
+        "https://www.quilldesignsystem.com/r/footer.json"
+      ],
+      "docs": "Composition, top to bottom: navbar → hero → feature-section → pricing → testimonial → footer. Install it, then replace the blocks' sample content with your own; keep the order and the spacing.\n\nA **4px base step** (`--space-1` = 0.25rem). Editorial rhythm — sections breathe.\n\n`--space-1` 4px · `--space-2` 8px · `--space-3` 12px · `--space-4` 16px · `--space-5` 20px · `--space-6` 24px · `--space-7` 28px · `--space-8` 32px · `--space-9` 36px · `--space-10` 40px · `--space-12` 48px · `--space-16` 64px · `--space-20` 80px · `--space-24` 96px\n\nComponents sit on `--space-4` / `--space-6`; sections breathe with `--space-24`.\n\n### Layout\nNo layout tokens ship; use the values the site uses. Marketing max-width **1400px** (`max-w-[1400px]`), reading column **800px**, side padding **48px** on desktop (`px-12`) and **24px** on mobile (`px-6`), vertical section rhythm **96px** (`py-24`; `py-14` on mobile).\n\n### Composition\n- Recurring section header: eyebrow → headline (one accent word) → right-aligned italic caption.\n- One idea per section: a heading plus one composition (a grid of cards, a table, a form), never a stack of unrelated widgets.\n- No hero-metric row above an identical card grid — that is the generic dashboard Quill exists to avoid. Lead with the thing the page is about; let numbers sit inside it."
+    },
+    {
+      "name": "example-auth-page",
+      "type": "registry:component",
+      "title": "Example: auth page",
+      "description": "An example showing how to compose an auth page: login-split-panel alone at full viewport — one task, nothing competing with it.",
+      "files": [
+        {
+          "path": "registry/examples/example-auth-page.tsx",
+          "type": "registry:component",
+          "target": "components/examples/example-auth-page.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "https://www.quilldesignsystem.com/r/login-split-panel.json"
+      ],
+      "docs": "Composition, top to bottom: login-split-panel. Install it, then replace the blocks' sample content with your own; keep the order and the spacing.\n\nA **4px base step** (`--space-1` = 0.25rem). Editorial rhythm — sections breathe.\n\n`--space-1` 4px · `--space-2` 8px · `--space-3` 12px · `--space-4` 16px · `--space-5` 20px · `--space-6` 24px · `--space-7` 28px · `--space-8` 32px · `--space-9` 36px · `--space-10` 40px · `--space-12` 48px · `--space-16` 64px · `--space-20` 80px · `--space-24` 96px\n\nComponents sit on `--space-4` / `--space-6`; sections breathe with `--space-24`.\n\n### Layout\nNo layout tokens ship; use the values the site uses. Marketing max-width **1400px** (`max-w-[1400px]`), reading column **800px**, side padding **48px** on desktop (`px-12`) and **24px** on mobile (`px-6`), vertical section rhythm **96px** (`py-24`; `py-14` on mobile).\n\n### Composition\n- Recurring section header: eyebrow → headline (one accent word) → right-aligned italic caption.\n- One idea per section: a heading plus one composition (a grid of cards, a table, a form), never a stack of unrelated widgets.\n- No hero-metric row above an identical card grid — that is the generic dashboard Quill exists to avoid. Lead with the thing the page is about; let numbers sit inside it."
+    },
+    {
       "name": "agent-rules",
       "type": "registry:file",
       "title": "Quill agent rules",
@@ -2100,7 +2159,7 @@
       "name": "sidebar-nav",
       "type": "registry:block",
       "title": "Sidebar navigation shell",
-      "description": "A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area.",
+      "description": "A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in.",
       "meta": {
         "intent": [
           "app-shell",
@@ -2123,7 +2182,7 @@
           "target": "components/quill/sidebar-nav.tsx"
         }
       ],
-      "docs": "A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area. Do: Group sidebar items under labeled sections (e.g. \"Workspace\", \"Studio\"), as this block already does, rather than one long flat list. Don't: List every nav item at the same level with no grouping once the count grows past a handful. Use dashboard when you need a simpler, fixed-width text sidebar without the icon-collapse behavior. Use mail-shell when the main content area is a two-pane message list/reading layout, not a card grid.",
+      "docs": "A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in. Do: Group sidebar items under labeled sections (e.g. \"Workspace\", \"Studio\"), as this block already does, rather than one long flat list. Don't: List every nav item at the same level with no grouping once the count grows past a handful. Use dashboard when you need a simpler, fixed-width text sidebar without the icon-collapse behavior. Use mail-shell when the main content area is a two-pane message list/reading layout, not a card grid.",
       "categories": [
         "app-shell",
         "navigation"

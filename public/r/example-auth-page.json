@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "example-auth-page",
+  "title": "Example: auth page",
+  "description": "An example showing how to compose an auth page: login-split-panel alone at full viewport — one task, nothing competing with it.",
+  "registryDependencies": [
+    "https://www.quilldesignsystem.com/r/login-split-panel.json"
+  ],
+  "files": [
+    {
+      "path": "registry/examples/example-auth-page.tsx",
+      "content": "import { SplitPanel } from '@/components/quill/login-split-panel'\n\n/**\n * An auth page, composed: login-split-panel alone. Signing in is one task, so\n * nothing else shares the viewport — no navbar, no footer, no promo strip.\n */\nexport function ExampleAuthPage() {\n  return (\n    <div className=\"min-h-screen bg-background text-foreground\">\n      <SplitPanel />\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/examples/example-auth-page.tsx"
+    }
+  ],
+  "docs": "Composition, top to bottom: login-split-panel. Install it, then replace the blocks' sample content with your own; keep the order and the spacing.\n\nA **4px base step** (`--space-1` = 0.25rem). Editorial rhythm — sections breathe.\n\n`--space-1` 4px · `--space-2` 8px · `--space-3` 12px · `--space-4` 16px · `--space-5` 20px · `--space-6` 24px · `--space-7` 28px · `--space-8` 32px · `--space-9` 36px · `--space-10` 40px · `--space-12` 48px · `--space-16` 64px · `--space-20` 80px · `--space-24` 96px\n\nComponents sit on `--space-4` / `--space-6`; sections breathe with `--space-24`.\n\n### Layout\nNo layout tokens ship; use the values the site uses. Marketing max-width **1400px** (`max-w-[1400px]`), reading column **800px**, side padding **48px** on desktop (`px-12`) and **24px** on mobile (`px-6`), vertical section rhythm **96px** (`py-24`; `py-14` on mobile).\n\n### Composition\n- Recurring section header: eyebrow → headline (one accent word) → right-aligned italic caption.\n- One idea per section: a heading plus one composition (a grid of cards, a table, a form), never a stack of unrelated widgets.\n- No hero-metric row above an identical card grid — that is the generic dashboard Quill exists to avoid. Lead with the thing the page is about; let numbers sit inside it.",
+  "type": "registry:component"
+}

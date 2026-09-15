@@ -30,6 +30,7 @@ npx shadcn@latest add @quill/quill          # the token layer (registry:base)
 npx shadcn@latest add @quill/agent-rules    # rules for the app's AI agents (.claude/rules/quill.md)
 npx shadcn@latest add @quill/tone-badge     # a component
 npx shadcn@latest add @quill/dashboard      # a block
+npx shadcn@latest add @quill/example-app-page   # a whole page composed from blocks (also marketing, auth)
 npx shadcn@latest view @quill/registry      # list everything
 ```
 
