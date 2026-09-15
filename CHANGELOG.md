@@ -12,6 +12,19 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.33] — 2026-09-15
+
+### Changed
+- **Every story names its component, and every component carries its
+  description.** `LoginVariants.stories.tsx` documented two blocks in one file,
+  so the Storybook MCP manifest had no `component` to key its entry on; it is
+  now `LoginSplitPanel` and `LoginMinimal`. The manifest takes a component's
+  description from react-docgen — the JSDoc directly above its definition, not
+  the story's docs parameters — so every documented component (the blocks, the
+  two shipped components, and the site's primitives) now carries its usage
+  summary as that one-line JSDoc, kept equal to `src/usage` by
+  `component-descriptions.test.mjs`. llms.txt links the manifest. (CRA-212)
+
 ## [0.9.32] — 2026-09-15
 
 ### Changed

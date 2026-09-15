@@ -33,6 +33,7 @@ function GoogleG({ size = 16 }: { size?: number }) {
   )
 }
 
+/** Signup that leads with GitHub and Google provider buttons, falling back to an email/password form. */
 export function SignupSocial() {
   return (
     <Card className="w-[380px]">

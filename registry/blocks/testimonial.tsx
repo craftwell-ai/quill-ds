@@ -1,3 +1,4 @@
+/** A customer-quote card with a serif pull-quote, avatar initials, and attribution. */
 export function Testimonial() {
   return (
     <figure className="flex w-[520px] flex-col gap-6 rounded-xl border border-border bg-card p-8 text-foreground">

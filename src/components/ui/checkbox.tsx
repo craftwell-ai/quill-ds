@@ -5,6 +5,7 @@ import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/ui/icon"
 
+/** A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox. */
 function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
   return (
     <CheckboxPrimitive.Root

@@ -11,6 +11,7 @@ const team = [
   { initials: 'MR', name: 'Marcus Reed', role: 'Research', badge: 'Research' },
 ]
 
+/** A marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action. */
 export function TeamSection() {
   return (
     <section className="mx-auto flex w-full max-w-[880px] flex-col gap-8">

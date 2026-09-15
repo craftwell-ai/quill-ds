@@ -45,6 +45,7 @@ function useChart() {
   return context
 }
 
+/** A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend. */
 function ChartContainer({
   id,
   className,

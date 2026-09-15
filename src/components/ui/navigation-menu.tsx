@@ -4,6 +4,7 @@ import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/ui/icon"
 
+/** Top-level site navigation with mega-dropdown panels — for public/marketing navigation, not desktop application chrome. */
 function NavigationMenu({
   align = "start",
   className,

@@ -16,6 +16,7 @@ const lines = [
   { name: 'Priority support', qty: 1, price: '$24.00' },
 ]
 
+/** A checkout order-summary card — line items, a promo code field, a total, and a pay-now button. */
 export function OrderSummary() {
   return (
     <Card className="w-[400px]">

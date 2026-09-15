@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
 
+/** A profile settings card — name fields, a bio textarea, and an email-notification toggle. */
 export function Settings() {
   return (
     <Card className="w-[560px]">

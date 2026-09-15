@@ -56,6 +56,7 @@ function AppleMark() {
   )
 }
 
+/** Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback. */
 export function LoginOauth() {
   return (
     <div className="flex w-[340px] flex-col gap-5">

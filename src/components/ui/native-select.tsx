@@ -7,6 +7,7 @@ type NativeSelectProps = Omit<React.ComponentProps<"select">, "size"> & {
   size?: "sm" | "default"
 }
 
+/** The browser's own `<select>`, restyled to match the theme — the OS-native picker, not a custom-rendered popover. */
 function NativeSelect({
   className,
   size = "default",

@@ -8,14 +8,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Forms / Checkout',
+  component: CheckoutBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof CheckoutBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Checkout: Story = {
   render: () => <CheckoutBlock />,

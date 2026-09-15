@@ -33,6 +33,7 @@ function warnUnknown(name: string) {
   )
 }
 
+/** The Quill icon component — Material Symbols Outlined at weight 400, shipped as a self-contained core set of 91 names covering every icon the Quill blocks use. */
 function Icon({
   name,
   size = '1em',

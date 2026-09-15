@@ -5,6 +5,7 @@ import { useRender } from "@base-ui/react/use-render"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/ui/icon"
 
+/** A trail of links showing the current page's position in a hierarchy — the last crumb is always the current, non-link page. */
 function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav

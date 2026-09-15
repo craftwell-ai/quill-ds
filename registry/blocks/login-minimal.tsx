@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 
+/** The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code. */
 export function Minimal() {
   return (
     <form className="flex w-[320px] flex-col gap-5" onSubmit={(e) => e.preventDefault()}>

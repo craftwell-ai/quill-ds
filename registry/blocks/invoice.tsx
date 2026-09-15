@@ -19,6 +19,7 @@ const lines = [
   { item: 'Storybook pattern library', qty: 12, rate: '$95.00', amount: '$1,140.00' },
 ]
 
+/** A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action. */
 export function Invoice() {
   return (
     <Card className="mx-auto w-full max-w-[640px]">

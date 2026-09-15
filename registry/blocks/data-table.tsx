@@ -22,6 +22,7 @@ const rows = [
 // moss for a live membership, gold for one still developing.
 const STATUS_TONE: Record<(typeof rows)[number]['status'], Tone> = { Active: 'moss', Invited: 'gold' }
 
+/** A filterable members table with a toolbar, ToneBadge status pills, and a per-row actions menu. */
 export function DataTable() {
   return (
     <div className="flex flex-col gap-3">

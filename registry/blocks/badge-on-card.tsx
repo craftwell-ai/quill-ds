@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
+/** Default, secondary, and destructive badges shown together on a card surface. */
 export function BadgeOnCard() {
   return (
     <Card className="w-[280px]">

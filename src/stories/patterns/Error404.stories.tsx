@@ -8,14 +8,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / State / Error 404',
+  component: Error404Block,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof Error404Block>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Error404: Story = {
   render: () => <Error404Block />,

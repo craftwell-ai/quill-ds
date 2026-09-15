@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
+/** Merges an input (or textarea) with prefix/suffix addons — icons, buttons, plain text — inside one bordered control. */
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

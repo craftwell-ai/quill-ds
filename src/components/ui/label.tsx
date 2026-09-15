@@ -4,6 +4,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/** The accessible name for a form control — always associate it via htmlFor/id or co-location. */
 function Label({ className, ...props }: React.ComponentProps<"label">) {
   return (
     <label

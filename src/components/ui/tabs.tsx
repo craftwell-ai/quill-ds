@@ -5,6 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/** A set of triggers that swap which panel is visible in place — content panels share the same position, only one shown at a time. */
 function Tabs({
   className,
   orientation = "horizontal",

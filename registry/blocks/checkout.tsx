@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { Icon } from '@/components/ui/icon'
 
+/** A two-column checkout — payment method picker and card form beside an order summary sidebar. */
 export function Checkout() {
   return (
     <div className="mx-auto grid w-full max-w-[820px] grid-cols-[1fr_300px] items-start gap-6 max-md:grid-cols-1">

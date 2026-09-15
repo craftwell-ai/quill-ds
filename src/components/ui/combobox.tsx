@@ -49,6 +49,7 @@ function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
   )
 }
 
+/** A searchable dropdown — type to filter a list, or multi-select with removable chips. */
 function ComboboxInput({
   className,
   children,

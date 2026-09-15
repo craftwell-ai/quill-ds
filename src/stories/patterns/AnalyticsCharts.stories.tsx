@@ -15,14 +15,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Data / Analytics charts',
+  component: AnalyticsChartsBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof AnalyticsChartsBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const AnalyticsCharts: Story = {
   render: () => <AnalyticsChartsBlock />,

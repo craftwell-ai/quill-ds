@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Icon } from '@/components/ui/icon'
 
+/** A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action. */
 export function Hero() {
   return (
     <section className="flex w-full flex-col items-center gap-6 bg-background px-6 py-20 text-center text-foreground">

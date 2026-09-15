@@ -42,6 +42,7 @@ function useCarousel() {
   return context
 }
 
+/** A horizontally or vertically scrolling item viewport built on Embla Carousel, with Previous/Next controls and keyboard arrow-key support. */
 function Carousel({
   orientation = "horizontal",
   opts,

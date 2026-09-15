@@ -7,6 +7,7 @@ const stats = [
   { value: 'AA', label: 'WCAG 2.1 target' },
 ]
 
+/** A marketing band of headline statistics separated by vertical dividers on a card background. */
 export function StatsBand() {
   return (
     <section className="mx-auto w-full max-w-[880px] rounded-xl bg-card px-8 py-10 ring-1 ring-foreground/10">

@@ -22,6 +22,7 @@ const buttonGroupVariants = cva(
   }
 )
 
+/** A structural wrapper that merges adjacent Buttons into one visually connected control — shared borders, no owned selection state. */
 function ButtonGroup({
   className,
   orientation,

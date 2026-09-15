@@ -1,6 +1,7 @@
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Icon } from '@/components/ui/icon'
 
+/** A vertical stack of informational, success, and destructive alerts with icons. */
 export function Alerts() {
   return (
     <div className="flex max-w-lg flex-col gap-4">

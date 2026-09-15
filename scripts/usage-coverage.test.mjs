@@ -10,13 +10,12 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const storiesDir = join(root, 'src/stories')
 
 // Story files whose usage name(s) can't be derived from the filename by the
-// default kebab-case rule — either because one file renders more than one
-// registry block as separate exported stories (LoginVariants), or because
-// the filename itself diverges from the block's registry slug (e.g.
-// SettingsForm.stories.tsx documents 'settings', not 'settings-form'). Both
-// directions of the mapping are spelled out explicitly here.
+// default kebab-case rule, because the filename diverges from the block's
+// registry slug (e.g. SettingsForm.stories.tsx documents 'settings', not
+// 'settings-form'). Both directions of the mapping are spelled out here. One
+// story file documents exactly one block: the Storybook MCP manifest keys its
+// entries on the meta's `component`, so a two-block file had none (CRA-212).
 const MULTI_BLOCK_STORIES = {
-  'patterns/LoginVariants.stories.tsx': ['login-split-panel', 'login-minimal'],
   'patterns/SettingsForm.stories.tsx': ['settings'],
   'patterns/DashboardShell.stories.tsx': ['dashboard'],
   'patterns/Error404.stories.tsx': ['error-404'],

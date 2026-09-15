@@ -14,6 +14,7 @@ const stats = [
   { label: 'Open tickets', value: '27', delta: '+6', tone: 'destructive' as const },
 ]
 
+/** A responsive grid of KPI cards, each showing a value with a delta badge versus last month. */
 export function StatCards() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

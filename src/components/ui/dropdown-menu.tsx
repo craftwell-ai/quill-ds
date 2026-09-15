@@ -6,6 +6,7 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/ui/icon"
 
+/** A click-triggered list of actions anchored to a visible button, with full keyboard navigation and typeahead. */
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
 }

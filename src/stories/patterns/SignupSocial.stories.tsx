@@ -10,14 +10,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Auth / Signup — social first',
+  component: SignupSocialBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof SignupSocialBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const SignupSocial: Story = {
   render: () => <SignupSocialBlock />,

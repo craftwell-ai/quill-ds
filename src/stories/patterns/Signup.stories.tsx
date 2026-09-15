@@ -17,14 +17,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Auth / Sign up',
+  component: SignupBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof SignupBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Signup: Story = {
   render: () => <SignupBlock />,

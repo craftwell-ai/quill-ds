@@ -10,6 +10,7 @@ const results = [
   { title: 'Accessibility checklist', crumb: 'Docs › A11y', type: 'Guide' },
 ]
 
+/** A docs search panel — query input, result count, and a linked result list with breadcrumbs and type badges. */
 export function SearchResults() {
   return (
     <div className="flex w-[440px] flex-col gap-3 text-foreground">

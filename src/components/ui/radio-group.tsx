@@ -5,6 +5,7 @@ import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group"
 
 import { cn } from "@/lib/utils"
 
+/** A set of mutually exclusive options rendered as visible radio buttons — pick exactly one from a short, always-visible list. */
 function RadioGroup({ className, ...props }: RadioGroupPrimitive.Props) {
   return (
     <RadioGroupPrimitive

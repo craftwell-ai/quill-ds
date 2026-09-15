@@ -69,6 +69,7 @@ const fieldVariants = cva(
   }
 )
 
+/** A form field wrapper that connects a Label, FieldDescription, and FieldError to a control. */
 function Field({
   className,
   orientation = "vertical",

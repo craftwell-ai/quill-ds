@@ -149,6 +149,7 @@ function SidebarProvider({
   )
 }
 
+/** The persistent side-rail navigation primitive — expands, collapses to icons, or slides in as an off-canvas sheet on mobile. `sidebar-nav` is this primitive already assembled into a full app shell with grouped menus and a breadcrumb header. */
 function Sidebar({
   side = "left",
   variant = "sidebar",

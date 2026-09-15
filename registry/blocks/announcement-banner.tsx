@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 
+/** Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant. */
 export function AnnouncementBanner() {
   return (
     <div className="mx-auto flex w-full max-w-[880px] flex-col gap-4">

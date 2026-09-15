@@ -6,6 +6,7 @@ import { OTPInput, OTPInputContext } from "input-otp"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/ui/icon"
 
+/** Digit-by-digit secure code entry — email verification, 2FA, PIN. */
 function InputOTP({
   className,
   containerClassName,

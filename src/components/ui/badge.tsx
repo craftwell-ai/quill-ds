@@ -27,6 +27,7 @@ const badgeVariants = cva(
   }
 )
 
+/** A small, non-interactive label for status, category, or count — not a button or a link on its own. */
 function Badge({
   className,
   variant = "default",

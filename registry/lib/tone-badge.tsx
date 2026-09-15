@@ -39,6 +39,7 @@ const SOLID: Record<Tone, string> = {
   muted: 'bg-ink-muted text-paper',
 }
 
+/** Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site. */
 export function ToneBadge({
   tone,
   size = 'md',

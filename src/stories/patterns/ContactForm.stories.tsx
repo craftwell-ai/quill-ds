@@ -17,14 +17,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Forms / Contact form',
+  component: ContactFormBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof ContactFormBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const ContactForm: Story = {
   render: () => <ContactFormBlock />,

@@ -16,6 +16,7 @@ const plans = [
   { name: 'Enterprise', price: 'Custom', blurb: 'For large organizations.', features: ['SSO & SAML', 'Dedicated support', 'Unlimited storage', 'Audit logs'], cta: 'Contact sales', featured: false },
 ]
 
+/** A three-tier pricing grid with a highlighted popular plan, feature checklists, and per-plan calls to action. */
 export function Pricing() {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

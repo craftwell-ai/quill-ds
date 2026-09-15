@@ -6,6 +6,7 @@ const columns = [
   { title: 'Company', links: ['About', 'Blog', 'Careers', 'Contact'] },
 ]
 
+/** A marketing footer with brand blurb, link columns, and legal links. */
 export function Footer() {
   return (
     <footer className="w-full bg-background px-6 py-12 text-foreground">

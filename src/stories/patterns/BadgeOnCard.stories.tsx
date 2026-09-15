@@ -8,14 +8,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Data / Badge on card',
+  component: BadgeOnCardBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof BadgeOnCardBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 // Regression guard: destructive Badge on a card surface must pass AA contrast (was 4.45:1).
 export const BadgeOnCard: Story = {

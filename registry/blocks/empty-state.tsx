@@ -1,6 +1,7 @@
 import { Icon } from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
 
+/** A dashed-border empty state with an icon, explanatory text, and a primary action. */
 export function EmptyState() {
   return (
     <div className="flex w-[420px] flex-col items-center gap-4 rounded-xl border border-dashed border-border bg-card p-10 text-center">
