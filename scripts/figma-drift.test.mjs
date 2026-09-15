@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex, classFor, planRepair, applyRepair, pickVariant, derivedClasses, findClassString, adoptCandidate } from './figma-drift.mjs'
+import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex, classFor, planRepair, applyRepair, pickVariant, derivedClasses, matchCode, adoptCandidate } from './figma-drift.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -212,10 +212,16 @@ test('derivedClasses names the classes the bindings translate to and skips the u
   assert.deepEqual(derivedClasses({ fill: { var: 'unknown(VariableID:9:9)', raw: '#000000' }, texts: {} }), [])
 })
 
-test('findClassString wants every class in one literal that occurs exactly once', () => {
-  assert.equal(findClassString(AGREEING_SOURCE, ['bg-card', 'p-8']), 'inline-flex rounded-2xl bg-card p-8 shadow-lg')
-  assert.equal(findClassString(AGREEING_SOURCE, ['bg-card', 'p-6']), null, 'a class the code does not carry')
-  assert.equal(findClassString('cn("bg-card p-8") + cn("bg-card p-8")', ['bg-card']), null, 'an ambiguous literal cannot be rewritten later')
+test('matchCode anchors on the literal carrying the most classes and names what is missing', () => {
+  assert.deepEqual(matchCode(AGREEING_SOURCE, ['bg-card', 'p-8']), { classes: 'inline-flex rounded-2xl bg-card p-8 shadow-lg', missing: [], detectionOnly: false })
+  assert.deepEqual(matchCode(AGREEING_SOURCE, ['bg-card', 'p-6']).missing, ['p-6'], 'a class the code does not carry')
+  // cva keeps the fill in a variant literal, apart from the base string
+  const cva = 'cva("inline-flex gap-1 px-2 py-0.5", { variants: { variant: { default: "bg-primary text-primary-foreground" } } })'
+  assert.deepEqual(matchCode(cva, ['bg-primary', 'p-2', 'gap-1']), { classes: 'inline-flex gap-1 px-2 py-0.5', missing: [], detectionOnly: false })
+  // a literal that occurs twice cannot be rewritten later, so it never anchors
+  assert.equal(matchCode('cn("bg-card p-8") + cn("bg-card p-8")', ['bg-card']).classes, null)
+  // nothing to derive: detection-only, anchored on the first real class string
+  assert.deepEqual(matchCode('cn("peer size-4 rounded-sm border")', []), { classes: 'peer size-4 rounded-sm border', missing: [], detectionOnly: true })
 })
 
 test('a candidate whose code agrees with Figma is adopted through its default variant', () => {
@@ -244,4 +250,24 @@ test('a candidate whose code disagrees with Figma is reported, never adopted', (
   assert.match(why, /disagree/)
   assert.match(why, /figma-pull|figma-push/)
   assert.equal(adoptCandidate(CANDIDATE, undefined, VARS, disagreeing, '2026-09-15').adopted, null)
+})
+
+test('a candidate with nothing to derive is adopted for Figma-side detection, and says so', () => {
+  const bare = { document: { type: 'COMPONENT', id: '82:9', name: 'Label', children: [{ name: 'Label', type: 'TEXT', characters: 'Label' }] }, styles: {} }
+  const { adopted, why } = adoptCandidate({ name: 'Label', nodeId: '82:9', codeFile: 'src/components/ui/label.tsx' }, bare, VARS, 'cn("flex items-center gap-2 text-sm")', '2026-09-15')
+  assert.ok(adopted)
+  assert.equal(adopted.code.classes, 'flex items-center gap-2 text-sm')
+  assert.match(why, /Figma-side edits only/)
+  assert.deepEqual(adopted.figma.texts, { Label: 'Label' })
+})
+
+test('a padding re-binding repairs the px- form the code carries', () => {
+  const component = { name: 'Badge', codeFile: 'x', figma: { ...snapshot, padding: { var: 'spacing/8', raw: 32 } }, code: { classes: 'inline-flex rounded-2xl bg-card px-8 shadow-lg' } }
+  const bundle = cleanBundle()
+  bundle.document.boundVariables.paddingLeft.id = 'VariableID:1:4'
+  bundle.document.paddingLeft = 24
+  const live = extractComponent(bundle, { ...VARS, 'VariableID:1:4': 'spacing/6' })
+  const plan = planRepair(component, live, 'className="inline-flex rounded-2xl bg-card px-8 shadow-lg"')
+  assert.ok(plan.repairable, plan.reasons.join('; '))
+  assert.deepEqual(plan.classEdits.map((e) => [e.from, e.to]), [['px-8', 'px-6']])
 })

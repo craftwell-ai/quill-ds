@@ -42,17 +42,18 @@ Code Connect requires a **Dev/Full seat on a Figma Org/Enterprise plan** (blocks
 `add_code_connect_map` and the `figma connect publish` CLI). This workspace is on a lower plan
 with no org-plan upgrade planned, so Code Connect stays off the roadmap. This 1:1 map — Figma
 component set (node id) ↔ code component — is kept for reference in case that ever changes:
+(Button and Toggle were rebuilt after the 2026-08-10 audit; ids refreshed 2026-09-15 from the file. The live list is `candidates` / `components` in `figma/sync-state.json`.)
 
 | Figma node | Code component | Source |
 |---|---|---|
 | `65:13` | Badge | `src/components/ui/badge.tsx` |
-| `76:56` | Button | `src/components/ui/button.tsx` |
+| `359:267` | Button | `src/components/ui/button.tsx` |
 | `77:5` | Input | `src/components/ui/input.tsx` |
 | `84:4` | Textarea | `src/components/ui/textarea.tsx` |
 | `78:9` | Checkbox | `src/components/ui/checkbox.tsx` |
 | `80:8` | RadioGroupItem | `src/components/ui/radio-group.tsx` |
 | `79:9` | Switch | `src/components/ui/switch.tsx` |
-| `84:23` | Toggle | `src/components/ui/toggle.tsx` |
+| `356:183` | Toggle | `src/components/ui/toggle.tsx` |
 | `82:9` | Label | `src/components/ui/label.tsx` |
 | `82:13` | Kbd | `src/components/ui/kbd.tsx` |
 | `84:8` | Avatar | `src/components/ui/avatar.tsx` |
