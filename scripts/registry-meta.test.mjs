@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { EXAMPLES } from '../src/usage/examples.mjs'
 
 import { INTENT_TAG_NAMES } from './registry-intent-tags.mjs'
 import { DEFAULT_ACCENT } from './build-tokens.mjs'
@@ -97,5 +98,20 @@ test('every registry item carries install-time docs', () => {
       typeof item.docs === 'string' && item.docs.trim().length >= 40,
       `registry item '${item.name}' has no install-time docs — add src/usage/${item.name}.usage.mjs and run \`npm run build:usage\``,
     )
+  }
+})
+
+test('every composition example is a registry item built only from shipped blocks', () => {
+  const home = registry.homepage.replace(/\/$/, '')
+  const byName = new Map(registry.items.map((i) => [i.name, i]))
+  for (const e of EXAMPLES) {
+    const item = byName.get(e.name)
+    assert.ok(item, `${e.name} is missing from registry.json`)
+    assert.equal(item.type, 'registry:component', `${e.name}: shadcn's published schema has no registry:example type`)
+    assert.equal(item.files?.[0]?.path, `registry/examples/${e.name}.tsx`)
+    assert.equal(item.files?.[0]?.target, `components/examples/${e.name}.tsx`)
+    for (const b of e.blocks) assert.equal(byName.get(b)?.type, 'registry:block', `${e.name}: '${b}' is not a shipped block`)
+    assert.deepEqual(item.registryDependencies, e.blocks.map((b) => `${home}/r/${b}.json`), `${e.name}: run npm run build:usage`)
+    assert.ok(typeof item.docs === 'string' && item.docs.includes(e.blocks.join(' → ')), `${e.name}: docs must carry the composition order`)
   }
 })

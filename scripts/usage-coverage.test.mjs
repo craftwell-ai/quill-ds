@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
+import { EXAMPLES } from '../src/usage/examples.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const storiesDir = join(root, 'src/stories')
@@ -84,5 +85,21 @@ test('every story outside the allowlist has a usage file', () => {
     const base = f.replace(/^patterns\//, '').replace(/\.stories\.tsx$/, '')
     const kebab = base.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
     assert.ok(documented.has(kebab), `story '${f}' has no usage file (expected src/usage/${kebab}.usage.mjs)`)
+  }
+})
+
+// Composition examples (src/stories/examples) are registry examples, not
+// components: their docs come from src/usage/examples.mjs, so they carry no
+// usage module by design. The mapping is enforced both ways instead.
+const pascalOf = (name) => name.split('-').map((s) => s[0].toUpperCase() + s.slice(1)).join('')
+test('composition example stories and src/usage/examples.mjs mirror each other', () => {
+  const files = readdirSync(join(storiesDir, 'examples')).filter((f) => f.endsWith('.stories.tsx'))
+  for (const f of files) {
+    const kebab = f.replace(/\.stories\.tsx$/, '').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+    assert.ok(EXAMPLES.some((e) => e.name === `example-${kebab}`), `story 'examples/${f}' has no entry in src/usage/examples.mjs`)
+  }
+  for (const e of EXAMPLES) {
+    const file = `${pascalOf(e.name.replace(/^example-/, ''))}.stories.tsx`
+    assert.ok(files.includes(file), `example '${e.name}' has no story src/stories/examples/${file}`)
   }
 })

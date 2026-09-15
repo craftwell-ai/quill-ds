@@ -12,6 +12,33 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.34] — 2026-09-15
+
+### Added
+- **Three page compositions, shipped as registry examples.**
+  `@quill/example-app-page` (sidebar-nav shell → page-header → stat-cards →
+  data-table), `@quill/example-marketing-page` (navbar → hero → feature-section
+  → pricing → testimonial → footer) and `@quill/example-auth-page`
+  (login-split-panel alone) install to `components/examples/` and pull their
+  blocks in as dependencies. Their `docs` carry the composition order and the
+  spacing, layout and composition rules from the token source — the same span
+  DESIGN.md, llms.txt and the agent-rules file render — so "how do these fit
+  together" now reaches an agent through shadcn's own examples channel.
+  Described once in `src/usage/examples.mjs`; listed under "Examples" in
+  llms.txt and the agent-rules file; rendered in Storybook under Examples.
+  They ship as `registry:component` because shadcn's published schema has no
+  `registry:example` type (the CLI keeps it internal). (CRA-205, spec W5; D4
+  taken as the spec's own three pages)
+
+### Changed
+- **`sidebar-nav` is a real shell now.** It accepts `children`; the demo card
+  grid stays the default, and when a page is passed in the top bar keeps to
+  the trigger and the workspace name so the page owns its breadcrumb.
+- **`testimonial`** caps at 520px instead of fixing that width, so it no
+  longer overflows a phone inside a page.
+- The site resolves `@/components/quill/*` to `registry/blocks/*` (tsconfig
+  paths), so the examples compile here through the same imports an app uses.
+
 ## [0.9.33] — 2026-09-15
 
 ### Changed

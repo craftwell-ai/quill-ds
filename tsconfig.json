@@ -19,6 +19,7 @@
       }
     ],
     "paths": {
+      "@/components/quill/*": ["./registry/blocks/*"],
       "@/*": ["./src/*"],
       "@registry/*": ["./registry/*"]
     }
