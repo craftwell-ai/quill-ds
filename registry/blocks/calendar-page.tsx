@@ -11,6 +11,7 @@ const sessions = [
   { time: '15:00', title: 'Working session', kind: 'Workshop' },
 ]
 
+/** A single-date calendar paired with the selected day's session list, in one studio-schedule card. */
 export function CalendarPage() {
   const [date, setDate] = useState<Date | undefined>(new Date(2026, 6, 14))
   return (

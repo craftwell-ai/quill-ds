@@ -7,14 +7,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Shells / Tabs page',
+  component: TabsPageBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof TabsPageBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const TabsPage: Story = {
   render: () => <TabsPageBlock />,

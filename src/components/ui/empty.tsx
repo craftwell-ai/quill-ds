@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/** An empty-state block for zero-data surfaces — icon, title, description, and a primary action, centered in the available space. */
 function Empty({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

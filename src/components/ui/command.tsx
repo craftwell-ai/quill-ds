@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/input-group"
 import { Icon } from "@/components/ui/icon"
 
+/** A keyboard-first search palette — embed inline for settings search, or wrap in CommandDialog for a ⌘K-style command palette. */
 function Command({
   className,
   ...props

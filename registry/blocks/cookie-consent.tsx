@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 
+/** A cookie consent banner offering accept, reject, and preferences actions. */
 export function CookieConsent() {
   return (
     <div className="flex w-[520px] items-start gap-3 rounded-xl border border-border bg-card p-4 text-foreground shadow-md">

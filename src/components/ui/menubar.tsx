@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Icon } from "@/components/ui/icon"
 
+/** A desktop application-style menu strip — a row of always-visible top-level menus, each opening its own dropdown on click. */
 function Menubar({ className, ...props }: MenubarPrimitive.Props) {
   return (
     <MenubarPrimitive

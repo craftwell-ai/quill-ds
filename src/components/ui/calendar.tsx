@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Icon } from "@/components/ui/icon"
 
+/** The date-picker primitive built on react-day-picker — supports single, multiple, and range selection modes. `calendar-page` and `calendar-range` are this primitive already composed into full scheduling and booking patterns. */
 function Calendar({
   className,
   classNames,

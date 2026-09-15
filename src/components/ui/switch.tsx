@@ -4,6 +4,7 @@ import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
 
 import { cn } from "@/lib/utils"
 
+/** An on/off control for a setting that takes effect immediately — no separate Save step. */
 function Switch({
   className,
   size = "default",

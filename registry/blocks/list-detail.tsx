@@ -9,6 +9,7 @@ const threads = [
   { from: 'Katherine J.', subject: 'Design review', preview: 'Left comments on the flows.', time: 'Yesterday' },
 ]
 
+/** An inbox-style split view — a selectable message list beside a detail pane with archive and delete actions. */
 export function ListDetail() {
   return (
     <div className="flex h-[520px] w-full bg-background text-foreground">

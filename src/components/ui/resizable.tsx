@@ -4,6 +4,7 @@ import * as ResizablePrimitive from "react-resizable-panels"
 
 import { cn } from "@/lib/utils"
 
+/** Drag-resizable split panels — the user controls how space is divided between two or more regions by dragging a handle between them. */
 function ResizablePanelGroup({
   className,
   ...props

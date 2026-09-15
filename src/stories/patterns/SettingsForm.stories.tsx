@@ -7,14 +7,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Forms / Settings',
+  component: SettingsBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof SettingsBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Settings: Story = {
   render: () => <SettingsBlock />,

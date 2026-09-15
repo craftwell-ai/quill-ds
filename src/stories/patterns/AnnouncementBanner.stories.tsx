@@ -9,14 +9,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Marketing / Announcement banner',
+  component: AnnouncementBannerBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof AnnouncementBannerBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const AnnouncementBanner: Story = {
   render: () => <AnnouncementBannerBlock />,

@@ -5,6 +5,7 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
 
 import { cn } from "@/lib/utils"
 
+/** A small, click-triggered overlay anchored to its trigger — for inline forms, filters, and contextual editing, not a blocking task. */
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }

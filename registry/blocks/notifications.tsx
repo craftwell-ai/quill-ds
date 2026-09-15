@@ -9,6 +9,7 @@ const items: { icon: IconName; title: string; body: string; time: string; unread
   { icon: 'content_copy', title: 'Backup complete', body: 'Weekly backup finished successfully.', time: '4h' },
 ]
 
+/** A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action. */
 export function Notifications() {
   return (
     <Card className="w-[360px]">

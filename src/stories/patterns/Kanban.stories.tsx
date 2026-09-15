@@ -7,14 +7,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Data / Kanban board',
+  component: KanbanBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof KanbanBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Kanban: Story = {
   render: () => <KanbanBlock />,

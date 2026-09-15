@@ -15,14 +15,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Nav / Command palette',
+  component: CommandPaletteBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof CommandPaletteBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const CommandPalette: Story = {
   render: () => <CommandPaletteBlock />,

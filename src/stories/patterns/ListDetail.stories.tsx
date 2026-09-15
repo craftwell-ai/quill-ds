@@ -6,14 +6,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Shells / List + detail',
+  component: ListDetailBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof ListDetailBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const ListDetail: Story = {
   render: () => <ListDetailBlock />,

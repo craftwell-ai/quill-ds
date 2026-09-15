@@ -7,14 +7,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Data / Invoice',
+  component: InvoiceBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof InvoiceBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Invoice: Story = {
   render: () => <InvoiceBlock />,

@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/** A styled native `<textarea>` for multi-line free text — descriptions, bios, comments. */
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return (
     <textarea

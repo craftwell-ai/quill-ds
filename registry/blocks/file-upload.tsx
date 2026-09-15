@@ -17,6 +17,7 @@ const files = [
   { name: 'field-notes-issue-001.pdf', size: '2.8 MB', progress: 64, state: 'uploading' },
 ] as const
 
+/** An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue. */
 export function FileUpload() {
   return (
     <Card className="w-[440px]">

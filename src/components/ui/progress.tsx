@@ -4,6 +4,7 @@ import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 
 import { cn } from "@/lib/utils"
 
+/** A determinate progress bar for a real, measurable completion value — pass a numeric `value` and pair it with ProgressLabel/ProgressValue for a labeled, live-updating readout. */
 function Progress({
   className,
   children,

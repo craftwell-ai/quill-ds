@@ -7,14 +7,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Auth / Login',
+  component: LoginBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof LoginBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Login: Story = {
   render: () => <LoginBlock />,

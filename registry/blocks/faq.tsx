@@ -25,6 +25,7 @@ const faqs = [
   },
 ]
 
+/** A centered FAQ section — an accordion of common questions with a contact call-to-action footer. */
 export function Faq() {
   return (
     <section className="flex w-[560px] flex-col gap-6">

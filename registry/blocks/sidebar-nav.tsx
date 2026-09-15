@@ -39,6 +39,7 @@ const team = [
   { icon: 'settings', label: 'Settings' },
 ] as const
 
+/** A collapsible icon-sidebar app shell with grouped menus, badges, a breadcrumb header, and a card grid main area. */
 export function SidebarNav() {
   return (
     <SidebarProvider>

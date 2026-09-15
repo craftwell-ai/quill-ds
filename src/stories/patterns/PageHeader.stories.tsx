@@ -14,14 +14,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Shells / Page header',
+  component: PageHeaderBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof PageHeaderBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const PageHeader: Story = {
   render: () => <PageHeaderBlock />,

@@ -6,6 +6,7 @@ import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
+/** A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside. */
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
 }

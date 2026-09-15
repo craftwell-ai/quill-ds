@@ -19,6 +19,7 @@ const recent: { icon: IconName; label: string }[] = [
   { icon: 'folder_open', label: 'Acme site' },
 ]
 
+/** A searchable ⌘K command palette with grouped actions, recent items, and keyboard shortcuts. */
 export function CommandPalette() {
   return (
     <Command className="w-[440px] rounded-xl border border-border shadow-md">

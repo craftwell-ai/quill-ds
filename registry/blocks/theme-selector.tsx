@@ -55,6 +55,7 @@ function ThemeGlyph({ icon, size = 16 }: { icon: (typeof quillThemes)[number]['i
   return <Icon name={icon} size={size} />
 }
 
+/** A dropdown picker for the five Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage. */
 export function ThemeSelector({
   value,
   onValueChange,

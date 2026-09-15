@@ -6,6 +6,7 @@ const features: { icon: IconName; title: string; body: string }[] = [
   { icon: 'check_circle', title: 'Accessible', body: 'WCAG 2.1 AA out of the box, verified in CI.' },
 ]
 
+/** A marketing section with an editorial heading and a three-column feature grid. */
 export function FeatureSection() {
   return (
     <section className="flex flex-col items-center gap-10 bg-background py-12 text-foreground">

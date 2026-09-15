@@ -6,6 +6,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
+/** A stateful two-month range calendar for booking a span of days, with clear and reserve actions. */
 export function CalendarRange() {
   const [range, setRange] = useState<DateRange | undefined>({
     from: new Date(2026, 6, 20),

@@ -40,6 +40,7 @@ const buttonVariants = cva(
   }
 )
 
+/** Buttons trigger actions. The default (primary) variant is the single most important action on a surface. */
 function Button({
   className,
   variant = "default",

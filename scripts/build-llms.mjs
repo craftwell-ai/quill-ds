@@ -136,6 +136,7 @@ export function renderLlms(t = tokens) {
   p('## Links')
   p()
   p(`- [Storybook](${HOME}/storybook/) — live components, foundations, and patterns`)
+  p(`- [Storybook component manifest](${HOME}/storybook/manifests/components.json) — every component with its description, props and story source, for the Storybook MCP (\`@storybook/addon-mcp\`)`)
   p(`- [Theme item](${HOME}/r/quill.json) — the token layer (install first)`)
   p(`- [Agent rules item](${HOME}/r/agent-rules.json) — \`.claude/rules/quill.md\` for the app's AI agents`)
   p(`- [Full registry index](${HOME}/r/registry.json)`)

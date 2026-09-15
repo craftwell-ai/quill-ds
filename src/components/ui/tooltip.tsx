@@ -17,6 +17,7 @@ function TooltipProvider({
   )
 }
 
+/** A short hint that appears on hover or focus — a supplementary visual label for sighted mouse and keyboard users, not a reliable way to deliver essential information. */
 function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
   return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
 }

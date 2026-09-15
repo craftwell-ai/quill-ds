@@ -39,6 +39,7 @@ const salesConfig = {
   prints: { label: 'Print sales', color: 'var(--chart-3)' },
 }
 
+/** A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card. */
 export function AnalyticsCharts() {
   return (
     <div className="mx-auto grid w-full max-w-[880px] grid-cols-[1.4fr_1fr] items-start gap-6 max-md:grid-cols-1">

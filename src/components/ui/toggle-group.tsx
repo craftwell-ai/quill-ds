@@ -20,6 +20,7 @@ const ToggleGroupContext = React.createContext<
   orientation: "horizontal",
 })
 
+/** A row, or column, of Toggle buttons sharing selection, sizing, and spacing — single-select for exclusive choices, multi-select for independent ones. */
 function ToggleGroup({
   className,
   variant,

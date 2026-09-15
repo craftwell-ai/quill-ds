@@ -3,6 +3,7 @@ import { Icon } from '@/components/ui/icon'
 
 const links = ['Product', 'Solutions', 'Pricing', 'Docs']
 
+/** A top navigation bar with brand wordmark, a responsive link list, and sign-in / get-started actions. */
 export function Navbar() {
   return (
     <nav className="flex h-14 w-full items-center gap-6 border-b border-border bg-background px-6 text-foreground">

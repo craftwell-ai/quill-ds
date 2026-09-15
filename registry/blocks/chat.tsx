@@ -9,6 +9,7 @@ const messages = [
   { from: 'me', text: 'Right? Everything binds to the foundation.' },
 ]
 
+/** A one-on-one messaging panel — contact header, message bubbles, and a composer input. */
 export function Chat() {
   return (
     <div className="flex h-[480px] w-[400px] flex-col rounded-xl border border-border bg-card text-foreground">

@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 
+/** A page header with a breadcrumb trail, title and description, and duplicate/new action buttons. */
 export function PageHeader() {
   return (
     <div className="flex flex-col gap-3 text-foreground">

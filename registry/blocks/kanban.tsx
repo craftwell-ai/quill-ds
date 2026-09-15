@@ -7,6 +7,7 @@ const columns = [
   { title: 'Done', cards: [{ t: 'Token foundation', tag: 'core' }, { t: 'Material Symbols', tag: 'icons' }] },
 ]
 
+/** A three-column kanban board with card counts, tagged task cards, and an add-card affordance per column. */
 export function Kanban() {
   return (
     <div className="flex gap-4 text-foreground">

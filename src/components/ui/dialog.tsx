@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Icon } from "@/components/ui/icon"
 
+/** A modal window over the page for focused, non-destructive tasks — forms, details, reversible confirmations. */
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }

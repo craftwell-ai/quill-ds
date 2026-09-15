@@ -12,14 +12,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Marketing / FAQ',
+  component: FaqBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof FaqBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Faq: Story = {
   render: () => <FaqBlock />,

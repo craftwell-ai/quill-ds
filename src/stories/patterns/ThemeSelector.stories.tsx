@@ -20,14 +20,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Nav / Theme selector',
+  component: ThemeSelectorBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof ThemeSelectorBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 // Controlled demo: the selector drives data-theme AND data-accent on the
 // preview card (the Storybook toolbar owns the canvas), so all sixteen

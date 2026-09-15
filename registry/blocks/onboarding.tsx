@@ -15,6 +15,7 @@ const tasks = [
   { label: 'Connect a repository', done: false },
 ]
 
+/** A setup checklist card with a progress bar, completed and pending tasks, and start links for remaining steps. */
 export function Onboarding() {
   const done = tasks.filter((t) => t.done).length
   return (

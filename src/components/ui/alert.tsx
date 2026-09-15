@@ -19,6 +19,7 @@ const alertVariants = cva(
   }
 )
 
+/** A single inline status box for a message tied to a specific area of the page. `alerts` is this primitive already assembled into a vertical stack of several. */
 function Alert({
   className,
   variant,

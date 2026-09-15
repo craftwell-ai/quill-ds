@@ -36,6 +36,7 @@ const messages = [
   },
 ] as const
 
+/** A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply. */
 export function MailShell() {
   return (
     <div className="grid h-[560px] w-full grid-cols-[340px_minmax(0,1fr)] bg-background max-lg:grid-cols-1">

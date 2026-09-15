@@ -4,6 +4,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/** A data table for rows of tabular content — headers, cells, an optional footer for totals, and a caption for the accessible description. */
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div

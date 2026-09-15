@@ -18,14 +18,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Auth / Forgot password',
+  component: ForgotPasswordBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof ForgotPasswordBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const ForgotPassword: Story = {
   render: () => <ForgotPasswordBlock />,

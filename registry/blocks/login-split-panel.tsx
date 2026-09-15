@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Icon } from '@/components/ui/icon'
 
+/** A full-page, branded sign-in — a testimonial panel beside an email/password form with a magic-link option. */
 export function SplitPanel() {
   return (
     <div className="grid h-[560px] w-full grid-cols-2 bg-background max-md:grid-cols-1">

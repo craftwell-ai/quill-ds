@@ -56,6 +56,7 @@ const itemVariants = cva(
   }
 )
 
+/** A general-purpose list row — compose ItemMedia (icon or avatar), ItemContent (title + description), and ItemActions (trailing button) into a consistent row for lists, search results, and settings. */
 function Item({
   className,
   variant = "default",

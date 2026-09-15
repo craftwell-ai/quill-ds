@@ -4,6 +4,7 @@ import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { Icon } from "@/components/ui/icon"
 
+/** A toast-notification stack for transient feedback about an action just taken — mount one Toaster at the app root, then trigger toasts imperatively with the `toast()` function from `sonner`. */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
 

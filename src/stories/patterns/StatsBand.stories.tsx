@@ -6,14 +6,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Marketing / Stats band',
+  component: StatsBandBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof StatsBandBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const StatsBand: Story = {
   render: () => <StatsBandBlock />,

@@ -13,6 +13,7 @@ import { Icon } from '@/components/ui/icon'
 
 const steps = ['Account', 'Workspace', 'Invite']
 
+/** A multi-step setup card — a progress stepper, workspace fields, and back/continue navigation. */
 export function Wizard() {
   return (
     <Card className="w-[460px]">

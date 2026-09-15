@@ -18,14 +18,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Shells / Sidebar navigation',
+  component: SidebarNavBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof SidebarNavBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const SidebarNav: Story = {
   render: () => <SidebarNavBlock />,

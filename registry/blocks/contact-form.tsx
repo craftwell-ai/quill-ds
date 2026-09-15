@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+/** A get-in-touch card — name, email, a topic select, and a message field. */
 export function ContactForm() {
   return (
     <Card className="w-[440px]">

@@ -2,6 +2,7 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "@/lib/utils"
 
+/** A draggable control for picking a numeric value, or range, within a bounded min/max — position matters as much as the exact figure. */
 function Slider({
   className,
   defaultValue,

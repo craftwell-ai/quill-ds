@@ -27,6 +27,7 @@ const toggleVariants = cva(
   }
 )
 
+/** A two-state icon or icon-plus-text button whose pressed state persists after the click — a formatting toggle inside a toolbar. */
 function Toggle({
   className,
   variant = "default",

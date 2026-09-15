@@ -56,6 +56,7 @@ function SelectTrigger({
   )
 }
 
+/** A custom-rendered dropdown for choosing one option from a short list — the same look on every platform, unlike the OS-native picker. */
 function SelectContent({
   className,
   children,

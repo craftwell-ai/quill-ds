@@ -4,6 +4,7 @@ import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"
 
 import { cn } from "@/lib/utils"
 
+/** A thin decorative divider line between stacked or inline content — horizontal by default, vertical for toolbars and inline groups. */
 function Separator({
   className,
   orientation = "horizontal",

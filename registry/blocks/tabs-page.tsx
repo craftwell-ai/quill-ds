@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 
+/** A tabbed settings page with account, notifications, and security panels. */
 export function TabsPage() {
   return (
     <div className="w-[560px]">

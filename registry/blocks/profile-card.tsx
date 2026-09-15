@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Icon } from '@/components/ui/icon'
 import { Separator } from '@/components/ui/separator'
 
+/** A compact, centered profile card — avatar initials, role, follower stats, and follow/message actions. */
 export function ProfileCard() {
   return (
     <Card className="w-[340px]">

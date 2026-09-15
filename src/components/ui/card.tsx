@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/** A bounded content container with header, body, and footer slots — paper-warm surface with a soft ring instead of a box-shadow border. */
 function Card({
   className,
   size = "default",

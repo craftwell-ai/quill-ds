@@ -8,14 +8,15 @@ import { DoDontPair } from '../DoDont'
 
 const meta = {
   title: 'Patterns / Shells / Dashboard',
+  component: DashboardBlock,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: renderUsageDocs(usage) } },
   },
-} satisfies Meta
+} satisfies Meta<typeof DashboardBlock>
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Dashboard: Story = {
   render: () => <DashboardBlock />,

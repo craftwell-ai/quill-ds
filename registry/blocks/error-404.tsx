@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 
+/** A full-page 404 error state with go-back and home recovery actions. */
 export function Error404() {
   return (
     <div className="flex h-[500px] w-full flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">

@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils"
 
+/** Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails. */
 function AspectRatio({
   ratio,
   className,

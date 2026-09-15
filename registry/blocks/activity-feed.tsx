@@ -38,6 +38,7 @@ const events = [
   },
 ] as const
 
+/** A card timeline of recent events — avatar, action text, and a relative timestamp per entry. */
 export function ActivityFeed() {
   return (
     <Card className="w-[420px]">

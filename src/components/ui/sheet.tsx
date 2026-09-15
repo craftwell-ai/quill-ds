@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Icon } from "@/components/ui/icon"
 
+/** A panel that slides in from a screen edge while the page stays visible behind it — the same Base UI dialog underneath Dialog, styled as an edge panel instead of a centered card. */
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }

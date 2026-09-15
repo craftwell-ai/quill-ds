@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 
+/** A centered newsletter-signup section — an email field, subscribe action, and social proof. */
 export function Newsletter() {
   return (
     <section className="flex w-[560px] flex-col items-center gap-4 rounded-xl bg-card p-10 text-center ring-1 ring-foreground/10">

@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 
+/** Standard account-creation card — name, email, password, and a link back to sign-in. */
 export function Signup() {
   return (
     <Card className="w-[380px]">

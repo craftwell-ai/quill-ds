@@ -5,6 +5,7 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 
 import { cn } from "@/lib/utils"
 
+/** A round image, initials, or icon representing a person or entity — reserves its shape immediately and swaps in the real photo once it loads. */
 function Avatar({
   className,
   size = "default",

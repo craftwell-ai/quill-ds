@@ -18,6 +18,7 @@ const nav: { label: string; icon: IconName; active?: boolean }[] = [
   { label: 'Settings', icon: 'settings' },
 ]
 
+/** An app shell with sidebar navigation, a search header, and KPI stat cards. */
 export function Dashboard() {
   return (
     <div className="flex h-[600px] w-full bg-background text-foreground">
