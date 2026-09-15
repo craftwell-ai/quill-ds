@@ -141,29 +141,9 @@
   },
   "candidates": [
     {
-      "name": "Input",
-      "nodeId": "77:5",
-      "codeFile": "src/components/ui/input.tsx"
-    },
-    {
-      "name": "Textarea",
-      "nodeId": "84:4",
-      "codeFile": "src/components/ui/textarea.tsx"
-    },
-    {
       "name": "Switch",
       "nodeId": "79:9",
       "codeFile": "src/components/ui/switch.tsx"
-    },
-    {
-      "name": "Kbd",
-      "nodeId": "82:13",
-      "codeFile": "src/components/ui/kbd.tsx"
-    },
-    {
-      "name": "Progress",
-      "nodeId": "81:8",
-      "codeFile": "src/components/ui/progress.tsx"
     }
   ],
   "components": [
@@ -482,6 +462,136 @@
       },
       "code": {
         "classes": "animate-pulse rounded-md bg-muted"
+      }
+    },
+    {
+      "name": "Input",
+      "nodeId": "77:5",
+      "codeFile": "src/components/ui/input.tsx",
+      "lastSynced": "2026-09-15",
+      "figma": {
+        "stroke": {
+          "var": "shadcn/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "spacing/2_5",
+          "raw": 10
+        },
+        "texts": {
+          "Placeholder": "Placeholder"
+        },
+        "childSignature": [
+          "Placeholder:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
+      }
+    },
+    {
+      "name": "Textarea",
+      "nodeId": "84:4",
+      "codeFile": "src/components/ui/textarea.tsx",
+      "lastSynced": "2026-09-15",
+      "figma": {
+        "stroke": {
+          "var": "shadcn/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "spacing/2_5",
+          "raw": 10
+        },
+        "texts": {
+          "Placeholder": "Placeholder"
+        },
+        "childSignature": [
+          "Placeholder:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "flex field-sizing-content min-h-16 w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
+      }
+    },
+    {
+      "name": "Kbd",
+      "nodeId": "82:13",
+      "codeFile": "src/components/ui/kbd.tsx",
+      "lastSynced": "2026-09-15",
+      "figma": {
+        "fill": {
+          "var": "shadcn/muted",
+          "raw": "#E8DCC0"
+        },
+        "stroke": {
+          "var": "shadcn/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 4
+        },
+        "padding": {
+          "var": "spacing/1",
+          "raw": 4
+        },
+        "texts": {
+          "⌘K": "⌘K"
+        },
+        "childSignature": [
+          "⌘K:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-muted-foreground select-none in-data-[slot=tooltip-content]:bg-background/20 in-data-[slot=tooltip-content]:text-background dark:in-data-[slot=tooltip-content]:bg-background/10 [&_svg:not([class*='size-'])]:size-3"
+      }
+    },
+    {
+      "name": "Progress",
+      "nodeId": "81:8",
+      "codeFile": "src/components/ui/progress.tsx",
+      "lastSynced": "2026-09-15",
+      "figma": {
+        "fill": {
+          "var": "shadcn/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 40
+        },
+        "texts": {},
+        "childSignature": [
+          "Frame:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-input"
       }
     }
   ]
