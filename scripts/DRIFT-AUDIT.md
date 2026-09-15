@@ -72,6 +72,12 @@ an obsolete `auto/figma-pull` PR gets closed (the workflow closes it when drift
 disappears). The job skips cleanly until a `FIGMA_TOKEN` repo secret exists
 (Figma personal access token, file read scope).
 
+**Coverage grows by adoption, not by hand.** `figma/sync-state.json` lists
+`candidates` (twins built before the check existed); the workflow's `adopt`
+input reads each over REST, keeps the ones whose bindings already match a class
+string in code, reports the rest, and opens a human-merged PR. See
+`figma/README.md`, "Adopting existing twins into the daily check".
+
 The **variable/style-level** check below still needs interactive Figma MCP auth
 (variable definitions are Enterprise-gated over REST), so it stays on-demand —
 run it in an interactive session (e.g. ask Claude to "run the Figma parity
