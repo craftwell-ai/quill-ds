@@ -136,8 +136,13 @@ parity** workflow by hand with the `adopt` input on, and it:
 
 1. reads each candidate over the REST API (a variant set is tracked through its
    default variant — every property `default` or `off`);
-2. translates the node's bindings to classes and looks for one class string in
-   the code file that carries all of them, occurring exactly once;
+2. translates the node's bindings to classes and matches them against the code
+   file: the class string carrying most of them becomes `code.classes` (it must
+   occur exactly once), the rest may sit in another string (cva keeps variant
+   classes apart from the base), and a padding binding is accepted in the
+   `px-N` form code usually writes; a component with no binding that maps to
+   a class is adopted for Figma-side detection only, anchored on its first
+   class string;
 3. adopts the ones that agree into `components`, and lists the ones that do not
    in the run summary — that disagreement is real drift, settled by a human with
    `/figma-pull` or `/figma-push`, never adopted blind;

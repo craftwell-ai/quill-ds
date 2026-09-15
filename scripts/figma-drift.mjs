@@ -188,10 +188,14 @@ export function planRepair(component, live, source) {
     if (!snap?.var) continue
     if (cur.var == null || cur.var === snap.var) continue
     if (key !== 'effectStyle' && snap.raw != null && cur.raw != null && snap.raw === cur.raw) continue
-    const from = classFor(key, snap.var)
-    const to = classFor(key, cur.var)
-    if (!from || !to) reasons.push(`${key}: no class mapping for '${cur.var ?? snap.var}'`)
-    else if (!component.code.classes.split(' ').includes(from)) reasons.push(`${key}: baseline class '${from}' not in code.classes`)
+    const fromBase = classFor(key, snap.var)
+    const toBase = classFor(key, cur.var)
+    const tokens = component.code.classes.split(' ')
+    // The baseline may carry the px- form of a padding class; rewrite in kind.
+    const from = acceptableForms(fromBase).find((form) => tokens.includes(form))
+    const to = from?.startsWith('px-') && toBase ? toBase.replace(/^p-/, 'px-') : toBase
+    if (!fromBase || !toBase) reasons.push(`${key}: no class mapping for '${cur.var ?? snap.var}'`)
+    else if (!from) reasons.push(`${key}: baseline class '${fromBase}' not in code.classes`)
     else classEdits.push({ key, from, to, newVar: cur.var, newRaw: cur.raw })
   }
   for (const [name, chars] of Object.entries(snapshot.texts ?? {})) {
@@ -260,17 +264,44 @@ export function derivedClasses(snapshot) {
   }).filter(Boolean)
 }
 
-// The first class-string literal in `source` carrying every class as a whole
-// token and occurring exactly once — the string applyRepair can later rewrite
-// without ambiguity. Null when code and Figma disagree.
-export function findClassString(source, classes) {
-  if (!classes.length) return null
-  const literals = [...source.matchAll(/(["'])((?:(?!\1)[^\\\n])+)\1/g)].map((m) => m[2]).filter((lit) => lit.includes(' '))
-  for (const lit of literals) {
-    const tokens = lit.split(/\s+/)
-    if (classes.every((c) => tokens.includes(c)) && countOccurrences(source, lit) === 1) return lit
+// The forms code writes a derived class in: the padding snapshot comes from
+// paddingLeft, which shadcn writes as `px-N` far more often than `p-N`.
+export const acceptableForms = (cls) => (cls?.startsWith('p-') ? [cls, `px-${cls.slice(2)}`] : cls ? [cls] : [])
+const hasToken = (tokens, cls) => acceptableForms(cls).some((form) => tokens.includes(form))
+
+// Class-string literals that occur exactly once in the file — the only ones
+// applyRepair can later rewrite without ambiguity.
+export function uniqueLiterals(source) {
+  return [...source.matchAll(/(["'])((?:(?!\1)[^\\\n])+)\1/g)]
+    .map((m) => m[2])
+    .filter((lit) => lit.includes(' ') && countOccurrences(source, lit) === 1)
+}
+
+// Match the derived classes against the code file. `classes` becomes the
+// literal carrying the most of them (code.classes); the rest may sit in another
+// unique literal — cva keeps variant classes apart from the base string. Any
+// class found nowhere is `missing`: Figma and code disagree. With nothing to
+// derive, the component's first real class string anchors a detection-only
+// entry, so Figma-side edits are still caught.
+export function matchCode(source, classes) {
+  const literals = uniqueLiterals(source)
+  const tokensOf = (lit) => lit.split(/\s+/)
+  if (!classes.length) {
+    const anchor = literals.find((lit) => tokensOf(lit).length >= 2)
+    return anchor ? { classes: anchor, missing: [], detectionOnly: true } : null
   }
-  return null
+  let main = null
+  let best = 0
+  for (const lit of literals) {
+    const n = classes.filter((c) => hasToken(tokensOf(lit), c)).length
+    if (n > best) {
+      best = n
+      main = lit
+    }
+  }
+  if (!main) return { classes: null, missing: [...classes], detectionOnly: false }
+  const missing = classes.filter((c) => !literals.some((lit) => hasToken(tokensOf(lit), c)))
+  return { classes: main, missing, detectionOnly: false }
 }
 
 // One candidate → either a baseline entry or a reason. Pure; the caller does I/O.
@@ -288,12 +319,10 @@ export function adoptCandidate(candidate, bundle, varNames, source, today) {
     .filter(([, v]) => typeof v?.var === 'string' && v.var.startsWith('unknown('))
     .map(([k, v]) => `${k}=${v.var}`)
   const classes = derivedClasses(figma)
-  if (!classes.length) {
-    return { adopted: null, why: `no binding resolves to a class${unnamed.length ? ` (variables not in the id map: ${unnamed.join(', ')})` : ''}` }
-  }
-  const found = findClassString(source, classes)
-  if (!found) {
-    return { adopted: null, why: `code does not carry [${classes.join(' ')}] in one class string — Figma and code disagree; settle with /figma-pull or /figma-push ${candidate.name}` }
+  const match = matchCode(source, classes)
+  if (!match) return { adopted: null, why: 'no class string in the code file to anchor on' }
+  if (match.missing.length) {
+    return { adopted: null, why: `code does not carry [${match.missing.join(' ')}] — Figma and code disagree; settle with /figma-pull or /figma-push ${candidate.name}` }
   }
   const adopted = {
     name: candidate.name,
@@ -302,9 +331,12 @@ export function adoptCandidate(candidate, bundle, varNames, source, today) {
     codeFile: candidate.codeFile,
     lastSynced: today,
     figma,
-    code: { classes: found },
+    code: { classes: match.classes },
   }
-  return { adopted, why: unnamed.length ? `variables not in the id map are tracked by id: ${unnamed.join(', ')}` : 'Figma and code agree' }
+  const notes = []
+  if (match.detectionOnly) notes.push('no binding maps to a class, so this entry catches Figma-side edits only')
+  if (unnamed.length) notes.push(`variables not in the id map are tracked by id: ${unnamed.join(', ')}`)
+  return { adopted, why: notes.length ? notes.join('; ') : 'Figma and code agree' }
 }
 
 export async function fetchNodes(fileKey, ids, token) {

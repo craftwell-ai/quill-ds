@@ -12,6 +12,23 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.37] — 2026-09-15
+
+### Changed
+- **Parity adoption matches code the way shadcn writes it, and covers the
+  twins the first pass could not name.** The first adoption run brought one
+  of fifteen Wave A components under the daily check; the other fourteen fell
+  to three causes, all fixed here. A padding binding is now accepted in the
+  `px-N` form code writes; derived classes may sit in more than one class
+  string (cva keeps variant classes apart from the base — Badge's `bg-primary`
+  lives in its `default` variant); a component with no binding that maps to a
+  class is adopted for Figma-side detection, anchored on its first class
+  string. `figma/sync-state.json` now names all 136 variables in the file
+  (read from Figma; the 35 it already named all agreed), and the Button and
+  Toggle candidates point at the component sets rebuilt after the August
+  audit (`359:267`, `356:183`). A padding re-binding repairs the `px-` form
+  in kind. (CRA-179)
+
 ## [0.9.36] — 2026-09-15
 
 ### Changed
