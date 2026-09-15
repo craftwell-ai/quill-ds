@@ -12,6 +12,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.36] — 2026-09-15
+
+### Changed
+- chore(figma-sync): adopt Figma twins into the parity baseline
+
 ## [0.9.35] — 2026-09-15
 
 ### Added
