@@ -12,6 +12,22 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.35] — 2026-09-15
+
+### Added
+- **The Figma parity check can adopt the twins that already exist.**
+  `figma/sync-state.json` now lists `candidates` — Wave A's 15 component sets,
+  from `figma/components/README.md` — and the Figma parity workflow gains an
+  `adopt` input that runs `figma-drift.mjs --adopt`: each candidate is read
+  over the REST API (a variant set through its default variant), its bindings
+  are translated to classes, and it enters the baseline only when one class
+  string in its code file carries all of them. Candidates that disagree are
+  listed in the run summary instead — that disagreement is real drift for a
+  human to settle with `/figma-pull` or `/figma-push`, never adopted blind.
+  Adoption PRs land on `auto/figma-adopt` and do not self-merge. Five unit
+  tests cover variant choice, class derivation, the literal match, and both
+  adoption outcomes. (CRA-179)
+
 ## [0.9.34] — 2026-09-15
 
 ### Added

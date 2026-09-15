@@ -126,6 +126,29 @@ expected, not a bug.
    node identity and orphans instances. The push doubles as parity repair: re-assert
    bindings that Figma-side hand-editing dropped.
 
+### Adopting existing twins into the daily check
+
+The parity baseline started with one entry — the fixture — so its daily green
+proved the pipeline, not the library. `figma/sync-state.json` now also lists
+`candidates`: Figma twins built earlier (Wave A's 15 atoms, from
+`components/README.md`) that are not yet under the check. Run the **Figma
+parity** workflow by hand with the `adopt` input on, and it:
+
+1. reads each candidate over the REST API (a variant set is tracked through its
+   default variant — every property `default` or `off`);
+2. translates the node's bindings to classes and looks for one class string in
+   the code file that carries all of them, occurring exactly once;
+3. adopts the ones that agree into `components`, and lists the ones that do not
+   in the run summary — that disagreement is real drift, settled by a human with
+   `/figma-pull` or `/figma-push`, never adopted blind;
+4. opens a PR on `auto/figma-adopt` that does **not** self-merge: read the
+   summary, then merge.
+
+Variables the REST response names only by id (the id map in `sync-state.json`
+is partial — the variables endpoint is Enterprise-gated) are tracked by id: a
+re-binding still reads as drift, it just cannot be auto-repaired until the
+name is added to the map.
+
 ### Why there is no fully-automatic version
 
 Headless (no-Figma-open) variable reads/writes need the Variables REST API, which is

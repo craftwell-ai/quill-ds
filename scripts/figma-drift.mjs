@@ -230,6 +230,83 @@ export function applyRepair(component, plan, source, today) {
   return { source: newSource, component: next }
 }
 
+// ---- adoption: bring an existing Figma twin under the parity check ----
+//
+// Candidates (`candidates` in figma/sync-state.json — Wave A, from
+// figma/components/README.md's component-set map) become baseline entries only
+// when Figma and code already agree: the classes the node's bindings translate
+// to must all sit in one class string of the code file. A candidate that
+// disagrees is reported, not adopted — that disagreement is real drift for a
+// human to settle with /figma-pull or /figma-push, and adopting it blind would
+// turn the daily run red for good.
+
+// A variant set is tracked through one variant, the default one: the child
+// whose properties are all `default` or `off` (Button's "Variant=default,
+// Size=default", Checkbox's "Checked=off"). Ties and single components fall
+// back to the first child.
+export function pickVariant(set) {
+  const children = (set.children ?? []).filter((c) => c.type === 'COMPONENT')
+  if (!children.length) return null
+  const score = (c) => c.name.split(',').filter((seg) => /=\s*(default|off)\s*$/i.test(seg)).length
+  return children.reduce((best, c) => (score(c) > score(best) ? c : best), children[0])
+}
+
+// The classes a snapshot's repairable bindings translate to — the part of the
+// code twin the check can name.
+export function derivedClasses(snapshot) {
+  return REPAIRABLE_KEYS.map((key) => {
+    const name = key === 'effectStyle' ? snapshot.effectStyle : snapshot[key]?.var
+    return name ? classFor(key, name) : null
+  }).filter(Boolean)
+}
+
+// The first class-string literal in `source` carrying every class as a whole
+// token and occurring exactly once — the string applyRepair can later rewrite
+// without ambiguity. Null when code and Figma disagree.
+export function findClassString(source, classes) {
+  if (!classes.length) return null
+  const literals = [...source.matchAll(/(["'])((?:(?!\1)[^\\\n])+)\1/g)].map((m) => m[2]).filter((lit) => lit.includes(' '))
+  for (const lit of literals) {
+    const tokens = lit.split(/\s+/)
+    if (classes.every((c) => tokens.includes(c)) && countOccurrences(source, lit) === 1) return lit
+  }
+  return null
+}
+
+// One candidate → either a baseline entry or a reason. Pure; the caller does I/O.
+export function adoptCandidate(candidate, bundle, varNames, source, today) {
+  if (!bundle?.document) return { adopted: null, why: `node ${candidate.nodeId} not found in file` }
+  let node = bundle.document
+  let variant = null
+  if (node.type === 'COMPONENT_SET') {
+    node = pickVariant(node)
+    if (!node) return { adopted: null, why: 'component set has no variants' }
+    variant = node.name
+  }
+  const figma = extractComponent({ document: node, styles: bundle.styles }, varNames)
+  const unnamed = Object.entries(figma)
+    .filter(([, v]) => typeof v?.var === 'string' && v.var.startsWith('unknown('))
+    .map(([k, v]) => `${k}=${v.var}`)
+  const classes = derivedClasses(figma)
+  if (!classes.length) {
+    return { adopted: null, why: `no binding resolves to a class${unnamed.length ? ` (variables not in the id map: ${unnamed.join(', ')})` : ''}` }
+  }
+  const found = findClassString(source, classes)
+  if (!found) {
+    return { adopted: null, why: `code does not carry [${classes.join(' ')}] in one class string — Figma and code disagree; settle with /figma-pull or /figma-push ${candidate.name}` }
+  }
+  const adopted = {
+    name: candidate.name,
+    nodeId: node.id,
+    ...(variant ? { variantOf: candidate.nodeId, variant } : {}),
+    codeFile: candidate.codeFile,
+    lastSynced: today,
+    figma,
+    code: { classes: found },
+  }
+  return { adopted, why: unnamed.length ? `variables not in the id map are tracked by id: ${unnamed.join(', ')}` : 'Figma and code agree' }
+}
+
 export async function fetchNodes(fileKey, ids, token) {
   const url = `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${encodeURIComponent(ids.join(','))}`
   const res = await fetch(url, { headers: { 'X-Figma-Token': token } })
@@ -246,7 +323,7 @@ function report(line) {
 // Repair mode (--repair): value-level drift is fixed in place (source file +
 // baseline rewritten; the workflow commits and opens the PR); exit 2 only when
 // unrepairable drift remains and a human needs /figma-pull or /figma-push.
-export async function main({ repair = false } = {}) {
+export async function main({ repair = false, adopt = false } = {}) {
   const token = process.env.FIGMA_TOKEN
   if (!token) {
     report('figma-drift: no FIGMA_TOKEN secret — component parity check skipped (add a Figma personal access token with file read scope to enable).')
@@ -254,7 +331,9 @@ export async function main({ repair = false } = {}) {
   }
   const statePath = join(root, 'figma/sync-state.json')
   const state = loadState(statePath)
-  const data = await fetchNodes(state.fileKey, state.components.map((c) => c.nodeId), token)
+  const tracked = new Set(state.components.map((c) => c.name))
+  const candidates = adopt ? (state.candidates ?? []).filter((c) => !tracked.has(c.name)) : []
+  const data = await fetchNodes(state.fileKey, [...state.components.map((c) => c.nodeId), ...candidates.map((c) => c.nodeId)], token)
   const today = new Date().toISOString().slice(0, 10)
   let unrepaired = false
   let repaired = false
@@ -298,10 +377,24 @@ export async function main({ repair = false } = {}) {
     for (const u of unverifiable) report(`  ⚠ ${component.name}: '${u}' not verifiable from the REST response — needs a live /figma-pull audit`)
     if (!drift.length && codeInSync) report(`✔ ${component.name}: in sync (last synced ${component.lastSynced})`)
   }
-  if (repaired) writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n')
+  let adoptedAny = false
+  for (const candidate of candidates) {
+    const source = readFileSync(join(root, candidate.codeFile), 'utf8')
+    const { adopted, why } = adoptCandidate(candidate, data.nodes[candidate.nodeId], state.variables, source, today)
+    if (adopted) {
+      state.components.push(adopted)
+      state.candidates = state.candidates.filter((c) => c.name !== candidate.name)
+      adoptedAny = true
+      report(`✔ ${candidate.name}: adopted into the parity baseline — ${why}`)
+    } else {
+      // Staged on purpose: a candidate that disagrees stays listed, never red.
+      report(`○ ${candidate.name}: not adopted — ${why}`)
+    }
+  }
+  if (repaired || adoptedAny) writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n')
   if (unrepaired) process.exitCode = repair ? 2 : 1
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  await main({ repair: process.argv.includes('--repair') })
+  await main({ repair: process.argv.includes('--repair'), adopt: process.argv.includes('--adopt') })
 }

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex, classFor, planRepair, applyRepair } from './figma-drift.mjs'
+import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex, classFor, planRepair, applyRepair, pickVariant, derivedClasses, findClassString, adoptCandidate } from './figma-drift.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -181,4 +181,67 @@ test('the shipped sync-state baseline is valid and its pairs exist on disk', () 
     const source = readFileSync(join(root, c.codeFile), 'utf8')
     assert.ok(checkCode(c, source), `baseline classes for '${c.name}' not found in ${c.codeFile} — run /figma-push or update figma/sync-state.json`)
   }
+})
+
+// ---- adoption ----
+
+const variantSet = () => ({
+  document: {
+    type: 'COMPONENT_SET',
+    id: '76:56',
+    children: [
+      { ...cleanBundle().document, id: '76:57', name: 'Variant=destructive, Size=default' },
+      { ...cleanBundle().document, id: '76:58', name: 'Variant=default, Size=default' },
+      { ...cleanBundle().document, id: '76:59', name: 'Variant=default, Size=sm' },
+    ],
+  },
+  styles: cleanBundle().styles,
+})
+const CANDIDATE = { name: 'Button', nodeId: '76:56', codeFile: 'src/components/ui/button.tsx' }
+const AGREEING_SOURCE = 'const base = cva("inline-flex rounded-2xl bg-card p-8 shadow-lg", { variants: {} })\nexport { base }\n'
+
+test('pickVariant takes the all-default variant, not the first child', () => {
+  assert.equal(pickVariant(variantSet().document).id, '76:58')
+  const noDefault = { children: [{ type: 'COMPONENT', id: 'a', name: 'Checked=on' }, { type: 'COMPONENT', id: 'b', name: 'Checked=off' }] }
+  assert.equal(pickVariant(noDefault).id, 'b')
+  assert.equal(pickVariant({ children: [] }), null)
+})
+
+test('derivedClasses names the classes the bindings translate to and skips the unmappable', () => {
+  assert.deepEqual(derivedClasses(snapshot), ['bg-card', 'rounded-2xl', 'p-8', 'shadow-lg'])
+  assert.deepEqual(derivedClasses({ fill: { var: 'unknown(VariableID:9:9)', raw: '#000000' }, texts: {} }), [])
+})
+
+test('findClassString wants every class in one literal that occurs exactly once', () => {
+  assert.equal(findClassString(AGREEING_SOURCE, ['bg-card', 'p-8']), 'inline-flex rounded-2xl bg-card p-8 shadow-lg')
+  assert.equal(findClassString(AGREEING_SOURCE, ['bg-card', 'p-6']), null, 'a class the code does not carry')
+  assert.equal(findClassString('cn("bg-card p-8") + cn("bg-card p-8")', ['bg-card']), null, 'an ambiguous literal cannot be rewritten later')
+})
+
+test('a candidate whose code agrees with Figma is adopted through its default variant', () => {
+  const { adopted, why } = adoptCandidate(CANDIDATE, variantSet(), VARS, AGREEING_SOURCE, '2026-09-15')
+  assert.ok(adopted, why)
+  assert.equal(adopted.nodeId, '76:58')
+  assert.equal(adopted.variantOf, '76:56')
+  assert.equal(adopted.variant, 'Variant=default, Size=default')
+  assert.equal(adopted.code.classes, 'inline-flex rounded-2xl bg-card p-8 shadow-lg')
+  assert.deepEqual(adopted.figma.fill, { var: 'shadcn/card', raw: '#EFE4CE' })
+  // …and the entry it produced is what the daily check consumes: clean today,
+  // drift the moment a designer re-binds the radius.
+  assert.deepEqual(diffComponent(adopted.figma, extractComponent({ document: variantSet().document.children[1], styles: variantSet().styles }, VARS)).drift, [])
+  // A re-binding that changes the resolved value: both the name and the raw
+  // move (a dropped binding with the same raw value is parity noise, not drift).
+  const rebound = variantSet().document.children[1]
+  rebound.boundVariables.topLeftRadius.id = 'VariableID:1:3'
+  rebound.cornerRadius = 8
+  assert.match(diffComponent(adopted.figma, extractComponent({ document: rebound, styles: variantSet().styles }, { ...VARS, 'VariableID:1:3': 'corner-radius/lg' })).drift.join(' '), /cornerRadius/)
+})
+
+test('a candidate whose code disagrees with Figma is reported, never adopted', () => {
+  const disagreeing = 'const base = cva("inline-flex rounded-lg bg-card p-8 shadow-lg")\n'
+  const { adopted, why } = adoptCandidate(CANDIDATE, variantSet(), VARS, disagreeing, '2026-09-15')
+  assert.equal(adopted, null)
+  assert.match(why, /disagree/)
+  assert.match(why, /figma-pull|figma-push/)
+  assert.equal(adoptCandidate(CANDIDATE, undefined, VARS, disagreeing, '2026-09-15').adopted, null)
 })

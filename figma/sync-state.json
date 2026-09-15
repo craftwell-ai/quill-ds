@@ -1,5 +1,5 @@
 {
-  "$comment": "Baseline for the scheduled Figma↔code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry.",
+  "$comment": "Baseline for the scheduled Figma\u2194code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry. `candidates` lists Figma twins not yet under the check (Wave A, from figma/components/README.md); `figma-drift.mjs --adopt` (the figma-parity workflow's `adopt` input) moves each into `components` once Figma and code agree, and reports the ones that do not.",
   "fileKey": "Dcf8lEB7Ash71iNl7WN4Jq",
   "variables": {
     "VariableID:4:2": "corner-radius/xs",
@@ -38,6 +38,83 @@
     "VariableID:70:5": "spacing/1_5",
     "VariableID:70:6": "spacing/2_5"
   },
+  "candidates": [
+    {
+      "name": "Badge",
+      "nodeId": "65:13",
+      "codeFile": "src/components/ui/badge.tsx"
+    },
+    {
+      "name": "Button",
+      "nodeId": "76:56",
+      "codeFile": "src/components/ui/button.tsx"
+    },
+    {
+      "name": "Input",
+      "nodeId": "77:5",
+      "codeFile": "src/components/ui/input.tsx"
+    },
+    {
+      "name": "Textarea",
+      "nodeId": "84:4",
+      "codeFile": "src/components/ui/textarea.tsx"
+    },
+    {
+      "name": "Checkbox",
+      "nodeId": "78:9",
+      "codeFile": "src/components/ui/checkbox.tsx"
+    },
+    {
+      "name": "RadioGroupItem",
+      "nodeId": "80:8",
+      "codeFile": "src/components/ui/radio-group.tsx"
+    },
+    {
+      "name": "Switch",
+      "nodeId": "79:9",
+      "codeFile": "src/components/ui/switch.tsx"
+    },
+    {
+      "name": "Toggle",
+      "nodeId": "84:23",
+      "codeFile": "src/components/ui/toggle.tsx"
+    },
+    {
+      "name": "Label",
+      "nodeId": "82:9",
+      "codeFile": "src/components/ui/label.tsx"
+    },
+    {
+      "name": "Kbd",
+      "nodeId": "82:13",
+      "codeFile": "src/components/ui/kbd.tsx"
+    },
+    {
+      "name": "Avatar",
+      "nodeId": "84:8",
+      "codeFile": "src/components/ui/avatar.tsx"
+    },
+    {
+      "name": "Spinner",
+      "nodeId": "84:12",
+      "codeFile": "src/components/ui/spinner.tsx"
+    },
+    {
+      "name": "Separator",
+      "nodeId": "82:3",
+      "codeFile": "src/components/ui/separator.tsx"
+    },
+    {
+      "name": "Skeleton",
+      "nodeId": "82:6",
+      "codeFile": "src/components/ui/skeleton.tsx"
+    },
+    {
+      "name": "Progress",
+      "nodeId": "81:8",
+      "codeFile": "src/components/ui/progress.tsx"
+    }
+  ],
   "components": [
     {
       "name": "Test",
@@ -45,18 +122,40 @@
       "codeFile": "src/components/ui/test-card.tsx",
       "lastSynced": "2026-08-13",
       "figma": {
-        "fill": { "var": "shadcn/card", "raw": "#EFE4CE" },
-        "stroke": { "var": "shadcn/border", "raw": "#2A2622" },
-        "strokeWeight": { "var": "border-width/1", "raw": 1 },
-        "cornerRadius": { "var": "corner-radius/2xl", "raw": 24 },
-        "padding": { "var": "spacing/8", "raw": 32 },
-        "itemSpacing": { "var": "spacing/3", "raw": 12 },
+        "fill": {
+          "var": "shadcn/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "shadcn/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": "border-width/1",
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": "corner-radius/2xl",
+          "raw": 24
+        },
+        "padding": {
+          "var": "spacing/8",
+          "raw": 32
+        },
+        "itemSpacing": {
+          "var": "spacing/3",
+          "raw": 12
+        },
         "effectStyle": "Elevation/lg",
         "texts": {
           "Title": "Title",
           "Body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit duis auctor ex ac molestie blandit."
         },
-        "childSignature": ["Title:TEXT", "Body:TEXT", "Frame 1:FRAME"]
+        "childSignature": [
+          "Title:TEXT",
+          "Body:TEXT",
+          "Frame 1:FRAME"
+        ]
       },
       "code": {
         "classes": "flex w-72 flex-col gap-3 rounded-2xl border bg-card p-8 text-card-foreground shadow-lg"
