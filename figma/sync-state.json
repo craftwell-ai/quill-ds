@@ -222,27 +222,10 @@
           "var": "shadcn/border",
           "raw": "#2A2622"
         },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 1
         },
-        "cornerRadius": {
-          "var": null,
-          "raw": null
-        },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {},
         "childSignature": []
       },
@@ -262,10 +245,6 @@
           "var": "shadcn/primary",
           "raw": "#2A2622"
         },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 1
@@ -282,7 +261,6 @@
           "var": "spacing/1",
           "raw": 4
         },
-        "effectStyle": null,
         "texts": {
           "Badge": "Badge"
         },
@@ -306,10 +284,6 @@
           "var": "shadcn/primary",
           "raw": "#2A2622"
         },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 1
@@ -326,7 +300,6 @@
           "var": "spacing/1_5",
           "raw": 6
         },
-        "effectStyle": null,
         "texts": {
           "Button": "Button"
         },
@@ -346,10 +319,6 @@
       "codeFile": "src/components/ui/checkbox.tsx",
       "lastSynced": "2026-09-15",
       "figma": {
-        "fill": {
-          "var": null,
-          "raw": null
-        },
         "stroke": {
           "var": "shadcn/input",
           "raw": "#8A7F6E"
@@ -362,15 +331,6 @@
           "var": null,
           "raw": 4
         },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {},
         "childSignature": []
       },
@@ -386,10 +346,6 @@
       "codeFile": "src/components/ui/radio-group.tsx",
       "lastSynced": "2026-09-15",
       "figma": {
-        "fill": {
-          "var": null,
-          "raw": null
-        },
         "stroke": {
           "var": "shadcn/input",
           "raw": "#8A7F6E"
@@ -402,15 +358,6 @@
           "var": null,
           "raw": 40
         },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {},
         "childSignature": []
       },
@@ -426,14 +373,6 @@
       "codeFile": "src/components/ui/toggle.tsx",
       "lastSynced": "2026-09-15",
       "figma": {
-        "fill": {
-          "var": null,
-          "raw": null
-        },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 1
@@ -442,15 +381,6 @@
           "var": null,
           "raw": 8
         },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {},
         "childSignature": [
           "Frame:FRAME"
@@ -466,31 +396,10 @@
       "codeFile": "src/components/ui/label.tsx",
       "lastSynced": "2026-09-15",
       "figma": {
-        "fill": {
-          "var": null,
-          "raw": null
-        },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 1
         },
-        "cornerRadius": {
-          "var": null,
-          "raw": null
-        },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {
           "Label": "Label"
         },
@@ -512,10 +421,6 @@
           "var": "shadcn/muted",
           "raw": "#E8DCC0"
         },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 1
@@ -524,15 +429,6 @@
           "var": null,
           "raw": 40
         },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {
           "JD": "JD"
         },
@@ -550,31 +446,10 @@
       "codeFile": "src/components/ui/spinner.tsx",
       "lastSynced": "2026-09-15",
       "figma": {
-        "fill": {
-          "var": null,
-          "raw": null
-        },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 0.02083333395421505
         },
-        "cornerRadius": {
-          "var": null,
-          "raw": null
-        },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {},
         "childSignature": [
           "Vector:VECTOR"
@@ -594,10 +469,6 @@
           "var": "shadcn/muted",
           "raw": "#E8DCC0"
         },
-        "stroke": {
-          "var": null,
-          "raw": null
-        },
         "strokeWeight": {
           "var": null,
           "raw": 1
@@ -606,15 +477,6 @@
           "var": null,
           "raw": 6
         },
-        "padding": {
-          "var": null,
-          "raw": null
-        },
-        "itemSpacing": {
-          "var": null,
-          "raw": null
-        },
-        "effectStyle": null,
         "texts": {},
         "childSignature": []
       },

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex, classFor, planRepair, applyRepair, pickVariant, derivedClasses, matchCode, adoptCandidate } from './figma-drift.mjs'
+import { loadState, extractComponent, diffComponent, checkCode, boundName, rgbToHex, classFor, planRepair, applyRepair, pickVariant, derivedClasses, matchCode, adoptCandidate, pruneSnapshot } from './figma-drift.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -270,4 +270,22 @@ test('a padding re-binding repairs the px- form the code carries', () => {
   const plan = planRepair(component, live, 'className="inline-flex rounded-2xl bg-card px-8 shadow-lg"')
   assert.ok(plan.repairable, plan.reasons.join('; '))
   assert.deepEqual(plan.classEdits.map((e) => [e.from, e.to]), [['px-8', 'px-6']])
+})
+
+test('an adopted snapshot drops the keys the REST response could not fill, and keeps raw-only ones', () => {
+  const pruned = pruneSnapshot({
+    fill: { var: 'shadcn/border', raw: '#2A2622' },
+    stroke: { var: null, raw: null },
+    strokeWeight: { var: null, raw: 1 },
+    cornerRadius: { var: null, raw: null },
+    effectStyle: null,
+    texts: {},
+    childSignature: [],
+  })
+  assert.deepEqual(Object.keys(pruned), ['fill', 'strokeWeight', 'texts', 'childSignature'])
+  // and the daily check is silent on what is absent: no drift, no warnings
+  const { drift, unverifiable } = diffComponent(pruned, { fill: { var: 'shadcn/border', raw: '#2A2622' }, stroke: { var: null, raw: null }, strokeWeight: { var: null, raw: 1 }, cornerRadius: { var: null, raw: null }, padding: { var: null, raw: null }, itemSpacing: { var: null, raw: null }, effectStyle: null, texts: {}, childSignature: [] })
+  assert.deepEqual([drift, unverifiable], [[], []])
+  const { adopted } = adoptCandidate(CANDIDATE, variantSet(), VARS, AGREEING_SOURCE, '2026-09-15')
+  assert.ok(!('stroke' in adopted.figma) && !('itemSpacing' in adopted.figma), 'double-null keys never enter the baseline')
 })
