@@ -12,6 +12,16 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.41] — 2026-09-16
+
+### Changed
+- **`@quill` is listed in shadcn's registry directory** (shadcn-ui/ui#11915,
+  merged 2026-09-16), so `npx shadcn@latest add @quill/<item>` works with no
+  `components.json` entry. README and the llms.txt quick start now lead with
+  that and keep the URL pin as the fallback. The README's "list everything"
+  line said `view @quill/registry`, which fails because the index is not an
+  item; it now says `search @quill`, which lists all 58. (CRA-213)
+
 ## [0.9.40] — 2026-09-15
 
 ### Changed
