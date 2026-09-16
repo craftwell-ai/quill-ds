@@ -17,7 +17,9 @@ under you — and nothing arrives until you pull it.
 npx shadcn@latest init -d
 ```
 
-Add the namespace to `components.json`:
+Quill is listed in [shadcn's registry directory](https://ui.shadcn.com/docs/directory), so the
+`@quill` namespace works with no configuration. To pin the URL yourself instead, add it to
+`components.json`:
 
 ```json
 { "registries": { "@quill": "https://www.quilldesignsystem.com/r/{name}.json" } }
@@ -31,7 +33,7 @@ npx shadcn@latest add @quill/agent-rules    # rules for the app's AI agents (.cl
 npx shadcn@latest add @quill/tone-badge     # a component
 npx shadcn@latest add @quill/dashboard      # a block
 npx shadcn@latest add @quill/example-app-page   # a whole page composed from blocks (also marketing, auth)
-npx shadcn@latest view @quill/registry      # list everything
+npx shadcn@latest search @quill             # list everything
 ```
 
 **Primitives are stock shadcn, restyled by the token layer.** Quill does not re-ship its own
