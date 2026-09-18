@@ -12,6 +12,15 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.45] — 2026-09-18
+
+### Added
+- **The last four pattern pages in Figma (session C: flows)** — ❖ Signup,
+  ❖ Login — OAuth (provider marks inlined from the source; GitHub and Apple
+  bound to foreground), ❖ Wizard, ❖ Onboarding. Every block now has a declared
+  Figma status: 47 of 51 mirrored, 4 declined with reasons, 0 missing. The
+  daily parity run checks all 47 pages are still in place.
+
 ## [0.9.44] — 2026-09-18
 
 ### Added

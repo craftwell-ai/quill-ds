@@ -200,6 +200,20 @@ set `characters` on the twin's text node (fonts loaded from the node's own segme
 | kanban | ❖ Kanban | 581:85 | 581:86 | columns fill → shadcn/muted @ 0.5; card tags outline Badge |
 | chat | ❖ Chat | 581:159 | 581:160 | 400×480; bubbles radius → corner-radius/2xl, primary / muted; composed primary send button |
 
+### Pattern pages built — session C, flows (2026-09-18)
+
+| Block | Page | Page id | Frame id | Notes |
+|---|---|---|---|---|
+| signup | ❖ Signup | 584:2 | 584:3 | three Label + Input fields; "Sign in" link → shadcn/primary, underlined |
+| login-oauth | ❖ Login — OAuth | 585:2 | 585:3 | provider buttons are composed (paints copied from the Button outline variant) so they can carry the brand marks inlined from the source — Google keeps its four colours, GitHub / Apple bind to shadcn/foreground; two Separator instances flank "or" |
+| wizard | ❖ Wizard | 585:38 | 585:39 | stepper: done → primary disc + check, current → primary @ 0.1 with primary stroke, todo → muted; connectors → shadcn/border |
+| onboarding | ❖ Onboarding | 585:75 | 585:76 | progress track → shadcn/muted, fill → shadcn/primary at 50 %; done rows strikethrough; link sm Buttons |
+
+**Every block now has a declared Figma status:** 47 of 51 mirrored, 4 declined
+(badge-on-card, alerts, command-palette, order-summary — reasons in
+`sync-state.json`), 0 missing. The file holds 93 pages, alphabetical after
+Foundations and Icons.
+
 ### ToneBadge twin (2026-09-18)
 
 `❖ Tone badge` — component set **577:75**, code twin `registry/lib/tone-badge.tsx`.

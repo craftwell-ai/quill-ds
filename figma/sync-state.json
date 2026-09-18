@@ -786,8 +786,10 @@
     },
     {
       "block": "login-oauth",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Login — OAuth",
+      "pageId": "585:2",
+      "frameId": "585:3"
     },
     {
       "block": "login-split-panel",
@@ -826,8 +828,10 @@
     },
     {
       "block": "onboarding",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Onboarding",
+      "pageId": "585:75",
+      "frameId": "585:76"
     },
     {
       "block": "order-summary",
@@ -885,8 +889,10 @@
     },
     {
       "block": "signup",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Signup",
+      "pageId": "584:2",
+      "frameId": "584:3"
     },
     {
       "block": "signup-social",
@@ -939,8 +945,10 @@
     },
     {
       "block": "wizard",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Wizard",
+      "pageId": "585:38",
+      "frameId": "585:39"
     }
   ]
 }
