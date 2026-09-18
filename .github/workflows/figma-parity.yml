@@ -23,6 +23,10 @@ on:
         description: 'Adopt the candidates in figma/sync-state.json into the parity baseline (opens a PR for review; never self-merges)'
         type: boolean
         default: false
+      snapshot:
+        description: 'Re-read every mirrored pattern frame into figma/pattern-baseline.json after pages were rebuilt (opens a PR for review; never self-merges)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -40,7 +44,9 @@ jobs:
       # Adoption runs land on their own branch and wait for a human: a baseline
       # entry is a claim about what "in sync" means, so someone reads the summary.
       ADOPT: ${{ inputs.adopt == true }}
-      BRANCH: ${{ inputs.adopt == true && 'auto/figma-adopt' || 'auto/figma-pull' }}
+      # A snapshot run rewrites the pattern content baseline from the file — a human reads that diff.
+      SNAPSHOT: ${{ inputs.snapshot == true }}
+      BRANCH: ${{ inputs.adopt == true && 'auto/figma-adopt' || inputs.snapshot == true && 'auto/figma-snapshot' || 'auto/figma-pull' }}
       HAS_PAT: ${{ secrets.AUTOMATION_TOKEN != '' }}
       GH_TOKEN: ${{ secrets.AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
       FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
@@ -58,7 +64,7 @@ jobs:
         id: parity
         run: |
           set +e
-          node scripts/figma-drift.mjs --repair $([ "$ADOPT" = 'true' ] && echo '--adopt')
+          node scripts/figma-drift.mjs --repair $([ "$ADOPT" = 'true' ] && echo '--adopt') $([ "$SNAPSHOT" = 'true' ] && echo '--snapshot-patterns')
           echo "code=$?" >> "$GITHUB_OUTPUT"
 
       - name: Detect repairs
@@ -69,7 +75,7 @@ jobs:
           else
             echo "repaired=true" >> "$GITHUB_OUTPUT"
             {
-              if [ "$ADOPT" = 'true' ]; then echo "## Parity baseline: adoption result"; else echo "## Value-level Figma edits pulled into code"; fi
+              if [ "$ADOPT" = 'true' ]; then echo "## Parity baseline: adoption result"; elif [ "$SNAPSHOT" = 'true' ]; then echo "## Pattern content baseline re-read from Figma"; else echo "## Value-level Figma edits pulled into code"; fi
               echo
               echo '```'
               git diff --stat
@@ -101,6 +107,10 @@ jobs:
             git commit \
               -m 'chore(figma-sync): adopt Figma twins into the parity baseline' \
               -m 'Opened by .github/workflows/figma-parity.yml with the adopt input. Each adopted component was read from Figma over the REST API and matched against its code file: the classes its bindings translate to all sit in one class string there, so Figma and code agreed at adoption. Candidates that disagreed are listed in the run summary, not adopted. Review the summary, then merge by hand.'
+          elif [ "$SNAPSHOT" = 'true' ]; then
+            git commit \
+              -m 'chore(figma-sync): re-read the pattern content baseline from Figma' \
+              -m 'Opened by .github/workflows/figma-parity.yml with the snapshot input after pattern pages were rebuilt. figma/pattern-baseline.json now holds what every mirrored frame shows (texts, icon instances, top-level instances) as read over the REST API; the offline test still checks that content against what each block renders. Review the diff, then merge by hand.'
           else
             git commit \
               -m 'fix(figma-sync): pull value-level Figma edits into code' \
@@ -118,6 +128,15 @@ jobs:
               gh pr create --base main --head "$BRANCH" \
                 --title 'chore(figma-sync): adopt Figma twins into the parity baseline' \
                 --body-file /tmp/pr-body.md
+            elif [ "$SNAPSHOT" = 'true' ]; then
+              printf '%s\n' \
+                'The pattern content baseline (`figma/pattern-baseline.json`) was re-read from the Figma file by the figma-parity workflow with its `snapshot` input — the step after pattern pages are rebuilt. Each mirrored frame now records the texts, icon instances and top-level instances it shows; `scripts/figma-pattern-parity.test.mjs` checks that against what the blocks render.' \
+                '' \
+                'Not self-merging on purpose: read the diff, then merge.' \
+                > /tmp/pr-body.md
+              gh pr create --base main --head "$BRANCH" \
+                --title 'chore(figma-sync): re-read the pattern content baseline from Figma' \
+                --body-file /tmp/pr-body.md
             else
               printf '%s\n' \
                 'A designer changed value-level properties (token bindings / text) on a synced component in Figma. `figma-parity.yml` translated them into the code twin deterministically and updated the parity baseline.' \
@@ -130,7 +149,7 @@ jobs:
             fi
           fi
 
-          if [ "$ADOPT" != 'true' ]; then gh pr merge --auto --merge "$BRANCH" || true; fi
+          if [ "$ADOPT" != 'true' ] && [ "$SNAPSHOT" != 'true' ]; then gh pr merge --auto --merge "$BRANCH" || true; fi
 
       - name: Fail on drift that needs a human
         if: steps.parity.outputs.code == '2'

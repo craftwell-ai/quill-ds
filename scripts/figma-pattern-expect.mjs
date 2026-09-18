@@ -38,14 +38,21 @@ export async function renderBlocks(blocks = blockNames()) {
   return html
 }
 
-// Strings a designer sees: text nodes, placeholders, input values.
+// Strings a designer sees: text nodes, placeholders, input values. Style and
+// script blocks (recharts, input-otp) are not copy.
 export function textsOf(html) {
   // Screen-reader-only text is not drawn; a placeholder is hidden behind a value.
   const visible = html
+    .replace(/<(style|script)\b[^>]*>[\s\S]*?<\/\1>/g, '')
     .replace(/<(\w+)\b[^>]*\bclass="[^"]*\bsr-only\b[^"]*"[^>]*>[\s\S]*?<\/\1>/g, '')
+    // Base UI hides helper text with an inline clip-path instead of a class (Progress renders one).
+    .replace(/<(\w+)\b[^>]*\bstyle="[^"]*clip-path:inset\(50%\)[^"]*"[^>]*>[\s\S]*?<\/\1>/g, '')
     .replace(/<(?:input|textarea)\b[^>]*>/g, (tag) => (/\svalue="/.test(tag) ? tag.replace(/\splaceholder="[^"]*"/, '') : tag))
   const texts = [...visible.matchAll(/>([^<>]+)</g)].map((m) => clean(m[1])).filter(Boolean)
-  const attrs = [...visible.matchAll(/\s(?:placeholder|value)="([^"]*)"/g)].map((m) => clean(m[1])).filter(Boolean)
+  // Only a drawn field shows its placeholder or value; a button's `value` is data, and the
+  // hidden radio/checkbox input Base UI renders beside its control is not drawn either.
+  const drawnField = (tag) => !/\saria-hidden="true"|\stype="(?:radio|checkbox|hidden)"|clip-path:inset\(50%\)/.test(tag)
+  const attrs = [...visible.matchAll(/<(?:input|textarea)\b[^>]*>/g)].map((m) => m[0]).filter(drawnField).flatMap((tag) => [...tag.matchAll(/\s(?:placeholder|value)="([^"]*)"/g)].map((a) => clean(a[1]))).filter(Boolean)
   return [...texts, ...attrs]
 }
 

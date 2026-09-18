@@ -60,5 +60,6 @@ test('the block hash ignores comments and whitespace, so a JSDoc-only change doe
 test('the stale list only names pages that are still mirrored, and reads as a shrinking list', () => {
   const stale = mirrored.filter((p) => p.stale)
   for (const p of stale) assert.ok(p.page && p.pageId, `${p.block}: stale entries stay mirrored (page + ids) until rebuilt`)
-  assert.ok(stale.length <= 22, `stale list grew to ${stale.length} — rebuild pages, do not add to it`)
+  // Empty since v0.9.52 (every July page rebuilt): a page that falls behind is rebuilt and re-stamped, never re-listed.
+  assert.equal(stale.length, 0, `stale list grew to ${stale.length} (${stale.map((p) => p.block).join(', ')}) — rebuild the page and re-stamp it, do not add to the list`)
 })

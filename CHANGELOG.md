@@ -12,6 +12,31 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.52] — 2026-09-18
+
+### Changed
+- **Every mirrored pattern page is now stamped** (CRA-223). The 22 pages built
+  in July were rebuilt in Figma from today's blocks — copy, icons, component
+  instances and the shipped Card anatomy (16 px spacing, foreground ring at
+  10 %, Fraunces titles at weight 500, a muted footer band) — and stamped with
+  their block hash, so `figma-restamp.test.mjs` holds 47 of 47 and the content
+  check in `figma-pattern-parity.test.mjs` covers every page. Thirteen earlier
+  pages still on the old card recipe were patched to the same anatomy.
+- **The Figma parity workflow takes a `snapshot` input** that re-reads every
+  mirrored frame into `figma/pattern-baseline.json` and opens a PR — the step
+  after pages are rebuilt, runnable without a local Figma token.
+
+### Fixed
+- **Adopt matcher** (CRA-221): a spacing variable takes its unprefixed
+  definition (`[--card-spacing:--spacing(4)]`, not the `data-[size=sm]:`
+  override), a left padding is accepted as `pl-N`, and a one-class cva variant
+  value (`default: "bg-muted"`) counts as a class string — Card, Tabs and
+  Select adopt on the next run.
+- **Pattern content expectation** drops Base UI's inline clip-path helper text
+  (Progress rendered an "x"), reads `placeholder`/`value` only from fields, not
+  from radios or buttons, and lets a chart block (recharts) show more strings
+  than the server render, never fewer.
+
 ## [0.9.51] — 2026-09-18
 
 ### Changed

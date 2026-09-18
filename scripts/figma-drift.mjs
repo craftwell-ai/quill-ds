@@ -268,7 +268,7 @@ export function derivedClasses(snapshot) {
 // paddingLeft, which shadcn writes as `px-N` far more often than `p-N`.
 export const acceptableForms = (cls) => {
   if (!cls) return []
-  if (cls.startsWith('p-')) return [cls, `px-${cls.slice(2)}`]
+  if (cls.startsWith('p-')) return [cls, `px-${cls.slice(2)}`, `pl-${cls.slice(2)}`] // paddingLeft is what the twin reads
   if (cls.startsWith('gap-')) return [cls, `gap-x-${cls.slice(4)}`, `gap-y-${cls.slice(4)}`]
   if (cls === 'rounded-4xl') return [cls, 'rounded-full'] // both draw a full pill on a control
   return [cls]
@@ -288,7 +288,12 @@ const baseToken = (tok) => {
 }
 const hasToken = (tokens, cls) => acceptableForms(cls).some((form) => tokens.some((t) => t === form || baseToken(t) === form))
 // `[--card-spacing:--spacing(4)]` in a file makes `gap-(--card-spacing)` read as `gap-4`.
-const spacingVarsOf = (source) => Object.fromEntries([...source.matchAll(/\[--([a-z0-9-]+):--spacing\(([\d.]+)\)\]/g)].map((m) => [m[1], m[2]]))
+// Only the unprefixed definition counts: `data-[size=sm]:[--card-spacing:--spacing(3)]` is a variant.
+const spacingVarsOf = (source) => {
+  const out = {}
+  for (const m of source.matchAll(/(?<![:\w])\[--([a-z0-9-]+):--spacing\(([\d.]+)\)\]/g)) if (!(m[1] in out)) out[m[1]] = m[2]
+  return out
+}
 const tokensIn = (lit, spacingVars) => lit.split(/\s+/).flatMap((t) => {
   const m = baseToken(t).match(/^(p|px|py|pl|pr|pt|pb|gap|gap-x|gap-y)-\(--([a-z0-9-]+)\)$/)
   return m && spacingVars[m[2]] ? [t, `${m[1]}-${spacingVars[m[2]]}`] : [t]
@@ -331,7 +336,9 @@ export function matchCode(source, classes, alsoIn = []) {
   // every class may live in the base component's file: anchor on the first real class string here
   if (!main && elsewhere.length) main = literals.find((lit) => tokensOf(lit).length >= 2) ?? null
   if (!main) return { classes: null, missing: [...classes], detectionOnly: false }
-  const missing = classes.filter((c) => !literals.some((lit) => hasToken(tokensOf(lit), c)) && !elsewhere.some((tokens) => hasToken(tokens, c)))
+  // a one-class cva variant value (`default: "bg-muted"`) is a class string too
+  const singles = [...source.matchAll(/(["'])([a-z][\w./[\]()%:-]*-[\w./[\]()%:-]*)\1/g)].map((m) => m[2])
+  const missing = classes.filter((c) => !literals.some((lit) => hasToken(tokensOf(lit), c)) && !singles.some((s) => hasToken([s], c)) && !elsewhere.some((tokens) => hasToken(tokens, c)))
   return { classes: main, missing, detectionOnly: false }
 }
 
