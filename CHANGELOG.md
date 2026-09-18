@@ -12,6 +12,24 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.49] — 2026-09-18
+
+### Added
+- **Pattern content parity** (CRA-223). `figma/pattern-baseline.json` records
+  what every mirrored Figma frame shows (texts, icon components, top-level
+  instances, bound variables); the daily run diffs all 47 frames against it
+  and names the page when Figma moves. `scripts/figma-pattern-expect.mjs`
+  renders every block with react-dom/server, and
+  `scripts/figma-pattern-parity.test.mjs` requires each stamped page to show
+  exactly the block's strings and carry its icons — the check that would have
+  caught the 2026-09-12 copy change on its own. All 25 stamped pages pass.
+
+### Changed
+- **Icons on pattern pages are instances** of the `icon/*` components (36
+  composed vectors replaced), the Feature section eyebrow reads "Why Quill"
+  with the style doing the uppercasing, and `error-404` names `arrow_back`
+  instead of rotating `arrow_forward` (page re-stamped).
+
 ## [0.9.48] — 2026-09-18
 
 ### Added

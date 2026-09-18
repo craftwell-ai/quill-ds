@@ -126,6 +126,13 @@ that's an auto-layout child (use the up/down glyph instead).
   checks both are still there), `missing` (not built yet) or `declined` (reason
   written down). `scripts/figma-pattern-coverage.test.mjs` fails when a block has
   no entry. The table below is the build log, not the record.
+- **Content parity (since 2026-09-18):** `../pattern-baseline.json` holds what each mirrored
+  frame shows (visible texts in order, icon components, top-level instances, bound variables);
+  `scripts/figma-pattern-expect.mjs` renders every block with react-dom/server and reads back
+  the strings and icon names; `scripts/figma-pattern-parity.test.mjs` requires a stamped page
+  to match its block exactly on both. The daily run diffs every frame against the baseline and
+  names the page when Figma moves. Icons on pattern pages are **instances of `icon/*`**, never
+  composed vectors, so the check can see them.
 - **Figma:** patterns mirror onto `❖ <Name>` pages by composing real component **instances**
   (with text overrides). Recipe: instance the components, override text/props, lay out with
   auto-layout, bind container tokens (card fill→`shadcn/card`, stroke→`shadcn/border`,
