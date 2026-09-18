@@ -179,6 +179,43 @@ instance keeps its link to the twin, which a hand-composed button would lose.
 | cookie-consent | ❖ Cookie consent | 574:125 | 574:126 | Elevation/base; three sm Buttons, wrap enabled |
 
 
+### Pattern pages built — session B, app pages (2026-09-18)
+
+Same recipe. Icon-only buttons (`size="icon"`) are composed frames — width/height →
+spacing/8, radius → corner-radius/lg, ghost = no fill, default = shadcn/primary —
+because the Button twin's icon variants carry a fixed glyph that an instance cannot
+swap. Text overrides inside Input / Textarea / Label / Tabs / Breadcrumb instances
+set `characters` on the twin's text node (fonts loaded from the node's own segments).
+
+| Block | Page | Page id | Frame id | Notes |
+|---|---|---|---|---|
+| dashboard | ❖ Dashboard | 578:2 | 578:3 | 880×600; sidebar fill → shadcn/sidebar, active nav → shadcn/accent; Input instance; KPI cards with Badge deltas |
+| data-table | ❖ Data table | 579:2 | 579:3 | hand-built table (header h 40, per-row bottom stroke) like the Table twin; **ToneBadge instances** moss / gold |
+| list-detail | ❖ List detail | 580:2 | 580:3 | 880×520; active thread → shadcn/accent; Separator instances; composed ghost icon buttons |
+| settings | ❖ Settings | 580:45 | 580:46 | Label + Input / Textarea instances, Separator, Switch `Checked=on` |
+| tabs-page | ❖ Tabs page | 580:80 | 580:81 | Tabs instance (Variant=default) with label overrides, tab frames set to hug; only the active Account panel is drawn, as in the story |
+| profile-card | ❖ Profile card | 580:104 | 580:105 | 64px initials disc, Badge secondary, two FILL Buttons |
+| notifications | ❖ Notifications | 581:2 | 581:3 | link sm Button; unread dot 8px → shadcn/primary |
+| search-results | ❖ Search results | 581:40 | 581:41 | Input instance with value override; outline Badges |
+| kanban | ❖ Kanban | 581:85 | 581:86 | columns fill → shadcn/muted @ 0.5; card tags outline Badge |
+| chat | ❖ Chat | 581:159 | 581:160 | 400×480; bubbles radius → corner-radius/2xl, primary / muted; composed primary send button |
+
+### ToneBadge twin (2026-09-18)
+
+`❖ Tone badge` — component set **577:75**, code twin `registry/lib/tone-badge.tsx`.
+Variants Tone(moss|gold|terracotta|indigo|neutral|muted) × Size(md|sm) × Solid(off|on) = 24,
+each built fresh. Anatomy copied from Badge: height → spacing/5 (sm spacing/4),
+padding → spacing/2 (sm spacing/1_5), gap → spacing/1, radius → corner-radius/4xl;
+label Raleway Medium, fontSize → type/2xs, 10 % tracking, uppercase. Tint fills are
+the pigment base at the code's opacity (moss 0.2, gold 0.25, terracotta 0.16, indigo
+0.2) with deep text (gold uses `color/pigment/gold/text`); neutral / muted use
+`color/paper/deep` with `color/ink/soft` / `color/ink/muted`; Solid=on fills the deep
+pigment with `color/paper/base` text. Listed in `sync-state.json` → `candidates` for
+the next adopt run. The ❖ Invoice "Paid" chip (built before ToneBadge existed) was
+swapped in place to a `Tone=moss` instance (node 581:188).
+
+### Accent (2026-07-11; re-pinned to moss 2026-07-20)
+
 Code adds `data-accent="terracotta|moss|indigo|gold"` (eyebrows, accent italics,
 links, focus rings). Figma can't model a second runtime dimension — the Primitives
 collection is at its 4-mode ceiling — so the accent is **pinned to the code default,
