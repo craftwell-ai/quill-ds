@@ -172,8 +172,10 @@ variant prefix (`data-unchecked:bg-input` carries `bg-input`), through an axis
 (`gap-x-2` satisfies `gap-2`), through a spacing variable the file defines
 (`gap-(--card-spacing)` with `[--card-spacing:--spacing(4)]` is `gap-4` — the
 unprefixed definition, not a `data-[size=sm]:` override), as the `pl-N` form of
-a left padding, in a one-class cva variant value (`default: "bg-muted"`), and
-treats `rounded-full` as `rounded-4xl` on a control.
+a left padding, in a one-class cva variant value (`default: "bg-muted"` — when
+that is all the twin derives, the entry anchors on the file's first real class
+string; a directive such as `'use client'` never counts as one), and treats
+`rounded-full` as `rounded-4xl` on a control.
 
 Variables the REST response names only by id (the id map in `sync-state.json`
 is partial — the variables endpoint is Enterprise-gated) are tracked by id: a

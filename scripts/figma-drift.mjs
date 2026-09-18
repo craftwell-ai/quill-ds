@@ -318,12 +318,16 @@ export function matchCode(source, classes, alsoIn = []) {
   const literals = uniqueLiterals(source)
   const spacingVars = spacingVarsOf(source)
   const tokensOf = (lit) => tokensIn(lit, spacingVars)
+  // a real class string: two or more tokens, at least one shaped like a utility — 'use client' is two words, not classes
+  const classString = (lit) => { const t = tokensOf(lit); return t.length >= 2 && t.some((x) => /[-/[:]/.test(x)) }
   // classes the twin inherits from a base component live in that file
   const elsewhere = alsoIn.flatMap((src) => { const sv = spacingVarsOf(src); return allLiterals(src).map((lit) => tokensIn(lit, sv)) })
   if (!classes.length) {
-    const anchor = literals.find((lit) => tokensOf(lit).length >= 2)
+    const anchor = literals.find(classString)
     return anchor ? { classes: anchor, missing: [], detectionOnly: true } : null
   }
+  // a one-class cva variant value (`default: "bg-muted"`) is a class string too
+  const singles = [...source.matchAll(/(["'])([a-z][\w./[\]()%:-]*-[\w./[\]()%:-]*)\1/g)].map((m) => m[2])
   let main = null
   let best = 0
   for (const lit of literals) {
@@ -333,11 +337,10 @@ export function matchCode(source, classes, alsoIn = []) {
       main = lit
     }
   }
-  // every class may live in the base component's file: anchor on the first real class string here
-  if (!main && elsewhere.length) main = literals.find((lit) => tokensOf(lit).length >= 2) ?? null
+  // every class may live in the base component's file or in one-class values (Tabs: only `bg-muted`
+  // is derived, and it sits alone in the variants map): anchor on the first real class string here
+  if (!main && (elsewhere.length || singles.some((s) => classes.some((c) => hasToken([s], c))))) main = literals.find(classString) ?? null
   if (!main) return { classes: null, missing: [...classes], detectionOnly: false }
-  // a one-class cva variant value (`default: "bg-muted"`) is a class string too
-  const singles = [...source.matchAll(/(["'])([a-z][\w./[\]()%:-]*-[\w./[\]()%:-]*)\1/g)].map((m) => m[2])
   const missing = classes.filter((c) => !literals.some((lit) => hasToken(tokensOf(lit), c)) && !singles.some((s) => hasToken([s], c)) && !elsewhere.some((tokens) => hasToken(tokens, c)))
   return { classes: main, missing, detectionOnly: false }
 }

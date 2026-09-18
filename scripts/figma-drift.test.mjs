@@ -318,6 +318,10 @@ test('matchCode reads a left padding as pl- and a one-class cva variant value', 
   // Tabs: the list background sits alone in the cva variants map.
   const cva = 'cva("inline-flex rounded-lg p-[3px] text-muted-foreground", { variants: { variant: { default: "bg-muted", line: "gap-1 bg-transparent" } } })'
   assert.deepEqual(matchCode(cva, ['bg-muted', 'rounded-lg']).missing, [])
+  // …even when that one class is all the twin derives: anchor on the base string, nothing missing —
+  // and never on a directive like 'use client', which is two words but no class string.
+  assert.deepEqual(matchCode("'use client'\n" + cva, ['bg-muted']), { classes: 'inline-flex rounded-lg p-[3px] text-muted-foreground', missing: [], detectionOnly: false })
+  assert.equal(matchCode("'use client'\ncn(\"peer size-4 rounded-sm border\")", []).classes, 'peer size-4 rounded-sm border')
 })
 
 test('matchCode may find the rest of the classes in a file the candidate also names', () => {
