@@ -355,11 +355,43 @@ export function adoptCandidate(candidate, bundle, varNames, source, today) {
   return { adopted, why: notes.length ? notes.join('; ') : 'Figma and code agree' }
 }
 
-export async function fetchNodes(fileKey, ids, token) {
-  const url = `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${encodeURIComponent(ids.join(','))}`
+export async function fetchNodes(fileKey, ids, token, { depth } = {}) {
+  const url = `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${encodeURIComponent(ids.join(','))}${depth ? `&depth=${depth}` : ''}`
   const res = await fetch(url, { headers: { 'X-Figma-Token': token } })
   if (!res.ok) throw new Error(`Figma API ${res.status}: ${await res.text()}`)
   return res.json()
+}
+
+// Pattern pages (one ❖ page per block, the pattern frame inside it) are checked
+// for presence only: the page is still there under its name and still holds
+// the frame. `nodes` is a REST nodes response fetched at depth 1. Blocks marked
+// missing or declined are counted, never fetched — the offline test
+// (figma-pattern-coverage.test.mjs) already made sure each one says why.
+export function checkPatterns(patterns, nodes) {
+  const inSync = []
+  const problems = []
+  const skipped = { missing: 0, declined: 0 }
+  for (const p of patterns) {
+    if (p.status !== 'mirrored') {
+      if (p.status in skipped) skipped[p.status]++
+      continue
+    }
+    const doc = nodes?.[p.pageId]?.document
+    if (!doc) {
+      problems.push(`pattern ${p.block}: page ${p.page} (${p.pageId}) not found in file — was it deleted? Fix the entry in figma/sync-state.json → patterns`)
+      continue
+    }
+    if (doc.name !== p.page) {
+      problems.push(`pattern ${p.block}: page ${p.pageId} was renamed ${p.page} → ${doc.name} — update figma/sync-state.json → patterns`)
+      continue
+    }
+    if (!(doc.children ?? []).some((c) => c.id === p.frameId)) {
+      problems.push(`pattern ${p.block}: frame ${p.frameId} is no longer on page ${p.page} — rebuild it or update figma/sync-state.json → patterns`)
+      continue
+    }
+    inSync.push(p.block)
+  }
+  return { inSync, problems, skipped }
 }
 
 function report(line) {
@@ -438,6 +470,14 @@ export async function main({ repair = false, adopt = false } = {}) {
       // Staged on purpose: a candidate that disagrees stays listed, never red.
       report(`○ ${candidate.name}: not adopted — ${why}`)
     }
+  }
+  const mirrored = (state.patterns ?? []).filter((p) => p.status === 'mirrored')
+  if (mirrored.length) {
+    const pages = await fetchNodes(state.fileKey, mirrored.map((p) => p.pageId), token, { depth: 1 })
+    const { inSync, problems, skipped } = checkPatterns(state.patterns, pages.nodes)
+    for (const problem of problems) report(`✖ ${problem}`)
+    if (problems.length) unrepaired = true
+    report(`${problems.length ? '✖' : '✔'} patterns: ${inSync.length} of ${mirrored.length} mirrored pages in place · ${skipped.missing} not built yet · ${skipped.declined} declined (figma/sync-state.json → patterns)`)
   }
   if (repaired || adoptedAny) writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n')
   if (unrepaired) process.exitCode = repair ? 2 : 1

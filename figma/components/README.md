@@ -114,8 +114,13 @@ that's an auto-layout child (use the up/down glyph instead).
 
 ## Patterns
 
-- **Code (source of truth):** 28 pattern stories under `src/stories/patterns/`
-  (Auth/Forms/Data/State/Marketing/Shells/Nav) + a `Patterns / Overview` page.
+- **Code (source of truth):** the blocks in `registry/blocks/` (51 as of 2026-09-18),
+  each with a story under `src/stories/patterns/` + a `Patterns / Overview` page.
+- **The record of which blocks have a page is `patterns` in `../sync-state.json`** —
+  one entry per block: `mirrored` (❖ page + pattern frame ids; the daily parity run
+  checks both are still there), `missing` (not built yet) or `declined` (reason
+  written down). `scripts/figma-pattern-coverage.test.mjs` fails when a block has
+  no entry. The table below is the build log, not the record.
 - **Figma:** patterns mirror onto `❖ <Name>` pages by composing real component **instances**
   (with text overrides). Recipe: instance the components, override text/props, lay out with
   auto-layout, bind container tokens (card fill→`shadcn/card`, stroke→`shadcn/border`,
