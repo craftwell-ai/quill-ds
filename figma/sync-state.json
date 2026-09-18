@@ -148,7 +148,10 @@
     {
       "name": "ToneBadge",
       "nodeId": "577:75",
-      "codeFile": "registry/lib/tone-badge.tsx"
+      "codeFile": "registry/lib/tone-badge.tsx",
+      "alsoIn": [
+        "src/components/ui/badge.tsx"
+      ]
     },
     {
       "name": "Card",
@@ -218,7 +221,9 @@
     {
       "name": "Toast",
       "nodeId": "268:183",
-      "codeFile": "src/components/ui/sonner.tsx"
+      "codeFile": "src/components/ui/sonner.tsx",
+      "detectionOnly": true,
+      "anchor": "toaster group"
     }
   ],
   "components": [

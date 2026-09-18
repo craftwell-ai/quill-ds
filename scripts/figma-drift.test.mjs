@@ -289,3 +289,34 @@ test('an adopted snapshot drops the keys the REST response could not fill, and k
   const { adopted } = adoptCandidate(CANDIDATE, variantSet(), VARS, AGREEING_SOURCE, '2026-09-15')
   assert.ok(!('stroke' in adopted.figma) && !('itemSpacing' in adopted.figma), 'double-null keys never enter the baseline')
 })
+
+// 2026-09-18 — what the adopt run taught the matcher
+test('matchCode accepts variant-prefixed, axis and pill forms of a class', () => {
+  const src = 'cn("peer rounded-full border data-unchecked:bg-input group-data-[size=default]/switch:h-4") + cn("grid gap-0.5 has-[>svg]:gap-x-2 px-2.5 py-2")'
+  assert.deepEqual(matchCode(src, ['bg-input']).missing, [])
+  assert.deepEqual(matchCode(src, ['gap-2', 'p-2.5']).missing, [])
+  assert.deepEqual(matchCode(src, ['rounded-4xl']).missing, [], 'rounded-full draws the same pill as rounded-4xl on a control')
+  assert.deepEqual(matchCode(src, ['gap-3']).missing, ['gap-3'])
+})
+
+test('matchCode resolves a spacing CSS variable the file defines', () => {
+  const src = 'cn("flex gap-(--card-spacing) py-(--card-spacing) rounded-xl bg-card [--card-spacing:--spacing(4)]")'
+  assert.deepEqual(matchCode(src, ['gap-4', 'bg-card', 'rounded-xl']).missing, [])
+  assert.deepEqual(matchCode(src, ['gap-6']).missing, ['gap-6'])
+})
+
+test('matchCode may find the rest of the classes in a file the candidate also names', () => {
+  const own = "cn('border-transparent text-2xs uppercase', tone)"
+  const base = 'cva("inline-flex h-5 gap-1 rounded-4xl px-2 py-0.5")'
+  assert.deepEqual(matchCode(own, ['p-2', 'gap-1'], [base]), { classes: 'border-transparent text-2xs uppercase', missing: [], detectionOnly: false })
+  assert.deepEqual(matchCode(own, ['p-2', 'gap-1']).missing, ['p-2', 'gap-1'])
+})
+
+test('a detection-only candidate adopts on its anchor without a class match', () => {
+  const candidate = { name: 'Toast', nodeId: '1:1', codeFile: 'x.tsx', detectionOnly: true, anchor: 'toaster group' }
+  const { adopted, why } = adoptCandidate(candidate, cleanBundle(), VARS, 'const c = "toaster group"; export {}', '2026-09-18')
+  assert.ok(adopted, why)
+  assert.equal(adopted.code.classes, 'toaster group')
+  assert.match(why, /detection/)
+  assert.equal(adoptCandidate({ ...candidate, anchor: 'nope' }, cleanBundle(), VARS, 'const c = "toaster group"', '2026-09-18').adopted, null)
+})

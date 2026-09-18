@@ -12,6 +12,20 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.51] — 2026-09-18
+
+### Changed
+- **Adopt matcher reads code the way it is written** (CRA-221). A class counts
+  when it sits behind a variant prefix (`data-unchecked:bg-input`), on an axis
+  (`gap-x-2` for `gap-2`), behind a spacing variable the file defines
+  (`gap-(--card-spacing)` = `gap-4`), or as `rounded-full` for `rounded-4xl`.
+  A candidate may name the base component's file (`alsoIn`) for inherited
+  classes, or declare itself detection-only with an `anchor` when its code is
+  styled by CSS variables. Thirteen twins were pushed to today's code in Figma
+  (Card, Alert, Tabs, Select, Pagination, InputGroup, Dialog, AlertDialog,
+  HoverCard, Menubar, Command, ToggleGroup, InputOTP) and Switch's track padding
+  unbound, so the remaining sixteen candidates can adopt.
+
 ## [0.9.50] — 2026-09-18
 
 ### Added
