@@ -162,6 +162,15 @@ parity** workflow by hand with the `adopt` input on, and it:
 4. opens a PR on `auto/figma-adopt` that does **not** self-merge: read the
    summary, then merge.
 
+A candidate may carry `alsoIn: [file, …]` when the twin inherits classes from a base
+component (ToneBadge wraps Badge), or `detectionOnly: true` + `anchor: '<string
+present once in the file>'` when the code is styled by CSS variables and has no
+class strings to match (sonner's Toast). The matcher reads a class through its
+variant prefix (`data-unchecked:bg-input` carries `bg-input`), through an axis
+(`gap-x-2` satisfies `gap-2`), through a spacing variable the file defines
+(`gap-(--card-spacing)` with `[--card-spacing:--spacing(4)]` is `gap-4`), and
+treats `rounded-full` as `rounded-4xl` on a control.
+
 Variables the REST response names only by id (the id map in `sync-state.json`
 is partial — the variables endpoint is Enterprise-gated) are tracked by id: a
 re-binding still reads as drift, it just cannot be auto-repaired until the

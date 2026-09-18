@@ -266,8 +266,34 @@ export function derivedClasses(snapshot) {
 
 // The forms code writes a derived class in: the padding snapshot comes from
 // paddingLeft, which shadcn writes as `px-N` far more often than `p-N`.
-export const acceptableForms = (cls) => (cls?.startsWith('p-') ? [cls, `px-${cls.slice(2)}`] : cls ? [cls] : [])
-const hasToken = (tokens, cls) => acceptableForms(cls).some((form) => tokens.includes(form))
+export const acceptableForms = (cls) => {
+  if (!cls) return []
+  if (cls.startsWith('p-')) return [cls, `px-${cls.slice(2)}`]
+  if (cls.startsWith('gap-')) return [cls, `gap-x-${cls.slice(4)}`, `gap-y-${cls.slice(4)}`]
+  if (cls === 'rounded-4xl') return [cls, 'rounded-full'] // both draw a full pill on a control
+  return [cls]
+}
+// `data-unchecked:bg-input` or `group-data-[size=default]/switch:h-4` carries
+// the class after its last top-level colon.
+const baseToken = (tok) => {
+  let depth = 0
+  let cut = -1
+  for (let i = 0; i < tok.length; i++) {
+    const ch = tok[i]
+    if (ch === '[' || ch === '(') depth++
+    else if (ch === ']' || ch === ')') depth--
+    else if (ch === ':' && depth === 0) cut = i
+  }
+  return cut === -1 ? tok : tok.slice(cut + 1)
+}
+const hasToken = (tokens, cls) => acceptableForms(cls).some((form) => tokens.some((t) => t === form || baseToken(t) === form))
+// `[--card-spacing:--spacing(4)]` in a file makes `gap-(--card-spacing)` read as `gap-4`.
+const spacingVarsOf = (source) => Object.fromEntries([...source.matchAll(/\[--([a-z0-9-]+):--spacing\(([\d.]+)\)\]/g)].map((m) => [m[1], m[2]]))
+const tokensIn = (lit, spacingVars) => lit.split(/\s+/).flatMap((t) => {
+  const m = baseToken(t).match(/^(p|px|py|pl|pr|pt|pb|gap|gap-x|gap-y)-\(--([a-z0-9-]+)\)$/)
+  return m && spacingVars[m[2]] ? [t, `${m[1]}-${spacingVars[m[2]]}`] : [t]
+})
+const allLiterals = (source) => [...source.matchAll(/(["'])((?:(?!\1)[^\\\n])+)\1/g)].map((m) => m[2]).filter((lit) => lit.includes(' '))
 
 // Class-string literals that occur exactly once in the file — the only ones
 // applyRepair can later rewrite without ambiguity.
@@ -283,9 +309,12 @@ export function uniqueLiterals(source) {
 // class found nowhere is `missing`: Figma and code disagree. With nothing to
 // derive, the component's first real class string anchors a detection-only
 // entry, so Figma-side edits are still caught.
-export function matchCode(source, classes) {
+export function matchCode(source, classes, alsoIn = []) {
   const literals = uniqueLiterals(source)
-  const tokensOf = (lit) => lit.split(/\s+/)
+  const spacingVars = spacingVarsOf(source)
+  const tokensOf = (lit) => tokensIn(lit, spacingVars)
+  // classes the twin inherits from a base component live in that file
+  const elsewhere = alsoIn.flatMap((src) => { const sv = spacingVarsOf(src); return allLiterals(src).map((lit) => tokensIn(lit, sv)) })
   if (!classes.length) {
     const anchor = literals.find((lit) => tokensOf(lit).length >= 2)
     return anchor ? { classes: anchor, missing: [], detectionOnly: true } : null
@@ -299,8 +328,10 @@ export function matchCode(source, classes) {
       main = lit
     }
   }
+  // every class may live in the base component's file: anchor on the first real class string here
+  if (!main && elsewhere.length) main = literals.find((lit) => tokensOf(lit).length >= 2) ?? null
   if (!main) return { classes: null, missing: [...classes], detectionOnly: false }
-  const missing = classes.filter((c) => !literals.some((lit) => hasToken(tokensOf(lit), c)))
+  const missing = classes.filter((c) => !literals.some((lit) => hasToken(tokensOf(lit), c)) && !elsewhere.some((tokens) => hasToken(tokens, c)))
   return { classes: main, missing, detectionOnly: false }
 }
 
@@ -321,7 +352,7 @@ export function pruneSnapshot(figma) {
 }
 
 // One candidate → either a baseline entry or a reason. Pure; the caller does I/O.
-export function adoptCandidate(candidate, bundle, varNames, source, today) {
+export function adoptCandidate(candidate, bundle, varNames, source, today, alsoIn = []) {
   if (!bundle?.document) return { adopted: null, why: `node ${candidate.nodeId} not found in file` }
   let node = bundle.document
   let variant = null
@@ -335,7 +366,14 @@ export function adoptCandidate(candidate, bundle, varNames, source, today) {
     .filter(([, v]) => typeof v?.var === 'string' && v.var.startsWith('unknown('))
     .map(([k, v]) => `${k}=${v.var}`)
   const classes = derivedClasses(figma)
-  const match = matchCode(source, classes)
+  let match
+  if (candidate.detectionOnly) {
+    // styled by CSS variables (sonner) — nothing to derive; anchor on a string the file carries once
+    if (!candidate.anchor || countOccurrences(source, candidate.anchor) !== 1) return { adopted: null, why: 'a detection-only candidate needs an `anchor` string that occurs exactly once in its code file' }
+    match = { classes: candidate.anchor, missing: [], detectionOnly: true }
+  } else {
+    match = matchCode(source, classes, alsoIn)
+  }
   if (!match) return { adopted: null, why: 'no class string in the code file to anchor on' }
   if (match.missing.length) {
     return { adopted: null, why: `code does not carry [${match.missing.join(' ')}] — Figma and code disagree; settle with /figma-pull or /figma-push ${candidate.name}` }
@@ -350,7 +388,8 @@ export function adoptCandidate(candidate, bundle, varNames, source, today) {
     code: { classes: match.classes },
   }
   const notes = []
-  if (match.detectionOnly) notes.push('no binding maps to a class, so this entry catches Figma-side edits only')
+  if (candidate.detectionOnly) notes.push(`detection-only by declaration, anchored on '${candidate.anchor}' — catches Figma-side edits only`)
+  else if (match.detectionOnly) notes.push('no binding maps to a class, so this entry catches Figma-side edits only')
   if (unnamed.length) notes.push(`variables not in the id map are tracked by id: ${unnamed.join(', ')}`)
   return { adopted, why: notes.length ? notes.join('; ') : 'Figma and code agree' }
 }
@@ -505,7 +544,8 @@ export async function main({ repair = false, adopt = false, snapshotPatterns = f
   let adoptedAny = false
   for (const candidate of candidates) {
     const source = readFileSync(join(root, candidate.codeFile), 'utf8')
-    const { adopted, why } = adoptCandidate(candidate, data.nodes[candidate.nodeId], state.variables, source, today)
+    const alsoIn = (candidate.alsoIn ?? []).map((f) => readFileSync(join(root, f), 'utf8'))
+    const { adopted, why } = adoptCandidate(candidate, data.nodes[candidate.nodeId], state.variables, source, today, alsoIn)
     if (adopted) {
       state.components.push(adopted)
       state.candidates = state.candidates.filter((c) => c.name !== candidate.name)
