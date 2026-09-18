@@ -141,19 +141,9 @@
   },
   "candidates": [
     {
-      "name": "Card",
-      "nodeId": "93:14",
-      "codeFile": "src/components/ui/card.tsx"
-    },
-    {
       "name": "Tabs",
       "nodeId": "355:19",
       "codeFile": "src/components/ui/tabs.tsx"
-    },
-    {
-      "name": "Select",
-      "nodeId": "96:12",
-      "codeFile": "src/components/ui/select.tsx"
     }
   ],
   "components": [
@@ -1539,6 +1529,82 @@
       },
       "code": {
         "classes": "toaster group"
+      }
+    },
+    {
+      "name": "Card",
+      "nodeId": "93:14",
+      "codeFile": "src/components/ui/card.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "shadcn/foreground",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "itemSpacing": {
+          "var": "spacing/4",
+          "raw": 16
+        },
+        "texts": {
+          "Card title": "Card title",
+          "A short description of the card.": "A short description of the card.",
+          "Card content — compose anything here.": "Card content — compose anything here.",
+          "Button": "Button"
+        },
+        "childSignature": [
+          "Frame:FRAME",
+          "Frame:FRAME",
+          "Frame:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl"
+      }
+    },
+    {
+      "name": "Select",
+      "nodeId": "96:12",
+      "codeFile": "src/components/ui/select.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "stroke": {
+          "var": "shadcn/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "spacing/2_5",
+          "raw": 10
+        },
+        "texts": {
+          "Select an option": "Select an option"
+        },
+        "childSignature": [
+          "Select an option:TEXT",
+          "Frame:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "flex w-fit items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
       }
     }
   ],
