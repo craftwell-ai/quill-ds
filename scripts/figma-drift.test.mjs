@@ -305,6 +305,21 @@ test('matchCode resolves a spacing CSS variable the file defines', () => {
   assert.deepEqual(matchCode(src, ['gap-6']).missing, ['gap-6'])
 })
 
+test('matchCode takes the unprefixed spacing-variable definition, not a variant override', () => {
+  // Card: `[--card-spacing:--spacing(4)]` is the value; `data-[size=sm]:[--card-spacing:--spacing(3)]` is a variant.
+  const src = 'cn("flex gap-(--card-spacing) rounded-xl [--card-spacing:--spacing(4)] data-[size=sm]:[--card-spacing:--spacing(3)]")'
+  assert.deepEqual(matchCode(src, ['gap-4']).missing, [])
+  assert.deepEqual(matchCode(src, ['gap-3']).missing, ['gap-3'])
+})
+
+test('matchCode reads a left padding as pl- and a one-class cva variant value', () => {
+  // Select: the twin reads paddingLeft; the code writes each side out.
+  assert.deepEqual(matchCode('cn("flex py-2 pr-2 pl-2.5 text-sm")', ['p-2.5']).missing, [])
+  // Tabs: the list background sits alone in the cva variants map.
+  const cva = 'cva("inline-flex rounded-lg p-[3px] text-muted-foreground", { variants: { variant: { default: "bg-muted", line: "gap-1 bg-transparent" } } })'
+  assert.deepEqual(matchCode(cva, ['bg-muted', 'rounded-lg']).missing, [])
+})
+
 test('matchCode may find the rest of the classes in a file the candidate also names', () => {
   const own = "cn('border-transparent text-2xs uppercase', tone)"
   const base = 'cva("inline-flex h-5 gap-1 rounded-4xl px-2 py-0.5")'

@@ -23,6 +23,10 @@ const state = loadState()
 const stamped = state.patterns.filter((p) => p.status === 'mirrored' && p.codeHash)
 const expected = await expectations(stamped.map((p) => p.block))
 
+// A chart draws its ticks and legend in the browser; the server render has none, so the
+// page may show more strings than the render — never fewer.
+const clientDrawn = (block) => /from ['"]recharts['"]/.test(readFileSync(join(root, 'registry/blocks', `${block}.tsx`), 'utf8'))
+
 const count = (arr) => arr.reduce((m, s) => m.set(s, (m.get(s) || 0) + 1), new Map())
 const minus = (a, b) => { const ca = count(a), cb = count(b); return [...ca].filter(([s, n]) => (cb.get(s) || 0) < n).map(([s, n]) => `${s}${n - (cb.get(s) || 0) > 1 ? ' ×' + (n - (cb.get(s) || 0)) : ''}`) }
 
@@ -36,7 +40,7 @@ test('every stamped pattern page shows exactly the strings its block renders', (
   for (const p of stamped) {
     const e = expected[p.block]; const f = baseline[p.block]
     if (!f) { failures.push(`${p.block}: no entry in figma/pattern-baseline.json`); continue }
-    const missing = minus(e.texts, f.texts), extra = minus(f.texts, e.texts)
+    const missing = minus(e.texts, f.texts), extra = clientDrawn(p.block) ? [] : minus(f.texts, e.texts)
     if (missing.length || extra.length) failures.push(`${p.block} (${p.page}):${missing.length ? '\n    missing in Figma: ' + missing.join(' | ') : ''}${extra.length ? '\n    only in Figma:    ' + extra.join(' | ') : ''}`)
   }
   assert.deepEqual(failures, [], 'Pattern copy differs from the block:\n  ' + failures.join('\n  ') + '\nFix the page (/figma-push <block>), re-read the baseline, then re-stamp.')
@@ -53,8 +57,9 @@ test('every stamped pattern page carries the icons its block names', () => {
 })
 
 test('the expectation drops screen-reader-only text and a placeholder hidden behind a value', () => {
-  const html = '<th><span class="sr-only">Actions</span></th><input placeholder="Search…" value="token"/><input placeholder="Email"/><p>Hi &amp; bye</p>'
-  assert.deepEqual(textsOf(html), ['Hi & bye', 'token', 'Email'])
+  // Base UI hides helper text with an inline clip-path span (Progress renders one); a radio's `value` is not drawn.
+  const html = '<style>[data-chart] { --x: 1 }</style><th><span class="sr-only">Actions</span></th><input placeholder="Search…" value="token"/><input placeholder="Email"/><p>Hi &amp; bye</p><span role="presentation" style="clip-path:inset(50%);overflow:hidden;width:1px">x</span><button role="radio" value="card">Card</button><input type="radio" tabindex="-1" style="clip-path:inset(50%);width:1px" aria-hidden="true" checked="" value="card"/>'
+  assert.deepEqual(textsOf(html), ['Hi & bye', 'Card', 'token', 'Email'])
 })
 
 // The daily half: the same snapshot from a REST nodes bundle, diffed against the baseline.

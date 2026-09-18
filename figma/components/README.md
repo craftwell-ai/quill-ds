@@ -221,6 +221,66 @@ set `characters` on the twin's text node (fonts loaded from the node's own segme
 | wizard | ❖ Wizard | 585:38 | 585:39 | stepper: done → primary disc + check, current → primary @ 0.1 with primary stroke, todo → muted; connectors → shadcn/border |
 | onboarding | ❖ Onboarding | 585:75 | 585:76 | progress track → shadcn/muted, fill → shadcn/primary at 50 %; done rows strikethrough; link sm Buttons |
 
+### Pattern pages built — session D, the July pages rebuilt (2026-09-18)
+
+The 22 pages built in July carried pre-2026-09-12 copy and the classic shadcn
+card recipe. Each was rebuilt from its block on the same page (page ids kept,
+new frame ids), stamped, and its content baseline re-read, so the stale list in
+`sync-state.json` is empty.
+
+| Block | Page | Page id | Frame id | Notes |
+|---|---|---|---|---|
+| contact-form | ❖ Contact form | 200:2 | 630:15 | Card anatomy; two-column name fields; Select and Textarea instances |
+| forgot-password | ❖ Forgot password | 182:2 | 630:66 | vertical footer band; ghost Button with a start `arrow_back` |
+| login | ❖ Login | 103:2 | 630:91 | Checkbox instance row; link Button in the footer |
+| file-upload | ❖ File upload | 201:2 | 631:17 | dashed dropzone; Progress instance; ghost icon-sm close Buttons |
+| announcement-banner | ❖ Announcement banner | 205:2 | 628:30 | card banner and primary banner; link Button with the default end arrow |
+| newsletter | ❖ Newsletter | 185:2 | 632:7 | card-styled section; the round tile is a hard 9999 radius (no `rounded-full` token) |
+| stat-cards | ❖ Stat cards | 105:2 | 632:26 | Fraunces `type/2xl` values; Badge default / secondary / destructive |
+| signup-social | ❖ Signup — social first | 184:2 | 633:16 | page-local `brand/github` (633:9) and `brand/google` (633:15) components fill the outline Buttons' icon slot |
+| checkout | ❖ Checkout | 203:2 | 634:10 | method tiles (the checked one → ring stroke + muted fill); `size="sm"` summary card |
+| otp-verification | ❖ OTP verification | 183:2 | 637:8 | InputOTP instance with its sample digits hidden; the description is the three text runs the code renders |
+| login-minimal | ❖ Login — minimal | 215:187 | 637:47 | no card; primary Button with the default end arrow |
+| login-split-panel | ❖ Login — split panel | 215:154 | 637:73 | 960 × 560; primary brand panel; link xs "Forgot?" |
+| activity-feed | ❖ Activity feed | 208:2 | 638:7 | three text runs per line; absolute 1 px rule behind 32 px Avatars with a 4 px card ring |
+| mail-shell | ❖ Mail inbox | 215:2 | 639:20 | 960 × 560 two panes; preview lines truncate to one line |
+| faq | ❖ FAQ | 207:76 | 641:21 | accordion composed (the twin has three fixed items); `keyboard_arrow_up` on the open item |
+| team-section | ❖ Team section | 207:2 | 642:19 | four `size="sm"` cards; 40 px Avatars; ghost icon-sm mail Buttons |
+| stats-band | ❖ Stats band | 204:2 | 642:77 | values bind `text/accent-color`; eyebrows bind `color/ink/muted` |
+| sidebar-nav | ❖ Sidebar navigation | 214:2 | 645:3 | 256 px sidebar on the `shadcn/sidebar-*` tokens; composed breadcrumb; `dock_to_left` trigger |
+| calendar-page | ❖ Calendar page | 210:2 | 646:5 | composed react-day-picker month: 28 px cells, outside days, July 14 selected |
+| calendar-range | ❖ Calendar range | 211:2 | 647:9 | two months; July 20–24 with start / middle / end states |
+| analytics-charts | ❖ Analytics charts | 213:2 | 648:3 | area paths and bars drawn as vectors from the block data; ticks and legend are text (client-drawn in code, so the test only requires the block's strings) |
+| theme-selector | ❖ Theme selector | 231:2 | 648:77 | the tracked frame is the closed trigger — all the server render shows; the open menu sits beside it as an untracked reference (648:84) |
+
+Thirteen Card-primitive frames on the September pages (pricing × 3, dashboard
+× 3, settings, tabs page, profile card, notifications, signup, wizard,
+onboarding) were on the old recipe too and were patched in place to the shipped
+anatomy: `gap` and vertical padding `spacing/4`, side padding `spacing/4` on
+Header / Content / Footer, ring `shadcn/foreground` at 0.1 instead of the border
+token, Header gap `spacing/1`, Fraunces titles at weight 500, and a Footer band
+(`shadcn/muted` at 0.5, top rule, padding `spacing/4`, root bottom padding 0).
+The border token itself carries 12 % alpha, so a frame whose stroke reads
+`shadcn/border@0.12` is a plain `border-border` and is right as drawn.
+
+Rules learned in this pass:
+
+- **A node cannot carry a custom property.** `node.__spacing = …` throws
+  `no such property` and rolls the whole script back; keep script state in a
+  `Map` keyed by `node.id`.
+- **Fraunces has no Medium instance in the file.** `fontName = { family:
+  'Fraunces', style: 'Regular', variationSettings: { wght: 500 } }` sets the
+  variable-font weight, and that is what `font-medium` headings (CardTitle) use.
+- **`getNodeByIdAsync` reaches every page**, so a patch pass across pages runs
+  in one script with no page switch.
+- **Third-party marks are page-local components.** GitHub and Google marks sit
+  beside the frame as `brand/*` components and are swapped into the Button's
+  icon slot; they are not icons, and the icon sync ignores them.
+- **Compose where the twin cannot flex.** Accordion (three fixed items),
+  Breadcrumb (fixed items), Calendar (declined) and charts (vectors from the
+  block data) are built by hand in the shipped anatomy; instances are used for
+  everything else.
+
 **Every block now has a declared Figma status:** 47 of 51 mirrored, 4 declined
 (badge-on-card, alerts, command-palette, order-summary — reasons in
 `sync-state.json`), 0 missing. The file holds 93 pages, alphabetical after

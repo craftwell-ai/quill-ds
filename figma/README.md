@@ -117,9 +117,11 @@ originate on either side, but when they disagree, code wins. Proven end-to-end
 5. Ship through the normal branch → PR → CI → merge flow.
 6. For a pattern page, re-stamp its entry: `node scripts/figma-stamp.mjs --block <name>`. The
    re-stamp guard fails when a block's source changes without its page being synced.
-7. Refresh the page's content baseline: `FIGMA_TOKEN=… node scripts/figma-drift.mjs --snapshot-patterns`
-   (rewrites `figma/pattern-baseline.json` from REST for every mirrored frame); the parity test
-   then compares it to what the block renders.
+7. Refresh the page's content baseline: run the **Figma parity** workflow with its `snapshot`
+   input on (it runs `node scripts/figma-drift.mjs --snapshot-patterns` with the CI token,
+   rewrites `figma/pattern-baseline.json` from REST for every mirrored frame, and opens a PR
+   on `auto/figma-snapshot` that does not self-merge); the parity test then compares the
+   baseline to what the block renders. The same command runs locally with `FIGMA_TOKEN=…`.
 
 Out of scope by design (code-side judgment fills these in): behavior, responsive
 rules, accessibility semantics, edge cases. Figma under-describes them; that's
@@ -168,7 +170,9 @@ present once in the file>'` when the code is styled by CSS variables and has no
 class strings to match (sonner's Toast). The matcher reads a class through its
 variant prefix (`data-unchecked:bg-input` carries `bg-input`), through an axis
 (`gap-x-2` satisfies `gap-2`), through a spacing variable the file defines
-(`gap-(--card-spacing)` with `[--card-spacing:--spacing(4)]` is `gap-4`), and
+(`gap-(--card-spacing)` with `[--card-spacing:--spacing(4)]` is `gap-4` — the
+unprefixed definition, not a `data-[size=sm]:` override), as the `pl-N` form of
+a left padding, in a one-class cva variant value (`default: "bg-muted"`), and
 treats `rounded-full` as `rounded-4xl` on a control.
 
 Variables the REST response names only by id (the id map in `sync-state.json`

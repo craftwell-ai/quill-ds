@@ -101,7 +101,9 @@ naming the page and the change (`text gone`, `icon added`, `instances …`) and
 exiting 2 for a human. The code side is `scripts/figma-pattern-expect.mjs`
 (each block rendered with react-dom/server); `scripts/figma-pattern-parity.test.mjs`
 (Tier 1) requires a stamped page to match its block exactly on strings and
-icons. `--snapshot-patterns` rewrites the baseline after a page is synced.
+icons. `--snapshot-patterns` rewrites the baseline after a page is synced; the
+**Figma parity** workflow's `snapshot` input runs it headlessly and opens a PR
+with the new baseline (never self-merging), so no local Figma token is needed.
 
 **Re-stamp guard (Tier 1, since v0.9.46).** Pushing to Figma can never be a bot
 (no headless node-write API on any plan), so the only way drift stays at zero is
