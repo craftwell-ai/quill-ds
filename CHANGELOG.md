@@ -12,6 +12,19 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.42] — 2026-09-18
+
+### Added
+- **Block-to-Figma coverage guard.** The block folder has 51 blocks; Figma held
+  pattern pages for 23 of them, and nothing said so — the daily parity bot
+  watches atoms, and the only record of the pattern pages was a build log.
+  `figma/sync-state.json` now carries `patterns`: one entry per block,
+  `mirrored` (❖ page + pattern frame ids), `missing` (24, not built yet) or
+  `declined` (4, reason recorded). `scripts/figma-pattern-coverage.test.mjs`
+  fails when a block has no entry or an entry has no reason; the daily
+  `figma-parity` run fetches the mirrored pages at depth 1 and fails when a
+  page is gone, renamed, or has lost its frame.
+
 ## [0.9.41] — 2026-09-16
 
 ### Changed

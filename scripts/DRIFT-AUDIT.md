@@ -78,6 +78,17 @@ input reads each over REST, keeps the ones whose bindings already match a class
 string in code, reports the rest, and opens a human-merged PR. See
 `figma/README.md`, "Adopting existing twins into the daily check".
 
+**Pattern pages are covered for presence, not values** (since v0.9.42). The
+block folder had grown to 51 while Figma held pattern pages for 23, and no
+check compared the two lists. `figma/sync-state.json` → `patterns` is now the
+record — one entry per `registry/blocks` file: `mirrored` (❖ page + pattern
+frame ids), `missing` (not built yet) or `declined` (reason recorded).
+`scripts/figma-pattern-coverage.test.mjs` (Tier 1, in `test:tokens`) fails
+when a block has no entry; the daily run fetches every mirrored page at depth 1
+and fails when a page is gone, renamed, or has lost its frame. Token bindings
+inside pattern frames are not diffed — they are instances of the atoms above,
+which are.
+
 The **variable/style-level** check below still needs interactive Figma MCP auth
 (variable definitions are Enterprise-gated over REST), so it stays on-demand —
 run it in an interactive session (e.g. ask Claude to "run the Figma parity
