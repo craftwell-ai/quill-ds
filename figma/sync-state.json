@@ -141,27 +141,9 @@
   },
   "candidates": [
     {
-      "name": "Switch",
-      "nodeId": "79:9",
-      "codeFile": "src/components/ui/switch.tsx"
-    },
-    {
-      "name": "ToneBadge",
-      "nodeId": "577:75",
-      "codeFile": "registry/lib/tone-badge.tsx",
-      "alsoIn": [
-        "src/components/ui/badge.tsx"
-      ]
-    },
-    {
       "name": "Card",
       "nodeId": "93:14",
       "codeFile": "src/components/ui/card.tsx"
-    },
-    {
-      "name": "Alert",
-      "nodeId": "94:17",
-      "codeFile": "src/components/ui/alert.tsx"
     },
     {
       "name": "Tabs",
@@ -172,58 +154,6 @@
       "name": "Select",
       "nodeId": "96:12",
       "codeFile": "src/components/ui/select.tsx"
-    },
-    {
-      "name": "Pagination",
-      "nodeId": "97:25",
-      "codeFile": "src/components/ui/pagination.tsx"
-    },
-    {
-      "name": "InputGroup",
-      "nodeId": "261:113",
-      "codeFile": "src/components/ui/input-group.tsx"
-    },
-    {
-      "name": "Dialog",
-      "nodeId": "263:112",
-      "codeFile": "src/components/ui/dialog.tsx"
-    },
-    {
-      "name": "AlertDialog",
-      "nodeId": "263:123",
-      "codeFile": "src/components/ui/alert-dialog.tsx"
-    },
-    {
-      "name": "HoverCard",
-      "nodeId": "263:179",
-      "codeFile": "src/components/ui/hover-card.tsx"
-    },
-    {
-      "name": "Menubar",
-      "nodeId": "264:174",
-      "codeFile": "src/components/ui/menubar.tsx"
-    },
-    {
-      "name": "Command",
-      "nodeId": "266:35",
-      "codeFile": "src/components/ui/command.tsx"
-    },
-    {
-      "name": "ToggleGroup",
-      "nodeId": "267:153",
-      "codeFile": "src/components/ui/toggle-group.tsx"
-    },
-    {
-      "name": "InputOTP",
-      "nodeId": "267:175",
-      "codeFile": "src/components/ui/input-otp.tsx"
-    },
-    {
-      "name": "Toast",
-      "nodeId": "268:183",
-      "codeFile": "src/components/ui/sonner.tsx",
-      "detectionOnly": true,
-      "anchor": "toaster group"
     }
   ],
   "components": [
@@ -1113,6 +1043,502 @@
       },
       "code": {
         "classes": "use client"
+      }
+    },
+    {
+      "name": "Switch",
+      "nodeId": "79:5",
+      "variantOf": "79:9",
+      "variant": "Checked=off",
+      "codeFile": "src/components/ui/switch.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 40
+        },
+        "padding": {
+          "var": null,
+          "raw": 2
+        },
+        "texts": {},
+        "childSignature": [
+          "Frame:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "peer group/switch relative inline-flex shrink-0 items-center rounded-full border border-transparent transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px] dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:bg-primary data-unchecked:bg-input dark:data-unchecked:bg-input/80 data-disabled:cursor-not-allowed data-disabled:opacity-50"
+      }
+    },
+    {
+      "name": "ToneBadge",
+      "nodeId": "577:5",
+      "variantOf": "577:75",
+      "variant": "Tone=moss, Size=md, Solid=off",
+      "codeFile": "registry/lib/tone-badge.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "color/pigment/moss/base",
+          "raw": "#7A8C5C"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 40
+        },
+        "padding": {
+          "var": "spacing/2",
+          "raw": 8
+        },
+        "itemSpacing": {
+          "var": "spacing/1",
+          "raw": 4
+        },
+        "texts": {
+          "Label": "Badge"
+        },
+        "childSignature": [
+          "Label:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "bg-moss/20 text-moss-deep"
+      }
+    },
+    {
+      "name": "Alert",
+      "nodeId": "94:9",
+      "variantOf": "94:17",
+      "variant": "Variant=default",
+      "codeFile": "src/components/ui/alert.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "shadcn/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "spacing/2_5",
+          "raw": 10
+        },
+        "itemSpacing": {
+          "var": "spacing/2",
+          "raw": 8
+        },
+        "texts": {
+          "Heads up": "Heads up",
+          "Your trial ends in 3 days.": "Your trial ends in 3 days."
+        },
+        "childSignature": [
+          "Frame:FRAME",
+          "Frame:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "group/alert relative grid w-full gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4"
+      }
+    },
+    {
+      "name": "Pagination",
+      "nodeId": "97:25",
+      "codeFile": "src/components/ui/pagination.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": "spacing/0_5",
+          "raw": 2
+        },
+        "texts": {
+          "1": "1",
+          "2": "2",
+          "3": "3"
+        },
+        "childSignature": [
+          "Frame:FRAME",
+          "Frame:FRAME",
+          "Frame:FRAME",
+          "Frame:FRAME",
+          "Frame:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "flex items-center gap-0.5"
+      }
+    },
+    {
+      "name": "InputGroup",
+      "nodeId": "261:111",
+      "variantOf": "261:113",
+      "variant": "Layout=Inline",
+      "codeFile": "src/components/ui/input-group.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "stroke": {
+          "var": "shadcn/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "spacing/2_5",
+          "raw": 10
+        },
+        "itemSpacing": {
+          "var": "spacing/2",
+          "raw": 8
+        },
+        "texts": {
+          "Search…": "Search…",
+          "⌘K": "⌘K"
+        },
+        "childSignature": [
+          "icon/search:INSTANCE",
+          "Search…:TEXT",
+          "Kbd:INSTANCE"
+        ]
+      },
+      "code": {
+        "classes": "flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4"
+      }
+    },
+    {
+      "name": "Dialog",
+      "nodeId": "263:112",
+      "codeFile": "src/components/ui/dialog.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/popover",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "shadcn/foreground",
+          "raw": "#000000"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "texts": {
+          "Rename project": "Rename project",
+          "This updates the project name everywhere it appears in the workspace.": "This updates the project name everywhere it appears in the workspace.",
+          "Placeholder": "Placeholder",
+          "Button": "Save changes"
+        },
+        "childSignature": [
+          "Body:FRAME",
+          "Footer:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
+      }
+    },
+    {
+      "name": "AlertDialog",
+      "nodeId": "263:123",
+      "codeFile": "src/components/ui/alert-dialog.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/popover",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "shadcn/foreground",
+          "raw": "#000000"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "texts": {
+          "Delete this project?": "Delete this project?",
+          "This action cannot be undone. The project and all of its files will be permanently removed.": "This action cannot be undone. The project and all of its files will be permanently removed.",
+          "Button": "Delete project"
+        },
+        "childSignature": [
+          "Header:FRAME",
+          "Footer:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
+      }
+    },
+    {
+      "name": "HoverCard",
+      "nodeId": "263:179",
+      "codeFile": "src/components/ui/hover-card.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/popover",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "shadcn/foreground",
+          "raw": "#000000"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "spacing/2_5",
+          "raw": 10
+        },
+        "itemSpacing": {
+          "var": null,
+          "raw": 10
+        },
+        "effectStyle": "Elevation/base",
+        "texts": {
+          "JD": "JD",
+          "@quill": "@quill",
+          "A paper-first design system with an unhurried editorial rhythm.": "A paper-first design system with an unhurried editorial rhythm.",
+          "Joined June 2026": "Joined June 2026"
+        },
+        "childSignature": [
+          "Avatar:INSTANCE",
+          "Content:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "z-50 w-64 origin-(--transform-origin) rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
+      }
+    },
+    {
+      "name": "Menubar",
+      "nodeId": "264:174",
+      "codeFile": "src/components/ui/menubar.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "stroke": {
+          "var": "shadcn/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": null,
+          "raw": 3
+        },
+        "itemSpacing": {
+          "var": "spacing/0_5",
+          "raw": 2
+        },
+        "texts": {
+          "File": "File",
+          "Edit": "Edit",
+          "View": "View",
+          "Profiles": "Profiles",
+          "Help": "Help"
+        },
+        "childSignature": [
+          "Trigger:FRAME",
+          "Trigger:FRAME",
+          "Trigger:FRAME",
+          "Trigger:FRAME",
+          "Trigger:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "flex h-8 items-center gap-0.5 rounded-lg border p-[3px]"
+      }
+    },
+    {
+      "name": "Command",
+      "nodeId": "266:35",
+      "codeFile": "src/components/ui/command.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/popover",
+          "raw": "#EFE4CE"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "padding": {
+          "var": "spacing/1",
+          "raw": 4
+        },
+        "texts": {
+          "Type a command or search…": "Type a command or search…",
+          "Suggestions": "Suggestions",
+          "New document": "New document",
+          "Change theme…": "Change theme…",
+          "Open settings": "Open settings",
+          "Navigation": "Navigation",
+          "Go to dashboard": "Go to dashboard",
+          "Search docs…": "Search docs…"
+        },
+        "childSignature": [
+          "Input:FRAME",
+          "Group:FRAME",
+          "Separator:RECTANGLE",
+          "Group:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground"
+      }
+    },
+    {
+      "name": "ToggleGroup",
+      "nodeId": "267:153",
+      "codeFile": "src/components/ui/toggle-group.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": null,
+          "raw": 2
+        },
+        "texts": {},
+        "childSignature": [
+          "Toggle:FRAME",
+          "Toggle pressed:FRAME",
+          "Toggle:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "use client"
+      }
+    },
+    {
+      "name": "InputOTP",
+      "nodeId": "267:175",
+      "codeFile": "src/components/ui/input-otp.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": null,
+          "raw": 8
+        },
+        "texts": {
+          "2": "2",
+          "4": "4",
+          "9": "9"
+        },
+        "childSignature": [
+          "Group:FRAME",
+          "icon/remove:INSTANCE",
+          "Group:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "use client"
+      }
+    },
+    {
+      "name": "Toast",
+      "nodeId": "268:180",
+      "variantOf": "268:183",
+      "variant": "Variant=Default",
+      "codeFile": "src/components/ui/sonner.tsx",
+      "lastSynced": "2026-09-18",
+      "figma": {
+        "fill": {
+          "var": "shadcn/popover",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "shadcn/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "spacing/4",
+          "raw": 16
+        },
+        "itemSpacing": {
+          "var": "spacing/2",
+          "raw": 8
+        },
+        "effectStyle": "Elevation/lg",
+        "texts": {
+          "Event created": "Event created",
+          "Sunday, July 26 at 4:30 PM.": "Sunday, July 26 at 4:30 PM."
+        },
+        "childSignature": [
+          "Content:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "toaster group"
       }
     }
   ],
