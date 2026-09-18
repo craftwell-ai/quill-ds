@@ -16,7 +16,7 @@
 // pattern). Properties the API response doesn't let us verify are reported as
 // warnings, never counted as clean OR as drift.
 
-import { readFileSync, writeFileSync, appendFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 
@@ -394,6 +394,51 @@ export function checkPatterns(patterns, nodes) {
   return { inSync, problems, skipped }
 }
 
+// Pattern pages, content level: what a designer sees on the frame — visible
+// text strings in document order (inside instances too: button labels, input
+// placeholders), the icon components used, and the top-level component
+// instances — from a REST nodes bundle fetched at full depth. Same shape as
+// figma/pattern-baseline.json, first written by a Plugin API read on
+// 2026-09-18 and rewritten by `--snapshot-patterns` from REST. Variables are
+// left out: the id map is partial, and the atoms above already diff bindings.
+const cleanText = (s) => String(s ?? '').replace(/\s+/g, ' ').trim()
+export function snapshotPattern(bundle) {
+  const comps = bundle.components ?? {}
+  const sets = bundle.componentSets ?? {}
+  const texts = []
+  const icons = []
+  const instances = []
+  const nameOf = (node) => { const c = comps[node.componentId]; if (!c) return '?'; const s = c.componentSetId && sets[c.componentSetId]; return s ? s.name : c.name }
+  const walk = (n, inside) => {
+    if (n.visible === false) return
+    if (n.type === 'TEXT') { const t = cleanText(n.characters); if (t) texts.push(t) }
+    if (n.type === 'INSTANCE') {
+      const name = nameOf(n)
+      if (name.startsWith('icon/')) icons.push(name.slice(5))
+      else if (!inside) instances.push(name)
+      inside = true
+    }
+    for (const c of n.children ?? []) walk(c, inside)
+  }
+  walk(bundle.document, false)
+  return { texts, icons: icons.sort(), instances }
+}
+export function diffPattern(base, live) {
+  const drift = []
+  const count = (a) => a.reduce((m, s) => m.set(s, (m.get(s) || 0) + 1), new Map())
+  const minus = (a, b) => { const ca = count(a), cb = count(b); return [...ca].filter(([s, n]) => (cb.get(s) || 0) < n).map(([s]) => s) }
+  const gone = minus(base.texts, live.texts)
+  const added = minus(live.texts, base.texts)
+  if (gone.length) drift.push(`text gone: ${gone.map((s) => "'" + s + "'").join(', ')}`)
+  if (added.length) drift.push(`text added: ${added.map((s) => "'" + s + "'").join(', ')}`)
+  const iconsGone = minus(base.icons, live.icons)
+  const iconsAdded = minus(live.icons, base.icons)
+  if (iconsGone.length) drift.push(`icon gone: ${iconsGone.join(', ')}`)
+  if (iconsAdded.length) drift.push(`icon added: ${iconsAdded.join(', ')}`)
+  if (JSON.stringify(base.instances) !== JSON.stringify(live.instances)) drift.push(`instances: [${base.instances}] → [${live.instances}]`)
+  return drift
+}
+
 function report(line) {
   console.log(line)
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, line + '\n')
@@ -403,7 +448,7 @@ function report(line) {
 // Repair mode (--repair): value-level drift is fixed in place (source file +
 // baseline rewritten; the workflow commits and opens the PR); exit 2 only when
 // unrepairable drift remains and a human needs /figma-pull or /figma-push.
-export async function main({ repair = false, adopt = false } = {}) {
+export async function main({ repair = false, adopt = false, snapshotPatterns = false } = {}) {
   const token = process.env.FIGMA_TOKEN
   if (!token) {
     report('figma-drift: no FIGMA_TOKEN secret — component parity check skipped (add a Figma personal access token with file read scope to enable).')
@@ -478,11 +523,40 @@ export async function main({ repair = false, adopt = false } = {}) {
     for (const problem of problems) report(`✖ ${problem}`)
     if (problems.length) unrepaired = true
     report(`${problems.length ? '✖' : '✔'} patterns: ${inSync.length} of ${mirrored.length} mirrored pages in place · ${skipped.missing} not built yet · ${skipped.declined} declined (figma/sync-state.json → patterns)`)
+    // content: every mirrored frame at full depth vs figma/pattern-baseline.json
+    const baselinePath = join(root, 'figma/pattern-baseline.json')
+    const frames = {}
+    for (let i = 0; i < mirrored.length; i += 16) {
+      const chunk = mirrored.slice(i, i + 16)
+      Object.assign(frames, (await fetchNodes(state.fileKey, chunk.map((p) => p.frameId), token)).nodes)
+    }
+    if (snapshotPatterns) {
+      const out = { $comment: 'Figma-side baseline of every mirrored pattern frame (texts in document order, icon components used, top-level component instances). Rewritten by `node scripts/figma-drift.mjs --snapshot-patterns` from the REST file API; compared against the code-side expectation by scripts/figma-pattern-parity.test.mjs.', syncedAt: today, frames: {} }
+      for (const p of mirrored) { const b = frames[p.frameId]; if (b?.document) out.frames[p.block] = { frameId: p.frameId, ...snapshotPattern(b) } }
+      writeFileSync(baselinePath, JSON.stringify(out, null, 2) + '\n')
+      report(`✔ patterns: baseline rewritten for ${Object.keys(out.frames).length} frames (figma/pattern-baseline.json)`)
+    } else if (existsSync(baselinePath)) {
+      const baseline = JSON.parse(readFileSync(baselinePath, 'utf8')).frames
+      let moved = 0
+      for (const p of mirrored) {
+        const b = frames[p.frameId]
+        if (!b?.document) continue
+        const base = baseline[p.block]
+        if (!base) { report(`○ pattern ${p.block}: not in figma/pattern-baseline.json yet — run --snapshot-patterns`); continue }
+        const drift = diffPattern(base, snapshotPattern(b))
+        if (!drift.length) continue
+        moved++
+        unrepaired = true
+        report(`✖ pattern ${p.block}: Figma moved — run /figma-pull ${p.block} (or --snapshot-patterns if the page is right)`)
+        for (const d of drift) report(`    ${d}`)
+      }
+      report(`${moved ? '✖' : '✔'} pattern content: ${mirrored.length - moved} of ${mirrored.length} frames match the baseline`)
+    }
   }
   if (repaired || adoptedAny) writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n')
   if (unrepaired) process.exitCode = repair ? 2 : 1
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  await main({ repair: process.argv.includes('--repair'), adopt: process.argv.includes('--adopt') })
+  await main({ repair: process.argv.includes('--repair'), adopt: process.argv.includes('--adopt'), snapshotPatterns: process.argv.includes('--snapshot-patterns') })
 }

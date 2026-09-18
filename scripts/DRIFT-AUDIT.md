@@ -94,6 +94,15 @@ and fails when a page is gone, renamed, or has lost its frame. Token bindings
 inside pattern frames are not diffed — they are instances of the atoms above,
 which are.
 
+**Pattern content (since v0.9.49).** The daily run also fetches every mirrored
+frame at full depth and diffs what a designer sees — visible texts, icon
+components, top-level instances — against `figma/pattern-baseline.json`,
+naming the page and the change (`text gone`, `icon added`, `instances …`) and
+exiting 2 for a human. The code side is `scripts/figma-pattern-expect.mjs`
+(each block rendered with react-dom/server); `scripts/figma-pattern-parity.test.mjs`
+(Tier 1) requires a stamped page to match its block exactly on strings and
+icons. `--snapshot-patterns` rewrites the baseline after a page is synced.
+
 **Re-stamp guard (Tier 1, since v0.9.46).** Pushing to Figma can never be a bot
 (no headless node-write API on any plan), so the only way drift stays at zero is
 to make the Figma update part of the PR. Each mirrored pattern records

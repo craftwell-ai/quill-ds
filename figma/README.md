@@ -117,6 +117,9 @@ originate on either side, but when they disagree, code wins. Proven end-to-end
 5. Ship through the normal branch → PR → CI → merge flow.
 6. For a pattern page, re-stamp its entry: `node scripts/figma-stamp.mjs --block <name>`. The
    re-stamp guard fails when a block's source changes without its page being synced.
+7. Refresh the page's content baseline: `FIGMA_TOKEN=… node scripts/figma-drift.mjs --snapshot-patterns`
+   (rewrites `figma/pattern-baseline.json` from REST for every mirrored frame); the parity test
+   then compares it to what the block renders.
 
 Out of scope by design (code-side judgment fills these in): behavior, responsive
 rules, accessibility semantics, edge cases. Figma under-describes them; that's
