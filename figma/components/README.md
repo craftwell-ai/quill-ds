@@ -30,7 +30,12 @@ all type binds to a Figma variable or text style (no literal values). Built via 
   re-binding fills on cloned/combined components corrupts the render to the literal fallback.
 - `combineAsVariants(comps, page)` requires the components to already be **on the target page**.
 - Variant names encode properties: `Variant=x`, `Size=y`, `Checked=on`, `Pressed=off`.
-- Fill opacity (e.g. destructive `/10`) must be applied via `fills.map(p => ({...p, opacity}))`.
+- **Opacity is a second assignment.** Binding a colour variable to a paint (`setBoundVariableForPaint`)
+  resets the paint's opacity to the variable's own alpha and discards any opacity on the paint you
+  passed in — one assignment `fills = [boundPaintAt0.2]` lands at 100 % (and `shadcn/border`
+  lands at 12 %, because its alias carries that alpha). Assign the bound paint first, then
+  `node.fills = node.fills.map(p => ({ ...p, opacity }))`. The 2026-09-18 ToneBadge tints and Kanban
+  columns shipped at 100 % for exactly this reason and were fixed with the second assignment.
 - Figma variable names can't contain `.` — fractional spacing keys are sanitized (`spacing/2_5`).
 - `createFrame`/`createAutoLayout` frames ship with a **default white fill** — clear
   `fills = []` on every wrapper/group frame (and on `createNodeFromSvg` import frames), or

@@ -8,6 +8,10 @@
 // Source of truth is code (src/tokens/quill.tokens.mjs). Do not edit values here.
 
 const REM = 16 // DTCG dimensions are rem; Figma numeric variables are px.
+// The file's four modes. The DTCG export also carries Intelligent, which is
+// skipped by decision (figma/README.md, "Variable modes") — the Professional
+// plan's ceiling is four modes per collection.
+const MODES = ['Light', 'Dark', 'Classic Light', 'Classic Dark']
 const COLOR_SCOPES = ['ALL_FILLS', 'STROKE_COLOR', 'EFFECT_COLOR'] // ALL_FILLS already covers text/frame/shape fills
 
 // ---- color parsing ----
@@ -27,7 +31,7 @@ function toFigmaColor(css) {
   return { r, g, b, a: 1 }
 }
 
-// walk DTCG.Primitives.color leaves → { path:[...], modes:{Light,Dark} }
+// walk DTCG.Primitives.color leaves → { path:[...], modes:{ <mode name>: css } }
 function walkColorLeaves(node, prefix, out) {
   for (const [k, v] of Object.entries(node)) {
     if (v && v.$type === 'color') out.push({ path: [...prefix, k], modes: v.$extensions['com.figma'].modes })
@@ -60,7 +64,7 @@ async function varsInCollection(col) {
 
 async function syncPrimitiveColors(DTCG) {
   const col = await upsertCollection('Quill Primitives')
-  const modes = ensureModes(col, ['Light', 'Dark'])
+  const modes = ensureModes(col, MODES)
   const existing = await varsInCollection(col)
   const leaves = []
   walkColorLeaves(DTCG.Primitives.color, [], leaves)
@@ -74,8 +78,7 @@ async function syncPrimitiveColors(DTCG) {
       v.scopes = COLOR_SCOPES
       created++
     } else updated++
-    v.setValueForMode(modes.Light, toFigmaColor(mv.Light))
-    v.setValueForMode(modes.Dark, toFigmaColor(mv.Dark))
+    for (const m of MODES) if (mv[m]) v.setValueForMode(modes[m], toFigmaColor(mv[m]))
     existing[name] = v
   }
   return { collection: col.name, modes: Object.keys(modes), created, updated, total: leaves.length }
@@ -109,7 +112,7 @@ function upsertScalar(col, name, value, type, scopes, modeIds, existing) {
 
 async function syncPrimitiveScalars(DTCG) {
   const col = await upsertCollection('Quill Primitives')
-  const modes = ensureModes(col, ['Light', 'Dark'])
+  const modes = ensureModes(col, MODES)
   const existing = await varsInCollection(col)
   let created = 0
   let updated = 0
@@ -234,19 +237,17 @@ const shadowColors = (css) => css.match(/rgba?\([^)]*\)/g) || []
 
 async function syncShadowColorVars(DTCG) {
   const col = await upsertCollection('Quill Primitives')
-  const modes = ensureModes(col, ['Light', 'Dark'])
+  const modes = ensureModes(col, MODES)
   const existing = await varsInCollection(col)
   let created = 0
   let updated = 0
   for (const [k, tok] of Object.entries(DTCG.Primitives.elevation)) {
-    const light = shadowColors(tok.$extensions['com.figma'].modes.Light)
-    const dark = shadowColors(tok.$extensions['com.figma'].modes.Dark)
-    for (let i = 0; i < light.length; i++) {
+    const perMode = Object.fromEntries(MODES.map((m) => [m, shadowColors(tok.$extensions['com.figma'].modes[m] ?? tok.$value)]))
+    for (let i = 0; i < perMode.Light.length; i++) {
       const name = `shadow/${k}/${i + 1}`
       let v = existing[name]
       if (!v) { v = figma.variables.createVariable(name, col, 'COLOR'); v.scopes = SHADOW_COLOR_SCOPES; created++ } else updated++
-      v.setValueForMode(modes.Light, toFigmaColor(light[i]))
-      v.setValueForMode(modes.Dark, toFigmaColor(dark[i]))
+      for (const m of MODES) if (perMode[m][i]) v.setValueForMode(modes[m], toFigmaColor(perMode[m][i]))
       existing[name] = v
     }
   }

@@ -1,5 +1,5 @@
 {
-  "$comment": "Baseline for the scheduled Figma↔code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry. `candidates` lists Figma twins not yet under the check (Wave A, from figma/components/README.md); `figma-drift.mjs --adopt` (the figma-parity workflow's `adopt` input) moves each into `components` once Figma and code agree, and reports the ones that do not. `patterns` is the block-to-Figma map: one entry per registry/blocks file — mirrored (❖ page + pattern frame ids, presence checked daily), missing (not built yet) or declined (reason recorded); scripts/figma-pattern-coverage.test.mjs keeps it complete.",
+  "$comment": "Baseline for the scheduled Figma↔code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry. `candidates` lists Figma twins not yet under the check (Wave A, from figma/components/README.md); `figma-drift.mjs --adopt` (the figma-parity workflow's `adopt` input) moves each into `components` once Figma and code agree, and reports the ones that do not. `patterns` is the block-to-Figma map: one entry per registry/blocks file — mirrored (❖ page + pattern frame ids, presence checked daily), missing (not built yet) or declined (reason recorded); scripts/figma-pattern-coverage.test.mjs keeps it complete. Mirrored entries carry codeHash + syncedAt (the block source hash at the last Figma sync; scripts/figma-restamp.test.mjs fails when the block moves without its page) or stale: <reason>. `foundations` carries the token-source hash at the last foundations sync.",
   "fileKey": "Dcf8lEB7Ash71iNl7WN4Jq",
   "variables": {
     "VariableID:4:2": "corner-radius/xs",
@@ -606,7 +606,8 @@
       "status": "mirrored",
       "page": "❖ Activity feed",
       "pageId": "208:2",
-      "frameId": "208:3"
+      "frameId": "208:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "alerts",
@@ -618,14 +619,16 @@
       "status": "mirrored",
       "page": "❖ Analytics charts",
       "pageId": "213:2",
-      "frameId": "213:3"
+      "frameId": "213:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "announcement-banner",
       "status": "mirrored",
       "page": "❖ Announcement banner",
       "pageId": "205:2",
-      "frameId": "205:3"
+      "frameId": "205:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "badge-on-card",
@@ -637,28 +640,33 @@
       "status": "mirrored",
       "page": "❖ Calendar page",
       "pageId": "210:2",
-      "frameId": "210:3"
+      "frameId": "210:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "calendar-range",
       "status": "mirrored",
       "page": "❖ Calendar range",
       "pageId": "211:2",
-      "frameId": "211:3"
+      "frameId": "211:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "chat",
       "status": "mirrored",
       "page": "❖ Chat",
       "pageId": "581:159",
-      "frameId": "581:160"
+      "frameId": "581:160",
+      "codeHash": "6d42a9e67f4f5ee4",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "checkout",
       "status": "mirrored",
       "page": "❖ Checkout",
       "pageId": "203:2",
-      "frameId": "203:3"
+      "frameId": "203:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "command-palette",
@@ -670,168 +678,207 @@
       "status": "mirrored",
       "page": "❖ Contact form",
       "pageId": "200:2",
-      "frameId": "200:3"
+      "frameId": "200:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "cookie-consent",
       "status": "mirrored",
       "page": "❖ Cookie consent",
       "pageId": "574:125",
-      "frameId": "574:126"
+      "frameId": "574:126",
+      "codeHash": "f3dcf0a810721936",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "dashboard",
       "status": "mirrored",
       "page": "❖ Dashboard",
       "pageId": "578:2",
-      "frameId": "578:3"
+      "frameId": "578:3",
+      "codeHash": "acc21f1bc971ee4e",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "data-table",
       "status": "mirrored",
       "page": "❖ Data table",
       "pageId": "579:2",
-      "frameId": "579:3"
+      "frameId": "579:3",
+      "codeHash": "3dabe8fa5538e08c",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "empty-state",
       "status": "mirrored",
       "page": "❖ Empty state",
       "pageId": "574:115",
-      "frameId": "574:116"
+      "frameId": "574:116",
+      "codeHash": "01da1320800b5898",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "error-404",
       "status": "mirrored",
       "page": "❖ Error 404",
       "pageId": "574:104",
-      "frameId": "574:105"
+      "frameId": "574:105",
+      "codeHash": "cc9ea96984742a5b",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "faq",
       "status": "mirrored",
       "page": "❖ FAQ",
       "pageId": "207:76",
-      "frameId": "207:77"
+      "frameId": "207:77",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "feature-section",
       "status": "mirrored",
       "page": "❖ Feature section",
       "pageId": "572:2",
-      "frameId": "572:3"
+      "frameId": "572:3",
+      "codeHash": "244203398c780657",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "file-upload",
       "status": "mirrored",
       "page": "❖ File upload",
       "pageId": "201:2",
-      "frameId": "201:3"
+      "frameId": "201:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "footer",
       "status": "mirrored",
       "page": "❖ Footer",
       "pageId": "571:19",
-      "frameId": "571:20"
+      "frameId": "571:20",
+      "codeHash": "87e7e5b547457460",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "forgot-password",
       "status": "mirrored",
       "page": "❖ Forgot password",
       "pageId": "182:2",
-      "frameId": "182:3"
+      "frameId": "182:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "hero",
       "status": "mirrored",
       "page": "❖ Hero",
       "pageId": "568:2",
-      "frameId": "568:3"
+      "frameId": "568:3",
+      "codeHash": "6d852d561214d812",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "invoice",
       "status": "mirrored",
       "page": "❖ Invoice",
       "pageId": "209:2",
-      "frameId": "209:3"
+      "frameId": "209:3",
+      "codeHash": "e6a25bd662e40d91",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "kanban",
       "status": "mirrored",
       "page": "❖ Kanban",
       "pageId": "581:85",
-      "frameId": "581:86"
+      "frameId": "581:86",
+      "codeHash": "68ef22c6c49ae5e9",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "list-detail",
       "status": "mirrored",
       "page": "❖ List detail",
       "pageId": "580:2",
-      "frameId": "580:3"
+      "frameId": "580:3",
+      "codeHash": "d4cc405c3691177a",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "login",
       "status": "mirrored",
       "page": "❖ Login",
       "pageId": "103:2",
-      "frameId": "103:3"
+      "frameId": "103:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "login-minimal",
       "status": "mirrored",
       "page": "❖ Login — minimal",
       "pageId": "215:187",
-      "frameId": "215:188"
+      "frameId": "215:188",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "login-oauth",
       "status": "mirrored",
       "page": "❖ Login — OAuth",
       "pageId": "585:2",
-      "frameId": "585:3"
+      "frameId": "585:3",
+      "codeHash": "abc90ff72831524e",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "login-split-panel",
       "status": "mirrored",
       "page": "❖ Login — split panel",
       "pageId": "215:154",
-      "frameId": "215:155"
+      "frameId": "215:155",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "mail-shell",
       "status": "mirrored",
       "page": "❖ Mail inbox",
       "pageId": "215:2",
-      "frameId": "215:3"
+      "frameId": "215:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "navbar",
       "status": "mirrored",
       "page": "❖ Navbar",
       "pageId": "571:2",
-      "frameId": "571:3"
+      "frameId": "571:3",
+      "codeHash": "6ae49fdc23d3d4b7",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "newsletter",
       "status": "mirrored",
       "page": "❖ Newsletter",
       "pageId": "185:2",
-      "frameId": "185:3"
+      "frameId": "185:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "notifications",
       "status": "mirrored",
       "page": "❖ Notifications",
       "pageId": "581:2",
-      "frameId": "581:3"
+      "frameId": "581:3",
+      "codeHash": "625a03cb45c19a8c",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "onboarding",
       "status": "mirrored",
       "page": "❖ Onboarding",
       "pageId": "585:75",
-      "frameId": "585:76"
+      "frameId": "585:76",
+      "codeHash": "dc28f93e8230ffe3",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "order-summary",
@@ -843,112 +890,141 @@
       "status": "mirrored",
       "page": "❖ OTP verification",
       "pageId": "183:2",
-      "frameId": "183:3"
+      "frameId": "183:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "page-header",
       "status": "mirrored",
       "page": "❖ Page header",
       "pageId": "574:85",
-      "frameId": "574:86"
+      "frameId": "574:86",
+      "codeHash": "1b2792dda2413fac",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "pricing",
       "status": "mirrored",
       "page": "❖ Pricing",
       "pageId": "574:2",
-      "frameId": "574:3"
+      "frameId": "574:3",
+      "codeHash": "c0fba8b22ca7b974",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "profile-card",
       "status": "mirrored",
       "page": "❖ Profile card",
       "pageId": "580:104",
-      "frameId": "580:105"
+      "frameId": "580:105",
+      "codeHash": "c144a2fcc0c6be38",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "search-results",
       "status": "mirrored",
       "page": "❖ Search results",
       "pageId": "581:40",
-      "frameId": "581:41"
+      "frameId": "581:41",
+      "codeHash": "5c1a4d06d24377a6",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "settings",
       "status": "mirrored",
       "page": "❖ Settings",
       "pageId": "580:45",
-      "frameId": "580:46"
+      "frameId": "580:46",
+      "codeHash": "50138cd89d1ee4d6",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "sidebar-nav",
       "status": "mirrored",
       "page": "❖ Sidebar navigation",
       "pageId": "214:2",
-      "frameId": "214:3"
+      "frameId": "214:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "signup",
       "status": "mirrored",
       "page": "❖ Signup",
       "pageId": "584:2",
-      "frameId": "584:3"
+      "frameId": "584:3",
+      "codeHash": "788e5aa783de6823",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "signup-social",
       "status": "mirrored",
       "page": "❖ Signup — social first",
       "pageId": "184:2",
-      "frameId": "184:3"
+      "frameId": "184:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "stat-cards",
       "status": "mirrored",
       "page": "❖ Stat cards",
       "pageId": "105:2",
-      "frameId": "105:3"
+      "frameId": "105:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "stats-band",
       "status": "mirrored",
       "page": "❖ Stats band",
       "pageId": "204:2",
-      "frameId": "204:3"
+      "frameId": "204:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "tabs-page",
       "status": "mirrored",
       "page": "❖ Tabs page",
       "pageId": "580:80",
-      "frameId": "580:81"
+      "frameId": "580:81",
+      "codeHash": "7d9e14355eb869cc",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "team-section",
       "status": "mirrored",
       "page": "❖ Team section",
       "pageId": "207:2",
-      "frameId": "207:3"
+      "frameId": "207:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "testimonial",
       "status": "mirrored",
       "page": "❖ Testimonial",
       "pageId": "572:27",
-      "frameId": "572:28"
+      "frameId": "572:28",
+      "codeHash": "b52f832a34ba08e6",
+      "syncedAt": "2026-09-18"
     },
     {
       "block": "theme-selector",
       "status": "mirrored",
       "page": "❖ Theme selector",
       "pageId": "231:2",
-      "frameId": "231:3"
+      "frameId": "231:3",
+      "stale": "built 2026-07-10/11 to the earlier recipe from the block as it then was; audit against the Storybook render and rebuild (CRA-223), then re-stamp"
     },
     {
       "block": "wizard",
       "status": "mirrored",
       "page": "❖ Wizard",
       "pageId": "585:38",
-      "frameId": "585:39"
+      "frameId": "585:39",
+      "codeHash": "ae0e76b80b7ba6ed",
+      "syncedAt": "2026-09-18"
     }
-  ]
+  ],
+  "foundations": {
+    "tokensHash": "65be6eb898a030d9",
+    "syncedAt": "2026-09-18"
+  }
 }
