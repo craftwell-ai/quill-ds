@@ -1,0 +1,1996 @@
+{
+  "$comment": "Figma-side baseline of every mirrored pattern frame (texts in document order, icon components used, top-level component instances, variables bound outside instances). Written by the pattern baseline read on 2026-09-18 via the Plugin API; refreshed by scripts/figma-drift.mjs from the REST file API. Compared against the code-side expectation by scripts/figma-pattern-parity.test.mjs.",
+  "syncedAt": "2026-09-18",
+  "frames": {
+    "activity-feed": {
+      "frameId": "208:3",
+      "texts": [
+        "Activity",
+        "This week",
+        "What happened while you were away.",
+        "AL",
+        "Ada Lovelace published Field Notes · Issue № 004",
+        "2 hours ago",
+        "JD",
+        "John Doe commented on Botanical pigment studies",
+        "Yesterday",
+        "MM",
+        "Meeting Mapper archived Q2 planning notes",
+        "2 days ago",
+        "AL",
+        "Ada Lovelace invited two new collaborators",
+        "Last week"
+      ],
+      "icons": [],
+      "instances": [
+        "Badge",
+        "Avatar",
+        "Avatar",
+        "Avatar",
+        "Avatar"
+      ],
+      "vars": [
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "analytics-charts": {
+      "frameId": "213:3",
+      "texts": [
+        "Audience",
+        "Last 6 months",
+        "Monthly readers and new subscribers.",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Readers",
+        "Subscribers",
+        "Print editions",
+        "Weekly sales this month.",
+        "W1",
+        "W2",
+        "W3",
+        "W4"
+      ],
+      "icons": [],
+      "instances": [
+        "Badge"
+      ],
+      "vars": [
+        "color/chart/series/1",
+        "color/chart/series/2",
+        "color/chart/series/3",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "announcement-banner": {
+      "frameId": "205:3",
+      "texts": [
+        "New",
+        "Issue № 004 of the Field Notes just shipped — botanical pigments, from seed to swatch.",
+        "Read it",
+        "Workshop: Letterpress for interfaces — Saturday, July 26. Twelve seats.",
+        "Save a seat"
+      ],
+      "icons": [
+        "arrow_forward",
+        "close",
+        "close"
+      ],
+      "instances": [
+        "Badge",
+        "Button",
+        "Button",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/lg",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground"
+      ]
+    },
+    "calendar-page": {
+      "frameId": "210:3",
+      "texts": [
+        "Studio schedule",
+        "Pick a day to see its sessions.",
+        "‹",
+        "July 2026",
+        "›",
+        "Su",
+        "Mo",
+        "Tu",
+        "We",
+        "Th",
+        "Fr",
+        "Sa",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "Tuesday, July 14",
+        "9:00",
+        "Sketchbook review",
+        "Studio",
+        "11:30",
+        "Token sync with Inkwell Press",
+        "Call",
+        "15:00",
+        "Letterpress workshop",
+        "Workshop"
+      ],
+      "icons": [],
+      "instances": [
+        "Separator",
+        "Badge",
+        "Badge",
+        "Badge"
+      ],
+      "vars": [
+        "corner-radius/lg",
+        "corner-radius/md",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground"
+      ]
+    },
+    "calendar-range": {
+      "frameId": "211:3",
+      "texts": [
+        "Book studio time",
+        "Pick the days you want at the letterpress bench.",
+        "5 days selected",
+        "July 2026",
+        "Su",
+        "Mo",
+        "Tu",
+        "We",
+        "Th",
+        "Fr",
+        "Sa",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "August 2026",
+        "Su",
+        "Mo",
+        "Tu",
+        "We",
+        "Th",
+        "Fr",
+        "Sa",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "July 20 – 24, 2026",
+        "Clear",
+        "Reserve"
+      ],
+      "icons": [],
+      "instances": [
+        "Badge",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/lg",
+        "corner-radius/md",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground"
+      ]
+    },
+    "checkout": {
+      "frameId": "203:3",
+      "texts": [
+        "Payment",
+        "All transactions are encrypted end to end.",
+        "Card",
+        "Bank",
+        "Wallet",
+        "Name on card",
+        "John Doe",
+        "Card number",
+        "1234 5678 9012 3456",
+        "Expiry",
+        "MM / YY",
+        "CVC",
+        "123",
+        "Pay $58.00",
+        "Order summary",
+        "Field Notes annual",
+        "$48.00",
+        "Print edition add-on",
+        "$14.00",
+        "Early-bird discount",
+        "−$4.00",
+        "Total",
+        "$58.00"
+      ],
+      "icons": [
+        "lock"
+      ],
+      "instances": [
+        "Input",
+        "Input",
+        "Input",
+        "Input",
+        "Button",
+        "Separator"
+      ],
+      "vars": [
+        "corner-radius/lg",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/ring"
+      ]
+    },
+    "contact-form": {
+      "frameId": "200:3",
+      "texts": [
+        "Get in touch",
+        "We usually reply within one working day.",
+        "First name",
+        "John",
+        "Last name",
+        "Doe",
+        "Email",
+        "you@example.com",
+        "Topic",
+        "Choose a topic",
+        "Message",
+        "Tell us a little about it…",
+        "Markdown is welcome.",
+        "Cancel",
+        "Send message"
+      ],
+      "icons": [],
+      "instances": [
+        "Input",
+        "Input",
+        "Input",
+        "Select",
+        "Textarea",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "faq": {
+      "frameId": "207:77",
+      "texts": [
+        "FAQ",
+        "Common questions",
+        "Everything else lives in the docs — or ask us directly.",
+        "Can I use Quill in a commercial project?",
+        "Yes. The theme, tokens, and every pattern ship under a permissive license — attribution is appreciated, never required.",
+        "How do I install the theme?",
+        "Does dark mode come for free?",
+        "Still curious?",
+        "Talk to the studio"
+      ],
+      "icons": [],
+      "instances": [
+        "Accordion",
+        "Button"
+      ],
+      "vars": [
+        "color/ink/muted",
+        "corner-radius/lg",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "file-upload": {
+      "frameId": "201:3",
+      "texts": [
+        "Upload assets",
+        "SVG, PNG, PDF or ZIP — up to 25 MB each.",
+        "Drag files here or click to browse",
+        "Your files stay private.",
+        "brand-lockups.zip",
+        "4.2 MB",
+        "declaration.webp",
+        "189 KB",
+        "field-notes-issue-001.pdf",
+        "2.8 MB",
+        "Cancel",
+        "Done"
+      ],
+      "icons": [
+        "close",
+        "close",
+        "close",
+        "cloud_upload"
+      ],
+      "instances": [
+        "Separator",
+        "Button",
+        "Button",
+        "Progress",
+        "Button",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/lg",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/input",
+        "shadcn/muted",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "forgot-password": {
+      "frameId": "182:3",
+      "texts": [
+        "Reset your password",
+        "Enter the email you signed up with and we'll send you a reset link.",
+        "Email",
+        "you@example.com",
+        "Send reset link",
+        "Back to sign in"
+      ],
+      "icons": [
+        "arrow_back"
+      ],
+      "instances": [
+        "Input",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "invoice": {
+      "frameId": "209:3",
+      "texts": [
+        "Invoice 0042",
+        "Issued June 30, 2026 · Due July 14, 2026",
+        "Paid",
+        "From",
+        "Craftwell",
+        "hello@craftwell.ai",
+        "Billed to",
+        "Northwind Ltd.",
+        "accounts@northwind.com",
+        "Description",
+        "Qty",
+        "Rate",
+        "Amount",
+        "Design system retainer — June",
+        "1",
+        "$3,200.00",
+        "$3,200.00",
+        "Brand lock-up refinements",
+        "6",
+        "$140.00",
+        "$840.00",
+        "Storybook pattern library",
+        "12",
+        "$95.00",
+        "$1,140.00",
+        "Total",
+        "$5,180.00",
+        "Thank you — see you next issue.",
+        "Download PDF"
+      ],
+      "icons": [
+        "download"
+      ],
+      "instances": [
+        "Tone badge",
+        "Separator",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "spacing/0_5",
+        "spacing/10",
+        "spacing/2",
+        "spacing/3",
+        "spacing/4",
+        "type/xs"
+      ]
+    },
+    "login": {
+      "frameId": "103:3",
+      "texts": [
+        "Sign in",
+        "Welcome back — enter your details.",
+        "Email",
+        "you@example.com",
+        "Password",
+        "••••••••",
+        "Sign in"
+      ],
+      "icons": [],
+      "instances": [
+        "Input",
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/1_5",
+        "spacing/4",
+        "spacing/6"
+      ]
+    },
+    "login-minimal": {
+      "frameId": "215:188",
+      "texts": [
+        "Q",
+        "Sign in to Quill",
+        "Email",
+        "you@example.com",
+        "Continue",
+        "We’ll email you a one-time code. No password needed."
+      ],
+      "icons": [
+        "arrow_forward"
+      ],
+      "instances": [
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/md",
+        "corner-radius/xl",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground"
+      ]
+    },
+    "login-split-panel": {
+      "frameId": "215:155",
+      "texts": [
+        "Quill",
+        "“The most crafted-feeling system we’ve ever shipped on. It reads like a notebook, not a dashboard.”",
+        "Sofia Almeida — Head of Product, Inkwell Press",
+        "Welcome back",
+        "Sign in to your studio account.",
+        "Email",
+        "you@example.com",
+        "Password",
+        "Forgot?",
+        "••••••••",
+        "Sign in",
+        "or",
+        "Continue with a magic link"
+      ],
+      "icons": [
+        "mail"
+      ],
+      "instances": [
+        "Input",
+        "Input",
+        "Button",
+        "Separator",
+        "Separator",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/xl",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground",
+        "spacing/3"
+      ]
+    },
+    "mail-shell": {
+      "frameId": "215:3",
+      "texts": [
+        "Inbox",
+        "2 unread",
+        "Search mail…",
+        "Ada Lovelace",
+        "9:12",
+        "Proofs for Issue № 004",
+        "The terracotta plate came out beautifully — see the attached scans…",
+        "William Morris",
+        "Yesterday",
+        "Border pattern revisions",
+        "I reworked the vine motif so it tiles cleanly at three scales…",
+        "Beatrix Potter",
+        "Tue",
+        "Botanical studies, second pass",
+        "Moss and indigo swatches are drying — photos tomorrow morning…",
+        "1 of 24",
+        "AL",
+        "Ada Lovelace",
+        "to Studio · 9:12",
+        "Studio",
+        "Proofs for Issue № 004",
+        "The terracotta plate came out beautifully — the grain held even at the smallest caption size, and the dusk variants read exactly as we hoped under lamplight.",
+        "I’ve queued the moss and indigo runs for tomorrow. If the humidity holds we should have the full set scanned by Thursday.",
+        "— A.",
+        "Reply to Ada…",
+        "Send"
+      ],
+      "icons": [
+        "archive",
+        "delete",
+        "forward",
+        "reply",
+        "send"
+      ],
+      "instances": [
+        "Badge",
+        "Input",
+        "Separator",
+        "Button",
+        "Button",
+        "Button",
+        "Button",
+        "Avatar",
+        "Badge",
+        "Separator",
+        "Separator",
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/xl",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "newsletter": {
+      "frameId": "185:3",
+      "texts": [
+        "The Field Notes",
+        "One letter a month on design systems, drawn by hand. No spam, no noise — unsubscribe any time.",
+        "you@example.com",
+        "Subscribe",
+        "Joined by 4,200 fellow practitioners."
+      ],
+      "icons": [
+        "mail"
+      ],
+      "instances": [
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "otp-verification": {
+      "frameId": "183:3",
+      "texts": [
+        "Check your email",
+        "We sent a six-digit code to ada@example.com.",
+        "The code expires in 10 minutes.",
+        "Verify",
+        "Didn't get it? Resend code"
+      ],
+      "icons": [],
+      "instances": [
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/md",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/input",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "sidebar-nav": {
+      "frameId": "214:3",
+      "texts": [
+        "Q",
+        "Quill Studio",
+        "Workspace",
+        "Overview",
+        "Issues",
+        "4",
+        "Pigments",
+        "Plates",
+        "12",
+        "Studio",
+        "Collaborators",
+        "Settings",
+        "JD",
+        "John Doe",
+        "Studio plan",
+        "Workspace",
+        "›",
+        "Overview",
+        "Morning proofs",
+        "Nothing pressing.",
+        "Pigment queue",
+        "Nothing pressing.",
+        "Reader notes",
+        "Nothing pressing."
+      ],
+      "icons": [],
+      "instances": [
+        "Separator",
+        "Separator",
+        "Avatar"
+      ],
+      "vars": [
+        "corner-radius/lg",
+        "corner-radius/md",
+        "corner-radius/xl",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground",
+        "shadcn/sidebar",
+        "shadcn/sidebar-accent",
+        "shadcn/sidebar-accent-foreground",
+        "shadcn/sidebar-border",
+        "shadcn/sidebar-foreground"
+      ]
+    },
+    "signup-social": {
+      "frameId": "184:3",
+      "texts": [
+        "Create your account",
+        "Start with a provider, or use your email.",
+        "Continue with GitHub",
+        "Continue with Google",
+        "or with email",
+        "Email",
+        "you@example.com",
+        "Password",
+        "At least 12 characters",
+        "Create account",
+        "By continuing you agree to the studio terms and privacy note."
+      ],
+      "icons": [],
+      "instances": [
+        "Separator",
+        "Separator",
+        "Input",
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/lg",
+        "corner-radius/xl",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/1_5",
+        "spacing/2_5",
+        "spacing/8"
+      ]
+    },
+    "stat-cards": {
+      "frameId": "105:3",
+      "texts": [
+        "Revenue",
+        "$48,120",
+        "+12%",
+        "Active users",
+        "3,842",
+        "+4%",
+        "Churn",
+        "1.9%",
+        "−0.3%",
+        "Open tickets",
+        "27",
+        "+6"
+      ],
+      "icons": [],
+      "instances": [
+        "Badge",
+        "Badge",
+        "Badge",
+        "Badge"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/2",
+        "spacing/4"
+      ]
+    },
+    "stats-band": {
+      "frameId": "204:3",
+      "texts": [
+        "By the numbers",
+        "A system that keeps its promises",
+        "56",
+        "Components",
+        "40+",
+        "Patterns",
+        "2",
+        "Themes, light & dusk",
+        "AA",
+        "WCAG 2.1 target"
+      ],
+      "icons": [],
+      "instances": [
+        "Separator",
+        "Separator",
+        "Separator"
+      ],
+      "vars": [
+        "color/ink/muted",
+        "color/pigment/terracotta/base",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "team-section": {
+      "frameId": "207:3",
+      "texts": [
+        "The studio",
+        "Drawn by hand, by these hands",
+        "A small bench of makers who believe interfaces should feel like well-kept notebooks.",
+        "JD",
+        "John Doe",
+        "Founder & Principal",
+        "Studio",
+        "AL",
+        "Ada Lovelace",
+        "Engineering",
+        "Systems",
+        "WM",
+        "William Morris",
+        "Pattern Design",
+        "Print",
+        "BP",
+        "Beatrix Potter",
+        "Illustration",
+        "Botanical"
+      ],
+      "icons": [
+        "mail",
+        "mail",
+        "mail",
+        "mail"
+      ],
+      "instances": [
+        "Avatar",
+        "Badge",
+        "Button",
+        "Avatar",
+        "Badge",
+        "Button",
+        "Avatar",
+        "Badge",
+        "Button",
+        "Avatar",
+        "Badge",
+        "Button"
+      ],
+      "vars": [
+        "color/ink/muted",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground"
+      ]
+    },
+    "theme-selector": {
+      "frameId": "231:3",
+      "texts": [
+        "Quill",
+        "Dawn",
+        "ISSUE Nº 001",
+        "Distinctive yet familiar.",
+        "Every artifact in the collection is approachable and accessible for everyday use by people.",
+        "Browse the collection",
+        "Theme",
+        "Dawn",
+        "Dusk",
+        "Classic Light",
+        "Classic Dark",
+        "Accent",
+        "Moss",
+        "Terracotta",
+        "Indigo",
+        "Gold"
+      ],
+      "icons": [
+        "keyboard_arrow_down",
+        "light_mode"
+      ],
+      "instances": [
+        "Button"
+      ],
+      "vars": [
+        "color/pigment/gold/base",
+        "color/pigment/indigo/base",
+        "color/pigment/moss/base",
+        "color/pigment/terracotta/base",
+        "corner-radius/lg",
+        "corner-radius/md",
+        "corner-radius/xl",
+        "shadcn/accent",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/popover",
+        "shadcn/primary",
+        "shadcn/primary-foreground"
+      ]
+    },
+    "hero": {
+      "frameId": "568:3",
+      "texts": [
+        "New — v2.0 is here",
+        "The calm design system for building things by hand",
+        "Accessible, themeable components and a single-source token foundation that flows to code and Figma alike.",
+        "Get started",
+        "Read the docs"
+      ],
+      "icons": [
+        "arrow_forward",
+        "menu_book"
+      ],
+      "instances": [
+        "Badge",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "shadcn/background",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/20",
+        "spacing/3",
+        "spacing/6"
+      ]
+    },
+    "navbar": {
+      "frameId": "571:3",
+      "texts": [
+        "Quill",
+        "Product",
+        "Solutions",
+        "Pricing",
+        "Docs",
+        "Sign in",
+        "Get started"
+      ],
+      "icons": [
+        "arrow_forward"
+      ],
+      "instances": [
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/lg",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/1",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/3",
+        "spacing/6"
+      ]
+    },
+    "footer": {
+      "frameId": "571:20",
+      "texts": [
+        "Quill",
+        "A calm, editorial design system for building by hand.",
+        "Product",
+        "Overview",
+        "Components",
+        "Tokens",
+        "Changelog",
+        "Resources",
+        "Docs",
+        "Guides",
+        "Figma kit",
+        "Support",
+        "Company",
+        "About",
+        "Blog",
+        "Careers",
+        "Contact",
+        "© 2026 Quill. All rights reserved.",
+        "Privacy",
+        "Terms"
+      ],
+      "icons": [],
+      "instances": [
+        "Separator"
+      ],
+      "vars": [
+        "font/heading",
+        "shadcn/background",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/10",
+        "spacing/12",
+        "spacing/2",
+        "spacing/4",
+        "spacing/6",
+        "spacing/8",
+        "type/xl"
+      ]
+    },
+    "feature-section": {
+      "frameId": "572:3",
+      "texts": [
+        "Why Quill",
+        "A calm, editorial design system",
+        "Everything connected to tokens, so it stays consistent as it grows.",
+        "Design tokens",
+        "One source of truth flows to code and Figma alike.",
+        "Composable",
+        "Build screens fast from accessible, themeable components.",
+        "Accessible",
+        "WCAG 2.1 AA out of the box, verified in CI."
+      ],
+      "icons": [
+        "check_circle",
+        "dashboard",
+        "palette"
+      ],
+      "instances": [],
+      "vars": [
+        "corner-radius/lg",
+        "font/sans",
+        "shadcn/background",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "spacing/10",
+        "spacing/12",
+        "spacing/2",
+        "spacing/8",
+        "type/lg"
+      ]
+    },
+    "testimonial": {
+      "frameId": "572:28",
+      "texts": [
+        "“Quill let our team ship consistent, accessible screens in days — the token foundation means design and code never drift.”",
+        "RP",
+        "Riley Park",
+        "Head of Design, Northwind"
+      ],
+      "icons": [],
+      "instances": [],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "spacing/3",
+        "spacing/6",
+        "spacing/8"
+      ]
+    },
+    "pricing": {
+      "frameId": "574:3",
+      "texts": [
+        "Starter",
+        "For trying things out.",
+        "$0",
+        "/mo",
+        "1 project",
+        "Community support",
+        "1 GB storage",
+        "Get started",
+        "Pro",
+        "Popular",
+        "For growing teams.",
+        "$18",
+        "/mo",
+        "Unlimited projects",
+        "Priority support",
+        "100 GB storage",
+        "Analytics",
+        "Start free trial",
+        "Enterprise",
+        "For large organizations.",
+        "Custom",
+        "SSO & SAML",
+        "Dedicated support",
+        "Unlimited storage",
+        "Audit logs",
+        "Contact sales"
+      ],
+      "icons": [
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check"
+      ],
+      "instances": [
+        "Button",
+        "Badge",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "border-width/2",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/ring",
+        "spacing/0_5",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/6",
+        "type/3xl",
+        "type/base"
+      ]
+    },
+    "page-header": {
+      "frameId": "574:86",
+      "texts": [
+        "Projects",
+        "Acme site",
+        "Settings",
+        "Project settings",
+        "Manage configuration, members, and integrations for this project.",
+        "Duplicate",
+        "New"
+      ],
+      "icons": [
+        "add",
+        "content_copy"
+      ],
+      "instances": [
+        "Breadcrumb",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "font/sans",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/1",
+        "spacing/2",
+        "spacing/3",
+        "spacing/4",
+        "type/2xl"
+      ]
+    },
+    "error-404": {
+      "frameId": "574:105",
+      "texts": [
+        "404",
+        "Page not found",
+        "The page you’re looking for doesn’t exist or may have been moved.",
+        "Go back",
+        "Take me home"
+      ],
+      "icons": [
+        "arrow_back"
+      ],
+      "instances": [
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "font/sans",
+        "shadcn/background",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/1",
+        "spacing/2",
+        "spacing/4",
+        "spacing/6",
+        "type/2xl"
+      ]
+    },
+    "empty-state": {
+      "frameId": "574:116",
+      "texts": [
+        "No projects yet",
+        "Create your first project and it’ll show up here.",
+        "New project"
+      ],
+      "icons": [
+        "add",
+        "folder_open"
+      ],
+      "instances": [
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "spacing/1",
+        "spacing/10",
+        "spacing/4",
+        "type/lg"
+      ]
+    },
+    "cookie-consent": {
+      "frameId": "574:126",
+      "texts": [
+        "We use essential cookies to make Quill work, and optional analytics to improve it. You can change your choice anytime.",
+        "Accept all",
+        "Reject non-essential",
+        "Preferences"
+      ],
+      "icons": [
+        "info"
+      ],
+      "instances": [
+        "Button",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/lg",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadow/base/1",
+        "spacing/2",
+        "spacing/3",
+        "spacing/4"
+      ]
+    },
+    "dashboard": {
+      "frameId": "578:3",
+      "texts": [
+        "Quill",
+        "Overview",
+        "Projects",
+        "Team",
+        "Billing",
+        "Settings",
+        "Search…",
+        "AL",
+        "Overview",
+        "Welcome back, Ada.",
+        "New project",
+        "Revenue",
+        "$48,120",
+        "+12%",
+        "Active users",
+        "3,842",
+        "+4%",
+        "Conversion",
+        "3.1%",
+        "+0.4%"
+      ],
+      "icons": [
+        "add",
+        "credit_card",
+        "dashboard",
+        "folder_open",
+        "group",
+        "notifications",
+        "settings"
+      ],
+      "instances": [
+        "Input",
+        "Button",
+        "Button",
+        "Badge",
+        "Badge",
+        "Badge"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/lg",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/accent",
+        "shadcn/accent-foreground",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/sidebar",
+        "spacing/1",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/2_5",
+        "spacing/3",
+        "spacing/4",
+        "spacing/5",
+        "spacing/6",
+        "type/2xl"
+      ]
+    },
+    "data-table": {
+      "frameId": "579:3",
+      "texts": [
+        "Filter members…",
+        "Filter",
+        "Invite",
+        "Name",
+        "Role",
+        "Status",
+        "Ada Lovelace",
+        "ada@example.com",
+        "Owner",
+        "Active",
+        "Alan Turing",
+        "alan@example.com",
+        "Admin",
+        "Active",
+        "Grace Hopper",
+        "grace@example.com",
+        "Editor",
+        "Invited",
+        "Katherine Johnson",
+        "kat@example.com",
+        "Viewer",
+        "Active"
+      ],
+      "icons": [
+        "add",
+        "filter_list",
+        "more_horiz",
+        "more_horiz",
+        "more_horiz",
+        "more_horiz"
+      ],
+      "instances": [
+        "Input",
+        "Button",
+        "Button",
+        "Tone badge",
+        "Button",
+        "Tone badge",
+        "Button",
+        "Tone badge",
+        "Button",
+        "Tone badge",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/lg",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/2",
+        "spacing/3"
+      ]
+    },
+    "list-detail": {
+      "frameId": "580:3",
+      "texts": [
+        "Inbox",
+        "3",
+        "Grace Hopper",
+        "9:41",
+        "Re: Q3 roadmap",
+        "Looks great — one note on timing…",
+        "Alan Turing",
+        "8:02",
+        "Deploy window",
+        "Can we push to Thursday?",
+        "Katherine J.",
+        "Yesterday",
+        "Design review",
+        "Left comments on the flows.",
+        "Re: Q3 roadmap",
+        "Grace Hopper · 9:41 AM",
+        "Hi Ada,",
+        "Looks great — one note on timing: can we align the beta with the marketing push in week 6? That gives us room to bake in the feedback from the design review.",
+        "Thanks, Grace"
+      ],
+      "icons": [
+        "delete",
+        "folder_open"
+      ],
+      "instances": [
+        "Badge",
+        "Separator",
+        "Button",
+        "Button",
+        "Separator"
+      ],
+      "vars": [
+        "border-width/1",
+        "font/sans",
+        "shadcn/accent",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/0_5",
+        "spacing/2",
+        "spacing/3",
+        "spacing/4",
+        "spacing/6",
+        "type/base",
+        "type/lg"
+      ]
+    },
+    "settings": {
+      "frameId": "580:46",
+      "texts": [
+        "Profile",
+        "Update your public profile and notification preferences.",
+        "First name",
+        "Ada",
+        "Last name",
+        "Lovelace",
+        "Bio",
+        "Tell us a little about yourself…",
+        "Email notifications",
+        "Get notified about activity.",
+        "Cancel",
+        "Save changes"
+      ],
+      "icons": [],
+      "instances": [
+        "Label",
+        "Input",
+        "Label",
+        "Input",
+        "Label",
+        "Textarea",
+        "Separator",
+        "Label",
+        "Switch",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/4",
+        "spacing/5",
+        "spacing/6",
+        "type/base"
+      ]
+    },
+    "tabs-page": {
+      "frameId": "580:81",
+      "texts": [
+        "Account",
+        "Notifications",
+        "Security",
+        "Account",
+        "Update your account details.",
+        "Display name",
+        "Ada Lovelace",
+        "Email",
+        "ada@example.com"
+      ],
+      "icons": [],
+      "instances": [
+        "Tabs",
+        "Label",
+        "Input",
+        "Label",
+        "Input"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/4",
+        "spacing/6",
+        "type/base"
+      ]
+    },
+    "profile-card": {
+      "frameId": "580:105",
+      "texts": [
+        "AL",
+        "Ada Lovelace",
+        "Principal Engineer",
+        "Pro",
+        "24",
+        "Projects",
+        "1.2k",
+        "Followers",
+        "318",
+        "Following",
+        "Follow",
+        "Message"
+      ],
+      "icons": [
+        "add",
+        "mail"
+      ],
+      "instances": [
+        "Badge",
+        "Separator",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "spacing/1",
+        "spacing/2",
+        "spacing/3",
+        "spacing/6",
+        "spacing/8",
+        "type/base",
+        "type/lg",
+        "type/xl"
+      ]
+    },
+    "notifications": {
+      "frameId": "581:3",
+      "texts": [
+        "Notifications",
+        "Mark all read",
+        "New member joined",
+        "Grace Hopper accepted your invite.",
+        "2m",
+        "Deploy succeeded",
+        "acme-site is live in production.",
+        "1h",
+        "Backup complete",
+        "Weekly backup finished successfully.",
+        "4h"
+      ],
+      "icons": [
+        "check_circle",
+        "content_copy",
+        "group"
+      ],
+      "instances": [
+        "Button",
+        "Separator",
+        "Separator"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "spacing/2",
+        "spacing/3",
+        "spacing/6",
+        "type/base"
+      ]
+    },
+    "search-results": {
+      "frameId": "581:41",
+      "texts": [
+        "token",
+        "4 results for “token”",
+        "Design tokens",
+        "Docs › Foundations",
+        "Guide",
+        "Button component",
+        "Components › Button",
+        "Component",
+        "Theming & dark mode",
+        "Docs › Theming",
+        "Guide",
+        "Accessibility checklist",
+        "Docs › A11y",
+        "Guide"
+      ],
+      "icons": [
+        "description",
+        "description",
+        "description",
+        "description"
+      ],
+      "instances": [
+        "Input",
+        "Badge",
+        "Separator",
+        "Badge",
+        "Separator",
+        "Badge",
+        "Separator",
+        "Badge"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/lg",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "spacing/3",
+        "spacing/4"
+      ]
+    },
+    "kanban": {
+      "frameId": "581:86",
+      "texts": [
+        "Backlog",
+        "2",
+        "Audit color contrast",
+        "a11y",
+        "AL",
+        "Draft migration guide",
+        "docs",
+        "AL",
+        "Add card",
+        "In progress",
+        "2",
+        "Wave B components",
+        "design",
+        "AL",
+        "Icon gallery search",
+        "feat",
+        "AL",
+        "Add card",
+        "Done",
+        "2",
+        "Token foundation",
+        "core",
+        "AL",
+        "Material Symbols",
+        "icons",
+        "AL",
+        "Add card"
+      ],
+      "icons": [
+        "add",
+        "add",
+        "add"
+      ],
+      "instances": [
+        "Badge",
+        "Badge",
+        "Badge",
+        "Badge",
+        "Badge",
+        "Badge",
+        "Badge",
+        "Badge",
+        "Badge"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/lg",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "spacing/1",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/3",
+        "spacing/4",
+        "type/2xs"
+      ]
+    },
+    "chat": {
+      "frameId": "581:160",
+      "texts": [
+        "GH",
+        "Grace Hopper",
+        "Online",
+        "Hey! Did the new tokens land?",
+        "Yep — merged this morning. Dark mode flows automatically now.",
+        "Amazing. The badges look so much cleaner.",
+        "Right? Everything binds to the foundation.",
+        "Message…"
+      ],
+      "icons": [
+        "arrow_forward"
+      ],
+      "instances": [
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/2xl",
+        "corner-radius/4xl",
+        "corner-radius/xl",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground",
+        "spacing/2",
+        "spacing/3",
+        "spacing/4"
+      ]
+    },
+    "signup": {
+      "frameId": "584:3",
+      "texts": [
+        "Create your account",
+        "Start your 14-day free trial — no card required.",
+        "Full name",
+        "Ada Lovelace",
+        "Work email",
+        "you@company.com",
+        "Password",
+        "At least 8 characters",
+        "Create account",
+        "Already have an account?",
+        "Sign in"
+      ],
+      "icons": [],
+      "instances": [
+        "Label",
+        "Input",
+        "Label",
+        "Input",
+        "Label",
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "spacing/1",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/4",
+        "spacing/6",
+        "type/base"
+      ]
+    },
+    "login-oauth": {
+      "frameId": "585:3",
+      "texts": [
+        "Q",
+        "Sign in to Quill",
+        "Use the account you already have.",
+        "Continue with Google",
+        "Continue with GitHub",
+        "Continue with Apple",
+        "or",
+        "Email",
+        "you@example.com",
+        "Continue with email",
+        "By continuing you agree to the Terms and Privacy Policy."
+      ],
+      "icons": [],
+      "instances": [
+        "Separator",
+        "Separator",
+        "Label",
+        "Input",
+        "Button"
+      ],
+      "vars": [
+        "corner-radius/lg",
+        "corner-radius/md",
+        "shadcn/background",
+        "shadcn/border",
+        "shadcn/foreground",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/2_5",
+        "spacing/3",
+        "spacing/5",
+        "spacing/8"
+      ]
+    },
+    "wizard": {
+      "frameId": "585:39",
+      "texts": [
+        "Account",
+        "2",
+        "Workspace",
+        "3",
+        "Invite",
+        "Name your workspace",
+        "This is where your team’s projects will live.",
+        "Workspace name",
+        "Acme Inc.",
+        "Workspace URL",
+        "acme",
+        "Back",
+        "Continue"
+      ],
+      "icons": [
+        "arrow_forward",
+        "check"
+      ],
+      "instances": [
+        "Label",
+        "Input",
+        "Label",
+        "Input",
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/4",
+        "spacing/6",
+        "type/base"
+      ]
+    },
+    "onboarding": {
+      "frameId": "585:76",
+      "texts": [
+        "Get set up",
+        "2 of 4 complete — you’re almost there.",
+        "Create your account",
+        "Name your workspace",
+        "Invite your team",
+        "Start",
+        "Connect a repository",
+        "Start"
+      ],
+      "icons": [
+        "check",
+        "check"
+      ],
+      "instances": [
+        "Button",
+        "Button"
+      ],
+      "vars": [
+        "border-width/1",
+        "corner-radius/4xl",
+        "corner-radius/lg",
+        "corner-radius/xl",
+        "font/sans",
+        "shadcn/border",
+        "shadcn/card",
+        "shadcn/foreground",
+        "shadcn/input",
+        "shadcn/muted",
+        "shadcn/muted-foreground",
+        "shadcn/primary",
+        "shadcn/primary-foreground",
+        "spacing/1",
+        "spacing/1_5",
+        "spacing/2",
+        "spacing/3",
+        "spacing/5",
+        "spacing/6",
+        "type/base"
+      ]
+    }
+  }
+}
