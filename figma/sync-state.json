@@ -667,8 +667,10 @@
     },
     {
       "block": "cookie-consent",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Cookie consent",
+      "pageId": "574:125",
+      "frameId": "574:126"
     },
     {
       "block": "dashboard",
@@ -682,13 +684,17 @@
     },
     {
       "block": "empty-state",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Empty state",
+      "pageId": "574:115",
+      "frameId": "574:116"
     },
     {
       "block": "error-404",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Error 404",
+      "pageId": "574:104",
+      "frameId": "574:105"
     },
     {
       "block": "faq",
@@ -699,8 +705,10 @@
     },
     {
       "block": "feature-section",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Feature section",
+      "pageId": "572:2",
+      "frameId": "572:3"
     },
     {
       "block": "file-upload",
@@ -711,8 +719,10 @@
     },
     {
       "block": "footer",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Footer",
+      "pageId": "571:19",
+      "frameId": "571:20"
     },
     {
       "block": "forgot-password",
@@ -723,8 +733,10 @@
     },
     {
       "block": "hero",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Hero",
+      "pageId": "568:2",
+      "frameId": "568:3"
     },
     {
       "block": "invoice",
@@ -778,8 +790,10 @@
     },
     {
       "block": "navbar",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Navbar",
+      "pageId": "571:2",
+      "frameId": "571:3"
     },
     {
       "block": "newsletter",
@@ -812,13 +826,17 @@
     },
     {
       "block": "page-header",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Page header",
+      "pageId": "574:85",
+      "frameId": "574:86"
     },
     {
       "block": "pricing",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Pricing",
+      "pageId": "574:2",
+      "frameId": "574:3"
     },
     {
       "block": "profile-card",
@@ -882,8 +900,10 @@
     },
     {
       "block": "testimonial",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Testimonial",
+      "pageId": "572:27",
+      "frameId": "572:28"
     },
     {
       "block": "theme-selector",
