@@ -4,8 +4,10 @@
 // `ICONS` object in scope — the `icons` export of src/components/ui/icons.core.mjs
 // (the sync core written by `npm run build:icons`; the gitignored
 // icons.all.generated.mjs holds the whole library in the same shape), i.e.
-// { name: { viewBox, paths } }. Idempotent: clears the prior gallery + icon/*
-// components and rebuilds, so a re-run creates no duplicates.
+// { name: { viewBox, paths } }. Idempotent by UPSERT: an existing icon/* component
+// keeps its node id and gets its vectors replaced, so instances elsewhere in the
+// file (Toast, Command, Dropdown Menu, Toggle Group, …) stay live; new names are
+// created; names no longer in code are reported, never removed.
 //
 // Source of truth is code (scripts/build-icons.mjs → icons.core.mjs). Do not
 // edit icon geometry here. See figma/README.md, "Re-run the icon sync".
@@ -32,24 +34,26 @@ async function syncIcons(ICONS) {
   if (!iconsPage) { iconsPage = figma.createPage(); iconsPage.name = 'Icons' }
   await figma.setCurrentPageAsync(iconsPage)
 
-  // --- idempotent: clear prior gallery + icon components ---
-  iconsPage.findAll((n) => n.type === 'COMPONENT' && n.name.startsWith('icon/')).forEach((c) => c.remove())
-  const oldG = iconsPage.findOne((n) => n.type === 'FRAME' && n.name === 'Quill Icons')
-  if (oldG) oldG.remove()
+  // --- idempotent upsert: existing icon/* components keep their ids ---
+  const existing = Object.fromEntries(iconsPage.findAll((n) => n.type === 'COMPONENT' && n.name.startsWith('icon/')).map((c) => [c.name, c]))
 
-  // --- wrapping gallery container ---
-  const gallery = figma.createAutoLayout('HORIZONTAL', { name: 'Quill Icons', itemSpacing: 20, counterAxisSpacing: 20 })
-  gallery.layoutWrap = 'WRAP'
-  gallery.paddingTop = gallery.paddingBottom = gallery.paddingLeft = gallery.paddingRight = 28
-  gallery.cornerRadius = 12
-  gallery.x = 0
-  gallery.y = 0
-  gallery.primaryAxisSizingMode = 'FIXED'
-  gallery.counterAxisSizingMode = 'AUTO'
-  gallery.resize(396, 200)
+  // --- wrapping gallery container (reused when present) ---
+  let gallery = iconsPage.findOne((n) => n.type === 'FRAME' && n.name === 'Quill Icons')
+  if (!gallery) {
+    gallery = figma.createAutoLayout('HORIZONTAL', { name: 'Quill Icons', itemSpacing: 20, counterAxisSpacing: 20 })
+    gallery.layoutWrap = 'WRAP'
+    gallery.paddingTop = gallery.paddingBottom = gallery.paddingLeft = gallery.paddingRight = 28
+    gallery.cornerRadius = 12
+    gallery.x = 0
+    gallery.y = 0
+    gallery.primaryAxisSizingMode = 'FIXED'
+    gallery.counterAxisSizingMode = 'AUTO'
+    gallery.resize(396, 200)
+  }
 
-  // --- build each icon/* component ---
+  // --- build or refresh each icon/* component ---
   const created = []
+  const updated = []
   for (const [name, def] of Object.entries(ICONS)) {
     const svg =
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${def.viewBox}">` +
@@ -62,14 +66,24 @@ async function syncIcons(ICONS) {
       const paint = (v.fills && v.fills[0]) || { type: 'SOLID', color: { r: 0, g: 0, b: 0 } }
       v.fills = [figma.variables.setBoundVariableForPaint(paint, 'color', iconColor)]
     })
-    const comp = figma.createComponentFromNode(frame)
-    comp.name = 'icon/' + name
-    gallery.appendChild(comp)
+    let comp = existing['icon/' + name]
+    if (comp) {
+      // keep the node (and every instance of it); swap the geometry
+      for (const ch of [...comp.children]) ch.remove()
+      for (const ch of [...frame.children]) comp.appendChild(ch)
+      frame.remove()
+      updated.push(comp.name)
+    } else {
+      comp = figma.createComponentFromNode(frame)
+      comp.name = 'icon/' + name
+      gallery.appendChild(comp)
+      created.push(comp.name)
+    }
     comp.layoutSizingHorizontal = 'FIXED'
     comp.layoutSizingVertical = 'FIXED'
     comp.resize(24, 24)
-    created.push(comp.name)
   }
+  const orphans = Object.keys(existing).filter((n) => !(n.slice(5) in ICONS))
 
   // gallery background = token
   if (bgColor) {
@@ -77,7 +91,7 @@ async function syncIcons(ICONS) {
     gallery.fills = [figma.variables.setBoundVariableForPaint(p, 'color', bgColor)]
   }
 
-  return { page: iconsPage.name, created: created.length, iconColorVar: iconColor.name, galleryBgVar: bgColor && bgColor.name }
+  return { page: iconsPage.name, created: created.length, updated: updated.length, orphans, iconColorVar: iconColor.name, galleryBgVar: bgColor && bgColor.name }
 }
 
 return await syncIcons(ICONS)
