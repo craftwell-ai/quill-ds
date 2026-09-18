@@ -72,6 +72,11 @@ an obsolete `auto/figma-pull` PR gets closed (the workflow closes it when drift
 disappears). The job skips cleanly until a `FIGMA_TOKEN` repo secret exists
 (Figma personal access token, file read scope).
 
+**Every primitive has a declared status** (since v0.9.48): `components` (checked daily),
+`candidates` (twin exists, not yet adopted) or `declined` (no twin, reason recorded) —
+`scripts/figma-component-coverage.test.mjs` fails on a file in `src/components/ui` with
+none of the three, the same shape as the pattern map.
+
 **Coverage grows by adoption, not by hand.** `figma/sync-state.json` lists
 `candidates` (twins built before the check existed); the workflow's `adopt`
 input reads each over REST, keeps the ones whose bindings already match a class

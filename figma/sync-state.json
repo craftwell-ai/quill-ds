@@ -1,5 +1,5 @@
 {
-  "$comment": "Baseline for the scheduled Figma↔code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry. `candidates` lists Figma twins not yet under the check (Wave A, from figma/components/README.md); `figma-drift.mjs --adopt` (the figma-parity workflow's `adopt` input) moves each into `components` once Figma and code agree, and reports the ones that do not. `patterns` is the block-to-Figma map: one entry per registry/blocks file — mirrored (❖ page + pattern frame ids, presence checked daily), missing (not built yet) or declined (reason recorded); scripts/figma-pattern-coverage.test.mjs keeps it complete. Mirrored entries carry codeHash + syncedAt (the block source hash at the last Figma sync; scripts/figma-restamp.test.mjs fails when the block moves without its page) or stale: <reason>. `foundations` carries the token-source hash at the last foundations sync.",
+  "$comment": "Baseline for the scheduled Figma↔code component parity check (scripts/figma-drift.mjs). Updated by every /figma-pull and /figma-push. Each component records the token bindings (var) AND the resolved Dawn-mode raw values (raw) as of the last sync; the checker flags drift when BOTH stop matching. code.classes is the container class string the code twin must still carry. `candidates` lists Figma twins not yet under the check (Wave A, from figma/components/README.md); `figma-drift.mjs --adopt` (the figma-parity workflow's `adopt` input) moves each into `components` once Figma and code agree, and reports the ones that do not. `patterns` is the block-to-Figma map: one entry per registry/blocks file — mirrored (❖ page + pattern frame ids, presence checked daily), missing (not built yet) or declined (reason recorded); scripts/figma-pattern-coverage.test.mjs keeps it complete. Mirrored entries carry codeHash + syncedAt (the block source hash at the last Figma sync; scripts/figma-restamp.test.mjs fails when the block moves without its page) or stale: <reason>. `foundations` carries the token-source hash at the last foundations sync. `declined` lists the primitives that get no twin, with the reason; scripts/figma-component-coverage.test.mjs keeps components + candidates + declined equal to src/components/ui.",
   "fileKey": "Dcf8lEB7Ash71iNl7WN4Jq",
   "variables": {
     "VariableID:4:2": "corner-radius/xs",
@@ -149,6 +149,141 @@
       "name": "ToneBadge",
       "nodeId": "577:75",
       "codeFile": "registry/lib/tone-badge.tsx"
+    },
+    {
+      "name": "Card",
+      "nodeId": "93:14",
+      "codeFile": "src/components/ui/card.tsx"
+    },
+    {
+      "name": "Alert",
+      "nodeId": "94:17",
+      "codeFile": "src/components/ui/alert.tsx"
+    },
+    {
+      "name": "Tabs",
+      "nodeId": "355:19",
+      "codeFile": "src/components/ui/tabs.tsx"
+    },
+    {
+      "name": "Tooltip",
+      "nodeId": "96:6",
+      "codeFile": "src/components/ui/tooltip.tsx"
+    },
+    {
+      "name": "Select",
+      "nodeId": "96:12",
+      "codeFile": "src/components/ui/select.tsx"
+    },
+    {
+      "name": "Breadcrumb",
+      "nodeId": "97:10",
+      "codeFile": "src/components/ui/breadcrumb.tsx"
+    },
+    {
+      "name": "Pagination",
+      "nodeId": "97:25",
+      "codeFile": "src/components/ui/pagination.tsx"
+    },
+    {
+      "name": "Accordion",
+      "nodeId": "99:19",
+      "codeFile": "src/components/ui/accordion.tsx"
+    },
+    {
+      "name": "Field",
+      "nodeId": "259:113",
+      "codeFile": "src/components/ui/field.tsx"
+    },
+    {
+      "name": "ButtonGroup",
+      "nodeId": "260:113",
+      "codeFile": "src/components/ui/button-group.tsx"
+    },
+    {
+      "name": "InputGroup",
+      "nodeId": "261:113",
+      "codeFile": "src/components/ui/input-group.tsx"
+    },
+    {
+      "name": "Dialog",
+      "nodeId": "263:112",
+      "codeFile": "src/components/ui/dialog.tsx"
+    },
+    {
+      "name": "AlertDialog",
+      "nodeId": "263:123",
+      "codeFile": "src/components/ui/alert-dialog.tsx"
+    },
+    {
+      "name": "Sheet",
+      "nodeId": "263:146",
+      "codeFile": "src/components/ui/sheet.tsx"
+    },
+    {
+      "name": "Drawer",
+      "nodeId": "263:159",
+      "codeFile": "src/components/ui/drawer.tsx"
+    },
+    {
+      "name": "Popover",
+      "nodeId": "263:170",
+      "codeFile": "src/components/ui/popover.tsx"
+    },
+    {
+      "name": "HoverCard",
+      "nodeId": "263:179",
+      "codeFile": "src/components/ui/hover-card.tsx"
+    },
+    {
+      "name": "DropdownMenu",
+      "nodeId": "264:32",
+      "codeFile": "src/components/ui/dropdown-menu.tsx"
+    },
+    {
+      "name": "ContextMenu",
+      "nodeId": "264:161",
+      "codeFile": "src/components/ui/context-menu.tsx"
+    },
+    {
+      "name": "Menubar",
+      "nodeId": "264:174",
+      "codeFile": "src/components/ui/menubar.tsx"
+    },
+    {
+      "name": "Command",
+      "nodeId": "266:35",
+      "codeFile": "src/components/ui/command.tsx"
+    },
+    {
+      "name": "Combobox",
+      "nodeId": "267:20",
+      "codeFile": "src/components/ui/combobox.tsx"
+    },
+    {
+      "name": "ToggleGroup",
+      "nodeId": "267:153",
+      "codeFile": "src/components/ui/toggle-group.tsx"
+    },
+    {
+      "name": "Slider",
+      "nodeId": "267:159",
+      "codeFile": "src/components/ui/slider.tsx"
+    },
+    {
+      "name": "InputOTP",
+      "nodeId": "267:175",
+      "codeFile": "src/components/ui/input-otp.tsx"
+    },
+    {
+      "name": "Table",
+      "nodeId": "268:35",
+      "codeFile": "src/components/ui/table.tsx"
+    },
+    {
+      "name": "Toast",
+      "nodeId": "268:183",
+      "codeFile": "src/components/ui/sonner.tsx"
     }
   ],
   "components": [
@@ -1028,5 +1163,77 @@
   "foundations": {
     "tokensHash": "65be6eb898a030d9",
     "syncedAt": "2026-09-18"
-  }
+  },
+  "declined": [
+    {
+      "name": "aspect-ratio",
+      "codeFile": "src/components/ui/aspect-ratio.tsx",
+      "reason": "trivial CSS wrapper — sets an aspect-ratio custom property on a div; no fill, border or token of its own to draw"
+    },
+    {
+      "name": "calendar",
+      "codeFile": "src/components/ui/calendar.tsx",
+      "reason": "drawn inside the ❖ Calendar page and ❖ Calendar range pattern pages; no standalone twin"
+    },
+    {
+      "name": "carousel",
+      "codeFile": "src/components/ui/carousel.tsx",
+      "reason": "interaction-heavy slideshow; no static twin planned (2026-07-20 decision)"
+    },
+    {
+      "name": "chart",
+      "codeFile": "src/components/ui/chart.tsx",
+      "reason": "charts live in the ❖ Analytics charts pattern with the series tokens bound there"
+    },
+    {
+      "name": "collapsible",
+      "codeFile": "src/components/ui/collapsible.tsx",
+      "reason": "interaction-only wrapper; nothing static to draw"
+    },
+    {
+      "name": "empty",
+      "codeFile": "src/components/ui/empty.tsx",
+      "reason": "trivial wrapper; the ❖ Empty state pattern carries the visual"
+    },
+    {
+      "name": "item",
+      "codeFile": "src/components/ui/item.tsx",
+      "reason": "trivial wrapper (2026-07-20 decision)"
+    },
+    {
+      "name": "native-select",
+      "codeFile": "src/components/ui/native-select.tsx",
+      "reason": "visually identical to ❖ Select"
+    },
+    {
+      "name": "navigation-menu",
+      "codeFile": "src/components/ui/navigation-menu.tsx",
+      "reason": "complex marketing nav, low app value (2026-07-20 decision)"
+    },
+    {
+      "name": "resizable",
+      "codeFile": "src/components/ui/resizable.tsx",
+      "reason": "interaction-only; nothing static to draw"
+    },
+    {
+      "name": "scroll-area",
+      "codeFile": "src/components/ui/scroll-area.tsx",
+      "reason": "interaction-only; nothing static to draw"
+    },
+    {
+      "name": "sidebar",
+      "codeFile": "src/components/ui/sidebar.tsx",
+      "reason": "exists as the ❖ Sidebar navigation pattern"
+    },
+    {
+      "name": "tone-badge",
+      "codeFile": "src/components/ui/tone-badge.tsx",
+      "reason": "site shim that re-exports registry/lib/tone-badge.tsx; the twin (❖ Tone badge, set 577:75) is tracked through the ToneBadge candidate"
+    },
+    {
+      "name": "icon",
+      "codeFile": "src/components/ui/icon.tsx",
+      "reason": "the 91 icon/* components on the Icons page are the twin, synced from icons.core.mjs; the <Icon> wrapper has no component of its own"
+    }
+  ]
 }
