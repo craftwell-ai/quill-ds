@@ -12,6 +12,17 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.43] — 2026-09-18
+
+### Added
+- **Ten pattern pages in Figma (session A: marketing and shells).** ❖ Hero,
+  ❖ Navbar, ❖ Footer, ❖ Feature section, ❖ Testimonial, ❖ Pricing, ❖ Page
+  header, ❖ Error 404, ❖ Empty state and ❖ Cookie consent, each composed from
+  the component twins (Button, Badge, Separator, Breadcrumb instances) with
+  container tokens bound. They are now `mirrored` in `figma/sync-state.json`,
+  so the daily parity run checks they stay in place. Coverage: 33 of 51 blocks
+  mirrored, 14 not built yet, 4 declined.
+
 ## [0.9.42] — 2026-09-18
 
 ### Added

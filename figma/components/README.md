@@ -156,7 +156,28 @@ that's an auto-layout child (use the up/down glyph instead).
 | 4 | ❖ Login — minimal | 215:187 | arrow glyph in composed primary button |
 | 5 | ❖ Theme selector | 231:2 | dropdown trigger + open menu (Theme + Accent sections, menu node 233:2); four theme chips pinned via `setExplicitVariableModeForCollection` |
 
-### Accent (2026-07-11; re-pinned to moss 2026-07-20)
+### Pattern pages built — session A, marketing and shells (2026-09-18)
+
+Built from the block sources with the same recipe (real Button / Badge /
+Separator / Breadcrumb instances, container tokens bound, wrapper fills
+cleared). Text with no matching text style (sans headings, prices) is Raleway
+with `fontSize` bound to the `type/*` token. Icons inside Button instances
+are omitted on purpose: the Button twin has no icon slot, and a label-only
+instance keeps its link to the twin, which a hand-composed button would lose.
+
+| Block | Page | Page id | Frame id | Notes |
+|---|---|---|---|---|
+| hero | ❖ Hero | 568:2 | 568:3 | Badge secondary + Display/M + two lg Buttons |
+| navbar | ❖ Navbar | 571:2 | 571:3 | bottom stroke only (per-side weight → border-width/1) |
+| footer | ❖ Footer | 571:19 | 571:20 | Separator instance FILL; wordmark Fraunces + type/xl |
+| feature-section | ❖ Feature section | 572:2 | 572:3 | Eyebrow → shadcn/primary; icon tiles palette / dashboard / check_circle |
+| testimonial | ❖ Testimonial | 572:27 | 572:28 | Heading/M pull-quote, initials disc |
+| pricing | ❖ Pricing | 574:2 | 574:3 | Pro card stroke → shadcn/ring @ border-width/2; check icons → primary |
+| page-header | ❖ Page header | 574:85 | 574:86 | Breadcrumb instance with crumb text overrides |
+| error-404 | ❖ Error 404 | 574:104 | 574:105 | 880×500 fixed; Display/L "404" in muted-foreground |
+| empty-state | ❖ Empty state | 574:115 | 574:116 | dashed stroke (`dashPattern [4,4]`), round icon tile |
+| cookie-consent | ❖ Cookie consent | 574:125 | 574:126 | Elevation/base; three sm Buttons, wrap enabled |
+
 
 Code adds `data-accent="terracotta|moss|indigo|gold"` (eyebrows, accent italics,
 links, focus rings). Figma can't model a second runtime dimension — the Primitives
