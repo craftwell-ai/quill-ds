@@ -12,6 +12,16 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.48] — 2026-09-18
+
+### Added
+- **Component coverage guard** (CRA-221). `figma/sync-state.json` now declares a
+  status for every file in `src/components/ui`: 15 under the daily check, 29
+  candidates (every Wave B / Wave C twin joins ToneBadge and Switch), 13
+  declined with reasons (the twelve July deferrals plus the Icon wrapper and
+  the ToneBadge site shim). `scripts/figma-component-coverage.test.mjs` fails
+  when a primitive has none of the three.
+
 ## [0.9.47] — 2026-09-18
 
 ### Added

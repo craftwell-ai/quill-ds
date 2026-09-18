@@ -137,8 +137,11 @@ expected, not a bug.
 
 The parity baseline started with one entry — the fixture — so its daily green
 proved the pipeline, not the library. `figma/sync-state.json` now also lists
-`candidates`: Figma twins built earlier (Wave A's 15 atoms, from
-`components/README.md`) that are not yet under the check. Run the **Figma
+`candidates`: Figma twins built earlier that are not yet under the check — since
+2026-09-18 every Wave B / Wave C twin plus ToneBadge and Switch (29). `declined`
+lists the 13 primitives that get no twin, each with its reason, and
+`scripts/figma-component-coverage.test.mjs` fails when a file in
+`src/components/ui` has no status at all. Run the **Figma
 parity** workflow by hand with the `adopt` input on, and it:
 
 1. reads each candidate over the REST API (a variant set is tracked through its
