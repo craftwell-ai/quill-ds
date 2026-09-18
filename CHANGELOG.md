@@ -12,6 +12,27 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.46] — 2026-09-18
+
+### Added
+- **Figma re-stamp guard** (CRA-219). Each mirrored pattern page now records the
+  hash of its block source at the last sync (`codeHash` + `syncedAt`) or a
+  `stale` reason; the token source records its hash at the last foundations
+  sync. `scripts/figma-restamp.test.mjs` fails when a block or the token source
+  changes without Figma being re-synced, naming `node scripts/figma-stamp.mjs`.
+  25 pages are stamped (the 24 built 2026-09-18 plus Invoice, repaired the same
+  day); 22 July pages are declared stale pending CRA-223.
+
+### Fixed
+- **Foundations sync writes all four modes** (CRA-220). `sync-foundations.figma.js`
+  hard-coded Light and Dark, so Classic Light / Classic Dark values never
+  reached Figma after their first build. Re-run 2026-09-18 against the current
+  export; the token source is stamped.
+- **Figma-side repairs recorded** (CRA-218): ToneBadge tint opacity (the
+  bound-paint opacity rule, now in the build log), Kanban column fills, four
+  stale pigment values, and the ❖ Invoice page brought to parity with its
+  Storybook render.
+
 ## [0.9.45] — 2026-09-18
 
 ### Added

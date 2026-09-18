@@ -89,6 +89,16 @@ and fails when a page is gone, renamed, or has lost its frame. Token bindings
 inside pattern frames are not diffed — they are instances of the atoms above,
 which are.
 
+**Re-stamp guard (Tier 1, since v0.9.46).** Pushing to Figma can never be a bot
+(no headless node-write API on any plan), so the only way drift stays at zero is
+to make the Figma update part of the PR. Each mirrored pattern records
+`codeHash` + `syncedAt` (the block source, comments and whitespace ignored, at
+its last sync) or `stale: <reason>`; `foundations.tokensHash` records the token
+source at the last foundations sync. `scripts/figma-restamp.test.mjs` fails when
+either moves without a re-sync and names the command
+(`node scripts/figma-stamp.mjs --block <name>` / `--tokens`). The stale list may
+only shrink (CRA-223 rebuilds the July pages). Ledger: CRA-217.
+
 The **variable/style-level** check below still needs interactive Figma MCP auth
 (variable definitions are Enterprise-gated over REST), so it stays on-demand —
 run it in an interactive session (e.g. ask Claude to "run the Figma parity

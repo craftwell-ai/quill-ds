@@ -12,7 +12,10 @@
    - `const DTCG = <contents of tokens/quill.figma.json>;` prepended, followed by the contents of
      `figma/sync-foundations.figma.js`, then `await syncFoundations(DTCG)`.
 3. The sync **upserts by name**: existing variables/styles update in place; nothing duplicates.
-   Running it a second time creates zero new objects.
+   Running it a second time creates zero new objects. Since 2026-09-18 it writes all four modes
+   the file has (Light, Dark, Classic Light, Classic Dark); Intelligent is skipped by decision.
+4. Stamp the token source: `node scripts/figma-stamp.mjs --tokens`. `scripts/figma-restamp.test.mjs`
+   fails whenever `src/tokens/quill.tokens.mjs` changes without this re-sync.
 
 ## Re-run the icon sync
 
@@ -110,6 +113,8 @@ originate on either side, but when they disagree, code wins. Proven end-to-end
    never hand-rolled markup.
 4. Verify in Storybook (HMR) against a Figma screenshot of the node.
 5. Ship through the normal branch → PR → CI → merge flow.
+6. For a pattern page, re-stamp its entry: `node scripts/figma-stamp.mjs --block <name>`. The
+   re-stamp guard fails when a block's source changes without its page being synced.
 
 Out of scope by design (code-side judgment fills these in): behavior, responsive
 rules, accessibility semantics, edge cases. Figma under-describes them; that's
