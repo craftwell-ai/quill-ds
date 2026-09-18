@@ -12,7 +12,7 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
-## [0.9.49] — 2026-09-18
+## [0.9.50] — 2026-09-18
 
 ### Added
 - **Pattern content parity** (CRA-223). `figma/pattern-baseline.json` records
@@ -29,6 +29,11 @@ footer reads `package.json` directly, so the displayed version updates with the 
   composed vectors replaced), the Feature section eyebrow reads "Why Quill"
   with the style doing the uppercasing, and `error-404` names `arrow_back`
   instead of rotating `arrow_forward` (page re-stamped).
+
+## [0.9.49] — 2026-09-18
+
+### Changed
+- chore(figma-sync): adopt Figma twins into the parity baseline (#193)
 
 ## [0.9.48] — 2026-09-18
 
