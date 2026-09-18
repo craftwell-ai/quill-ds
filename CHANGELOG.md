@@ -12,6 +12,15 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.55] — 2026-09-18
+
+### Fixed
+- **Adopt matcher anchors on a real class string** (CRA-221). When the only class a
+  twin derives sits in a one-class cva variant value (Tabs: `default: "bg-muted"`),
+  the entry now anchors on the file's first class string instead of giving up; a
+  directive such as `'use client'` is never taken for one, so a later repair can
+  never rewrite it. Tabs adopts on the next run — 29 of 29.
+
 ## [0.9.54] — 2026-09-18
 
 ### Changed
