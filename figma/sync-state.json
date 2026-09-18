@@ -144,6 +144,11 @@
       "name": "Switch",
       "nodeId": "79:9",
       "codeFile": "src/components/ui/switch.tsx"
+    },
+    {
+      "name": "ToneBadge",
+      "nodeId": "577:75",
+      "codeFile": "registry/lib/tone-badge.tsx"
     }
   ],
   "components": [
@@ -643,8 +648,10 @@
     },
     {
       "block": "chat",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Chat",
+      "pageId": "581:159",
+      "frameId": "581:160"
     },
     {
       "block": "checkout",
@@ -674,13 +681,17 @@
     },
     {
       "block": "dashboard",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Dashboard",
+      "pageId": "578:2",
+      "frameId": "578:3"
     },
     {
       "block": "data-table",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Data table",
+      "pageId": "579:2",
+      "frameId": "579:3"
     },
     {
       "block": "empty-state",
@@ -747,13 +758,17 @@
     },
     {
       "block": "kanban",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Kanban",
+      "pageId": "581:85",
+      "frameId": "581:86"
     },
     {
       "block": "list-detail",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ List detail",
+      "pageId": "580:2",
+      "frameId": "580:3"
     },
     {
       "block": "login",
@@ -804,8 +819,10 @@
     },
     {
       "block": "notifications",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Notifications",
+      "pageId": "581:2",
+      "frameId": "581:3"
     },
     {
       "block": "onboarding",
@@ -840,18 +857,24 @@
     },
     {
       "block": "profile-card",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Profile card",
+      "pageId": "580:104",
+      "frameId": "580:105"
     },
     {
       "block": "search-results",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Search results",
+      "pageId": "581:40",
+      "frameId": "581:41"
     },
     {
       "block": "settings",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Settings",
+      "pageId": "580:45",
+      "frameId": "580:46"
     },
     {
       "block": "sidebar-nav",
@@ -888,8 +911,10 @@
     },
     {
       "block": "tabs-page",
-      "status": "missing",
-      "reason": "not built yet"
+      "status": "mirrored",
+      "page": "❖ Tabs page",
+      "pageId": "580:80",
+      "frameId": "580:81"
     },
     {
       "block": "team-section",

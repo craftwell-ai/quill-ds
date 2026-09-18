@@ -12,6 +12,22 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.44] — 2026-09-18
+
+### Added
+- **Ten more pattern pages in Figma (session B: app pages)** — ❖ Dashboard,
+  ❖ Data table, ❖ List detail, ❖ Settings, ❖ Tabs page, ❖ Profile card,
+  ❖ Notifications, ❖ Search results, ❖ Kanban, ❖ Chat — composed from the
+  component twins and now `mirrored` in `figma/sync-state.json`. Coverage:
+  43 of 51 blocks mirrored, 4 not built yet, 4 declined.
+- **ToneBadge Figma twin** (`❖ Tone badge`, set 577:75): Tone × Size × Solid =
+  24 fully token-bound variants matching `registry/lib/tone-badge.tsx`. Data
+  table uses it, and the ❖ Invoice "Paid" chip (a plain Badge since July)
+  was swapped in place. Listed as a parity-baseline candidate.
+
+### Fixed
+- The Figma build log's "Accent" heading, dropped by the 0.9.43 edit, is back.
+
 ## [0.9.43] — 2026-09-18
 
 ### Added
