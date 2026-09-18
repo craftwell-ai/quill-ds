@@ -23,9 +23,11 @@
 2. Load the `figma-use` skill, then call the Figma MCP `use_figma` on file `Dcf8lEB7Ash71iNl7WN4Jq` with:
    - `const ICONS = <the `icons` export of src/components/ui/icons.core.mjs>;` prepended, followed by the
      contents of `figma/sync-icons.figma.js`, then `await syncIcons(ICONS)`.
-3. The sync clears the previous gallery and `icon/*` components and rebuilds them, so a re-run creates
-   no duplicates. Every icon's fill is bound to the `text/strong` variable; nothing is hardcoded.
-   Last run: 2026-07-02 (33cd83b).
+3. The sync **upserts**: an existing `icon/*` component keeps its node id and gets fresh geometry (so
+   the instances inside Toast, Command, Dropdown Menu, Toggle Group… stay live); new names are created;
+   names no longer in code are reported, never removed. Every icon is one vector named `Vector`, fill
+   bound to `text/strong`, constraints SCALE so it resizes cleanly inside a slot.
+   Last run: 2026-09-18 — 91 icons (40 refreshed in place, 51 created).
 
 ## What this manages
 

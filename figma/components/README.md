@@ -323,6 +323,25 @@ truth — always verify against the file directly (`figma.variables`,
 `variantGroupProperties`, live Storybook screenshots) before trusting what's
 written here or assuming "built" means "still current."
 
+## Button icon slot (2026-09-18)
+
+The Button set (`359:267`) carries four component properties: **Icon start** / **Icon end**
+(booleans, off by default) and **Icon start swap** / **Icon end swap** (instance swaps over the
+91 `icon/*` components; defaults `icon/add` and `icon/arrow_forward`). The 24 text-size
+variants hold a hidden 16 / 14 / 12 px icon instance at each end (default & lg 16, sm 14, xs 12,
+the code's `size-4 / 3.5 / 3`); the 24 icon-only variants hold one always-visible instance
+bound to **Icon start swap**. Each icon's vector fill is overridden per variant to the variant's
+text colour, so a swapped icon follows the button. Two gotchas: (1) **setting a swap to the icon
+that is already the default resets the override** to `text/strong` — when the default icon is
+the one you want, set only the boolean; (2) the code shrinks padding on the icon side
+(`has-data-[icon=inline-end]:pr-2`), which Figma cannot express conditionally, so slot
+buttons sit 2 px wider than the render. Every icon button across the 47 mirrored pages is now
+an instance with the slot on (35 code-side occurrences → 43 visible icon instances once rows and
+cards repeat); the composed icon-only buttons on the 2026-09-18 pages and the composed July
+buttons (Mail inbox toolbar + Send, Login — minimal Continue, Theme selector trigger,
+Announcement dismiss glyphs) were replaced in place, and the buttons the July pages never had
+(File upload row dismiss, Team section mail, Login — split panel magic link + rule) were added.
+
 ## Sync fixture (2026-08-12)
 
 `❖ Test` (component node `371:7`) is the **bi-directional sync fixture** — its code twin

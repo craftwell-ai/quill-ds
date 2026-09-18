@@ -12,6 +12,24 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.47] — 2026-09-18
+
+### Added
+- **Button icon slot in Figma** (CRA-222). The Button twin gains Icon start /
+  Icon end booleans and instance-swap properties over the full icon set, with
+  the icon colour following each variant; the 24 icon-only variants swap their
+  glyph the same way. Every icon button across the 47 mirrored pattern pages is
+  now a real instance with its icon on — including the Invoice "Download PDF"
+  button that started this — and the buttons the July pages never had were
+  added. The daily check's Button baseline carries the new start / text / end
+  structure.
+
+### Changed
+- **Icon sync is an upsert** (`figma/sync-icons.figma.js`): existing `icon/*`
+  components keep their ids (17 had live instances in the Wave B/C twins), new
+  ones are created, orphans reported. Re-run 2026-09-18: 91 icons, 40 refreshed
+  in place, 51 created.
+
 ## [0.9.46] — 2026-09-18
 
 ### Added

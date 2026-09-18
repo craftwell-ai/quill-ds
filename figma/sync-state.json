@@ -289,7 +289,9 @@
           "Button": "Button"
         },
         "childSignature": [
-          "Button:TEXT"
+          "Icon start:INSTANCE",
+          "Button:TEXT",
+          "Icon end:INSTANCE"
         ]
       },
       "code": {

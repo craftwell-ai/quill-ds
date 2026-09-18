@@ -34,7 +34,8 @@ export function stamp({ blocks = [], tokens = false, allBlocks = false } = {}) {
   state.patterns = state.patterns.map((p) => {
     if (!wanted.has(p.block)) return p
     if (p.status !== 'mirrored') throw new Error(`${p.block} is ${p.status}, not mirrored — nothing to stamp`)
-    const { stale, ...rest } = p
+    const rest = { ...p }
+    delete rest.stale
     stamped.push(p.block)
     return { ...rest, codeHash: blockHash(readFileSync(join(root, 'registry/blocks', `${p.block}.tsx`), 'utf8')), syncedAt: today() }
   })
