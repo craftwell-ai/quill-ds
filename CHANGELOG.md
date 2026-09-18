@@ -12,7 +12,7 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
-## [0.9.52] — 2026-09-18
+## [0.9.53] — 2026-09-18
 
 ### Changed
 - **Every mirrored pattern page is now stamped** (CRA-223). The 22 pages built
@@ -36,6 +36,12 @@ footer reads `package.json` directly, so the displayed version updates with the 
   (Progress rendered an "x"), reads `placeholder`/`value` only from fields, not
   from radios or buttons, and lets a chart block (recharts) show more strings
   than the server render, never fewer.
+
+## [0.9.52] — 2026-09-18
+
+### Changed
+- chore(figma-sync): adopt Figma twins into the parity baseline
+
 
 ## [0.9.51] — 2026-09-18
 
