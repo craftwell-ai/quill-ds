@@ -11,6 +11,8 @@ import { readdirSync, readFileSync, mkdirSync, writeFileSync, unlinkSync } from 
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 
+import { sourcePath } from './figma-stamp.mjs'
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const decode = (s) => s.replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ')
@@ -18,6 +20,11 @@ const clean = (s) => decode(s).replace(/\s+/g, ' ').trim()
 
 export function blockNames() {
   return readdirSync(join(root, 'registry/blocks')).filter((f) => f.endsWith('.tsx')).map((f) => f.replace(/\.tsx$/, ''))
+}
+
+// The page compositions in registry/examples (example-*), mirrored as ❖ template pages.
+export function templateNames() {
+  return readdirSync(join(root, 'registry/examples')).filter((f) => f.endsWith('.tsx')).map((f) => f.replace(/\.tsx$/, ''))
 }
 
 export async function renderBlocks(blocks = blockNames()) {
@@ -28,7 +35,7 @@ export async function renderBlocks(blocks = blockNames()) {
   writeFileSync(entry, [
     "import { renderToStaticMarkup } from 'react-dom/server'",
     "import { createElement } from 'react'",
-    ...blocks.map((b, i) => `import * as m${i} from ${JSON.stringify(join(root, 'registry/blocks', b + '.tsx'))}`),
+    ...blocks.map((b, i) => `import * as m${i} from ${JSON.stringify(sourcePath(b))}`),
     'export const html = {}',
     ...blocks.map((b, i) => `try { const C = Object.values(m${i}).find((v) => typeof v === 'function'); html[${JSON.stringify(b)}] = renderToStaticMarkup(createElement(C)) } catch (e) { html[${JSON.stringify(b)}] = { error: String(e && e.message || e) } }`),
   ].join('\n'))
@@ -65,7 +72,8 @@ export async function expectations(blocks = blockNames()) {
   const html = await renderBlocks(blocks)
   const out = {}
   for (const b of blocks) {
-    const source = readFileSync(join(root, 'registry/blocks', b + '.tsx'), 'utf8')
+    // A template names no icons itself; the ones its blocks name are already checked on the block pages.
+    const source = readFileSync(sourcePath(b), 'utf8')
     out[b] = typeof html[b] === 'string' ? { texts: textsOf(html[b]), icons: iconsOf(source) } : { error: html[b]?.error ?? 'no render' }
   }
   return out

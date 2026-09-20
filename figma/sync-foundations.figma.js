@@ -275,6 +275,68 @@ async function syncEffectStyles(DTCG) {
   return { created, updated, total: Object.keys(DTCG.Primitives.elevation).length }
 }
 
+// ---- tints: the Tailwind opacity modifiers code uses on tokens (`bg-destructive/10`,
+// `ring-foreground/10`, `bg-muted/50`, the ToneBadge pigment tints…) as alpha-carrying
+// variables. A paint-level opacity on a bound colour is dropped when the component is
+// instanced inside another component (proven 2026-09-19: the app-page template drew every
+// tinted badge and card ring solid), while a variable whose value carries the alpha survives —
+// so every tinted paint binds one of these. Values are derived per mode from the base variable
+// (resolved through its aliases), never typed by hand; the list below is the single source.
+const TINTS = [
+  ['tint/destructive/10', 'shadcn/destructive', 0.10, '--destructive'],
+  ['tint/moss/20', 'color/pigment/moss/base', 0.20, '--moss'],
+  ['tint/gold/25', 'color/pigment/gold/base', 0.25, '--gold'],
+  ['tint/terracotta/16', 'color/pigment/terracotta/base', 0.16, '--terracotta'],
+  ['tint/indigo/20', 'color/pigment/indigo/base', 0.20, '--indigo'],
+  ['tint/foreground/10', 'shadcn/foreground', 0.10, '--foreground'],
+  ['tint/input/30', 'shadcn/input', 0.30, '--input'],
+  ['tint/chart-1/20', 'shadcn/chart-1', 0.20, '--chart-1'],
+  ['tint/chart-2/20', 'shadcn/chart-2', 0.20, '--chart-2'],
+  ['tint/muted/50', 'shadcn/muted', 0.50, '--muted'],
+  ['tint/primary/10', 'shadcn/primary', 0.10, '--primary'],
+  ['tint/sidebar-border/8', 'shadcn/sidebar-border', 0.08, '--sidebar-border'],
+  ['tint/sidebar-foreground/70', 'shadcn/sidebar-foreground', 0.70, '--sidebar-foreground'],
+]
+
+async function syncTints() {
+  const prim = await upsertCollection('Quill Primitives')
+  const all = await figma.variables.getLocalVariablesAsync()
+  const byName = (n) => all.find((v) => v.name === n)
+  const colOf = (v) => figma.variables.getVariableCollectionByIdAsync(v.variableCollectionId)
+  // Resolve a base variable for one Primitives mode: a Semantic alias is read in its own
+  // (single) mode and followed into Primitives, where the requested mode applies.
+  async function resolveForMode(v, modeId) {
+    let c = await colOf(v)
+    let m = c.id === prim.id ? modeId : c.defaultModeId
+    let val = v.valuesByMode[m]
+    let guard = 0
+    while (val && typeof val === 'object' && val.type === 'VARIABLE_ALIAS' && guard++ < 10) {
+      const t = await figma.variables.getVariableByIdAsync(val.id)
+      const tc = await colOf(t)
+      m = tc.id === prim.id ? modeId : tc.defaultModeId
+      val = t.valuesByMode[m]
+    }
+    if (!val || val.r == null) throw new Error(`tint base ${v.name} did not resolve for mode ${modeId}`)
+    return val
+  }
+  let created = 0
+  let updated = 0
+  for (const [name, baseName, alpha, cssVar] of TINTS) {
+    const base = byName(baseName)
+    if (!base) throw new Error(`tint base ${baseName} missing — run the colour sync first`)
+    let v = byName(name)
+    if (!v) { v = figma.variables.createVariable(name, prim, 'COLOR'); created++ } else updated++
+    for (const mode of prim.modes) {
+      const c = await resolveForMode(base, mode.modeId)
+      v.setValueForMode(mode.modeId, { r: c.r, g: c.g, b: c.b, a: alpha })
+    }
+    v.scopes = name.includes('sidebar-foreground') ? ['TEXT_FILL', 'SHAPE_FILL', 'FRAME_FILL'] : ['FRAME_FILL', 'SHAPE_FILL', 'STROKE_COLOR']
+    v.setVariableCodeSyntax('WEB', `color-mix(in oklab, var(${cssVar}) ${Math.round(alpha * 100)}%, transparent)`)
+    v.description = `${baseName} at ${Math.round(alpha * 100)} % — the Tailwind opacity modifier (${cssVar.replace('--', '')}/${Math.round(alpha * 100)}) as a variable, so the tint survives nested instances.`
+  }
+  return { created, updated, total: TINTS.length }
+}
+
 async function syncFoundations(DTCG) {
   const results = {}
   results.colors = await syncPrimitiveColors(DTCG)
@@ -283,5 +345,6 @@ async function syncFoundations(DTCG) {
   results.shadowColors = await syncShadowColorVars(DTCG)
   results.text = await syncTextStyles()
   results.effects = await syncEffectStyles(DTCG)
+  results.tints = await syncTints()
   return results
 }

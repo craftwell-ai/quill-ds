@@ -566,10 +566,12 @@ export async function main({ repair = false, adopt = false, snapshotPatterns = f
       report(`○ ${candidate.name}: not adopted — ${why}`)
     }
   }
-  const mirrored = (state.patterns ?? []).filter((p) => p.status === 'mirrored')
+  // Template pages (registry/examples, `templates` in sync-state) are checked exactly like pattern pages.
+  const pages_ = [...(state.patterns ?? []), ...(state.templates ?? [])]
+  const mirrored = pages_.filter((p) => p.status === 'mirrored')
   if (mirrored.length) {
     const pages = await fetchNodes(state.fileKey, mirrored.map((p) => p.pageId), token, { depth: 1 })
-    const { inSync, problems, skipped } = checkPatterns(state.patterns, pages.nodes)
+    const { inSync, problems, skipped } = checkPatterns(pages_, pages.nodes)
     for (const problem of problems) report(`✖ ${problem}`)
     if (problems.length) unrepaired = true
     report(`${problems.length ? '✖' : '✔'} patterns: ${inSync.length} of ${mirrored.length} mirrored pages in place · ${skipped.missing} not built yet · ${skipped.declined} declined (figma/sync-state.json → patterns)`)

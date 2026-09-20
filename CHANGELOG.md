@@ -12,6 +12,41 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.57] — 2026-09-19
+
+### Changed
+- **Figma: every pattern page and template is a master component.** The 47 mirrored
+  pattern frames were converted in place to main components (same pages, new node ids,
+  code-twin descriptions), and the three page examples in `registry/examples` now exist
+  as `❖ Example: app page / auth page / marketing page` template components composed
+  from the block components as instances. `figma/sync-state.json` gained a `templates`
+  map and the pattern guards (coverage, content parity, re-stamp, the daily presence
+  check) cover templates exactly like blocks (`scripts/figma-stamp.mjs sourcePath`).
+- **Figma: tint variables.** The opacity modifiers code puts on tokens
+  (`bg-destructive/10`, `ring-foreground/10`, `bg-muted/50`, the ToneBadge pigment
+  tints, …) are now 13 alpha-carrying `tint/*` variables in the Primitives collection,
+  derived per mode by `syncTints()` in `figma/sync-foundations.figma.js`; 97 tinted
+  paints bind them. A paint-level opacity on a bound colour is dropped when a component
+  is instanced inside another component — the template pages drew every tinted badge
+  and card ring solid until this change.
+
+### Fixed
+- **Figma ↔ Storybook visual parity sweep** (44 twins, 47 pattern pages, 3 templates,
+  compared by screenshot against the Storybook render, then re-verified by an
+  independent QA pass with pixel samples). Drift found and fixed in Figma: destructive
+  Badge drawn solid (label invisible) and its stat-cards instance; unchecked Checkbox and
+  Radio had no border; checked Radio drawn inverted; checked Checkbox glyph thin and
+  grey; destructive Alert had a destructive border; InputGroup send arrow drawn
+  ink-on-ink; Breadcrumb, Pagination, search-result titles and the sidebar-nav crumb
+  drawn muted although they are links; Pagination active cell filled instead of
+  outlined and missing its Previous/Next labels; Dialog and both Sheet variants had no
+  close button; Command search row drawn as a plain row instead of the input-group
+  field; Badge link variant underlined at rest; Sheet footer order reversed; Popover,
+  Dropdown menu, Context menu and Combobox rings at full strength; every ❖ component
+  page on a grey canvas instead of paper.
+- `notifications` block: `flex-row` on the grid `CardHeader` was inert, so "Mark all
+  read" wrapped under the title — now `flex flex-row`; page re-stamped.
+
 ## [0.9.56] — 2026-09-18
 
 ### Changed

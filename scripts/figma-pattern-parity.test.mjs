@@ -6,6 +6,7 @@ import { dirname, join } from 'node:path'
 
 import { loadState, snapshotPattern, diffPattern } from './figma-drift.mjs'
 import { expectations, textsOf } from './figma-pattern-expect.mjs'
+import { sourcePath } from './figma-stamp.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -20,12 +21,12 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const baseline = JSON.parse(readFileSync(join(root, 'figma/pattern-baseline.json'), 'utf8')).frames
 const state = loadState()
-const stamped = state.patterns.filter((p) => p.status === 'mirrored' && p.codeHash)
+const stamped = [...state.patterns, ...(state.templates ?? [])].filter((p) => p.status === 'mirrored' && p.codeHash)
 const expected = await expectations(stamped.map((p) => p.block))
 
 // A chart draws its ticks and legend in the browser; the server render has none, so the
 // page may show more strings than the render — never fewer.
-const clientDrawn = (block) => /from ['"]recharts['"]/.test(readFileSync(join(root, 'registry/blocks', `${block}.tsx`), 'utf8'))
+const clientDrawn = (block) => /from ['"]recharts['"]/.test(readFileSync(sourcePath(block), 'utf8'))
 
 const count = (arr) => arr.reduce((m, s) => m.set(s, (m.get(s) || 0) + 1), new Map())
 const minus = (a, b) => { const ca = count(a), cb = count(b); return [...ca].filter(([s, n]) => (cb.get(s) || 0) < n).map(([s, n]) => `${s}${n - (cb.get(s) || 0) > 1 ? ' ×' + (n - (cb.get(s) || 0)) : ''}`) }
