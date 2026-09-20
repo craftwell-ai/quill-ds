@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 import { loadState } from './figma-drift.mjs'
-import { blockHash, tokensHash, STAMP_COMMAND } from './figma-stamp.mjs'
+import { blockHash, tokensHash, sourcePath, STAMP_COMMAND } from './figma-stamp.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -20,7 +20,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 // the current recipe says so with `stale`, which is reported, never silent.
 
 const state = loadState()
-const mirrored = state.patterns.filter((p) => p.status === 'mirrored')
+const mirrored = [...state.patterns, ...(state.templates ?? [])].filter((p) => p.status === 'mirrored')
 
 test('every mirrored pattern is either stamped or declared stale, never both, never neither', () => {
   for (const p of mirrored) {
@@ -34,7 +34,7 @@ test('a stamped block has not changed since its Figma page was synced', () => {
   const failures = []
   for (const p of mirrored) {
     if (!p.codeHash) continue
-    const now = blockHash(readFileSync(join(root, 'registry/blocks', `${p.block}.tsx`), 'utf8'))
+    const now = blockHash(readFileSync(sourcePath(p.block), 'utf8'))
     if (now !== p.codeHash) failures.push(`${p.block} changed since ${p.page} was synced on ${p.syncedAt}`)
   }
   assert.deepEqual(failures, [], `Blocks moved without their Figma page:\n  ${failures.join('\n  ')}\nUpdate the page (/figma-push <block>), then re-stamp: ${STAMP_COMMAND} --block <name>`)

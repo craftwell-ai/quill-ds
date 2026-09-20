@@ -1,9 +1,9 @@
 {
-  "$comment": "Figma-side baseline of every mirrored pattern frame (texts in document order, icon components used, top-level component instances, variables bound outside instances). Written by the pattern baseline read on 2026-09-18 via the Plugin API; refreshed by scripts/figma-drift.mjs from the REST file API. Compared against the code-side expectation by scripts/figma-pattern-parity.test.mjs.",
-  "syncedAt": "2026-09-18",
+  "$comment": "Figma-side baseline of every mirrored pattern and template frame (texts in document order, icon components used, top-level component instances, variables bound outside instances). Written by the pattern baseline read on 2026-09-18 via the Plugin API; refreshed by scripts/figma-drift.mjs from the REST file API. Compared against the code-side expectation by scripts/figma-pattern-parity.test.mjs.",
+  "syncedAt": "2026-09-19",
   "frames": {
     "activity-feed": {
-      "frameId": "638:7",
+      "frameId": "696:2",
       "texts": [
         "Activity",
         "This week",
@@ -61,7 +61,7 @@
       ]
     },
     "analytics-charts": {
-      "frameId": "648:3",
+      "frameId": "696:3",
       "texts": [
         "Audience",
         "Last 6 months",
@@ -119,7 +119,7 @@
       ]
     },
     "announcement-banner": {
-      "frameId": "628:30",
+      "frameId": "696:4",
       "texts": [
         "New",
         "Issue 004 of The Brief just shipped — how we scope a design system engagement.",
@@ -162,7 +162,7 @@
       ]
     },
     "calendar-page": {
-      "frameId": "646:5",
+      "frameId": "696:5",
       "texts": [
         "Week ahead",
         "Pick a day to see its sessions.",
@@ -259,7 +259,7 @@
       ]
     },
     "calendar-range": {
-      "frameId": "647:9",
+      "frameId": "696:6",
       "texts": [
         "Book a session",
         "5 days selected",
@@ -401,7 +401,7 @@
       ]
     },
     "checkout": {
-      "frameId": "634:10",
+      "frameId": "696:8",
       "texts": [
         "Payment",
         "All transactions are encrypted end to end.",
@@ -472,7 +472,7 @@
       ]
     },
     "contact-form": {
-      "frameId": "630:15",
+      "frameId": "696:9",
       "texts": [
         "Get in touch",
         "We usually reply within one working day.",
@@ -528,7 +528,7 @@
       ]
     },
     "faq": {
-      "frameId": "641:21",
+      "frameId": "696:19",
       "texts": [
         "FAQ",
         "Common questions",
@@ -572,7 +572,7 @@
       ]
     },
     "file-upload": {
-      "frameId": "631:17",
+      "frameId": "696:21",
       "texts": [
         "Upload assets",
         "SVG, PNG, PDF or ZIP — up to 25 MB each.",
@@ -633,7 +633,7 @@
       ]
     },
     "forgot-password": {
-      "frameId": "630:66",
+      "frameId": "696:23",
       "texts": [
         "Reset your password",
         "Enter the email you signed up with and we’ll send you a reset link.",
@@ -673,7 +673,7 @@
       ]
     },
     "invoice": {
-      "frameId": "209:3",
+      "frameId": "696:26",
       "texts": [
         "Invoice 0042",
         "Issued June 30, 2026 · Due July 14, 2026",
@@ -731,7 +731,7 @@
       ]
     },
     "login": {
-      "frameId": "630:91",
+      "frameId": "696:29",
       "texts": [
         "Sign in",
         "Welcome back — enter your details to continue.",
@@ -777,7 +777,7 @@
       ]
     },
     "login-minimal": {
-      "frameId": "637:47",
+      "frameId": "696:35",
       "texts": [
         "Q",
         "Sign in to Quill",
@@ -813,7 +813,7 @@
       ]
     },
     "login-split-panel": {
-      "frameId": "637:73",
+      "frameId": "696:37",
       "texts": [
         "Quill",
         "“The most crafted-feeling system we’ve ever shipped on. It reads like a notebook, not a dashboard.”",
@@ -867,7 +867,7 @@
       ]
     },
     "mail-shell": {
-      "frameId": "639:20",
+      "frameId": "696:38",
       "texts": [
         "Inbox",
         "2 unread",
@@ -949,7 +949,7 @@
       ]
     },
     "newsletter": {
-      "frameId": "632:7",
+      "frameId": "696:40",
       "texts": [
         "The Brief",
         "One letter a month on design systems and the teams that ship them. No spam, no noise — unsubscribe any time.",
@@ -986,7 +986,7 @@
       ]
     },
     "otp-verification": {
-      "frameId": "637:8",
+      "frameId": "696:42",
       "texts": [
         "Check your email",
         "We sent a six-digit code to",
@@ -1028,7 +1028,7 @@
       ]
     },
     "sidebar-nav": {
-      "frameId": "645:3",
+      "frameId": "699:788",
       "texts": [
         "Q",
         "Quill",
@@ -1100,7 +1100,7 @@
       ]
     },
     "signup-social": {
-      "frameId": "633:16",
+      "frameId": "696:55",
       "texts": [
         "Create your account",
         "Start with a provider, or use your email.",
@@ -1150,7 +1150,7 @@
       ]
     },
     "stat-cards": {
-      "frameId": "632:26",
+      "frameId": "699:786",
       "texts": [
         "Total revenue",
         "$48,120",
@@ -1196,7 +1196,7 @@
       ]
     },
     "stats-band": {
-      "frameId": "642:77",
+      "frameId": "696:56",
       "texts": [
         "By the numbers",
         "A system that keeps its promises",
@@ -1231,7 +1231,7 @@
       ]
     },
     "team-section": {
-      "frameId": "642:19",
+      "frameId": "696:64",
       "texts": [
         "The team",
         "Curated collections, crafted by intelligence",
@@ -1298,7 +1298,7 @@
       ]
     },
     "theme-selector": {
-      "frameId": "648:77",
+      "frameId": "696:71",
       "texts": [
         "Dawn"
       ],
@@ -1322,7 +1322,7 @@
       ]
     },
     "hero": {
-      "frameId": "568:3",
+      "frameId": "696:25",
       "texts": [
         "New — v2.0 is here",
         "The calm design system for building things by hand",
@@ -1349,7 +1349,7 @@
       ]
     },
     "navbar": {
-      "frameId": "571:3",
+      "frameId": "696:39",
       "texts": [
         "Quill",
         "Product",
@@ -1381,7 +1381,7 @@
       ]
     },
     "footer": {
-      "frameId": "571:20",
+      "frameId": "696:22",
       "texts": [
         "Quill",
         "A calm, editorial design system for building by hand.",
@@ -1423,7 +1423,7 @@
       ]
     },
     "feature-section": {
-      "frameId": "572:3",
+      "frameId": "696:20",
       "texts": [
         "Why Quill",
         "A calm, editorial design system",
@@ -1457,7 +1457,7 @@
       ]
     },
     "testimonial": {
-      "frameId": "572:28",
+      "frameId": "696:65",
       "texts": [
         "“Quill let our team ship consistent, accessible screens in days — the token foundation means design and code never drift.”",
         "RP",
@@ -1481,7 +1481,7 @@
       ]
     },
     "pricing": {
-      "frameId": "574:3",
+      "frameId": "696:51",
       "texts": [
         "Starter",
         "For trying things out.",
@@ -1549,7 +1549,7 @@
       ]
     },
     "page-header": {
-      "frameId": "574:86",
+      "frameId": "696:50",
       "texts": [
         "Projects",
         "Acme site",
@@ -1580,7 +1580,7 @@
       ]
     },
     "error-404": {
-      "frameId": "574:105",
+      "frameId": "696:18",
       "texts": [
         "404",
         "Page not found",
@@ -1608,7 +1608,7 @@
       ]
     },
     "empty-state": {
-      "frameId": "574:116",
+      "frameId": "696:17",
       "texts": [
         "No projects yet",
         "Create your first project and it’ll show up here.",
@@ -1638,7 +1638,7 @@
       ]
     },
     "cookie-consent": {
-      "frameId": "574:126",
+      "frameId": "696:10",
       "texts": [
         "We use essential cookies to make Quill work, and optional analytics to improve it. You can change your choice anytime.",
         "Accept all",
@@ -1668,7 +1668,7 @@
       ]
     },
     "dashboard": {
-      "frameId": "578:3",
+      "frameId": "696:11",
       "texts": [
         "Quill",
         "Overview",
@@ -1735,7 +1735,7 @@
       ]
     },
     "data-table": {
-      "frameId": "579:3",
+      "frameId": "696:12",
       "texts": [
         "Filter members…",
         "Filter",
@@ -1792,7 +1792,7 @@
       ]
     },
     "list-detail": {
-      "frameId": "580:3",
+      "frameId": "696:28",
       "texts": [
         "Inbox",
         "3",
@@ -1843,7 +1843,7 @@
       ]
     },
     "settings": {
-      "frameId": "580:46",
+      "frameId": "696:53",
       "texts": [
         "Profile",
         "Update your public profile and notification preferences.",
@@ -1889,7 +1889,7 @@
       ]
     },
     "tabs-page": {
-      "frameId": "580:81",
+      "frameId": "696:63",
       "texts": [
         "Account",
         "Notifications",
@@ -1925,7 +1925,7 @@
       ]
     },
     "profile-card": {
-      "frameId": "580:105",
+      "frameId": "696:52",
       "texts": [
         "AL",
         "Ada Lovelace",
@@ -1971,7 +1971,7 @@
       ]
     },
     "notifications": {
-      "frameId": "581:3",
+      "frameId": "699:789",
       "texts": [
         "Notifications",
         "Mark all read",
@@ -2013,7 +2013,7 @@
       ]
     },
     "search-results": {
-      "frameId": "581:41",
+      "frameId": "699:787",
       "texts": [
         "token",
         "4 results for “token”",
@@ -2058,7 +2058,7 @@
       ]
     },
     "kanban": {
-      "frameId": "581:86",
+      "frameId": "696:27",
       "texts": [
         "Backlog",
         "2",
@@ -2124,7 +2124,7 @@
       ]
     },
     "chat": {
-      "frameId": "581:160",
+      "frameId": "696:7",
       "texts": [
         "GH",
         "Grace Hopper",
@@ -2160,7 +2160,7 @@
       ]
     },
     "signup": {
-      "frameId": "584:3",
+      "frameId": "696:54",
       "texts": [
         "Create your account",
         "Start your 14-day free trial — no card required.",
@@ -2202,7 +2202,7 @@
       ]
     },
     "login-oauth": {
-      "frameId": "585:3",
+      "frameId": "696:36",
       "texts": [
         "Q",
         "Sign in to Quill",
@@ -2242,7 +2242,7 @@
       ]
     },
     "wizard": {
-      "frameId": "585:39",
+      "frameId": "696:72",
       "texts": [
         "Account",
         "2",
@@ -2290,7 +2290,7 @@
       ]
     },
     "onboarding": {
-      "frameId": "585:76",
+      "frameId": "696:41",
       "texts": [
         "Get set up",
         "2 of 4 complete — you’re almost there.",
@@ -2330,6 +2330,222 @@
         "spacing/5",
         "spacing/6",
         "type/base"
+      ]
+    },
+    "example-marketing-page": {
+      "frameId": "697:233",
+      "texts": [
+        "Quill",
+        "Product",
+        "Solutions",
+        "Pricing",
+        "Docs",
+        "Sign in",
+        "Get started",
+        "New — v2.0 is here",
+        "The calm design system for building things by hand",
+        "Accessible, themeable components and a single-source token foundation that flows to code and Figma alike.",
+        "Get started",
+        "Read the docs",
+        "Why Quill",
+        "A calm, editorial design system",
+        "Everything connected to tokens, so it stays consistent as it grows.",
+        "Design tokens",
+        "One source of truth flows to code and Figma alike.",
+        "Composable",
+        "Build screens fast from accessible, themeable components.",
+        "Accessible",
+        "WCAG 2.1 AA out of the box, verified in CI.",
+        "Starter",
+        "For trying things out.",
+        "$0",
+        "/mo",
+        "1 project",
+        "Community support",
+        "1 GB storage",
+        "Get started",
+        "Pro",
+        "Popular",
+        "For growing teams.",
+        "$18",
+        "/mo",
+        "Unlimited projects",
+        "Priority support",
+        "100 GB storage",
+        "Analytics",
+        "Start free trial",
+        "Enterprise",
+        "For large organizations.",
+        "Custom",
+        "SSO & SAML",
+        "Dedicated support",
+        "Unlimited storage",
+        "Audit logs",
+        "Contact sales",
+        "“Quill let our team ship consistent, accessible screens in days — the token foundation means design and code never drift.”",
+        "RP",
+        "Riley Park",
+        "Head of Design, Northwind",
+        "Quill",
+        "A calm, editorial design system for building by hand.",
+        "Product",
+        "Overview",
+        "Components",
+        "Tokens",
+        "Changelog",
+        "Resources",
+        "Docs",
+        "Guides",
+        "Figma kit",
+        "Support",
+        "Company",
+        "About",
+        "Blog",
+        "Careers",
+        "Contact",
+        "© 2026 Quill. All rights reserved.",
+        "Privacy",
+        "Terms"
+      ],
+      "icons": [
+        "arrow_forward",
+        "arrow_forward",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check",
+        "check_circle",
+        "dashboard",
+        "menu_book",
+        "palette"
+      ],
+      "instances": [
+        "Navbar",
+        "Hero",
+        "Feature section",
+        "Pricing",
+        "Testimonial",
+        "Footer"
+      ]
+    },
+    "example-auth-page": {
+      "frameId": "697:289",
+      "texts": [
+        "Quill",
+        "“The most crafted-feeling system we’ve ever shipped on. It reads like a notebook, not a dashboard.”",
+        "Sofia Almeida — Head of Product, Northwind",
+        "Welcome back",
+        "Sign in to your team account.",
+        "Email",
+        "you@example.com",
+        "Password",
+        "Forgot?",
+        "••••••••",
+        "Sign in",
+        "or",
+        "Continue with a magic link"
+      ],
+      "icons": [
+        "mail"
+      ],
+      "instances": [
+        "Login split panel"
+      ]
+    },
+    "example-app-page": {
+      "frameId": "700:274",
+      "texts": [
+        "Q",
+        "Quill",
+        "Workspace",
+        "Overview",
+        "Engagements",
+        "4",
+        "Clients",
+        "Deliverables",
+        "12",
+        "Team",
+        "Collaborators",
+        "Settings",
+        "JD",
+        "John Doe",
+        "Team plan",
+        "Workspace",
+        "Projects",
+        "Acme site",
+        "Settings",
+        "Project settings",
+        "Manage configuration, members, and integrations for this project.",
+        "Duplicate",
+        "New",
+        "Total revenue",
+        "$48,120",
+        "+12.4%",
+        "vs last month",
+        "Active users",
+        "3,842",
+        "+4.1%",
+        "vs last month",
+        "Churn",
+        "1.9%",
+        "−0.3%",
+        "vs last month",
+        "Open tickets",
+        "27",
+        "+6",
+        "vs last month",
+        "Filter members…",
+        "Filter",
+        "Invite",
+        "Name",
+        "Role",
+        "Status",
+        "Ada Lovelace",
+        "ada@example.com",
+        "Owner",
+        "Active",
+        "Alan Turing",
+        "alan@example.com",
+        "Admin",
+        "Active",
+        "Grace Hopper",
+        "grace@example.com",
+        "Editor",
+        "Invited",
+        "Katherine Johnson",
+        "kat@example.com",
+        "Viewer",
+        "Active"
+      ],
+      "icons": [
+        "add",
+        "add",
+        "content_copy",
+        "dock_to_left",
+        "filter_list",
+        "group",
+        "ink_pen",
+        "more_horiz",
+        "more_horiz",
+        "more_horiz",
+        "more_horiz",
+        "palette",
+        "photo_library",
+        "settings",
+        "space_dashboard"
+      ],
+      "instances": [
+        "Sidebar nav",
+        "Page header",
+        "Stat cards",
+        "Data table"
       ]
     }
   }

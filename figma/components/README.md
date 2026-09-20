@@ -409,6 +409,81 @@ buttons (Mail inbox toolbar + Send, Login — minimal Continue, Theme selector t
 Announcement dismiss glyphs) were replaced in place, and the buttons the July pages never had
 (File upload row dismiss, Team section mail, Login — split panel magic link + rule) were added.
 
+## Visual parity sweep + master components (2026-09-19)
+
+Every twin (44), every pattern page (47) and the three example pages were
+compared **visually** against their Storybook render — Figma screenshots via
+the MCP exporter, Storybook via the repo's own Playwright in the bare iframe
+(`iframe.html?id=<story>&viewMode=story`, Dawn, DPR 2; popups opened by
+script). The daily check reads bindings and copy; it cannot see a paint that
+renders wrong, so the sweep found what it never could:
+
+| Twin / page | Drift | Fix |
+|---|---|---|
+| Badge `Variant=destructive` (65:5) | fill at 100 % — text and fill both destructive, label invisible | opacity 0.1 (second assignment) |
+| Checkbox / Radio `Checked=off` (78:4, 80:4) | strokeWeight 0 — the unchecked control was invisible | 1 px bound to `border-width/1` (Figma stores it per side) |
+| Alert `Variant=destructive` (94:16) | destructive stroke; code keeps `border` | stroke → `shadcn/border` |
+| Input group `Layout=Block` send button | arrow vector `text/strong` on a primary fill | `shadcn/primary-foreground` |
+| Breadcrumb (97:10), Pagination (97:25), ❖ Search results titles, ❖ Sidebar navigation crumb | drawn muted / ink; in code these are `<a>` and the shipped CSS colours anchors `var(--text-accent-color)` | `text/accent-color` |
+| Pagination active cell | tan fill; code = Button `outline` | `shadcn/background` + `shadcn/border`; "Previous" / "Next" labels added |
+| Dialog (263:112), Sheet Right / Bottom | no close button; `showCloseButton` defaults true | Button instance `ghost` × `icon-sm`, swap `icon/close`, absolute top-right (8 px dialog, 12 px sheet) |
+| Command (266:35) | plain search row with bottom rule; code wraps the input in an `InputGroup` (`h-8 rounded-lg bg-input/30 border-input/30`) | row restyled in place, icon at 50 % |
+| ❖ Stat cards "+6" badge | destructive instance kept the pre-fix solid paint | two-step component-paint recipe |
+| notifications block (**code**) | `flex-row` on a grid `CardHeader` is inert — the action wrapped under the title | `flex flex-row`; page re-stamped |
+
+Rules learned (add to the recipe above):
+
+- **An instance-override paint must copy the component's paint, never a
+  placeholder.** `setBoundVariableForPaint` on a black placeholder stores the
+  binding but the instance *renders the placeholder*. Copy `mc.fills[0]`
+  (real colour + binding), then set opacity in a second assignment.
+- **Verify a colour by sampling**, not by reading the binding: a temporary
+  1 × 1 `SLICE` over the pixel, `exportAsync`, read the PNG (pngjs is in
+  `node_modules`). This is how the placeholder case above was caught.
+- **Pattern page canvases are paper** (`#F5EDDD`, the Storybook ground). Page
+  backgrounds refuse a variable binding, so the value is raw and does not
+  follow Dusk / Classic.
+- **A link is green.** The shipped theme colours every `<a>` with
+  `--text-accent-color`; any block text rendered as an anchor (breadcrumb
+  crumbs, pagination cells, result titles) binds `text/accent-color`.
+
+
+Round two of the sweep (an independent QA agent re-read every fix by pixel sample) added: Radio `Checked=on` was drawn inverted (grey ring + dark dot; code fills the disc `primary` with a `primary-foreground` dot), the Checkbox check was a thin 6.8 px vector reading grey (now an `icon/check` instance at 14 px, the code's `size-3.5`), Badge `Variant=link` was underlined at rest (code underlines on hover only), the Sheet footer stacked the primary button above the outline one (the story stacks outline first), and every ❖ component page sat on Figma's default grey canvas — all 93 ❖ pages are paper now.
+
+- **Tints are variables, not paint opacity.** A paint-level opacity on a bound colour is
+  dropped when the component is instanced inside another component (the app-page
+  template drew every tinted badge and card ring solid), while a variable whose value
+  carries the alpha survives any depth (the 12 % `shadcn/border` alias always did). The
+  opacity modifiers code puts on tokens are therefore 13 `tint/<token>/<pct>` variables in
+  the Primitives collection — `tint/destructive/10`, `tint/foreground/10`, `tint/muted/50`,
+  `tint/input/30`, `tint/primary/10`, `tint/chart-1/20`, `tint/chart-2/20`,
+  `tint/sidebar-border/8`, `tint/sidebar-foreground/70` and the four ToneBadge pigment
+  tints — derived per mode by `syncTints()` in `../sync-foundations.figma.js` (single
+  source: the `TINTS` table there). Every tinted paint binds one at paint opacity 1; the
+  "opacity is a second assignment" recipe above is now only for one-off values that have
+  no tint variable, and never inside a component that will be instanced. Popover, Dropdown
+  menu, Context menu and Combobox had been ringed with `shadcn/foreground` at 100 % —
+  found by the binding dump, not by eye.
+- **An instance-override paint does not survive nesting.** The stat-cards "+6" badge had its fill overridden to 10 % (instance-paint recipe); the ❖ Stat cards page rendered right, but an instance of that page inside the app-page template drew the badge solid again. The robust fix is *no override at all*: fix the paint on the main component, `resetOverrides()` on the instance and re-apply only its text. Reach for the instance-paint recipe only when the component itself cannot carry the value.
+
+### Master components
+
+Every mirrored pattern frame is now a **main component** (`❖ <Name>` page →
+one `COMPONENT` named after the block, description `Code twin:
+registry/blocks/<block>.tsx`). `createComponentFromNode` keeps the children
+but issues a **new node id** — the ids in `sync-state.json → patterns` and
+`pattern-baseline.json` were rewritten in the same pass. The three example
+pages (`registry/examples`) are **template components** composed from those
+block components as instances, on their own `❖ Example: …` pages, tracked in
+`sync-state.json → templates` by the same guards (coverage, content, re-stamp,
+daily presence check).
+
+| Template | Page | Page id | Component id | Composition |
+|---|---|---|---|---|
+| example-app-page | ❖ Example: app page | 700:2 | 700:274 | Sidebar nav shell (placeholder cards hidden) + Page header + Stat cards + Data table stacked in the content area |
+| example-auth-page | ❖ Example: auth page | 697:234 | 697:289 | Login — split panel alone |
+| example-marketing-page | ❖ Example: marketing page | 697:2 | 697:233 | Navbar → Hero → Feature section → Pricing (96 / 48 px section) → Testimonial (centred, 96 px) → Footer |
+
 ## Sync fixture (2026-08-12)
 
 `❖ Test` (component node `371:7`) is the **bi-directional sync fixture** — its code twin
@@ -419,4 +494,5 @@ Keep the pair in sync when testing the workflow; procedure in `../README.md`
 
 ## Next
 
-- Visual QA sweep of component + pattern pages in light/dark modes.
+- Visual QA sweep in Dusk / Classic modes (the 2026-09-19 sweep covered Dawn only).
+- State axis (Disabled / Invalid / Focus) on the form-control sets — awaiting the CRA-221 decision.

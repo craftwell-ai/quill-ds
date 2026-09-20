@@ -13,7 +13,7 @@ const items: { icon: IconName; title: string; body: string; time: string; unread
 export function Notifications() {
   return (
     <Card className="w-[360px]">
-      <CardHeader className="flex-row items-center justify-between">
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Notifications</CardTitle>
         <Button variant="link" size="sm">
           Mark all read

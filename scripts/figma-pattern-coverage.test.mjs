@@ -20,7 +20,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const blocks = readdirSync(join(root, 'registry/blocks'))
   .filter((f) => f.endsWith('.tsx'))
   .map((f) => f.replace(/\.tsx$/, ''))
-const { patterns } = loadState()
+const { patterns, templates = [] } = loadState()
+const examples = readdirSync(join(root, 'registry/examples'))
+  .filter((f) => f.endsWith('.tsx'))
+  .map((f) => f.replace(/\.tsx$/, ''))
 
 test('every block has exactly one entry in the pattern map', () => {
   const names = patterns.map((p) => p.block)
@@ -31,8 +34,16 @@ test('every block has exactly one entry in the pattern map', () => {
   )
 })
 
+test('every template (registry/examples) has exactly one entry in the template map', () => {
+  assert.deepEqual(
+    [...templates.map((t) => t.block)].sort(),
+    [...examples].sort(),
+    'figma/sync-state.json `templates` does not match registry/examples — one entry per example page (mirrored, missing or declined).',
+  )
+})
+
 test('a mirrored entry names its page and frame; every other entry says why', () => {
-  for (const p of patterns) {
+  for (const p of [...patterns, ...templates]) {
     if (p.status === 'mirrored') {
       assert.ok(p.page?.startsWith('❖ '), `${p.block}: a mirrored entry names its ❖ page`)
       assert.match(p.pageId ?? '', /^\d+:\d+$/, `${p.block}: a mirrored entry carries the page id`)
@@ -45,7 +56,7 @@ test('a mirrored entry names its page and frame; every other entry says why', ()
 })
 
 test('no two blocks claim the same Figma page', () => {
-  const ids = patterns.filter((p) => p.status === 'mirrored').map((p) => p.pageId)
+  const ids = [...patterns, ...templates].filter((p) => p.status === 'mirrored').map((p) => p.pageId)
   assert.equal(new Set(ids).size, ids.length, 'duplicate pageId in the pattern map')
 })
 

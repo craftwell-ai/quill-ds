@@ -137,7 +137,20 @@
     "VariableID:272:13": "color/chart/div/2",
     "VariableID:272:14": "color/chart/div/3",
     "VariableID:272:15": "color/chart/div/4",
-    "VariableID:272:16": "color/chart/div/5"
+    "VariableID:272:16": "color/chart/div/5",
+    "VariableID:705:2": "tint/destructive/10",
+    "VariableID:705:3": "tint/moss/20",
+    "VariableID:705:4": "tint/gold/25",
+    "VariableID:705:5": "tint/terracotta/16",
+    "VariableID:705:6": "tint/indigo/20",
+    "VariableID:705:7": "tint/foreground/10",
+    "VariableID:705:8": "tint/input/30",
+    "VariableID:705:9": "tint/chart-1/20",
+    "VariableID:705:10": "tint/chart-2/20",
+    "VariableID:705:11": "tint/muted/50",
+    "VariableID:705:12": "tint/primary/10",
+    "VariableID:705:13": "tint/sidebar-border/8",
+    "VariableID:705:14": "tint/sidebar-foreground/70"
   },
   "candidates": [],
   "components": [
@@ -213,7 +226,7 @@
       "variantOf": "65:13",
       "variant": "Variant=default",
       "codeFile": "src/components/ui/badge.tsx",
-      "lastSynced": "2026-09-15",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/primary",
@@ -293,15 +306,15 @@
       "variantOf": "78:9",
       "variant": "Checked=off",
       "codeFile": "src/components/ui/checkbox.tsx",
-      "lastSynced": "2026-09-15",
+      "lastSynced": "2026-09-19",
       "figma": {
         "stroke": {
           "var": "shadcn/input",
           "raw": "#8A7F6E"
         },
         "strokeWeight": {
-          "var": null,
-          "raw": 0
+          "var": "border-width/1",
+          "raw": 1
         },
         "cornerRadius": {
           "var": null,
@@ -320,15 +333,15 @@
       "variantOf": "80:8",
       "variant": "Checked=off",
       "codeFile": "src/components/ui/radio-group.tsx",
-      "lastSynced": "2026-09-15",
+      "lastSynced": "2026-09-19",
       "figma": {
         "stroke": {
           "var": "shadcn/input",
           "raw": "#8A7F6E"
         },
         "strokeWeight": {
-          "var": null,
-          "raw": 0
+          "var": "border-width/1",
+          "raw": 1
         },
         "cornerRadius": {
           "var": null,
@@ -620,7 +633,7 @@
       "name": "Breadcrumb",
       "nodeId": "97:10",
       "codeFile": "src/components/ui/breadcrumb.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "strokeWeight": {
           "var": null,
@@ -737,7 +750,7 @@
       "variantOf": "263:146",
       "variant": "Side=Right",
       "codeFile": "src/components/ui/sheet.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
@@ -755,12 +768,13 @@
         "texts": {
           "Edit profile": "Edit profile",
           "Make changes to your profile here. Click save when you're done.": "Make changes to your profile here. Click save when you're done.",
-          "Button": "Close"
+          "Button": "Save changes"
         },
         "childSignature": [
           "Header:FRAME",
           "Content:FRAME",
-          "Footer:FRAME"
+          "Footer:FRAME",
+          "Close:INSTANCE"
         ]
       },
       "code": {
@@ -808,14 +822,14 @@
       "name": "Popover",
       "nodeId": "263:170",
       "codeFile": "src/components/ui/popover.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#2A2622"
         },
         "strokeWeight": {
@@ -854,14 +868,14 @@
       "name": "DropdownMenu",
       "nodeId": "264:32",
       "codeFile": "src/components/ui/dropdown-menu.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#2A2622"
         },
         "strokeWeight": {
@@ -897,14 +911,14 @@
       "name": "ContextMenu",
       "nodeId": "264:161",
       "codeFile": "src/components/ui/context-menu.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#2A2622"
         },
         "strokeWeight": {
@@ -940,14 +954,14 @@
       "name": "Combobox",
       "nodeId": "267:20",
       "codeFile": "src/components/ui/combobox.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#2A2622"
         },
         "strokeWeight": {
@@ -1068,10 +1082,10 @@
       "variantOf": "577:75",
       "variant": "Tone=moss, Size=md, Solid=off",
       "codeFile": "registry/lib/tone-badge.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
-          "var": "color/pigment/moss/base",
+          "var": "tint/moss/20",
           "raw": "#7A8C5C"
         },
         "strokeWeight": {
@@ -1107,7 +1121,7 @@
       "variantOf": "94:17",
       "variant": "Variant=default",
       "codeFile": "src/components/ui/alert.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/card",
@@ -1150,7 +1164,7 @@
       "name": "Pagination",
       "nodeId": "97:25",
       "codeFile": "src/components/ui/pagination.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "strokeWeight": {
           "var": null,
@@ -1183,7 +1197,7 @@
       "variantOf": "261:113",
       "variant": "Layout=Inline",
       "codeFile": "src/components/ui/input-group.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "stroke": {
           "var": "shadcn/input",
@@ -1223,14 +1237,14 @@
       "name": "Dialog",
       "nodeId": "263:112",
       "codeFile": "src/components/ui/dialog.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#000000"
         },
         "strokeWeight": {
@@ -1249,7 +1263,8 @@
         },
         "childSignature": [
           "Body:FRAME",
-          "Footer:FRAME"
+          "Footer:FRAME",
+          "Close:INSTANCE"
         ]
       },
       "code": {
@@ -1260,14 +1275,14 @@
       "name": "AlertDialog",
       "nodeId": "263:123",
       "codeFile": "src/components/ui/alert-dialog.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#000000"
         },
         "strokeWeight": {
@@ -1296,14 +1311,14 @@
       "name": "HoverCard",
       "nodeId": "263:179",
       "codeFile": "src/components/ui/hover-card.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#000000"
         },
         "strokeWeight": {
@@ -1387,7 +1402,7 @@
       "name": "Command",
       "nodeId": "266:35",
       "codeFile": "src/components/ui/command.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/popover",
@@ -1529,14 +1544,14 @@
       "name": "Card",
       "nodeId": "93:14",
       "codeFile": "src/components/ui/card.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "fill": {
           "var": "shadcn/card",
           "raw": "#EFE4CE"
         },
         "stroke": {
-          "var": "shadcn/foreground",
+          "var": "tint/foreground/10",
           "raw": "#2A2622"
         },
         "strokeWeight": {
@@ -1647,7 +1662,7 @@
       "status": "mirrored",
       "page": "❖ Activity feed",
       "pageId": "208:2",
-      "frameId": "638:7",
+      "frameId": "696:2",
       "codeHash": "28f29f3b67409bcf",
       "syncedAt": "2026-09-18"
     },
@@ -1661,7 +1676,7 @@
       "status": "mirrored",
       "page": "❖ Analytics charts",
       "pageId": "213:2",
-      "frameId": "648:3",
+      "frameId": "696:3",
       "codeHash": "c95c5e19ef702e10",
       "syncedAt": "2026-09-18"
     },
@@ -1670,7 +1685,7 @@
       "status": "mirrored",
       "page": "❖ Announcement banner",
       "pageId": "205:2",
-      "frameId": "628:30",
+      "frameId": "696:4",
       "codeHash": "9876adab3b16dfdc",
       "syncedAt": "2026-09-18"
     },
@@ -1684,7 +1699,7 @@
       "status": "mirrored",
       "page": "❖ Calendar page",
       "pageId": "210:2",
-      "frameId": "646:5",
+      "frameId": "696:5",
       "codeHash": "271ef1dd9fb0a68d",
       "syncedAt": "2026-09-18"
     },
@@ -1693,7 +1708,7 @@
       "status": "mirrored",
       "page": "❖ Calendar range",
       "pageId": "211:2",
-      "frameId": "647:9",
+      "frameId": "696:6",
       "codeHash": "6611d94dbf35280d",
       "syncedAt": "2026-09-18"
     },
@@ -1702,7 +1717,7 @@
       "status": "mirrored",
       "page": "❖ Chat",
       "pageId": "581:159",
-      "frameId": "581:160",
+      "frameId": "696:7",
       "codeHash": "6d42a9e67f4f5ee4",
       "syncedAt": "2026-09-18"
     },
@@ -1711,7 +1726,7 @@
       "status": "mirrored",
       "page": "❖ Checkout",
       "pageId": "203:2",
-      "frameId": "634:10",
+      "frameId": "696:8",
       "codeHash": "f8e28c86929ea0b2",
       "syncedAt": "2026-09-18"
     },
@@ -1725,7 +1740,7 @@
       "status": "mirrored",
       "page": "❖ Contact form",
       "pageId": "200:2",
-      "frameId": "630:15",
+      "frameId": "696:9",
       "codeHash": "10a7573b90f9c6fa",
       "syncedAt": "2026-09-18"
     },
@@ -1734,7 +1749,7 @@
       "status": "mirrored",
       "page": "❖ Cookie consent",
       "pageId": "574:125",
-      "frameId": "574:126",
+      "frameId": "696:10",
       "codeHash": "f3dcf0a810721936",
       "syncedAt": "2026-09-18"
     },
@@ -1743,7 +1758,7 @@
       "status": "mirrored",
       "page": "❖ Dashboard",
       "pageId": "578:2",
-      "frameId": "578:3",
+      "frameId": "696:11",
       "codeHash": "acc21f1bc971ee4e",
       "syncedAt": "2026-09-18"
     },
@@ -1752,7 +1767,7 @@
       "status": "mirrored",
       "page": "❖ Data table",
       "pageId": "579:2",
-      "frameId": "579:3",
+      "frameId": "696:12",
       "codeHash": "3dabe8fa5538e08c",
       "syncedAt": "2026-09-18"
     },
@@ -1761,7 +1776,7 @@
       "status": "mirrored",
       "page": "❖ Empty state",
       "pageId": "574:115",
-      "frameId": "574:116",
+      "frameId": "696:17",
       "codeHash": "01da1320800b5898",
       "syncedAt": "2026-09-18"
     },
@@ -1770,7 +1785,7 @@
       "status": "mirrored",
       "page": "❖ Error 404",
       "pageId": "574:104",
-      "frameId": "574:105",
+      "frameId": "696:18",
       "codeHash": "e31c6bb568acf8c4",
       "syncedAt": "2026-09-18"
     },
@@ -1779,7 +1794,7 @@
       "status": "mirrored",
       "page": "❖ FAQ",
       "pageId": "207:76",
-      "frameId": "641:21",
+      "frameId": "696:19",
       "codeHash": "4eeb7e11d3754419",
       "syncedAt": "2026-09-18"
     },
@@ -1788,7 +1803,7 @@
       "status": "mirrored",
       "page": "❖ Feature section",
       "pageId": "572:2",
-      "frameId": "572:3",
+      "frameId": "696:20",
       "codeHash": "244203398c780657",
       "syncedAt": "2026-09-18"
     },
@@ -1797,7 +1812,7 @@
       "status": "mirrored",
       "page": "❖ File upload",
       "pageId": "201:2",
-      "frameId": "631:17",
+      "frameId": "696:21",
       "codeHash": "a633d000eee5cdee",
       "syncedAt": "2026-09-18"
     },
@@ -1806,7 +1821,7 @@
       "status": "mirrored",
       "page": "❖ Footer",
       "pageId": "571:19",
-      "frameId": "571:20",
+      "frameId": "696:22",
       "codeHash": "87e7e5b547457460",
       "syncedAt": "2026-09-18"
     },
@@ -1815,7 +1830,7 @@
       "status": "mirrored",
       "page": "❖ Forgot password",
       "pageId": "182:2",
-      "frameId": "630:66",
+      "frameId": "696:23",
       "codeHash": "132b2922a822f815",
       "syncedAt": "2026-09-18"
     },
@@ -1824,7 +1839,7 @@
       "status": "mirrored",
       "page": "❖ Hero",
       "pageId": "568:2",
-      "frameId": "568:3",
+      "frameId": "696:25",
       "codeHash": "6d852d561214d812",
       "syncedAt": "2026-09-18"
     },
@@ -1833,7 +1848,7 @@
       "status": "mirrored",
       "page": "❖ Invoice",
       "pageId": "209:2",
-      "frameId": "209:3",
+      "frameId": "696:26",
       "codeHash": "e6a25bd662e40d91",
       "syncedAt": "2026-09-18"
     },
@@ -1842,7 +1857,7 @@
       "status": "mirrored",
       "page": "❖ Kanban",
       "pageId": "581:85",
-      "frameId": "581:86",
+      "frameId": "696:27",
       "codeHash": "68ef22c6c49ae5e9",
       "syncedAt": "2026-09-18"
     },
@@ -1851,7 +1866,7 @@
       "status": "mirrored",
       "page": "❖ List detail",
       "pageId": "580:2",
-      "frameId": "580:3",
+      "frameId": "696:28",
       "codeHash": "d4cc405c3691177a",
       "syncedAt": "2026-09-18"
     },
@@ -1860,7 +1875,7 @@
       "status": "mirrored",
       "page": "❖ Login",
       "pageId": "103:2",
-      "frameId": "630:91",
+      "frameId": "696:29",
       "codeHash": "0df9d29d23c773ed",
       "syncedAt": "2026-09-18"
     },
@@ -1869,7 +1884,7 @@
       "status": "mirrored",
       "page": "❖ Login — minimal",
       "pageId": "215:187",
-      "frameId": "637:47",
+      "frameId": "696:35",
       "codeHash": "233b629bcabe1180",
       "syncedAt": "2026-09-18"
     },
@@ -1878,7 +1893,7 @@
       "status": "mirrored",
       "page": "❖ Login — OAuth",
       "pageId": "585:2",
-      "frameId": "585:3",
+      "frameId": "696:36",
       "codeHash": "abc90ff72831524e",
       "syncedAt": "2026-09-18"
     },
@@ -1887,7 +1902,7 @@
       "status": "mirrored",
       "page": "❖ Login — split panel",
       "pageId": "215:154",
-      "frameId": "637:73",
+      "frameId": "696:37",
       "codeHash": "4c28c46d39d982e7",
       "syncedAt": "2026-09-18"
     },
@@ -1896,7 +1911,7 @@
       "status": "mirrored",
       "page": "❖ Mail inbox",
       "pageId": "215:2",
-      "frameId": "639:20",
+      "frameId": "696:38",
       "codeHash": "490f1f76fec36865",
       "syncedAt": "2026-09-18"
     },
@@ -1905,7 +1920,7 @@
       "status": "mirrored",
       "page": "❖ Navbar",
       "pageId": "571:2",
-      "frameId": "571:3",
+      "frameId": "696:39",
       "codeHash": "6ae49fdc23d3d4b7",
       "syncedAt": "2026-09-18"
     },
@@ -1914,7 +1929,7 @@
       "status": "mirrored",
       "page": "❖ Newsletter",
       "pageId": "185:2",
-      "frameId": "632:7",
+      "frameId": "696:40",
       "codeHash": "8c38ce87f1b52470",
       "syncedAt": "2026-09-18"
     },
@@ -1923,16 +1938,16 @@
       "status": "mirrored",
       "page": "❖ Notifications",
       "pageId": "581:2",
-      "frameId": "581:3",
-      "codeHash": "625a03cb45c19a8c",
-      "syncedAt": "2026-09-18"
+      "frameId": "699:789",
+      "codeHash": "e490738d4c1696e8",
+      "syncedAt": "2026-09-19"
     },
     {
       "block": "onboarding",
       "status": "mirrored",
       "page": "❖ Onboarding",
       "pageId": "585:75",
-      "frameId": "585:76",
+      "frameId": "696:41",
       "codeHash": "dc28f93e8230ffe3",
       "syncedAt": "2026-09-18"
     },
@@ -1946,7 +1961,7 @@
       "status": "mirrored",
       "page": "❖ OTP verification",
       "pageId": "183:2",
-      "frameId": "637:8",
+      "frameId": "696:42",
       "codeHash": "c5526f5cf149a31e",
       "syncedAt": "2026-09-18"
     },
@@ -1955,7 +1970,7 @@
       "status": "mirrored",
       "page": "❖ Page header",
       "pageId": "574:85",
-      "frameId": "574:86",
+      "frameId": "696:50",
       "codeHash": "1b2792dda2413fac",
       "syncedAt": "2026-09-18"
     },
@@ -1964,7 +1979,7 @@
       "status": "mirrored",
       "page": "❖ Pricing",
       "pageId": "574:2",
-      "frameId": "574:3",
+      "frameId": "696:51",
       "codeHash": "c0fba8b22ca7b974",
       "syncedAt": "2026-09-18"
     },
@@ -1973,7 +1988,7 @@
       "status": "mirrored",
       "page": "❖ Profile card",
       "pageId": "580:104",
-      "frameId": "580:105",
+      "frameId": "696:52",
       "codeHash": "c144a2fcc0c6be38",
       "syncedAt": "2026-09-18"
     },
@@ -1982,7 +1997,7 @@
       "status": "mirrored",
       "page": "❖ Search results",
       "pageId": "581:40",
-      "frameId": "581:41",
+      "frameId": "699:787",
       "codeHash": "5c1a4d06d24377a6",
       "syncedAt": "2026-09-18"
     },
@@ -1991,7 +2006,7 @@
       "status": "mirrored",
       "page": "❖ Settings",
       "pageId": "580:45",
-      "frameId": "580:46",
+      "frameId": "696:53",
       "codeHash": "50138cd89d1ee4d6",
       "syncedAt": "2026-09-18"
     },
@@ -2000,7 +2015,7 @@
       "status": "mirrored",
       "page": "❖ Sidebar navigation",
       "pageId": "214:2",
-      "frameId": "645:3",
+      "frameId": "699:788",
       "codeHash": "1a0f26fc5958399a",
       "syncedAt": "2026-09-18"
     },
@@ -2009,7 +2024,7 @@
       "status": "mirrored",
       "page": "❖ Signup",
       "pageId": "584:2",
-      "frameId": "584:3",
+      "frameId": "696:54",
       "codeHash": "788e5aa783de6823",
       "syncedAt": "2026-09-18"
     },
@@ -2018,7 +2033,7 @@
       "status": "mirrored",
       "page": "❖ Signup — social first",
       "pageId": "184:2",
-      "frameId": "633:16",
+      "frameId": "696:55",
       "codeHash": "20d03735fd552915",
       "syncedAt": "2026-09-18"
     },
@@ -2027,7 +2042,7 @@
       "status": "mirrored",
       "page": "❖ Stat cards",
       "pageId": "105:2",
-      "frameId": "632:26",
+      "frameId": "699:786",
       "codeHash": "39a31d85c84112d2",
       "syncedAt": "2026-09-18"
     },
@@ -2036,7 +2051,7 @@
       "status": "mirrored",
       "page": "❖ Stats band",
       "pageId": "204:2",
-      "frameId": "642:77",
+      "frameId": "696:56",
       "codeHash": "446e297946f3b2fa",
       "syncedAt": "2026-09-18"
     },
@@ -2045,7 +2060,7 @@
       "status": "mirrored",
       "page": "❖ Tabs page",
       "pageId": "580:80",
-      "frameId": "580:81",
+      "frameId": "696:63",
       "codeHash": "7d9e14355eb869cc",
       "syncedAt": "2026-09-18"
     },
@@ -2054,7 +2069,7 @@
       "status": "mirrored",
       "page": "❖ Team section",
       "pageId": "207:2",
-      "frameId": "642:19",
+      "frameId": "696:64",
       "codeHash": "5fdfaa023d4cf5d2",
       "syncedAt": "2026-09-18"
     },
@@ -2063,7 +2078,7 @@
       "status": "mirrored",
       "page": "❖ Testimonial",
       "pageId": "572:27",
-      "frameId": "572:28",
+      "frameId": "696:65",
       "codeHash": "b52f832a34ba08e6",
       "syncedAt": "2026-09-18"
     },
@@ -2072,7 +2087,7 @@
       "status": "mirrored",
       "page": "❖ Theme selector",
       "pageId": "231:2",
-      "frameId": "648:77",
+      "frameId": "696:71",
       "codeHash": "0824508d50bbc727",
       "syncedAt": "2026-09-18"
     },
@@ -2081,9 +2096,38 @@
       "status": "mirrored",
       "page": "❖ Wizard",
       "pageId": "585:38",
-      "frameId": "585:39",
+      "frameId": "696:72",
       "codeHash": "ae0e76b80b7ba6ed",
       "syncedAt": "2026-09-18"
+    }
+  ],
+  "templates": [
+    {
+      "block": "example-app-page",
+      "status": "mirrored",
+      "page": "❖ Example: app page",
+      "pageId": "700:2",
+      "frameId": "700:274",
+      "codeHash": "ac778d0dff61b24d",
+      "syncedAt": "2026-09-19"
+    },
+    {
+      "block": "example-auth-page",
+      "status": "mirrored",
+      "page": "❖ Example: auth page",
+      "pageId": "697:234",
+      "frameId": "697:289",
+      "codeHash": "1d9c20d2076ed289",
+      "syncedAt": "2026-09-19"
+    },
+    {
+      "block": "example-marketing-page",
+      "status": "mirrored",
+      "page": "❖ Example: marketing page",
+      "pageId": "697:2",
+      "frameId": "697:233",
+      "codeHash": "dc6f4c4d99749c83",
+      "syncedAt": "2026-09-19"
     }
   ],
   "foundations": {
