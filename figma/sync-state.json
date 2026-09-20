@@ -664,17 +664,17 @@
       "name": "Accordion",
       "nodeId": "99:19",
       "codeFile": "src/components/ui/accordion.tsx",
-      "lastSynced": "2026-09-18",
+      "lastSynced": "2026-09-19",
       "figma": {
         "strokeWeight": {
           "var": null,
           "raw": 1
         },
         "texts": {
-          "Is it accessible?": "Is it accessible?",
-          "Yes — it follows WAI-ARIA patterns and passes the enforced a11y suite.": "Yes — it follows WAI-ARIA patterns and passes the enforced a11y suite.",
-          "Is it themeable?": "Is it themeable?",
-          "Can I compose it?": "Can I compose it?"
+          "What is Quill?": "What is Quill?",
+          "Quill is a design system — a platform for publishing hand-crafted skill courses.": "Quill is a design system — a platform for publishing hand-crafted skill courses.",
+          "What fonts does it use?": "What fonts does it use?",
+          "Is there a dark mode?": "Is there a dark mode?"
         },
         "childSignature": [
           "Frame:FRAME",

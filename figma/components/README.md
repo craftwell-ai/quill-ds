@@ -484,6 +484,30 @@ daily presence check).
 | example-auth-page | ❖ Example: auth page | 697:234 | 697:289 | Login — split panel alone |
 | example-marketing-page | ❖ Example: marketing page | 697:2 | 697:233 | Navbar → Hero → Feature section → Pricing (96 / 48 px section) → Testimonial (centred, 96 px) → Footer |
 
+### Accordion re-cut (2026-09-19, after the sweep)
+
+Ryan's spot check. A screenshot comparison had passed the Accordion; a **property-level**
+comparison (computed styles read from the live story with Playwright vs the twin's node
+dump) did not: trigger at Body/Base 15.2 Regular vs code `text-sm font-medium` (13.6
+Medium, line-height 142.857 %, and −0.48 px tracking inherited from the shipped
+`h1–h6 { letter-spacing: -0.03em }` rule — the trigger sits in an `h3`); item padding 16
+vs `py-2.5`; a hand-drawn chevron hugging the label vs a 16 px `icon/keyboard_arrow_down`
+at the right edge; content muted-foreground vs the shipped `body { color: var(--ink-soft) }`;
+a rule under the last item. Rules for the next sweep:
+
+- **Screenshots find layout and colour drift; they miss type metrics.** Pair every visual
+  pass with a computed-style dump of the story (`getComputedStyle` on the slots) against
+  the twin's text nodes: family, weight, size, line-height, letter-spacing, colour.
+- **`text-sm` / `text-base` carry Tailwind's own line-heights** (142.857 % / 150 %), not
+  the body 1.7 the `Body/*` text styles encode. A twin text that mirrors a `text-*`
+  utility binds `type/*` for size and sets the utility's line-height; the `Body/*`
+  styles are for untagged prose only. Open: audit the other twins for Body/S on
+  `text-sm` text.
+- **Headings leak tracking.** Anything rendered inside an `h1–h6` (Accordion header,
+  CardTitle, DialogTitle…) inherits −0.03em from the shipped base layer.
+- **A CSS border adds to the box; a Figma inside stroke does not.** Ruled items get the
+  border width added to their padding (Accordion: paddingBottom 11 on `not-last` items).
+
 ## Sync fixture (2026-08-12)
 
 `❖ Test` (component node `371:7`) is the **bi-directional sync fixture** — its code twin

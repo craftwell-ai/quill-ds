@@ -12,6 +12,21 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.58] — 2026-09-19
+
+### Fixed
+- **Figma: Accordion twin re-cut to the code's anatomy.** A property-level check of
+  the Accordion (computed styles from the live story vs the twin's node dump) found the
+  twin still off in nine ways the screenshot pass had accepted: trigger text at
+  Body/Base 15.2 px Regular instead of text-sm 13.6 px Medium with the h3-inherited
+  −0.03em tracking; item padding 16 instead of `py-2.5` (10); a hand-drawn 18 px
+  chevron beside the label instead of a 16 px `icon/keyboard_arrow_down` at the right
+  edge; content in muted-foreground instead of the shipped body colour (`ink-soft`);
+  a bottom rule under the last item (`not-last:border-b`); and placeholder copy. Fixed
+  in place; the baseline text map follows. Remaining, by design of the tools: Figma
+  rounds line height to whole pixels (19 vs 19.43), so ruled items measure ≤ 1 px
+  shorter than the DOM.
+
 ## [0.9.57] — 2026-09-19
 
 ### Changed
