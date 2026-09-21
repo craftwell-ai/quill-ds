@@ -88,7 +88,9 @@ Labels are fixed-width on the left; the specimen sits on the right and is clippe
     swatch={<span style={{ fontFamily: v, width: 40 }}>Aa</span>} />
 ))}</div>
 
-## Semantic aliases
+## Semantic contract
+
+The 31 colour roles every component speaks. The names are shadcn-compatible, so stock primitives land on Quill's palette with no edits.
 
 <div>{Object.entries(tokens.semantic).map(([name, alias]) => (
   <Row key={name}
@@ -97,9 +99,11 @@ Labels are fixed-width on the left; the specimen sits on the right and is clippe
     value={alias} />
 ))}</div>
 
-## Component tokens
+## Status and accent roles
 
-<div>{Object.entries(tokens.shadcn).map(([name, alias]) => (
+Roles the contract has no word for. Plain variables, in the same `semantic` group in Figma.
+
+<div>{Object.entries(tokens.status).map(([name, alias]) => (
   <Row key={name}
     swatch={<span style={{ width: 22, height: 22, borderRadius: 5, background: 'var(--' + name + ')', border: '1px solid rgba(42,38,34,0.15)' }} />}
     name={'--' + name}

@@ -63,21 +63,84 @@ this palette for pure neutrals.
 ### Pigments — accents (each has a `-deep` press/hover shade)
 | Token | Hex | Deep | Use |
 |---|---|---|---|
-| `--moss` | `#7A8C5C` | `#5E6E43` | **the signature** — the default accent: the one italic word, CTAs, focus; success |
+| `--moss` | `#7A8C5C` | `#5E6E43` | **the signature** — the default accent: the one italic word, links, the focus ring; success. Never a CTA fill: actions are ink |
 | `--terracotta` | `#C4684B` | `#944A33` | danger / destructive; the warm pole in diverging charts |
-| `--indigo` | `#5B6B8A` | `#44516D` | links, info; the cool pole in diverging charts |
+| `--indigo` | `#5B6B8A` | `#44516D` | info; an accent option; the cool pole in diverging charts |
 | `--gold` | `#B89968` | `#9A7D4E` | highlight, warning |
 
 ### Hairlines — ink at low alpha over digital paper
 `--line-faint` (ink 8%) · `--line-soft` (12%) · `--line` (15%) · `--line-strong` (20%).
 Borders are always ink-at-alpha, never a solid grey.
 
-### Semantic aliases (reach for these in components)
-- **Surfaces:** `--surface-page` (paper) · `--surface-card` (paper-warm) · `--surface-well` (paper-deep)
-- **Text:** `--text-strong` (ink) · `--text-body` (ink-soft) · `--text-muted` (ink-muted) · `--text-on-ink` (paper) · `--text-accent` (terracotta)
-- **Interactive:** `--accent` (terracotta) · `--accent-pressed` (terracotta-deep) · `--link` (indigo)
-- **Borders:** `--border-card` (line-soft) · `--border-field` (line) · `--border-divider` (line-faint)
-- **Feedback:** `--success` (moss-deep) · `--warning` (gold-deep) · `--danger` (terracotta-deep) · `--info` (indigo)
+### The semantic contract (reach for these in components)
+<!-- generated:roles:start -->
+Components speak 31 colour roles as classes: `bg-background`, `text-muted-foreground`, `border-border`. The names are shadcn-compatible, so stock primitives and third-party blocks land on Quill's palette with no edits. Seven surface roles are only three colours (`card` = `popover` = `sidebar`; `secondary` = `muted` = `accent`), so pick by the job below, never by the look.
+
+#### The contract
+- `background` (paper) — The page ground and full-width sections; the cut-out fill of a control sitting on another surface (outline button, switch thumb, active tab). **Never:** Cards, menus or dialogs. Those sit one step warmer, on `card` or `popover`. Pairs with `foreground`.
+- `foreground` (ink) — Strong text: headings, names, values, totals. At 10% it is the hairline ring around cards and floating panels. **Never:** Captions, meta or placeholder text. That is `muted-foreground`. Pairs with `background`.
+- `card` (paper-warm) — Raised surfaces that sit in the page: cards, inline banners, a chat window, kanban tasks, an empty-state panel. **Never:** Floating layers such as menus and dialogs (those are `popover`), and never the page ground. Pairs with `card-foreground`.
+- `card-foreground` (ink) — The default text colour inside a card, set once on its root. **Never:** Text outside a `card` surface. Pairs with `card`.
+- `popover` (paper-warm) — Anything that floats above the page: menus, selects, popovers, hover cards, dialogs, sheets, the command palette. **Never:** In-page cards or sections. Those are `card`. Pairs with `popover-foreground`.
+- `popover-foreground` (ink) — The default text colour inside a floating layer, set once on its root. **Never:** Text outside a `popover` surface. Pairs with `popover`.
+- `primary` (ink) — The main action and "on / done" states: default button, checked checkbox, radio and switch, progress fill, selected date, finished step. **Never:** Brand colour or "make it pop" emphasis. `primary` is ink; the brand accent is the accent pigment. Pairs with `primary-foreground`.
+- `primary-foreground` (paper) — Text and icons on an ink (`primary`) fill. **Never:** Text on a paper surface. It is paper-coloured, so it disappears. Pairs with `primary`.
+- `secondary` (paper-deep) — The fill of the secondary button and the neutral badge. Reach it with `variant="secondary"`, not with a class. **Never:** A second brand colour, or general wells and panels. Those are `muted`. Pairs with `secondary-foreground`.
+- `secondary-foreground` (ink) — The label on a secondary button or badge. It arrives with the variant. **Never:** "Secondary" meaning quieter text. Quiet text is `muted-foreground`. Pairs with `secondary`.
+- `muted` (paper-deep) — Quiet fills: icon wells, avatar fallbacks, skeletons, tab tracks. Also the hover wash on standalone controls and table rows. **Never:** Text: `text-muted` is a paper tone and vanishes. Nor the highlight of a list or menu item; that is `accent`. Pairs with `muted-foreground`.
+- `muted-foreground` (ink-muted) — Supporting text: descriptions, captions, timestamps, helper text, placeholders, table meta. Icons at rest. **Never:** Headings, values or the main label of a control; and never on an ink fill. Pairs with `muted`.
+- `accent` (paper-deep) — The highlighted item in a list or menu: the row under the pointer or keyboard focus, and the current item in a nav. **Never:** Brand emphasis, CTAs or accent text. It is a pale paper tone, not the accent pigment. Buttons and table rows hover with `muted`. Pairs with `accent-foreground`.
+- `accent-foreground` (ink) — Text and icons on a highlighted (`accent`) row. **Never:** Accent-coloured text. It is ink; coloured accent text comes from `--accent-pigment-text`. Pairs with `accent`.
+- `destructive` (terracotta-deep) — Errors and destructive actions: the invalid-field border and ring, error text, the destructive button, badge, alert and menu item. **Never:** A solid fill with light text: the contract has no foreground partner for it, and the shipped button is a 10% tint with destructive text. Never a hover colour.
+- `border` (line-soft) — Hairlines: outlines of panels and lists, row rules, separators, step connectors (`bg-border` draws a 1px line), chart grid lines. **Never:** The edge of a form control. At 12% it fails the 3:1 non-text rule; controls use `input`.
+- `input` (line-control) — The boundary of anything you type into or toggle (input, select, checkbox, radio, dropzone) and the empty track of a switch, slider or progress bar. **Never:** Decorative dividers or card outlines (too heavy; use `border`), and never text.
+- `ring` (accent-pigment-text) — Keyboard focus, built into every primitive (3px at 50%). Also the outline of the one selected or featured item in a set: the chosen plan, the picked option. **Never:** A hand-picked focus colour, or decoration with no state behind it. It follows `data-accent`.
+- `chart-1` (chart-series-1) — The first data series in a chart, passed as `var(--chart-1)` in the chart config. **Never:** UI colour (badges, status, text, fills), and never swapped with another series.
+- `chart-2` (chart-series-2) — The second data series. **Never:** Links, info states or any UI; never the first series.
+- `chart-3` (chart-series-3) — The third data series. **Never:** Warnings, highlights or any UI.
+- `chart-4` (chart-series-4) — The fourth data series. **Never:** Any UI. Never skip to it to get its hue.
+- `chart-5` (chart-series-5) — The fifth data series. Past five, group the rest as "Other". **Never:** Success states or any UI; never a sixth invented colour.
+- `sidebar` (paper-warm) — The ground of the app's side navigation rail. **Never:** Any surface that is not the side navigation. Cards use `card`. Pairs with `sidebar-foreground`.
+- `sidebar-foreground` (ink) — Default text and icons inside the sidebar; at 70% for group labels. **Never:** Text outside the sidebar. Pairs with `sidebar`.
+- `sidebar-primary` (ink) — A solid ink element inside the sidebar, such as the workspace logo tile. **Never:** The current nav item. That is `sidebar-accent`. Pairs with `sidebar-primary-foreground`.
+- `sidebar-primary-foreground` (paper) — Text or an icon on a `sidebar-primary` fill. **Never:** Text on the sidebar's own ground; it disappears. Pairs with `sidebar-primary`.
+- `sidebar-accent` (paper-deep) — The hovered, pressed and current item in the sidebar. It arrives with `SidebarMenuButton` and its `isActive` prop. **Never:** Brand emphasis. It is the pale highlight, as `accent` is. Pairs with `sidebar-accent-foreground`.
+- `sidebar-accent-foreground` (ink) — Text and icons on a highlighted sidebar item. **Never:** Accent-coloured text. Pairs with `sidebar-accent`.
+- `sidebar-border` (line-faint) — Dividers and sub-menu guide lines inside the sidebar, and the outline of a floating sidebar. **Never:** Lines outside the sidebar. Those are `border`.
+- `sidebar-ring` (accent-pigment-text) — The keyboard focus ring on sidebar items. Built into the Sidebar parts. **Never:** A hand-picked focus colour or a decorative outline.
+
+#### Accent and status
+The contract has no word for these. Each is a variable (`--success`); the ones marked class also have a text class (`text-success`). Every one clears 4.5:1 as text on page, card and well in all five themes; none is checked as a fill behind text.
+- `--text-accent-color` (accent-pigment-text, variable) — The one italic accent word in a headline, and the colour of a bare `<a>`. Both come free from the theme (`.fraunces-accent`, `a`). **Never:** Buttons, fills or body text. One accent word per headline, never two.
+- `--link` (accent-pigment-text, class) — A text link inside prose, when you set its colour by hand (`text-link`). It follows the chosen accent. **Never:** Buttons or navigation. A link-styled Button (`variant="link"`) is ink; nav links are `muted-foreground` with an `accent` highlight.
+- `--success` (moss-deep, class) — Text or an icon confirming that something worked (`text-success`). **Never:** A fill behind text, or decoration. It is moss, also the default accent, so use it only when the meaning is "succeeded".
+- `--warning` (gold-text, class) — Cautionary text or an icon (`text-warning`). **Never:** Errors (that is `destructive`). Never swap in `--gold` or `--gold-deep` for text: both fail AA on light grounds.
+- `--info` (indigo-deep, class) — Neutral, informational text or an icon (`text-info`). **Never:** Links. Links follow the accent, not indigo.
+- `--working` (teal-deep, class) — Live activity: an agent or job running right now (`text-working`). **Never:** Success or info. Teal sits between moss and indigo so that live work reads as its own signal.
+- `--queued` (ink-muted, class) — Waiting its turn in a run list (`text-queued`). It should recede. **Never:** Anything that needs attention.
+
+#### Sanctioned tints
+A role at a fixed opacity. These are the only opacity forms the system uses on purpose; reach for one before inventing another.
+- `bg-destructive/10` — The fill of the destructive button and badge, and the focused destructive menu item. **Never:** A whole alert or panel. The destructive Alert stays on `card`; only its text turns.
+- `<ToneBadge tone="moss">` — The wash behind a moss ToneBadge: positive, current. **Never:** A hand-built pill or panel. Every tag renders through ToneBadge.
+- `<ToneBadge tone="gold">` — The wash behind a gold ToneBadge: caution. **Never:** A hand-built pill or panel.
+- `<ToneBadge tone="terracotta">` — The wash behind a terracotta ToneBadge: needs attention. **Never:** A hand-built pill or panel.
+- `<ToneBadge tone="indigo">` — The wash behind an indigo ToneBadge: informational. **Never:** A hand-built pill or panel.
+- `ring-1 ring-foreground/10` — The hairline ring around a Card and every floating panel. **Never:** A fill or text; nor dividers inside a surface. Those are `border`.
+- `bg-input/30` — The faint fill inside form controls on dark themes, and the search field inside the command palette and combobox. **Never:** The control's edge on the page. That stays solid `input` to keep 3:1.
+- `fill="var(--chart-1)" fillOpacity={0.2}` — The soft area under the first series' line, below a full-strength stroke of the same series. **Never:** UI tints, or a series other than the stroke's own.
+- `fill="var(--chart-2)" fillOpacity={0.2}` — The soft area under the second series' line. **Never:** UI tints, or a series other than the stroke's own.
+- `bg-muted/50` — A half-strength well: card, dialog and table footers, table-row hover, kanban columns. **Never:** Text, or where the full `muted` fill is already the quiet option (icon wells, skeletons).
+- `bg-primary/10` — The "current, not yet done" state beside a solid-ink "done": the current wizard step. **Never:** Hover. Hover is `muted` or `accent`.
+- `border-sidebar-border` — The sidebar's faint dividers. The role is already ink at about 8%, so code writes the plain role. **Never:** Lines outside the sidebar.
+- `text-sidebar-foreground/70` — The small group label above a set of sidebar links. **Never:** Sidebar link text itself. That is full-strength `sidebar-foreground`.
+
+#### Two rules the names hide
+- **Hover has two names and one colour.** Items in a list or menu highlight with `accent`; standalone controls (buttons, toggles) and table rows wash with `muted`.
+- **Links.** A link in prose follows the accent (a bare `<a>` gets it from the theme; `text-link` sets it by hand). A link-styled Button is ink.
+<!-- generated:roles:end -->
+
+A second vocabulary of surface, text and border aliases was retired in 0.10.0; the CHANGELOG maps each name to its contract role.
 
 ## 3. Dusk — the dark theme
 
@@ -147,7 +210,7 @@ Same principle as light (ink-at-alpha), inverted to cream-at-alpha.
 ### Elevation — deeper, warmer near-black
 Shadows rebuild on warm near-black `rgba(8,5,3,…)` at higher alpha than Dawn
 (walnut needs more contrast to lift a surface): `--shadow-xs` 0.40 →
-`--shadow-pop` up to 0.72, plus `--shadow-btn-hover`. Same layered, negative-spread
+`--shadow-pop` up to 0.72. Same layered, negative-spread
 structure as light — never a hard black drop.
 
 ### Texture & focus
@@ -155,8 +218,9 @@ structure as light — never a hard black drop.
   swaps `.paper-grain` to a **light fractal under `mix-blend-mode: screen`**
   (opacity ~0.22) — the tooth reads as a faint highlight instead of a shadow.
   `.paper-specks` drops to ~0.10.
-- **Focus stays neutral:** `--focus-ring` cream 14% (never terracotta).
-  `--focus-ring-danger` lifted-terracotta 22%. `--scrim` warm near-black 62%.
+- **Focus follows the accent in every theme:** `--ring` is the accent's text cut
+  (moss-deep by default), drawn 3px at 50% by every primitive; an invalid field
+  rings in `destructive`. Dialogs and sheets dim the page with `bg-black/10`.
 - `color-scheme: dark` is set so native form controls and scrollbars follow.
 
 ### Do / Don't (Dusk)
@@ -257,7 +321,7 @@ House easing `--ease-out` (`cubic-bezier(0.4, 0, 0.2, 1)`); soft `--ease-soft` (
 
 ### Texture — the tooth of the page
 Two fixed, pointer-events-none overlays give surfaces digital paper grain:
-- `.paper-grain` — fractal-noise SVG (`--grain-noise`), opacity ~0.4, `mix-blend-mode: multiply`.
+- `.paper-grain` — fractal-noise SVG, inline in the stylesheet, opacity ~0.4, `mix-blend-mode: multiply`. Both layers belong to the Quill site; the theme an app installs carries neither.
 - `.paper-specks` — faint radial-dot speck layer, opacity ~0.15.
 Place both as fixed siblings in the app shell (skip on dense dashboards).
 
@@ -324,7 +388,7 @@ The generic uppercase tag pill for app status/tier/label chips — pigment
 informational · `neutral`/`muted` quiet), tinted by default or `solid` for the
 strong cue. Two sanctioned sizes, and only these two: `md` (20px, the badge
 scale) and `sm` (16px, the count-pill scale). Type stays `--text-2xs` with
-`--tracking-wide` 0.1em in BOTH sizes — never tighten tracking to shrink a
+`tracking-label` (0.1em) in BOTH sizes — never tighten tracking to shrink a
 pill. Hand-rolling `rounded-full … uppercase` spans is a contract violation;
 render every tag pill through ToneBadge.
 ```jsx

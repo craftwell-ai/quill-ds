@@ -26,7 +26,7 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
 
 4. **Resolve variables/styles by NAME, live** — `getLocalVariablesAsync()` /
    `getLocalTextStylesAsync()` / `getLocalEffectStylesAsync()`, matched by name
-   (`corner-radius/2xl`, `Elevation/lg`). Never trust remembered IDs beyond the
+   (`radius/2xl`, `Elevation/lg`). Never trust remembered IDs beyond the
    fixture's. Class → variable mapping is the `/figma-pull` table, reversed.
 
 5. **Upsert the existing node in place — NEVER recreate it.** Recreating breaks

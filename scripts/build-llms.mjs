@@ -28,6 +28,7 @@ import {
   renderSpacingSection,
   renderEffectsSection,
 } from '../src/usage/foundations.mjs'
+import { renderRolesSection } from '../src/usage/roles.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -85,7 +86,8 @@ export function renderLlms(t = tokens) {
 
   p('## Tokens')
   p()
-  p('- **Semantic contract** — the shadcn variables map onto Quill pigments: ' + ['background', 'foreground', 'card', 'primary', 'muted', 'muted-foreground', 'destructive', 'border', 'input', 'ring'].map((k) => `\`--${k}\``).join(', ') + '.')
+  p(renderRolesSection(t))
+  p()
   p(`- **Accent-driven** — \`--link\`, \`--ring\`, and accent text follow \`data-accent\` (default ${DEFAULT_ACCENT}-deep). Never hardcode a pigment for these.`)
   p('- **Charts** — use the chart tokens, never raw pigments (raw pigments fail colorblind-safety as data marks):')
   p(`  - Categorical: \`--chart-1\`…\`--chart-5\` (${Object.keys(t.color.chart.series).length} colorblind-safe series cuts). **Assign in fixed order; never cycle or repaint survivors when a series is filtered out.**`)
@@ -165,6 +167,7 @@ export function designSpans(t = tokens) {
     spacing: renderSpacingSection(t),
     effects: renderEffectsSection(t),
     principles: renderPrinciples({ blockCount: blocks.length }),
+    roles: renderRolesSection(t, { heading: '####' }),
   }
 }
 

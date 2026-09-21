@@ -224,35 +224,13 @@ export const tokens = {
     // bar — so gold's decorative cut is the deep one (3.3:1+ everywhere).
     gold: { base: 'var(--gold-deep)', text: 'var(--gold-text)' },
   },
-  // Aliases → primitives (var references, keyed by CSS var name without `--`).
+  // Quill's semantic contract: the 31 colour roles every component speaks
+  // (`bg-background`, `text-muted-foreground`, `border-border`). The names are
+  // shadcn-compatible on purpose — stock primitives and third-party blocks land on
+  // Quill's palette with no edits — but the contract is Quill's own, so it is named
+  // for what it is, not for where the names came from. The only group that gets
+  // `--color-*` utilities. Aliases → primitives, keyed by CSS var name without `--`.
   semantic: {
-    'surface-page': 'var(--paper)',
-    'surface-card': 'var(--paper-warm)',
-    'surface-well': 'var(--paper-deep)',
-    'text-strong': 'var(--ink)',
-    'text-body': 'var(--ink-soft)',
-    'text-muted-color': 'var(--ink-muted)',
-    'text-on-ink': 'var(--paper)',
-    'text-accent-color': 'var(--accent-pigment-text)', // follows the chosen accent (default moss-deep)
-    'link': 'var(--accent-pigment-text)', // links follow the accent (was fixed indigo pre-accent)
-    'border-card': 'var(--line-soft)',
-    'border-field': 'var(--line-control)',
-    'border-divider': 'var(--line-faint)',
-    'success': 'var(--moss-deep)',
-    // gold-text, not gold-deep: gold-deep is 3.33:1 on Dawn paper and 3.91:1 on
-    // Classic Light — under AA for text. gold-text IS gold-deep on every dark
-    // theme, so this is a light-theme-only correction.
-    'warning': 'var(--gold-text)',
-    'danger': 'var(--terracotta-deep)',
-    // indigo-deep, not the base cut: base is 4.26:1 on a Dawn card and 3.94:1
-    // on a well. Every other status token already points at a deep cut.
-    'info': 'var(--indigo-deep)',
-    // Run-status semantics (agent surfaces): working = live activity (teal's
-    // AA text cut); queued = waiting its turn — muted ink, recedes, never signals.
-    'working': 'var(--teal-deep)',
-    'queued': 'var(--ink-muted)',
-  },
-  shadcn: {
     'background': 'var(--paper)', 'foreground': 'var(--ink)',
     'card': 'var(--paper-warm)', 'card-foreground': 'var(--ink)',
     'popover': 'var(--paper-warm)', 'popover-foreground': 'var(--ink)',
@@ -268,5 +246,39 @@ export const tokens = {
     'sidebar-primary': 'var(--ink)', 'sidebar-primary-foreground': 'var(--paper)',
     'sidebar-accent': 'var(--paper-deep)', 'sidebar-accent-foreground': 'var(--ink)',
     'sidebar-border': 'var(--line-faint)', 'sidebar-ring': 'var(--accent-pigment-text)',
+  },
+  // Roles the contract has no word for: the accent mechanism and status. They sit
+  // beside the contract in Figma's one `semantic` group. Each also gets a text
+  // class (`text-success`) — without one, six of them had no reader anywhere and
+  // an agent had no way to write a success or warning colour. The exception is a
+  // key that already starts with `text-`, which would make `text-text-…`.
+  status: {
+    'text-accent-color': 'var(--accent-pigment-text)', // follows the chosen accent (default moss-deep)
+    'link': 'var(--accent-pigment-text)', // links follow the accent (was fixed indigo pre-accent)
+    'success': 'var(--moss-deep)',
+    // gold-text, not gold-deep: gold-deep is 3.33:1 on Dawn paper and 3.91:1 on
+    // Classic Light — under AA for text. gold-text IS gold-deep on every dark
+    // theme, so this is a light-theme-only correction.
+    'warning': 'var(--gold-text)',
+    // indigo-deep, not the base cut: base is 4.26:1 on a Dawn card and 3.94:1
+    // on a well. Every other status token already points at a deep cut.
+    'info': 'var(--indigo-deep)',
+    // Run-status semantics (agent surfaces): working = live activity (teal's
+    // AA text cut); queued = waiting its turn — muted ink, recedes, never signals.
+    'working': 'var(--teal-deep)',
+    'queued': 'var(--ink-muted)',
+  },
+  // Retired 0.10.0. A second vocabulary for what the contract already says
+  // (`--surface-card` is `--card`), which no shipped component and no utility ever
+  // used while DESIGN.md told agents to reach for it. Still emitted so an app that
+  // wrote `var(--text-strong)` keeps its colour; gone from Figma's picker, the
+  // docs and this repo's code (deprecated-tokens.test.mjs). Remove in a later minor.
+  deprecated: {
+    'surface-page': 'var(--paper)', 'surface-card': 'var(--paper-warm)', 'surface-well': 'var(--paper-deep)',
+    'text-strong': 'var(--ink)', 'text-body': 'var(--ink-soft)', 'text-muted-color': 'var(--ink-muted)',
+    'text-on-ink': 'var(--paper)',
+    'border-card': 'var(--line-soft)', 'border-field': 'var(--line-control)', 'border-divider': 'var(--line-faint)',
+    // The same colour as `destructive`, which has the class and every shipped use.
+    'danger': 'var(--terracotta-deep)',
   },
 }

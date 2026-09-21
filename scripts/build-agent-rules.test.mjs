@@ -18,7 +18,7 @@ test('the rules file carries the contract an agent in an app needs', () => {
   assert.doesNotMatch(committed, /undefined/, 'contains the literal string "undefined"')
   for (const m of ALL_MODES) assert.ok(committed.includes(`data-theme="${m.attr}"`), `does not name the '${m.attr}' theme`)
   assert.match(committed, /--overwrite/, 'must state the update rule')
-  for (const h of ['## Theming contract', '## Foundations', '## Principles', '## Icons', '## Blocks', '## Primitives', '## Updating and verifying']) {
+  for (const h of ['## Theming contract', '## Colour roles', '## Foundations', '## Principles', '## Icons', '## Blocks', '## Primitives', '## Updating and verifying']) {
     assert.ok(committed.includes(`\n${h}`), `missing section ${h}`)
   }
   for (const b of registry.items.filter((i) => i.type === 'registry:block')) {
@@ -40,5 +40,8 @@ test('the rules file stays small enough to load into every session', () => {
   // Claude Code loads .claude/rules/*.md into every session of the app. The
   // block index is names + titles for that reason; use_when and rules live in
   // the linked usage pages.
-  assert.ok(committed.length < 18_000, `rules file is ${committed.length} bytes — trim it, every session pays for it`)
+  // Raised from 18 to 19.5 KB in 0.10.0 for the colour-role guidance: the file named
+  // 3 of the 31 roles, and picking a colour is what an agent does most. It gets the
+  // 1.8 KB compact form; the full 12 KB table lives in llms.txt. Spend on nothing else.
+  assert.ok(committed.length < 19_500, `rules file is ${committed.length} bytes — trim it, every session pays for it`)
 })

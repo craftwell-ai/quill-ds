@@ -142,15 +142,15 @@ const ELEVATION_CLASS = { 'Elevation/xs': 'shadow-xs', 'Elevation/sm': 'shadow-s
 export function classFor(key, name) {
   if (name == null) return undefined
   if (key === 'fill') {
-    const m = name.match(/^shadcn\/([a-z0-9-]+)$/)
+    const m = name.match(/^semantic\/([a-z0-9-]+)$/)
     return m ? `bg-${m[1]}` : undefined
   }
   if (key === 'cornerRadius') {
-    const m = name.match(/^corner-radius\/(.+)$/)
+    const m = name.match(/^radius\/(.+)$/)
     return m ? RADIUS_CLASS[m[1]] : undefined
   }
   if (key === 'padding' || key === 'itemSpacing') {
-    const m = name.match(/^spacing\/(.+)$/)
+    const m = name.match(/^space\/(.+)$/)
     if (!m) return undefined
     return `${key === 'padding' ? 'p' : 'gap'}-${m[1].replace('_', '.')}`
   }

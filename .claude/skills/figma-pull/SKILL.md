@@ -36,9 +36,9 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
 
    | Figma | Code |
    |---|---|
-   | fill/stroke → `shadcn/<x>` | `bg-<x>` / `border-<x>` / `text-<x>` |
-   | `corner-radius/<s>` | `rounded-<s>` |
-   | `spacing/<n>` (padding/gap) | `p-<n>` / `gap-<n>` (`spacing/2_5` → `p-2.5`) |
+   | fill/stroke → `semantic/<x>` | `bg-<x>` / `border-<x>` / `text-<x>` |
+   | `radius/<s>` | `rounded-<s>` |
+   | `space/<n>` (padding/gap) | `p-<n>` / `gap-<n>` (`space/2_5` → `p-2.5`) |
    | `border-width/1` | `border` (2 → `border-2`) |
    | `Elevation/<s>` effect style | `shadow-<s>` (`base` → `shadow`) |
    | `color/pigment/<name>[/deep]` | `[var(--<name>[-deep])]` arbitrary value |

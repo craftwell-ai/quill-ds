@@ -58,7 +58,7 @@ export function MailShell() {
             <li key={m.subject}>
               <button
                 type="button"
-                className="flex w-full flex-col gap-1 border-b border-border px-4 py-3 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:-outline-offset-2 focus-visible:outline-ring aria-[current=true]:bg-muted"
+                className="flex w-full flex-col gap-1 border-b border-border px-4 py-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:-outline-offset-2 focus-visible:outline-ring aria-[current=true]:bg-muted"
                 aria-current={m.subject === messages[0].subject}
               >
                 <div className="flex items-baseline justify-between gap-2">

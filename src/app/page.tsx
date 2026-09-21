@@ -137,11 +137,11 @@ function SectionHeader({
     <div className="mb-14 flex items-baseline justify-between gap-8 max-sm:mb-9">
       <div className="flex flex-col gap-4">
         <span className="font-sans text-xs font-medium tracking-eyebrow uppercase text-ink-muted">{eyebrow}</span>
-        <h2 className="m-0 font-display text-3xl font-normal leading-heading tracking-display text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
+        <h2 className="m-0 font-display text-3xl font-normal leading-heading tracking-display text-foreground [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
           {title}
         </h2>
       </div>
-      <p className="m-0 hidden text-right font-display text-base italic text-[var(--text-muted-color)] [font-variation-settings:var(--fraunces-caption)] md:block">
+      <p className="m-0 hidden text-right font-display text-base italic text-muted-foreground [font-variation-settings:var(--fraunces-caption)] md:block">
         {caption}
       </p>
     </div>
@@ -154,7 +154,7 @@ function Accent({ children }: { children: React.ReactNode }) {
 
 function SpecimenLabel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className={`text-2xs font-medium tracking-[0.2em] uppercase text-[var(--text-muted-color)] ${className ?? ""}`}>
+    <span className={`text-2xs font-medium tracking-[0.2em] uppercase text-muted-foreground ${className ?? ""}`}>
       {children}
     </span>
   );
@@ -233,15 +233,15 @@ export default function Home() {
   }
 
   const navLink =
-    "text-sm font-medium text-[var(--text-body)] no-underline transition-colors duration-200 hover:text-[var(--accent-pigment)]";
+    "text-sm font-medium text-ink-soft no-underline transition-colors duration-200 hover:text-[var(--accent-pigment)]";
 
   return (
-    <div className="min-h-screen w-full bg-[var(--surface-page)] font-sans text-[var(--text-body)]">
+    <div className="min-h-screen w-full bg-background font-sans text-ink-soft">
       <div className="paper-grain" />
       <div className="paper-specks" />
 
       {/* ── Nav ─────────────────────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-10 border-b border-[var(--border-divider)] bg-[var(--surface-page)]">
+      <nav className="sticky top-0 z-10 border-b border-[var(--line-faint)] bg-background">
         {/* Three zones: logo left, links centered, theme toggle right. On mobile
             the middle zone sits between the other two (true centering and the
             sun/moon pair don't fit a 390px row). */}
@@ -250,7 +250,7 @@ export default function Home() {
             <Logo />
             {/* On mobile only the feather + Quill wordmark stays. */}
             <span className="inline-block h-[18px] w-px bg-[var(--line)] max-sm:hidden" />
-            <span className="text-2xs font-medium tracking-[0.2em] uppercase text-[var(--text-muted-color)] max-sm:hidden">
+            <span className="text-2xs font-medium tracking-[0.2em] uppercase text-muted-foreground max-sm:hidden">
               Design system
             </span>
           </a>
@@ -264,7 +264,7 @@ export default function Home() {
           <div className="flex items-center sm:justify-self-end">
             <DropdownMenu>
               <DropdownMenuTrigger
-                className="flex items-center gap-1.5 rounded-lg border border-[var(--line-soft)] bg-transparent px-2.5 py-1.5 text-sm font-medium text-[var(--ink)] transition-colors duration-200 hover:bg-[var(--surface-card)]"
+                className="flex items-center gap-1.5 rounded-lg border border-[var(--line-soft)] bg-transparent px-2.5 py-1.5 text-sm font-medium text-[var(--ink)] transition-colors duration-200 hover:bg-card"
                 aria-label={`Theme: ${THEME_OPTIONS.find((t) => t.value === theme)?.label}`}
               >
                 <ToggleGlyph
@@ -318,7 +318,7 @@ export default function Home() {
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
-      <header id="top" className="relative overflow-hidden bg-[var(--surface-page)]">
+      <header id="top" className="relative overflow-hidden bg-background">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.07] saturate-0 dark:invert [[data-theme=dark]_&]:opacity-[0.035]"
@@ -327,10 +327,10 @@ export default function Home() {
         <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] lg:pt-[68px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-[15px] max-sm:pb-16">
           <div className="flex flex-col items-start gap-7 max-sm:gap-5">
             <Eyebrow dash>The Quill design system · Issue 001</Eyebrow>
-            <h1 className="m-0 font-display text-5xl font-normal leading-display tracking-display text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
+            <h1 className="m-0 font-display text-5xl font-normal leading-display tracking-display text-foreground [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
               A design system, made for <Accent>people</Accent>.
             </h1>
-            <p className="m-0 max-w-[540px] text-lg leading-reading text-[var(--text-body)]">
+            <p className="m-0 max-w-[540px] text-lg leading-reading text-ink-soft">
               Warm neutral grounds, ink-toned type, and a narrow accent palette. Quill is designed for making interfaces
               feel approachable, delightful, and premium — crafted for everyday use.
             </p>
@@ -342,7 +342,7 @@ export default function Home() {
                 Read the foundations
               </Button>
             </div>
-            <p className="m-0 mt-1 font-display text-sm italic text-[var(--text-muted-color)] [font-variation-settings:var(--fraunces-caption)]">
+            <p className="m-0 mt-1 font-display text-sm italic text-muted-foreground [font-variation-settings:var(--fraunces-caption)]">
               Optimized for agentic development.
             </p>
           </div>
@@ -357,7 +357,7 @@ export default function Home() {
       </header>
 
       {/* ── Foundations ─────────────────────────────────────────────────── */}
-      <section id="foundations" className="border-y border-[var(--border-divider)] bg-paper-warm">
+      <section id="foundations" className="border-y border-[var(--line-faint)] bg-paper-warm">
         <div className="mx-auto max-w-[1400px] px-12 py-24 max-sm:px-6 max-sm:py-14">
           <SectionHeader
             eyebrow="Foundations"
@@ -388,7 +388,7 @@ export default function Home() {
                     <Swatch color="var(--gold)" pill />
                   </div>
                 </div>
-                <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
+                <p className="m-0 mt-auto text-sm leading-normal text-ink-soft">
                   Three paper tones, three inks, four pigments — re-cut for every theme.
                 </p>
               </CardContent>
@@ -397,10 +397,10 @@ export default function Home() {
               <CardContent className="flex h-full flex-col gap-[18px]">
                 <SpecimenLabel>Type</SpecimenLabel>
                 <div className="flex items-baseline gap-3.5">
-                  <span className="font-display text-[64px] leading-none text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)]">Aa</span>
-                  <span className="font-sans text-[30px] font-medium leading-none text-[var(--text-muted-color)]">Aa</span>
+                  <span className="font-display text-[64px] leading-none text-foreground [font-variation-settings:var(--fraunces-display)]">Aa</span>
+                  <span className="font-sans text-[30px] font-medium leading-none text-muted-foreground">Aa</span>
                 </div>
-                <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
+                <p className="m-0 mt-auto text-sm leading-normal text-ink-soft">
                   Fraunces carries the voice; Raleway does the work. One italic word per headline, always in the accent pigment.
                 </p>
               </CardContent>
@@ -413,7 +413,7 @@ export default function Home() {
                   <span className="h-[52px] w-[52px] rounded-lg border border-[var(--line-faint)] bg-paper-warm shadow-md" />
                   <span className="h-[52px] w-[52px] rounded-xl border border-[var(--line-faint)] bg-paper-warm shadow-lg" />
                 </div>
-                <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
+                <p className="m-0 mt-auto text-sm leading-normal text-ink-soft">
                   Fractal paper grain, gentle radii, and three steps of warm ink shadow — never a hard drop.
                 </p>
               </CardContent>
@@ -438,7 +438,7 @@ export default function Home() {
                     <img src="/home/quill-mark-cream.svg" alt="16px favicon" width={16} height={16} className="hidden rounded-xs border border-[var(--line-soft)] bg-transparent p-px dark:block" />
                   </div>
                 </div>
-                <p className="m-0 mt-auto text-sm leading-normal text-[var(--text-body)]">
+                <p className="m-0 mt-auto text-sm leading-normal text-ink-soft">
                   The quill, set in ink. Ships as SVG, a full favicon set, and lock-ups in three sizes.
                 </p>
                 <a href={storyUrl("foundations-brand--docs")} className="text-sm font-medium text-[var(--link)] no-underline transition-colors duration-200 hover:text-[var(--accent-pigment)]">
@@ -451,7 +451,7 @@ export default function Home() {
       </section>
 
       {/* ── Components ──────────────────────────────────────────────────── */}
-      <section id="components" className="bg-[var(--surface-page)]">
+      <section id="components" className="bg-background">
         <div className="mx-auto max-w-[1400px] px-12 py-24 max-sm:px-6 max-sm:py-14">
           <SectionHeader
             eyebrow="The collection"
@@ -557,10 +557,10 @@ export default function Home() {
       </section>
 
       {/* ── Principles ──────────────────────────────────────────────────── */}
-      <section id="principles" className="border-y border-[var(--border-divider)] bg-paper-warm">
+      <section id="principles" className="border-y border-[var(--line-faint)] bg-paper-warm">
         <div className="mx-auto flex max-w-[800px] flex-col items-center gap-7 px-12 pt-24 pb-[72px] text-center max-sm:px-6 max-sm:pt-14 max-sm:pb-10">
           <span className="font-display text-3xl leading-none text-[var(--accent-pigment)]">&mdash;</span>
-          <p className="m-0 font-display text-2xl font-normal leading-[1.45] tracking-[-0.02em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:pretty] max-sm:text-xl">
+          <p className="m-0 font-display text-2xl font-normal leading-[1.45] tracking-[-0.02em] text-foreground [font-variation-settings:var(--fraunces-display)] [text-wrap:pretty] max-sm:text-xl">
             &ldquo;People sit at the core of our design system and shape what good looks like: distinctive yet
             familiar, with a flair of style that makes it easy to come back to every day.&rdquo;
           </p>
@@ -574,8 +574,8 @@ export default function Home() {
             ].map(([num, title, body]) => (
               <div key={num} className="flex flex-col gap-2.5">
                 <span className="font-display text-base italic text-[var(--accent-pigment)] [font-variation-settings:var(--fraunces-caption)]">{num}</span>
-                <h3 className="m-0 font-display text-xl font-normal text-[var(--text-strong)] [font-variation-settings:var(--fraunces-text)]">{title}</h3>
-                <p className="m-0 text-sm leading-reading text-[var(--text-body)]">{body}</p>
+                <h3 className="m-0 font-display text-xl font-normal text-foreground [font-variation-settings:var(--fraunces-text)]">{title}</h3>
+                <p className="m-0 text-sm leading-reading text-ink-soft">{body}</p>
               </div>
             ))}
           </div>
@@ -583,14 +583,14 @@ export default function Home() {
       </section>
 
       {/* ── Getting started ─────────────────────────────────────────────── */}
-      <section id="start" className="bg-[var(--surface-page)]">
+      <section id="start" className="bg-background">
         <div className="mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-center gap-16 px-12 py-24 max-lg:grid-cols-1 max-sm:gap-8 max-sm:px-6 max-sm:py-14">
           <div className="flex flex-col items-start gap-6">
             <span className="font-sans text-xs font-medium tracking-eyebrow uppercase text-ink-muted">Getting started</span>
-            <h2 className="m-0 font-display text-3xl font-normal leading-heading tracking-display text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
+            <h2 className="m-0 font-display text-3xl font-normal leading-heading tracking-display text-foreground [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
               Begin with a single <Accent>command</Accent>.
             </h2>
-            <p className="m-0 max-w-[460px] text-[1rem] leading-reading text-[var(--text-body)]">
+            <p className="m-0 max-w-[460px] text-[1rem] leading-reading text-ink-soft">
               Add the Quill theme with the shadcn CLI, import from the registry, and compose. The Storybook holds a
               story for every component, every state, both themes.
             </p>
@@ -619,18 +619,18 @@ export default function Home() {
       </section>
 
       {/* ── Footer ──────────────────────────────────────────────────────── */}
-      <footer className="bg-[var(--surface-page)]">
+      <footer className="bg-background">
         <div className="h-px bg-[linear-gradient(90deg,transparent,var(--line-strong),transparent)]" />
         <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-8 px-12 pt-12 pb-14 max-md:flex-col max-sm:gap-6 max-sm:px-6 max-sm:pt-8 max-sm:pb-10">
           <div className="flex items-center gap-3.5">
             <Logo />
-            <span className="text-sm text-[var(--text-body)]">— A design system, made for people.</span>
+            <span className="text-sm text-ink-soft">— A design system, made for people.</span>
           </div>
           <div className="flex items-center gap-5">
             <a href="/llms.txt" className={navLink}>
               llms.txt
             </a>
-            <span className="font-display text-sm italic text-[var(--text-muted-color)] [font-variation-settings:var(--fraunces-caption)]">
+            <span className="font-display text-sm italic text-muted-foreground [font-variation-settings:var(--fraunces-caption)]">
               v{packageJson.version}
             </span>
           </div>
