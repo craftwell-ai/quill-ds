@@ -268,6 +268,20 @@ export const tokens = {
     'working': 'var(--teal-deep)',
     'queued': 'var(--ink-muted)',
   },
+  // The opacities the system uses on purpose: a role or a pigment at a fixed alpha.
+  // Code writes the Tailwind modifier (`bg-destructive/10`); Figma needs a variable
+  // per tint (`tint/destructive/10`), because a paint opacity on a bound colour dies
+  // inside a nested instance. `of` is a contract role or a pigment's CSS name;
+  // `text` marks a tint that colours text, so Figma offers it for text fills.
+  // What each is for: src/usage/roles.mjs (TINT_INTENTS).
+  tints: [
+    { of: 'destructive', pct: 10 },
+    { of: 'moss', pct: 20 }, { of: 'gold', pct: 25 }, { of: 'terracotta', pct: 16 }, { of: 'indigo', pct: 20 },
+    { of: 'foreground', pct: 10 }, { of: 'input', pct: 30 },
+    { of: 'chart-1', pct: 20 }, { of: 'chart-2', pct: 20 },
+    { of: 'muted', pct: 50 }, { of: 'primary', pct: 10 },
+    { of: 'sidebar-border', pct: 8 }, { of: 'sidebar-foreground', pct: 70, text: true },
+  ],
   // Retired 0.10.0. A second vocabulary for what the contract already says
   // (`--surface-card` is `--card`), which no shipped component and no utility ever
   // used while DESIGN.md told agents to reach for it. Still emitted so an app that

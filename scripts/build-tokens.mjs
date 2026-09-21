@@ -227,17 +227,29 @@ function decls(block, { keepPrefix = false } = {}) {
   return Object.fromEntries(
     block
       .split('\n')
-      .map((l) => l.match(/^\s*--([a-z0-9-]+)\s*:\s*(.+);\s*$/))
+      // `_` too: `--space-2_5`. Without it the three half-steps never reached a CLI-installed app.
+      .map((l) => l.match(/^\s*--([a-z0-9_-]+)\s*:\s*(.+);\s*$/))
       .filter(Boolean)
       .map((m) => [keepPrefix ? `--${m[1]}` : m[1], m[2]]),
   )
 }
 
-export function registryPayload(css) {
+// A third shape rule, learned the same way (real CLI, scratch app, 2026-09-21): the
+// CLI registers every COLOUR in `cssVars.light` as a `--color-*` theme key. With all
+// of :root there, an app got 271 classes nobody asked for (`bg-dk-paper`,
+// `bg-cd-indigo-deep`, `bg-int-ink`) in the stylesheet its agents read. So
+// `cssVars.light` carries only the contract roles — the keys the CLI is built to
+// map, and the same ones `cssVars.theme` already asks for — and every other :root
+// declaration rides in `css[':root']`, written verbatim with nothing registered.
+// library-sync's merged-layer detection reads that block for the same reason.
+export function registryPayload(css, t = tokens) {
   const literal = { keepPrefix: true }
+  const contract = new Set([...Object.keys(t.semantic), 'radius'])
+  const root = Object.entries(decls(css.root))
   return {
-    cssVars: { theme: decls(css.theme), light: decls(css.root) },
+    cssVars: { theme: decls(css.theme), light: Object.fromEntries(root.filter(([k]) => contract.has(k))) },
     css: Object.fromEntries([
+      [':root', Object.fromEntries(root.filter(([k]) => !contract.has(k)).map(([k, v]) => [`--${k}`, v]))],
       ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body, literal)]),
       ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body, literal)]),
     ]),
@@ -354,6 +366,17 @@ export function renderDtcg(t) {
   const Theme = { semantic: {} }
   for (const [k, v] of Object.entries(t.semantic)) Theme.semantic[k] = named(alias(v), `semantic/${k}`, `shadcn/${k}`)
   for (const [k, v] of Object.entries(t.status)) Theme.semantic[k] = named(alias(v), `semantic/${k}`, legacyRoleName(k))
+  // Each tint names the Figma variable it is cut from: a contract role, else the
+  // colour primitive whose CSS name it carries.
+  const colourNames = new Map()
+  const collectColours = (node) => { for (const v of Object.values(node)) { if (v.$type === 'color') { const n = v.$extensions['com.figma'].name; colourNames.set(n.slice('color/'.length), n) } else collectColours(v) } }
+  collectColours(primColor)
+  const Tints = t.tints.map(({ of, pct, text = false }) => {
+    const base = of in t.semantic ? `semantic/${of}` : colourNames.get(of)
+    if (!base) throw new Error(`tint '${of}/${pct}': '${of}' is neither a contract role nor a colour primitive`)
+    return { name: `tint/${of}/${pct}`, base, alpha: pct / 100, cssVar: `--${of}`, text }
+  })
+
   // Retired names are not tokens any more, so they carry no value here — only the
   // rename that parks their Figma variable under `deprecated/`, hidden from
   // publishing. Never deleted: a file that consumes the library may be bound to one.
@@ -364,6 +387,7 @@ export function renderDtcg(t) {
     Primitives: { color: primColor, font, spacing, radius, borderWidth, type, lineHeight, leading, tracking, elevation, motion, fraunces },
     Theme,
     Deprecated,
+    Tints,
   }
 }
 

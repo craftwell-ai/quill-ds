@@ -359,23 +359,8 @@ async function syncEffectStyles(DTCG) {
 // tinted badge and card ring solid), while a variable whose value carries the alpha survives —
 // so every tinted paint binds one of these. Values are derived per mode from the base variable
 // (resolved through its aliases), never typed by hand; the list below is the single source.
-const TINTS = [
-  ['tint/destructive/10', 'semantic/destructive', 0.10, '--destructive'],
-  ['tint/moss/20', 'color/moss', 0.20, '--moss'],
-  ['tint/gold/25', 'color/gold', 0.25, '--gold'],
-  ['tint/terracotta/16', 'color/terracotta', 0.16, '--terracotta'],
-  ['tint/indigo/20', 'color/indigo', 0.20, '--indigo'],
-  ['tint/foreground/10', 'semantic/foreground', 0.10, '--foreground'],
-  ['tint/input/30', 'semantic/input', 0.30, '--input'],
-  ['tint/chart-1/20', 'semantic/chart-1', 0.20, '--chart-1'],
-  ['tint/chart-2/20', 'semantic/chart-2', 0.20, '--chart-2'],
-  ['tint/muted/50', 'semantic/muted', 0.50, '--muted'],
-  ['tint/primary/10', 'semantic/primary', 0.10, '--primary'],
-  ['tint/sidebar-border/8', 'semantic/sidebar-border', 0.08, '--sidebar-border'],
-  ['tint/sidebar-foreground/70', 'semantic/sidebar-foreground', 0.70, '--sidebar-foreground'],
-]
 
-async function syncTints() {
+async function syncTints(DTCG) {
   const prim = await upsertCollection('Quill Primitives')
   const all = await figma.variables.getLocalVariablesAsync()
   const byName = (n) => all.find((v) => v.name === n)
@@ -398,7 +383,8 @@ async function syncTints() {
   }
   let created = 0
   let updated = 0
-  for (const [name, baseName, alpha, cssVar] of TINTS) {
+  // Which tints exist is a token decision (quill.tokens.mjs `tints`); the export carries them.
+  for (const { name, base: baseName, alpha, cssVar, text } of DTCG.Tints) {
     const base = byName(baseName)
     if (!base) throw new Error(`tint base ${baseName} missing — run the colour sync first`)
     let v = byName(name)
@@ -407,11 +393,11 @@ async function syncTints() {
       const c = await resolveForMode(base, mode.modeId)
       v.setValueForMode(mode.modeId, { r: c.r, g: c.g, b: c.b, a: alpha })
     }
-    v.scopes = name.includes('sidebar-foreground') ? ['TEXT_FILL', 'SHAPE_FILL', 'FRAME_FILL'] : ['FRAME_FILL', 'SHAPE_FILL', 'STROKE_COLOR']
+    v.scopes = text ? ['TEXT_FILL', 'SHAPE_FILL', 'FRAME_FILL'] : ['FRAME_FILL', 'SHAPE_FILL', 'STROKE_COLOR']
     v.setVariableCodeSyntax('WEB', `color-mix(in oklab, var(${cssVar}) ${Math.round(alpha * 100)}%, transparent)`)
     v.description = `${baseName} at ${Math.round(alpha * 100)} % — the Tailwind opacity modifier (${cssVar.replace('--', '')}/${Math.round(alpha * 100)}) as a variable, so the tint survives nested instances.`
   }
-  return { created, updated, total: TINTS.length }
+  return { created, updated, total: DTCG.Tints.length }
 }
 
 async function syncFoundations(DTCG) {
@@ -422,7 +408,7 @@ async function syncFoundations(DTCG) {
   results.shadowColors = await syncShadowColorVars(DTCG)
   results.text = await syncTextStyles(DTCG)
   results.effects = await syncEffectStyles(DTCG)
-  results.tints = await syncTints()
+  results.tints = await syncTints(DTCG)
   results.renamed = renamed
   return results
 }

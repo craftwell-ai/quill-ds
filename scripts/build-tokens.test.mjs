@@ -254,6 +254,61 @@ test('a leading or tracking role never reuses one of Tailwind\'s own names', () 
   assert.deepEqual(Object.keys(tokens.tracking).filter((k) => owned('tracking').has(k)), [])
 })
 
+test('the sanctioned tints are declared in the token source and exported for Figma', () => {
+  // They lived in a table inside the Figma sync snippet: a design decision (which
+  // opacities the system uses on purpose) that the token source knew nothing about.
+  assert.equal(tokens.tints.length, 13)
+  const d = renderDtcg(tokens)
+  assert.equal(d.Tints.length, tokens.tints.length)
+  const names = new Set()
+  const collect = (o) => { for (const v of Object.values(o)) { if (!v || typeof v !== 'object') continue; const f = v.$extensions?.['com.figma']; if (f?.name) names.add(f.name); else collect(v) } }
+  collect(d.Primitives); collect(d.Theme)
+  for (const t of d.Tints) {
+    assert.match(t.name, /^tint\/[a-z0-9-]+\/\d+$/)
+    assert.ok(names.has(t.base), `${t.name}: base '${t.base}' is not a variable the export produces`)
+    assert.ok(t.alpha > 0 && t.alpha < 1)
+    assert.match(t.cssVar, /^--[a-z0-9-]+$/)
+  }
+  const byName = Object.fromEntries(d.Tints.map((t) => [t.name, t]))
+  assert.deepEqual(byName['tint/destructive/10'], { name: 'tint/destructive/10', base: 'semantic/destructive', alpha: 0.1, cssVar: '--destructive', text: false })
+  assert.equal(byName['tint/moss/20'].base, 'color/moss')
+  assert.equal(byName['tint/sidebar-foreground/70'].text, true) // a text tint gets text scopes in Figma
+})
+
+test('--space-N is the step Tailwind renders for p-N, so the variable and the class never disagree', () => {
+  // Nothing reads --space-* (not shipped code, not the site, not the app): components
+  // write `p-4`. The variables stay because they are the CSS name behind Figma's
+  // `space/*` and the documented scale — which is only honest while both are 0.25rem × N.
+  const defaults = readFileSync(new URL('../node_modules/tailwindcss/theme.css', import.meta.url), 'utf8')
+  const step = defaults.match(/--spacing:\s*([\d.]+)rem;/)
+  assert.ok(step, 'Tailwind theme not read — guard is vacuous')
+  let checked = 0
+  for (const [k, v] of Object.entries(tokens.spacing)) {
+    assert.ok(Math.abs(parseFloat(v) - Number(k) * Number(step[1])) < 1e-9, `--space-${k} is ${v}; Tailwind's p-${k} renders ${Number(k) * Number(step[1])}rem`)
+    checked++
+  }
+  assert.ok(checked >= 15)
+})
+
+test('the CLI payload registers no class for a primitive: cssVars.light holds only the contract', () => {
+  // The shadcn CLI turns EVERY colour in `cssVars.light` into a `--color-*` theme key.
+  // With all of :root there, an installed app got 271 classes nobody asked for —
+  // `bg-dk-paper`, `bg-cd-indigo-deep`, `bg-int-ink` — in the stylesheet its agents
+  // read (measured with the real CLI in a scratch app: 103 keys asked for, 374
+  // written). Everything that is not a contract role now rides in the `css` field,
+  // which the CLI writes verbatim and registers nothing for.
+  const payload = registryPayload(renderCss(tokens))
+  assert.deepEqual(Object.keys(payload.cssVars.light).sort(), [...Object.keys(tokens.semantic), 'radius'].sort())
+  const root = payload.css[':root']
+  for (const k of ['--paper', '--dk-paper', '--int-ink', '--success', '--space-4', '--leading-reading', '--shadow-xs']) assert.ok(k in root, `${k} should ride in css[':root']`)
+  for (const k of Object.keys(root)) assert.match(k, /^--[a-z0-9_-]+$/)
+  // Nothing dropped on the way: every :root declaration lands in exactly one place.
+  const declared = [...renderCss(tokens).root.matchAll(/^\s*--([a-z0-9_-]+)\s*:/gm)].map((m) => m[1])
+  const carried = new Set([...Object.keys(payload.cssVars.light), ...Object.keys(root).map((k) => k.slice(2))])
+  assert.deepEqual(declared.filter((k) => !carried.has(k)), [])
+  assert.equal(Object.keys(payload.cssVars.light).filter((k) => `--${k}` in root).length, 0)
+})
+
 test('the dark: variant covers every theme whose color-scheme is dark', () => {
   const selector = darkVariant()
   const dark = MODES.filter((m) => m.colorScheme === 'dark')
@@ -281,11 +336,11 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
     for (const k of Object.keys(vars)) assert.ok(!k.startsWith('--'), `cssVars.${bucket} key '${k}' must be bare`)
   }
   const selectors = Object.keys(payload.css)
-  assert.equal(selectors.length, css.modes.length + css.accents.length)
+  assert.equal(selectors.length, 1 + css.modes.length + css.accents.length) // ':root' + themes + accents
   for (const [selector, block] of Object.entries(payload.css)) {
     const keys = Object.keys(block)
     assert.ok(keys.length > 0, `${selector} has no declarations`)
-    for (const k of keys) assert.match(k, /^--[a-z0-9-]+$/, `${selector} key '${k}' must be a custom-property name`)
+    for (const k of keys) assert.match(k, /^--[a-z0-9_-]+$/, `${selector} key '${k}' must be a custom-property name`)
   }
   // Nothing lost in translation: the dark block carries every --var its CSS body declares.
   const darkBody = css.modes.find((m) => m.attr === 'dark').body
