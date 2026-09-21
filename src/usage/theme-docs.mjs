@@ -50,6 +50,8 @@ export function themeDocsParagraphs() {
 
     `Fonts — Raleway for body, Fraunces for display. The theme file already @imports both from Google Fonts, so no next/font setup is needed; loading them again under a different family name is what makes the theme's literal font-family names fail to match.`,
 
+    `dark: utilities — stock shadcn primitives carry dark: tweaks, and a stock app only fires them on the .dark class. Installing with the CLI adds the rule that makes dark: follow Quill's dark themes as well. If you installed the theme as a file instead, add this line to your main stylesheet, after @import "tailwindcss": @custom-variant dark (&:is(.dark *, ${ALL_MODES.filter((m) => m.colorScheme === 'dark').map((m) => `[data-theme="${m.attr}"] *`).join(', ')}));`,
+
     `Updating — re-run with --overwrite, not --yes. On a file you have changed, --yes does not overwrite: it prompts in a terminal and silently skips when non-interactive.`,
 
     `Full machine-readable reference for agents: ${LLMS_URL}. Per-component usage guides at /usage/<name>.md.`,

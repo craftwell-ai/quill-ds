@@ -12,6 +12,23 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.2] — 2026-09-21
+
+### Fixed
+- **`dark:` follows Quill's dark themes in an app.** Stock shadcn primitives carry 71
+  `dark:` tweaks (`dark:bg-input/30`, `dark:aria-invalid:ring-destructive/40`…). A stock
+  app defines that variant as `.dark *`, so on `data-theme="dark"` none of them fired:
+  Dusk, Classic Dark and Intelligent rendered differently in an app than in Storybook,
+  where the site defines the variant. The `quill` item now ships
+  `@custom-variant dark (&:is(.dark *, [data-theme="dark"] *, …))` in its `css` field —
+  the CLI writes the at-rule into the app's main stylesheet, where Tailwind processes it.
+  The rule keeps `.dark *` on purpose: Tailwind honours the last definition of a custom
+  variant (compiled: stock then ours → ours), and an app toggling shadcn's stock class
+  must keep working. Derived from the theme list, so a new dark theme joins by itself.
+  The theme **file** cannot carry it (it is imported outside the Tailwind entry), so the
+  theming docs now give file-channel apps the one line to add. None of Quill's own
+  blocks uses `dark:`; they re-cut through the tokens.
+
 ## [0.10.1] — 2026-09-21
 
 Closes step 5 of the token-unification plan, and fixes what a dry run of the CLI

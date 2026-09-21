@@ -187,13 +187,15 @@ export function injectMarkers(source, block) {
 // silently rendering their light treatment on a near-black ground, because the
 // selector still named only two of the three dark themes. A sixth theme now
 // joins automatically.
-// NOTE: this is site-only. The registry cut is imported from a layout rather
-// than the Tailwind entry, so an @custom-variant there would never be processed
-// — consumers get no data-theme→dark: bridge until the token layer ships
-// through shadcn's cssVars/css fields (see docs/audits/2026-09-09, item 6).
-export function darkVariant(modes = MODES) {
+// Apps get it too, through the registry item's `css` field (the CLI writes an
+// at-rule into the app's main stylesheet, where Tailwind processes it). It cannot
+// ride in the theme FILE: that is imported from a layout, outside the Tailwind
+// entry, so a file-channel app adds the line by hand (theme-docs.mjs says so).
+// `stockClass` keeps `.dark *` in the rule: Tailwind honours the LAST definition
+// of a custom variant, and an app toggling shadcn's stock class must keep working.
+export function darkVariant(modes = MODES, { stockClass = false } = {}) {
   const dark = modes.filter((m) => m.colorScheme === 'dark')
-  const selector = dark.map((m) => `[data-theme="${m.attr}"] *`).join(', ')
+  const selector = [...(stockClass ? ['.dark *'] : []), ...dark.map((m) => `[data-theme="${m.attr}"] *`)].join(', ')
   return `@custom-variant dark (&:is(${selector}));`
 }
 
@@ -249,6 +251,7 @@ export function registryPayload(css, t = tokens) {
   return {
     cssVars: { theme: decls(css.theme), light: Object.fromEntries(root.filter(([k]) => contract.has(k))) },
     css: Object.fromEntries([
+      [darkVariant(MODES, { stockClass: true }).replace(/;$/, ''), {}],
       [':root', Object.fromEntries(root.filter(([k]) => !contract.has(k)).map(([k, v]) => [`--${k}`, v]))],
       ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body, literal)]),
       ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body, literal)]),
