@@ -23,6 +23,7 @@ import { dirname, join } from 'node:path'
 import { icons } from '../src/components/ui/icons.core.mjs'
 import { themeDocsParagraphs, LLMS_URL } from '../src/usage/theme-docs.mjs'
 import { renderFoundations, renderPrinciples } from '../src/usage/foundations.mjs'
+import { renderRolesCompact } from '../src/usage/roles.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
 import { EXAMPLES } from '../src/usage/examples.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
@@ -50,6 +51,11 @@ export function renderAgentRules() {
   p('## Theming contract')
   p()
   for (const para of themeDocsParagraphs()) p(`- ${para}`)
+  p()
+
+  p('## Colour roles')
+  p()
+  p(renderRolesCompact())
   p()
 
   p('## Foundations')

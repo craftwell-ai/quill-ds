@@ -14,6 +14,20 @@ This app is built on Quill (https://www.quilldesignsystem.com): a token layer wi
 - Updating — re-run with --overwrite, not --yes. On a file you have changed, --yes does not overwrite: it prompts in a terminal and silently skips when non-interactive.
 - Full machine-readable reference for agents: https://www.quilldesignsystem.com/llms.txt. Per-component usage guides at /usage/<name>.md.
 
+## Colour roles
+
+Components speak 31 colour roles as classes. Several share a colour (`card` = `popover` = `sidebar`; `secondary` = `muted` = `accent`), so pick by the job, never by the look.
+- **Surfaces** — `background` page · `card` raised, in the page · `popover` anything floating · `sidebar` the nav rail · `muted` quiet wells · `secondary` only through `variant="secondary"`.
+- **Text** — `foreground` strong · `muted-foreground` supporting · a `-foreground` role is text ON that surface. Never `text-muted`: it is a paper tone and vanishes.
+- **Actions** — `primary` is INK: the main action and on / done states, never a brand colour. `destructive` is errors, as a 10% tint with destructive text, never a solid fill.
+- **`accent` is the pale highlight, not the brand accent.** The brand accent is the accent pigment; it arrives through `ring`, links and the one italic accent word.
+- **Hover** — list and menu items highlight with `accent`; buttons, toggles and table rows wash with `muted`. Same colour, two jobs.
+- **Lines** — `border` hairlines and dividers · `input` the edge of anything typed into or toggled (it holds 3:1; `border` does not) · `ring` keyboard focus, and the one selected item in a set.
+- **Charts** — `--chart-1`…`--chart-5` in fixed order, never as UI colour.
+- **Status, as text only** — `text-link` · `text-success` · `text-warning` · `text-info` · `text-working` · `text-queued`. Never a fill behind text. `text-link` is a prose link; a link-styled Button is ink.
+- **Sanctioned tints** — `bg-destructive/10` · `ring-1 ring-foreground/10` · `bg-input/30` · `bg-muted/50` · `bg-primary/10` · `text-sidebar-foreground/70`. Reach for one before inventing another opacity.
+- Every role with its use-for / never-for line: the Colour roles table in llms.txt.
+
 ## Foundations
 
 ### Type

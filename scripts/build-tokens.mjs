@@ -109,6 +109,9 @@ export function renderCss(t) {
   themeLines.push(`  --font-ui: ${t.font.ui};`)
   themeLines.push(`  --font-data: ${t.font.data};`)
   for (const k of Object.keys(t.semantic)) themeLines.push(`  --color-${k}: var(--${k});`)
+  // Status roles get a class too. A key that starts with `text-` would produce
+  // `text-text-accent-color`, so it stays a variable (the theme applies it).
+  for (const k of Object.keys(t.status)) if (!k.startsWith('text-')) themeLines.push(`  --color-${k}: var(--${k});`)
   const paletteMap = {
     paper: '--paper', 'paper-warm': '--paper-warm', 'paper-deep': '--paper-deep',
     ink: '--ink', 'ink-soft': '--ink-soft', 'ink-muted': '--ink-muted',

@@ -247,9 +247,11 @@ export const tokens = {
     'sidebar-accent': 'var(--paper-deep)', 'sidebar-accent-foreground': 'var(--ink)',
     'sidebar-border': 'var(--line-faint)', 'sidebar-ring': 'var(--accent-pigment-text)',
   },
-  // Roles the contract has no word for: the accent mechanism and status. Plain
-  // variables (no utility yet); they sit beside the contract in Figma's one
-  // `semantic` group.
+  // Roles the contract has no word for: the accent mechanism and status. They sit
+  // beside the contract in Figma's one `semantic` group. Each also gets a text
+  // class (`text-success`) — without one, six of them had no reader anywhere and
+  // an agent had no way to write a success or warning colour. The exception is a
+  // key that already starts with `text-`, which would make `text-text-…`.
   status: {
     'text-accent-color': 'var(--accent-pigment-text)', // follows the chosen accent (default moss-deep)
     'link': 'var(--accent-pigment-text)', // links follow the accent (was fixed indigo pre-accent)
@@ -258,7 +260,6 @@ export const tokens = {
     // Classic Light — under AA for text. gold-text IS gold-deep on every dark
     // theme, so this is a light-theme-only correction.
     'warning': 'var(--gold-text)',
-    'danger': 'var(--terracotta-deep)',
     // indigo-deep, not the base cut: base is 4.26:1 on a Dawn card and 3.94:1
     // on a well. Every other status token already points at a deep cut.
     'info': 'var(--indigo-deep)',
@@ -277,5 +278,7 @@ export const tokens = {
     'text-strong': 'var(--ink)', 'text-body': 'var(--ink-soft)', 'text-muted-color': 'var(--ink-muted)',
     'text-on-ink': 'var(--paper)',
     'border-card': 'var(--line-soft)', 'border-field': 'var(--line-control)', 'border-divider': 'var(--line-faint)',
+    // The same colour as `destructive`, which has the class and every shipped use.
+    'danger': 'var(--terracotta-deep)',
   },
 }

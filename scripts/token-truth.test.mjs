@@ -39,6 +39,11 @@ const sources = {
   'src/usage/foundations.mjs (principles)': renderPrinciples({ blockCount: 51 }),
   'public/llms.txt': readFileSync(join(root, 'public/llms.txt'), 'utf8'),
   'registry/agent-rules/quill.md': readFileSync(join(root, 'registry/agent-rules/quill.md'), 'utf8'),
+  // The hand-written documents too. DESIGN.md sat outside this guard and told agents
+  // to "reach for" three variables that never existed, plus a focus ring and a scrim
+  // defined in neither stylesheet.
+  'DESIGN.md': readFileSync(join(root, 'DESIGN.md'), 'utf8'),
+  'PRODUCT.md': readFileSync(join(root, 'PRODUCT.md'), 'utf8'),
 }
 
 test('the built theme item defines a meaningful number of custom properties', () => {

@@ -1657,15 +1657,6 @@
           }
         }
       },
-      "danger": {
-        "$value": "{Primitives.color.pigment.terracotta.deep}",
-        "$extensions": {
-          "com.figma": {
-            "name": "semantic/danger",
-            "legacyName": "status/danger"
-          }
-        }
-      },
       "info": {
         "$value": "{Primitives.color.pigment.indigo.deep}",
         "$extensions": {
@@ -1783,6 +1774,15 @@
         "com.figma": {
           "name": "deprecated/border-divider",
           "legacyName": "border/divider"
+        }
+      }
+    },
+    "danger": {
+      "$description": "Retired 0.10.0 — use the semantic contract",
+      "$extensions": {
+        "com.figma": {
+          "name": "deprecated/danger",
+          "legacyName": "status/danger"
         }
       }
     }

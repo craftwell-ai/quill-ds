@@ -83,7 +83,7 @@
     "VariableID:5:14": "semantic/link",
     "VariableID:5:15": "semantic/success",
     "VariableID:5:16": "semantic/warning",
-    "VariableID:5:17": "semantic/danger",
+    "VariableID:5:17": "deprecated/danger",
     "VariableID:5:18": "semantic/info",
     "VariableID:5:19": "semantic/background",
     "VariableID:5:20": "semantic/foreground",
@@ -1912,8 +1912,8 @@
       "page": "❖ Mail inbox",
       "pageId": "215:2",
       "frameId": "696:38",
-      "codeHash": "490f1f76fec36865",
-      "syncedAt": "2026-09-18"
+      "codeHash": "16fc1fa76b3ea93b",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "navbar",
@@ -2131,7 +2131,7 @@
     }
   ],
   "foundations": {
-    "tokensHash": "065180025bb7a85a",
+    "tokensHash": "8ea2cc68ba814630",
     "syncedAt": "2026-09-21"
   },
   "declined": [

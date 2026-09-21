@@ -46,6 +46,8 @@ test('every path the agent-facing docs name exists, or is a registry install tar
       for (const m of line.matchAll(/`([^`\n]+)`/g)) {
         const s = m[1]
         if (!/^[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)+$/.test(s)) continue
+        // `bg-muted/50` has a slash and is no path: a utility with an opacity modifier.
+        if (/^[a-z][a-z0-9-]*-[a-z0-9-]+\/\d{1,3}$/.test(s)) continue
         if (!existsSync(join(root, s)) && !targets.has(s)) offenders.push(`${doc}:${i + 1} ${s}`)
       }
     })

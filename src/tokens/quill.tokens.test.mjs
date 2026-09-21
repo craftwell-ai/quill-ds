@@ -189,12 +189,12 @@ test('every status token clears WCAG 4.5:1 on page, card AND well in all 5 theme
     const family = tokens.color.pigment[parts[0]] ?? tokens.color[parts[0]]
     return family[cut][mode]
   }
-  const STATUS = ['success', 'warning', 'danger', 'info', 'working', 'queued']
+  const STATUS = ['success', 'warning', 'destructive', 'info', 'working', 'queued']
   const GROUNDS = { page: 'base', card: 'warm', well: 'deep' }
   let checked = 0
   for (const mode of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
     for (const name of STATUS) {
-      const cut = resolve(tokens.status[name], mode)
+      const cut = resolve(tokens.status[name] ?? tokens.semantic[name], mode)
       for (const [label, paperCut] of Object.entries(GROUNDS)) {
         const ground = tokens.color.paper[paperCut][mode]
         const ratio = contrast(cut, ground)

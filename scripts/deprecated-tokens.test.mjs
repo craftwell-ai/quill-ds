@@ -18,7 +18,7 @@ const re = new RegExp(`--(${names.join('|')})(?![a-z0-9-])`, 'g')
 
 test('the retired names still ship, so nothing downstream loses a colour', () => {
   const { root: css } = renderCss(tokens)
-  assert.equal(names.length, 10)
+  assert.equal(names.length, 11) // the ten duplicate aliases, and `danger` (it is `destructive`)
   for (const n of names) assert.match(css, new RegExp(`--${n}:\\s*var\\(`), `--${n} should still be emitted`)
 })
 

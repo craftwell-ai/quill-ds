@@ -21,6 +21,29 @@ name, class or value changes in this release**: the shipped stylesheet holds the
 473 declarations. What moved is what things are called in Figma, in the token source
 and in the docs.
 
+### Added
+- **Every colour role says what it is for.** The agent docs named 3 to 12 of the 31
+  roles and said when to use none of them — and the names do not explain themselves:
+  seven surface roles are three colours (`card` = `popover` = `sidebar`; `secondary` =
+  `muted` = `accent`), `primary` is ink, and `accent` is the pale highlight rather than
+  the accent. `src/usage/roles.mjs` now carries one *use for / never for* line per role,
+  per status role and per sanctioned tint, grounded in how shipped code uses each
+  (842 class uses measured; counts and examples in `docs/drafts`). One source, four
+  outputs: a generated span in DESIGN.md, the Tokens section of llms.txt, a compact
+  1.8 KB form in the agent-rules file apps install (its budget moves 18 → 19.5 KB for
+  this and nothing else), and Storybook's Colors page. Two rules the names hide are
+  now written down: list and menu items highlight with `accent` while standalone
+  controls and table rows wash with `muted`; a prose link follows the accent while a
+  link-styled Button is ink. `ring` has a second sanctioned job: the one selected or
+  featured item in a set.
+- **Status roles have classes: `text-success`, `text-warning`, `text-info`,
+  `text-working`, `text-queued`, `text-link`.** Six of the eight status roles were read
+  nowhere in the repo and no utility reached them, so an agent had no way to write a
+  success or warning colour. Each clears 4.5:1 as text on page, card and well in all
+  five themes (the existing contrast test); none is sanctioned as a fill.
+  `--text-accent-color` stays a variable — the theme applies it to `a` and
+  `.fraunces-accent`.
+
 ### Changed
 - **The colour contract is named `semantic`.** The 31 roles components speak
   (`bg-background`, `text-muted-foreground`, `border-border`) stay shadcn-compatible,
@@ -45,7 +68,7 @@ and in the docs.
   fixtures, both Figma skills and the build log.
 
 ### Deprecated
-- **Ten aliases that duplicated the contract.** No shipped component and no utility
+- **Eleven aliases that duplicated the contract** (ten surface, text and border aliases, and `--danger`, which is `--destructive`). No shipped component and no utility
   ever used them. They are still emitted, so an app that wrote `var(--text-strong)`
   keeps its colour; they are gone from the docs, parked in Figma as `deprecated/*`
   (hidden from publishing, never deleted — a consuming file may be bound to one), and
@@ -64,20 +87,28 @@ and in the docs.
   | `--border-card` | `--border` · `border-border` |
   | `--border-field` | `--input` · `border-input` |
   | `--border-divider` | `--line-faint` |
+  | `--danger` | `--destructive` · `text-destructive` |
 
 ### Fixed
 - **DESIGN.md told agents to "reach for" tokens that do nothing.** Its semantic-alias
   list named three variables that never existed (`--text-muted`, `--text-accent`,
   `--accent-pressed`), called `--accent` terracotta when it is the pale hover surface
   (`paper-deep`), and listed the ten aliases above, which no class can reach. The
-  section now describes the contract that ships; a guard fails on a retired or
+  section is now generated from `roles.mjs`; a guard fails on a retired or
   never-existing name in DESIGN.md, PRODUCT.md, AGENTS.md, README.md, llms.txt or the
-  agent-rules file.
+  agent-rules file. `token-truth.test.mjs` now reads DESIGN.md and PRODUCT.md as well,
+  and on its first run found five more variables defined in neither stylesheet:
+  `--focus-ring`, `--focus-ring-danger`, `--scrim`, `--shadow-btn-hover` and
+  `--grain-noise` (plus `--tracking-wide`, now `tracking-label`). Focus is `--ring`, the
+  accent's text cut, in every theme. DESIGN.md also listed CTAs under moss (actions are
+  ink) and links under indigo (links follow the accent).
 - **Figma: every icon was bound to a retired variable.** The icon sync preferred
   `text/strong` for the 91 glyph fills and `surface/page` for the gallery ground —
   the Icons page was outside the earlier binding audit. Both now bind
   `semantic/foreground` / `semantic/background` (the same ink and paper, so nothing
   moved), in the library and in `figma/sync-icons.figma.js`.
+- `mail-shell` hovered its thread rows with `muted`; list items highlight with `accent`
+  (the same colour, the right name).
 - The site's own page used six of the retired aliases through bracketed values
   (`text-[var(--text-strong)]`); it speaks the contract now (32 swaps, each to the same
   primitive).
