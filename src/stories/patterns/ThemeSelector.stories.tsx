@@ -73,7 +73,7 @@ function Demo() {
         <div className="mt-3 flex gap-2" aria-hidden>
           <span className="size-3.5 rounded-full bg-terracotta" />
           <span className="size-3.5 rounded-full bg-moss" />
-          <span className="size-3.5 rounded-full bg-indigo-brand" />
+          <span className="size-3.5 rounded-full bg-indigo" />
           <span className="size-3.5 rounded-full bg-gold" />
         </div>
       </div>

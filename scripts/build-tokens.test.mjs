@@ -182,6 +182,27 @@ test('every pigment cut has a --color-* utility mapping', () => {
   assert.ok(mapped.size >= 15, `expected the palette map to cover 15+ vars, matched ${mapped.size}`)
 })
 
+test('a colour utility is spelled like the CSS variable it reads', () => {
+  // `bg-indigo-brand` read `--indigo`: two names for one token. ToneBadge asked
+  // for the natural `bg-indigo`, got nothing, and shipped an unstyled chip
+  // (0.8.29). Tailwind only defines numbered indigo shades, so the plain stem is
+  // free — `teal` always shipped this way. The old names stay as aliases until
+  // the apps are confirmed off them.
+  const { theme } = renderCss(tokens)
+  const pairs = [...theme.matchAll(/--color-([a-z0-9-]+):\s*var\(--([a-z0-9-]+)\)/g)].map((m) => [m[1], m[2]])
+  const DEPRECATED_ALIASES = new Set(['indigo-brand', 'indigo-brand-deep'])
+  const renamed = pairs.filter(([utility, cssVar]) => utility !== cssVar && !DEPRECATED_ALIASES.has(utility))
+  assert.deepEqual(
+    renamed,
+    [],
+    `utilities named differently from their variable — one token, two spellings: ${renamed.map(([u, v]) => `${u} → --${v}`).join(', ')}`,
+  )
+  const utilities = new Set(pairs.map(([utility]) => utility))
+  for (const name of ['indigo', 'indigo-deep']) assert.ok(utilities.has(name), `--color-${name} should ship`)
+  // Anti-vacuity: fail if the regex stops matching rather than silently passing.
+  assert.ok(pairs.length >= 45, `expected 45+ colour utilities, matched ${pairs.length}`)
+})
+
 test('the dark: variant covers every theme whose color-scheme is dark', () => {
   const selector = darkVariant()
   const dark = MODES.filter((m) => m.colorScheme === 'dark')

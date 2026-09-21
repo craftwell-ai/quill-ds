@@ -61,6 +61,8 @@
       "color-terracotta-deep": "var(--terracotta-deep)",
       "color-moss": "var(--moss)",
       "color-moss-deep": "var(--moss-deep)",
+      "color-indigo": "var(--indigo)",
+      "color-indigo-deep": "var(--indigo-deep)",
       "color-indigo-brand": "var(--indigo)",
       "color-indigo-brand-deep": "var(--indigo-deep)",
       "color-gold": "var(--gold)",
