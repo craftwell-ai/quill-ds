@@ -14,8 +14,10 @@ footer reads `package.json` directly, so the displayed version updates with the 
 
 ## [0.10.1] — 2026-09-21
 
-Closes step 5 of the token-unification plan. Nothing an app receives changes except
-one sentence in the agent rules.
+Closes step 5 of the token-unification plan, and fixes what a dry run of the CLI
+install into tech-careers turned up. An app on the file channel receives nothing new
+but one sentence in the agent rules; an app installing through the CLI receives a far
+smaller, cleaner merge.
 
 ### Changed
 - **The sanctioned tints are declared in the token source.** Which opacities the system
@@ -25,6 +27,31 @@ one sentence in the agent rules.
   is cut from (`Tints`), the sync reads that, and `roles.test.mjs` fails if the snippet
   grows a table of its own again. Re-run in the library: 0 created, 13 updated, no
   value or scope changed.
+
+### Fixed
+- **A CLI-installed app got 271 classes nobody asked for.** The shadcn CLI registers
+  every colour in `cssVars.light` as a `--color-*` theme key, and Quill put all of
+  `:root` there — so `npx shadcn add @quill/quill` wrote `bg-dk-paper`,
+  `bg-cd-indigo-deep`, `bg-int-ink` and 268 more into the stylesheet an app's agents
+  read (measured with the real CLI in a scratch clone of tech-careers: 103 theme keys
+  asked for, 374 written). `cssVars.light` now carries only the contract roles — the
+  keys the CLI is built to map — and every other `:root` declaration rides in
+  `css[':root']`, which the CLI writes verbatim and registers nothing for. Same
+  install, re-run: 134 keys (the 103 asked for plus the CLI's 31 harmless
+  self-references for the contract), **no unasked `--color-*`**, every variable still
+  declared, theme switching intact.
+- **`--space-0_5`, `--space-1_5` and `--space-2_5` never reached a CLI-installed
+  app.** The payload builder's pattern did not allow an underscore, so the three
+  half-steps were silently dropped from `cssVars`. Found by the new "nothing dropped on
+  the way" assertion; they ship now.
+- **library-sync would have migrated a file-channel app unasked.** It decided an app
+  was CLI-installed by counting `cssVars.light` names in its stylesheet. With that
+  field reduced to the contract roles, every stock shadcn stylesheet matches — checked
+  against tech-careers' real `globals.css`: 32 of 32 — and the bot would have run
+  `shadcn add --overwrite` on it, rewriting its fonts and radii. Detection now counts
+  Quill's own variables (`css[':root']`), which no stock app carries: tech-careers as it
+  is → not merged; the same app after a CLI install → 270 of 270. Items released before
+  the split fall back to the old field.
 
 ### Decided
 - **`--space-*` stays.** Nothing reads it — not shipped code, not the site, not

@@ -298,6 +298,23 @@ test('mergedTokenLayer: an app that only imports the theme file, or declares a f
   assert.equal(mergedTokenLayer(CJ, fileOnly, { name: 'quill' }), null)
 })
 
+test('mergedTokenLayer: a stock shadcn app is never mistaken for a merged one', () => {
+  // Since 0.10.1 `cssVars.light` holds only the contract roles — the names every
+  // stock shadcn stylesheet declares. Counting those would flag tech-careers as
+  // merged and let the bot run `shadcn add --overwrite` on it: an unasked
+  // migration that rewrites its fonts and radii. Detection reads Quill's own
+  // variables (the `css[':root']` block), which no stock app carries.
+  const item = {
+    name: 'quill',
+    cssVars: { light: { background: 'var(--paper)', foreground: 'var(--ink)', primary: 'var(--ink)', border: 'var(--line-soft)' } },
+    css: { ':root': { '--paper': '#F5EDDD', '--ink': '#2A2622', '--dk-paper': '#20180E', '--line-soft': 'rgba(42, 38, 34, 0.12)' } },
+  }
+  const stock = ':root {\n  --background: oklch(1 0 0);\n  --foreground: oklch(0.145 0 0);\n  --primary: oklch(0.205 0 0);\n  --border: oklch(0.922 0 0);\n}\n'
+  assert.equal(mergedTokenLayer(CJ, stock, item), null)
+  const merged = stock + ':root {\n  --paper: #F5EDDD;\n  --ink: #2A2622;\n  --dk-paper: #20180E;\n  --line-soft: rgba(42, 38, 34, 0.12);\n}\n'
+  assert.deepEqual(mergedTokenLayer(CJ, merged, item), { present: 4, total: 4 })
+})
+
 test('detectMergedTokenLayer reads components.json for the stylesheet and returns its path', () => {
   const dir = mkdtempSync(join(tmpdir(), 'quill-sync-merged-'))
   try {

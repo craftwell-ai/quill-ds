@@ -290,6 +290,25 @@ test('--space-N is the step Tailwind renders for p-N, so the variable and the cl
   assert.ok(checked >= 15)
 })
 
+test('the CLI payload registers no class for a primitive: cssVars.light holds only the contract', () => {
+  // The shadcn CLI turns EVERY colour in `cssVars.light` into a `--color-*` theme key.
+  // With all of :root there, an installed app got 271 classes nobody asked for —
+  // `bg-dk-paper`, `bg-cd-indigo-deep`, `bg-int-ink` — in the stylesheet its agents
+  // read (measured with the real CLI in a scratch app: 103 keys asked for, 374
+  // written). Everything that is not a contract role now rides in the `css` field,
+  // which the CLI writes verbatim and registers nothing for.
+  const payload = registryPayload(renderCss(tokens))
+  assert.deepEqual(Object.keys(payload.cssVars.light).sort(), [...Object.keys(tokens.semantic), 'radius'].sort())
+  const root = payload.css[':root']
+  for (const k of ['--paper', '--dk-paper', '--int-ink', '--success', '--space-4', '--leading-reading', '--shadow-xs']) assert.ok(k in root, `${k} should ride in css[':root']`)
+  for (const k of Object.keys(root)) assert.match(k, /^--[a-z0-9_-]+$/)
+  // Nothing dropped on the way: every :root declaration lands in exactly one place.
+  const declared = [...renderCss(tokens).root.matchAll(/^\s*--([a-z0-9_-]+)\s*:/gm)].map((m) => m[1])
+  const carried = new Set([...Object.keys(payload.cssVars.light), ...Object.keys(root).map((k) => k.slice(2))])
+  assert.deepEqual(declared.filter((k) => !carried.has(k)), [])
+  assert.equal(Object.keys(payload.cssVars.light).filter((k) => `--${k}` in root).length, 0)
+})
+
 test('the dark: variant covers every theme whose color-scheme is dark', () => {
   const selector = darkVariant()
   const dark = MODES.filter((m) => m.colorScheme === 'dark')
@@ -317,11 +336,11 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
     for (const k of Object.keys(vars)) assert.ok(!k.startsWith('--'), `cssVars.${bucket} key '${k}' must be bare`)
   }
   const selectors = Object.keys(payload.css)
-  assert.equal(selectors.length, css.modes.length + css.accents.length)
+  assert.equal(selectors.length, 1 + css.modes.length + css.accents.length) // ':root' + themes + accents
   for (const [selector, block] of Object.entries(payload.css)) {
     const keys = Object.keys(block)
     assert.ok(keys.length > 0, `${selector} has no declarations`)
-    for (const k of keys) assert.match(k, /^--[a-z0-9-]+$/, `${selector} key '${k}' must be a custom-property name`)
+    for (const k of keys) assert.match(k, /^--[a-z0-9_-]+$/, `${selector} key '${k}' must be a custom-property name`)
   }
   // Nothing lost in translation: the dark block carries every --var its CSS body declares.
   const darkBody = css.modes.find((m) => m.attr === 'dark').body

@@ -161,13 +161,18 @@ export function applyPlan(appDir, writes, { dryRun = false } = {}) {
  * shape `npx shadcn add @quill/quill` leaves behind — rather than only the
  * shipped `app/quill-theme.css` file? Pure: takes the app's parsed
  * components.json (or null), the text of the stylesheet it names (or null), and
- * the released base item. "Merged" means at least half of the item's
- * `cssVars.light` custom properties are declared in that stylesheet; an app's
- * own `:root` with a handful of same-named vars does not qualify.
+ * the released base item. "Merged" means at least half of QUILL'S OWN custom
+ * properties are declared in that stylesheet — the item's `css[':root']` block
+ * (`--paper`, `--dk-paper`…). Never `cssVars.light`: since 0.10.1 that holds only
+ * the contract roles, which every stock shadcn stylesheet declares, so counting
+ * them would flag a file-channel app as merged and let the bot migrate it
+ * unasked. Items released before the split have no such block; their
+ * `cssVars.light` still carries everything, so it is the fallback.
  */
 export function mergedTokenLayer(componentsJson, stylesheet, baseItem) {
   if (!componentsJson || typeof stylesheet !== 'string') return null
-  const keys = Object.keys(baseItem?.cssVars?.light ?? {})
+  const own = Object.keys(baseItem?.css?.[':root'] ?? {}).map((k) => k.replace(/^--/, ''))
+  const keys = own.length ? own : Object.keys(baseItem?.cssVars?.light ?? {})
   if (keys.length === 0) return null
   const present = keys.filter((k) => new RegExp(`--${k}\\s*:`).test(stylesheet)).length
   return present * 2 >= keys.length ? { present, total: keys.length } : null

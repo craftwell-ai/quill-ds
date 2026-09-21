@@ -227,17 +227,29 @@ function decls(block, { keepPrefix = false } = {}) {
   return Object.fromEntries(
     block
       .split('\n')
-      .map((l) => l.match(/^\s*--([a-z0-9-]+)\s*:\s*(.+);\s*$/))
+      // `_` too: `--space-2_5`. Without it the three half-steps never reached a CLI-installed app.
+      .map((l) => l.match(/^\s*--([a-z0-9_-]+)\s*:\s*(.+);\s*$/))
       .filter(Boolean)
       .map((m) => [keepPrefix ? `--${m[1]}` : m[1], m[2]]),
   )
 }
 
-export function registryPayload(css) {
+// A third shape rule, learned the same way (real CLI, scratch app, 2026-09-21): the
+// CLI registers every COLOUR in `cssVars.light` as a `--color-*` theme key. With all
+// of :root there, an app got 271 classes nobody asked for (`bg-dk-paper`,
+// `bg-cd-indigo-deep`, `bg-int-ink`) in the stylesheet its agents read. So
+// `cssVars.light` carries only the contract roles — the keys the CLI is built to
+// map, and the same ones `cssVars.theme` already asks for — and every other :root
+// declaration rides in `css[':root']`, written verbatim with nothing registered.
+// library-sync's merged-layer detection reads that block for the same reason.
+export function registryPayload(css, t = tokens) {
   const literal = { keepPrefix: true }
+  const contract = new Set([...Object.keys(t.semantic), 'radius'])
+  const root = Object.entries(decls(css.root))
   return {
-    cssVars: { theme: decls(css.theme), light: decls(css.root) },
+    cssVars: { theme: decls(css.theme), light: Object.fromEntries(root.filter(([k]) => contract.has(k))) },
     css: Object.fromEntries([
+      [':root', Object.fromEntries(root.filter(([k]) => !contract.has(k)).map(([k, v]) => [`--${k}`, v]))],
       ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body, literal)]),
       ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body, literal)]),
     ]),
