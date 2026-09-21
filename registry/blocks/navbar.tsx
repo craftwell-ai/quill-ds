@@ -7,7 +7,7 @@ const links = ['Product', 'Solutions', 'Pricing', 'Docs']
 export function Navbar() {
   return (
     <nav className="flex h-14 w-full items-center gap-6 border-b border-border bg-background px-6 text-foreground">
-      <span className="font-[family-name:var(--font-fraunces,Georgia,serif)] text-lg">Quill</span>
+      <span className="font-heading text-lg">Quill</span>
       <ul className="hidden flex-1 items-center gap-1 md:flex">
         {links.map((l) => (
           <li key={l}>
