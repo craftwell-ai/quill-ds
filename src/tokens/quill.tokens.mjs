@@ -142,6 +142,24 @@ export const tokens = {
     '2xs': '0.7rem', xs: '0.75rem', sm: '0.85rem', base: '0.95rem', lg: '1.15rem',
     xl: '1.5rem', '2xl': '2rem', '3xl': '3rem', '4xl': '4rem', '5xl': '5.5rem',
   },
+  // The line height each `text-*` utility carries. Not new values: these are
+  // what the classes have always rendered — Tailwind's default pairings,
+  // inherited silently when Quill re-cut the sizes (`text-sm` = 13.6px on a
+  // 142.857% line). Declared so Figma's text styles, the docs and the apps read
+  // one number instead of each typing their own. `2xs` is Quill's own size and
+  // has no pairing on purpose: it inherits from its parent.
+  textLeading: {
+    xs: 'calc(1 / 0.75)', sm: 'calc(1.25 / 0.875)', base: 'calc(1.5 / 1)', lg: 'calc(1.75 / 1.125)',
+    xl: 'calc(1.75 / 1.25)', '2xl': 'calc(2 / 1.5)', '3xl': 'calc(2.25 / 1.875)', '4xl': 'calc(2.5 / 2.25)',
+    '5xl': '1',
+  },
+  // Line-height and letter-spacing roles, named for the text they set rather than
+  // how they feel. The scale used to be documented as snug / tight / wide, but
+  // Tailwind owns those names with other values (`leading-snug` is 1.375,
+  // `tracking-wide` 0.025em) and shipped components use them — and a role tells an
+  // agent when to reach for it. Only values shipped code uses earn a token.
+  leading: { display: '1.05', heading: '1.2', ui: '1.5', reading: '1.7' },
+  tracking: { display: '-0.03em', label: '0.1em', eyebrow: '0.15em' },
   shadow: {
     // Classic pairs reuse the light/dark recipes with neutral black casts —
     // no warm ink tint on the pure white/black grounds.

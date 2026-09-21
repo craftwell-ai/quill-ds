@@ -11,7 +11,7 @@ export function FeatureSection() {
   return (
     <section className="flex flex-col items-center gap-10 bg-background py-12 text-foreground">
       <div className="flex max-w-xl flex-col items-center gap-2 text-center">
-        <span className="text-xs font-medium uppercase tracking-[0.15em] text-primary">Why Quill</span>
+        <span className="text-xs font-medium uppercase tracking-eyebrow text-primary">Why Quill</span>
         <h2 className="font-[family-name:var(--font-fraunces,Georgia,serif)] text-3xl">
           A calm, editorial design system
         </h2>

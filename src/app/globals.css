@@ -72,14 +72,30 @@
   --radius-4xl: 2.5rem;
   --text-2xs: 0.7rem;
   --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
   --text-sm: 0.85rem;
+  --text-sm--line-height: calc(1.25 / 0.875);
   --text-base: 0.95rem;
+  --text-base--line-height: calc(1.5 / 1);
   --text-lg: 1.15rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
   --text-xl: 1.5rem;
+  --text-xl--line-height: calc(1.75 / 1.25);
   --text-2xl: 2rem;
+  --text-2xl--line-height: calc(2 / 1.5);
   --text-3xl: 3rem;
+  --text-3xl--line-height: calc(2.25 / 1.875);
   --text-4xl: 4rem;
+  --text-4xl--line-height: calc(2.5 / 2.25);
   --text-5xl: 5.5rem;
+  --text-5xl--line-height: 1;
+  --leading-display: 1.05;
+  --leading-heading: 1.2;
+  --leading-ui: 1.5;
+  --leading-reading: 1.7;
+  --tracking-display: -0.03em;
+  --tracking-label: 0.1em;
+  --tracking-eyebrow: 0.15em;
   --shadow-2xs: var(--shadow-xs);
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
@@ -186,6 +202,13 @@
   --border-width-2: 2px;
   --border-width-3: 3px;
   --border-width-4: 4px;
+  --leading-display: 1.05;
+  --leading-heading: 1.2;
+  --leading-ui: 1.5;
+  --leading-reading: 1.7;
+  --tracking-display: -0.03em;
+  --tracking-label: 0.1em;
+  --tracking-eyebrow: 0.15em;
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-warm);
@@ -811,18 +834,18 @@
     @apply bg-background;
     color: var(--ink-soft);
     font-family: var(--font-raleway), "Raleway", -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.7;
+    line-height: var(--leading-reading);
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-fraunces), "Fraunces", Georgia, serif;
     font-weight: 400;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
+    letter-spacing: var(--tracking-display);
+    line-height: var(--leading-heading);
     color: var(--ink);
     font-variation-settings: var(--fraunces-text);
   }
   h1 {
-    line-height: 1.05;
+    line-height: var(--leading-display);
     font-variation-settings: var(--fraunces-display);
   }
   a {

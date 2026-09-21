@@ -30,7 +30,7 @@ export function Faq() {
   return (
     <section className="flex w-[560px] flex-col gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
-        <span className="text-xs font-medium tracking-[0.15em] uppercase text-ink-muted">FAQ</span>
+        <span className="text-xs font-medium tracking-eyebrow uppercase text-ink-muted">FAQ</span>
         <h2 className="font-heading text-2xl text-foreground">Common questions</h2>
         <p className="text-sm text-muted-foreground">
           Everything else lives in the docs — or ask us directly.

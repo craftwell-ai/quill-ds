@@ -59,7 +59,7 @@ export function ToneBadge({
     <Badge
       title={title}
       className={cn(
-        'border-transparent text-2xs font-medium tracking-[0.1em] uppercase',
+        'border-transparent text-2xs font-medium tracking-label uppercase',
         size === 'sm' ? 'h-4 px-1.5' : '',
         solid ? SOLID[tone] : TINT[tone],
         className

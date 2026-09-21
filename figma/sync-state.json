@@ -1795,8 +1795,8 @@
       "page": "❖ FAQ",
       "pageId": "207:76",
       "frameId": "696:19",
-      "codeHash": "4eeb7e11d3754419",
-      "syncedAt": "2026-09-18"
+      "codeHash": "3be1b0412fe02cdf",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "feature-section",
@@ -1804,8 +1804,8 @@
       "page": "❖ Feature section",
       "pageId": "572:2",
       "frameId": "696:20",
-      "codeHash": "244203398c780657",
-      "syncedAt": "2026-09-18"
+      "codeHash": "a2906283f35abe97",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "file-upload",
@@ -1840,8 +1840,8 @@
       "page": "❖ Hero",
       "pageId": "568:2",
       "frameId": "696:25",
-      "codeHash": "6d852d561214d812",
-      "syncedAt": "2026-09-18"
+      "codeHash": "a0c919bf0b46b4bb",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "invoice",
@@ -1849,8 +1849,8 @@
       "page": "❖ Invoice",
       "pageId": "209:2",
       "frameId": "696:26",
-      "codeHash": "e6a25bd662e40d91",
-      "syncedAt": "2026-09-18"
+      "codeHash": "5b9fdc21b61960bf",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "kanban",
@@ -2052,8 +2052,8 @@
       "page": "❖ Stats band",
       "pageId": "204:2",
       "frameId": "696:56",
-      "codeHash": "446e297946f3b2fa",
-      "syncedAt": "2026-09-18"
+      "codeHash": "f8a8790ef4991a60",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "tabs-page",
@@ -2070,8 +2070,8 @@
       "page": "❖ Team section",
       "pageId": "207:2",
       "frameId": "696:64",
-      "codeHash": "5fdfaa023d4cf5d2",
-      "syncedAt": "2026-09-18"
+      "codeHash": "d61deeaa0387bb05",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "testimonial",
@@ -2131,8 +2131,8 @@
     }
   ],
   "foundations": {
-    "tokensHash": "65be6eb898a030d9",
-    "syncedAt": "2026-09-18"
+    "tokensHash": "fdc95aae23b391fb",
+    "syncedAt": "2026-09-21"
   },
   "declined": [
     {

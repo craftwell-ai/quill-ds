@@ -193,25 +193,28 @@ Loaded from Google Fonts by the `@import` at the top of the shipped theme file. 
 - Presets: `--fraunces-display` (`"opsz" 144, "SOFT" 50, "WONK" 0`) · `--fraunces-accent` (`"opsz" 144, "SOFT" 100, "WONK" 1`, the italic emphasis) · `--fraunces-text` (`"opsz" 24, "SOFT" 50`) · `--fraunces-caption` (`"opsz" 14, "SOFT" 100`).
 
 ### Type scale
-| Token | Size | Use |
-|---|---|---|
-| `--text-2xs` | 0.7rem (11.2px) | micro labels, tag pills |
-| `--text-xs` | 0.75rem (12px) | meta, eyebrows |
-| `--text-sm` | 0.85rem (13.6px) | captions, fine print |
-| `--text-base` | 0.95rem (15.2px) | UI text, buttons |
-| `--text-lg` | 1.15rem (18.4px) | lead paragraphs |
-| `--text-xl` | 1.5rem (24px) | card titles |
-| `--text-2xl` | 2rem (32px) | sub-headings |
-| `--text-3xl` | 3rem (48px) | section titles |
-| `--text-4xl` | 4rem (64px) | page heads |
-| `--text-5xl` | 5.5rem (88px) | hero display |
+| Token | Size | Line | Use |
+|---|---|---|---|
+| `--text-2xs` | 0.7rem (11.2px) | inherits | micro labels, tag pills |
+| `--text-xs` | 0.75rem (12px) | 133.3% (16px) | meta, eyebrows |
+| `--text-sm` | 0.85rem (13.6px) | 142.9% (19.4px) | captions, fine print |
+| `--text-base` | 0.95rem (15.2px) | 150% (22.8px) | UI text, buttons |
+| `--text-lg` | 1.15rem (18.4px) | 155.6% (28.6px) | lead paragraphs |
+| `--text-xl` | 1.5rem (24px) | 140% (33.6px) | card titles |
+| `--text-2xl` | 2rem (32px) | 133.3% (42.7px) | sub-headings |
+| `--text-3xl` | 3rem (48px) | 120% (57.6px) | section titles |
+| `--text-4xl` | 4rem (64px) | 111.1% (71.1px) | page heads |
+| `--text-5xl` | 5.5rem (88px) | 100% (88px) | hero display |
 
 ### Leading, tracking, rules
-- No leading or tracking tokens ship; set them as values. Leading: 1.05 display · 1.2 snug · 1.5 UI · 1.7 reading copy (`leading-[1.7]`). Tracking: −0.03em display · −0.02em tight · 0.1em wide · 0.15em eyebrows (`tracking-[0.15em]`) · 0.2em section labels.
+- A `text-*` class sets its line height with its size (the Line column, shipped as `--text-sm--line-height` and so on), so bare UI text needs no `leading-*`.
+- **Leading roles** — `leading-display` 1.05 (hero and h1 lines) · `leading-heading` 1.2 (h2–h6) · `leading-ui` 1.5 (controls and dense UI text) · `leading-reading` 1.7 (body and long-form copy).
+- **Tracking roles** — `tracking-display` −0.03em (Fraunces headings) · `tracking-label` 0.1em (small uppercase labels and badges) · `tracking-eyebrow` 0.15em (eyebrows above a headline).
+- Each role is a class and a variable (`leading-reading`, `--leading-reading`). They are named for the text they set: `leading-snug`, `tracking-tight` and `tracking-wide` are Tailwind's own and keep Tailwind's values, so never redefine them. `body` and `h1`–`h6` already carry their roles from the base layer.
 - **Headings** — Fraunces at weight 400 (never heavy or bold), tight tracking, `--fraunces-display`.
 - **The one accent word** — italicize exactly one word per headline in the accent (`--accent-pigment-text`, moss by default) with `--fraunces-accent`. Never two.
 - **Body / UI** — Raleway 400/500/600; relaxed leading for reading copy.
-- **Eyebrows / labels** — Raleway, uppercase, `--text-xs`, 0.15em tracking, `--ink-muted`; the accent variant carries a short leading dash.
+- **Eyebrows / labels** — Raleway, uppercase, `--text-xs`, `tracking-eyebrow`, `--ink-muted`; the accent variant carries a short leading dash.
 - **Captions** — small Fraunces italic in `--ink-muted` with `--fraunces-caption`.
 - Sentence case in prose and headings; uppercase only for eyebrows.
 <!-- generated:type:end -->
@@ -330,7 +333,7 @@ render every tag pill through ToneBadge.
 
 ### Eyebrow — a recipe, not a component
 The uppercase tracked kicker above a heading. In blocks it is a plain `<span>`:
-`text-xs font-medium tracking-[0.15em] uppercase text-ink-muted` for the quiet
+`text-xs font-medium tracking-eyebrow uppercase text-ink-muted` for the quiet
 section label (as in `registry/blocks/faq.tsx`), or
 `text-[var(--accent-pigment-text)]` — the AA text cut of the accent — for the
 editorial flavour, optionally with a leading dash. There is no `Eyebrow`

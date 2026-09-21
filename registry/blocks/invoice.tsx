@@ -34,12 +34,12 @@ export function Invoice() {
         <Separator />
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs tracking-[0.1em] uppercase text-muted-foreground">From</span>
+            <span className="text-xs tracking-label uppercase text-muted-foreground">From</span>
             <span className="font-medium text-foreground">Craftwell</span>
             <span className="text-muted-foreground">hello@craftwell.ai</span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs tracking-[0.1em] uppercase text-muted-foreground">Billed to</span>
+            <span className="text-xs tracking-label uppercase text-muted-foreground">Billed to</span>
             <span className="font-medium text-foreground">Northwind Ltd.</span>
             <span className="text-muted-foreground">accounts@northwind.com</span>
           </div>

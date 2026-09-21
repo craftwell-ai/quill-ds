@@ -12,7 +12,7 @@ export function StatsBand() {
   return (
     <section className="mx-auto w-full max-w-[880px] rounded-xl bg-card px-8 py-10 ring-1 ring-foreground/10">
       <div className="flex flex-col items-center gap-2 text-center">
-        <span className="text-xs font-medium tracking-[0.15em] uppercase text-ink-muted">
+        <span className="text-xs font-medium tracking-eyebrow uppercase text-ink-muted">
           By the numbers
         </span>
         <h2 className="font-heading text-2xl text-foreground">A system that keeps its promises</h2>

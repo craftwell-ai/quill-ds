@@ -91,6 +91,10 @@ export function renderCss(t) {
   // production build + downstream consumers) throws and drops the whole :root block.
   for (const [k, v] of Object.entries(t.spacing)) rootLines.push(`  --space-${String(k).replace(/\./g, '_')}: ${v};`)
   for (const [k, v] of Object.entries(t.borderWidth)) rootLines.push(`  --border-width-${k}: ${v};`)
+  // In :root as well as @theme: `@theme inline` writes a value into its utility
+  // and never emits the variable, and the base layer (body, h1–h6) reads these.
+  for (const [k, v] of Object.entries(t.leading)) rootLines.push(`  --leading-${k}: ${v};`)
+  for (const [k, v] of Object.entries(t.tracking)) rootLines.push(`  --tracking-${k}: ${v};`)
   for (const [k, v] of Object.entries(t.shadcn)) rootLines.push(`  --${k}: ${v};`)
 
   // @theme inline: fonts, color mappings, radii, type scale.
@@ -120,7 +124,14 @@ export function renderCss(t) {
   }
   for (const [k, v] of Object.entries(paletteMap)) themeLines.push(`  --color-${k}: ${`var(${v})`};`)
   for (const [k, v] of Object.entries(t.radius)) themeLines.push(`  --radius-${k}: ${v};`)
-  for (const [k, v] of Object.entries(t.text)) themeLines.push(`  --text-${k}: ${v};`)
+  // Tailwind's own key for a size's line height (`--text-sm--line-height`), so the
+  // `text-*` utilities pick it up with no new class to learn.
+  for (const [k, v] of Object.entries(t.text)) {
+    themeLines.push(`  --text-${k}: ${v};`)
+    if (t.textLeading[k]) themeLines.push(`  --text-${k}--line-height: ${t.textLeading[k]};`)
+  }
+  for (const [k, v] of Object.entries(t.leading)) themeLines.push(`  --leading-${k}: ${v};`)
+  for (const [k, v] of Object.entries(t.tracking)) themeLines.push(`  --tracking-${k}: ${v};`)
   // Shadow utilities route through the :root tokens (remapped in dark) —
   // without these, Tailwind's shadow-* fall back to its cool-black defaults
   // and never flip in dark mode. Tailwind's 7-step scale maps onto our 5.
@@ -257,6 +268,15 @@ const shadow = (mv) => ({
   $extensions: { 'com.figma': { modes: figmaModes(mv) } },
 })
 const other = (v) => ({ $type: 'other', $value: v, $description: 'CSS-only — not a Figma variable' })
+// `calc(1.25 / 0.875)` or a bare number → the ratio itself. Figma cannot bind a
+// percentage line height to a variable, so these stay out of the variable sync
+// and feed the text styles, which take a percentage.
+const ratio = (css) => {
+  const m = css.match(/^calc\(([\d.]+)\s*\/\s*([\d.]+)\)$/)
+  const n = m ? Number(m[1]) / Number(m[2]) : Number(css)
+  if (!Number.isFinite(n)) throw new Error(`line height '${css}' is neither a number nor calc(a / b)`)
+  return { $type: 'number', $value: n, $description: 'Line height as a ratio of the font size — read by the text styles, not a Figma variable' }
+}
 export function renderDtcg(t) {
   // Build lookup: CSS var name (e.g. '--terracotta-deep') → full DTCG dot-path
   // (e.g. 'Primitives.color.pigment.terracotta.deep') while walking the color tree.
@@ -298,6 +318,13 @@ export function renderDtcg(t) {
   const radius = Object.fromEntries(Object.entries(t.radius).map(([k, v]) => [k, dim(v)]))
   const borderWidth = Object.fromEntries(Object.entries(t.borderWidth).map(([k, v]) => [k, dim(v)]))
   const type = Object.fromEntries(Object.entries(t.text).map(([k, v]) => [k, dim(v)]))
+  const lineHeight = Object.fromEntries(Object.entries(t.textLeading).map(([k, v]) => [k, ratio(v)]))
+  const leading = Object.fromEntries(Object.entries(t.leading).map(([k, v]) => [k, ratio(v)]))
+  // Figma takes letter spacing as a percentage of the font size: -0.03em → -3.
+  const tracking = Object.fromEntries(Object.entries(t.tracking).map(([k, v]) => {
+    if (!/^-?[\d.]+em$/.test(v)) throw new Error(`tracking '${v}' must be in em`)
+    return [k, { $type: 'number', $value: Math.round(parseFloat(v) * 1e6) / 1e4, $description: 'Letter spacing as a percentage of the font size — read by the text styles, not a Figma variable' }]
+  }))
   const elevation = Object.fromEntries(Object.entries(t.shadow).map(([k, v]) => [k, shadow(v)]))
   const motion = Object.fromEntries(Object.entries(t.motion).map(([k, v]) => [k, other(v)]))
   const fraunces = Object.fromEntries(Object.entries(t.fraunces).map(([k, v]) => [k, other(v)]))
@@ -312,7 +339,7 @@ export function renderDtcg(t) {
 
   return {
     $description: 'Quill Design System tokens (DTCG). Colors/dimensions → Figma variables; shadows → effect styles; motion/fraunces are CSS-only.',
-    Primitives: { color: primColor, font, spacing, radius, borderWidth, type, elevation, motion, fraunces },
+    Primitives: { color: primColor, font, spacing, radius, borderWidth, type, lineHeight, leading, tracking, elevation, motion, fraunces },
     Theme,
   }
 }

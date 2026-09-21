@@ -12,6 +12,51 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.61] — 2026-09-21
+
+### Added
+- **Every type size declares the line height its class renders.** `text-sm` has always
+  drawn 13.6px on a 142.857% line, `text-base` on 150%: Tailwind's default pairings,
+  inherited silently when Quill re-cut the sizes and written down nowhere. They now
+  live in the token source (`textLeading`) and ship under Tailwind's own key
+  (`--text-sm--line-height`), so the `text-*` utilities read them with no new class to
+  learn. **Nothing renders differently** — a before/after compile of all ten sizes
+  resolves to the same ratios; `2xs` still inherits. The type table in DESIGN.md,
+  llms.txt and the agent-rules file gained a generated Line column.
+
+- **Leading and tracking roles: `leading-display / -heading / -ui / -reading`,
+  `tracking-display / -label / -eyebrow`.** The scale was documented as numbers to type
+  (`leading-[1.7]`, `tracking-[0.15em]`) under the names snug / tight / wide — names
+  Tailwind already owns with other values (`leading-snug` is 1.375, `tracking-wide`
+  0.025em) and that shipped components use, so redefining one would re-space text that
+  never asked. Roles are named for the text they set, which also tells an agent when to
+  reach for one. Each ships as a class and as a variable. The base layer (`body`,
+  `h1`–`h6`) now reads them instead of typing 1.7 / 1.2 / 1.05 / −0.03em in two
+  stylesheets, and the 8 bracketed values in shipped code (hero, faq, feature-section,
+  stats-band, team-section, invoice, ToneBadge) plus 12 on the site became roles. **Every
+  swap is value-identical** (compiled side by side), and Tailwind's own names still hold
+  Tailwind's values. Only values shipped code uses earned a token: the documented
+  −0.02em and 0.2em had no user and are gone from the docs. Guards:
+  `build-tokens.test.mjs` (roles ship; none reuses a Tailwind name) and
+  `type-metrics.test.mjs` (no bracketed value where a role names it; no typed number in
+  the base layer).
+
+### Fixed
+- **Figma's text styles read their family and size from tokens.** They were the one
+  layer typed by hand beside the tokens, and had drifted where nothing checked:
+  Heading/S and Body/L sat at 18px while `lg` is 18.4, and the Eyebrow at 11 while
+  code and DESIGN.md both say `text-xs` (12). The sync snippet now names token keys
+  and resolves them from the export; all three are corrected in the library. It also
+  generates one `Text/<size>` style per `text-*` utility (size + line height), so a
+  layer whose code twin is a bare `text-sm` has an exact style to bind to instead of
+  Body/S at 160%. `scripts/figma-text-styles.test.mjs` runs the resolution against the
+  real export. Curated styles take a leading or tracking role wherever their value
+  already equals one (re-run in the library: 23 updated in place, none moved). Still
+  typed, in a list that may only shrink: nine values that are no role and mostly
+  disagree with code (every h1–h6 tracks at −0.03em, not −2 or −1; `text-sm` draws a
+  142.857% line, not 160 or 140) — moving them re-spaces bound layers, so they wait for
+  a visual pass — and `Accent` at 28px (no token holds an inherited size).
+
 ## [0.9.60] — 2026-09-21
 
 ### Changed

@@ -7,7 +7,7 @@ export function Hero() {
   return (
     <section className="flex w-full flex-col items-center gap-6 bg-background px-6 py-20 text-center text-foreground">
       <Badge variant="secondary">New — v2.0 is here</Badge>
-      <h1 className="max-w-2xl font-[family-name:var(--font-fraunces,Georgia,serif)] text-5xl leading-[1.05]">
+      <h1 className="max-w-2xl font-[family-name:var(--font-fraunces,Georgia,serif)] text-5xl leading-display">
         The calm design system for building things by hand
       </h1>
       <p className="max-w-xl text-base text-muted-foreground">

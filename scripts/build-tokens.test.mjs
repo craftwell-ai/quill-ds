@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { transform } from 'lightningcss'
+import { readFileSync } from 'node:fs'
 import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES } from './build-tokens.mjs'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 
@@ -201,6 +202,56 @@ test('a colour utility is spelled like the CSS variable it reads', () => {
   for (const name of ['indigo', 'indigo-deep']) assert.ok(utilities.has(name), `--color-${name} should ship`)
   // Anti-vacuity: fail if the regex stops matching rather than silently passing.
   assert.ok(pairs.length >= 45, `expected 45+ colour utilities, matched ${pairs.length}`)
+})
+
+test('every type size ships the line height its utility renders', () => {
+  // `text-sm` has always rendered 13.6px on a 142.857% line: Tailwind's default
+  // pairing, inherited silently when Quill re-cut the sizes. Nothing declared it,
+  // so Figma's text styles were typed by hand and drifted (Body/S at 160%).
+  // `2xs` is Quill's own size with no pairing — it inherits, on purpose.
+  const { theme } = renderCss(tokens)
+  for (const size of Object.keys(tokens.text)) {
+    const declared = new RegExp(`--text-${size}--line-height:\\s*([^;]+);`).exec(theme)
+    if (size === '2xs') { assert.equal(declared, null, '2xs inherits its line height'); continue }
+    assert.ok(declared, `--text-${size}--line-height should ship`)
+    assert.equal(declared[1], tokens.textLeading[size])
+  }
+  // The export carries them as plain ratios so the Figma sync can write percentages.
+  const d = renderDtcg(tokens)
+  assert.equal(d.Primitives.lineHeight.sm.$type, 'number')
+  assert.ok(Math.abs(d.Primitives.lineHeight.sm.$value - 1.25 / 0.875) < 1e-6)
+  assert.equal(d.Primitives.lineHeight['5xl'].$value, 1)
+  assert.equal(d.Primitives.lineHeight['2xs'], undefined)
+})
+
+test('the leading and tracking roles ship as utilities and as variables', () => {
+  const { theme, root } = renderCss(tokens)
+  for (const [k, v] of Object.entries(tokens.leading)) {
+    assert.match(theme, new RegExp(`--leading-${k}:\\s*${v.replace('.', '\\.')};`), `leading-${k} utility`)
+    // In :root too: `@theme inline` never emits a variable, and the base layer reads these.
+    assert.match(root, new RegExp(`--leading-${k}:\\s*${v.replace('.', '\\.')};`), `--leading-${k} variable`)
+  }
+  for (const [k, v] of Object.entries(tokens.tracking)) {
+    assert.match(theme, new RegExp(`--tracking-${k}:\\s*${v.replace('.', '\\.')};`), `tracking-${k} utility`)
+    assert.match(root, new RegExp(`--tracking-${k}:\\s*${v.replace('.', '\\.')};`), `--tracking-${k} variable`)
+  }
+  const d = renderDtcg(tokens)
+  assert.equal(d.Primitives.leading.reading.$value, 1.7)
+  // Figma takes letter spacing as a percentage of the font size: -0.03em is -3.
+  assert.equal(d.Primitives.tracking.display.$value, -3)
+  assert.equal(d.Primitives.tracking.eyebrow.$value, 15)
+})
+
+test('a leading or tracking role never reuses one of Tailwind\'s own names', () => {
+  // The documented scale said snug / tight / wide. Tailwind owns those with other
+  // values (leading-snug is 1.375, tracking-wide 0.025em) and shipped components
+  // use them, so redefining one would silently re-space text that never asked.
+  // Roles are named for the text they set, which also tells an agent when to use one.
+  const defaults = readFileSync(new URL('../node_modules/tailwindcss/theme.css', import.meta.url), 'utf8')
+  const owned = (ns) => new Set([...defaults.matchAll(new RegExp(`--${ns}-([a-z]+):`, 'g'))].map((m) => m[1]))
+  assert.ok(owned('leading').has('snug') && owned('tracking').has('tight'), 'Tailwind theme not read — guard is vacuous')
+  assert.deepEqual(Object.keys(tokens.leading).filter((k) => owned('leading').has(k)), [])
+  assert.deepEqual(Object.keys(tokens.tracking).filter((k) => owned('tracking').has(k)), [])
 })
 
 test('the dark: variant covers every theme whose color-scheme is dark', () => {
