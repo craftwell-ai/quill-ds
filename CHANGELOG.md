@@ -27,6 +27,10 @@ footer reads `package.json` directly, so the displayed version updates with the 
   old spelling keeps its colour. ToneBadge, the theme selector's accent swatch and its
   story use the new names, and `build-tokens.test.mjs` now fails on any colour utility
   named differently from the variable it reads.
+- **Dependencies.** The two Dependabot merges the release bot had queued as 0.9.59 ride
+  in this release, which supersedes that proposal: `next` and `eslint-config-next`
+  16.3.4 → 16.3.5, `@material-symbols/svg-400` 0.47.2 → 0.47.4, `tailwind-merge`
+  3.6.0 → 3.7.0, `@types/node` 24.13.4 → 24.13.5.
 
 ## [0.9.58] — 2026-09-19
 
