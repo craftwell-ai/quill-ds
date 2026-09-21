@@ -12,6 +12,30 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.61] — 2026-09-21
+
+### Added
+- **Every type size declares the line height its class renders.** `text-sm` has always
+  drawn 13.6px on a 142.857% line, `text-base` on 150%: Tailwind's default pairings,
+  inherited silently when Quill re-cut the sizes and written down nowhere. They now
+  live in the token source (`textLeading`) and ship under Tailwind's own key
+  (`--text-sm--line-height`), so the `text-*` utilities read them with no new class to
+  learn. **Nothing renders differently** — a before/after compile of all ten sizes
+  resolves to the same ratios; `2xs` still inherits. The type table in DESIGN.md,
+  llms.txt and the agent-rules file gained a generated Line column.
+
+### Fixed
+- **Figma's text styles read their family and size from tokens.** They were the one
+  layer typed by hand beside the tokens, and had drifted where nothing checked:
+  Heading/S and Body/L sat at 18px while `lg` is 18.4, and the Eyebrow at 11 while
+  code and DESIGN.md both say `text-xs` (12). The sync snippet now names token keys
+  and resolves them from the export; all three are corrected in the library. It also
+  generates one `Text/<size>` style per `text-*` utility (size + line height), so a
+  layer whose code twin is a bare `text-sm` has an exact style to bind to instead of
+  Body/S at 160%. `scripts/figma-text-styles.test.mjs` runs the resolution against the
+  real export. Still typed: the curated styles' line height and tracking (no leading or
+  tracking scale ships yet) and `Accent` at 28px (no token holds an inherited size).
+
 ## [0.9.60] — 2026-09-21
 
 ### Changed

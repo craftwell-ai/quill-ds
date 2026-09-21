@@ -778,6 +778,53 @@
         "$value": "5.5rem"
       }
     },
+    "lineHeight": {
+      "xs": {
+        "$type": "number",
+        "$value": 1.3333333333333333,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "sm": {
+        "$type": "number",
+        "$value": 1.4285714285714286,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "base": {
+        "$type": "number",
+        "$value": 1.5,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "lg": {
+        "$type": "number",
+        "$value": 1.5555555555555556,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "xl": {
+        "$type": "number",
+        "$value": 1.4,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "2xl": {
+        "$type": "number",
+        "$value": 1.3333333333333333,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "3xl": {
+        "$type": "number",
+        "$value": 1.2,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "4xl": {
+        "$type": "number",
+        "$value": 1.1111111111111112,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      },
+      "5xl": {
+        "$type": "number",
+        "$value": 1,
+        "$description": "Line height as a ratio of the font size — read by the text styles, not a Figma variable"
+      }
+    },
     "elevation": {
       "xs": {
         "$type": "shadow",

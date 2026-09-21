@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.60.
+> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.9.61.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -52,21 +52,21 @@ Loaded from Google Fonts by the `@import` at the top of the shipped theme file. 
 - Presets: `--fraunces-display` (`"opsz" 144, "SOFT" 50, "WONK" 0`) · `--fraunces-accent` (`"opsz" 144, "SOFT" 100, "WONK" 1`, the italic emphasis) · `--fraunces-text` (`"opsz" 24, "SOFT" 50`) · `--fraunces-caption` (`"opsz" 14, "SOFT" 100`).
 
 #### Type scale
-| Token | Size | Use |
-|---|---|---|
-| `--text-2xs` | 0.7rem (11.2px) | micro labels, tag pills |
-| `--text-xs` | 0.75rem (12px) | meta, eyebrows |
-| `--text-sm` | 0.85rem (13.6px) | captions, fine print |
-| `--text-base` | 0.95rem (15.2px) | UI text, buttons |
-| `--text-lg` | 1.15rem (18.4px) | lead paragraphs |
-| `--text-xl` | 1.5rem (24px) | card titles |
-| `--text-2xl` | 2rem (32px) | sub-headings |
-| `--text-3xl` | 3rem (48px) | section titles |
-| `--text-4xl` | 4rem (64px) | page heads |
-| `--text-5xl` | 5.5rem (88px) | hero display |
+| Token | Size | Line | Use |
+|---|---|---|---|
+| `--text-2xs` | 0.7rem (11.2px) | inherits | micro labels, tag pills |
+| `--text-xs` | 0.75rem (12px) | 133.3% (16px) | meta, eyebrows |
+| `--text-sm` | 0.85rem (13.6px) | 142.9% (19.4px) | captions, fine print |
+| `--text-base` | 0.95rem (15.2px) | 150% (22.8px) | UI text, buttons |
+| `--text-lg` | 1.15rem (18.4px) | 155.6% (28.6px) | lead paragraphs |
+| `--text-xl` | 1.5rem (24px) | 140% (33.6px) | card titles |
+| `--text-2xl` | 2rem (32px) | 133.3% (42.7px) | sub-headings |
+| `--text-3xl` | 3rem (48px) | 120% (57.6px) | section titles |
+| `--text-4xl` | 4rem (64px) | 111.1% (71.1px) | page heads |
+| `--text-5xl` | 5.5rem (88px) | 100% (88px) | hero display |
 
 #### Leading, tracking, rules
-- No leading or tracking tokens ship; set them as values. Leading: 1.05 display · 1.2 snug · 1.5 UI · 1.7 reading copy (`leading-[1.7]`). Tracking: −0.03em display · −0.02em tight · 0.1em wide · 0.15em eyebrows (`tracking-[0.15em]`) · 0.2em section labels.
+- A `text-*` class sets its line height with its size (the Line column, shipped as `--text-sm--line-height` and so on), so bare UI text needs no `leading-*`. No standalone leading or tracking scale ships yet; where a line needs a different rhythm, set it as a value. Leading: 1.05 display · 1.2 snug · 1.5 UI · 1.7 reading copy (`leading-[1.7]`). Tracking: −0.03em display · −0.02em tight · 0.1em wide · 0.15em eyebrows (`tracking-[0.15em]`) · 0.2em section labels.
 - **Headings** — Fraunces at weight 400 (never heavy or bold), tight tracking, `--fraunces-display`.
 - **The one accent word** — italicize exactly one word per headline in the accent (`--accent-pigment-text`, moss by default) with `--fraunces-accent`. Never two.
 - **Body / UI** — Raleway 400/500/600; relaxed leading for reading copy.

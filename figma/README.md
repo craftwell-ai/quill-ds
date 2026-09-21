@@ -32,7 +32,12 @@
 ## What this manages
 
 - Variables: `Quill Primitives` collection (modes: Light, Dark) + `Quill Semantic` collection (aliases → Primitives).
-- Text styles (`Display/*`, `Heading/*`, `Body/*`, `Accent`, `Eyebrow`).
+- Text styles, in two kinds. **Curated** (`Display/*`, `Heading/*`, `Body/*`, `Label/*`, `Accent`, `Eyebrow`): family and size are
+  token keys resolved from the export when the sync runs (`size: 'lg'`, never `18`); their line height and tracking are still
+  literals, because no leading or tracking scale ships yet. **Generated** (`Text/xs` … `Text/5xl`): one per `text-*` utility, size
+  and line height both from tokens (`Text/sm` = 13.6px on 142.857%) — bind a layer here when its code twin is a bare `text-sm`.
+  `Accent` is the one style with a typed size (28px): in code the accent word inherits its heading's size, so no token holds it.
+  `scripts/figma-text-styles.test.mjs` runs the resolution against the real export without Figma.
 - Effect styles (`Elevation/xs·sm·base·lg·pop`, light values).
 - **Tint variables** (`tint/<token>/<pct>`, Primitives, four modes) — the opacity modifiers code puts on tokens (`bg-destructive/10`, `ring-foreground/10`, `bg-muted/50`, the ToneBadge pigment tints) as alpha-carrying variables, derived per mode from the base variable by `syncTints()`. Every tinted paint in the file binds one of these: a paint-level opacity on a bound colour does not survive an instance nested in another component (the template pages proved it on 2026-09-19).
 

@@ -120,7 +120,12 @@ export function renderCss(t) {
   }
   for (const [k, v] of Object.entries(paletteMap)) themeLines.push(`  --color-${k}: ${`var(${v})`};`)
   for (const [k, v] of Object.entries(t.radius)) themeLines.push(`  --radius-${k}: ${v};`)
-  for (const [k, v] of Object.entries(t.text)) themeLines.push(`  --text-${k}: ${v};`)
+  // Tailwind's own key for a size's line height (`--text-sm--line-height`), so the
+  // `text-*` utilities pick it up with no new class to learn.
+  for (const [k, v] of Object.entries(t.text)) {
+    themeLines.push(`  --text-${k}: ${v};`)
+    if (t.textLeading[k]) themeLines.push(`  --text-${k}--line-height: ${t.textLeading[k]};`)
+  }
   // Shadow utilities route through the :root tokens (remapped in dark) —
   // without these, Tailwind's shadow-* fall back to its cool-black defaults
   // and never flip in dark mode. Tailwind's 7-step scale maps onto our 5.
@@ -257,6 +262,15 @@ const shadow = (mv) => ({
   $extensions: { 'com.figma': { modes: figmaModes(mv) } },
 })
 const other = (v) => ({ $type: 'other', $value: v, $description: 'CSS-only — not a Figma variable' })
+// `calc(1.25 / 0.875)` or a bare number → the ratio itself. Figma cannot bind a
+// percentage line height to a variable, so these stay out of the variable sync
+// and feed the text styles, which take a percentage.
+const ratio = (css) => {
+  const m = css.match(/^calc\(([\d.]+)\s*\/\s*([\d.]+)\)$/)
+  const n = m ? Number(m[1]) / Number(m[2]) : Number(css)
+  if (!Number.isFinite(n)) throw new Error(`line height '${css}' is neither a number nor calc(a / b)`)
+  return { $type: 'number', $value: n, $description: 'Line height as a ratio of the font size — read by the text styles, not a Figma variable' }
+}
 export function renderDtcg(t) {
   // Build lookup: CSS var name (e.g. '--terracotta-deep') → full DTCG dot-path
   // (e.g. 'Primitives.color.pigment.terracotta.deep') while walking the color tree.
@@ -298,6 +312,7 @@ export function renderDtcg(t) {
   const radius = Object.fromEntries(Object.entries(t.radius).map(([k, v]) => [k, dim(v)]))
   const borderWidth = Object.fromEntries(Object.entries(t.borderWidth).map(([k, v]) => [k, dim(v)]))
   const type = Object.fromEntries(Object.entries(t.text).map(([k, v]) => [k, dim(v)]))
+  const lineHeight = Object.fromEntries(Object.entries(t.textLeading).map(([k, v]) => [k, ratio(v)]))
   const elevation = Object.fromEntries(Object.entries(t.shadow).map(([k, v]) => [k, shadow(v)]))
   const motion = Object.fromEntries(Object.entries(t.motion).map(([k, v]) => [k, other(v)]))
   const fraunces = Object.fromEntries(Object.entries(t.fraunces).map(([k, v]) => [k, other(v)]))
@@ -312,7 +327,7 @@ export function renderDtcg(t) {
 
   return {
     $description: 'Quill Design System tokens (DTCG). Colors/dimensions → Figma variables; shadows → effect styles; motion/fraunces are CSS-only.',
-    Primitives: { color: primColor, font, spacing, radius, borderWidth, type, elevation, motion, fraunces },
+    Primitives: { color: primColor, font, spacing, radius, borderWidth, type, lineHeight, elevation, motion, fraunces },
     Theme,
   }
 }

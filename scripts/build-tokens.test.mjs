@@ -203,6 +203,26 @@ test('a colour utility is spelled like the CSS variable it reads', () => {
   assert.ok(pairs.length >= 45, `expected 45+ colour utilities, matched ${pairs.length}`)
 })
 
+test('every type size ships the line height its utility renders', () => {
+  // `text-sm` has always rendered 13.6px on a 142.857% line: Tailwind's default
+  // pairing, inherited silently when Quill re-cut the sizes. Nothing declared it,
+  // so Figma's text styles were typed by hand and drifted (Body/S at 160%).
+  // `2xs` is Quill's own size with no pairing — it inherits, on purpose.
+  const { theme } = renderCss(tokens)
+  for (const size of Object.keys(tokens.text)) {
+    const declared = new RegExp(`--text-${size}--line-height:\\s*([^;]+);`).exec(theme)
+    if (size === '2xs') { assert.equal(declared, null, '2xs inherits its line height'); continue }
+    assert.ok(declared, `--text-${size}--line-height should ship`)
+    assert.equal(declared[1], tokens.textLeading[size])
+  }
+  // The export carries them as plain ratios so the Figma sync can write percentages.
+  const d = renderDtcg(tokens)
+  assert.equal(d.Primitives.lineHeight.sm.$type, 'number')
+  assert.ok(Math.abs(d.Primitives.lineHeight.sm.$value - 1.25 / 0.875) < 1e-6)
+  assert.equal(d.Primitives.lineHeight['5xl'].$value, 1)
+  assert.equal(d.Primitives.lineHeight['2xs'], undefined)
+})
+
 test('the dark: variant covers every theme whose color-scheme is dark', () => {
   const selector = darkVariant()
   const dark = MODES.filter((m) => m.colorScheme === 'dark')

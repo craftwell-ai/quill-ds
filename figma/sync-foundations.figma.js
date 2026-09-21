@@ -169,27 +169,56 @@ async function syncSemanticAliases(DTCG) {
   return { collection: semCol.name, created, updated, buckets: buckets.map((b) => `${b}:${Object.keys(DTCG.Theme[b]).length}`) }
 }
 
-// ---- Text styles (curated; sizes mirror the type scale; color applied via variables on layers) ----
+// ---- Text styles ----
+// `font` and `size` are token KEYS, resolved from the export when the sync runs.
+// They were typed pixels once, and drifted where nothing checked: Heading/S and
+// Body/L sat at 18 while `lg` is 18.4; the Eyebrow at 11 while code and DESIGN.md
+// both say `text-xs`. `lh` and `ls` on these curated rows are still literals —
+// the leading and tracking scale has no tokens yet. Colour is applied through
+// variables on the layers, not here.
 const TEXT_STYLES = [
-  { name: 'Display/XL', family: 'Fraunces', style: 'Regular', size: 88, lh: 105, ls: -3 },
-  { name: 'Display/L', family: 'Fraunces', style: 'Regular', size: 64, lh: 105, ls: -3 },
-  { name: 'Display/M', family: 'Fraunces', style: 'Regular', size: 48, lh: 110, ls: -3 },
-  { name: 'Heading/L', family: 'Fraunces', style: 'Regular', size: 32, lh: 120, ls: -2 },
-  { name: 'Heading/M', family: 'Fraunces', style: 'Regular', size: 24, lh: 120, ls: -2 },
-  { name: 'Heading/S', family: 'Fraunces', style: 'Regular', size: 18, lh: 130, ls: -1 },
-  { name: 'Body/L', family: 'Raleway', style: 'Regular', size: 18, lh: 170 },
-  { name: 'Body/Base', family: 'Raleway', style: 'Regular', size: 15.2, lh: 170 },
-  { name: 'Body/S', family: 'Raleway', style: 'Regular', size: 13.6, lh: 160 },
-  { name: 'Body/XS', family: 'Raleway', style: 'Regular', size: 12, lh: 150 },
+  { name: 'Display/XL', font: 'display', style: 'Regular', size: '5xl', lh: 105, ls: -3 },
+  { name: 'Display/L', font: 'display', style: 'Regular', size: '4xl', lh: 105, ls: -3 },
+  { name: 'Display/M', font: 'display', style: 'Regular', size: '3xl', lh: 110, ls: -3 },
+  { name: 'Heading/L', font: 'heading', style: 'Regular', size: '2xl', lh: 120, ls: -2 },
+  { name: 'Heading/M', font: 'heading', style: 'Regular', size: 'xl', lh: 120, ls: -2 },
+  { name: 'Heading/S', font: 'heading', style: 'Regular', size: 'lg', lh: 130, ls: -1 },
+  { name: 'Body/L', font: 'sans', style: 'Regular', size: 'lg', lh: 170 },
+  { name: 'Body/Base', font: 'sans', style: 'Regular', size: 'base', lh: 170 },
+  { name: 'Body/S', font: 'sans', style: 'Regular', size: 'sm', lh: 160 },
+  { name: 'Body/XS', font: 'sans', style: 'Regular', size: 'xs', lh: 150 },
   // Label styles — Raleway Medium for form/control labels, badges, chips (text-sm / text-xs + font-medium).
-  { name: 'Label/Default', family: 'Raleway', style: 'Medium', size: 13.6, lh: 140 },
-  { name: 'Label/Small', family: 'Raleway', style: 'Medium', size: 12, lh: 140 },
-  { name: 'Accent', family: 'Fraunces', style: 'Italic', size: 28, lh: 120, ls: -2 },
-  { name: 'Eyebrow', family: 'Raleway', style: 'Medium', size: 11, lh: 100, ls: 15, textCase: 'UPPER' },
+  { name: 'Label/Default', font: 'sans', style: 'Medium', size: 'sm', lh: 140 },
+  { name: 'Label/Small', font: 'sans', style: 'Medium', size: 'xs', lh: 140 },
+  { name: 'Accent', font: 'display', style: 'Italic', px: 28, lh: 120, ls: -2 },
+  { name: 'Eyebrow', font: 'sans', style: 'Medium', size: 'xs', lh: 100, ls: 15, textCase: 'UPPER' },
 ]
+// Styles allowed a typed `px` because no type token holds their size. In code the
+// accent word is an <em> that inherits its heading's size, so a fixed-size Accent
+// style has no twin to read from. The list may only shrink.
+const OFF_SCALE = new Set(['Accent'])
 
-async function syncTextStyles() {
-  const fonts = [...new Set(TEXT_STYLES.map((s) => s.family + '|' + s.style))].map((x) => {
+// Curated rows resolved against the export, plus one `Text/<size>` style per
+// `text-*` utility, generated whole: the size and the line height that class
+// renders (`Text/sm` = 13.6px on 142.857%). Bind a layer to `Text/*` when its code
+// twin is a bare `text-sm`; the curated styles are for prose and headings.
+function resolveTextStyles(DTCG) {
+  const P = DTCG.Primitives
+  const family = (key) => primaryFamily(P.font[key].$value)
+  const curated = TEXT_STYLES.map((s) => {
+    if (s.size === undefined && !OFF_SCALE.has(s.name)) throw new Error(s.name + ': name a type token in `size`')
+    if (s.size !== undefined && !P.type[s.size]) throw new Error(s.name + ': no type token "' + s.size + '"')
+    return { name: s.name, family: family(s.font), style: s.style, size: s.size !== undefined ? dimToPx(P.type[s.size].$value) : s.px, lh: s.lh, ls: s.ls, textCase: s.textCase }
+  })
+  const utilities = Object.entries(P.lineHeight).map(([k, t]) => ({
+    name: 'Text/' + k, family: family('sans'), style: 'Regular', size: dimToPx(P.type[k].$value), lh: Math.round(t.$value * 100000) / 1000,
+  }))
+  return [...curated, ...utilities]
+}
+
+async function syncTextStyles(DTCG) {
+  const styles = resolveTextStyles(DTCG)
+  const fonts = [...new Set(styles.map((s) => s.family + '|' + s.style))].map((x) => {
     const [family, style] = x.split('|')
     return { family, style }
   })
@@ -197,7 +226,7 @@ async function syncTextStyles() {
   const byName = Object.fromEntries((await figma.getLocalTextStylesAsync()).map((s) => [s.name, s]))
   let created = 0
   let updated = 0
-  for (const s of TEXT_STYLES) {
+  for (const s of styles) {
     let ts = byName[s.name]
     if (!ts) { ts = figma.createTextStyle(); created++ } else updated++
     ts.name = s.name
@@ -208,7 +237,7 @@ async function syncTextStyles() {
     ts.textCase = s.textCase || 'ORIGINAL'
     byName[s.name] = ts
   }
-  return { created, updated, total: TEXT_STYLES.length }
+  return { created, updated, total: styles.length }
 }
 
 // ---- Effect styles: elevation drop shadows (light values; Figma effect styles can't hold modes) ----
@@ -343,7 +372,7 @@ async function syncFoundations(DTCG) {
   results.scalars = await syncPrimitiveScalars(DTCG)
   results.semantic = await syncSemanticAliases(DTCG)
   results.shadowColors = await syncShadowColorVars(DTCG)
-  results.text = await syncTextStyles()
+  results.text = await syncTextStyles(DTCG)
   results.effects = await syncEffectStyles(DTCG)
   results.tints = await syncTints()
   return results

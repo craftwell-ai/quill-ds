@@ -17,6 +17,10 @@ import { tokens } from '../tokens/quill.tokens.mjs'
 import { DEFAULT_ACCENT } from '../tokens/themes.mjs'
 
 const px = (rem) => `${Math.round(parseFloat(rem) * 160) / 10}px`
+// `calc(1.25 / 0.875)` or a bare number → the ratio.
+const ratio = (css) => { const m = css.match(/^calc\(([\d.]+)\s*\/\s*([\d.]+)\)$/); return m ? m[1] / m[2] : Number(css) }
+// The line a `text-*` class sets along with its size; `2xs` has none and inherits.
+const line = (t, k) => (t.textLeading[k] ? `${Math.round(ratio(t.textLeading[k]) * 1000) / 10}% (${Math.round(ratio(t.textLeading[k]) * parseFloat(t.text[k]) * 160) / 10}px)` : 'inherits')
 
 const TEXT_USE = {
   '2xs': 'micro labels, tag pills',
@@ -48,12 +52,12 @@ export function renderTypeSection(t = tokens) {
   L.push(`- Presets: \`--fraunces-display\` (\`${t.fraunces.display}\`) · \`--fraunces-accent\` (\`${t.fraunces.accent}\`, the italic emphasis) · \`--fraunces-text\` (\`${t.fraunces.text}\`) · \`--fraunces-caption\` (\`${t.fraunces.caption}\`).`)
   L.push('')
   L.push('### Type scale')
-  L.push('| Token | Size | Use |')
-  L.push('|---|---|---|')
-  for (const [k, v] of Object.entries(t.text)) L.push(`| \`--text-${k}\` | ${v} (${px(v)}) | ${TEXT_USE[k] ?? ''} |`)
+  L.push('| Token | Size | Line | Use |')
+  L.push('|---|---|---|---|')
+  for (const [k, v] of Object.entries(t.text)) L.push(`| \`--text-${k}\` | ${v} (${px(v)}) | ${line(t, k)} | ${TEXT_USE[k] ?? ''} |`)
   L.push('')
   L.push('### Leading, tracking, rules')
-  L.push('- No leading or tracking tokens ship; set them as values. Leading: 1.05 display · 1.2 snug · 1.5 UI · 1.7 reading copy (`leading-[1.7]`). Tracking: −0.03em display · −0.02em tight · 0.1em wide · 0.15em eyebrows (`tracking-[0.15em]`) · 0.2em section labels.')
+  L.push('- A `text-*` class sets its line height with its size (the Line column, shipped as `--text-sm--line-height` and so on), so bare UI text needs no `leading-*`. No standalone leading or tracking scale ships yet; where a line needs a different rhythm, set it as a value. Leading: 1.05 display · 1.2 snug · 1.5 UI · 1.7 reading copy (`leading-[1.7]`). Tracking: −0.03em display · −0.02em tight · 0.1em wide · 0.15em eyebrows (`tracking-[0.15em]`) · 0.2em section labels.')
   L.push('- **Headings** — Fraunces at weight 400 (never heavy or bold), tight tracking, `--fraunces-display`.')
   L.push(`- **The one accent word** — italicize exactly one word per headline in the accent (\`--accent-pigment-text\`, ${DEFAULT_ACCENT} by default) with \`--fraunces-accent\`. Never two.`)
   L.push('- **Body / UI** — Raleway 400/500/600; relaxed leading for reading copy.')
