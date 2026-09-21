@@ -354,6 +354,17 @@ export function renderDtcg(t) {
   const Theme = { semantic: {} }
   for (const [k, v] of Object.entries(t.semantic)) Theme.semantic[k] = named(alias(v), `semantic/${k}`, `shadcn/${k}`)
   for (const [k, v] of Object.entries(t.status)) Theme.semantic[k] = named(alias(v), `semantic/${k}`, legacyRoleName(k))
+  // Each tint names the Figma variable it is cut from: a contract role, else the
+  // colour primitive whose CSS name it carries.
+  const colourNames = new Map()
+  const collectColours = (node) => { for (const v of Object.values(node)) { if (v.$type === 'color') { const n = v.$extensions['com.figma'].name; colourNames.set(n.slice('color/'.length), n) } else collectColours(v) } }
+  collectColours(primColor)
+  const Tints = t.tints.map(({ of, pct, text = false }) => {
+    const base = of in t.semantic ? `semantic/${of}` : colourNames.get(of)
+    if (!base) throw new Error(`tint '${of}/${pct}': '${of}' is neither a contract role nor a colour primitive`)
+    return { name: `tint/${of}/${pct}`, base, alpha: pct / 100, cssVar: `--${of}`, text }
+  })
+
   // Retired names are not tokens any more, so they carry no value here — only the
   // rename that parks their Figma variable under `deprecated/`, hidden from
   // publishing. Never deleted: a file that consumes the library may be bound to one.
@@ -364,6 +375,7 @@ export function renderDtcg(t) {
     Primitives: { color: primColor, font, spacing, radius, borderWidth, type, lineHeight, leading, tracking, elevation, motion, fraunces },
     Theme,
     Deprecated,
+    Tints,
   }
 }
 

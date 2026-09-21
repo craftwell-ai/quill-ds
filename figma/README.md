@@ -50,7 +50,7 @@ Retired variables are parked as `deprecated/*`, hidden from publishing, and neve
   `Accent` is the one style with a typed size (28px): in code the accent word inherits its heading's size, so no token holds it.
   `scripts/figma-text-styles.test.mjs` runs the resolution against the real export without Figma.
 - Effect styles (`Elevation/xs·sm·base·lg·pop`, light values).
-- **Tint variables** (`tint/<token>/<pct>`, Primitives, four modes) — the opacity modifiers code puts on tokens (`bg-destructive/10`, `ring-foreground/10`, `bg-muted/50`, the ToneBadge pigment tints) as alpha-carrying variables, derived per mode from the base variable by `syncTints()`. Every tinted paint in the file binds one of these: a paint-level opacity on a bound colour does not survive an instance nested in another component (the template pages proved it on 2026-09-19).
+- **Tint variables** (`tint/<token>/<pct>`, Primitives, four modes; which ones exist is declared in `quill.tokens.mjs` → `tints`, never in the sync) — the opacity modifiers code puts on tokens (`bg-destructive/10`, `ring-foreground/10`, `bg-muted/50`, the ToneBadge pigment tints) as alpha-carrying variables, derived per mode from the base variable by `syncTints()`. Every tinted paint in the file binds one of these: a paint-level opacity on a bound colour does not survive an instance nested in another component (the template pages proved it on 2026-09-19).
 
 **Not managed here:** dark-mode elevation (Figma effect styles can't hold modes) — deferred to the component phase. Components, Code Connect, and patterns are later phases.
 

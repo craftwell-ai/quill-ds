@@ -1786,5 +1786,98 @@
         }
       }
     }
-  }
+  },
+  "Tints": [
+    {
+      "name": "tint/destructive/10",
+      "base": "semantic/destructive",
+      "alpha": 0.1,
+      "cssVar": "--destructive",
+      "text": false
+    },
+    {
+      "name": "tint/moss/20",
+      "base": "color/moss",
+      "alpha": 0.2,
+      "cssVar": "--moss",
+      "text": false
+    },
+    {
+      "name": "tint/gold/25",
+      "base": "color/gold",
+      "alpha": 0.25,
+      "cssVar": "--gold",
+      "text": false
+    },
+    {
+      "name": "tint/terracotta/16",
+      "base": "color/terracotta",
+      "alpha": 0.16,
+      "cssVar": "--terracotta",
+      "text": false
+    },
+    {
+      "name": "tint/indigo/20",
+      "base": "color/indigo",
+      "alpha": 0.2,
+      "cssVar": "--indigo",
+      "text": false
+    },
+    {
+      "name": "tint/foreground/10",
+      "base": "semantic/foreground",
+      "alpha": 0.1,
+      "cssVar": "--foreground",
+      "text": false
+    },
+    {
+      "name": "tint/input/30",
+      "base": "semantic/input",
+      "alpha": 0.3,
+      "cssVar": "--input",
+      "text": false
+    },
+    {
+      "name": "tint/chart-1/20",
+      "base": "semantic/chart-1",
+      "alpha": 0.2,
+      "cssVar": "--chart-1",
+      "text": false
+    },
+    {
+      "name": "tint/chart-2/20",
+      "base": "semantic/chart-2",
+      "alpha": 0.2,
+      "cssVar": "--chart-2",
+      "text": false
+    },
+    {
+      "name": "tint/muted/50",
+      "base": "semantic/muted",
+      "alpha": 0.5,
+      "cssVar": "--muted",
+      "text": false
+    },
+    {
+      "name": "tint/primary/10",
+      "base": "semantic/primary",
+      "alpha": 0.1,
+      "cssVar": "--primary",
+      "text": false
+    },
+    {
+      "name": "tint/sidebar-border/8",
+      "base": "semantic/sidebar-border",
+      "alpha": 0.08,
+      "cssVar": "--sidebar-border",
+      "text": false
+    },
+    {
+      "name": "tint/sidebar-foreground/70",
+      "base": "semantic/sidebar-foreground",
+      "alpha": 0.7,
+      "cssVar": "--sidebar-foreground",
+      "text": true
+    }
+  ]
 }

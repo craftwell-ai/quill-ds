@@ -18,9 +18,10 @@ const variables = new Set([...rootCss.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map((m)
 test('every role that ships has an intent line, and nothing else does', () => {
   assert.deepEqual(Object.keys(ROLE_INTENTS), Object.keys(tokens.semantic))
   assert.deepEqual(Object.keys(STATUS_INTENTS), Object.keys(tokens.status))
-  const snippet = readFileSync(join(root, 'figma/sync-foundations.figma.js'), 'utf8')
-  const tints = [...snippet.slice(snippet.indexOf('const TINTS = [')).matchAll(/\['(tint\/[^']+)'/g)].map((m) => m[1])
+  const tints = tokens.tints.map((t) => `tint/${t.of}/${t.pct}`)
   assert.equal(tints.length, 13)
+  // The Figma sync must read them from the export, not keep a table of its own.
+  assert.equal(/const TINTS = \[/.test(readFileSync(join(root, 'figma/sync-foundations.figma.js'), 'utf8')), false)
   assert.deepEqual(Object.keys(TINT_INTENTS), tints)
 })
 

@@ -82,7 +82,7 @@ export function renderSpacingSection(t = tokens) {
   L.push('')
   L.push(steps.map(([k, v]) => `\`--space-${k}\` ${px(v)}`).join(' · '))
   L.push('')
-  L.push('Components sit on `--space-4` / `--space-6`; sections breathe with `--space-24`.')
+  L.push('Components sit on `--space-4` / `--space-6`; sections breathe with `--space-24`. In a component write the class (`p-4`, `gap-6`): it is the same step, and no shipped component reads the variable. The variables are for hand-written CSS.')
   L.push('')
   L.push('### Layout')
   L.push('No layout tokens ship; use the values the site uses. Marketing max-width **1400px** (`max-w-[1400px]`), reading column **800px**, side padding **48px** on desktop (`px-12`) and **24px** on mobile (`px-6`), vertical section rhythm **96px** (`py-24`; `py-14` on mobile).')

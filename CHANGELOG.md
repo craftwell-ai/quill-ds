@@ -12,6 +12,33 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.1] — 2026-09-21
+
+Closes step 5 of the token-unification plan. Nothing an app receives changes except
+one sentence in the agent rules.
+
+### Changed
+- **The sanctioned tints are declared in the token source.** Which opacities the system
+  uses on purpose (`destructive` at 10%, `muted` at 50%, the four ToneBadge washes…)
+  was a table inside the Figma sync snippet — a design decision the token source knew
+  nothing about. It is now `tokens.tints`; the export resolves each to the variable it
+  is cut from (`Tints`), the sync reads that, and `roles.test.mjs` fails if the snippet
+  grows a table of its own again. Re-run in the library: 0 created, 13 updated, no
+  value or scope changed.
+
+### Decided
+- **`--space-*` stays.** Nothing reads it — not shipped code, not the site, not
+  tech-careers — because components write `p-4`. It stays because it is the CSS name
+  behind Figma's `space/*` and the documented scale, and dropping a public variable
+  buys nothing. What makes that honest is now a test: every `--space-N` must equal the
+  step Tailwind renders for `p-N` (0.25rem × N), so the variable and the class can
+  never disagree. The docs say to write the class in a component.
+- **The six bracketed motion values stay.** All six (`duration-[0.35s]`,
+  `ease-[cubic-bezier(0.22,1,0.36,1)]`, three of each) sit in one file,
+  `src/components/ui/navigation-menu.tsx` — a stock shadcn primitive Quill restyles
+  through tokens and does not ship. Rewriting stock primitive internals is how a system
+  drifts off upstream; no shipped block or example uses a motion utility at all.
+
 ## [0.10.0] — 2026-09-21
 
 One token, one name. A colour had three spellings — `color/paper/base` in Figma,

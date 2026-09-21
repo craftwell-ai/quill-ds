@@ -254,6 +254,42 @@ test('a leading or tracking role never reuses one of Tailwind\'s own names', () 
   assert.deepEqual(Object.keys(tokens.tracking).filter((k) => owned('tracking').has(k)), [])
 })
 
+test('the sanctioned tints are declared in the token source and exported for Figma', () => {
+  // They lived in a table inside the Figma sync snippet: a design decision (which
+  // opacities the system uses on purpose) that the token source knew nothing about.
+  assert.equal(tokens.tints.length, 13)
+  const d = renderDtcg(tokens)
+  assert.equal(d.Tints.length, tokens.tints.length)
+  const names = new Set()
+  const collect = (o) => { for (const v of Object.values(o)) { if (!v || typeof v !== 'object') continue; const f = v.$extensions?.['com.figma']; if (f?.name) names.add(f.name); else collect(v) } }
+  collect(d.Primitives); collect(d.Theme)
+  for (const t of d.Tints) {
+    assert.match(t.name, /^tint\/[a-z0-9-]+\/\d+$/)
+    assert.ok(names.has(t.base), `${t.name}: base '${t.base}' is not a variable the export produces`)
+    assert.ok(t.alpha > 0 && t.alpha < 1)
+    assert.match(t.cssVar, /^--[a-z0-9-]+$/)
+  }
+  const byName = Object.fromEntries(d.Tints.map((t) => [t.name, t]))
+  assert.deepEqual(byName['tint/destructive/10'], { name: 'tint/destructive/10', base: 'semantic/destructive', alpha: 0.1, cssVar: '--destructive', text: false })
+  assert.equal(byName['tint/moss/20'].base, 'color/moss')
+  assert.equal(byName['tint/sidebar-foreground/70'].text, true) // a text tint gets text scopes in Figma
+})
+
+test('--space-N is the step Tailwind renders for p-N, so the variable and the class never disagree', () => {
+  // Nothing reads --space-* (not shipped code, not the site, not the app): components
+  // write `p-4`. The variables stay because they are the CSS name behind Figma's
+  // `space/*` and the documented scale — which is only honest while both are 0.25rem × N.
+  const defaults = readFileSync(new URL('../node_modules/tailwindcss/theme.css', import.meta.url), 'utf8')
+  const step = defaults.match(/--spacing:\s*([\d.]+)rem;/)
+  assert.ok(step, 'Tailwind theme not read — guard is vacuous')
+  let checked = 0
+  for (const [k, v] of Object.entries(tokens.spacing)) {
+    assert.ok(Math.abs(parseFloat(v) - Number(k) * Number(step[1])) < 1e-9, `--space-${k} is ${v}; Tailwind's p-${k} renders ${Number(k) * Number(step[1])}rem`)
+    checked++
+  }
+  assert.ok(checked >= 15)
+})
+
 test('the dark: variant covers every theme whose color-scheme is dark', () => {
   const selector = darkVariant()
   const dark = MODES.filter((m) => m.colorScheme === 'dark')

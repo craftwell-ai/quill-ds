@@ -76,7 +76,7 @@ A **4px base step** (`--space-1` = 0.25rem). Editorial rhythm — sections breat
 
 `--space-1` 4px · `--space-2` 8px · `--space-3` 12px · `--space-4` 16px · `--space-5` 20px · `--space-6` 24px · `--space-7` 28px · `--space-8` 32px · `--space-9` 36px · `--space-10` 40px · `--space-12` 48px · `--space-16` 64px · `--space-20` 80px · `--space-24` 96px
 
-Components sit on `--space-4` / `--space-6`; sections breathe with `--space-24`.
+Components sit on `--space-4` / `--space-6`; sections breathe with `--space-24`. In a component write the class (`p-4`, `gap-6`): it is the same step, and no shipped component reads the variable. The variables are for hand-written CSS.
 
 #### Layout
 No layout tokens ship; use the values the site uses. Marketing max-width **1400px** (`max-w-[1400px]`), reading column **800px**, side padding **48px** on desktop (`px-12`) and **24px** on mobile (`px-6`), vertical section rhythm **96px** (`py-24`; `py-14` on mobile).
