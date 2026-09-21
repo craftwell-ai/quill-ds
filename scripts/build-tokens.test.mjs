@@ -309,6 +309,23 @@ test('the CLI payload registers no class for a primitive: cssVars.light holds on
   assert.equal(Object.keys(payload.cssVars.light).filter((k) => `--${k}` in root).length, 0)
 })
 
+test('a CLI install receives the dark variant, so dark: follows Quill\'s dark themes in an app', () => {
+  // Stock shadcn primitives carry 71 `dark:` tweaks (`dark:bg-input/30`…). A stock
+  // app defines `dark` as `.dark *`, so on `data-theme="dark"` none of them fired
+  // and Dusk in an app differed from Dusk in Storybook, where the site defines the
+  // variant. The CLI writes an at-rule from the `css` field, and Tailwind honours the
+  // LAST definition of a custom variant (compiled: stock then ours → ours), so the
+  // shipped rule keeps `.dark *` and adds every dark-scheme theme.
+  const payload = registryPayload(renderCss(tokens))
+  const rules = Object.keys(payload.css).filter((k) => k.startsWith('@custom-variant dark '))
+  assert.equal(rules.length, 1)
+  assert.deepEqual(payload.css[rules[0]], {})
+  assert.ok(rules[0].includes('.dark *'), 'an app toggling the stock .dark class must keep working')
+  for (const m of MODES.filter((m) => m.colorScheme === 'dark')) assert.ok(rules[0].includes(`[data-theme="${m.attr}"] *`), `${m.attr} missing from the shipped variant`)
+  for (const m of MODES.filter((m) => m.colorScheme !== 'dark')) assert.equal(rules[0].includes(`[data-theme="${m.attr}"]`), false, `${m.attr} is a light theme`)
+  assert.equal(Object.keys(payload.css)[0], rules[0], 'first, so it is in place before anything that reads it')
+})
+
 test('the dark: variant covers every theme whose color-scheme is dark', () => {
   const selector = darkVariant()
   const dark = MODES.filter((m) => m.colorScheme === 'dark')
@@ -336,8 +353,9 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
     for (const k of Object.keys(vars)) assert.ok(!k.startsWith('--'), `cssVars.${bucket} key '${k}' must be bare`)
   }
   const selectors = Object.keys(payload.css)
-  assert.equal(selectors.length, 1 + css.modes.length + css.accents.length) // ':root' + themes + accents
+  assert.equal(selectors.length, 2 + css.modes.length + css.accents.length) // the dark variant + ':root' + themes + accents
   for (const [selector, block] of Object.entries(payload.css)) {
+    if (selector.startsWith('@')) continue // an at-rule carries no declarations
     const keys = Object.keys(block)
     assert.ok(keys.length > 0, `${selector} has no declarations`)
     for (const k of keys) assert.match(k, /^--[a-z0-9_-]+$/, `${selector} key '${k}' must be a custom-property name`)
