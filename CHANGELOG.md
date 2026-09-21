@@ -12,6 +12,26 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.9.60] — 2026-09-21
+
+### Changed
+- **The indigo utilities are spelled like their variable: `bg-indigo`,
+  `text-indigo-deep`.** Every other pigment's class already matched its CSS variable
+  (`--moss` → `bg-moss`, `--teal` → `bg-teal`); indigo alone shipped as
+  `bg-indigo-brand` for `--indigo`, on the 0.8.29 reasoning that the plain name belonged
+  to Tailwind. It does not: Tailwind defines only numbered shades (`indigo-500`), and a
+  compile holding both shows `bg-indigo` reading `var(--indigo)` with `bg-indigo-500`
+  untouched, which is how `teal` has always shipped. The mismatch had already cost one
+  bug (0.8.29: ToneBadge asked for `bg-indigo` and rendered an unstyled chip).
+  `indigo-brand` and `indigo-brand-deep` stay as deprecated aliases, so an app on the
+  old spelling keeps its colour. ToneBadge, the theme selector's accent swatch and its
+  story use the new names, and `build-tokens.test.mjs` now fails on any colour utility
+  named differently from the variable it reads.
+- **Dependencies.** The two Dependabot merges the release bot had queued as 0.9.59 ride
+  in this release, which supersedes that proposal: `next` and `eslint-config-next`
+  16.3.4 → 16.3.5, `@material-symbols/svg-400` 0.47.2 → 0.47.4, `tailwind-merge`
+  3.6.0 → 3.7.0, `@types/node` 24.13.4 → 24.13.5.
+
 ## [0.9.58] — 2026-09-19
 
 ### Fixed

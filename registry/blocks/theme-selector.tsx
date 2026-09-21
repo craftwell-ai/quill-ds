@@ -28,7 +28,7 @@ export const quillThemes = [
 export const quillAccents = [
   { value: 'moss', label: 'Moss', swatch: 'bg-moss' },
   { value: 'terracotta', label: 'Terracotta', swatch: 'bg-terracotta' },
-  { value: 'indigo', label: 'Indigo', swatch: 'bg-indigo-brand' },
+  { value: 'indigo', label: 'Indigo', swatch: 'bg-indigo' },
   { value: 'gold', label: 'Gold', swatch: 'bg-gold' },
 ] as const
 

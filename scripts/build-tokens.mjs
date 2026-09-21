@@ -107,6 +107,10 @@ export function renderCss(t) {
     ink: '--ink', 'ink-soft': '--ink-soft', 'ink-muted': '--ink-muted',
     terracotta: '--terracotta', 'terracotta-deep': '--terracotta-deep',
     moss: '--moss', 'moss-deep': '--moss-deep',
+    // Spelled like the variable: Tailwind only defines numbered indigo shades
+    // (`indigo-500`), so the plain stem is free, exactly as `teal` below.
+    indigo: '--indigo', 'indigo-deep': '--indigo-deep',
+    // Deprecated spelling, kept so an app already on it keeps its colour.
     'indigo-brand': '--indigo', 'indigo-brand-deep': '--indigo-deep',
     // gold-text is a third cut, not a shade: gold-deep can't carry TEXT duty on
     // light grounds (3.3:1 on Dawn). Without a utility here, `text-gold-text` in
