@@ -170,33 +170,42 @@ async function syncSemanticAliases(DTCG) {
 }
 
 // ---- Text styles ----
-// `font` and `size` are token KEYS, resolved from the export when the sync runs.
-// They were typed pixels once, and drifted where nothing checked: Heading/S and
-// Body/L sat at 18 while `lg` is 18.4; the Eyebrow at 11 while code and DESIGN.md
-// both say `text-xs`. `lh` and `ls` on these curated rows are still literals —
-// the leading and tracking scale has no tokens yet. Colour is applied through
-// variables on the layers, not here.
+// Every field names a token KEY, resolved from the export when the sync runs:
+// `font`, `size`, and — where the value is one a role holds — `leading` and
+// `tracking`. They were typed numbers once, and drifted where nothing checked:
+// Heading/S and Body/L sat at 18 while `lg` is 18.4; the Eyebrow at 11 while code
+// and DESIGN.md both say `text-xs`. Colour is applied through variables on the
+// layers, not here.
 const TEXT_STYLES = [
-  { name: 'Display/XL', font: 'display', style: 'Regular', size: '5xl', lh: 105, ls: -3 },
-  { name: 'Display/L', font: 'display', style: 'Regular', size: '4xl', lh: 105, ls: -3 },
-  { name: 'Display/M', font: 'display', style: 'Regular', size: '3xl', lh: 110, ls: -3 },
-  { name: 'Heading/L', font: 'heading', style: 'Regular', size: '2xl', lh: 120, ls: -2 },
-  { name: 'Heading/M', font: 'heading', style: 'Regular', size: 'xl', lh: 120, ls: -2 },
+  { name: 'Display/XL', font: 'display', style: 'Regular', size: '5xl', leading: 'display', tracking: 'display' },
+  { name: 'Display/L', font: 'display', style: 'Regular', size: '4xl', leading: 'display', tracking: 'display' },
+  { name: 'Display/M', font: 'display', style: 'Regular', size: '3xl', lh: 110, tracking: 'display' },
+  { name: 'Heading/L', font: 'heading', style: 'Regular', size: '2xl', leading: 'heading', ls: -2 },
+  { name: 'Heading/M', font: 'heading', style: 'Regular', size: 'xl', leading: 'heading', ls: -2 },
   { name: 'Heading/S', font: 'heading', style: 'Regular', size: 'lg', lh: 130, ls: -1 },
-  { name: 'Body/L', font: 'sans', style: 'Regular', size: 'lg', lh: 170 },
-  { name: 'Body/Base', font: 'sans', style: 'Regular', size: 'base', lh: 170 },
+  { name: 'Body/L', font: 'sans', style: 'Regular', size: 'lg', leading: 'reading' },
+  { name: 'Body/Base', font: 'sans', style: 'Regular', size: 'base', leading: 'reading' },
   { name: 'Body/S', font: 'sans', style: 'Regular', size: 'sm', lh: 160 },
-  { name: 'Body/XS', font: 'sans', style: 'Regular', size: 'xs', lh: 150 },
+  { name: 'Body/XS', font: 'sans', style: 'Regular', size: 'xs', leading: 'ui' },
   // Label styles — Raleway Medium for form/control labels, badges, chips (text-sm / text-xs + font-medium).
   { name: 'Label/Default', font: 'sans', style: 'Medium', size: 'sm', lh: 140 },
   { name: 'Label/Small', font: 'sans', style: 'Medium', size: 'xs', lh: 140 },
-  { name: 'Accent', font: 'display', style: 'Italic', px: 28, lh: 120, ls: -2 },
-  { name: 'Eyebrow', font: 'sans', style: 'Medium', size: 'xs', lh: 100, ls: 15, textCase: 'UPPER' },
+  { name: 'Accent', font: 'display', style: 'Italic', px: 28, leading: 'heading', ls: -2 },
+  { name: 'Eyebrow', font: 'sans', style: 'Medium', size: 'xs', lh: 100, tracking: 'eyebrow', textCase: 'UPPER' },
 ]
 // Styles allowed a typed `px` because no type token holds their size. In code the
 // accent word is an <em> that inherits its heading's size, so a fixed-size Accent
 // style has no twin to read from. The list may only shrink.
 const OFF_SCALE = new Set(['Accent'])
+// Styles still typing a line height (`lh`) or tracking (`ls`). None of these values
+// is a role, and most disagree with what code renders: every h1–h6 tracks at
+// -0.03em, not -2 or -1; `text-sm` draws a 142.857% line, not 160 or 140. Moving
+// them re-spaces every layer bound to the style, so they wait for a visual pass —
+// bind to `Text/*` or a role there, then delete the entry. The list may only shrink.
+const TYPED_METRICS = {
+  'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], 'Body/S': ['lh'],
+  'Label/Default': ['lh'], 'Label/Small': ['lh'], Accent: ['ls'], Eyebrow: ['lh'],
+}
 
 // Curated rows resolved against the export, plus one `Text/<size>` style per
 // `text-*` utility, generated whole: the size and the line height that class
@@ -208,7 +217,14 @@ function resolveTextStyles(DTCG) {
   const curated = TEXT_STYLES.map((s) => {
     if (s.size === undefined && !OFF_SCALE.has(s.name)) throw new Error(s.name + ': name a type token in `size`')
     if (s.size !== undefined && !P.type[s.size]) throw new Error(s.name + ': no type token "' + s.size + '"')
-    return { name: s.name, family: family(s.font), style: s.style, size: s.size !== undefined ? dimToPx(P.type[s.size].$value) : s.px, lh: s.lh, ls: s.ls, textCase: s.textCase }
+    const typed = TYPED_METRICS[s.name] || []
+    if ((s.lh !== undefined) !== typed.includes('lh')) throw new Error(s.name + ': name a leading role, or list the typed `lh` in TYPED_METRICS')
+    if ((s.ls !== undefined) !== typed.includes('ls')) throw new Error(s.name + ': name a tracking role, or list the typed `ls` in TYPED_METRICS')
+    if (s.leading !== undefined && !P.leading[s.leading]) throw new Error(s.name + ': no leading role "' + s.leading + '"')
+    if (s.tracking !== undefined && !P.tracking[s.tracking]) throw new Error(s.name + ': no tracking role "' + s.tracking + '"')
+    const lh = s.leading !== undefined ? Math.round(P.leading[s.leading].$value * 100000) / 1000 : s.lh
+    const ls = s.tracking !== undefined ? P.tracking[s.tracking].$value : s.ls
+    return { name: s.name, family: family(s.font), style: s.style, size: s.size !== undefined ? dimToPx(P.type[s.size].$value) : s.px, lh, ls, textCase: s.textCase }
   })
   const utilities = Object.entries(P.lineHeight).map(([k, t]) => ({
     name: 'Text/' + k, family: family('sans'), style: 'Regular', size: dimToPx(P.type[k].$value), lh: Math.round(t.$value * 100000) / 1000,

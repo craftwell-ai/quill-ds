@@ -153,6 +153,13 @@ export const tokens = {
     xl: 'calc(1.75 / 1.25)', '2xl': 'calc(2 / 1.5)', '3xl': 'calc(2.25 / 1.875)', '4xl': 'calc(2.5 / 2.25)',
     '5xl': '1',
   },
+  // Line-height and letter-spacing roles, named for the text they set rather than
+  // how they feel. The scale used to be documented as snug / tight / wide, but
+  // Tailwind owns those names with other values (`leading-snug` is 1.375,
+  // `tracking-wide` 0.025em) and shipped components use them — and a role tells an
+  // agent when to reach for it. Only values shipped code uses earn a token.
+  leading: { display: '1.05', heading: '1.2', ui: '1.5', reading: '1.7' },
+  tracking: { display: '-0.03em', label: '0.1em', eyebrow: '0.15em' },
   shadow: {
     // Classic pairs reuse the light/dark recipes with neutral black casts —
     // no warm ink tint on the pure white/black grounds.

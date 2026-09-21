@@ -117,7 +117,7 @@ function Logo() {
 
 function Eyebrow({ children, dash = false }: { children: React.ReactNode; dash?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2.5 font-sans text-xs font-medium tracking-[0.15em] uppercase text-[var(--accent-pigment)] whitespace-nowrap max-sm:text-[0.65rem] max-sm:tracking-[0.08em]">
+    <span className="inline-flex items-center gap-2.5 font-sans text-xs font-medium tracking-eyebrow uppercase text-[var(--accent-pigment)] whitespace-nowrap max-sm:text-[0.65rem] max-sm:tracking-[0.08em]">
       {dash && <span className="h-px w-5 bg-[var(--accent-pigment)] max-sm:hidden" />}
       {children}
     </span>
@@ -136,8 +136,8 @@ function SectionHeader({
   return (
     <div className="mb-14 flex items-baseline justify-between gap-8 max-sm:mb-9">
       <div className="flex flex-col gap-4">
-        <span className="font-sans text-xs font-medium tracking-[0.15em] uppercase text-ink-muted">{eyebrow}</span>
-        <h2 className="m-0 font-display text-3xl font-normal leading-[1.2] tracking-[-0.03em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
+        <span className="font-sans text-xs font-medium tracking-eyebrow uppercase text-ink-muted">{eyebrow}</span>
+        <h2 className="m-0 font-display text-3xl font-normal leading-heading tracking-display text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
           {title}
         </h2>
       </div>
@@ -327,10 +327,10 @@ export default function Home() {
         <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] lg:pt-[68px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-[15px] max-sm:pb-16">
           <div className="flex flex-col items-start gap-7 max-sm:gap-5">
             <Eyebrow dash>The Quill design system · Issue 001</Eyebrow>
-            <h1 className="m-0 font-display text-5xl font-normal leading-[1.05] tracking-[-0.03em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
+            <h1 className="m-0 font-display text-5xl font-normal leading-display tracking-display text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
               A design system, made for <Accent>people</Accent>.
             </h1>
-            <p className="m-0 max-w-[540px] text-lg leading-[1.7] text-[var(--text-body)]">
+            <p className="m-0 max-w-[540px] text-lg leading-reading text-[var(--text-body)]">
               Warm neutral grounds, ink-toned type, and a narrow accent palette. Quill is designed for making interfaces
               feel approachable, delightful, and premium — crafted for everyday use.
             </p>
@@ -575,7 +575,7 @@ export default function Home() {
               <div key={num} className="flex flex-col gap-2.5">
                 <span className="font-display text-base italic text-[var(--accent-pigment)] [font-variation-settings:var(--fraunces-caption)]">{num}</span>
                 <h3 className="m-0 font-display text-xl font-normal text-[var(--text-strong)] [font-variation-settings:var(--fraunces-text)]">{title}</h3>
-                <p className="m-0 text-sm leading-[1.7] text-[var(--text-body)]">{body}</p>
+                <p className="m-0 text-sm leading-reading text-[var(--text-body)]">{body}</p>
               </div>
             ))}
           </div>
@@ -586,11 +586,11 @@ export default function Home() {
       <section id="start" className="bg-[var(--surface-page)]">
         <div className="mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-center gap-16 px-12 py-24 max-lg:grid-cols-1 max-sm:gap-8 max-sm:px-6 max-sm:py-14">
           <div className="flex flex-col items-start gap-6">
-            <span className="font-sans text-xs font-medium tracking-[0.15em] uppercase text-ink-muted">Getting started</span>
-            <h2 className="m-0 font-display text-3xl font-normal leading-[1.2] tracking-[-0.03em] text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
+            <span className="font-sans text-xs font-medium tracking-eyebrow uppercase text-ink-muted">Getting started</span>
+            <h2 className="m-0 font-display text-3xl font-normal leading-heading tracking-display text-[var(--text-strong)] [font-variation-settings:var(--fraunces-display)] max-sm:text-2xl">
               Begin with a single <Accent>command</Accent>.
             </h2>
-            <p className="m-0 max-w-[460px] text-[1rem] leading-[1.7] text-[var(--text-body)]">
+            <p className="m-0 max-w-[460px] text-[1rem] leading-reading text-[var(--text-body)]">
               Add the Quill theme with the shadcn CLI, import from the registry, and compose. The Storybook holds a
               story for every component, every state, both themes.
             </p>

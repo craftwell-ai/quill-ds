@@ -33,8 +33,9 @@
 
 - Variables: `Quill Primitives` collection (modes: Light, Dark) + `Quill Semantic` collection (aliases → Primitives).
 - Text styles, in two kinds. **Curated** (`Display/*`, `Heading/*`, `Body/*`, `Label/*`, `Accent`, `Eyebrow`): family and size are
-  token keys resolved from the export when the sync runs (`size: 'lg'`, never `18`); their line height and tracking are still
-  literals, because no leading or tracking scale ships yet. **Generated** (`Text/xs` … `Text/5xl`): one per `text-*` utility, size
+  token keys resolved from the export when the sync runs (`size: 'lg'`, never `18`); line height and tracking name a role
+  (`leading: 'reading'`, `tracking: 'eyebrow'`) wherever the value is one. The values that are no role sit in `TYPED_METRICS`
+  in the snippet — a list that may only shrink; clear an entry during a visual pass, never by changing the number blind. **Generated** (`Text/xs` … `Text/5xl`): one per `text-*` utility, size
   and line height both from tokens (`Text/sm` = 13.6px on 142.857%) — bind a layer here when its code twin is a bare `text-sm`.
   `Accent` is the one style with a typed size (28px): in code the accent word inherits its heading's size, so no token holds it.
   `scripts/figma-text-styles.test.mjs` runs the resolution against the real export without Figma.

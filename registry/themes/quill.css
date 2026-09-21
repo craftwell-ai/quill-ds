@@ -104,6 +104,13 @@
   --border-width-2: 2px;
   --border-width-3: 3px;
   --border-width-4: 4px;
+  --leading-display: 1.05;
+  --leading-heading: 1.2;
+  --leading-ui: 1.5;
+  --leading-reading: 1.7;
+  --tracking-display: -0.03em;
+  --tracking-label: 0.1em;
+  --tracking-eyebrow: 0.15em;
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-warm);
@@ -725,7 +732,7 @@
 @layer base {
   body {
     font-family: "Raleway", -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.7;
+    line-height: var(--leading-reading);
     color: var(--ink-soft);
     background-color: var(--paper);
   }
@@ -733,14 +740,14 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: "Fraunces", Georgia, serif;
     font-weight: 400;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
+    letter-spacing: var(--tracking-display);
+    line-height: var(--leading-heading);
     color: var(--ink);
     font-variation-settings: var(--fraunces-text);
   }
 
   h1 {
-    line-height: 1.05;
+    line-height: var(--leading-display);
     font-variation-settings: var(--fraunces-display);
   }
 

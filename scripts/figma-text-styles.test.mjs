@@ -20,7 +20,7 @@ function load() {
   const end = snippet.indexOf('async function syncTextStyles')
   assert.ok(start !== -1 && end > start, 'text style section not found in the sync snippet')
   const helpers = snippet.match(/const REM = .*\n/)[0] + snippet.match(/const dimToPx = .*\n/)[0] + snippet.match(/const primaryFamily = .*\n/)[0]
-  return new Function(`${helpers}${snippet.slice(start, end)}\nreturn { TEXT_STYLES, OFF_SCALE, resolveTextStyles }`)()
+  return new Function(`${helpers}${snippet.slice(start, end)}\nreturn { TEXT_STYLES, OFF_SCALE, TYPED_METRICS, resolveTextStyles }`)()
 }
 
 const DTCG = renderDtcg(tokens)
@@ -61,4 +61,23 @@ test('every text-* utility with a line height has a generated Text/* style that 
   }
   assert.ok(Math.abs(byName['Text/sm'].lh - 142.857) < 0.001, 'text-sm renders a 142.857% line')
   assert.equal(byName['Text/2xs'], undefined, '2xs inherits its line height, so it has no utility style')
+})
+
+test('line height and tracking name a role; the styles still typing a number are listed, and the list only shrinks', () => {
+  const { TEXT_STYLES, TYPED_METRICS, resolveTextStyles } = load()
+  for (const s of TEXT_STYLES) {
+    if (s.leading !== undefined) assert.ok(s.leading in tokens.leading, `${s.name}: no leading role '${s.leading}'`)
+    if (s.tracking !== undefined) assert.ok(s.tracking in tokens.tracking, `${s.name}: no tracking role '${s.tracking}'`)
+  }
+  assert.deepEqual(TYPED_METRICS, {
+    'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], 'Body/S': ['lh'],
+    'Label/Default': ['lh'], 'Label/Small': ['lh'], Accent: ['ls'], Eyebrow: ['lh'],
+  })
+  // Taking a role moved nothing: each resolves to the number the style already held.
+  const byName = Object.fromEntries(resolveTextStyles(DTCG).map((s) => [s.name, s]))
+  const held = { 'Display/XL': [105, -3], 'Display/L': [105, -3], 'Display/M': [110, -3], 'Heading/L': [120, -2], 'Heading/M': [120, -2], 'Heading/S': [130, -1], 'Body/L': [170, undefined], 'Body/Base': [170, undefined], 'Body/S': [160, undefined], 'Body/XS': [150, undefined], 'Label/Default': [140, undefined], 'Label/Small': [140, undefined], Accent: [120, -2], Eyebrow: [100, 15] }
+  for (const [name, [lh, ls]] of Object.entries(held)) {
+    assert.equal(byName[name].lh, lh, `${name} line height`)
+    assert.equal(byName[name].ls, ls, `${name} tracking`)
+  }
 })
