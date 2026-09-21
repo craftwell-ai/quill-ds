@@ -25,7 +25,7 @@ export function Onboarding() {
         <CardDescription>
           {done} of {tasks.length} complete — you’re almost there.
         </CardDescription>
-        <div className="mt-1 h-2 overflow-hidden rounded-full bg-muted">
+        <div className="mt-1 h-2 overflow-hidden rounded-full bg-input">
           <div
             className="h-full rounded-full bg-primary"
             style={{ width: `${(done / tasks.length) * 100}%` }}

@@ -28,6 +28,13 @@ footer reads `package.json` directly, so the displayed version updates with the 
   The theme **file** cannot carry it (it is imported outside the Tailwind entry), so the
   theming docs now give file-channel apps the one line to add. None of Quill's own
   blocks uses `dark:`; they re-cut through the tokens.
+- **`onboarding`: the progress track was invisible to WCAG 1.4.11.** The block
+  hand-builds its bar, and drew the empty track in `muted` — 1.07 to 1.25:1 against the
+  page and the card in every theme, where a non-text boundary needs 3:1. It is `input`
+  now (3.04 to 4.56:1), the role the Progress primitive took for the same reason in
+  0.9.39 and the one the role guidance names for "the empty track of a switch, slider or
+  progress bar". The only hand-built track in the shipped blocks; the Figma twin's track
+  (`585:80`) is rebound to `semantic/input` to match.
 
 ## [0.10.1] — 2026-09-21
 
