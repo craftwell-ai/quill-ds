@@ -72,12 +72,16 @@ this palette for pure neutrals.
 `--line-faint` (ink 8%) · `--line-soft` (12%) · `--line` (15%) · `--line-strong` (20%).
 Borders are always ink-at-alpha, never a solid grey.
 
-### Semantic aliases (reach for these in components)
-- **Surfaces:** `--surface-page` (paper) · `--surface-card` (paper-warm) · `--surface-well` (paper-deep)
-- **Text:** `--text-strong` (ink) · `--text-body` (ink-soft) · `--text-muted` (ink-muted) · `--text-on-ink` (paper) · `--text-accent` (terracotta)
-- **Interactive:** `--accent` (terracotta) · `--accent-pressed` (terracotta-deep) · `--link` (indigo)
-- **Borders:** `--border-card` (line-soft) · `--border-field` (line) · `--border-divider` (line-faint)
-- **Feedback:** `--success` (moss-deep) · `--warning` (gold-deep) · `--danger` (terracotta-deep) · `--info` (indigo)
+### The semantic contract (reach for these in components)
+Components speak 31 colour roles as classes: `bg-background`, `text-muted-foreground`, `border-border`. The role names are shadcn-compatible, so stock primitives and third-party blocks land on Quill's palette with no edits. Each role points at a primitive above and re-cuts itself in every theme.
+- **Surfaces:** `background` (paper) · `card`, `popover`, `sidebar` (paper-warm) · `secondary`, `muted`, `accent` (paper-deep). **`accent` is the pale hover surface, not the brand accent** — that is the accent pigment, below.
+- **Text:** `foreground` (ink) · `muted-foreground` (ink-muted) · every surface has a `-foreground` partner. Body copy is ink-soft, set once on `body` (`text-ink-soft`).
+- **Actions:** `primary` (ink) with `primary-foreground` (paper) · `destructive` (terracotta-deep).
+- **Lines and focus:** `border` (line-soft) · `input` (line-control, the solid 3:1 boundary for fields and switches) · `ring` (the accent's text cut; follows `data-accent`).
+- **Charts:** `chart-1` … `chart-5`, always in that order.
+- **Accent and status** are variables, not classes: `--text-accent-color` and `--link` follow the chosen accent · `--success` (moss-deep) · `--warning` (gold-text) · `--danger` (terracotta-deep) · `--info` (indigo-deep) · `--working` (teal-deep) · `--queued` (ink-muted).
+
+A second vocabulary of surface, text and border aliases was retired in 0.10.0; the CHANGELOG maps each name to its contract role.
 
 ## 3. Dusk — the dark theme
 

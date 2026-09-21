@@ -110,9 +110,9 @@ Magnitude and polarity use ramps, not the series palette:
 <Ramp token="--chart-seq-1 … 5" steps={c.chart.seq} note="sequential (magnitude): one hue — moss — low → high emphasis; heatmaps, choropleths" />
 <Ramp token="--chart-div-1 … 5" steps={c.chart.div} note="diverging (polarity): terracotta ↔ indigo around a neutral midpoint — never red/green" />
 
-## Semantic aliases
+## Semantic contract
 
-The shadcn contract, generated from the token source:
+Quill's semantic contract, shadcn-compatible — generated from the token source:
 
 <div style={{ fontSize: 12 }}>
   {[
@@ -133,7 +133,7 @@ The shadcn contract, generated from the token source:
   ].map(([key, purpose]) => (
     <div key={key} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
       <code style={{ width: 180, flexShrink: 0 }}>{`--${key}`}</code>
-      <code style={{ width: 220, flexShrink: 0, color: '#944A33' }}>{tokens.shadcn[key]}</code>
+      <code style={{ width: 220, flexShrink: 0, color: '#944A33' }}>{tokens.semantic[key]}</code>
       <span style={{ color: '#675F58' }}>{purpose}</span>
     </div>
   ))}

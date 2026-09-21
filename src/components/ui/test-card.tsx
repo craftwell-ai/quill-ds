@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils"
 
 // Sync-proof fixture for the Figma → code round trip. Every visual property
 // maps 1:1 to the token-bound component on the ❖ Test page in Figma
-// (fill→shadcn/card, stroke→shadcn/border, radius→corner-radius/2xl,
-// padding→spacing/8, gap→spacing/3, shadow→Elevation/lg; footer buttons are
+// (fill→semantic/card, stroke→semantic/border, radius→radius/2xl,
+// padding→space/8, gap→space/3, shadow→Elevation/lg; footer buttons are
 // ❖ Button instances → <Button>). Not part of the registry.
 // Last synced with Figma: 2026-08-13 (node 371:7), direction Figma → code.
 // Body copy is kept on ONE source line on purpose: the daily figma-parity bot

@@ -20,14 +20,14 @@ test('scalars match current values', () => {
 })
 
 test('accent aliases follow data-accent, defaulting to moss (a11y)', () => {
-  assert.equal(tokens.semantic['text-accent-color'], 'var(--accent-pigment-text)')
-  assert.equal(tokens.semantic.link, 'var(--accent-pigment-text)')
-  assert.equal(tokens.shadcn.ring, 'var(--accent-pigment-text)')
+  assert.equal(tokens.status['text-accent-color'], 'var(--accent-pigment-text)')
+  assert.equal(tokens.status.link, 'var(--accent-pigment-text)')
+  assert.equal(tokens.semantic.ring, 'var(--accent-pigment-text)')
   assert.equal(tokens.accents.moss.text, 'var(--moss-deep)')
   assert.equal(tokens.accents.terracotta.text, 'var(--terracotta-deep)')
   // status colors do NOT follow the accent
-  assert.equal(tokens.shadcn.destructive, 'var(--terracotta-deep)')
-  assert.equal(tokens.semantic.warning, 'var(--gold-text)')
+  assert.equal(tokens.semantic.destructive, 'var(--terracotta-deep)')
+  assert.equal(tokens.status.warning, 'var(--gold-text)')
 })
 
 test('every accent text cut clears WCAG 4.5:1 on every theme ground (20 combos)', () => {
@@ -91,8 +91,8 @@ test('interactive controls use a solid AA boundary, not the faint alpha line (WC
   assert.equal(tokens.color.line.control.light, '#8A7F6E')
   assert.equal(tokens.color.line.control.dark, '#746B5D')
   // shadcn `input` (switch track, checkbox/radio/field borders) + semantic field border route through it.
-  assert.equal(tokens.shadcn.input, 'var(--line-control)')
-  assert.equal(tokens.semantic['border-field'], 'var(--line-control)')
+  assert.equal(tokens.semantic.input, 'var(--line-control)')
+  assert.equal(tokens.deprecated['border-field'], 'var(--line-control)')
 })
 
 test('chart tokens: series are CVD-safe chart cuts, ramps behave (WCAG 1.4.11 + dataviz checks)', () => {
@@ -108,7 +108,7 @@ test('chart tokens: series are CVD-safe chart cuts, ramps behave (WCAG 1.4.11 + 
   // shadcn chart slots route through the chart-only series cuts — the raw pigments
   // fail the data-mark checks (chroma < 0.10 reads gray; terracotta↔moss ΔE 3.2 deutan).
   for (const n of [1, 2, 3, 4, 5]) {
-    assert.equal(tokens.shadcn[`chart-${n}`], `var(--chart-series-${n})`)
+    assert.equal(tokens.semantic[`chart-${n}`], `var(--chart-series-${n})`)
   }
   for (const mode of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
     const ground = tokens.color.paper.base[mode]
@@ -161,8 +161,8 @@ test('intelligent theme: cockpit grounds, teal working status, instrument fonts 
     assert.ok(ratio >= 4.5, `teal deep ${tokens.color.pigment.teal.deep[m]} is ${ratio.toFixed(2)}:1 on ${m} ground`)
   }
   // Run-status semantics: working = teal text cut; queued = muted ink (recedes, never signals).
-  assert.equal(tokens.semantic.working, 'var(--teal-deep)')
-  assert.equal(tokens.semantic.queued, 'var(--ink-muted)')
+  assert.equal(tokens.status.working, 'var(--teal-deep)')
+  assert.equal(tokens.status.queued, 'var(--ink-muted)')
   // Instrument faces for dense operational surfaces (additive — sans/heading untouched).
   assert.ok(tokens.font.ui.includes('Inter'))
   assert.ok(tokens.font.data.includes('JetBrains Mono'))
@@ -194,7 +194,7 @@ test('every status token clears WCAG 4.5:1 on page, card AND well in all 5 theme
   let checked = 0
   for (const mode of ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']) {
     for (const name of STATUS) {
-      const cut = resolve(tokens.semantic[name], mode)
+      const cut = resolve(tokens.status[name], mode)
       for (const [label, paperCut] of Object.entries(GROUNDS)) {
         const ground = tokens.color.paper[paperCut][mode]
         const ratio = contrast(cut, ground)

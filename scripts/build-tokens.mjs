@@ -37,6 +37,10 @@ function walkModal(group, prefix, fn) {
   }
 }
 
+// Every alias that ships as a plain variable: the retired names (still emitted,
+// see the token source), the status roles, then the contract.
+const aliasGroups = (t) => [...Object.entries(t.deprecated), ...Object.entries(t.status), ...Object.entries(t.semantic)]
+
 export function renderCss(t) {
   const rootLines = []
   const prefixedLines = []
@@ -78,11 +82,10 @@ export function renderCss(t) {
   ]
   const aliasLines = [
     ...accentDefaultLines,
-    ...Object.entries(t.semantic).map(([k, v]) => `  --${k}: ${v};`),
-    ...Object.entries(t.shadcn).map(([k, v]) => `  --${k}: ${v};`),
+    ...aliasGroups(t).map(([k, v]) => `  --${k}: ${v};`),
   ]
   rootLines.push(...accentDefaultLines)
-  rootLines.push(...Object.entries(t.semantic).map(([k, v]) => `  --${k}: ${v};`))
+  rootLines.push(...[...Object.entries(t.deprecated), ...Object.entries(t.status)].map(([k, v]) => `  --${k}: ${v};`))
   rootLines.push(`  --radius: ${t.radiusBase};`)
   // Spacing + border-width (documented scales; kept in :root, not @theme, so they
   // don't collide with Tailwind's built-in numeric utilities).
@@ -95,7 +98,7 @@ export function renderCss(t) {
   // and never emits the variable, and the base layer (body, h1–h6) reads these.
   for (const [k, v] of Object.entries(t.leading)) rootLines.push(`  --leading-${k}: ${v};`)
   for (const [k, v] of Object.entries(t.tracking)) rootLines.push(`  --tracking-${k}: ${v};`)
-  for (const [k, v] of Object.entries(t.shadcn)) rootLines.push(`  --${k}: ${v};`)
+  for (const [k, v] of Object.entries(t.semantic)) rootLines.push(`  --${k}: ${v};`)
 
   // @theme inline: fonts, color mappings, radii, type scale.
   const themeLines = []
@@ -105,7 +108,7 @@ export function renderCss(t) {
   themeLines.push(`  --font-mono: ${t.font.mono};`)
   themeLines.push(`  --font-ui: ${t.font.ui};`)
   themeLines.push(`  --font-data: ${t.font.data};`)
-  for (const k of Object.keys(t.shadcn)) themeLines.push(`  --color-${k}: var(--${k});`)
+  for (const k of Object.keys(t.semantic)) themeLines.push(`  --color-${k}: var(--${k});`)
   const paletteMap = {
     paper: '--paper', 'paper-warm': '--paper-warm', 'paper-deep': '--paper-deep',
     ink: '--ink', 'ink-soft': '--ink-soft', 'ink-muted': '--ink-muted',
@@ -267,6 +270,20 @@ const shadow = (mv) => ({
   $type: 'shadow', $value: mv.light,
   $extensions: { 'com.figma': { modes: figmaModes(mv) } },
 })
+// Figma variable names follow the CSS name with ONE group level, so a designer's
+// picker and an engineer's stylesheet say the same word: `--paper-warm` is
+// `color/paper-warm`, `--space-2_5` is `space/2_5`. `legacyName` is what the
+// variable was called before 0.10.0 — the sync finds it by that name and renames
+// it in place (ids and every binding survive) instead of creating a twin.
+const named = (token, name, legacyName) => {
+  const ext = { ...(token.$extensions?.['com.figma'] ?? {}), name, ...(legacyName && legacyName !== name ? { legacyName } : {}) }
+  return { ...token, $extensions: { ...token.$extensions, 'com.figma': ext } }
+}
+// The pre-0.10.0 Semantic collection bucketed Quill's own roles by prefix.
+const legacyRoleName = (k) => {
+  const bucket = ['text', 'surface', 'border'].find((b) => k.startsWith(b + '-')) ?? 'status'
+  return `${bucket}/${bucket === 'status' ? k : k.slice(bucket.length + 1)}`
+}
 const other = (v) => ({ $type: 'other', $value: v, $description: 'CSS-only — not a Figma variable' })
 // `calc(1.25 / 0.875)` or a bare number → the ratio itself. Figma cannot bind a
 // percentage line height to a variable, so these stay out of the variable sync
@@ -308,16 +325,17 @@ export function renderDtcg(t) {
   const primColor = {}
   const emit = (obj, prefix, sink) => {
     for (const [k, v] of Object.entries(obj)) {
-      if (v && 'light' in v && 'dark' in v) sink[k] = colorToken(v)
+      if (v && 'light' in v && 'dark' in v) sink[k] = named(colorToken(v), 'color/' + cssVarName([...prefix, k]).slice(2), 'color/' + [...prefix, k].join('/'))
       else { sink[k] = {}; emit(v, [...prefix, k], sink[k]) }
     }
   }
   emit(t.color, [], primColor)
-  const font = Object.fromEntries(Object.entries(t.font).map(([k, v]) => [k, { $type: 'fontFamily', $value: v }]))
-  const spacing = Object.fromEntries(Object.entries(t.spacing).map(([k, v]) => [k, dim(v)]))
-  const radius = Object.fromEntries(Object.entries(t.radius).map(([k, v]) => [k, dim(v)]))
-  const borderWidth = Object.fromEntries(Object.entries(t.borderWidth).map(([k, v]) => [k, dim(v)]))
-  const type = Object.fromEntries(Object.entries(t.text).map(([k, v]) => [k, dim(v)]))
+  const font = Object.fromEntries(Object.entries(t.font).map(([k, v]) => [k, named({ $type: 'fontFamily', $value: v }, `font/${k}`)]))
+  const us = (k) => String(k).replace('.', '_') // Figma names cannot hold a dot; neither can the CSS name
+  const spacing = Object.fromEntries(Object.entries(t.spacing).map(([k, v]) => [k, named(dim(v), `space/${us(k)}`, `spacing/${us(k)}`)]))
+  const radius = Object.fromEntries(Object.entries(t.radius).map(([k, v]) => [k, named(dim(v), `radius/${k}`, `corner-radius/${k}`)]))
+  const borderWidth = Object.fromEntries(Object.entries(t.borderWidth).map(([k, v]) => [k, named(dim(v), `border-width/${k}`)]))
+  const type = Object.fromEntries(Object.entries(t.text).map(([k, v]) => [k, named(dim(v), `text/${k}`, `type/${k}`)]))
   const lineHeight = Object.fromEntries(Object.entries(t.textLeading).map(([k, v]) => [k, ratio(v)]))
   const leading = Object.fromEntries(Object.entries(t.leading).map(([k, v]) => [k, ratio(v)]))
   // Figma takes letter spacing as a percentage of the font size: -0.03em → -3.
@@ -329,18 +347,20 @@ export function renderDtcg(t) {
   const motion = Object.fromEntries(Object.entries(t.motion).map(([k, v]) => [k, other(v)]))
   const fraunces = Object.fromEntries(Object.entries(t.fraunces).map(([k, v]) => [k, other(v)]))
 
-  const Theme = { text: {}, surface: {}, border: {}, status: {}, shadcn: {} }
-  for (const [k, v] of Object.entries(t.semantic)) {
-    const bucket = k.startsWith('text') ? 'text' : k.startsWith('surface') ? 'surface'
-      : k.startsWith('border') ? 'border' : 'status'
-    Theme[bucket][k] = alias(v)
-  }
-  for (const [k, v] of Object.entries(t.shadcn)) Theme.shadcn[k] = alias(v)
+  // One group in Figma: the contract, then the roles it has no word for.
+  const Theme = { semantic: {} }
+  for (const [k, v] of Object.entries(t.semantic)) Theme.semantic[k] = named(alias(v), `semantic/${k}`, `shadcn/${k}`)
+  for (const [k, v] of Object.entries(t.status)) Theme.semantic[k] = named(alias(v), `semantic/${k}`, legacyRoleName(k))
+  // Retired names are not tokens any more, so they carry no value here — only the
+  // rename that parks their Figma variable under `deprecated/`, hidden from
+  // publishing. Never deleted: a file that consumes the library may be bound to one.
+  const Deprecated = Object.fromEntries(Object.keys(t.deprecated).map((k) => [k, named({ $description: 'Retired 0.10.0 — use the semantic contract' }, `deprecated/${k}`, legacyRoleName(k))]))
 
   return {
     $description: 'Quill Design System tokens (DTCG). Colors/dimensions → Figma variables; shadows → effect styles; motion/fraunces are CSS-only.',
     Primitives: { color: primColor, font, spacing, radius, borderWidth, type, lineHeight, leading, tracking, elevation, motion, fraunces },
     Theme,
+    Deprecated,
   }
 }
 

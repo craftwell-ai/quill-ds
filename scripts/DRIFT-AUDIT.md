@@ -121,9 +121,9 @@ run it in an interactive session (e.g. ask Claude to "run the Figma parity
 check") when doing Figma work. It compares the live Figma variables against the
 repo's source of truth:
 
-- `status/link`, `shadcn/ring`, `shadcn/sidebar-ring` alias
+- `semantic/link`, `semantic/ring`, `semantic/sidebar-ring` alias
   `color/pigment/<DEFAULT_ACCENT>/deep` (the repo default accent);
-- `shadcn/chart-1..5` alias `color/chart/series/1..5`, and those primitives'
+- `semantic/chart-1..5` alias `color/chart-series-1..5`, and those primitives'
   per-mode values match `tokens.color.chart.series` in `src/tokens/quill.tokens.mjs`.
 
 The repo-side half of this (DTCG export vs. code) is already a Tier 1 check; only

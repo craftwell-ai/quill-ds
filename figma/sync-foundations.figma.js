@@ -34,7 +34,7 @@ function toFigmaColor(css) {
 // walk DTCG.Primitives.color leaves → { path:[...], modes:{ <mode name>: css } }
 function walkColorLeaves(node, prefix, out) {
   for (const [k, v] of Object.entries(node)) {
-    if (v && v.$type === 'color') out.push({ path: [...prefix, k], modes: v.$extensions['com.figma'].modes })
+    if (v && v.$type === 'color') out.push({ path: [...prefix, k], tok: v, modes: v.$extensions['com.figma'].modes })
     else if (v && typeof v === 'object') walkColorLeaves(v, [...prefix, k], out)
   }
 }
@@ -62,6 +62,27 @@ async function varsInCollection(col) {
   return map
 }
 
+// ---- names come from the export ----
+// build-tokens writes each variable's Figma name (the CSS name with one group
+// level: `color/paper-warm`, `space/2_5`, `semantic/muted`) and, where it was
+// called something else before 0.10.0, its `legacyName`. A variable found under
+// the legacy name is RENAMED in place — its id and every binding survive. Creating
+// the new name beside it would orphan the 1,259 bindings the library carries.
+const figmaName = (tok) => tok.$extensions['com.figma'].name
+const legacyName = (tok) => tok.$extensions['com.figma'].legacyName
+let renamed = 0
+function adopt(existing, tok) {
+  const name = figmaName(tok)
+  const legacy = legacyName(tok)
+  if (!existing[name] && legacy && existing[legacy]) {
+    existing[legacy].name = name
+    existing[name] = existing[legacy]
+    delete existing[legacy]
+    renamed++
+  }
+  return name
+}
+
 async function syncPrimitiveColors(DTCG) {
   const col = await upsertCollection('Quill Primitives')
   const modes = ensureModes(col, MODES)
@@ -70,8 +91,8 @@ async function syncPrimitiveColors(DTCG) {
   walkColorLeaves(DTCG.Primitives.color, [], leaves)
   let created = 0
   let updated = 0
-  for (const { path, modes: mv } of leaves) {
-    const name = 'color/' + path.join('/')
+  for (const { tok, modes: mv } of leaves) {
+    const name = adopt(existing, tok)
     let v = existing[name]
     if (!v) {
       v = figma.variables.createVariable(name, col, 'COLOR')
@@ -117,13 +138,11 @@ async function syncPrimitiveScalars(DTCG) {
   let created = 0
   let updated = 0
   const bump = (c) => (c ? created++ : updated++)
-  // Figma variable names can't contain '.', so fractional spacing keys (2.5→2_5) are sanitized.
-  for (const [k, t] of Object.entries(DTCG.Primitives.spacing)) bump(upsertScalar(col, 'spacing/' + String(k).replace('.', '_'), dimToPx(t.$value), 'FLOAT', SPACE_SCOPES, modes, existing))
-  // Figma names this "corner-radius" (matches Figma's own UI term); code stays --radius-*.
-  for (const [k, t] of Object.entries(DTCG.Primitives.radius)) bump(upsertScalar(col, 'corner-radius/' + k, dimToPx(t.$value), 'FLOAT', RADIUS_SCOPES, modes, existing))
-  for (const [k, t] of Object.entries(DTCG.Primitives.borderWidth)) bump(upsertScalar(col, 'border-width/' + k, dimToPx(t.$value), 'FLOAT', STROKE_SCOPES, modes, existing))
-  for (const [k, t] of Object.entries(DTCG.Primitives.type)) bump(upsertScalar(col, 'type/' + k, dimToPx(t.$value), 'FLOAT', SIZE_SCOPES, modes, existing))
-  for (const [k, t] of Object.entries(DTCG.Primitives.font)) bump(upsertScalar(col, 'font/' + k, primaryFamily(t.$value), 'STRING', FONT_SCOPES, modes, existing))
+  for (const [k, t] of Object.entries(DTCG.Primitives.spacing)) bump(upsertScalar(col, adopt(existing, t), dimToPx(t.$value), 'FLOAT', SPACE_SCOPES, modes, existing))
+  for (const [k, t] of Object.entries(DTCG.Primitives.radius)) bump(upsertScalar(col, adopt(existing, t), dimToPx(t.$value), 'FLOAT', RADIUS_SCOPES, modes, existing))
+  for (const [k, t] of Object.entries(DTCG.Primitives.borderWidth)) bump(upsertScalar(col, adopt(existing, t), dimToPx(t.$value), 'FLOAT', STROKE_SCOPES, modes, existing))
+  for (const [k, t] of Object.entries(DTCG.Primitives.type)) bump(upsertScalar(col, adopt(existing, t), dimToPx(t.$value), 'FLOAT', SIZE_SCOPES, modes, existing))
+  for (const [k, t] of Object.entries(DTCG.Primitives.font)) bump(upsertScalar(col, adopt(existing, t), primaryFamily(t.$value), 'STRING', FONT_SCOPES, modes, existing))
   return {
     created,
     updated,
@@ -136,8 +155,12 @@ async function syncPrimitiveScalars(DTCG) {
 }
 
 // ---- Semantic collection: aliases → Primitives ----
-// "{Primitives.color.pigment.terracotta.deep}" → "color/pigment/terracotta/deep"
-const dtcgRefToVarName = (ref) => 'color/' + ref.replace(/^\{Primitives\.color\.|\}$/g, '').split('.').join('/')
+// "{Primitives.color.pigment.terracotta.deep}" → that leaf's Figma name
+function primitiveNameOf(DTCG, ref) {
+  const leaf = ref.replace(/^\{|\}$/g, '').split('.').reduce((node, seg) => node && node[seg], DTCG)
+  if (!leaf) throw new Error('Unresolved alias: ' + ref)
+  return figmaName(leaf)
+}
 
 async function syncSemanticAliases(DTCG) {
   const primCol = await upsertCollection('Quill Primitives')
@@ -148,25 +171,34 @@ async function syncSemanticAliases(DTCG) {
   let created = 0
   let updated = 0
   const missing = []
-  const buckets = ['text', 'surface', 'border', 'status', 'shadcn']
-  for (const bucket of buckets) {
-    for (const [key, tok] of Object.entries(DTCG.Theme[bucket])) {
-      const prim = primByName[dtcgRefToVarName(tok.$value)]
-      if (!prim) { missing.push(`${bucket}/${key} → ${tok.$value}`); continue }
-      const leaf = key.startsWith(bucket + '-') ? key.slice(bucket.length + 1) : key
-      const name = bucket + '/' + leaf
-      let v = existing[name]
-      if (!v) {
-        v = figma.variables.createVariable(name, semCol, 'COLOR')
-        v.scopes = COLOR_SCOPES
-        created++
-      } else updated++
-      v.setValueForMode(modeId, { type: 'VARIABLE_ALIAS', id: prim.id })
-      existing[name] = v
-    }
+  // One group: the 31 contract roles, then the status roles the contract has no word for.
+  for (const [key, tok] of Object.entries(DTCG.Theme.semantic)) {
+    const prim = primByName[primitiveNameOf(DTCG, tok.$value)]
+    if (!prim) { missing.push(`semantic/${key} → ${tok.$value}`); continue }
+    const name = adopt(existing, tok)
+    let v = existing[name]
+    if (!v) {
+      v = figma.variables.createVariable(name, semCol, 'COLOR')
+      v.scopes = COLOR_SCOPES
+      created++
+    } else updated++
+    v.setValueForMode(modeId, { type: 'VARIABLE_ALIAS', id: prim.id })
+    existing[name] = v
   }
   if (missing.length) throw new Error('Unresolved aliases: ' + missing.join(', '))
-  return { collection: semCol.name, created, updated, buckets: buckets.map((b) => `${b}:${Object.keys(DTCG.Theme[b]).length}`) }
+  // Names retired in 0.10.0 are parked, never deleted: a file that consumes the
+  // library may be bound to one. Out of the picker, out of the published set.
+  let parked = 0
+  for (const tok of Object.values(DTCG.Deprecated)) {
+    const name = adopt(existing, tok)
+    const v = existing[name]
+    if (!v) continue
+    v.hiddenFromPublishing = true
+    v.scopes = []
+    v.description = 'Retired in Quill 0.10.0 — use the semantic contract (semantic/*).'
+    parked++
+  }
+  return { collection: semCol.name, created, updated, parked, total: Object.keys(DTCG.Theme.semantic).length }
 }
 
 // ---- Text styles ----
@@ -328,19 +360,19 @@ async function syncEffectStyles(DTCG) {
 // so every tinted paint binds one of these. Values are derived per mode from the base variable
 // (resolved through its aliases), never typed by hand; the list below is the single source.
 const TINTS = [
-  ['tint/destructive/10', 'shadcn/destructive', 0.10, '--destructive'],
-  ['tint/moss/20', 'color/pigment/moss/base', 0.20, '--moss'],
-  ['tint/gold/25', 'color/pigment/gold/base', 0.25, '--gold'],
-  ['tint/terracotta/16', 'color/pigment/terracotta/base', 0.16, '--terracotta'],
-  ['tint/indigo/20', 'color/pigment/indigo/base', 0.20, '--indigo'],
-  ['tint/foreground/10', 'shadcn/foreground', 0.10, '--foreground'],
-  ['tint/input/30', 'shadcn/input', 0.30, '--input'],
-  ['tint/chart-1/20', 'shadcn/chart-1', 0.20, '--chart-1'],
-  ['tint/chart-2/20', 'shadcn/chart-2', 0.20, '--chart-2'],
-  ['tint/muted/50', 'shadcn/muted', 0.50, '--muted'],
-  ['tint/primary/10', 'shadcn/primary', 0.10, '--primary'],
-  ['tint/sidebar-border/8', 'shadcn/sidebar-border', 0.08, '--sidebar-border'],
-  ['tint/sidebar-foreground/70', 'shadcn/sidebar-foreground', 0.70, '--sidebar-foreground'],
+  ['tint/destructive/10', 'semantic/destructive', 0.10, '--destructive'],
+  ['tint/moss/20', 'color/moss', 0.20, '--moss'],
+  ['tint/gold/25', 'color/gold', 0.25, '--gold'],
+  ['tint/terracotta/16', 'color/terracotta', 0.16, '--terracotta'],
+  ['tint/indigo/20', 'color/indigo', 0.20, '--indigo'],
+  ['tint/foreground/10', 'semantic/foreground', 0.10, '--foreground'],
+  ['tint/input/30', 'semantic/input', 0.30, '--input'],
+  ['tint/chart-1/20', 'semantic/chart-1', 0.20, '--chart-1'],
+  ['tint/chart-2/20', 'semantic/chart-2', 0.20, '--chart-2'],
+  ['tint/muted/50', 'semantic/muted', 0.50, '--muted'],
+  ['tint/primary/10', 'semantic/primary', 0.10, '--primary'],
+  ['tint/sidebar-border/8', 'semantic/sidebar-border', 0.08, '--sidebar-border'],
+  ['tint/sidebar-foreground/70', 'semantic/sidebar-foreground', 0.70, '--sidebar-foreground'],
 ]
 
 async function syncTints() {
@@ -391,5 +423,6 @@ async function syncFoundations(DTCG) {
   results.text = await syncTextStyles(DTCG)
   results.effects = await syncEffectStyles(DTCG)
   results.tints = await syncTints()
+  results.renamed = renamed
   return results
 }

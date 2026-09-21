@@ -26,8 +26,18 @@
 3. The sync **upserts**: an existing `icon/*` component keeps its node id and gets fresh geometry (so
    the instances inside Toast, Command, Dropdown Menu, Toggle Group… stay live); new names are created;
    names no longer in code are reported, never removed. Every icon is one vector named `Vector`, fill
-   bound to `text/strong`, constraints SCALE so it resizes cleanly inside a slot.
+   bound to `deprecated/text-strong`, constraints SCALE so it resizes cleanly inside a slot.
    Last run: 2026-09-18 — 91 icons (40 refreshed in place, 51 created).
+
+## Names
+
+A variable is its CSS name with one group level: `--paper-warm` is `color/paper-warm`, `--space-2_5` is `space/2_5`,
+`--radius-lg` is `radius/lg`, `--text-sm` is `text/sm`. The colour contract is `semantic/*` (31 roles + 8 status roles).
+`shadow/*` layers and `tint/*` alphas have no CSS name and keep their own. The rule lives in `scripts/build-tokens.mjs` —
+the export carries each variable's `name` and, where it was called something else before 0.10.0, its `legacyName`; the sync
+renames a variable found under the legacy name **in place** (ids and bindings survive) and never creates a twin.
+`scripts/figma-names.test.mjs` holds the rule, and fails if `sync-state.json` records a name the export does not produce.
+Retired variables are parked as `deprecated/*`, hidden from publishing, and never deleted.
 
 ## What this manages
 
@@ -46,17 +56,17 @@
 
 ## Re-synced 2026-07-10
 
-Re-run after the a11y token overhaul: created `color/line/control` (the solid
+Re-run after the a11y token overhaul: created `color/line-control` (the solid
 field-border primitive added after the last sync), updated 18 colors / 44
 scalars / 47 semantic aliases / 14 text styles / 5 elevation styles in place.
-`border/field` and `shadcn/input` now alias `line/control`. Zero new objects
+`deprecated/border-field` and `semantic/input` now alias `line/control`. Zero new objects
 besides the one genuinely new variable — idempotency verified.
 
 ## Built (verified 2026-07-02)
 
 - `Quill Primitives` collection, modes **Light/Dark** — **67 variables**:
-  18 color, 12 `spacing/*`, 8 `corner-radius/*`, 5 `border-width/*`, 10 `type/*`, 4 `font/*`, 10 `shadow/*/*`.
-- `Quill Semantic` collection, single mode — 47 alias variables (text 5, surface 3, border 3, status 5, shadcn 31).
+  18 color, 12 `space/*`, 8 `radius/*`, 5 `border-width/*`, 10 `text/*`, 4 `font/*`, 10 `shadow/*/*`.
+- `Quill Semantic` collection, single mode — one `semantic/*` group of 39 aliases (the 31 contract roles + 8 status roles); the 10 names retired in 0.10.0 are parked as `deprecated/*`, hidden from publishing.
 - 12 text styles (`Display/*`, `Heading/*`, `Body/*`, `Accent`, `Eyebrow`).
 - 5 **mode-aware** effect styles (`Elevation/xs·sm·base·lg·pop`): each shadow's color is bound to a
   `shadow/*/*` variable, so the same style adapts Light↔Dark automatically (no separate dark set).
@@ -114,7 +124,7 @@ originate on either side, but when they disagree, code wins. Proven end-to-end
    (`boundVariables` + resolve IDs to names) and the raw value, plus text styles,
    effect style, characters, and child structure.
 2. Diff against the code twin. Bound variables map 1:1 to classes
-   (`shadcn/card`→`bg-card`, `corner-radius/xl`→`rounded-xl`, `spacing/8`→`p-8`,
+   (`semantic/card`→`bg-card`, `radius/xl`→`rounded-xl`, `space/8`→`p-8`,
    `Elevation/lg`→`shadow-lg`, `border-width/1`→`border`). Unbound values that
    match a token (12px→`gap-3`) translate too — bound is certain, unbound is inferred.
 3. Apply **surgical edits** to the existing source file. Component INSTANCES in the

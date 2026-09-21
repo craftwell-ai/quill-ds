@@ -144,7 +144,7 @@ test('DTCG export types + modes + Figma-friendly grouping', () => {
     }, d)
   }
   // spot-check: text-accent-color must resolve to Primitives.color.pigment.moss.deep
-  const accentAlias = d.Theme.text['text-accent-color']
+  const accentAlias = d.Theme.semantic['text-accent-color']
   assert.equal(accentAlias.$value, '{Primitives.color.pigment.moss.deep}')
   const accentLeaf = resolveAlias(accentAlias.$value)
   assert.equal(accentLeaf.$type, 'color', `text-accent-color alias did not resolve to a color leaf`)

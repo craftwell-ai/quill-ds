@@ -10,11 +10,11 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 // A miniature REST nodes-response bundle shaped like GET /v1/files/:key/nodes
 // (document + per-bundle styles table), matching the snapshot below exactly.
-const VARS = { 'VariableID:1:1': 'shadcn/card', 'VariableID:1:2': 'corner-radius/2xl', 'VariableID:1:3': 'spacing/8' }
+const VARS = { 'VariableID:1:1': 'semantic/card', 'VariableID:1:2': 'radius/2xl', 'VariableID:1:3': 'space/8' }
 const snapshot = {
-  fill: { var: 'shadcn/card', raw: '#EFE4CE' },
-  cornerRadius: { var: 'corner-radius/2xl', raw: 24 },
-  padding: { var: 'spacing/8', raw: 32 },
+  fill: { var: 'semantic/card', raw: '#EFE4CE' },
+  cornerRadius: { var: 'radius/2xl', raw: 24 },
+  padding: { var: 'space/8', raw: 32 },
   effectStyle: 'Elevation/lg',
   texts: { Title: 'Acknowledgement 001' },
   childSignature: ['Title:TEXT'],
@@ -93,7 +93,7 @@ test('text and structure changes are drift', () => {
 })
 
 test('boundVariables array form and hex conversion both normalize', () => {
-  assert.equal(boundName([{ id: 'VariableID:1:1' }], VARS), 'shadcn/card')
+  assert.equal(boundName([{ id: 'VariableID:1:1' }], VARS), 'semantic/card')
   assert.equal(rgbToHex({ r: 1, g: 1, b: 1 }), '#FFFFFF')
 })
 
@@ -108,10 +108,10 @@ const COMPONENT = () => ({
 const SOURCE = 'className={cn("flex gap-3 rounded-2xl bg-card p-8 shadow-lg")}\n<div>Acknowledgement 001</div>'
 
 test('classFor maps every repairable key and rejects unknowns', () => {
-  assert.equal(classFor('fill', 'shadcn/muted'), 'bg-muted')
-  assert.equal(classFor('cornerRadius', 'corner-radius/2xl'), 'rounded-2xl')
-  assert.equal(classFor('padding', 'spacing/2_5'), 'p-2.5')
-  assert.equal(classFor('itemSpacing', 'spacing/3'), 'gap-3')
+  assert.equal(classFor('fill', 'semantic/muted'), 'bg-muted')
+  assert.equal(classFor('cornerRadius', 'radius/2xl'), 'rounded-2xl')
+  assert.equal(classFor('padding', 'space/2_5'), 'p-2.5')
+  assert.equal(classFor('itemSpacing', 'space/3'), 'gap-3')
   assert.equal(classFor('effectStyle', 'Elevation/base'), 'shadow-md')
   assert.equal(classFor('fill', 'unknown(VariableID:9:9)'), undefined)
   assert.equal(classFor('cornerRadius', 'corner-radius/weird'), undefined)
@@ -120,7 +120,7 @@ test('classFor maps every repairable key and rejects unknowns', () => {
 test('a rebound radius is a repairable one-class edit that rewrites source and baseline', () => {
   const bundle = cleanBundle()
   bundle.document.boundVariables.topLeftRadius.id = 'VariableID:1:4'
-  const vars = { ...VARS, 'VariableID:1:4': 'corner-radius/lg' }
+  const vars = { ...VARS, 'VariableID:1:4': 'radius/lg' }
   bundle.document.cornerRadius = 8
   const component = COMPONENT()
   const live = extractComponent(bundle, vars)
@@ -128,7 +128,7 @@ test('a rebound radius is a repairable one-class edit that rewrites source and b
   assert.ok(plan.repairable, plan.reasons.join('; '))
   const { source, component: next } = applyRepair(component, plan, SOURCE, '2026-08-13')
   assert.ok(source.includes('rounded-lg') && !source.includes('rounded-2xl'))
-  assert.equal(next.figma.cornerRadius.var, 'corner-radius/lg')
+  assert.equal(next.figma.cornerRadius.var, 'radius/lg')
   assert.equal(next.figma.cornerRadius.raw, 8)
   assert.equal(next.code.classes, 'flex gap-3 rounded-lg bg-card p-8 shadow-lg')
   assert.equal(next.lastSynced, '2026-08-13')
@@ -167,7 +167,7 @@ test('applyRepair refuses a source where the baseline classes are not unique', (
   const doubled = SOURCE + '\n' + SOURCE
   const bundle = cleanBundle()
   bundle.document.boundVariables.topLeftRadius.id = 'VariableID:1:4'
-  const vars = { ...VARS, 'VariableID:1:4': 'corner-radius/lg' }
+  const vars = { ...VARS, 'VariableID:1:4': 'radius/lg' }
   const plan = planRepair(component, extractComponent(bundle, vars), doubled)
   assert.throws(() => applyRepair(component, plan, doubled, '2026-08-13'), /not found exactly once/)
 })
@@ -231,7 +231,7 @@ test('a candidate whose code agrees with Figma is adopted through its default va
   assert.equal(adopted.variantOf, '76:56')
   assert.equal(adopted.variant, 'Variant=default, Size=default')
   assert.equal(adopted.code.classes, 'inline-flex rounded-2xl bg-card p-8 shadow-lg')
-  assert.deepEqual(adopted.figma.fill, { var: 'shadcn/card', raw: '#EFE4CE' })
+  assert.deepEqual(adopted.figma.fill, { var: 'semantic/card', raw: '#EFE4CE' })
   // …and the entry it produced is what the daily check consumes: clean today,
   // drift the moment a designer re-binds the radius.
   assert.deepEqual(diffComponent(adopted.figma, extractComponent({ document: variantSet().document.children[1], styles: variantSet().styles }, VARS)).drift, [])
@@ -240,7 +240,7 @@ test('a candidate whose code agrees with Figma is adopted through its default va
   const rebound = variantSet().document.children[1]
   rebound.boundVariables.topLeftRadius.id = 'VariableID:1:3'
   rebound.cornerRadius = 8
-  assert.match(diffComponent(adopted.figma, extractComponent({ document: rebound, styles: variantSet().styles }, { ...VARS, 'VariableID:1:3': 'corner-radius/lg' })).drift.join(' '), /cornerRadius/)
+  assert.match(diffComponent(adopted.figma, extractComponent({ document: rebound, styles: variantSet().styles }, { ...VARS, 'VariableID:1:3': 'radius/lg' })).drift.join(' '), /cornerRadius/)
 })
 
 test('a candidate whose code disagrees with Figma is reported, never adopted', () => {
@@ -262,11 +262,11 @@ test('a candidate with nothing to derive is adopted for Figma-side detection, an
 })
 
 test('a padding re-binding repairs the px- form the code carries', () => {
-  const component = { name: 'Badge', codeFile: 'x', figma: { ...snapshot, padding: { var: 'spacing/8', raw: 32 } }, code: { classes: 'inline-flex rounded-2xl bg-card px-8 shadow-lg' } }
+  const component = { name: 'Badge', codeFile: 'x', figma: { ...snapshot, padding: { var: 'space/8', raw: 32 } }, code: { classes: 'inline-flex rounded-2xl bg-card px-8 shadow-lg' } }
   const bundle = cleanBundle()
   bundle.document.boundVariables.paddingLeft.id = 'VariableID:1:4'
   bundle.document.paddingLeft = 24
-  const live = extractComponent(bundle, { ...VARS, 'VariableID:1:4': 'spacing/6' })
+  const live = extractComponent(bundle, { ...VARS, 'VariableID:1:4': 'space/6' })
   const plan = planRepair(component, live, 'className="inline-flex rounded-2xl bg-card px-8 shadow-lg"')
   assert.ok(plan.repairable, plan.reasons.join('; '))
   assert.deepEqual(plan.classEdits.map((e) => [e.from, e.to]), [['px-8', 'px-6']])
@@ -274,7 +274,7 @@ test('a padding re-binding repairs the px- form the code carries', () => {
 
 test('an adopted snapshot drops the keys the REST response could not fill, and keeps raw-only ones', () => {
   const pruned = pruneSnapshot({
-    fill: { var: 'shadcn/border', raw: '#2A2622' },
+    fill: { var: 'semantic/border', raw: '#2A2622' },
     stroke: { var: null, raw: null },
     strokeWeight: { var: null, raw: 1 },
     cornerRadius: { var: null, raw: null },
@@ -284,7 +284,7 @@ test('an adopted snapshot drops the keys the REST response could not fill, and k
   })
   assert.deepEqual(Object.keys(pruned), ['fill', 'strokeWeight', 'texts', 'childSignature'])
   // and the daily check is silent on what is absent: no drift, no warnings
-  const { drift, unverifiable } = diffComponent(pruned, { fill: { var: 'shadcn/border', raw: '#2A2622' }, stroke: { var: null, raw: null }, strokeWeight: { var: null, raw: 1 }, cornerRadius: { var: null, raw: null }, padding: { var: null, raw: null }, itemSpacing: { var: null, raw: null }, effectStyle: null, texts: {}, childSignature: [] })
+  const { drift, unverifiable } = diffComponent(pruned, { fill: { var: 'semantic/border', raw: '#2A2622' }, stroke: { var: null, raw: null }, strokeWeight: { var: null, raw: 1 }, cornerRadius: { var: null, raw: null }, padding: { var: null, raw: null }, itemSpacing: { var: null, raw: null }, effectStyle: null, texts: {}, childSignature: [] })
   assert.deepEqual([drift, unverifiable], [[], []])
   const { adopted } = adoptCandidate(CANDIDATE, variantSet(), VARS, AGREEING_SOURCE, '2026-09-15')
   assert.ok(!('stroke' in adopted.figma) && !('itemSpacing' in adopted.figma), 'double-null keys never enter the baseline')

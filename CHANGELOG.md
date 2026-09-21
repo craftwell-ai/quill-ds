@@ -12,6 +12,76 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.0] — 2026-09-21
+
+One token, one name. A colour had three spellings — `color/paper/base` in Figma,
+`--paper` in CSS, `bg-paper` as a class — and the colour contract every component
+speaks was labelled with the name of the library its role names came from. **No CSS
+name, class or value changes in this release**: the shipped stylesheet holds the same
+473 declarations. What moved is what things are called in Figma, in the token source
+and in the docs.
+
+### Changed
+- **The colour contract is named `semantic`.** The 31 roles components speak
+  (`bg-background`, `text-muted-foreground`, `border-border`) stay shadcn-compatible,
+  so stock primitives and third-party blocks still land on Quill's palette with no
+  edits — but the contract is Quill's own and is now named for what it is. Token source
+  `shadcn` → `semantic`; Figma `shadcn/*` → `semantic/*`; the export's five
+  `Theme` buckets → one `semantic` group of 39 (the 31 roles plus the eight status and
+  accent roles: `text-accent-color`, `link`, `success`, `warning`, `danger`, `info`,
+  `working`, `queued`, now `tokens.status` in the source).
+- **A Figma variable is its CSS name with one group level.** `color/pigment/terracotta/deep`
+  → `color/terracotta-deep`, `color/line/base` → `color/line`, `spacing/2_5` →
+  `space/2_5`, `corner-radius/lg` → `radius/lg`, `type/sm` → `text/sm`. The rule lives
+  in `build-tokens.mjs`: the export carries every variable's `name` and, where it
+  differs, its `legacyName`. 121 variables were renamed **in place** in the library —
+  the same 155 ids before and after, so every binding survives. The sync now finds a
+  variable under its legacy name and renames it rather than creating a twin beside it
+  (it upserts by name, so a re-run under new names would have orphaned every binding);
+  re-run against the library: 0 created, 0 renamed.
+- The parity bot reads names from `figma/sync-state.json`, never from Figma, so the
+  repo's tables moved with the rename: 181 names there, 694 in
+  `figma/pattern-baseline.json`, the three name shapes `classFor()` parses, the drift
+  fixtures, both Figma skills and the build log.
+
+### Deprecated
+- **Ten aliases that duplicated the contract.** No shipped component and no utility
+  ever used them. They are still emitted, so an app that wrote `var(--text-strong)`
+  keeps its colour; they are gone from the docs, parked in Figma as `deprecated/*`
+  (hidden from publishing, never deleted — a consuming file may be bound to one), and
+  `deprecated-tokens.test.mjs` keeps them out of this repo's code. Removal in a later
+  minor. Use instead:
+
+  | retired | use |
+  |---|---|
+  | `--surface-page` | `--background` · `bg-background` |
+  | `--surface-card` | `--card` · `bg-card` |
+  | `--surface-well` | `--muted` · `bg-muted` |
+  | `--text-strong` | `--foreground` · `text-foreground` |
+  | `--text-body` | `--ink-soft` · `text-ink-soft` |
+  | `--text-muted-color` | `--muted-foreground` · `text-muted-foreground` |
+  | `--text-on-ink` | `--primary-foreground` · `text-primary-foreground` |
+  | `--border-card` | `--border` · `border-border` |
+  | `--border-field` | `--input` · `border-input` |
+  | `--border-divider` | `--line-faint` |
+
+### Fixed
+- **DESIGN.md told agents to "reach for" tokens that do nothing.** Its semantic-alias
+  list named three variables that never existed (`--text-muted`, `--text-accent`,
+  `--accent-pressed`), called `--accent` terracotta when it is the pale hover surface
+  (`paper-deep`), and listed the ten aliases above, which no class can reach. The
+  section now describes the contract that ships; a guard fails on a retired or
+  never-existing name in DESIGN.md, PRODUCT.md, AGENTS.md, README.md, llms.txt or the
+  agent-rules file.
+- **Figma: every icon was bound to a retired variable.** The icon sync preferred
+  `text/strong` for the 91 glyph fills and `surface/page` for the gallery ground —
+  the Icons page was outside the earlier binding audit. Both now bind
+  `semantic/foreground` / `semantic/background` (the same ink and paper, so nothing
+  moved), in the library and in `figma/sync-icons.figma.js`.
+- The site's own page used six of the retired aliases through bracketed values
+  (`text-[var(--text-strong)]`); it speaks the contract now (32 swaps, each to the same
+  primitive).
+
 ## [0.9.61] — 2026-09-21
 
 ### Added

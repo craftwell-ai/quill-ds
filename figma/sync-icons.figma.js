@@ -17,16 +17,16 @@
 //     check_circle, credit_card, folder_open, dashboard, description, dangerous)
 //     render as outlines, not filled discs. Setting windingRule after import does NOT
 //     re-tessellate; it must be in the SVG at createNodeFromSvg time.
-//   - NO hardcoded colors. Each icon's vector fill is bound to the `text/strong`
-//     color variable; the gallery background to `surface/page`. Everything = tokens.
+//   - NO hardcoded colors. Each icon's vector fill is bound to the `semantic/foreground`
+//     color variable; the gallery background to `semantic/background`. Everything = tokens.
 //   - Icons live on their own "Icons" page (Foundations / Icons / Components / Patterns).
 
 async function syncIcons(ICONS) {
   // --- resolve token variables (no hardcoded colors) ---
   const vars = await figma.variables.getLocalVariablesAsync()
   const byName = Object.fromEntries(vars.map((v) => [v.name, v]))
-  const iconColor = byName['text/strong'] || byName['shadcn/foreground'] || byName['color/ink/base']
-  const bgColor = byName['surface/page'] || byName['shadcn/background'] || byName['color/paper/base']
+  const iconColor = byName['semantic/foreground'] || byName['color/ink']
+  const bgColor = byName['semantic/background'] || byName['color/paper']
   if (!iconColor) throw new Error('icon color variable not found — run the foundations sync first')
 
   // --- ensure the Icons page ---
