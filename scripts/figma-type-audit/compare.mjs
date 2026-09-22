@@ -8,9 +8,13 @@ const UTIL = Object.fromEntries(Object.entries(tokens.text).map(([k, v]) => [k, 
 const WEIGHT = { Thin: 100, ExtraLight: 200, Light: 300, Regular: 400, Italic: 400, Medium: 500, SemiBold: 600, 'Semi Bold': 600, Bold: 700 }
 const norm = (s) => s.replace(/\s+/g, ' ').trim().toLowerCase().slice(0, 40)
 const num = (s) => (typeof s === 'string' ? parseFloat(s) : s)
+// The browser's computed font-variation-settings → { opsz, SOFT, WONK }; 'normal' means the
+// font's own defaults (Fraunces: SOFT 0, WONK 1; opsz follows the size automatically).
+const parseFvs = (fvs) => Object.fromEntries([...(fvs || '').matchAll(/"([A-Za-z]{4})"\s+([\d.]+)/g)].map((m) => [m[1], Number(m[2])]))
+const AXIS_DEFAULT = { SOFT: 0, WONK: 1 }
 const files = fs.readdirSync(path.join(dir, 'figma')).filter((f) => f.endsWith('.json'))
 const report = []
-const tally = { layers: 0, matched: 0, unmatched: 0, exact: 0, size: 0, lh: 0, ls: 0, weight: 0, family: 0, textCase: 0 }
+const tally = { layers: 0, matched: 0, unmatched: 0, exact: 0, size: 0, lh: 0, ls: 0, weight: 0, family: 0, textCase: 0, axes: 0 }
 const byStyle = {}
 const fixes = {}
 for (const f of files) {
@@ -44,6 +48,14 @@ for (const f of files) {
     if (figWeight !== Number(d.weight)) off.weight = [t.weight ? `${style} ${t.weight}` : style, d.weight]
     if (family.toLowerCase() !== d.family.toLowerCase()) off.family = [family, d.family]
     if ((t.textCase === 'UPPER') !== (d.transform === 'uppercase')) off.textCase = [t.textCase, d.transform || 'none']
+    if (t.axes && family === 'Fraunces') {
+      // SOFT and WONK are compared always (CSS 'normal' = the font defaults); opsz only when code sets it.
+      const want = { ...AXIS_DEFAULT, ...parseFvs(d.fvs) }
+      const bad = {}
+      // An axis Figma does not expose for the family (opsz — Figma runs optical sizing itself) cannot be set, so it is not a diff.
+      for (const k of ['SOFT', 'WONK', 'opsz']) { if (want[k] === undefined || t.axes[k] === undefined) continue; if (Math.abs(t.axes[k] - want[k]) > 0.5) bad[k] = [t.axes[k], want[k]] }
+      if (Object.keys(bad).length) off.axes = bad
+    }
     if (!Object.keys(off).length) { tally.exact += t.n; continue }
     st.off += t.n
     for (const k of Object.keys(off)) tally[k] += t.n
@@ -52,7 +64,7 @@ for (const f of files) {
     const plain = Number(d.weight) === 400 && !d.italic && Math.abs(num(d.ls)) < 0.05 && d.family === 'Raleway' && !d.transform
     const fix = util && plain ? `Text/${util[0]}` : `explicit ${d.size}px / ${d.lh} / ${d.ls}${Number(d.weight) !== 400 ? ' / ' + d.weight : ''}${d.inHeading ? ' (in heading)' : ''}`
     const fk = `${t.style || '(no style)'} → ${util && plain ? `Text/${util[0]}` : 'explicit values'}`; fixes[fk] = (fixes[fk] || 0) + t.n
-    rootOut.diffs.push({ chars: t.chars.slice(0, 36), n: t.n, figmaStyle: t.style, off, dom: { tag: d.tag, slot: d.slot, cls: d.cls.slice(0, 60) }, fix, id: t.id })
+    rootOut.diffs.push({ chars: t.chars.slice(0, 36), n: t.n, figmaStyle: t.style, off, dom: { tag: d.tag, slot: d.slot, cls: d.cls.slice(0, 60), fvs: d.fvs }, fix, id: t.id, ids: t.ids })
   }
   report.push(rootOut)
 }

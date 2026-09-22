@@ -30,10 +30,12 @@ for (const id of IDS) {
     const lh = t.lineHeight.unit === 'AUTO' ? 'auto' : Math.round(t.lineHeight.value * 100) / 100 + (t.lineHeight.unit === 'PERCENT' ? '%' : 'px')
     const ls = Math.round(t.letterSpacing.value * 100) / 100 + (t.letterSpacing.unit === 'PERCENT' ? '%' : 'px')
     // fontWeight reads the variation axis: Fraunces at wght 500 is still style "Regular"
-    const row = { chars: t.characters.replace(/\s+/g, ' ').slice(0, 60), font: t.fontName.family + '/' + t.fontName.style, weight: t.fontWeight, size: Math.round(t.fontSize * 100) / 100, lh, ls, textCase: t.textCase, style: styles[t.textStyleId] || '', inInstance: t.id.includes(';') }
+    // variationSettings is present only for variable fonts (Fraunces: wght, opsz, SOFT, WONK)
+    const axes = t.fontName.variationSettings ? Object.fromEntries(Object.entries(t.fontName.variationSettings).filter(([k]) => k !== 'wght').map(([k, v]) => [k, Math.round(v * 10) / 10])) : undefined
+    const row = { chars: t.characters.replace(/\s+/g, ' ').slice(0, 60), font: t.fontName.family + '/' + t.fontName.style, weight: t.fontWeight, size: Math.round(t.fontSize * 100) / 100, lh, ls, textCase: t.textCase, style: styles[t.textStyleId] || '', inInstance: t.id.includes(';'), axes }
     const key = JSON.stringify(row)
-    if (!seen.has(key)) seen.set(key, { ...row, n: 0, id: t.id })
-    seen.get(key).n++
+    if (!seen.has(key)) seen.set(key, { ...row, n: 0, id: t.id, ids: [] })
+    const g = seen.get(key); g.n++; if (g.ids.length < 30) g.ids.push(t.id)
   }
   out[id] = { rootId: root.id, figmaName: root.name, type: root.type, page: page.name, texts: texts.length, hidden, mixed, rows: [...seen.values()] }
 }

@@ -25,7 +25,7 @@ addons.setConfig({
 const style = document.createElement('style')
 style.textContent = `
   /* Load brand fonts */
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Raleway:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Raleway:wght@400;500;600&display=swap');
 
   /* Sidebar brand logo area */
   #storybook-explorer-menu a[href="/"] {

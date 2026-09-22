@@ -54,3 +54,29 @@ test('every path the agent-facing docs name exists, or is a registry install tar
   }
   assert.deepEqual(offenders, [], `agent-facing docs name paths that do not exist:\n${offenders.join('\n')}`)
 })
+
+// The four Fraunces presets in the token source set `opsz`, `SOFT` and `WONK`.
+// Until 0.10.13 the theme file, the CLI payload and Storybook loaded Fraunces from
+// Google Fonts with `ital,opsz,wght` only, so the font file had no SOFT or WONK
+// axis and those two settings were silently ignored everywhere but the site
+// (next/font, self-hosted, all four axes). Every place that loads Fraunces must
+// ask Google for every axis a preset names — see docs/audits/2026-09-22-fraunces-axes-audit.md.
+test('every Fraunces import loads every axis the token presets set', async () => {
+  const { tokens } = await import('../src/tokens/quill.tokens.mjs')
+  const wanted = new Set(Object.values(tokens.fraunces).flatMap((v) => [...v.matchAll(/"([A-Za-z]{4})"/g)].map((m) => m[1])))
+  assert.ok(wanted.size >= 3, `expected the presets to name axes, got ${[...wanted].join(',')}`)
+  const FILES = ['registry/themes/quill.css', '.storybook/preview-head.html', '.storybook/manager.ts']
+  for (const file of FILES) {
+    const src = readFileSync(join(root, file), 'utf8')
+    const m = src.match(/family=Fraunces:([A-Za-z,]+)@/)
+    assert.ok(m, `${file}: no Google Fonts Fraunces import found`)
+    const loaded = new Set(m[1].split(','))
+    for (const axis of wanted) assert.ok(loaded.has(axis), `${file} loads Fraunces without the "${axis}" axis, so \`font-variation-settings: "${axis}"\` does nothing there`)
+  }
+  // The CLI payload embeds the theme file verbatim, so it inherits the same import.
+  const payload = JSON.parse(readFileSync(join(root, 'public/r/quill.json'), 'utf8'))
+  const css = payload.files.map((f) => f.content).join('\n')
+  const pm = css.match(/family=Fraunces:([A-Za-z,]+)@/)
+  assert.ok(pm, 'public/r/quill.json: no Fraunces import in the payload')
+  for (const axis of wanted) assert.ok(pm[1].split(',').includes(axis), `public/r/quill.json loads Fraunces without "${axis}"`)
+})

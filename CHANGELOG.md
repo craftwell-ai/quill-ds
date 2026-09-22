@@ -12,6 +12,47 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.13] — 2026-09-22
+
+Fraunces axes: the four presets now render everywhere, not only on the site. Audit:
+`docs/audits/2026-09-22-fraunces-axes-audit.md`.
+
+### Fixed
+- **`SOFT` and `WONK` were silently ignored in every app and in Storybook.** The token
+  presets (`--fraunces-display` opsz 144 · SOFT 50 · WONK 0, `--fraunces-text` opsz 24 ·
+  SOFT 50, `--fraunces-accent` SOFT 100 · WONK 1, `--fraunces-caption` opsz 14 · SOFT 100)
+  set two axes that the theme's Google Fonts import never asked for
+  (`Fraunces:ital,opsz,wght`), so the served font file had no `SOFT` or `WONK` axis (read from
+  the woff2's `fvar` table) and `font-variation-settings` for them did nothing. Only the site,
+  which self-hosts Fraunces through next/font with all four axes, showed the presets; the shipped
+  theme, the CLI payload and Storybook rendered the font's defaults, SOFT 0 / WONK 1 — which is
+  also what the Figma library carried, so Figma matched what shipped and the site was the odd
+  one out. Chromium-proven on a fixed element: under the old import `SOFT 0` and `SOFT 100`
+  render pixel-identical; under the new one they differ. The import in `registry/themes/quill.css`
+  (and so the CLI payload), `.storybook/preview-head.html` and `.storybook/manager.ts` now
+  loads `Fraunces:ital,opsz,wght,SOFT,WONK@…`. Cost: about 15 KB more per Fraunces subset file
+  a page loads (20 → 34 KB). Guard: `repo-invariants.test.mjs` fails when any Fraunces import
+  omits an axis a preset names.
+- **The site's Fraunces had no italic faces.** `Fraunces()` in `src/app/layout.tsx` declared no
+  `style`, so next/font shipped the upright faces only and the accent word and captions
+  rendered a synthesised italic on quilldesignsystem.com while apps got the true italic. Now
+  `style: ["normal", "italic"]`.
+
+### Changed
+- **Figma text carries the presets, per element.** Code applies a preset by element — `h1`
+  → display, `h2–h6` → text, `.fraunces-accent`, `.fraunces-caption` — and a `font-heading`
+  div such as CardTitle gets none (the font defaults). The type-audit harness now records the
+  browser's computed `font-variation-settings` per text and each Figma layer's
+  `variationSettings`, and compares SOFT/WONK on every Fraunces layer (`opsz` is not exposed by
+  Figma, which runs optical sizing itself). Run on 94 roots / 1,363 layers: 911 matched, 14 off
+  on axes — every one an `h1`/`h2`/`h3` — plus the five overlay titles (AlertDialog, Dialog,
+  Drawer, Sheet ×2: `font-heading` on an `h2`, closed in the stories so the DOM never saw them).
+  16 layers set (`h1` → SOFT 50 · WONK 0; `h2`/`h3` → SOFT 50); the two template instances
+  inherit; the 5 overlay titles detach that property from `Heading/S`, which the Card title
+  (a `div`) keeps at the defaults. Re-dumped: 911 of 911 matched layers exact, 0 off on axes.
+  Storybook proven live: the hero `h1` renders differently with SOFT or WONK forced.
+  `scripts/figma-type-audit/README.md`.
+
 ## [0.10.12] — 2026-09-22
 
 Four block-vs-docs design calls, decided 2026-09-22, applied to the blocks and written into
