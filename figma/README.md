@@ -44,7 +44,8 @@ Retired variables are parked as `deprecated/*`, hidden from publishing, and neve
 - Variables: `Quill Primitives` collection (modes: Light, Dark) + `Quill Semantic` collection (aliases → Primitives).
 - Text styles, in two kinds. **Curated** (`Display/*`, `Heading/*`, `Body/*`, `Label/*`, `Accent`, `Eyebrow`): family and size are
   token keys resolved from the export when the sync runs (`size: 'lg'`, never `18`); line height and tracking name a role
-  (`leading: 'reading'`, `tracking: 'eyebrow'`) wherever the value is one. The values that are no role sit in `TYPED_METRICS`
+  (`leading: 'reading'`, `tracking: 'eyebrow'`) wherever the value is one, or `leading: 'paired'` for the line height the
+  size's own utility renders (`text-sm` → 142.857%) — what the type audit found most bound layers already are in code. The values that are no role sit in `TYPED_METRICS`
   in the snippet — a list that may only shrink; clear an entry during a visual pass, never by changing the number blind. **Generated** (`Text/xs` … `Text/5xl`): one per `text-*` utility, size
   and line height both from tokens (`Text/sm` = 13.6px on 142.857%) — bind a layer here when its code twin is a bare `text-sm`.
   `Accent` is the one style with a typed size (28px): in code the accent word inherits its heading's size, so no token holds it.

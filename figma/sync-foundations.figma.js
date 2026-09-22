@@ -204,7 +204,9 @@ async function syncSemanticAliases(DTCG) {
 // ---- Text styles ----
 // Every field names a token KEY, resolved from the export when the sync runs:
 // `font`, `size`, and — where the value is one a role holds — `leading` and
-// `tracking`. They were typed numbers once, and drifted where nothing checked:
+// `tracking`. `leading: 'paired'` is the line height the size's own utility
+// renders (`text-sm` → 142.857%): what the type audit found most bound layers
+// already are in code. They were typed numbers once, and drifted where nothing checked:
 // Heading/S and Body/L sat at 18 while `lg` is 18.4; the Eyebrow at 11 while code
 // and DESIGN.md both say `text-xs`. Colour is applied through variables on the
 // layers, not here.
@@ -217,11 +219,11 @@ const TEXT_STYLES = [
   { name: 'Heading/S', font: 'heading', style: 'Regular', size: 'lg', lh: 130, ls: -1 },
   { name: 'Body/L', font: 'sans', style: 'Regular', size: 'lg', leading: 'reading' },
   { name: 'Body/Base', font: 'sans', style: 'Regular', size: 'base', leading: 'reading' },
-  { name: 'Body/S', font: 'sans', style: 'Regular', size: 'sm', lh: 160 },
-  { name: 'Body/XS', font: 'sans', style: 'Regular', size: 'xs', leading: 'ui' },
+  { name: 'Body/S', font: 'sans', style: 'Regular', size: 'sm', leading: 'paired' },
+  { name: 'Body/XS', font: 'sans', style: 'Regular', size: 'xs', leading: 'paired' },
   // Label styles — Raleway Medium for form/control labels, badges, chips (text-sm / text-xs + font-medium).
-  { name: 'Label/Default', font: 'sans', style: 'Medium', size: 'sm', lh: 140 },
-  { name: 'Label/Small', font: 'sans', style: 'Medium', size: 'xs', lh: 140 },
+  { name: 'Label/Default', font: 'sans', style: 'Medium', size: 'sm', leading: 'paired' },
+  { name: 'Label/Small', font: 'sans', style: 'Medium', size: 'xs', leading: 'paired' },
   { name: 'Accent', font: 'display', style: 'Italic', px: 28, leading: 'heading', ls: -2 },
   { name: 'Eyebrow', font: 'sans', style: 'Medium', size: 'xs', lh: 100, tracking: 'eyebrow', textCase: 'UPPER' },
 ]
@@ -235,8 +237,7 @@ const OFF_SCALE = new Set(['Accent'])
 // them re-spaces every layer bound to the style, so they wait for a visual pass —
 // bind to `Text/*` or a role there, then delete the entry. The list may only shrink.
 const TYPED_METRICS = {
-  'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], 'Body/S': ['lh'],
-  'Label/Default': ['lh'], 'Label/Small': ['lh'], Accent: ['ls'], Eyebrow: ['lh'],
+  'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], Accent: ['ls'], Eyebrow: ['lh'],
 }
 
 // Curated rows resolved against the export, plus one `Text/<size>` style per
@@ -252,9 +253,10 @@ function resolveTextStyles(DTCG) {
     const typed = TYPED_METRICS[s.name] || []
     if ((s.lh !== undefined) !== typed.includes('lh')) throw new Error(s.name + ': name a leading role, or list the typed `lh` in TYPED_METRICS')
     if ((s.ls !== undefined) !== typed.includes('ls')) throw new Error(s.name + ': name a tracking role, or list the typed `ls` in TYPED_METRICS')
-    if (s.leading !== undefined && !P.leading[s.leading]) throw new Error(s.name + ': no leading role "' + s.leading + '"')
+    if (s.leading !== undefined && s.leading !== 'paired' && !P.leading[s.leading]) throw new Error(s.name + ': no leading role "' + s.leading + '"')
+    if (s.leading === 'paired' && !(P.lineHeight && P.lineHeight[s.size])) throw new Error(s.name + ': size "' + s.size + '" has no paired line height')
     if (s.tracking !== undefined && !P.tracking[s.tracking]) throw new Error(s.name + ': no tracking role "' + s.tracking + '"')
-    const lh = s.leading !== undefined ? Math.round(P.leading[s.leading].$value * 100000) / 1000 : s.lh
+    const lh = s.leading === 'paired' ? Math.round(P.lineHeight[s.size].$value * 100000) / 1000 : s.leading !== undefined ? Math.round(P.leading[s.leading].$value * 100000) / 1000 : s.lh
     const ls = s.tracking !== undefined ? P.tracking[s.tracking].$value : s.ls
     return { name: s.name, family: family(s.font), style: s.style, size: s.size !== undefined ? dimToPx(P.type[s.size].$value) : s.px, lh, ls, textCase: s.textCase }
   })

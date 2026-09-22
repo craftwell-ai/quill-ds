@@ -12,6 +12,29 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.4] — 2026-09-22
+
+Pass 1 of the Figma type audit. Nothing an app receives changes.
+
+### Changed
+- **Figma: four text styles take the line height their size renders in code.** The audit
+  (0.10.3) found the code's answer nearly uniform per style — 207 of 227 matched `Body/S`
+  layers render exactly `text-sm`'s 13.6px on a 142.857% line, while the style held
+  160% — so these are style-level changes, not a layer-by-layer pass:
+
+  | style | was | now |
+  |---|---|---|
+  | `Body/S` | 160% | 142.857% (`text-sm`) |
+  | `Body/XS` | 150% | 133.333% (`text-xs`) |
+  | `Label/Default` | 140% | 142.857% (`text-sm`, Medium) |
+  | `Label/Small` | 140% | 133.333% (`text-xs`, Medium) |
+
+  In the sync snippet they say `leading: 'paired'` — the size's own line height from the
+  export — which clears three of the ten hand-typed values in `TYPED_METRICS` and corrects
+  `Body/XS`, which had been given the `ui` role (150%) though nothing at `text-xs` renders
+  it. Run in the library: those four styles moved, nothing else; the 445 layers bound to
+  them (all auto-height, none fixed) reflowed 2–3 px shorter per line. Re-audited on a fresh dump of all 94 roots: **657 of 871 matched layers now exact (75%), up from 206 (24%)**; line-height mismatches 631 → 156. A QA pass compared every pattern and template page against its Storybook capture after the reflow: 49 of 50 clean — no clipped text, no overlap, no frame that failed to shrink. The one flag (the app-page template's stat-card delta row, 159 px in a 154 px card) is a horizontal overflow from the 672 px composition, present before this change; it is on the pass-2 list.
+
 ## [0.10.3] — 2026-09-21
 
 ### Fixed

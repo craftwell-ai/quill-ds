@@ -123,3 +123,38 @@ Fully exact: `Accordion` (re-cut by hand in 0.9.58 — the proof that the method
 | `Label/Small` | 140% | 133.333% (`text-xs`, Medium) | 45 |
 
 Every line of text bound to those styles gets 2–3px shorter, so auto-layout frames reflow: a screenshot pass per page follows, then a fresh pattern snapshot. **Pass 2 — per layer**, for what a style cannot settle: the ~90 unstyled layers (CardTitle weight, heading tracking), Button `sm` at 12.8px, `leading-none` labels, `leading-relaxed` copy, and the responsive headline sizes. Re-run this audit after each pass; the exact count is the score.
+
+## Pass 1 result — 2026-09-22 (0.10.4)
+
+The four style-level changes were made in the library (`Body/S` 160 → 142.857%, `Body/XS` 150 → 133.333%, `Label/Default` 140 → 142.857%, `Label/Small` 140 → 133.333%; exactly those four styles moved), then the audit was re-run on a fresh dump of all 94 roots against the same Storybook captures.
+
+| | before | after |
+|---|---|---|
+| matched layers, every metric equal | 206 (24%) | **657 (75%)** |
+| off on line height | 631 | 156 |
+| off on weight | 65 | 65 |
+| off on size | 40 | 40 |
+| off on letter spacing | 35 | 35 |
+| off on family | 12 | 12 |
+
+Still off, by Figma style (layers (matched) · off):
+
+| style | layers (matched) | off |
+|---|---|---|
+| `Body/S` | 322 (227) | 20 |
+| `(no style)` | 319 (295) | 89 |
+| `Label/Default` | 246 (194) | 62 |
+| `Label/Small` | 86 (68) | 23 |
+| `Body/XS` | 81 (70) | 3 |
+| `Heading/S` | 12 (6) | 6 |
+
+The reflow was checked page by page: a QA agent compared all 47 pattern pages and 3 templates against their Storybook captures after the change — **49 of 50 clean**: no clipped descenders or cut lines, no overlap, no fixed-height frame left tall. The one flag is not a reflow effect: in the app-page template the stat-card instance is 672 px wide, so each card is 156 px and the first card's delta row (`+12.4%  vs last month`, intrinsic width 143 px at x 16) runs 5 px past the card's inner edge. Horizontal, and pre-existing.
+
+### What pass 2 has to settle, per layer
+
+- **89 unstyled layers**: `CardTitle` is `font-medium` in code and Regular in Figma (36); text inside `h1`–`h6` tracks at −0.03em in code and 0 in Figma (20); calendar day numbers, chart axis labels, sidebar items, ToneBadge labels.
+- **`Label/Default`, 62 off**: 34 are `leading-none` labels in code (100%); 11 are `AvatarFallback` (Regular in code, the style is Medium).
+- **`Label/Small`, 23 off**: Button `sm` labels are `text-[0.8rem]` (12.8 px) in code — an arbitrary size that sets no line height, so the label inherits the body's 170%; the twin binds `Label/Small` at 12 px. Better fixed in code than mirrored.
+- **`Body/S`, 20 off**: `leading-relaxed` copy (162.5%) and Medium-weight cells.
+- The responsive headlines (hero 48 → 88, feature-section 32 → 48 at 1280 px): Figma mirrors the small step.
+- The stat-card delta row in the app-page template (above).
