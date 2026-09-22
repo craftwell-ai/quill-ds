@@ -285,6 +285,10 @@ export const tokens = {
     // `ring-destructive/20`; a disabled field washes with `bg-input/50`. Declared so
     // the Figma State variants can bind them (CRA-221).
     { of: 'ring', pct: 50 }, { of: 'destructive', pct: 20 }, { of: 'input', pct: 50 },
+    // Button states: the default button hovers to `bg-primary/80`; the secondary one to
+    // `color-mix(secondary, foreground 5%)`, which two stacked fills render exactly; the
+    // destructive one focuses with `border-destructive/40`.
+    { of: 'primary', pct: 80 }, { of: 'foreground', pct: 5 }, { of: 'destructive', pct: 40 },
   ],
   // Retired 0.10.0. A second vocabulary for what the contract already says
   // (`--surface-card` is `--card`), which no shipped component and no utility ever

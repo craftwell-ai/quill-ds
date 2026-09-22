@@ -1899,6 +1899,27 @@
       "alpha": 0.5,
       "cssVar": "--input",
       "text": false
+    },
+    {
+      "name": "tint/primary/80",
+      "base": "semantic/primary",
+      "alpha": 0.8,
+      "cssVar": "--primary",
+      "text": false
+    },
+    {
+      "name": "tint/foreground/5",
+      "base": "semantic/foreground",
+      "alpha": 0.05,
+      "cssVar": "--foreground",
+      "text": false
+    },
+    {
+      "name": "tint/destructive/40",
+      "base": "semantic/destructive",
+      "alpha": 0.4,
+      "cssVar": "--destructive",
+      "text": false
     }
   ]
 }

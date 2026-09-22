@@ -137,6 +137,9 @@ A role at a fixed opacity. These are the only opacity forms the system uses on p
 - `ring-3 ring-ring/50` — The keyboard-focus ring on every control, with `border-ring`. Built into the primitives. **Never:** A hand-drawn focus treatment, or a decorative glow.
 - `ring-3 ring-destructive/20` — The ring around an invalid field, with `border-destructive`, when `aria-invalid` is set. **Never:** Emphasis or a warning wash. It follows the invalid state only.
 - `bg-input/50` — The wash inside a disabled field, with 50% opacity on the control. **Never:** A resting field. At rest a field is transparent on light themes.
+- `hover:bg-primary/80` — The default button under the pointer. Built into the primitive. **Never:** A resting fill, or a "lighter primary" for emphasis.
+- `hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]` — The secondary button under the pointer: 5% ink over its fill. Built into the primitive. **Never:** A wash on anything else; the general hover wash is `muted` or `accent`.
+- `focus-visible:border-destructive/40` — The border of a focused destructive button, with its `ring-destructive/20` ring. **Never:** A fill or text; the invalid-field border is full `destructive`.
 
 #### Two rules the names hide
 - **Hover has two names and one colour.** Items in a list or menu highlight with `accent`; standalone controls (buttons, toggles) and table rows wash with `muted`.

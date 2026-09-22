@@ -555,7 +555,33 @@ the menu items (focus / disabled), Accordion (focus / disabled), Sidebar items (
 disabled), Table row (hover / selected). The dark-only `ring-destructive/40` and `bg-input/80` have no
 variable (a tint carries one alpha across modes).
 
+## State axis, tranche 2 — Button and Toggle (2026-09-22)
+
+| set | was | now | states |
+|---|---|---|---|
+| Button `359:267` | Variant × Size = 48 | × State = **288** | Hover · Focus · Invalid · Active · Disabled |
+| Toggle `356:183` | Variant × Size × Pressed = 12 | × State = **60** | Hover · Focus · Invalid · Disabled |
+
+Both sets are manual grids, so each state is the 48- (or 12-) variant grid copied into a block to the right
+(744 px / one set width + 48 apart); the originals were renamed `…, State=Default` and keep their ids.
+
+Button states come from the cva per variant: **Hover** — default `bg-primary/80` (`tint/primary/80`); outline
+and ghost `bg-muted text-foreground`; secondary `color-mix(in oklch, secondary, foreground 5%)`, which two
+stacked fills (`semantic/secondary` under `tint/foreground/5`) render exactly; destructive `bg-destructive/20`;
+link `underline` on the label. **Focus** — `border-ring` + Ring `tint/ring/50`, except destructive, whose own
+classes are `border-destructive/40` + `ring-destructive/20`. **Invalid** — `border-destructive` + Ring
+`tint/destructive/20`. **Active** — `translate-y-px`: paddingTop +1 / paddingBottom −1 on the auto-layout frame,
+so the label sits 1 px lower at the same height. **Disabled** — opacity 50 %. `aria-expanded` (a menu open)
+renders as Hover for outline / ghost and as Default for secondary, so it is not a separate variant. The three
+tints `tint/primary/80`, `tint/foreground/5`, `tint/destructive/40` were declared for this (0.10.8) and are
+recorded in `sync-state.variables`.
+
+Toggle: Hover `bg-muted text-foreground`; Focus `border-ring ring-[3px] ring-ring/50`; Invalid
+`border-destructive ring-destructive/20`; Disabled opacity 50 %. Pressed was already an axis.
+
 ## Next
 
 - Visual QA sweep in Dusk / Classic modes (the 2026-09-19 sweep covered Dawn only).
-- State axis, tranche 2: Button and Toggle (the largest sets), then the list above.
+- State axis, tranche 3: Badge (focus / invalid), Tabs (hover / focus / disabled), Slider, Input OTP, Input
+  group, Native select, Label (peer-disabled), Calendar (disabled / selected); then menu items, Accordion,
+  Sidebar items, Table rows.

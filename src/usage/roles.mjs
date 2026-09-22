@@ -86,6 +86,9 @@ export const TINT_INTENTS = {
   'tint/ring/50': { code: '`ring-3 ring-ring/50`', use: 'The keyboard-focus ring on every control, with `border-ring`. Built into the primitives.', never: 'A hand-drawn focus treatment, or a decorative glow.' },
   'tint/destructive/20': { code: '`ring-3 ring-destructive/20`', use: 'The ring around an invalid field, with `border-destructive`, when `aria-invalid` is set.', never: 'Emphasis or a warning wash. It follows the invalid state only.' },
   'tint/input/50': { code: '`bg-input/50`', use: 'The wash inside a disabled field, with 50% opacity on the control.', never: 'A resting field. At rest a field is transparent on light themes.' },
+  'tint/primary/80': { code: '`hover:bg-primary/80`', use: 'The default button under the pointer. Built into the primitive.', never: 'A resting fill, or a "lighter primary" for emphasis.' },
+  'tint/foreground/5': { code: '`hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]`', use: 'The secondary button under the pointer: 5% ink over its fill. Built into the primitive.', never: 'A wash on anything else; the general hover wash is `muted` or `accent`.' },
+  'tint/destructive/40': { code: '`focus-visible:border-destructive/40`', use: 'The border of a focused destructive button, with its `ring-destructive/20` ring.', never: 'A fill or text; the invalid-field border is full `destructive`.' },
 }
 
 const primitive = (ref) => ref.replace(/^var\(--|\)$/g, '')
