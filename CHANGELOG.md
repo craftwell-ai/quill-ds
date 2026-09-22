@@ -12,6 +12,41 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.11] — 2026-09-22
+
+Dusk / Classic / Intelligent QA sweep — every story rendered with axe under each of the
+four non-default themes (395 stories × 4). Classic Light and Classic Dark were clean; one
+token moved for Dusk and Intelligent.
+
+### Fixed
+- **Placeholder text failed AA on dark-theme fields.** In every dark colour scheme the
+  stock field primitives (Input, Select, InputGroup, Combobox, OTP, outline Button) paint a
+  30 % wash of `--input` (`line.control`) over the surface they sit on, and placeholder
+  text and InputGroup addons are `--muted-foreground` on that wash. `ink.muted` cleared
+  4.5:1 on the page, card and well — the grounds the contracts checked — but not on the
+  wash: 4.19:1 in Dusk inside a card, 4.29:1 on the Intelligent page and 3.88:1 in an
+  Intelligent card. A Select renders its placeholder as real text, so axe caught it in 11
+  stories. `ink.muted` is lifted the least that clears the wash over the card, hue kept:
+  Dusk `#A89880 → #AFA08A` (+8 % toward white), Intelligent `#93927C → #A09F8C` (+12 %);
+  every other ground gets more contrast (6.3–7.1:1 on page and card). `line.control`
+  could not move instead — it sits 0.34 above its own 3:1 boundary rule. Muted text in
+  those two themes reads a shade lighter; nothing else changes. Figma `color/ink-muted`
+  Dark updated in place (Intelligent is not a Figma mode by decision). New contract in
+  `quill.tokens.test.mjs` guards muted ink on the field wash over the card in every dark
+  scheme.
+- **`HoverCard` "Link Preview" story used `text-blue-600`.** A stock Tailwind blue that
+  ignores the theme — 3.34:1 on Dusk, 3.64:1 on Intelligent, 4.0:1 on Classic Dark. Now
+  `text-link`. Story-only; nothing shipped changes.
+
+### Added
+- **`npm run test-storybook:theme`** — the story suite with axe under a forced theme
+  (`QUILL_THEME=dark|classic-light|classic-dark|intelligent`), plus
+  `scripts/theme-qa/summarise.mjs` to read the reports. Each story also asserts the wrapper
+  carries the requested `data-theme`, so a run that quietly rendered Dawn fails. Not in CI
+  (four extra passes); run it after any token change. `scripts/theme-qa/README.md`.
+- `.storybook/preview.tsx` is now inside the `tsc` program (the harness imports it; TypeScript's
+  `**/*` skips dot-folders, so it never was) — one latent index type fixed.
+
 ## [0.10.10] — 2026-09-22
 
 State axis, tranche 4 — the axis is complete (CRA-221). Nothing an app receives changes.

@@ -30,9 +30,14 @@ export const tokens = {
     ink: {
       base: { light: '#2A2622', dark: '#F1E7D3', classicLight: '#171717', classicDark: '#F5F5F5', intelligent: '#E9E5D6' },
       // intelligent soft is lifted from the comp's #93927C — that cut passes AA but is
-      // thin for body duty; the comp value survives as the muted/meta cut below.
+      // thin for body duty; the comp value carried the muted/meta cut below until
+      // the 2026-09-22 theme sweep: muted also reads as placeholder text on the
+      // dark field wash (`dark:bg-input/30` in the stock primitives), where the
+      // comp values sat at 4.17:1 (Dusk) and 3.88:1 (Intelligent) inside a card.
+      // Both lifted the least that clears 4.5:1 there (+8 % / +12 % toward white,
+      // hue kept); line.control cannot move instead — it sits 0.34 above its own 3:1.
       soft: { light: '#5C524A', dark: '#C8B9A0', classicLight: '#454545', classicDark: '#C9C9C9', intelligent: '#A9A791' },
-      muted: { light: '#675F58', dark: '#A89880', classicLight: '#5E5E5E', classicDark: '#A0A0A0', intelligent: '#93927C' },
+      muted: { light: '#675F58', dark: '#AFA08A', classicLight: '#5E5E5E', classicDark: '#A0A0A0', intelligent: '#A09F8C' },
     },
     pigment: {
       terracotta: {

@@ -56,7 +56,8 @@ Pattern stories import blocks via the `@registry/*` alias — **edit the block, 
 npm run dev              # site, :3000
 npm run storybook        # component catalog, :6006
 npm run test:tokens      # token contracts, WCAG, generator output, repo invariants
-npm run test-storybook   # every story rendered + axe
+npm run test-storybook   # every story rendered + axe (Dawn)
+QUILL_THEME=dark npm run test-storybook:theme   # same, under one non-default theme — run after token changes
 npm run lint
 npx tsc --noEmit
 ```
