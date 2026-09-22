@@ -89,6 +89,7 @@ export const TINT_INTENTS = {
   'tint/primary/80': { code: '`hover:bg-primary/80`', use: 'The default button under the pointer. Built into the primitive.', never: 'A resting fill, or a "lighter primary" for emphasis.' },
   'tint/foreground/5': { code: '`hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]`', use: 'The secondary button under the pointer: 5% ink over its fill. Built into the primitive.', never: 'A wash on anything else; the general hover wash is `muted` or `accent`.' },
   'tint/destructive/40': { code: '`focus-visible:border-destructive/40`', use: 'The border of a focused destructive button, with its `ring-destructive/20` ring.', never: 'A fill or text; the invalid-field border is full `destructive`.' },
+  'tint/secondary/80': { code: '`[a]:hover:bg-secondary/80`', use: 'A secondary badge, rendered as a link, under the pointer. Built into the primitive.', never: 'A resting fill.' },
 }
 
 const primitive = (ref) => ref.replace(/^var\(--|\)$/g, '')

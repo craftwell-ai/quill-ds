@@ -140,6 +140,7 @@ A role at a fixed opacity. These are the only opacity forms the system uses on p
 - `hover:bg-primary/80` — The default button under the pointer. Built into the primitive. **Never:** A resting fill, or a "lighter primary" for emphasis.
 - `hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]` — The secondary button under the pointer: 5% ink over its fill. Built into the primitive. **Never:** A wash on anything else; the general hover wash is `muted` or `accent`.
 - `focus-visible:border-destructive/40` — The border of a focused destructive button, with its `ring-destructive/20` ring. **Never:** A fill or text; the invalid-field border is full `destructive`.
+- `[a]:hover:bg-secondary/80` — A secondary badge, rendered as a link, under the pointer. Built into the primitive. **Never:** A resting fill.
 
 #### Two rules the names hide
 - **Hover has two names and one colour.** Items in a list or menu highlight with `accent`; standalone controls (buttons, toggles) and table rows wash with `muted`.

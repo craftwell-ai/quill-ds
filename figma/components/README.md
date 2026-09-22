@@ -579,9 +579,24 @@ recorded in `sync-state.variables`.
 Toggle: Hover `bg-muted text-foreground`; Focus `border-ring ring-[3px] ring-ring/50`; Invalid
 `border-destructive ring-destructive/20`; Disabled opacity 50 %. Pressed was already an axis.
 
+## State axis, tranche 3 — Badge, Tabs, Slider, Input OTP, Input group, Label (2026-09-22)
+
+| set | was | now | states, from the classes |
+|---|---|---|---|
+| Badge `65:13` | Variant × 6 | **24** | Hover (the badge as a link: default `primary/80`, secondary `secondary/80`, destructive `destructive/20`, outline / ghost `muted` + muted-foreground, link underline) · Focus · Invalid. No disabled state in code. |
+| Tabs `355:19` | Variant × 2 | **8** | Shown on the second, inactive trigger: Hover `text-foreground` · Focus ring · Disabled 50 %. The list twin's children stay frames, so the parity signature holds. |
+| Slider `835:25` | single `267:159` | **5** | Hover, Focus, Active — each `ring-3` on the thumb's `ring-ring/50`, identical by design, three variants because the code names three states (an ELLIPSE ring around the thumb) · Disabled 50 %. |
+| Input OTP `835:70` | single `267:175` | **4** | Focus = the active slot (`data-[active=true]:border-ring ring-ring/50`, on the first slot) · Invalid = every slot `border-destructive`, ring on the group · Disabled 50 %. |
+| Input group `261:113` | Layout × 2 | **8** | Focus (control focus → group `border-ring ring-ring/50`) · Invalid · Disabled (50 % + `bg-input/50`). |
+| Label `835:1225` | single `82:9` | **2** | Disabled (`peer-disabled:opacity-50`). |
+
+`tint/secondary/80` was declared for the secondary badge's link hover (0.10.9). Not twins, so no State axis:
+Native select, Calendar, Sidebar (patterns or declined).
+
 ## Next
 
 - Visual QA sweep in Dusk / Classic modes (the 2026-09-19 sweep covered Dawn only).
-- State axis, tranche 3: Badge (focus / invalid), Tabs (hover / focus / disabled), Slider, Input OTP, Input
-  group, Native select, Label (peer-disabled), Calendar (disabled / selected); then menu items, Accordion,
-  Sidebar items, Table rows.
+- State axis, tranche 4 — list items: DropdownMenu, ContextMenu, Menubar, Combobox, Command (item
+  `focus:bg-accent` / `data-highlighted`, `data-disabled:opacity-50`), Accordion (trigger focus ring,
+  `aria-disabled`), Table (row `hover:bg-muted/50`, `data-[state=selected]:bg-muted`), ToggleGroup,
+  Breadcrumb (link hover), Pagination.
