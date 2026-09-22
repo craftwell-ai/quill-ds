@@ -205,3 +205,31 @@ test('the known-gap list has no stale entries — remove what has been fixed', (
       `entry silently stops guarding its utility:\n\n  ${stale.join('\n  ')}`,
   )
 })
+
+test('shipped code reads no CSS variable an app never receives', () => {
+  // Seven blocks set their display type with
+  // `font-[family-name:var(--font-fraunces,Georgia,serif)]`. `--font-fraunces` is set
+  // by next/font in the Quill SITE's layout and nowhere else, so in Storybook and in
+  // every app the fallback won: the hero headline, the wordmark and the 404 rendered
+  // in Georgia. The utility check above cannot see it — a bracketed value with a
+  // fallback always "resolves". Found by the Figma type audit (0.10.3).
+  const item = JSON.parse(readFileSync(join(root, 'public/r/quill.json'), 'utf8'))
+  const received = new Set([...Object.keys(item.cssVars.light).map((k) => `--${k}`), ...Object.keys(item.css[':root'])])
+  const offenders = []
+  let files = 0
+  for (const dir of ['registry/blocks', 'registry/lib', 'registry/examples']) {
+    for (const f of readdirSync(join(root, dir))) {
+      if (!/\.tsx?$/.test(f)) continue
+      files++
+      const src = readFileSync(join(root, dir, f), 'utf8')
+      for (const [, name] of src.matchAll(/var\((--[a-z0-9_-]+)/g)) {
+        if (received.has(name)) continue
+        // ChartContainer defines --color-<series key> at runtime from the chart config.
+        if (name.startsWith('--color-') && src.includes('ChartContainer')) continue
+        offenders.push(`${dir}/${f}: ${name}`)
+      }
+    }
+  }
+  assert.ok(files > 50, `expected 50+ shipped files, read ${files}`)
+  assert.deepEqual([...new Set(offenders)], [])
+})

@@ -65,3 +65,6 @@ public/axe.min.js
 docs/superpowers/plans/
 src/components/ui/icons.all.generated.mjs
 public/storybook
+
+# scratch for scripts/figma-type-audit
+.figma-type-audit/

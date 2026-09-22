@@ -23,7 +23,7 @@ export function Dashboard() {
   return (
     <div className="flex h-[600px] w-full bg-background text-foreground">
       <aside className="flex w-56 shrink-0 flex-col gap-1 border-r border-border bg-sidebar p-3">
-        <div className="px-2 py-3 font-[family-name:var(--font-fraunces,Georgia,serif)] text-lg">Quill</div>
+        <div className="px-2 py-3 font-heading text-lg">Quill</div>
         {nav.map((n) => (
           <button
             key={n.label}

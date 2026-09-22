@@ -12,6 +12,34 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.3] — 2026-09-21
+
+### Fixed
+- **Seven shipped blocks rendered their display type in Georgia, not Fraunces.** `hero`,
+  `navbar`, `footer`, `error-404`, `testimonial`, `feature-section` and `dashboard` set
+  the face with `font-[family-name:var(--font-fraunces,Georgia,serif)]`. `--font-fraunces`
+  is set by next/font in the Quill **site's** layout and nowhere else — not the shipped
+  theme file, not the CLI payload, not Storybook — so everywhere but quilldesignsystem.com
+  the fallback won: the hero headline, the wordmark and the 404 numeral were Georgia in
+  every app and in every story. They use `font-heading` now, as the other 14 display
+  uses in the blocks already did. Browser-checked before and after: Georgia → Fraunces on
+  each. The Do / Don't pair stories for Testimonial and Error 404 hand-built the same
+  class and moved with them, and the Typography docs page drew its "Fraunces" specimens
+  through the same variable. Found by the Figma type audit: Figma had it right.
+- **Guard: shipped code reads no CSS variable an app never receives.** The utility check
+  could not see this — a bracketed value with a fallback always "resolves". Quill-shipped
+  code reads eight variables in all; the only ones outside the theme are the
+  `--color-<series>` names a `ChartContainer` defines at runtime.
+
+### Added
+- **The Figma type audit** (`scripts/figma-type-audit/`, report in
+  `docs/audits/2026-09-21-figma-type-audit.md`): every Figma text layer's size, line
+  height, tracking, weight, family and case against the browser's computed style for the
+  same words. First run: 1,077 layers in 94 roots, 871 matched, **206 exact (24%)**, 631
+  off on line height. The answer is nearly uniform per style — 207 of 227 matched
+  `Body/S` layers render exactly `text-sm`'s 13.6px / 142.857% — so four style-level
+  changes settle most of it. No Figma layer is changed by this release.
+
 ## [0.10.2] — 2026-09-21
 
 ### Fixed

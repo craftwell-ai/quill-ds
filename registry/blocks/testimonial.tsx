@@ -2,7 +2,7 @@
 export function Testimonial() {
   return (
     <figure className="flex w-full max-w-[520px] flex-col gap-6 rounded-xl border border-border bg-card p-8 text-foreground">
-      <blockquote className="font-[family-name:var(--font-fraunces,Georgia,serif)] text-2xl leading-snug">
+      <blockquote className="font-heading text-2xl leading-snug">
         “Quill let our team ship consistent, accessible screens in days — the token
         foundation means design and code never drift.”
       </blockquote>

@@ -33,7 +33,7 @@ export const StyleRow = ({ name, font, size, weight, italic, family, note, sampl
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, padding: '10px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
     <code style={{ fontSize: 11, color: '#2A2622', width: 130, flexShrink: 0 }}>{name}</code>
     <span style={{ fontSize: 11, color: '#675F58', width: 150, flexShrink: 0 }}>{font} · {size}</span>
-    <span style={{ fontFamily: family === 'Fraunces' ? 'var(--font-fraunces, Georgia, serif)' : 'var(--font-raleway, Raleway, sans-serif)', fontSize: Math.min(parseFloat(size), 22), fontWeight: weight, fontStyle: italic ? 'italic' : 'normal', color: '#2A2622' }}>{sample || 'Aa'}</span>
+    <span style={{ fontFamily: family === 'Fraunces' ? tokens.font.display : 'var(--font-raleway, Raleway, sans-serif)', fontSize: Math.min(parseFloat(size), 22), fontWeight: weight, fontStyle: italic ? 'italic' : 'normal', color: '#2A2622' }}>{sample || 'Aa'}</span>
     <span style={{ fontSize: 11, color: '#675F58', marginLeft: 'auto' }}>{note}</span>
   </div>
 )
@@ -53,7 +53,7 @@ Fraunces is a variable font with optical-size (`opsz`), softness (`SOFT`), and w
 export const FraunchesSample = ({ label, vset, size, style, children }) => (
   <div style={{ padding: '16px 0', borderBottom: '1px solid rgba(42,38,34,0.08)' }}>
     <div style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#675F58', marginBottom: 8 }}>{label}</div>
-    <div style={{ fontFamily: 'var(--font-fraunces, Georgia, serif)', fontSize: size || 32, fontVariationSettings: vset, fontStyle: style || 'normal', color: '#2A2622', lineHeight: 1.2 }}>{children}</div>
+    <div style={{ fontFamily: tokens.font.display, fontSize: size || 32, fontVariationSettings: vset, fontStyle: style || 'normal', color: '#2A2622', lineHeight: 1.2 }}>{children}</div>
     <code style={{ fontSize: 10, color: '#675F58', display: 'block', marginTop: 6 }}>font-variation-settings: {vset}</code>
   </div>
 )

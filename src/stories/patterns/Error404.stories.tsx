@@ -32,7 +32,7 @@ export const DoDont: Story = {
       id="always-offer-two-ways-out"
       doExample={
         <div className="flex w-72 flex-col items-center gap-4 rounded-xl border border-border bg-background p-6 text-center text-foreground">
-          <span className="font-[family-name:var(--font-fraunces,Georgia,serif)] text-4xl text-muted-foreground">
+          <span className="font-heading text-4xl text-muted-foreground">
             404
           </span>
           <div className="flex flex-col gap-1">
@@ -51,7 +51,7 @@ export const DoDont: Story = {
       }
       dontExample={
         <div className="flex w-72 flex-col items-center gap-4 rounded-xl border border-border bg-background p-6 text-center text-foreground">
-          <span className="font-[family-name:var(--font-fraunces,Georgia,serif)] text-4xl text-muted-foreground">
+          <span className="font-heading text-4xl text-muted-foreground">
             404
           </span>
           <div className="flex flex-col gap-1">

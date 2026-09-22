@@ -28,7 +28,7 @@ export const DoDont: Story = {
       id="attribute-every-quote"
       doExample={
         <figure className="flex w-[280px] flex-col gap-4 rounded-xl border border-border bg-card p-5 text-foreground">
-          <blockquote className="font-[family-name:var(--font-fraunces,Georgia,serif)] text-base leading-snug">
+          <blockquote className="font-heading text-base leading-snug">
             “Quill let our team ship consistent, accessible screens in days.”
           </blockquote>
           <figcaption className="flex items-center gap-3">
@@ -44,7 +44,7 @@ export const DoDont: Story = {
       }
       dontExample={
         <figure className="flex w-[280px] flex-col gap-4 rounded-xl border border-border bg-card p-5 text-foreground">
-          <blockquote className="font-[family-name:var(--font-fraunces,Georgia,serif)] text-base leading-snug">
+          <blockquote className="font-heading text-base leading-snug">
             “Quill let our team ship consistent, accessible screens in days.”
           </blockquote>
         </figure>

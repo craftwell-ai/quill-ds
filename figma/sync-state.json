@@ -1759,8 +1759,8 @@
       "page": "❖ Dashboard",
       "pageId": "578:2",
       "frameId": "696:11",
-      "codeHash": "acc21f1bc971ee4e",
-      "syncedAt": "2026-09-18"
+      "codeHash": "4754c2587edfc0a4",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "data-table",
@@ -1786,8 +1786,8 @@
       "page": "❖ Error 404",
       "pageId": "574:104",
       "frameId": "696:18",
-      "codeHash": "e31c6bb568acf8c4",
-      "syncedAt": "2026-09-18"
+      "codeHash": "49fa3199e550bd2c",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "faq",
@@ -1804,7 +1804,7 @@
       "page": "❖ Feature section",
       "pageId": "572:2",
       "frameId": "696:20",
-      "codeHash": "a2906283f35abe97",
+      "codeHash": "61f5565b80eb8e19",
       "syncedAt": "2026-09-21"
     },
     {
@@ -1822,8 +1822,8 @@
       "page": "❖ Footer",
       "pageId": "571:19",
       "frameId": "696:22",
-      "codeHash": "87e7e5b547457460",
-      "syncedAt": "2026-09-18"
+      "codeHash": "be2e65665cd4e01e",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "forgot-password",
@@ -1840,7 +1840,7 @@
       "page": "❖ Hero",
       "pageId": "568:2",
       "frameId": "696:25",
-      "codeHash": "a0c919bf0b46b4bb",
+      "codeHash": "49044472b1ccdd3d",
       "syncedAt": "2026-09-21"
     },
     {
@@ -1921,8 +1921,8 @@
       "page": "❖ Navbar",
       "pageId": "571:2",
       "frameId": "696:39",
-      "codeHash": "6ae49fdc23d3d4b7",
-      "syncedAt": "2026-09-18"
+      "codeHash": "52b1c0d907a90d7a",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "newsletter",
@@ -2079,8 +2079,8 @@
       "page": "❖ Testimonial",
       "pageId": "572:27",
       "frameId": "696:65",
-      "codeHash": "b52f832a34ba08e6",
-      "syncedAt": "2026-09-18"
+      "codeHash": "bdef02f176573ee1",
+      "syncedAt": "2026-09-21"
     },
     {
       "block": "theme-selector",
