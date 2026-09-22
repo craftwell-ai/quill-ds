@@ -44,7 +44,8 @@ Loaded from Google Fonts by the `@import` at the top of the shipped theme file. 
 
 #### Fraunces variable axes
 - `opsz` 9–144 matches optical size to render size · `SOFT` 0–100 rounds terminals as size grows · `WONK` 0 | 1 is the off-kilter glyph set, **accents only**.
-- Presets: `--fraunces-display` (`"opsz" 144, "SOFT" 50, "WONK" 0`) · `--fraunces-accent` (`"opsz" 144, "SOFT" 100, "WONK" 1`, the italic emphasis) · `--fraunces-text` (`"opsz" 24, "SOFT" 50`) · `--fraunces-caption` (`"opsz" 14, "SOFT" 100`).
+- Presets: `--fraunces-display` (`"opsz" 144, "SOFT" 50, "WONK" 0`) · `--fraunces-accent` (`"opsz" 144, "SOFT" 100, "WONK" 1`, the italic emphasis) · `--fraunces-text` (`"SOFT" 50, "WONK" 0`) · `--fraunces-caption` (`"opsz" 14, "SOFT" 100, "WONK" 0`).
+- One rule: every Fraunces text is soft. `h2`–`h6` and anything set with `font-heading` (a CardTitle, a stat figure, a wordmark) take `--fraunces-text`, whose optical size follows the render size; `h1` takes `--fraunces-display`; `.fraunces-accent` and `.fraunces-caption` are the two named exceptions. The base layer applies all of it — nothing to add per element.
 
 #### Type scale
 | Token | Size | Line | Use |
@@ -65,7 +66,7 @@ Loaded from Google Fonts by the `@import` at the top of the shipped theme file. 
 - **Leading roles** — `leading-display` 1.05 (hero and h1 lines) · `leading-heading` 1.2 (h2–h6) · `leading-ui` 1.5 (controls and dense UI text) · `leading-reading` 1.7 (body and long-form copy).
 - **Tracking roles** — `tracking-display` −0.03em (Fraunces headings) · `tracking-label` 0.1em (small uppercase labels and badges) · `tracking-eyebrow` 0.15em (eyebrows above a headline).
 - Each role is a class and a variable (`leading-reading`, `--leading-reading`). They are named for the text they set: `leading-snug`, `tracking-tight` and `tracking-wide` are Tailwind's own and keep Tailwind's values, so never redefine them. `body` and `h1`–`h6` already carry their roles from the base layer.
-- **Headings** — Fraunces at weight 400 (never heavy or bold), tight tracking, `--fraunces-display`.
+- **Headings** — Fraunces at weight 400 (never heavy or bold), tight tracking; `h1` in `--fraunces-display`, every other heading and `font-heading` text in `--fraunces-text`.
 - **The one accent word** — italicize exactly one word per headline in the accent (`--accent-pigment-text`, moss by default) with `--fraunces-accent`. Never two.
 - **Body / UI** — Raleway 400/500/600; relaxed leading for reading copy.
 - **Eyebrows / labels** — Raleway, uppercase, `--text-xs`, `tracking-eyebrow`, `--ink-muted`; the accent variant carries a short leading dash.

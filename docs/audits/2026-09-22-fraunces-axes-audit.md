@@ -78,9 +78,17 @@ cost is paid by every consumer page). **Ryan chose A** (2026-09-22): the presets
   base rules and the two `.fraunces-*` classes. No shipped story renders `.fraunces-accent` or
   `.fraunces-caption`. Figma mirrors this per element (code is the source of truth), so a
   CardTitle in Figma stays at the defaults while the `h2` beside it takes SOFT 50.
-- **Follow-up design call, not taken here:** whether `font-heading` on a non-heading element
-  (CardTitle, stat figures, wordmarks) should carry the text preset too. Today it does not, on
-  the site or anywhere else; giving it one would be a custom `font-heading` utility in the theme.
+- **Follow-up, taken in v0.10.14 (Ryan: "do it"):** `font-heading` on a non-heading element now
+  carries the text preset through a base-layer rule, `.font-heading:not(h1, h2, h3, h4, h5, h6)`,
+  in both CSS cuts (the theme file reaches both channels; no utility or payload change). Two
+  preset corrections rode along: `--fraunces-text` no longer pins `opsz` (it serves 15–48 px, so
+  optical size follows the render size), and text + caption set `WONK 0` explicitly — the font
+  defaults WONK to 1, so every h2–h6 and caption had the off-kilter glyph set on while the docs
+  said "accents only" (visible mainly in the swash ampersand). Result: every Fraunces text is
+  SOFT 50 · WONK 0; accent SOFT 100 · WONK 1; caption SOFT 100 · WONK 0. Figma: the 7 Fraunces
+  text styles (Display/XL·L·M, Heading/L·M·S, Accent) and 56 main-component layers set; the 5
+  overlay titles re-attached to Heading/S; read back on all 45 Fraunces-bearing roots, instances
+  included: 911/911 matched layers exact, 0 off on axes.
 - **Figma, measured then set.** Fresh run: 94 roots, 1,363 layers, 911 matched by words,
   14 off on axes — every one an `h1`/`h2`/`h3` (faq, feature-section, hero, login-minimal,
   login-oauth, login-split-panel, mail-shell ×2, newsletter, stats-band, team-section, and the

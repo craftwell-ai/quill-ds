@@ -80,3 +80,17 @@ test('every Fraunces import loads every axis the token presets set', async () =>
   assert.ok(pm, 'public/r/quill.json: no Fraunces import in the payload')
   for (const axis of wanted) assert.ok(pm[1].split(',').includes(axis), `public/r/quill.json loads Fraunces without "${axis}"`)
 })
+
+// The base layer lives OUTSIDE the generated span in both CSS cuts (the theme
+// file that ships, and the site's), so a rule added to one can silently miss the
+// other. `font-heading` text takes the Fraunces text preset through this rule.
+test('both base layers give font-heading text the Fraunces text preset, headings excluded', () => {
+  const RULE = /\.font-heading:not\(h1, h2, h3, h4, h5, h6\)\s*\{\s*font-variation-settings:\s*var\(--fraunces-text\);\s*\}/
+  for (const file of ['registry/themes/quill.css', 'src/app/globals.css']) {
+    const src = readFileSync(join(root, file), 'utf8')
+    assert.match(src, RULE, `${file}: the .font-heading:not(h1…h6) rule is missing or changed`)
+    // the element rules it defers to must still be there
+    assert.match(src, /h1, h2, h3, h4, h5, h6 \{[^}]*font-variation-settings: var\(--fraunces-text\)/, `${file}: h1–h6 text preset rule missing`)
+    assert.match(src, /h1 \{[^}]*font-variation-settings: var\(--fraunces-display\)/, `${file}: h1 display preset rule missing`)
+  }
+})

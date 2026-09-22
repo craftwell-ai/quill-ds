@@ -12,6 +12,32 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.14] — 2026-09-22
+
+One rule for Fraunces: every Fraunces text is soft. Decided 2026-09-22 after the axes audit
+(`docs/audits/2026-09-22-fraunces-axes-audit.md`, "Follow-up").
+
+### Changed
+- **`font-heading` text takes the text preset.** A CardTitle, a stat figure, a wordmark — Fraunces
+  set by class on a div or span, 88 of the 109 Fraunces texts in the shipped blocks — rendered
+  the font's stock shapes while the `h2` beside them was soft (SOFT 50). A base-layer rule in both
+  CSS cuts, `.font-heading:not(h1, h2, h3, h4, h5, h6) { font-variation-settings:
+  var(--fraunces-text) }`, gives them the same preset; `h1–h6` keep their element rules (`h1` =
+  display), and `.fraunces-accent` / `.fraunces-caption` still win. The theme file carries it, so
+  it reaches the file and CLI channels alike with no payload change. Guard:
+  `repo-invariants.test.mjs` fails if either cut loses the rule.
+- **`--fraunces-text` no longer pins optical size.** It was `"opsz" 24`, and it now serves every
+  Fraunces text from a 15 px card title to a 48 px section headline; optical size follows the
+  render size instead (what Figma does too). Display, accent and caption keep their pins.
+- **Text and caption set `WONK 0` explicitly.** The font defaults WONK — the off-kilter glyph
+  set — to 1, and neither preset named it, so every `h2–h6` and caption had it on while DESIGN.md
+  says "accents only". Visible mainly in the swash ampersand and a few widened glyphs. Guard in
+  `quill.tokens.test.mjs`: every preset names WONK, and only the accent turns it on.
+- **Figma follows.** The 7 Fraunces text styles (Display/XL·L·M, Heading/L·M·S → SOFT 50 ·
+  WONK 0; Accent → SOFT 100 · WONK 1) and 56 main-component layers set; the five overlay titles
+  re-attached to `Heading/S`. Read back across all 45 Fraunces-bearing roots, instances included:
+  911 of 911 matched layers exact, 0 off on axes. Unpublished — publish after merge.
+
 ## [0.10.13] — 2026-09-22
 
 Fraunces axes: the four presets now render everywhere, not only on the site. Audit:

@@ -164,8 +164,8 @@
   --lift-sm: translateY(-2px);
   --fraunces-display: "opsz" 144, "SOFT" 50, "WONK" 0;
   --fraunces-accent: "opsz" 144, "SOFT" 100, "WONK" 1;
-  --fraunces-text: "opsz" 24, "SOFT" 50;
-  --fraunces-caption: "opsz" 14, "SOFT" 100;
+  --fraunces-text: "SOFT" 50, "WONK" 0;
+  --fraunces-caption: "opsz" 14, "SOFT" 100, "WONK" 0;
   --accent-pigment: var(--moss);
   --accent-pigment-text: var(--moss-deep);
   --surface-page: var(--paper);
@@ -854,6 +854,14 @@
   h1 {
     line-height: var(--leading-display);
     font-variation-settings: var(--fraunces-display);
+  }
+
+  /* Fraunces set by class (`font-heading` on a CardTitle, a stat figure, a wordmark)
+     takes the same text preset as h2–h6, so every Fraunces text is soft and one rule
+     describes it. h1–h6 are excluded: the element rules above carry their presets
+     (h1 = display). .fraunces-accent / .fraunces-caption are unlayered and still win. */
+  .font-heading:not(h1, h2, h3, h4, h5, h6) {
+    font-variation-settings: var(--fraunces-text);
   }
   a {
     /* --text-accent-color resolves to --terracotta-deep (WCAG AA 4.5:1 on paper);
