@@ -193,7 +193,7 @@ Dawn/moss.
 |---|---|---|---|
 | `--ink` | `#2A2622` | `#F1E7D3` | primary text — warm chalk cream |
 | `--ink-soft` | `#5C524A` | `#C8B9A0` | secondary text, body at ease |
-| `--ink-muted` | `#675F58` | `#A89880` | captions, meta, disabled |
+| `--ink-muted` | `#675F58` | `#AFA08A` | captions, meta, disabled, placeholders |
 
 ### Lifted pigments
 Brightened and slightly desaturated so they read like colored pencil on a dark

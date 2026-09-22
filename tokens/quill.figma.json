@@ -97,10 +97,10 @@
             "com.figma": {
               "modes": {
                 "Light": "#675F58",
-                "Dark": "#A89880",
+                "Dark": "#AFA08A",
                 "Classic Light": "#5E5E5E",
                 "Classic Dark": "#A0A0A0",
-                "Intelligent": "#93927C"
+                "Intelligent": "#A09F8C"
               },
               "name": "color/ink-muted",
               "legacyName": "color/ink/muted"

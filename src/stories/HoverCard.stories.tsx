@@ -83,7 +83,7 @@ export const LinkPreview: Story = {
     <HoverCard>
       <HoverCardTrigger
         href="https://quill.design"
-        className="text-sm text-blue-600 underline-offset-4 hover:underline"
+        className="text-sm text-link underline-offset-4 hover:underline"
       >
         quill.design
       </HoverCardTrigger>

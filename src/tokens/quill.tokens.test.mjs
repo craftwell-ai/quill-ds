@@ -209,6 +209,35 @@ test('every status token clears WCAG 4.5:1 on page, card AND well in all 5 theme
   assert.equal(checked, 90, 'expected 6 status tokens x 3 grounds x 5 themes')
 })
 
+// In every dark colour scheme the stock field primitives (Input, Select,
+// InputGroup, Combobox, OTP, outline Button) paint `dark:bg-input/30` — a 30 %
+// wash of --input (line.control) over whatever the field sits on. Placeholder
+// text and InputGroup addons are --muted-foreground on that wash, and a Select
+// renders its placeholder as real text, so axe measures it. The page-only check
+// missed this: Dusk read 4.19:1 and Intelligent 3.88:1 inside a card (2026-09-22
+// theme sweep). The card is the darker ground, so it is the one guarded.
+test('muted ink clears WCAG 4.5:1 on the dark field wash (input/30) over the card in every dark theme', () => {
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+  const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+  const lum = ([r, g, b]) =>
+    [r, g, b].map((c) => lin(c / 255)).reduce((acc, c, i) => acc + c * [0.2126, 0.7152, 0.0722][i], 0)
+  const contrast = (a, b) => {
+    const [x, y] = [lum(a) + 0.05, lum(b) + 0.05]
+    return Math.max(x, y) / Math.min(x, y)
+  }
+  const over = (top, bottom, alpha) => top.map((c, i) => c * alpha + bottom[i] * (1 - alpha))
+  const darkModes = MODES.filter((m) => m.colorScheme === 'dark').map((m) => m.key)
+  assert.deepEqual(darkModes, ['dark', 'classicDark', 'intelligent'])
+  for (const mode of darkModes) {
+    const wash = over(rgb(tokens.color.line.control[mode]), rgb(tokens.color.paper.warm[mode]), 0.3)
+    const ratio = contrast(rgb(tokens.color.ink.muted[mode]), wash)
+    assert.ok(
+      ratio >= 4.5,
+      `ink.muted ${tokens.color.ink.muted[mode]} is ${ratio.toFixed(2)}:1 on the ${mode} field wash over the card — a placeholder would fail AA`,
+    )
+  }
+})
+
 // The palette called itself CVD-safe and was not. Series 1/3/5 (terracotta, gold,
 // moss) all sit in the red-yellow-green arc that red-green deficiency collapses,
 // and all three sat at roughly one lightness — so under protanopia they merged.

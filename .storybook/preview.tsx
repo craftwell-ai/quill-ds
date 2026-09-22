@@ -14,7 +14,7 @@ import { ALL_MODES, DEFAULT_MODE, DEFAULT_ACCENT } from '../src/tokens/themes.mj
 // stopped at four when the Intelligent theme shipped — so it could not be previewed
 // at all, and would have rendered on Dawn cream if it had been selectable.
 const THEME_BG: Record<string, string> = Object.fromEntries(
-  ALL_MODES.map((m) => [m.attr, tokens.color.paper.base[m.key]]),
+  ALL_MODES.map((m) => [m.attr, tokens.color.paper.base[m.key as keyof typeof tokens.color.paper.base]]),
 )
 
 const THEME_ITEMS = ALL_MODES.map((m) => ({ value: m.attr, title: m.label }))

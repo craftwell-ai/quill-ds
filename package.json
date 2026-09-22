@@ -1,6 +1,6 @@
 {
   "name": "quill-ds",
-  "version": "0.10.10",
+  "version": "0.10.11",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -30,7 +30,9 @@
     "pretest-storybook:watch": "npm run build:icons",
     "test-storybook:watch": "vitest --project=storybook",
     "pretest-storybook:coverage": "npm run build:icons",
-    "test-storybook:coverage": "vitest --project=storybook run --coverage"
+    "test-storybook:coverage": "vitest --project=storybook run --coverage",
+    "pretest-storybook:theme": "npm run build:icons",
+    "test-storybook:theme": "vitest --config scripts/theme-qa/vitest.config.ts --project=storybook run --reporter=dot --reporter=json --outputFile.json=.figma-type-audit/theme-qa/${QUILL_THEME:-light}.json"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
