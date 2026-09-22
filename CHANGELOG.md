@@ -12,6 +12,24 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.7] — 2026-09-22
+
+State axis, tranche 1 (CRA-221). Nothing an app receives changes; this is the Figma library
+and its build log.
+
+### Added
+- **Figma: the six form controls carry every state the code styles.** Input, Textarea and
+  Select (trigger) became component sets with State = Default · Focus · Invalid · Disabled;
+  Checkbox, Radio and Switch cross their Checked axis with the same State (2 → 8 variants
+  each). 36 variants, derived from the classes: Focus = `border-ring` + `ring-ring/50`,
+  Invalid = `border-destructive` + `ring-destructive/20` (a checked box keeps
+  `border-primary`), Disabled = `opacity-50` and `bg-input/50` on fields. Every default
+  keeps its node id and children, so the daily parity check is unaffected. The ring is
+  geometry, not an effect — a drop shadow with spread draws nothing on a fill-less frame,
+  verified by pixel sampling; a locked `Ring` child with a 3px outside stroke bound to the
+  tint renders exactly as a CSS box-shadow ring does. Recipe and the remaining tranches in
+  `figma/components/README.md`.
+
 ## [0.10.6] — 2026-09-22
 
 Groundwork for the State axis (CRA-221: every state the code styles exists on its Figma

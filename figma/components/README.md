@@ -516,7 +516,46 @@ Figma edit pulled into code (~2 min), code edit pushed onto the node in place (~
 Keep the pair in sync when testing the workflow; procedure in `../README.md`
 ("Component sync — pull & push"). Code is the ultimate source of truth.
 
+## State axis, tranche 1 — form controls (2026-09-22)
+
+CRA-221, decided by Ryan: every state the code styles exists on its Figma twin, one to one. Scoped from the
+code — `src/components/ui` carries state styling in 36 primitives — and built control by control. The six form
+controls share one recipe in code, so they went first:
+
+| control | set | was | now | states |
+|---|---|---|---|---|
+| Input | `828:36` | single `77:5` | 4 variants, `77:5` = Default | Focus · Invalid · Disabled |
+| Textarea | `830:1004` | single `84:4` | 4, `84:4` = Default | Focus · Invalid · Disabled |
+| Select (trigger) | `830:1019` | single `96:12` | 4, `96:12` = Default | Focus · Invalid · Disabled |
+| Checkbox | `78:9` | Checked ×2 | Checked × State = 8 | Focus · Invalid · Disabled |
+| Radio | `80:8` | Checked ×2 | 8 | Focus · Invalid · Disabled |
+| Switch | `79:9` | Checked ×2 | 8 | Focus · Invalid · Disabled |
+
+What each state is, from the classes: **Focus** = `focus-visible:border-ring` + `ring-3 ring-ring/50` — the 1px
+border binds `semantic/ring`, plus a ring. **Invalid** = `aria-invalid:border-destructive` + `ring-3
+ring-destructive/20` — a checked Checkbox / Radio keeps `border-primary` (`aria-invalid:aria-checked:border-primary`),
+so only the ring changes there. **Disabled** = `opacity-50`, and `bg-input/50` on Input and Textarea. The tints
+`tint/ring/50`, `tint/destructive/20`, `tint/input/50` were declared in 0.10.6 for this. The default variant keeps
+its node id and its children, so the daily parity check (which tracks one variant per set) is unaffected.
+
+**The ring recipe — a drop shadow does not work.** The obvious Figma ring (`DROP_SHADOW`, blur 0, spread 3) widens
+the node's render bounds but draws **nothing** on a frame with no fill: sampled 2 px outside the border →
+paper, with or without a variable binding, with or without `showShadowBehindNode`. What renders is geometry:
+a locked `Ring` rectangle as the first child, absolutely positioned at 0,0, the node's size and radius,
+**no fill, a 3 px `OUTSIDE` stroke** bound to the tint, constraints STRETCH/STRETCH, with `clipsContent` off
+on the variant. That is a CSS box-shadow ring exactly: a band outside the box, nothing under it (a filled
+rectangle behind the field showed through the transparent interior — wrong). Sampled: `#a0a289` outside
+(moss-deep at 50 % over paper), `#f5eddd` inside. `clone()` puts the copy on `figma.currentPage`, so a
+set-building script must `setCurrentPageAsync` its page first or `combineAsVariants` throws.
+
+Not built yet, in this order: **Button** (hover / active / focus / disabled / invalid on 48 variants = 240),
+Toggle (hover / focus / disabled / invalid on 12), Badge (focus / invalid), Tabs (hover / focus / disabled),
+Slider, Input OTP, Input group, Native select, Label (peer-disabled), Calendar (disabled / selected); then
+the menu items (focus / disabled), Accordion (focus / disabled), Sidebar items (hover / active / focus /
+disabled), Table row (hover / selected). The dark-only `ring-destructive/40` and `bg-input/80` have no
+variable (a tint carries one alpha across modes).
+
 ## Next
 
 - Visual QA sweep in Dusk / Classic modes (the 2026-09-19 sweep covered Dawn only).
-- State axis (Disabled / Invalid / Focus) on the form-control sets — awaiting the CRA-221 decision.
+- State axis, tranche 2: Button and Toggle (the largest sets), then the list above.
