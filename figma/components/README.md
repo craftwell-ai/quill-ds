@@ -593,10 +593,28 @@ Toggle: Hover `bg-muted text-foreground`; Focus `border-ring ring-[3px] ring-rin
 `tint/secondary/80` was declared for the secondary badge's link hover (0.10.9). Not twins, so no State axis:
 Native select, Calendar, Sidebar (patterns or declined).
 
+## State axis, tranche 4 — list items (2026-09-22). The axis is complete.
+
+These twins are whole popups, lists or bars, so the state is shown on one member (the second item, or the
+first link), keeping every child a frame so the parity signature holds.
+
+| set | states, from the classes |
+|---|---|
+| DropdownMenu `837:64` · ContextMenu `837:97` | Focus = `focus:bg-accent text-accent-foreground ring-[1.5px] ring-inset ring-ring` (a 1.5 px INSIDE stroke) · Disabled = `data-disabled:opacity-50` |
+| Menubar `837:120` (the bar) | Hover = `hover:bg-muted` · Open = `aria-expanded:bg-muted` (renders as Hover; its own variant because the code names it) |
+| Combobox `837:157` | Highlighted = `data-highlighted:bg-accent …` · Disabled |
+| Command `837:196` | Disabled. The selected item (`data-selected:bg-muted`) is the first in every variant already. |
+| Accordion `837:243` | Hover = `hover:underline` · Focus = `focus-visible:border-ring ring-3 ring-ring/50` · Disabled = `aria-disabled:opacity-50` |
+| Table `837:314` | Hover = `hover:bg-muted/50` · Selected = `data-[state=selected]:bg-muted` |
+| Breadcrumb `837:1432` | Hover = `hover:text-foreground` on a link |
+
+**Where the axis ends.** Every twin whose code carries state styling now has it. ToggleGroup and Pagination
+compose Toggle and Button instances, so their states live on those sets. Dialog, Sheet, Drawer, Popover,
+HoverCard and Tooltip style `data-open` — the popup being present — which is the twin itself. Item, Sidebar,
+Calendar, Native select, Navigation menu, Resizable and Scroll area have state styling in code but no twin
+(patterns, or declined), so nothing to add there.
+
 ## Next
 
 - Visual QA sweep in Dusk / Classic modes (the 2026-09-19 sweep covered Dawn only).
-- State axis, tranche 4 — list items: DropdownMenu, ContextMenu, Menubar, Combobox, Command (item
-  `focus:bg-accent` / `data-highlighted`, `data-disabled:opacity-50`), Accordion (trigger focus ring,
-  `aria-disabled`), Table (row `hover:bg-muted/50`, `data-[state=selected]:bg-muted`), ToggleGroup,
-  Breadcrumb (link hover), Pagination.
+- Extend the type audit to read Fraunces axes (SOFT / WONK / opsz), not just weight.
