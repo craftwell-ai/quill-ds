@@ -12,6 +12,23 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.10] — 2026-09-22
+
+State axis, tranche 4 — the axis is complete (CRA-221). Nothing an app receives changes.
+
+### Added
+- **Figma: the list twins carry their item states.** DropdownMenu and ContextMenu (Focus,
+  Disabled on an item), Menubar (Hover, Open on a trigger), Combobox (Highlighted, Disabled),
+  Command (Disabled), Accordion (Hover, Focus, Disabled on a trigger), Table (Hover,
+  Selected on a row), Breadcrumb (Hover on a link) — 23 variants, each state from the
+  classes, shown on the second member so every child stays a frame and the parity
+  signature holds. With this, every twin whose code carries state styling has every state
+  the code styles, one to one: 36 primitives enumerated, 14 sets built across four
+  tranches (0.10.7 – 0.10.10), 8 tints declared for the rings and washes. ToggleGroup and
+  Pagination compose Toggle and Button instances, whose sets carry the states; the
+  overlays' `data-open` is the twin itself; the remaining primitives with state styling
+  have no twin. Build log: `figma/components/README.md`.
+
 ## [0.10.9] — 2026-09-22
 
 State axis, tranche 3 (CRA-221). Nothing an app receives changes.
