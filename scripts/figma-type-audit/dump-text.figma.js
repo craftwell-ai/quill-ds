@@ -29,7 +29,8 @@ for (const id of IDS) {
     if ([t.fontName, t.fontSize, t.lineHeight, t.letterSpacing].some((x) => typeof x === 'symbol')) { mixed++; continue }
     const lh = t.lineHeight.unit === 'AUTO' ? 'auto' : Math.round(t.lineHeight.value * 100) / 100 + (t.lineHeight.unit === 'PERCENT' ? '%' : 'px')
     const ls = Math.round(t.letterSpacing.value * 100) / 100 + (t.letterSpacing.unit === 'PERCENT' ? '%' : 'px')
-    const row = { chars: t.characters.replace(/\s+/g, ' ').slice(0, 60), font: t.fontName.family + '/' + t.fontName.style, size: Math.round(t.fontSize * 100) / 100, lh, ls, textCase: t.textCase, style: styles[t.textStyleId] || '', inInstance: t.id.includes(';') }
+    // fontWeight reads the variation axis: Fraunces at wght 500 is still style "Regular"
+    const row = { chars: t.characters.replace(/\s+/g, ' ').slice(0, 60), font: t.fontName.family + '/' + t.fontName.style, weight: t.fontWeight, size: Math.round(t.fontSize * 100) / 100, lh, ls, textCase: t.textCase, style: styles[t.textStyleId] || '', inInstance: t.id.includes(';') }
     const key = JSON.stringify(row)
     if (!seen.has(key)) seen.set(key, { ...row, n: 0, id: t.id })
     seen.get(key).n++
