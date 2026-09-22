@@ -26,7 +26,7 @@ Components speak 31 colour roles as classes. Several share a colour (`card` = `p
 - **Lines** — `border` hairlines and dividers · `input` the edge of anything typed into or toggled (it holds 3:1; `border` does not) · `ring` keyboard focus, and the one selected item in a set.
 - **Charts** — `--chart-1`…`--chart-5` in fixed order, never as UI colour.
 - **Status, as text only** — `text-link` · `text-success` · `text-warning` · `text-info` · `text-working` · `text-queued`. Never a fill behind text. `text-link` is a prose link; a link-styled Button is ink.
-- **Sanctioned tints** — `bg-destructive/10` · `ring-1 ring-foreground/10` · `bg-input/30` · `bg-muted/50` · `bg-primary/10` · `text-sidebar-foreground/70`. Reach for one before inventing another opacity.
+- **Sanctioned tints** — `bg-destructive/10` · `ring-1 ring-foreground/10` · `bg-input/30` · `bg-muted/50` · `bg-primary/10` · `text-sidebar-foreground/70` · `ring-3 ring-ring/50` · `ring-3 ring-destructive/20` · `bg-input/50`. Reach for one before inventing another opacity.
 - Every role with its use-for / never-for line: the Colour roles table in llms.txt.
 
 ## Foundations

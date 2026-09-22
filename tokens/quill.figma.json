@@ -1878,6 +1878,27 @@
       "alpha": 0.7,
       "cssVar": "--sidebar-foreground",
       "text": true
+    },
+    {
+      "name": "tint/ring/50",
+      "base": "semantic/ring",
+      "alpha": 0.5,
+      "cssVar": "--ring",
+      "text": false
+    },
+    {
+      "name": "tint/destructive/20",
+      "base": "semantic/destructive",
+      "alpha": 0.2,
+      "cssVar": "--destructive",
+      "text": false
+    },
+    {
+      "name": "tint/input/50",
+      "base": "semantic/input",
+      "alpha": 0.5,
+      "cssVar": "--input",
+      "text": false
     }
   ]
 }

@@ -134,6 +134,9 @@ A role at a fixed opacity. These are the only opacity forms the system uses on p
 - `bg-primary/10` — The "current, not yet done" state beside a solid-ink "done": the current wizard step. **Never:** Hover. Hover is `muted` or `accent`.
 - `border-sidebar-border` — The sidebar's faint dividers. The role is already ink at about 8%, so code writes the plain role. **Never:** Lines outside the sidebar.
 - `text-sidebar-foreground/70` — The small group label above a set of sidebar links. **Never:** Sidebar link text itself. That is full-strength `sidebar-foreground`.
+- `ring-3 ring-ring/50` — The keyboard-focus ring on every control, with `border-ring`. Built into the primitives. **Never:** A hand-drawn focus treatment, or a decorative glow.
+- `ring-3 ring-destructive/20` — The ring around an invalid field, with `border-destructive`, when `aria-invalid` is set. **Never:** Emphasis or a warning wash. It follows the invalid state only.
+- `bg-input/50` — The wash inside a disabled field, with 50% opacity on the control. **Never:** A resting field. At rest a field is transparent on light themes.
 
 #### Two rules the names hide
 - **Hover has two names and one colour.** Items in a list or menu highlight with `accent`; standalone controls (buttons, toggles) and table rows wash with `muted`.
