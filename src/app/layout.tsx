@@ -8,6 +8,10 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
+  // Both styles: without "italic" next/font ships the upright faces only and the
+  // accent word and captions (`.fraunces-accent`, `.fraunces-caption`) render a
+  // synthesised italic — the apps get the true italic from the Google import.
+  style: ["normal", "italic"],
   axes: ["SOFT", "WONK", "opsz"],
 });
 

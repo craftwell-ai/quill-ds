@@ -30,7 +30,7 @@ const collect = () => {
     const lhPx = cs.lineHeight === 'normal' ? null : parseFloat(cs.lineHeight)
     const lsPx = cs.letterSpacing === 'normal' ? 0 : parseFloat(cs.letterSpacing)
     let h = el; let inHeading = false; while (h && h !== root) { if (/^H[1-6]$/.test(h.tagName)) { inHeading = true; break } h = h.parentElement }
-    rows.push({ chars: own.slice(0, 60), tag: el.tagName.toLowerCase(), inHeading, family: cs.fontFamily.split(',')[0].replace(/["']/g, '').trim(), weight: cs.fontWeight, italic: cs.fontStyle === 'italic', size: Math.round(size * 100) / 100, lh: lhPx === null ? 'normal' : Math.round((lhPx / size) * 10000) / 100 + '%', ls: Math.round((lsPx / size) * 10000) / 100 + '%', transform: cs.textTransform === 'none' ? '' : cs.textTransform, visible: rect.width > 0 && rect.height > 0 && cs.visibility !== 'hidden', slot: el.getAttribute('data-slot') || '', cls: (el.getAttribute('class') || '').slice(0, 90) })
+    rows.push({ chars: own.slice(0, 60), tag: el.tagName.toLowerCase(), inHeading, family: cs.fontFamily.split(',')[0].replace(/["']/g, '').trim(), weight: cs.fontWeight, italic: cs.fontStyle === 'italic', size: Math.round(size * 100) / 100, lh: lhPx === null ? 'normal' : Math.round((lhPx / size) * 10000) / 100 + '%', ls: Math.round((lsPx / size) * 10000) / 100 + '%', transform: cs.textTransform === 'none' ? '' : cs.textTransform, visible: rect.width > 0 && rect.height > 0 && cs.visibility !== 'hidden', slot: el.getAttribute('data-slot') || '', cls: (el.getAttribute('class') || '').slice(0, 90), fvs: cs.fontVariationSettings })
   }
   return rows
 }

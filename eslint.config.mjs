@@ -19,6 +19,8 @@ const eslintConfig = defineConfig([
     "public/storybook/**",
     "storybook-static/**",
     ".vercel/**",
+    // Scratch for the audit harnesses (gitignored; holds a static Storybook build):
+    ".figma-type-audit/**",
     // Vendored minified library + Figma plugin-sandbox scripts (not app code):
     "public/axe.min.js",
     "figma/**",
