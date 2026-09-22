@@ -156,7 +156,8 @@
     "VariableID:827:4": "tint/input/50",
     "VariableID:831:2": "tint/primary/80",
     "VariableID:831:3": "tint/foreground/5",
-    "VariableID:831:4": "tint/destructive/40"
+    "VariableID:831:4": "tint/destructive/40",
+    "VariableID:834:2": "tint/secondary/80"
   },
   "candidates": [],
   "components": [
@@ -2137,7 +2138,7 @@
     }
   ],
   "foundations": {
-    "tokensHash": "939ed65c02564201",
+    "tokensHash": "513b48fd58245ee0",
     "syncedAt": "2026-09-22"
   },
   "declined": [

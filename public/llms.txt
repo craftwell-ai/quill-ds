@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.10.8.
+> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.10.9.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -90,6 +90,7 @@ A role at a fixed opacity. These are the only opacity forms the system uses on p
 - `hover:bg-primary/80` — The default button under the pointer. Built into the primitive. **Never:** A resting fill, or a "lighter primary" for emphasis.
 - `hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]` — The secondary button under the pointer: 5% ink over its fill. Built into the primitive. **Never:** A wash on anything else; the general hover wash is `muted` or `accent`.
 - `focus-visible:border-destructive/40` — The border of a focused destructive button, with its `ring-destructive/20` ring. **Never:** A fill or text; the invalid-field border is full `destructive`.
+- `[a]:hover:bg-secondary/80` — A secondary badge, rendered as a link, under the pointer. Built into the primitive. **Never:** A resting fill.
 
 ### Two rules the names hide
 - **Hover has two names and one colour.** Items in a list or menu highlight with `accent`; standalone controls (buttons, toggles) and table rows wash with `muted`.

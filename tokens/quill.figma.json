@@ -1920,6 +1920,13 @@
       "alpha": 0.4,
       "cssVar": "--destructive",
       "text": false
+    },
+    {
+      "name": "tint/secondary/80",
+      "base": "semantic/secondary",
+      "alpha": 0.8,
+      "cssVar": "--secondary",
+      "text": false
     }
   ]
 }

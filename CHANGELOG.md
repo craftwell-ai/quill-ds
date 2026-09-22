@@ -12,6 +12,20 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.9] — 2026-09-22
+
+State axis, tranche 3 (CRA-221). Nothing an app receives changes.
+
+### Added
+- **Figma: Badge, Tabs, Slider, Input OTP, Input group and Label carry every state the code
+  styles** — 51 new variants. Badge: Hover (as a link, per variant), Focus, Invalid. Tabs:
+  Hover, Focus, Disabled on the inactive trigger. Slider: Hover, Focus and Active (each
+  `ring-3` on the thumb — identical by design, three variants because the code names
+  three states) and Disabled. Input OTP: Focus on the active slot, Invalid, Disabled. Input
+  group: Focus, Invalid, Disabled on both layouts. Label: Disabled. Defaults keep their
+  ids. `tint/secondary/80` declared for the secondary badge's link hover. Build log:
+  `figma/components/README.md`.
+
 ## [0.10.8] — 2026-09-22
 
 State axis, tranche 2 (CRA-221). Nothing an app receives changes.

@@ -289,6 +289,8 @@ export const tokens = {
     // `color-mix(secondary, foreground 5%)`, which two stacked fills render exactly; the
     // destructive one focuses with `border-destructive/40`.
     { of: 'primary', pct: 80 }, { of: 'foreground', pct: 5 }, { of: 'destructive', pct: 40 },
+    // A secondary badge rendered as a link hovers to `bg-secondary/80`.
+    { of: 'secondary', pct: 80 },
   ],
   // Retired 0.10.0. A second vocabulary for what the contract already says
   // (`--surface-card` is `--card`), which no shipped component and no utility ever

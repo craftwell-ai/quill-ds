@@ -257,7 +257,7 @@ test('a leading or tracking role never reuses one of Tailwind\'s own names', () 
 test('the sanctioned tints are declared in the token source and exported for Figma', () => {
   // They lived in a table inside the Figma sync snippet: a design decision (which
   // opacities the system uses on purpose) that the token source knew nothing about.
-  assert.equal(tokens.tints.length, 19)
+  assert.equal(tokens.tints.length, 20)
   const d = renderDtcg(tokens)
   assert.equal(d.Tints.length, tokens.tints.length)
   assert.deepEqual(d.Tints.find((t) => t.name === 'tint/ring/50'), { name: 'tint/ring/50', base: 'semantic/ring', alpha: 0.5, cssVar: '--ring', text: false })
