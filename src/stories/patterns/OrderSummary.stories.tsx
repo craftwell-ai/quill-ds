@@ -28,7 +28,7 @@ export const DoDont: Story = {
       usage={usage}
       id="promo-discount-is-a-visible-line"
       doExample={
-        <div className="flex w-[320px] flex-col gap-3 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[320px] flex-col gap-3 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <div className="flex items-center justify-between text-sm">
             <span className="text-foreground">Pro plan (annual)</span>
             <span className="text-muted-foreground">$180.00</span>
@@ -49,7 +49,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex w-[320px] flex-col gap-3 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[320px] flex-col gap-3 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <div className="flex items-center justify-between text-sm">
             <span className="text-foreground">Pro plan (annual)</span>
             <span className="text-muted-foreground">$180.00</span>

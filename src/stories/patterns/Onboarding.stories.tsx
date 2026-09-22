@@ -27,7 +27,7 @@ export const DoDont: Story = {
       usage={usage}
       id="show-progress-as-a-fraction-and-a-bar"
       doExample={
-        <div className="flex w-64 flex-col gap-1.5 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-64 flex-col gap-1.5 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <span className="text-sm text-muted-foreground">2 of 4 complete</span>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div className="h-full w-1/2 rounded-full bg-primary" />
@@ -35,7 +35,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex w-64 flex-col gap-1.5 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-64 flex-col gap-1.5 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div className="h-full w-1/2 rounded-full bg-primary" />
           </div>

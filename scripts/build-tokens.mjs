@@ -127,6 +127,9 @@ export function renderCss(t) {
     // ToneBadge compiled to nothing and the AA fix was inert.
     gold: '--gold', 'gold-deep': '--gold-deep', 'gold-text': '--gold-text',
     teal: '--teal', 'teal-deep': '--teal-deep',
+    // The accent's AA text cut. Without a utility, DESIGN.md's own eyebrow recipe
+    // and stats-band had to reach it through a bracketed `text-[var(…)]`.
+    'accent-pigment-text': '--accent-pigment-text',
   }
   for (const [k, v] of Object.entries(paletteMap)) themeLines.push(`  --color-${k}: ${`var(${v})`};`)
   for (const [k, v] of Object.entries(t.radius)) themeLines.push(`  --radius-${k}: ${v};`)

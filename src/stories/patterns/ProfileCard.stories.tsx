@@ -27,7 +27,7 @@ export const DoDont: Story = {
       usage={usage}
       id="stats-need-context"
       doExample={
-        <div className="flex w-[320px] items-center justify-around rounded-lg border border-border bg-card p-4">
+        <div className="flex w-[320px] items-center justify-around rounded-lg bg-card ring-1 ring-foreground/10 p-4">
           <div className="flex flex-col items-center">
             <span className="text-base font-medium text-foreground">24</span>
             <span className="text-xs text-muted-foreground">Projects</span>
@@ -43,7 +43,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex w-[320px] items-center justify-around rounded-lg border border-border bg-card p-4">
+        <div className="flex w-[320px] items-center justify-around rounded-lg bg-card ring-1 ring-foreground/10 p-4">
           <span className="text-base font-medium text-foreground">24</span>
           <span className="text-base font-medium text-foreground">1.2k</span>
           <span className="text-base font-medium text-foreground">318</span>

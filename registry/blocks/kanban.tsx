@@ -19,7 +19,7 @@ export function Kanban() {
           </div>
           <div className="flex flex-col gap-2">
             {col.cards.map((c) => (
-              <div key={c.t} className="flex flex-col gap-2 rounded-lg border border-border bg-card p-3">
+              <div key={c.t} className="flex flex-col gap-2 rounded-lg bg-card p-3 ring-1 ring-foreground/10">
                 <span className="text-sm">{c.t}</span>
                 <div className="flex items-center justify-between">
                   <Badge variant="outline">{c.tag}</Badge>

@@ -35,7 +35,7 @@ export const DoDont: Story = {
       usage={usage}
       id="sync-list-to-selection"
       doExample={
-        <div className="flex items-start gap-6 rounded-xl border border-border bg-card p-4">
+        <div className="flex items-start gap-6 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <Calendar
             mode="single"
             selected={new Date(2026, 6, 14)}
@@ -64,7 +64,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex items-start gap-6 rounded-xl border border-border bg-card p-4">
+        <div className="flex items-start gap-6 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <Calendar
             mode="single"
             selected={new Date(2026, 6, 21)}

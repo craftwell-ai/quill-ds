@@ -12,6 +12,39 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.12] — 2026-09-22
+
+Four block-vs-docs design calls, decided 2026-09-22, applied to the blocks and written into
+the role source so the docs, `llms.txt` and the agent-rules file say one thing.
+
+### Changed
+- **One card-outline rule.** Anything that reads as a card — a `bg-card` surface, a floating
+  panel, a hand-built tile — takes the Card primitive or its ring, `ring-1 ring-foreground/10`;
+  `border-border` is for list, table and Calendar wrappers, the dashed edge of a dropzone, and
+  a selectable tile whose checked state swaps to `ring`. The docs disagreed with themselves
+  (`input` said card outlines are `border`; the ring tint said the ring is "around a Card"),
+  which is how 3 hand-built cards got the ring and 12 blocks got a border. Reclassified: six
+  move to the ring — `kanban` (task cards), `testimonial`, `announcement-banner`, `chat`,
+  `cookie-consent`, `command-palette` (a floating panel, as Popover) — and six keep
+  `border-border` on purpose: `data-table`, `search-results`, `calendar-range`,
+  `calendar-page`, `checkout` (selectable tiles), `empty-state` (dashed). The Do/Don't stories'
+  27 hand-built tiles follow. Figma: the ten frames' strokes rebound from `semantic/border` to
+  `tint/foreground/10` (1px inside, the Card twin's paint, copied); pages re-stamped.
+- **`feature-section` eyebrow is the quiet recipe.** It was `text-primary` — which in Quill is
+  *ink*, not the accent (`primary` is the action role; its intent line says never brand colour
+  or emphasis) — so it rendered a full-ink uppercase kicker where `faq`, `team-section` and
+  `stats-band` use `text-ink-muted`. Now `text-ink-muted`. Figma eyebrow rebound.
+- **`hero` and `feature-section` no longer force `text-foreground` on the section root.** The
+  base layer already sets body copy to `--ink-soft` and headings to `--ink`; the override made
+  their paragraphs darker than every other block's. Every visible text in both blocks names
+  its own colour, so nothing rendered changes; the Figma pages carry explicit bindings and
+  needed no edit.
+- **`stats-band` figures take a named class.** `text-[var(--accent-pigment-text)]` →
+  `text-accent-pigment-text`, a new utility for the accent's AA text cut (spelled like its
+  variable, as the naming guard requires). DESIGN.md's own eyebrow recipe told agents to write
+  the bracketed form; it now names the class. Same value, same Figma binding
+  (`semantic/text-accent-color`).
+
 ## [0.10.11] — 2026-09-22
 
 Dusk / Classic / Intelligent QA sweep — every story rendered with axe under each of the

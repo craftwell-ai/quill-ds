@@ -28,13 +28,13 @@ export const DoDont: Story = {
       usage={usage}
       id="separate-save-from-cancel"
       doExample={
-        <div className="flex w-[300px] justify-end gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[300px] justify-end gap-2 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <Button variant="ghost">Cancel</Button>
           <Button>Save changes</Button>
         </div>
       }
       dontExample={
-        <div className="flex w-[300px] justify-end gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[300px] justify-end gap-2 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <Button>Cancel</Button>
           <Button>Save changes</Button>
         </div>

@@ -36,7 +36,7 @@ function Glyph({ name, size = 24 }: { name: string; size?: number }) {
 
 function IconDetail({ name, onClose }: { name: string; onClose: () => void }) {
   return (
-    <aside className="sticky top-4 h-fit w-64 shrink-0 rounded-xl border border-border bg-card p-5">
+    <aside className="sticky top-4 h-fit w-64 shrink-0 rounded-xl bg-card ring-1 ring-foreground/10 p-5">
       <div className="mb-4 flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">Icon detail</span>
         <button

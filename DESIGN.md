@@ -79,7 +79,7 @@ Components speak 31 colour roles as classes: `bg-background`, `text-muted-foregr
 #### The contract
 - `background` (paper) — The page ground and full-width sections; the cut-out fill of a control sitting on another surface (outline button, switch thumb, active tab). **Never:** Cards, menus or dialogs. Those sit one step warmer, on `card` or `popover`. Pairs with `foreground`.
 - `foreground` (ink) — Strong text: headings, names, values, totals. At 10% it is the hairline ring around cards and floating panels. **Never:** Captions, meta or placeholder text. That is `muted-foreground`. Pairs with `background`.
-- `card` (paper-warm) — Raised surfaces that sit in the page: cards, inline banners, a chat window, kanban tasks, an empty-state panel. **Never:** Floating layers such as menus and dialogs (those are `popover`), and never the page ground. Pairs with `card-foreground`.
+- `card` (paper-warm) — Raised surfaces in the page: cards, inline banners, a chat window, kanban tasks, an empty-state panel. Its edge is the ring, `ring-1 ring-foreground/10`, as on Card. **Never:** Floating layers such as menus and dialogs (those are `popover`), and never the page ground. Never `border` as its edge. Pairs with `card-foreground`.
 - `card-foreground` (ink) — The default text colour inside a card, set once on its root. **Never:** Text outside a `card` surface. Pairs with `card`.
 - `popover` (paper-warm) — Anything that floats above the page: menus, selects, popovers, hover cards, dialogs, sheets, the command palette. **Never:** In-page cards or sections. Those are `card`. Pairs with `popover-foreground`.
 - `popover-foreground` (ink) — The default text colour inside a floating layer, set once on its root. **Never:** Text outside a `popover` surface. Pairs with `popover`.
@@ -92,8 +92,8 @@ Components speak 31 colour roles as classes: `bg-background`, `text-muted-foregr
 - `accent` (paper-deep) — The highlighted item in a list or menu: the row under the pointer or keyboard focus, and the current item in a nav. **Never:** Brand emphasis, CTAs or accent text. It is a pale paper tone, not the accent pigment. Buttons and table rows hover with `muted`. Pairs with `accent-foreground`.
 - `accent-foreground` (ink) — Text and icons on a highlighted (`accent`) row. **Never:** Accent-coloured text. It is ink; coloured accent text comes from `--accent-pigment-text`. Pairs with `accent`.
 - `destructive` (terracotta-deep) — Errors and destructive actions: the invalid-field border and ring, error text, the destructive button, badge, alert and menu item. **Never:** A solid fill with light text: the contract has no foreground partner for it, and the shipped button is a 10% tint with destructive text. Never a hover colour.
-- `border` (line-soft) — Hairlines: outlines of panels and lists, row rules, separators, step connectors (`bg-border` draws a 1px line), chart grid lines. **Never:** The edge of a form control. At 12% it fails the 3:1 non-text rule; controls use `input`.
-- `input` (line-control) — The boundary of anything you type into or toggle (input, select, checkbox, radio, dropzone) and the empty track of a switch, slider or progress bar. **Never:** Decorative dividers or card outlines (too heavy; use `border`), and never text.
+- `border` (line-soft) — Hairlines: the outline of a list, table or Calendar wrapper, a dashed dropzone, row rules, separators, step connectors (`bg-border` draws a 1px line), chart grid lines. **Never:** The edge of a form control (12% fails the 3:1 non-text rule; controls use `input`), or of a card or floating panel: those take `ring-1 ring-foreground/10`.
+- `input` (line-control) — The boundary of anything you type into or toggle (input, select, checkbox, radio, dropzone) and the empty track of a switch, slider or progress bar. **Never:** Decorative dividers (too heavy; use `border`) or card outlines (the ring), and never text.
 - `ring` (accent-pigment-text) — Keyboard focus, built into every primitive (3px at 50%). Also the outline of the one selected or featured item in a set: the chosen plan, the picked option. **Never:** A hand-picked focus colour, or decoration with no state behind it. It follows `data-accent`.
 - `chart-1` (chart-series-1) — The first data series in a chart, passed as `var(--chart-1)` in the chart config. **Never:** UI colour (badges, status, text, fills), and never swapped with another series.
 - `chart-2` (chart-series-2) — The second data series. **Never:** Links, info states or any UI; never the first series.
@@ -126,7 +126,7 @@ A role at a fixed opacity. These are the only opacity forms the system uses on p
 - `<ToneBadge tone="gold">` — The wash behind a gold ToneBadge: caution. **Never:** A hand-built pill or panel.
 - `<ToneBadge tone="terracotta">` — The wash behind a terracotta ToneBadge: needs attention. **Never:** A hand-built pill or panel.
 - `<ToneBadge tone="indigo">` — The wash behind an indigo ToneBadge: informational. **Never:** A hand-built pill or panel.
-- `ring-1 ring-foreground/10` — The hairline ring around a Card and every floating panel. **Never:** A fill or text; nor dividers inside a surface. Those are `border`.
+- `ring-1 ring-foreground/10` — The hairline ring around a Card and every floating panel, hand-built ones included. **Never:** A fill or text; nor dividers, list and table wrappers or field edges. Those are `border`.
 - `bg-input/30` — The faint fill inside form controls on dark themes, and the search field inside the command palette and combobox. **Never:** The control's edge on the page. That stays solid `input` to keep 3:1.
 - `fill="var(--chart-1)" fillOpacity={0.2}` — The soft area under the first series' line, below a full-strength stroke of the same series. **Never:** UI tints, or a series other than the stroke's own.
 - `fill="var(--chart-2)" fillOpacity={0.2}` — The soft area under the second series' line. **Never:** UI tints, or a series other than the stroke's own.
@@ -352,6 +352,13 @@ Read from the shipped primitives (`src/components/ui/button.tsx`,
 `--card` (paper-warm) stock, a 10% ink hairline ring, `rounded-xl` corners, no
 shadow and no hover lift — cards are paper, not buttons. Parts in §7.
 
+**One outline rule.** Anything that reads as a card — a `bg-card` surface, a floating
+panel, a hand-built tile — takes the Card primitive or its ring, `ring-1
+ring-foreground/10`. `border-border` is for structure around content that is not a
+card: list, table and Calendar wrappers, and the dashed edge of a dropzone. A
+selectable tile keeps `border-border` too, because its checked state swaps the
+border for `ring`.
+
 ---
 
 ## 7. Components
@@ -406,8 +413,9 @@ render every tag pill through ToneBadge.
 The uppercase tracked kicker above a heading. In blocks it is a plain `<span>`:
 `text-xs font-medium tracking-eyebrow uppercase text-ink-muted` for the quiet
 section label (as in `registry/blocks/faq.tsx`), or
-`text-[var(--accent-pigment-text)]` — the AA text cut of the accent — for the
-editorial flavour, optionally with a leading dash. There is no `Eyebrow`
+`text-accent-pigment-text` — the AA text cut of the accent — for the editorial
+flavour, optionally with a leading dash. The same class carries a display figure
+that should read in the accent (`registry/blocks/stats-band.tsx`). There is no `Eyebrow`
 component and none is planned.
 
 ### Avatar — `src/components/ui/avatar.tsx`
