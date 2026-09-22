@@ -30,7 +30,7 @@ export const DoDont: Story = {
       usage={usage}
       id="always-dismissible"
       doExample={
-        <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg border border-border bg-card px-4 py-3">
+        <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg bg-card ring-1 ring-foreground/10 px-4 py-3">
           <div className="flex items-center gap-3">
             <Badge>New</Badge>
             <p className="text-sm text-foreground">Issue 004 of The Brief just shipped.</p>
@@ -41,7 +41,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg border border-border bg-card px-4 py-3">
+        <div className="flex w-[320px] items-center justify-between gap-4 rounded-lg bg-card ring-1 ring-foreground/10 px-4 py-3">
           <div className="flex items-center gap-3">
             <Badge>New</Badge>
             <p className="text-sm text-foreground">Issue 004 of The Brief just shipped.</p>

@@ -34,8 +34,8 @@ export const DoDont: Story = {
             <Badge variant="secondary">2</Badge>
           </div>
           <div className="flex flex-col gap-2">
-            <div className="rounded-lg border border-border bg-card p-3 text-sm">Wave B components</div>
-            <div className="rounded-lg border border-border bg-card p-3 text-sm">Icon gallery search</div>
+            <div className="rounded-lg bg-card ring-1 ring-foreground/10 p-3 text-sm">Wave B components</div>
+            <div className="rounded-lg bg-card ring-1 ring-foreground/10 p-3 text-sm">Icon gallery search</div>
           </div>
         </div>
       }
@@ -46,7 +46,7 @@ export const DoDont: Story = {
             <Badge variant="secondary">2</Badge>
           </div>
           <div className="flex flex-col gap-2">
-            <div className="rounded-lg border border-border bg-card p-3 text-sm">Wave B components</div>
+            <div className="rounded-lg bg-card ring-1 ring-foreground/10 p-3 text-sm">Wave B components</div>
           </div>
         </div>
       }

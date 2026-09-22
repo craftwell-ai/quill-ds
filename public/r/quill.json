@@ -76,6 +76,7 @@
       "color-gold-text": "var(--gold-text)",
       "color-teal": "var(--teal)",
       "color-teal-deep": "var(--teal-deep)",
+      "color-accent-pigment-text": "var(--accent-pigment-text)",
       "radius-xs": "0.125rem",
       "radius-sm": "0.25rem",
       "radius-md": "0.375rem",

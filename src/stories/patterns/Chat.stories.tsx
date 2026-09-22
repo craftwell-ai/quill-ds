@@ -27,7 +27,7 @@ export const DoDont: Story = {
       usage={usage}
       id="align-by-sender"
       doExample={
-        <div className="flex w-[280px] flex-col gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[280px] flex-col gap-2 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <div className="flex justify-start">
             <div className="max-w-[80%] rounded-2xl bg-muted px-3 py-2 text-sm text-foreground">
               Did the new tokens land?
@@ -41,7 +41,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex w-[280px] flex-col gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[280px] flex-col gap-2 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <div className="flex justify-start">
             <div className="max-w-[80%] rounded-2xl bg-muted px-3 py-2 text-sm text-foreground">
               Did the new tokens land?

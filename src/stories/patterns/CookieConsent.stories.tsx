@@ -29,7 +29,7 @@ export const DoDont: Story = {
       usage={usage}
       id="reject-is-equally-easy"
       doExample={
-        <div className="flex w-[300px] items-start gap-3 rounded-xl border border-border bg-card p-4 text-foreground shadow-sm">
+        <div className="flex w-[300px] items-start gap-3 rounded-xl bg-card ring-1 ring-foreground/10 p-4 text-foreground shadow-sm">
           <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <Icon name="info" size={18} />
           </div>
@@ -47,7 +47,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex w-[300px] items-start gap-3 rounded-xl border border-border bg-card p-4 text-foreground shadow-sm">
+        <div className="flex w-[300px] items-start gap-3 rounded-xl bg-card ring-1 ring-foreground/10 p-4 text-foreground shadow-sm">
           <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <Icon name="info" size={18} />
           </div>

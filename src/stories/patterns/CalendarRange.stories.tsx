@@ -28,7 +28,7 @@ export const DoDont: Story = {
       usage={usage}
       id="always-offer-clear"
       doExample={
-        <div className="flex w-[320px] items-center justify-between gap-4 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[320px] items-center justify-between gap-4 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <span className="text-sm text-muted-foreground">July 20 – 24, 2026</span>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm">
@@ -39,7 +39,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="flex w-[320px] items-center justify-between gap-4 rounded-xl border border-border bg-card p-4">
+        <div className="flex w-[320px] items-center justify-between gap-4 rounded-xl bg-card ring-1 ring-foreground/10 p-4">
           <span className="text-sm text-muted-foreground">July 20 – 24, 2026</span>
           <div className="flex gap-2">
             <Button size="sm">Reserve</Button>

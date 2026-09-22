@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/icon'
 /** A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action. */
 export function Hero() {
   return (
-    <section className="flex w-full flex-col items-center gap-6 bg-background px-6 py-20 text-center text-foreground">
+    <section className="flex w-full flex-col items-center gap-6 bg-background px-6 py-20 text-center">
       <Badge variant="secondary">New — v2.0 is here</Badge>
       <h1 className="max-w-2xl font-heading text-5xl leading-display">
         The calm design system for building things by hand
