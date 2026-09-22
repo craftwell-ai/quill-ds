@@ -12,6 +12,41 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.5] — 2026-09-22
+
+Pass 2 of the Figma type audit: the per-layer work. Nothing an app receives changes.
+
+### Changed
+- **Figma: every text layer now carries the type metrics its code twin renders.** Where
+  pass 1 fixed four shared styles, this pass settled the layers a style cannot — by
+  fixing main components first so their instances follow, then the pattern pages'
+  own layers, then the few instance overrides a context demands:
+  - **Styles:** `Label/Form` added (Raleway Medium 13.6px on a 100% line — the Label
+    primitive's `text-sm leading-none font-medium`; 34 form labels rendered that while
+    their twin bound `Label/Default`), and `Eyebrow` takes its size's paired line
+    (100% → 133.333%). `TYPED_METRICS` now holds six styles; `Label/Form` is the one
+    typed value that agrees with code.
+  - **Main components (38 texts):** Label → `Label/Form`; Avatar fallback → `Text/sm`;
+    Button `xs` → `Label/Small` (code is `text-xs`; the audit could not isolate it, every
+    variant says "Button"); Button `sm` → 12.8px on the body's 170% line, Medium — code is
+    stock shadcn's `text-[0.8rem]`, which sets no line height, and stock primitives are
+    not edited; Tone badge labels → 11.2px / 170% / 10% tracking; Tabs triggers →
+    `Label/Default`.
+  - **Pattern pages (104 own layers):** card titles to Fraunces weight 500 through the
+    variation axis (the file has no Medium instance; SOFT and WONK untouched), text inside
+    `h1`–`h6` to −3% tracking, `leading-relaxed` copy to 162.5%, stat numerals, the
+    responsive headlines at their desktop step (hero 48 → 88px, feature-section 32 → 48),
+    kanban avatar initials to 10px.
+  - **Instance overrides (14):** Button-sm and Tone-badge labels sitting in `text-sm`
+    contexts inherit a 142.857% line in code, not the body's 170%; small avatars in the
+    sidebar are `text-xs`.
+  Re-audited on a fresh dump of all 94 roots: **867 of 871 matched layers exact (99.5%)** — 206 (24%) before pass 1, 657 (75%) after it. The four layers still off at measurement time were single instance overrides (a plain-weight label, a button in a `text-sm` context, a badge, a footer link) and were set afterwards, each verified by read-back. The 206 unmatched layers are placeholder copy in component twins that no story renders; they are unchanged.
+- **The audit reads the rendered weight.** A variable-font axis does not change the
+  style name, so Fraunces at weight 500 read as "Regular" and 38 correct layers scored as
+  off; the dump snippet now records `fontWeight` and the comparison prefers it. The
+  browser side is re-captured from the post-0.10.3 build, so the seven blocks that
+  rendered Georgia no longer count as family mismatches.
+
 ## [0.10.4] — 2026-09-22
 
 Pass 1 of the Figma type audit. Nothing an app receives changes.

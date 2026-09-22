@@ -46,7 +46,8 @@ Retired variables are parked as `deprecated/*`, hidden from publishing, and neve
   token keys resolved from the export when the sync runs (`size: 'lg'`, never `18`); line height and tracking name a role
   (`leading: 'reading'`, `tracking: 'eyebrow'`) wherever the value is one, or `leading: 'paired'` for the line height the
   size's own utility renders (`text-sm` → 142.857%) — what the type audit found most bound layers already are in code. The values that are no role sit in `TYPED_METRICS`
-  in the snippet — a list that may only shrink; clear an entry during a visual pass, never by changing the number blind. **Generated** (`Text/xs` … `Text/5xl`): one per `text-*` utility, size
+  in the snippet — an exact list the tests pin; change it only with the type audit in hand (`scripts/figma-type-audit/`), never
+  by changing a number blind. `Label/Form` is the Label primitive's `leading-none` (100%), the one typed value that agrees with code. **Generated** (`Text/xs` … `Text/5xl`): one per `text-*` utility, size
   and line height both from tokens (`Text/sm` = 13.6px on 142.857%) — bind a layer here when its code twin is a bare `text-sm`.
   `Accent` is the one style with a typed size (28px): in code the accent word inherits its heading's size, so no token holds it.
   `scripts/figma-text-styles.test.mjs` runs the resolution against the real export without Figma.

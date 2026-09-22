@@ -40,7 +40,8 @@ for (const f of files) {
     if (Math.abs(t.size - d.size) > 0.06) off.size = [t.size, d.size]
     if (figLh !== null && domLh !== null && Math.abs(figLh - domLh) > 0.6) off.lh = [Math.round(figLh * 10) / 10, Math.round(domLh * 10) / 10]
     if (Math.abs(figLs - num(d.ls)) > 0.15) off.ls = [figLs, num(d.ls)]
-    if ((WEIGHT[style.replace(' Italic', '')] ?? 400) !== Number(d.weight)) off.weight = [style, d.weight]
+    const figWeight = t.weight ?? WEIGHT[style.replace(' Italic', '')] ?? 400
+    if (figWeight !== Number(d.weight)) off.weight = [t.weight ? `${style} ${t.weight}` : style, d.weight]
     if (family.toLowerCase() !== d.family.toLowerCase()) off.family = [family, d.family]
     if ((t.textCase === 'UPPER') !== (d.transform === 'uppercase')) off.textCase = [t.textCase, d.transform || 'none']
     if (!Object.keys(off).length) { tally.exact += t.n; continue }

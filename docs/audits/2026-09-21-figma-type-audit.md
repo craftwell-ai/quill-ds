@@ -158,3 +158,32 @@ The reflow was checked page by page: a QA agent compared all 47 pattern pages an
 - **`Body/S`, 20 off**: `leading-relaxed` copy (162.5%) and Medium-weight cells.
 - The responsive headlines (hero 48 → 88, feature-section 32 → 48 at 1280 px): Figma mirrors the small step.
 - The stat-card delta row in the app-page template (above).
+
+## Pass 2 result — 2026-09-22 (0.10.5)
+
+Per-layer work, in the order that makes the fewest edits: main components first (their instances follow), then the pattern pages' own layers, then the handful of instance overrides a context demands.
+
+| | before pass 1 | after pass 1 | after pass 2 |
+|---|---|---|---|
+| matched layers, every metric equal | 206 (24%) | 657 (75%) | **867 (99.5%)** |
+| off on line height | 631 | 156 | 1 |
+| off on weight | 65 | 65 | 3 |
+| off on size | 40 | 40 | 0 |
+| off on letter spacing | 35 | 35 | 0 |
+| off on family | 12 | 12 | 0 |
+| roots fully exact (of 60 with matches) | 1 | — | 56 |
+
+What was done, by layer of the system:
+
+- **Styles.** `Label/Form` added (the Label primitive's `leading-none`, 37 layers bound); `Eyebrow` takes its size's paired line. Six typed values remain in `TYPED_METRICS`, one of which (`Label/Form`) agrees with code by construction.
+- **Main components, 38 texts** — Label, Avatar fallback, Button `xs` and `sm`, Tone badge, Tabs. Button `sm` mirrors code's stock `text-[0.8rem]` on the body's 170% line: the code side is a stock primitive and stays stock.
+- **Pattern pages, 104 own layers** — card titles to Fraunces weight 500 through the variation axis (SOFT and WONK were already set on every node and were not touched), heading tracking, relaxed copy, stat numerals, the desktop-step headlines (hero 88px, feature-section 48px), kanban avatar initials.
+- **Instance overrides, 18** — labels and badges in `text-sm` contexts (142.857% instead of the body's 170%), small avatars (`text-xs`), one plain-weight label, one footer link.
+
+Two measurement fixes on the way: the dump now records `fontWeight` (a variation axis does not change the style name, so 38 correct card titles had scored as "Regular"), and the browser side was re-captured from the post-0.10.3 build (the seven Georgia blocks).
+
+The four layers still off at measurement time were set afterwards and verified by read-back; the score above is the last full measurement. The 206 unmatched layers are placeholder copy in component twins that no story renders.
+
+### Left for a later pass
+- The stat-card delta row in the app-page template overflows its 156px card (a width problem from the 672px composition; the stat-cards block itself is fine).
+- Fraunces axes: every Fraunces node in the file carries SOFT 0 / WONK 1, while code sets `--fraunces-text` (opsz 24, SOFT 50) on headings and `--fraunces-display` (opsz 144, SOFT 50, WONK 0) on `h1`. The audit does not read variation axes beyond weight; a follow-up should.

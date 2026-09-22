@@ -28,7 +28,7 @@ const px = (key) => parseFloat(tokens.text[key]) * 16
 
 test('a curated text style names token keys, never a typed pixel size or family', () => {
   const { TEXT_STYLES, OFF_SCALE } = load()
-  assert.ok(TEXT_STYLES.length >= 14, `expected the 14 curated styles, found ${TEXT_STYLES.length}`)
+  assert.ok(TEXT_STYLES.length >= 15, `expected the 15 curated styles, found ${TEXT_STYLES.length}`)
   for (const s of TEXT_STYLES) {
     assert.ok(s.font in tokens.font, `${s.name}: font '${s.font}' is not a key of tokens.font`)
     if (OFF_SCALE.has(s.name)) continue
@@ -71,14 +71,14 @@ test('line height and tracking name a role; the styles still typing a number are
     if (s.tracking !== undefined) assert.ok(s.tracking in tokens.tracking, `${s.name}: no tracking role '${s.tracking}'`)
   }
   assert.deepEqual(TYPED_METRICS, {
-    'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], Accent: ['ls'], Eyebrow: ['lh'],
+    'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], Accent: ['ls'], 'Label/Form': ['lh'],
   })
   // Pass 1 of the type audit (0.10.4): the four styles that carry most of the text take
   // the line height their size is paired with in code — Body/S and Label/Default the
   // `text-sm` line (142.857%), Body/XS and Label/Small the `text-xs` line (133.333%).
   // 207 of 227 matched Body/S layers rendered exactly that; Figma held 160.
   const byName = Object.fromEntries(resolveTextStyles(DTCG).map((s) => [s.name, s]))
-  const held = { 'Display/XL': [105, -3], 'Display/L': [105, -3], 'Display/M': [110, -3], 'Heading/L': [120, -2], 'Heading/M': [120, -2], 'Heading/S': [130, -1], 'Body/L': [170, undefined], 'Body/Base': [170, undefined], 'Body/S': [142.857, undefined], 'Body/XS': [133.333, undefined], 'Label/Default': [142.857, undefined], 'Label/Small': [133.333, undefined], Accent: [120, -2], Eyebrow: [100, 15] }
+  const held = { 'Display/XL': [105, -3], 'Display/L': [105, -3], 'Display/M': [110, -3], 'Heading/L': [120, -2], 'Heading/M': [120, -2], 'Heading/S': [130, -1], 'Body/L': [170, undefined], 'Body/Base': [170, undefined], 'Body/S': [142.857, undefined], 'Body/XS': [133.333, undefined], 'Label/Default': [142.857, undefined], 'Label/Small': [133.333, undefined], 'Label/Form': [100, undefined], Accent: [120, -2], Eyebrow: [133.333, 15] }
   for (const [name, [lh, ls]] of Object.entries(held)) {
     assert.equal(byName[name].lh, lh, `${name} line height`)
     assert.equal(byName[name].ls, ls, `${name} tracking`)

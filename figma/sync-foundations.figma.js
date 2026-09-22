@@ -224,20 +224,23 @@ const TEXT_STYLES = [
   // Label styles — Raleway Medium for form/control labels, badges, chips (text-sm / text-xs + font-medium).
   { name: 'Label/Default', font: 'sans', style: 'Medium', size: 'sm', leading: 'paired' },
   { name: 'Label/Small', font: 'sans', style: 'Medium', size: 'xs', leading: 'paired' },
+  // The Label primitive is `text-sm leading-none font-medium`: 34 form labels rendered
+  // at 100% while their twin bound Label/Default. Tailwind's `leading-none`, no Quill role.
+  { name: 'Label/Form', font: 'sans', style: 'Medium', size: 'sm', lh: 100 },
   { name: 'Accent', font: 'display', style: 'Italic', px: 28, leading: 'heading', ls: -2 },
-  { name: 'Eyebrow', font: 'sans', style: 'Medium', size: 'xs', lh: 100, tracking: 'eyebrow', textCase: 'UPPER' },
+  { name: 'Eyebrow', font: 'sans', style: 'Medium', size: 'xs', leading: 'paired', tracking: 'eyebrow', textCase: 'UPPER' },
 ]
 // Styles allowed a typed `px` because no type token holds their size. In code the
 // accent word is an <em> that inherits its heading's size, so a fixed-size Accent
 // style has no twin to read from. The list may only shrink.
 const OFF_SCALE = new Set(['Accent'])
 // Styles still typing a line height (`lh`) or tracking (`ls`). None of these values
-// is a role, and most disagree with what code renders: every h1–h6 tracks at
+// is a role. Label/Form's 100% IS what code renders (`leading-none`); the rest disagree: every h1–h6 tracks at
 // -0.03em, not -2 or -1; `text-sm` draws a 142.857% line, not 160 or 140. Moving
 // them re-spaces every layer bound to the style, so they wait for a visual pass —
 // bind to `Text/*` or a role there, then delete the entry. The list may only shrink.
 const TYPED_METRICS = {
-  'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], Accent: ['ls'], Eyebrow: ['lh'],
+  'Display/M': ['lh'], 'Heading/L': ['ls'], 'Heading/M': ['ls'], 'Heading/S': ['lh', 'ls'], Accent: ['ls'], 'Label/Form': ['lh'],
 }
 
 // Curated rows resolved against the export, plus one `Text/<size>` style per
