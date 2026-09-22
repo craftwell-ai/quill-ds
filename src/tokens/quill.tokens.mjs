@@ -281,6 +281,10 @@ export const tokens = {
     { of: 'chart-1', pct: 20 }, { of: 'chart-2', pct: 20 },
     { of: 'muted', pct: 50 }, { of: 'primary', pct: 10 },
     { of: 'sidebar-border', pct: 8 }, { of: 'sidebar-foreground', pct: 70, text: true },
+    // The state rings every control shares: focus is `ring-ring/50`, invalid is
+    // `ring-destructive/20`; a disabled field washes with `bg-input/50`. Declared so
+    // the Figma State variants can bind them (CRA-221).
+    { of: 'ring', pct: 50 }, { of: 'destructive', pct: 20 }, { of: 'input', pct: 50 },
   ],
   // Retired 0.10.0. A second vocabulary for what the contract already says
   // (`--surface-card` is `--card`), which no shipped component and no utility ever

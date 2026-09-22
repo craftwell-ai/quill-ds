@@ -150,7 +150,10 @@
     "VariableID:705:11": "tint/muted/50",
     "VariableID:705:12": "tint/primary/10",
     "VariableID:705:13": "tint/sidebar-border/8",
-    "VariableID:705:14": "tint/sidebar-foreground/70"
+    "VariableID:705:14": "tint/sidebar-foreground/70",
+    "VariableID:827:2": "tint/ring/50",
+    "VariableID:827:3": "tint/destructive/20",
+    "VariableID:827:4": "tint/input/50"
   },
   "candidates": [],
   "components": [
@@ -2131,8 +2134,8 @@
     }
   ],
   "foundations": {
-    "tokensHash": "bd13255d5b632db9",
-    "syncedAt": "2026-09-21"
+    "tokensHash": "237403bfff202795",
+    "syncedAt": "2026-09-22"
   },
   "declined": [
     {

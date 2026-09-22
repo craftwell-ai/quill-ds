@@ -83,6 +83,9 @@ export const TINT_INTENTS = {
   'tint/primary/10': { code: '`bg-primary/10`', use: 'The "current, not yet done" state beside a solid-ink "done": the current wizard step.', never: 'Hover. Hover is `muted` or `accent`.' },
   'tint/sidebar-border/8': { code: '`border-sidebar-border`', use: 'The sidebar\'s faint dividers. The role is already ink at about 8%, so code writes the plain role.', never: 'Lines outside the sidebar.' },
   'tint/sidebar-foreground/70': { code: '`text-sidebar-foreground/70`', use: 'The small group label above a set of sidebar links.', never: 'Sidebar link text itself. That is full-strength `sidebar-foreground`.' },
+  'tint/ring/50': { code: '`ring-3 ring-ring/50`', use: 'The keyboard-focus ring on every control, with `border-ring`. Built into the primitives.', never: 'A hand-drawn focus treatment, or a decorative glow.' },
+  'tint/destructive/20': { code: '`ring-3 ring-destructive/20`', use: 'The ring around an invalid field, with `border-destructive`, when `aria-invalid` is set.', never: 'Emphasis or a warning wash. It follows the invalid state only.' },
+  'tint/input/50': { code: '`bg-input/50`', use: 'The wash inside a disabled field, with 50% opacity on the control.', never: 'A resting field. At rest a field is transparent on light themes.' },
 }
 
 const primitive = (ref) => ref.replace(/^var\(--|\)$/g, '')

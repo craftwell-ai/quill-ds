@@ -12,6 +12,22 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.6] — 2026-09-22
+
+Groundwork for the State axis (CRA-221: every state the code styles exists on its Figma
+twin, one to one). Nothing an app receives changes.
+
+### Added
+- **Three sanctioned tints for control states.** Every form control shares one recipe in
+  code — focus is `border-ring` plus a 3px `ring-ring/50` (22 uses), invalid is
+  `border-destructive` plus `ring-destructive/20` (16), a disabled field washes with
+  `bg-input/50` (6) — and none of those opacities existed as a Figma variable, so a
+  focus ring drawn in Figma would have died inside the first nested instance. `tint/ring/50`,
+  `tint/destructive/20` and `tint/input/50` are declared in the token source with their
+  use-for / never-for lines, created in the library by the sync (3 created, 13 updated in
+  place) and recorded for the parity bot. Not declared: the dark-theme-only `/40` and
+  `/80` variants — a tint carries one alpha across modes.
+
 ## [0.10.5] — 2026-09-22
 
 Pass 2 of the Figma type audit: the per-layer work. Nothing an app receives changes.
