@@ -12,6 +12,21 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.10.8] — 2026-09-22
+
+State axis, tranche 2 (CRA-221). Nothing an app receives changes.
+
+### Added
+- **Figma: Button and Toggle carry every state the code styles.** Button's 48 variants
+  gain Hover · Focus · Invalid · Active · Disabled (288 variants); Toggle's 12 gain Hover ·
+  Focus · Invalid · Disabled (60). Each state is derived from the cva per variant — the
+  default button hovers to `bg-primary/80`, outline and ghost to `bg-muted`, secondary to a
+  5% ink mix, destructive to `bg-destructive/20`, link to an underline; the destructive
+  button's focus uses its own `border-destructive/40` + `ring-destructive/20`; Active is
+  the 1px `translate-y-px`. Defaults keep their ids. Three tints declared for it:
+  `tint/primary/80`, `tint/foreground/5` (the `color-mix`, rendered as a stacked fill),
+  `tint/destructive/40`. Build log: `figma/components/README.md`.
+
 ## [0.10.7] — 2026-09-22
 
 State axis, tranche 1 (CRA-221). Nothing an app receives changes; this is the Figma library
