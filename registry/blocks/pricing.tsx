@@ -41,7 +41,7 @@ export function Pricing() {
               </div>
             ))}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="mt-auto">
             <Button variant={p.featured ? 'default' : 'outline'} className="w-full">
               {p.cta}
             </Button>
