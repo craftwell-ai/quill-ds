@@ -31,10 +31,12 @@ export const PALETTE = {
   border: { white: ['border'], black: ['foreground'], grey: ['border', 'input', 'ring'], red: ['destructive'], green: ['moss'], blue: ['indigo'], yellow: ['gold'], purple: [] },
 }
 
-// The versions that retired each name — the token source says WHAT is deprecated; the fix
-// text should also say WHEN, so an agent can judge how old the code it is reading is.
-const RETIRED_CLASSES = { 'indigo-brand': { use: 'indigo', since: '0.9.60' }, 'indigo-brand-deep': { use: 'indigo-deep', since: '0.9.60' } }
+// The versions that retired each name and then dropped it from the CSS — the token source
+// says WHAT is retired; the fix text should also say WHEN, so an agent can judge how old
+// the code it is reading is, and that the name now resolves to nothing.
+const RETIRED_CLASSES = { 'indigo-brand': { use: 'indigo', since: '0.9.60', removed: '0.13.0' }, 'indigo-brand-deep': { use: 'indigo-deep', since: '0.9.60', removed: '0.13.0' } }
 const RETIRED_VARS_SINCE = '0.10.0'
+const RETIRED_VARS_REMOVED = '0.13.0'
 
 const px = (v) => (v.endsWith('rem') ? Math.round(parseFloat(v) * 16 * 100) / 100 : parseFloat(v))
 const ms = (v) => Math.round(parseFloat(v) * (v.endsWith('ms') ? 1 : 1000))
@@ -100,7 +102,7 @@ export function checkData(t = tokens) {
     },
     retired: {
       classes: RETIRED_CLASSES,
-      vars: Object.fromEntries(Object.keys(t.deprecated).map((k) => [`--${k}`, { aliases: t.deprecated[k], since: RETIRED_VARS_SINCE }])),
+      vars: Object.fromEntries(Object.keys(t.retired).map((k) => [`--${k}`, { aliases: t.retired[k], since: RETIRED_VARS_SINCE, removed: RETIRED_VARS_REMOVED }])),
     },
     roles,
     palette: PALETTE,

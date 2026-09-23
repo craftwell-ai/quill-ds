@@ -9,17 +9,23 @@ import { tokens } from '../src/tokens/quill.tokens.mjs'
 // Quill carried a second vocabulary beside the colour contract (`--surface-card`
 // is `--card`, `--text-strong` is `--foreground`). No shipped component and no
 // utility ever used it, yet DESIGN.md told agents to "reach for these" — along
-// with three names that never existed. Retired in 0.10.0: still emitted so an
-// app that wrote `var(--text-strong)` keeps its colour, gone everywhere an agent
-// could learn it from.
+// with three names that never existed. Retired in 0.10.0 (kept emitting so an app
+// that wrote `var(--text-strong)` kept its colour), removed from the CSS in 0.13.0
+// once the one live app was confirmed off them. The list survives in the source so
+// `@quill/check` can still name each one, and so Figma keeps its variable parked.
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const names = Object.keys(tokens.deprecated)
+const names = Object.keys(tokens.retired)
 const re = new RegExp(`--(${names.join('|')})(?![a-z0-9-])`, 'g')
 
-test('the retired names still ship, so nothing downstream loses a colour', () => {
-  const { root: css } = renderCss(tokens)
+test('the retired names no longer ship — not as a variable, not as a utility', () => {
+  const { root: css, theme } = renderCss(tokens)
   assert.equal(names.length, 11) // the ten duplicate aliases, and `danger` (it is `destructive`)
-  for (const n of names) assert.match(css, new RegExp(`--${n}:\\s*var\\(`), `--${n} should still be emitted`)
+  for (const n of names) assert.doesNotMatch(css, new RegExp(`--${n}:`), `--${n} should not be emitted any more`)
+  // The utility spellings that read `--indigo` under an older name went with them.
+  for (const n of ['indigo-brand', 'indigo-brand-deep']) assert.doesNotMatch(theme, new RegExp(`--color-${n}:`), `--color-${n} should not be emitted any more`)
+  // Anti-vacuity: the current names are still there.
+  assert.match(css, /--ink:\s/)
+  assert.match(theme, /--color-indigo:\s*var\(--indigo\)/)
 })
 
 test('no code in this repo uses a retired name', () => {

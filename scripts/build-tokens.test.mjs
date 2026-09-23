@@ -98,7 +98,7 @@ test('theme blocks re-declare aliases so nested data-theme islands re-resolve', 
   const { modes } = renderCss(tokens)
   for (const m of modes) {
     assert.match(m.body, /--background:\s*var\(--paper\);/, `${m.attr} missing shadcn alias re-declare`)
-    assert.match(m.body, /--surface-page:\s*var\(--paper\);/, `${m.attr} missing semantic alias re-declare`)
+    assert.match(m.body, /--success:\s*var\(--moss-deep\);/, `${m.attr} missing status alias re-declare`)
   }
 })
 
@@ -191,12 +191,11 @@ test('a colour utility is spelled like the CSS variable it reads', () => {
   // `bg-indigo-brand` read `--indigo`: two names for one token. ToneBadge asked
   // for the natural `bg-indigo`, got nothing, and shipped an unstyled chip
   // (0.8.29). Tailwind only defines numbered indigo shades, so the plain stem is
-  // free — `teal` always shipped this way. The old names stay as aliases until
-  // the apps are confirmed off them.
+  // free — `teal` always shipped this way. The old names stayed as aliases until
+  // the apps were confirmed off them (0.13.0).
   const { theme } = renderCss(tokens)
   const pairs = [...theme.matchAll(/--color-([a-z0-9-]+):\s*var\(--([a-z0-9-]+)\)/g)].map((m) => [m[1], m[2]])
-  const DEPRECATED_ALIASES = new Set(['indigo-brand', 'indigo-brand-deep'])
-  const renamed = pairs.filter(([utility, cssVar]) => utility !== cssVar && !DEPRECATED_ALIASES.has(utility))
+  const renamed = pairs.filter(([utility, cssVar]) => utility !== cssVar)
   assert.deepEqual(
     renamed,
     [],

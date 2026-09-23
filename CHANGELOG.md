@@ -12,6 +12,36 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.13.0] — 2026-09-23
+
+The names retired in 0.10.0 leave the CSS. Breaking for any app still on one of them —
+`@quill/check` names every use, so run it before updating.
+
+### Removed
+- **Eleven variables**: `--surface-page`, `--surface-card`, `--surface-well`, `--text-strong`,
+  `--text-body`, `--text-muted-color`, `--text-on-ink`, `--border-card`, `--border-field`,
+  `--border-divider`, `--danger`. Each was an alias of a name the contract already has —
+  `var(--text-strong)` is `var(--ink)` (or the role that owns it: `text-foreground`),
+  `--surface-card` is `--card`, `--border-field` is `--input`, `--danger` is `--destructive`.
+  They stopped appearing in docs, Figma's picker and this repo's code in 0.10.0 and kept
+  emitting so a consumer on one kept its colour; the one live app has none. The theme file
+  and the CLI `cssVars` both drop them.
+- **Two utility spellings**: `indigo-brand` and `indigo-brand-deep` (renamed to `indigo` /
+  `indigo-deep` in 0.9.60). `bg-indigo-brand` now compiles to nothing.
+
+### Changed
+- `@quill/check`'s `retired` rule keeps every one of the 13 names and now says so: the fix
+  reads "renamed in 0.9.60; the old name compiles to nothing since 0.13.0" for a class and
+  "retired in 0.10.0 and gone since 0.13.0, so it resolves to nothing; it was `var(--ink)`"
+  for a variable. Reinstall the item (`npx shadcn add @quill/check`) to get the new text.
+- The token source keeps the list as `tokens.retired` (was `deprecated`) — read by the
+  check and by the Figma export, which still parks each one under `deprecated/*`, hidden
+  from publishing: the Icon vector fill is bound to `deprecated/text-strong`, and a file
+  that consumes the library may be too. No Figma change, nothing to publish.
+- `scripts/retired-tokens.test.mjs` (was `deprecated-tokens.test.mjs`) now asserts the
+  names are **absent** from the built CSS, and still keeps them out of this repo's code
+  and every agent-facing document.
+
 ## [0.12.3] — 2026-09-23
 
 The 14 visual drifts settled; the visual diff goes monthly. One real Storybook defect found
@@ -612,7 +642,7 @@ and in the docs.
   ever used them. They are still emitted, so an app that wrote `var(--text-strong)`
   keeps its colour; they are gone from the docs, parked in Figma as `deprecated/*`
   (hidden from publishing, never deleted — a consuming file may be bound to one), and
-  `deprecated-tokens.test.mjs` keeps them out of this repo's code. Removal in a later
+  `deprecated-tokens.test.mjs` (now `retired-tokens.test.mjs`) keeps them out of this repo's code. Removal in a later
   minor. Use instead:
 
   | retired | use |

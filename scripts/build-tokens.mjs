@@ -37,9 +37,9 @@ function walkModal(group, prefix, fn) {
   }
 }
 
-// Every alias that ships as a plain variable: the retired names (still emitted,
-// see the token source), the status roles, then the contract.
-const aliasGroups = (t) => [...Object.entries(t.deprecated), ...Object.entries(t.status), ...Object.entries(t.semantic)]
+// Every alias that ships as a plain variable: the status roles, then the contract.
+// The names retired in 0.10.0 left the CSS in 0.13.0 (see `retired` in the source).
+const aliasGroups = (t) => [...Object.entries(t.status), ...Object.entries(t.semantic)]
 
 export function renderCss(t) {
   const rootLines = []
@@ -85,7 +85,7 @@ export function renderCss(t) {
     ...aliasGroups(t).map(([k, v]) => `  --${k}: ${v};`),
   ]
   rootLines.push(...accentDefaultLines)
-  rootLines.push(...[...Object.entries(t.deprecated), ...Object.entries(t.status)].map(([k, v]) => `  --${k}: ${v};`))
+  rootLines.push(...Object.entries(t.status).map(([k, v]) => `  --${k}: ${v};`))
   rootLines.push(`  --radius: ${t.radiusBase};`)
   // Spacing + border-width (documented scales; kept in :root, not @theme, so they
   // don't collide with Tailwind's built-in numeric utilities).
@@ -120,8 +120,6 @@ export function renderCss(t) {
     // Spelled like the variable: Tailwind only defines numbered indigo shades
     // (`indigo-500`), so the plain stem is free, exactly as `teal` below.
     indigo: '--indigo', 'indigo-deep': '--indigo-deep',
-    // Deprecated spelling, kept so an app already on it keeps its colour.
-    'indigo-brand': '--indigo', 'indigo-brand-deep': '--indigo-deep',
     // gold-text is a third cut, not a shade: gold-deep can't carry TEXT duty on
     // light grounds (3.3:1 on Dawn). Without a utility here, `text-gold-text` in
     // ToneBadge compiled to nothing and the AA fix was inert.
@@ -393,8 +391,9 @@ export function renderDtcg(t) {
 
   // Retired names are not tokens any more, so they carry no value here — only the
   // rename that parks their Figma variable under `deprecated/`, hidden from
-  // publishing. Never deleted: a file that consumes the library may be bound to one.
-  const Deprecated = Object.fromEntries(Object.keys(t.deprecated).map((k) => [k, named({ $description: 'Retired 0.10.0 — use the semantic contract' }, `deprecated/${k}`, legacyRoleName(k))]))
+  // publishing. Never deleted: a file that consumes the library may be bound to one
+  // (the Icon vector fill is), which is why the list outlives its CSS.
+  const Deprecated = Object.fromEntries(Object.keys(t.retired).map((k) => [k, named({ $description: 'Retired 0.10.0 — use the semantic contract' }, `deprecated/${k}`, legacyRoleName(k))]))
 
   return {
     $description: 'Quill Design System tokens (DTCG). Colors/dimensions → Figma variables; shadows → effect styles; motion/fraunces are CSS-only.',

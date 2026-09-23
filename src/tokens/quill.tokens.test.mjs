@@ -92,7 +92,7 @@ test('interactive controls use a solid AA boundary, not the faint alpha line (WC
   assert.equal(tokens.color.line.control.dark, '#746B5D')
   // shadcn `input` (switch track, checkbox/radio/field borders) + semantic field border route through it.
   assert.equal(tokens.semantic.input, 'var(--line-control)')
-  assert.equal(tokens.deprecated['border-field'], 'var(--line-control)')
+  assert.equal(tokens.retired['border-field'], 'var(--line-control)') // what the check reports it was
 })
 
 test('chart tokens: series are CVD-safe chart cuts, ramps behave (WCAG 1.4.11 + dataviz checks)', () => {

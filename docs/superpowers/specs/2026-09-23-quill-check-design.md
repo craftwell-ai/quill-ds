@@ -59,7 +59,7 @@ on `${…}` boundaries, keeping tokens shaped like a Tailwind utility with a kno
 | 2 | `palette` | Tailwind's stock colours: `white`, `black`, and any numbered shade (`gray-500`, `red-600`, `indigo-500`…) behind a colour prefix; plus `font-serif` | the Quill roles for that job, by hue and prefix (table below), each with its intent line from `roles.mjs`; `font-serif` → `font-heading` |
 | 3 | `raw-color` | hex (3/4/6/8 digits), `rgb()`, `hsl()`, `oklch()`, `oklab()` in component source — class strings, inline `style`, SVG `fill`/`stroke`/`stopColor` | the nearest role or pigment by name; brand marks use an allow (below) |
 | 4 | `bracket` | a bracket value on a property Quill has tokens for: colour prefixes, `text-` (size), `leading-`, `tracking-`, `rounded-`, `shadow-`, `font-`, `ease-`, `duration-` — including `text-[var(--x)]` when `x` has a utility | the token utility: exact match by value when one exists (`text-[13px]` → `text-sm`, `tracking-[0.15em]` → `tracking-eyebrow`, `text-[var(--accent-pigment-text)]` → `text-accent-pigment-text`), else the scale to choose from |
-| 5 | `retired` | Quill's deprecated names: `indigo-brand`, `indigo-brand-deep`, and `var(--x)` for the 11 retired variables in `tokens.deprecated` | the current name, and the version that retired it |
+| 5 | `retired` | Quill's deprecated names: `indigo-brand`, `indigo-brand-deep`, and `var(--x)` for the 11 retired variables in `tokens.retired` (gone from the CSS since 0.13.0) | the current name, and the version that retired it |
 
 Not flagged, counted: bracket values on layout properties (`w-`, `h-`, `min-`, `max-`, `size-`,
 `grid-`, `inset-`/`top-`…, `translate-`, `p*-`, `m*-`, `gap-`, `space-`, `basis-`, `col-`, `row-`,
