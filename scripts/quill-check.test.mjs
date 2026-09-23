@@ -119,3 +119,12 @@ test('CLI: --json is machine-readable and exit 0 when every finding is allowed',
   assert.equal(j.summary.allowed, 1)
   assert.equal(j.findings[0].allowed, 'brand mark')
 })
+
+// ---------------------------------------------------------------- dogfood
+test("the check runs clean on Quill's own shipped blocks, lib and examples", async () => {
+  const dirs = ['registry/blocks', 'registry/lib', 'registry/examples'].map((d) => join(repoRoot, d))
+  const { findings, notes } = await check.runCheck({ cwd: repoRoot, dirs, css: join(repoRoot, 'src/app/globals.css') })
+  const active = findings.filter((f) => !f.allowed)
+  assert.deepEqual(active.map((f) => `${f.file}:${f.line} ${f.value} [${f.rule}]`), [], "Quill's own code must satisfy the rules it enforces on apps")
+  assert.deepEqual(notes, [])
+})

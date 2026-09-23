@@ -225,14 +225,20 @@ export function rawColourFindings(lines) {
 }
 
 // ------------------------------------------------------------------ allows
-// `quill-check: allow <rule> — <why>` on the same line or the line above. The reason is
-// mandatory: an allow without one is itself a finding, so exceptions never go quiet.
+// `quill-check: allow <rule> — <why>`. On the same line it covers that line; on a line of
+// its own it covers the element that follows, up to the line that closes the tag — a JSX
+// comment cannot sit between a tag's attributes, and an SVG brand mark's fill often does.
+// The reason is mandatory: an allow without one is itself a finding, so exceptions never go quiet.
 const ALLOW_RE = /quill-check:\s*allow\s+([a-z-]+)(?:\s*[—–-]+\s*(.*?))?\s*(?:\*\/|-->|\}|$)/
+const ALLOW_ONLY_LINE = /^\s*(?:\{\/\*|\/\/|\/\*|<!--)\s*quill-check:/
 export function allowsFor(lines, lineNo) {
   const found = []
-  for (const l of [lineNo - 1, lineNo]) {
-    const m = lines[l - 1]?.match(ALLOW_RE)
-    if (m) found.push({ rule: m[1], reason: (m[2] ?? '').trim(), line: l })
+  const same = lines[lineNo - 1]?.match(ALLOW_RE)
+  if (same) found.push({ rule: same[1], reason: (same[2] ?? '').trim(), line: lineNo })
+  for (let l = lineNo - 1; l >= 1 && l >= lineNo - 12; l--) {
+    const text = lines[l - 1]
+    if (ALLOW_ONLY_LINE.test(text)) { const m = text.match(ALLOW_RE); if (m) found.push({ rule: m[1], reason: (m[2] ?? '').trim(), line: l }); break }
+    if (/>\s*$/.test(text) && l < lineNo - 1) break // a tag closed between: the allow above belongs to that element
   }
   return found
 }
