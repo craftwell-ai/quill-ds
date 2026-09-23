@@ -81,3 +81,12 @@ test('baselineFrom builds the accepted numbers from a run\'s summary.json, keepi
   assert.deepEqual(Object.keys(b.pairs).sort(), ['hero', 'kanban'])
   assert.deepEqual(b.pairs.hero, { diffPct: 3.5, figma: [880, 610], storybook: [880, 611], story: 'p--hero', frameId: '1:1', at: '2026-09-23' })
 })
+
+test('cropTo cuts the frame box out of an export that includes a shadow margin', async () => {
+  const { cropTo } = await import('./figma-visual-diff.mjs')
+  const big = solid(120, 80, [245, 237, 221]); paint(big, 10, 10, 100, 60, [40, 40, 40])
+  const c = cropTo(big, 10, 10, 100, 60)
+  assert.equal(c.width, 100); assert.equal(c.height, 60)
+  assert.deepEqual([c.data[0], c.data[1], c.data[2]], [40, 40, 40], 'top-left of the crop is the frame, not the margin')
+  assert.equal(cropTo(big, 0, 0, 120, 80), big, 'a full-size crop is the same object')
+})

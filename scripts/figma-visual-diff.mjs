@@ -55,6 +55,18 @@ export function flatten(png) {
   return png
 }
 
+/** Cut a region out of a PNG. Figma's export covers the RENDER bounds — a drop shadow
+ * bleeds past the frame — while Playwright shoots the element box, so exports are cropped
+ * to the frame's own bounding box before comparing. */
+export function cropTo(png, x, y, w, h) {
+  x = Math.max(0, Math.round(x)); y = Math.max(0, Math.round(y))
+  w = Math.min(Math.round(w), png.width - x); h = Math.min(Math.round(h), png.height - y)
+  if (x === 0 && y === 0 && w === png.width && h === png.height) return png
+  const out = new PNG({ width: w, height: h })
+  PNG.bitblt(png, out, x, y, w, h, 0, 0)
+  return out
+}
+
 export function padTo(png, w, h) {
   if (png.width === w && png.height === h) return png
   const out = new PNG({ width: w, height: h })
@@ -136,6 +148,19 @@ async function figmaExport(token, ids) {
   return urls
 }
 
+/** Each frame's bounding box and render bounds (effects included), to crop the export by. */
+async function figmaBounds(token, ids) {
+  const out = {}
+  for (let i = 0; i < ids.length; i += 50) {
+    const batch = ids.slice(i, i + 50)
+    const r = await fetch(`https://api.figma.com/v1/files/${FILE_KEY}/nodes?ids=${encodeURIComponent(batch.join(','))}&depth=1`, { headers: { 'X-Figma-Token': token } })
+    if (!r.ok) throw new Error(`Figma nodes ${r.status}: ${await r.text()}`)
+    const { nodes } = await r.json()
+    for (const id of batch) { const d = nodes[id]?.document; if (d) out[id] = { box: d.absoluteBoundingBox, render: d.absoluteRenderBounds ?? d.absoluteBoundingBox } }
+  }
+  return out
+}
+
 // ------------------------------------------------------------------ Storybook render
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.png': 'image/png', '.ico': 'image/x-icon' }
 function serve(dir) {
@@ -214,6 +239,7 @@ async function main(argv = process.argv.slice(2)) {
 
   console.log(`exporting ${pairs.length} frames from Figma…`)
   const urls = await figmaExport(token, pairs.map((p) => p.frameId))
+  const bounds = await figmaBounds(token, pairs.map((p) => p.frameId))
   const { chromium } = await import('playwright')
   const { server, port } = await serve(sb)
   const browser = await chromium.launch()
@@ -225,7 +251,9 @@ async function main(argv = process.argv.slice(2)) {
       if (!p.story) throw new Error('no story')
       const url = urls[p.frameId]
       if (!url) throw new Error('Figma returned no image (frame missing?)')
-      const figma = flatten(PNG.sync.read(Buffer.from(await (await fetch(url)).arrayBuffer())))
+      let figma = flatten(PNG.sync.read(Buffer.from(await (await fetch(url)).arrayBuffer())))
+      const b = bounds[p.frameId]
+      if (b && b.box && b.render) figma = cropTo(figma, (b.box.x - b.render.x) * SCALE, (b.box.y - b.render.y) * SCALE, b.box.width * SCALE, b.box.height * SCALE)
       const storybook = await renderStory(page, port, p.story, figma.width / SCALE, figma.height / SCALE)
       const result = comparePngs(figma, storybook)
       const dir = join(out, 'pairs', p.name)
