@@ -22,7 +22,8 @@
       "marketing",
       "commerce"
     ],
-    "use_when": "You need a tiered pricing grid with a highlighted plan and feature checklists."
+    "use_when": "You need a tiered pricing grid with a highlighted plan and feature checklists.",
+    "not_for": "you're describing capabilities in general, not comparing specific paid tiers against each other → feature-section; the user has already chosen a plan and is now reviewing a specific purchase, not comparing options → order-summary"
   },
   "docs": "A three-tier pricing grid with a highlighted popular plan, feature checklists, and per-plan calls to action. Do: Mark exactly one plan as featured (ring + Popular badge) to guide the decision. Don't: Feature more than one plan, or none — either dilutes the recommendation this pattern exists to make. Use feature-section when you're describing capabilities in general, not comparing specific paid tiers against each other. Use order-summary when the user has already chosen a plan and is now reviewing a specific purchase, not comparing options.",
   "categories": [

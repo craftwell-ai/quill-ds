@@ -25,7 +25,8 @@
       "messaging",
       "app-shell"
     ],
-    "use_when": "You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply."
+    "use_when": "You need a two-pane mail client — searchable list plus a reading pane with toolbar and reply.",
+    "not_for": "you need the simpler read-and-select pattern with no search, toolbar, or reply composer → list-detail; the messaging is a live conversational thread, not discrete emails with subjects → chat"
   },
   "docs": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply. Do: Hide the reading pane on narrow viewports so the message list gets the full width instead of squeezing both panes. Don't: Force the two-pane layout at phone widths where neither pane has room to be usable. Use list-detail when you need the simpler read-and-select pattern with no search, toolbar, or reply composer. Use chat when the messaging is a live conversational thread, not discrete emails with subjects.",
   "categories": [

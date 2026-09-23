@@ -24,7 +24,8 @@
       "commerce",
       "data-display"
     ],
-    "use_when": "You need a printable invoice with parties, line-item totals, and a download action."
+    "use_when": "You need a printable invoice with parties, line-item totals, and a download action.",
+    "not_for": "you're showing a cart before payment, not a record of a completed transaction → order-summary; you need a list of many invoices to browse, not the full detail of one → data-table"
   },
   "docs": "A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action. Do: Keep the total in a table footer, visually distinct from line items (its own row, right-aligned). Don't: Let the total blend in as just another line item — it needs to read as the sum, not another charge. Use order-summary when you're showing a cart before payment, not a record of a completed transaction. Use data-table when you need a list of many invoices to browse, not the full detail of one.",
   "categories": [

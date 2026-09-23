@@ -29,6 +29,17 @@ test('every block carries a machine-readable intent tag from the controlled voca
   }
 })
 
+// Selection is where agents go wrong most: `use_when` says when to reach for a block;
+// `not_for` says which jobs it is the wrong pick for and what to pick instead (derived
+// from the usage module's alternatives, so it cannot drift from the guide).
+test('every block says what it is not for (meta.not_for, "when → name")', () => {
+  for (const b of blocks) {
+    const notFor = b.meta?.not_for
+    assert.ok(typeof notFor === 'string' && notFor.length >= 20, `block '${b.name}' needs a meta.not_for — add an alternatives entry to its usage module`)
+    assert.match(notFor, / → [a-z0-9-]+/, `block '${b.name}' not_for must name the block to pick instead`)
+  }
+})
+
 test('every block explains when to use it (meta.use_when)', () => {
   for (const b of blocks) {
     const useWhen = b.meta?.use_when

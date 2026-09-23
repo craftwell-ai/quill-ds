@@ -19,7 +19,8 @@
     "intent": [
       "productivity"
     ],
-    "use_when": "You need to manage work across status columns with draggable, tagged task cards."
+    "use_when": "You need to manage work across status columns with draggable, tagged task cards.",
+    "not_for": "status is one column among many sortable fields — a table reads better than columns once you need to sort or filter across many records → data-table; the steps are a single sequential checklist, not parallel work items across independent columns → onboarding"
   },
   "docs": "A three-column kanban board with card counts, tagged task cards, and an add-card affordance per column. Do: Keep each column's card-count badge in sync with its actual card list — it's a running total, not a caption. Don't: Let the count badge drift out of sync when cards move between columns. Use data-table when status is one column among many sortable fields — a table reads better than columns once you need to sort or filter across many records. Use onboarding when the steps are a single sequential checklist, not parallel work items across independent columns.",
   "categories": [

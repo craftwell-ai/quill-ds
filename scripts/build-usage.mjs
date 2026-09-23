@@ -4,7 +4,8 @@
  *   - registry.json                     `docs` field (shadcn CLI prints it at
  *                                       install time), `description`
  *                                       (:= summary), `meta.use_when`
- *                                       (:= useWhen[0]) and `categories`
+ *                                       (:= useWhen[0]), `meta.not_for` (:= the
+ *                                       alternatives, "when → name") and `categories`
  *                                       (:= meta.intent) for documented items.
  *                                       The base `quill` item has no usage
  *                                       module: its docs come from
@@ -18,7 +19,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
-import { renderUsageDocs } from '../src/usage/render.mjs'
+import { renderUsageDocs, renderNotFor } from '../src/usage/render.mjs'
 import { renderThemeDocs } from '../src/usage/theme-docs.mjs'
 import { EXAMPLES, renderExampleDocs } from '../src/usage/examples.mjs'
 
@@ -88,7 +89,7 @@ export function injectRegistryDocs(registry, all = ALL_USAGE) {
     // search. Same source, published through both so future tooling reading
     // schema fields finds the intent too.
     if (item.type === 'registry:block') {
-      item.meta = { ...item.meta, use_when: u.useWhen[0] }
+      item.meta = { ...item.meta, use_when: u.useWhen[0], not_for: renderNotFor(u) }
       if (item.meta.intent?.length) item.categories = [...item.meta.intent]
     }
   }

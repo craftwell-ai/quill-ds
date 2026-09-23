@@ -67,7 +67,7 @@ npx tsc --noEmit
 ## Conventions that are easy to violate
 
 - **Every feature/fix PR bumps `version` in `package.json` and adds a `## [x.y.z] — date` CHANGELOG entry.** `repo-invariants.test.mjs` fails on one without the other.
-- **A version bump needs `npm run build:llms`** — `llms.txt` embeds the version string, so the bump alone leaves it stale and fails CI.
+- **A version bump needs `npm run build:check && npm run build:registry && npm run build:llms`** — `llms.txt` and the `check` script both embed the version string, so the bump alone leaves them stale and fails CI.
 - **Shipped code may only use tokens consumers receive.** `consumer-reachability.test.mjs` enumerates every utility in shipped code and checks it resolves from `registry/themes/quill.css`. A utility that works on the site but is not in the shipped theme fails.
 - **Five themes, four accents, two separate axes.** `data-theme` on `<html>`: unset/`light` → Dawn (default), `dark` → Dusk, `classic-light`, `classic-dark`, `intelligent`. `data-accent`: `moss` (default), `terracotta`, `indigo`, `gold`. Derive both from `ALL_MODES`/`DEFAULT_ACCENT`; `theme-enumeration.test.mjs` fails on a hand-typed list that disagrees.
 - **The base item's description must name the default accent** (`moss accents`) — `registry-meta.test.mjs` guards it.
