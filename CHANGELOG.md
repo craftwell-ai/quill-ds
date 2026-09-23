@@ -12,6 +12,21 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.13.1] — 2026-09-23
+
+Two `@quill/check` fixes found by running it on a live app (tech-careers, 2,197 findings).
+Reinstall the item (`npx shadcn add @quill/check`) to get them.
+
+### Fixed
+- **`--json` reports past ~64 KB arrived truncated.** The CLI ended with `process.exit(code)`;
+  on macOS a pipe is asynchronous, so the tail was dropped and an agent parsing the report got
+  "Unterminated string in JSON". It now sets `process.exitCode` and lets the pipe drain. A test
+  pipes a 1,500-finding report through and parses it.
+- **The `dark-variant` finding assumed the theme was imported from the stylesheet.** When the
+  theme is imported from `layout.tsx` instead — colours apply, the variant is invisible to
+  Tailwind — the fix text said the stock line "sits below Quill's". It now says the theme is not
+  imported from this stylesheet and to add the `@import` directly below that line.
+
 ## [0.13.0] — 2026-09-23
 
 The names retired in 0.10.0 leave the CSS. Breaking for any app still on one of them —

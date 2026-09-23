@@ -8,7 +8,7 @@ import { join, relative, resolve, dirname, extname } from 'node:path'
 import { createRequire } from 'node:module'
 
 export const DATA = {
- "version": "0.13.0",
+ "version": "0.13.1",
  "prefixes": [
   "bg",
   "text",
@@ -1674,7 +1674,14 @@ export async function runCheck({ cwd = process.cwd(), dirs, includeUi = false, c
       if (!r.unresolved.has('bg-background') && !r.darkFollowsThemes && candidates.has('bg-background')) {
         const entryText = readFileSync(r.entry, 'utf8').split('\n')
         const stock = entryText.findIndex((l) => /@custom-variant\s+dark\b/.test(l) && !l.includes('data-theme'))
-        findings.push({ file: relative(cwd, r.entry), line: stock + 1 || 1, col: 1, rule: 'dark-variant', value: '@custom-variant dark', fix: "→ this stock line sits below Quill's and wins, so dark: fires only on .dark and never on data-theme: move the @import of quill-theme.css below it (or delete it — Quill's variant keeps .dark working)" })
+        // Two ways to get here: the theme IS imported from this stylesheet but above the stock line,
+        // or it is not imported from here at all (a layout.tsx import keeps the colours, which are
+        // plain variables, while Tailwind never sees the variant). Say which.
+        const imported = entryText.some((l) => /@import\s+(url\()?["']?[^"')]*quill[^"')]*\.css/.test(l))
+        const fix = imported
+          ? "→ this stock line sits below Quill's and wins, so dark: fires only on .dark and never on data-theme: move the @import of quill-theme.css below it (or delete it — Quill's variant keeps .dark working)"
+          : "→ Quill's theme is not imported from this stylesheet (a layout.tsx import keeps its colours, but Tailwind never sees its dark variant), so dark: fires only on .dark and never on data-theme: add `@import \"./quill-theme.css\"` directly below this line"
+        findings.push({ file: relative(cwd, r.entry), line: stock + 1 || 1, col: 1, rule: 'dark-variant', value: '@custom-variant dark', fix })
       }
       const dead = [...r.unresolved].filter((t) => !flagged.has(t))
       // Three or more Quill classes dead at once is not three typos — the theme is missing.
@@ -1742,4 +1749,6 @@ export async function main(argv = process.argv.slice(2)) {
   return active ? 1 : 0
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) process.exit(await main())
+// exitCode, not exit(): on macOS a pipe is asynchronous, and exit() dropped the tail of a
+// --json report past ~64 KB — the agent reading it got "Unterminated string".
+if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) process.exitCode = await main()
