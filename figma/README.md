@@ -31,7 +31,7 @@
 
 ## Visual diff (nightly, CRA-224)
 
-The picture check. `scripts/figma-visual-diff.mjs` exports every mirrored pattern page and
+The picture check, monthly (the 1st, 13:00 UTC) or on demand. `scripts/figma-visual-diff.mjs` exports every mirrored pattern page and
 template from Figma at 2x, renders the block's canonical story in a desktop viewport with the
 block pinned to the frame's width, and diffs the two (`pixelmatch`, anti-aliasing ignored —
 Figma and Chromium rasterise glyphs differently). Each pair gets a Figma | Storybook | diff
@@ -52,6 +52,10 @@ npm run build-storybook -- -o .visual/sb --quiet
 npm run figma:visual                        # FIGMA_TOKEN from .env; --pairs a,b to narrow
 gh run download <run id> -n figma-visual-diff -D .visual/ci && node scripts/figma-visual-diff.mjs --baseline-from .visual/ci/summary.json   # accept, after reading the strips
 ```
+
+## Binding a colour on a NEW paint (gotcha, 2026-09-23)
+
+A paint built from a literal and then bound — `setBoundVariableForPaint({ type: 'SOLID', color: {0,0,0} }, 'color', v)` — keeps the binding but RENDERS the literal (solid black), in the plugin export and the REST export alike. Every binding that works carries the variable's resolved `color` and, for a `tint/*`, `opacity` = its alpha. So either copy a paint from a node that already uses the variable (`JSON.parse(JSON.stringify(node.fills[0]))`) or set `color`/`opacity` to the light-mode value yourself before binding. Proven with a 1×1 slice export: black → (235, 224, 199).
 
 ## Names
 

@@ -12,6 +12,45 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.12.3] — 2026-09-23
+
+The 14 visual drifts settled; the visual diff goes monthly. One real Storybook defect found
+on the way. Nothing an app receives changes.
+
+### Fixed
+- **Storybook never applied shadcn's custom variants.** Vite inlines CSS `@import`s before
+  Tailwind runs and drops the block-form `@custom-variant` definitions in
+  `shadcn/tailwind.css` (`data-horizontal { &:where(…) { @slot } }`), so Tailwind fell back to
+  its generic `data-*` form — `data-active:`, `data-open:`, `data-checked:`, `data-horizontal:`
+  and the rest were dead in Storybook while the Next site (Turbopack) rendered them correctly:
+  Tabs laid out sideways, active triggers unstyled. Found by the visual diff (`tabs-page`).
+  `.storybook/main.ts` now splices that file into the entry before Vite's CSS stage. Quill's
+  own one-line `@custom-variant dark (…)` and its `@theme` block survive Vite's inlining
+  (measured), so the file channel is unaffected. The type audit and the first visual baseline
+  were made against the broken Storybook; both are rebuilt by the runs below.
+- **Visual diff: exports cropped to the frame.** Figma renders a frame's drop shadow into
+  the export, so `cookie-consent` read 12 px larger than it is. Exports are now cropped to
+  the frame's bounding box from the nodes endpoint.
+
+### Changed
+- **11 Figma pages reconciled to code** (code is the source of truth): `faq` accordion
+  triggers `py-2.5` (was 16/16); `calendar-page` and `calendar-range` month grids (no 16 px gap
+  between weeks, 18 px weekday row — both now exact); `feature-section` header pinned to
+  `max-w-xl` so the headline wraps as it does in code; `notifications` rows fill the card (the
+  first description no longer wraps two pixels early); `settings`, `contact-form` textareas
+  `min-h-16`; `profile-card` content `pt-6`; `checkout` payment tiles 90 px; and the
+  `CardFooter` band (`bg-muted/50` + `border-t`) on `settings`, `profile-card`, `checkout`,
+  `contact-form`. `example-marketing-page` follows `feature-section` through its instance.
+  All 50 pairs are within the 8 px size tolerance; median diff 2.9 %.
+- **`theme-selector` story split.** The block is the trigger and the Figma page draws exactly
+  that; the story named for the block now renders the bare block, and the scene around it is
+  the `Scene` story.
+- **Visual diff runs monthly** (the 1st, 13:00 UTC) or on demand; the daily cron runs the
+  structural parity job only.
+- Figma gotcha recorded in `figma/README.md`: a freshly built paint bound to a variable renders
+  its literal colour — copy a paint that already carries the variable's resolved colour and
+  alpha, or set them yourself.
+
 ## [0.12.2] — 2026-09-23
 
 ### Fixed

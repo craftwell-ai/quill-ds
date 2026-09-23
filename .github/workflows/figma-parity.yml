@@ -16,7 +16,8 @@ name: Figma parity
 
 on:
   schedule:
-    - cron: '0 13 * * *' # daily 13:00 UTC
+    - cron: '0 13 * * *' # daily 13:00 UTC — structural parity
+    - cron: '0 13 1 * *' # monthly, the 1st — the visual diff job runs on this one only
   workflow_dispatch:
     inputs:
       adopt:
@@ -171,13 +172,16 @@ jobs:
   # Parity 6 (CRA-224): the picture check. Structural checks compare values; this
   # exports every mirrored page from Figma, renders its story at the same width, and
   # diffs the two with a tolerance for font rasterisation, against the accepted
-  # numbers in figma/visual-baseline.json. Report-only (continue-on-error) until the
-  # tolerance has held for a while; then drop that line and add --strict.
+  # numbers in figma/visual-baseline.json (Linux numbers from a CI run — rebuild with
+  # --baseline-from after a run whose strips a human has read). Report-only
+  # (continue-on-error) until the tolerance has held; then drop that line and add --strict.
   # Its own job: it needs npm ci, a Storybook build and a browser, which the
   # dependency-free parity job deliberately does not.
   visual:
     needs: parity
-    if: always()
+    # Monthly (Ryan, 2026-09-23), or on demand: a picture check per page is a designer's
+    # review, not a daily gate. The daily cron runs only the structural parity job.
+    if: always() && (github.event_name == 'workflow_dispatch' || github.event.schedule == '0 13 1 * *')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     continue-on-error: true
