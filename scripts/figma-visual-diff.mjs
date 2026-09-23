@@ -117,6 +117,13 @@ export function renderSummary(rows, { strict = false } = {}) {
   return L.join('\n')
 }
 
+/** The accepted numbers, built from a run's summary.json (a CI artifact). */
+export function baselineFrom(summary, previous = { pairs: {} }) {
+  const pairs = { ...previous.pairs }
+  for (const r of summary.rows) if (!r.error) pairs[r.name] = { diffPct: r.diffPct, figma: r.size.figma, storybook: r.size.storybook, story: r.story, frameId: r.frameId, at: summary.at.slice(0, 10) }
+  return { platform: summary.platform ?? 'linux (CI)', pairs }
+}
+
 // ------------------------------------------------------------------ Figma export
 async function figmaExport(token, ids) {
   const urls = {}
@@ -170,7 +177,7 @@ async function renderStory(page, port, storyId, widthCss, heightCss) {
 
 // ------------------------------------------------------------------ main
 async function main(argv = process.argv.slice(2)) {
-  const opts = { out: '.visual/out', sb: '.visual/sb', pairs: null, strict: false, update: false }
+  const opts = { out: '.visual/out', sb: '.visual/sb', pairs: null, strict: false, update: false, from: null }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--out') opts.out = argv[++i]
@@ -178,7 +185,17 @@ async function main(argv = process.argv.slice(2)) {
     else if (a === '--pairs') opts.pairs = argv[++i].split(',')
     else if (a === '--strict') opts.strict = true
     else if (a === '--update-baseline') opts.update = true
+    else if (a === '--baseline-from') opts.from = argv[++i]
     else throw new Error(`unknown option ${a}`)
+  }
+  // The nightly runs on Linux and text rasterises differently there (a few pairs even wrap
+  // differently), so the accepted numbers must come from a CI run's summary.json, never
+  // from a laptop: download the artifact and point --baseline-from at it.
+  if (opts.from) {
+    const summary = JSON.parse(readFileSync(resolve(root, opts.from), 'utf8'))
+    writeFileSync(BASELINE_PATH, JSON.stringify(baselineFrom(summary), null, 1) + '\n')
+    console.log(`baseline written from ${opts.from}: ${summary.rows.filter((r) => !r.error).length} pairs (${summary.at.slice(0, 10)}) → figma/visual-baseline.json`)
+    return 0
   }
   const token = process.env.FIGMA_TOKEN
   if (!token) { console.log('figma-visual-diff: no FIGMA_TOKEN — skipped.'); return 0 }
@@ -232,9 +249,10 @@ async function main(argv = process.argv.slice(2)) {
 
   const summary = renderSummary(rows, { strict: opts.strict })
   writeFileSync(join(out, 'summary.md'), summary)
-  writeFileSync(join(out, 'summary.json'), JSON.stringify({ at: new Date().toISOString(), strict: opts.strict, rows }, null, 1))
+  writeFileSync(join(out, 'summary.json'), JSON.stringify({ at: new Date().toISOString(), platform: `${process.platform}${process.env.CI ? ' (CI)' : ' (local)'}`, strict: opts.strict, rows }, null, 1))
   if (process.env.GITHUB_STEP_SUMMARY) writeFileSync(process.env.GITHUB_STEP_SUMMARY, summary + '\n', { flag: 'a' })
   if (opts.update) {
+    if (!process.env.CI) console.log('note: a local baseline will not match the Linux nightly — prefer --baseline-from <CI summary.json>')
     for (const r of rows) if (!r.error) baseline.pairs[r.name] = { diffPct: r.diffPct, figma: r.size.figma, storybook: r.size.storybook, story: r.story, frameId: r.frameId, at: new Date().toISOString().slice(0, 10) }
     writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 1) + '\n')
     console.log(`baseline written: ${rows.filter((r) => !r.error).length} pairs → figma/visual-baseline.json`)

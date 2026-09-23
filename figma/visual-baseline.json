@@ -1,7 +1,8 @@
 {
+ "platform": "linux (CI)",
  "pairs": {
   "activity-feed": {
-   "diffPct": 3.32,
+   "diffPct": 3.41,
    "figma": [
     420,
     318
@@ -15,7 +16,7 @@
    "at": "2026-09-23"
   },
   "analytics-charts": {
-   "diffPct": 6.39,
+   "diffPct": 6.44,
    "figma": [
     880,
     318
@@ -29,7 +30,7 @@
    "at": "2026-09-23"
   },
   "announcement-banner": {
-   "diffPct": 6.29,
+   "diffPct": 6.48,
    "figma": [
     880,
     122
@@ -43,7 +44,7 @@
    "at": "2026-09-23"
   },
   "calendar-page": {
-   "diffPct": 2.05,
+   "diffPct": 2.18,
    "figma": [
     510,
     444
@@ -57,7 +58,7 @@
    "at": "2026-09-23"
   },
   "calendar-range": {
-   "diffPct": 4.22,
+   "diffPct": 4.27,
    "figma": [
     458,
     557
@@ -71,7 +72,7 @@
    "at": "2026-09-23"
   },
   "chat": {
-   "diffPct": 3.16,
+   "diffPct": 6.18,
    "figma": [
     400,
     480
@@ -85,7 +86,7 @@
    "at": "2026-09-23"
   },
   "checkout": {
-   "diffPct": 6.93,
+   "diffPct": 6.89,
    "figma": [
     820,
     446
@@ -99,7 +100,7 @@
    "at": "2026-09-23"
   },
   "contact-form": {
-   "diffPct": 6.32,
+   "diffPct": 6.42,
    "figma": [
     440,
     481
@@ -113,7 +114,7 @@
    "at": "2026-09-23"
   },
   "cookie-consent": {
-   "diffPct": 4.46,
+   "diffPct": 4.64,
    "figma": [
     532,
     124
@@ -127,7 +128,7 @@
    "at": "2026-09-23"
   },
   "dashboard": {
-   "diffPct": 0.6,
+   "diffPct": 0.76,
    "figma": [
     880,
     600
@@ -141,7 +142,7 @@
    "at": "2026-09-23"
   },
   "data-table": {
-   "diffPct": 1.45,
+   "diffPct": 1.9,
    "figma": [
     720,
     293
@@ -155,7 +156,7 @@
    "at": "2026-09-23"
   },
   "empty-state": {
-   "diffPct": 0.7,
+   "diffPct": 1.38,
    "figma": [
     420,
     246
@@ -169,7 +170,7 @@
    "at": "2026-09-23"
   },
   "error-404": {
-   "diffPct": 1.08,
+   "diffPct": 1.1,
    "figma": [
     880,
     500
@@ -183,7 +184,7 @@
    "at": "2026-09-23"
   },
   "faq": {
-   "diffPct": 2.26,
+   "diffPct": 2.42,
    "figma": [
     560,
     457
@@ -197,7 +198,7 @@
    "at": "2026-09-23"
   },
   "feature-section": {
-   "diffPct": 3.71,
+   "diffPct": 3.55,
    "figma": [
     880,
     368
@@ -211,7 +212,7 @@
    "at": "2026-09-23"
   },
   "file-upload": {
-   "diffPct": 2.92,
+   "diffPct": 3.16,
    "figma": [
     440,
     485
@@ -225,7 +226,7 @@
    "at": "2026-09-23"
   },
   "footer": {
-   "diffPct": 1.03,
+   "diffPct": 1.29,
    "figma": [
     880,
     304
@@ -239,7 +240,7 @@
    "at": "2026-09-23"
   },
   "forgot-password": {
-   "diffPct": 3.67,
+   "diffPct": 4.17,
    "figma": [
     380,
     271
@@ -253,7 +254,7 @@
    "at": "2026-09-23"
   },
   "hero": {
-   "diffPct": 3.56,
+   "diffPct": 3.83,
    "figma": [
     880,
     610
@@ -267,7 +268,7 @@
    "at": "2026-09-23"
   },
   "invoice": {
-   "diffPct": 1.3,
+   "diffPct": 2.04,
    "figma": [
     640,
     423
@@ -281,7 +282,7 @@
    "at": "2026-09-23"
   },
   "kanban": {
-   "diffPct": 1.4,
+   "diffPct": 1.6,
    "figma": [
     800,
     261
@@ -295,7 +296,7 @@
    "at": "2026-09-23"
   },
   "list-detail": {
-   "diffPct": 0.66,
+   "diffPct": 1.22,
    "figma": [
     880,
     520
@@ -309,7 +310,7 @@
    "at": "2026-09-23"
   },
   "login": {
-   "diffPct": 5.93,
+   "diffPct": 6,
    "figma": [
     380,
     353
@@ -323,7 +324,7 @@
    "at": "2026-09-23"
   },
   "login-minimal": {
-   "diffPct": 5.27,
+   "diffPct": 5.54,
    "figma": [
     320,
     238
@@ -337,7 +338,7 @@
    "at": "2026-09-23"
   },
   "login-oauth": {
-   "diffPct": 2.53,
+   "diffPct": 3.52,
    "figma": [
     340,
     425
@@ -351,7 +352,7 @@
    "at": "2026-09-23"
   },
   "login-split-panel": {
-   "diffPct": 3.59,
+   "diffPct": 4.07,
    "figma": [
     960,
     560
@@ -365,7 +366,7 @@
    "at": "2026-09-23"
   },
   "mail-shell": {
-   "diffPct": 1.73,
+   "diffPct": 1.87,
    "figma": [
     960,
     560
@@ -379,7 +380,7 @@
    "at": "2026-09-23"
   },
   "navbar": {
-   "diffPct": 2,
+   "diffPct": 2.37,
    "figma": [
     880,
     56
@@ -393,7 +394,7 @@
    "at": "2026-09-23"
   },
   "newsletter": {
-   "diffPct": 2.12,
+   "diffPct": 2.62,
    "figma": [
     560,
     300
@@ -407,21 +408,21 @@
    "at": "2026-09-23"
   },
   "notifications": {
-   "diffPct": 3.15,
+   "diffPct": 2.75,
    "figma": [
     360,
     285
    ],
    "storybook": [
     360,
-    266
+    304
    ],
    "story": "patterns-data-notifications--notifications",
    "frameId": "699:789",
    "at": "2026-09-23"
   },
   "onboarding": {
-   "diffPct": 1.82,
+   "diffPct": 1.87,
    "figma": [
     400,
     278
@@ -435,7 +436,7 @@
    "at": "2026-09-23"
   },
   "otp-verification": {
-   "diffPct": 2.32,
+   "diffPct": 2.77,
    "figma": [
     380,
     259
@@ -449,7 +450,7 @@
    "at": "2026-09-23"
   },
   "page-header": {
-   "diffPct": 1.11,
+   "diffPct": 2.88,
    "figma": [
     880,
     97
@@ -463,7 +464,7 @@
    "at": "2026-09-23"
   },
   "pricing": {
-   "diffPct": 3.71,
+   "diffPct": 3.63,
    "figma": [
     880,
     331
@@ -477,7 +478,7 @@
    "at": "2026-09-23"
   },
   "profile-card": {
-   "diffPct": 6.91,
+   "diffPct": 6.84,
    "figma": [
     340,
     327
@@ -491,7 +492,7 @@
    "at": "2026-09-23"
   },
   "search-results": {
-   "diffPct": 0.94,
+   "diffPct": 1.96,
    "figma": [
     440,
     313
@@ -505,7 +506,7 @@
    "at": "2026-09-23"
   },
   "settings": {
-   "diffPct": 5.06,
+   "diffPct": 5.19,
    "figma": [
     560,
     400
@@ -519,7 +520,7 @@
    "at": "2026-09-23"
   },
   "sidebar-nav": {
-   "diffPct": 0.69,
+   "diffPct": 0.7,
    "figma": [
     960,
     560
@@ -533,7 +534,7 @@
    "at": "2026-09-23"
   },
   "signup": {
-   "diffPct": 7.51,
+   "diffPct": 7.61,
    "figma": [
     380,
     374
@@ -547,7 +548,7 @@
    "at": "2026-09-23"
   },
   "signup-social": {
-   "diffPct": 4.83,
+   "diffPct": 5.4,
    "figma": [
     380,
     433
@@ -561,7 +562,7 @@
    "at": "2026-09-23"
   },
   "stat-cards": {
-   "diffPct": 2.9,
+   "diffPct": 3.03,
    "figma": [
     880,
     136
@@ -575,7 +576,7 @@
    "at": "2026-09-23"
   },
   "stats-band": {
-   "diffPct": 1.85,
+   "diffPct": 2.16,
    "figma": [
     880,
     250
@@ -589,7 +590,7 @@
    "at": "2026-09-23"
   },
   "tabs-page": {
-   "diffPct": 4.05,
+   "diffPct": 3.93,
    "figma": [
     560,
     256
@@ -603,21 +604,21 @@
    "at": "2026-09-23"
   },
   "team-section": {
-   "diffPct": 1.15,
+   "diffPct": 2.06,
    "figma": [
     880,
     316
    ],
    "storybook": [
     880,
-    317
+    339
    ],
    "story": "patterns-marketing-team-section--team-section",
    "frameId": "696:64",
    "at": "2026-09-23"
   },
   "testimonial": {
-   "diffPct": 4.34,
+   "diffPct": 4.95,
    "figma": [
     520,
     350
@@ -631,7 +632,7 @@
    "at": "2026-09-23"
   },
   "theme-selector": {
-   "diffPct": 4.44,
+   "diffPct": 4.25,
    "figma": [
     91,
     28
@@ -645,7 +646,7 @@
    "at": "2026-09-23"
   },
   "wizard": {
-   "diffPct": 4.2,
+   "diffPct": 4.46,
    "figma": [
     460,
     317
@@ -659,7 +660,7 @@
    "at": "2026-09-23"
   },
   "example-app-page": {
-   "diffPct": 2.06,
+   "diffPct": 2.25,
    "figma": [
     960,
     560
@@ -673,7 +674,7 @@
    "at": "2026-09-23"
   },
   "example-auth-page": {
-   "diffPct": 3.59,
+   "diffPct": 4.07,
    "figma": [
     960,
     560
@@ -687,7 +688,7 @@
    "at": "2026-09-23"
   },
   "example-marketing-page": {
-   "diffPct": 3.9,
+   "diffPct": 3.89,
    "figma": [
     880,
     2403

@@ -39,14 +39,18 @@ strip; the run writes a table (`summary.md`) and, in CI, uploads the strips as a
 
 `figma/visual-baseline.json` holds the accepted `diffPct` and sizes per pair. A run reports a
 **regression** only when a pair is more than 1.0 point above its accepted value or its size
-drifted by more than 8 px; report-only until `--strict`. First baseline 2026-09-23: 50 pairs,
-median 3.2 %, max 7.5 % (charts). The residual is font rasterisation; the size drifts listed
-in the CHANGELOG are real content differences for a human to settle, not noise.
+drifted by more than 8 px; report-only until `--strict`. **The baseline is Linux numbers from a
+CI run** — text rasterises differently on macOS (median 0.2 points, up to 3, and two pairs wrap
+differently), so refresh it from the artifact, never from a laptop: download
+`figma-visual-diff` from the run and `node scripts/figma-visual-diff.mjs --baseline-from
+<that>/summary.json`. First CI baseline 2026-09-23: 50 pairs, median 3.5 %, max 7.6 %. The
+residual is font rasterisation; the size drifts listed in the CHANGELOG are real content
+differences for a human to settle, not noise.
 
 ```bash
 npm run build-storybook -- -o .visual/sb --quiet
 npm run figma:visual                        # FIGMA_TOKEN from .env; --pairs a,b to narrow
-node --env-file=.env scripts/figma-visual-diff.mjs --out .visual/out --sb .visual/sb --update-baseline   # after reading the strips
+gh run download <run id> -n figma-visual-diff -D .visual/ci && node scripts/figma-visual-diff.mjs --baseline-from .visual/ci/summary.json   # accept, after reading the strips
 ```
 
 ## Names
