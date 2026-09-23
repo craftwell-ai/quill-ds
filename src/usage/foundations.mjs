@@ -53,7 +53,7 @@ export function renderTypeSection(t = tokens) {
   L.push('### Fraunces variable axes')
   L.push('- `opsz` 9–144 matches optical size to render size · `SOFT` 0–100 rounds terminals as size grows · `WONK` 0 | 1 is the off-kilter glyph set, **accents only**.')
   L.push(`- Presets: \`--fraunces-display\` (\`${t.fraunces.display}\`) · \`--fraunces-accent\` (\`${t.fraunces.accent}\`, the italic emphasis) · \`--fraunces-text\` (\`${t.fraunces.text}\`) · \`--fraunces-caption\` (\`${t.fraunces.caption}\`).`)
-  L.push('- One rule: every Fraunces text is soft. `h2`–`h6` and anything set with `font-heading` (a CardTitle, a stat figure, a wordmark) take `--fraunces-text`, whose optical size follows the render size; `h1` takes `--fraunces-display`; `.fraunces-accent` and `.fraunces-caption` are the two named exceptions. The base layer applies all of it — nothing to add per element.')
+  L.push('- Every Fraunces text is soft: `h2`–`h6` and `font-heading` text take `--fraunces-text` (optical size follows the render size), `h1` takes `--fraunces-display`, `.fraunces-accent` / `.fraunces-caption` are the exceptions. The base layer applies all of it.')
   L.push('')
   L.push('### Type scale')
   L.push('| Token | Size | Line | Use |')

@@ -33,7 +33,7 @@ test('readRegistryItems returns every indexed item with writable files', () => {
 // Two directories are the sync's own: blocks under `components/quill/` and
 // the page compositions under `components/examples/` (CRA-205), which an app
 // only ever receives after installing one, like a block.
-test('non-block registry targets are exactly the six the downstream gate knows', () => {
+test('non-block registry targets are exactly the seven the downstream gate knows', () => {
   const items = readRegistryItems(root)
   const targets = new Set()
   for (const item of items) for (const f of item.files ?? []) targets.add(f.target)
@@ -45,6 +45,8 @@ test('non-block registry targets are exactly the six the downstream gate knows',
     'components/ui/icons.core.mjs',
     'components/ui/tone-badge.tsx',
     '~/.claude/rules/quill.md',
+    // @quill/check (0.11.0). Downstream SYNC_PATHS must list scripts/quill-check.mjs before an app installs it.
+    '~/scripts/quill-check.mjs',
   ])
 })
 

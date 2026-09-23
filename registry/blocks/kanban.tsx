@@ -23,7 +23,7 @@ export function Kanban() {
                 <span className="text-sm">{c.t}</span>
                 <div className="flex items-center justify-between">
                   <Badge variant="outline">{c.tag}</Badge>
-                  <div className="flex size-6 items-center justify-center rounded-full bg-muted text-[10px] font-medium text-muted-foreground">
+                  <div className="flex size-6 items-center justify-center rounded-full bg-muted text-2xs font-medium text-muted-foreground">
                     AL
                   </div>
                 </div>

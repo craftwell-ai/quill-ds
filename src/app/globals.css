@@ -1,4 +1,10 @@
 @import "tailwindcss";
+/* Tailwind scans every non-ignored file for class names. These hold prose and generated
+   data, not UI: a class-like phrase in a spec (`bg-[url(…)]`) became a real rule whose url
+   Turbopack then tried to resolve, and the check script carries every Quill class name. */
+@source not "../../docs";
+@source not "../../scripts";
+@source not "../../registry/check";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 

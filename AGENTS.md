@@ -21,13 +21,13 @@ A self-hosted [shadcn registry](https://ui.shadcn.com/docs/registry) — a token
 ```
 src/app/globals.css   src/tokens/generated   registry/themes   tokens
 src/components/ui/icons.core.mjs   src/components/ui/icons.generated.d.ts
-registry.json   registry/agent-rules   public/r   public/llms.txt   DESIGN.md (the spans between generated:… markers)
+registry.json   registry/agent-rules   registry/check   public/r   public/llms.txt   DESIGN.md (the spans between generated:… markers)
 ```
 
-Regenerate in this order — later steps read earlier output (`build:icons` before `build:registry`: the `icon` item inlines `icons.core.mjs`; `build:usage` before it too, because it writes `registry.json` docs fields):
+Regenerate in this order — later steps read earlier output (`build:icons` before `build:registry`: the `icon` item inlines `icons.core.mjs`; `build:usage` before it too, because it writes `registry.json` docs fields; `build:check` before it because the `check` item ships `registry/check/quill-check.mjs`):
 
 ```bash
-npm run build:tokens && npm run build:icons && npm run build:usage && npm run build:agent-rules && npm run build:registry && npm run build:llms
+npm run build:tokens && npm run build:icons && npm run build:usage && npm run build:agent-rules && npm run build:check && npm run build:registry && npm run build:llms
 ```
 
 ## Where things live
