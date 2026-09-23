@@ -329,3 +329,17 @@ test('chart series stay distinguishable under all three dichromacies (ΔE2000 �
   assert.equal(checked, 150, 'expected 10 pairs x 3 deficiencies x 5 themes')
   assert.ok(worst.d >= TARGET, `worst pair: ${worst.where} at ΔE ${worst.d.toFixed(2)}`)
 })
+
+// The docs reserve WONK — Fraunces's off-kilter glyph set — for the accent word.
+// The font turns it ON by default, so a preset that does not name WONK gets it
+// (text and caption shipped that way until 0.10.14). And `text` pins no optical
+// size: it serves h2–h6 and every font-heading element from 15 px to 48 px.
+test('Fraunces presets: only the accent turns WONK on, and text lets optical size follow the render size', () => {
+  const axes = (preset) => Object.fromEntries([...preset.matchAll(/"([A-Za-z]{4})"\s+([\d.]+)/g)].map((m) => [m[1], Number(m[2])]))
+  for (const [name, preset] of Object.entries(tokens.fraunces)) {
+    const a = axes(preset)
+    assert.ok('WONK' in a, `--fraunces-${name} must name WONK explicitly (the font defaults it to 1)`)
+    assert.equal(a.WONK, name === 'accent' ? 1 : 0, `--fraunces-${name}: WONK is for the accent word only`)
+  }
+  assert.ok(!('opsz' in axes(tokens.fraunces.text)), '--fraunces-text must not pin opsz')
+})

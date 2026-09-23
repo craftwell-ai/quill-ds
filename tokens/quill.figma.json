@@ -1330,12 +1330,12 @@
       },
       "text": {
         "$type": "other",
-        "$value": "\"opsz\" 24, \"SOFT\" 50",
+        "$value": "\"SOFT\" 50, \"WONK\" 0",
         "$description": "CSS-only — not a Figma variable"
       },
       "caption": {
         "$type": "other",
-        "$value": "\"opsz\" 14, \"SOFT\" 100",
+        "$value": "\"opsz\" 14, \"SOFT\" 100, \"WONK\" 0",
         "$description": "CSS-only — not a Figma variable"
       }
     }

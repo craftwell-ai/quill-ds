@@ -210,11 +210,16 @@ export const tokens = {
     durFast: '0.2s', dur: '0.3s', durSlow: '0.5s',
     lift: 'translateY(-4px)', liftSm: 'translateY(-2px)',
   },
+  // WONK (the off-kilter glyph set) is ON by default in the font, so a preset that
+  // does not name it gets WONK 1 — which is why text and caption set it to 0: the
+  // docs reserve the off-kilter forms for the accent word. text pins no optical
+  // size: it serves h2–h6 and every font-heading element from 15 px to 48 px, and
+  // opsz should follow the size; display/accent/caption pin theirs on purpose.
   fraunces: {
     display: '"opsz" 144, "SOFT" 50, "WONK" 0',
     accent: '"opsz" 144, "SOFT" 100, "WONK" 1',
-    text: '"opsz" 24, "SOFT" 50',
-    caption: '"opsz" 14, "SOFT" 100',
+    text: '"SOFT" 50, "WONK" 0',
+    caption: '"opsz" 14, "SOFT" 100, "WONK" 0',
   },
   // User-selectable accent: which pigment carries the voice (eyebrows, accent
   // italics, links, focus rings). Switched via data-accent="…" on <html>;
