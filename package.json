@@ -21,6 +21,7 @@
     "build:icons": "node scripts/build-icons.mjs",
     "build:icon-manifest": "node scripts/build-manifest.mjs",
     "build:agent-rules": "node scripts/build-agent-rules.mjs",
+    "build:check": "node scripts/build-check.mjs",
     "drift-audit": "node scripts/drift-audit.mjs",
     "pattern-scan": "node scripts/pattern-scan.mjs",
     "pretest:tokens": "npm run build:icons",
