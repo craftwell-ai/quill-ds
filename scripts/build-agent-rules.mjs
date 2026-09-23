@@ -107,7 +107,8 @@ export function renderAgentRules() {
   const primitives = ALL_USAGE.filter((u) => u.kind === 'component').map((u) => u.name)
   p('## Primitives')
   p()
-  p(`Stock shadcn components restyled by the token layer — install them from shadcn (\`npx shadcn@latest add button\`), never hand-roll them. Quill-specific usage rules exist at \`${HOME}/usage/<name>.md\` for: ${primitives.join(', ')}.`)
+  // Names only: the per-primitive rules live in the usage pages, and this file is budgeted.
+  p(`Stock shadcn components restyled by the token layer — install from shadcn (\`npx shadcn@latest add button\`), never hand-roll. Quill usage rules at \`${HOME}/usage/<name>.md\` for: ${primitives.join(', ')}.`)
   p()
 
   p('## Updating and verifying')

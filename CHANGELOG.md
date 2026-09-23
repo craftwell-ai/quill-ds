@@ -12,6 +12,40 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.12.0] — 2026-09-23
+
+The file channel works. An app that installs the theme as a file now gets every Quill
+utility from one import line — and the trap it sat in is a test, not a memory.
+
+### Changed
+- **The shipped theme file carries the utility layer.** `registry/themes/quill.css` now opens
+  with the dark variant (`@custom-variant dark (&:is(.dark *, [data-theme=…] *))`, stock class
+  kept) and the `@theme inline { … }` block — the same keys the CLI channel merges. Imported from
+  **inside** the stylesheet that holds `@import "tailwindcss"` (`@import "./quill-theme.css"` on
+  the next line), the block is honoured and `font-heading`, `text-2xs`, the pigments, the role
+  and status classes and `dark:` all exist (measured: 950 of 950 utilities). Imported from a
+  layout — the only wiring the docs used to describe, and the one tech-careers is on — both are
+  inert, exactly as before: nothing changes for an existing app, its colours still apply, and
+  its utilities are still dead until the import moves. Public API: the file grows by the
+  variant and ~110 theme keys; `library-sync` carries it downstream as usual.
+- **Docs say the one wiring.** A "Wiring" paragraph in theme-docs (→ `llms.txt`, the `quill`
+  item's install-time docs, the rules file) and the file's own header; the `dark:` paragraph
+  shrinks to "nothing to add by hand". The self-check's "theme not wired" fix names the exact
+  line.
+
+### Added
+- `scripts/file-channel.test.mjs`: compiles the built file both ways — inside the Tailwind
+  entry every Quill utility must resolve and `dark:` must fire on the three dark themes with
+  the stock class kept; from outside, `font-heading`, `text-2xs` and `bg-background` must stay
+  inert. The channel is proven, permanently. A fourth case pins the order rule below.
+- **Order rule, and a check for it.** `shadcn init` writes its own `@custom-variant dark
+  (&:is(.dark *))` into the stylesheet, and Tailwind keeps the *last* dark definition — so if
+  Quill's import lands above that line, `dark:` silently stops following `data-theme` while
+  everything else works. The docs say "below any `@custom-variant dark` line shadcn wrote", and
+  `@quill/check` gains rule `dark-variant`: when Quill's theme is wired but `dark:` ignores
+  `data-theme`, it names the stock line and the move. (Regenerate the check in an app with
+  `npx shadcn@latest add @quill/check --overwrite`.)
+
 ## [0.11.1] — 2026-09-23
 
 Agent-readiness: every block now says what it is *not* for, at the moment an agent picks one.

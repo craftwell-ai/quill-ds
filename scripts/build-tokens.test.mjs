@@ -38,12 +38,16 @@ test('renderCss reproduces primitive + dk + remap declarations', () => {
   assert.match(theme, /--text-xl:\s*1\.5rem;/)
 })
 
-test('registryBlock emits :root + all theme blocks, no @theme', () => {
+test('registryBlock emits the dark variant, @theme inline, :root and all theme blocks', () => {
   const css = renderCss(tokens)
   const block = registryBlock(css)
+  // Since 0.12.0 the file carries the utility layer too: honoured when imported from
+  // inside the Tailwind stylesheet, inert (as before) when imported from a layout.
+  assert.ok(block.startsWith('@custom-variant dark (&:is(.dark *, [data-theme="dark"] *'), 'the file opens with the dark variant, stock class kept')
+  assert.match(block, /@theme inline \{\n  --font-sans:/)
+  assert.match(block, /--color-paper: var\(--paper\);/)
   assert.match(block, /:root \{/)
   assert.match(block, /\[data-theme="dark"\] \{/)
-  assert.equal(/@theme/.test(block), false)
   assert.match(block, /--terracotta-deep: #8A4530;/)
   // classic themes ship to consumers too, with the right color-scheme
   assert.match(block, /\[data-theme="classic-light"\] \{\n  color-scheme: light;/)

@@ -128,3 +128,18 @@ test("the check runs clean on Quill's own shipped blocks, lib and examples", asy
   assert.deepEqual(active.map((f) => `${f.file}:${f.line} ${f.value} [${f.rule}]`), [], "Quill's own code must satisfy the rules it enforces on apps")
   assert.deepEqual(notes, [])
 })
+
+test('rule dark-variant: a stock @custom-variant dark line below the import overrides Quill\'s, and the check says so', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'quill-check-'))
+  writeFileSync(join(dir, 'globals.css'), `@import "tailwindcss";\n@import "${join(repoRoot, 'registry/themes/quill.css')}";\n@custom-variant dark (&:is(.dark *));\n`)
+  writeFileSync(join(dir, 'page.tsx'), 'export const P = () => <div className="bg-background dark:bg-card">x</div>\n')
+  const { findings } = await check.runCheck({ cwd: repoRoot, dirs: [dir], css: join(dir, 'globals.css') })
+  const dv = findings.filter((f) => f.rule === 'dark-variant')
+  assert.equal(dv.length, 1)
+  assert.equal(dv[0].line, 3)
+  assert.match(dv[0].fix, /below it/)
+  // and the fixed order is clean
+  writeFileSync(join(dir, 'globals.css'), `@import "tailwindcss";\n@custom-variant dark (&:is(.dark *));\n@import "${join(repoRoot, 'registry/themes/quill.css')}";\n`)
+  const ok = await check.runCheck({ cwd: repoRoot, dirs: [dir], css: join(dir, 'globals.css') })
+  assert.equal(ok.findings.filter((f) => f.rule === 'dark-variant').length, 0)
+})
