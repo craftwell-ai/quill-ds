@@ -262,7 +262,7 @@ Loaded from Google Fonts by the `@import` at the top of the shipped theme file. 
 ### Fraunces variable axes
 - `opsz` 9–144 matches optical size to render size · `SOFT` 0–100 rounds terminals as size grows · `WONK` 0 | 1 is the off-kilter glyph set, **accents only**.
 - Presets: `--fraunces-display` (`"opsz" 144, "SOFT" 50, "WONK" 0`) · `--fraunces-accent` (`"opsz" 144, "SOFT" 100, "WONK" 1`, the italic emphasis) · `--fraunces-text` (`"SOFT" 50, "WONK" 0`) · `--fraunces-caption` (`"opsz" 14, "SOFT" 100, "WONK" 0`).
-- One rule: every Fraunces text is soft. `h2`–`h6` and anything set with `font-heading` (a CardTitle, a stat figure, a wordmark) take `--fraunces-text`, whose optical size follows the render size; `h1` takes `--fraunces-display`; `.fraunces-accent` and `.fraunces-caption` are the two named exceptions. The base layer applies all of it — nothing to add per element.
+- Every Fraunces text is soft: `h2`–`h6` and `font-heading` text take `--fraunces-text` (optical size follows the render size), `h1` takes `--fraunces-display`, `.fraunces-accent` / `.fraunces-caption` are the exceptions. The base layer applies all of it.
 
 ### Type scale
 | Token | Size | Line | Use |

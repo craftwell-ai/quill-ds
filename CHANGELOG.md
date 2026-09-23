@@ -12,6 +12,38 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.11.0] — 2026-09-23
+
+`@quill/check` — a self-check agents run in their own app. Spec:
+`docs/superpowers/specs/2026-09-23-quill-check-design.md`.
+
+### Added
+- **`npx shadcn@latest add @quill/check` → `scripts/quill-check.mjs`.** Quill's rules were
+  reading material; nothing told an agent when it broke one. `node scripts/quill-check.mjs`
+  lists every place the app's code stepped outside the system, each with the fix to write:
+  stock Tailwind colours (`bg-white` → `bg-background` or `bg-card`, with the role's intent
+  line), raw colour values (the nearest Quill colours named), bracket values where a token
+  exists (`text-[13px]` → `text-sm`; `text-[var(--accent-pigment-text)]` →
+  `text-accent-pigment-text`), retired names (`indigo-brand` → `indigo`, with the version that
+  renamed it), and classes that produce no CSS in *this* app — asked of the app's own Tailwind
+  v4, so the file-channel trap ("installed the rules, not the styles") reads as "theme not
+  wired", not as typos, and a typo gets its nearest Quill class. Layout brackets (`w-[420px]`)
+  are counted, never flagged: Quill does not own composition. Exceptions:
+  `// quill-check: allow <rule> — <why>` on the same line, or on its own line above the element;
+  a reason is mandatory and every allow is counted in the summary. Exit 1 on findings; `--json`
+  for tools; `--dir`, `--css`, `--include-ui`, `--quiet`. Dependency-free; generated from the
+  token source and the role intents by `build:check`, so it cannot disagree with the system.
+  Guards in `scripts/quill-check.test.mjs`: the generated file must be in sync; a fixture with
+  one of each violation must be flagged with the expected fix; and Quill's own blocks, lib and
+  examples must run clean.
+- The agent-rules file, the registry docs and `llms.txt` tell agents to run it after every
+  UI change.
+
+### Changed
+- `kanban` avatar initials: `text-[10px]` → `text-2xs` (11.2 px) — the check's first finding on
+  Quill's own code; six Figma layers updated, page re-stamped. The Google "G" mark's four brand
+  hex fills in `login-oauth` and `signup-social` carry allows with their reason.
+
 ## [0.10.14] — 2026-09-22
 
 One rule for Fraunces: every Fraunces text is soft. Decided 2026-09-22 after the axes audit

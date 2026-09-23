@@ -100,9 +100,10 @@ with `compile(css, { base, loadStylesheet })`, builds all candidates in one call
 candidate as resolved when its escaped class selector appears in the output. Exact, zero
 maintained lists, and the file-channel trap surfaces as "theme not wired" rather than a typo.
 
-Fallback when `tailwindcss` cannot be loaded or no entry is found: rule 1 runs against a
-generated static list (every Quill utility + Tailwind's built-in names the script knows), and the
-summary says so.
+Fallback when `tailwindcss` cannot be loaded or no entry is found: rules 2–5 still run (they
+are pure text rules); rule 1 is skipped and the summary says why ("run from the app root, or
+pass `--css <entry>`"). A guessed static list would flag real classes the app defines itself —
+a check that is sometimes wrong is a check agents learn to ignore.
 
 ### Generated, guarded, documented (quill-ds side)
 
@@ -116,8 +117,8 @@ summary says so.
   checker runs **clean** on `registry/blocks`, `registry/lib`, `registry/examples` against the
   site's Tailwind entry (`kanban.tsx:26` `text-[10px]` → `text-2xs` is the first fix this
   forces, mirrored to Figma and re-stamped); (c) a fixture at `scripts/check/fixture.tsx`
-  holding one of each violation plus one allow yields exactly the expected findings; (d) the
-  fallback path produces the same findings on the fixture.
+  holding one of each violation plus one allow yields exactly the expected findings; (d) with Tailwind
+  unavailable, the fixture yields the same rule 2–5 findings and a printed "rule 1 skipped" notice.
 - `registry.json` gains the `check` item; `src/usage/theme-docs.mjs` and the agent-rules file
   gain one line: "after changing UI, run `node scripts/quill-check.mjs` and clear every
   finding"; `llms.txt` quick start mentions it; CHANGELOG + version bump (minor: 0.11.0 — a

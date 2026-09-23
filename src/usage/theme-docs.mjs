@@ -44,15 +44,17 @@ export function themeDocsParagraphs() {
 
     `Accents — set data-accent on <html>, independently of the theme: ${accents}. The accent drives links, eyebrows, focus rings and accent italics. The two attributes are separate axes; a dark ground and an accent choice do not constrain each other.`,
 
-    `Runtime contract — the theme-selector block owns both attributes. After hydration it reads localStorage ("quill-theme" and "quill-accent") and stamps <html>. Prerendered markup is always ${DEFAULT_MODE.label} + ${DEFAULT_ACCENT}, so server output and first paint agree.`,
+    `Runtime contract — the theme-selector block owns both attributes: after hydration it reads localStorage ("quill-theme", "quill-accent") and stamps <html>. Prerendered markup is always ${DEFAULT_MODE.label} + ${DEFAULT_ACCENT}, so server output and first paint agree.`,
 
-    `Charts — use the chart tokens (--chart-series-1..${chartSeriesCount()}, the sequential and diverging ramps), never raw pigments. Assign series colours in that fixed order and never reorder or cycle survivors when a filter drops one: the order is what keeps the palette distinguishable under all three dichromacies.`,
+    `Charts — use the chart tokens (--chart-series-1..${chartSeriesCount()}, the sequential and diverging ramps), never raw pigments. Assign series colours in that fixed order and never reorder or cycle survivors when a filter drops one: the order keeps the palette distinguishable under all three dichromacies.`,
 
-    `Fonts — Raleway for body, Fraunces for display. The theme file already @imports both from Google Fonts, so no next/font setup is needed; loading them again under a different family name is what makes the theme's literal font-family names fail to match.`,
+    `Fonts — Raleway (body) and Fraunces (display) load through the theme file's Google Fonts @import; no next/font setup. Never load them again under another family name: the theme matches the literal names.`,
 
-    `dark: utilities — stock shadcn primitives carry dark: tweaks, and a stock app only fires them on the .dark class. Installing with the CLI adds the rule that makes dark: follow Quill's dark themes as well. If you installed the theme as a file instead, add this line to your main stylesheet, after @import "tailwindcss": @custom-variant dark (&:is(.dark *, ${ALL_MODES.filter((m) => m.colorScheme === 'dark').map((m) => `[data-theme="${m.attr}"] *`).join(', ')}));`,
+    `dark: utilities — stock primitives carry dark: tweaks that only fire on the .dark class. A CLI install adds the rule that makes them follow Quill's dark themes; a file install needs this line after @import "tailwindcss": @custom-variant dark (&:is(.dark *, ${ALL_MODES.filter((m) => m.colorScheme === 'dark').map((m) => `[data-theme="${m.attr}"] *`).join(', ')}));`,
 
-    `Updating — re-run with --overwrite, not --yes. On a file you have changed, --yes does not overwrite: it prompts in a terminal and silently skips when non-interactive.`,
+    `Self-check — after changing UI, run \`node scripts/quill-check.mjs\` (install once: \`npx shadcn@latest add @quill/check\`) and clear every finding: stock colours, raw colours, bracket values where a token exists, retired names, dead classes. An exception: \`// quill-check: allow <rule> — <why>\` on the line above.`,
+
+    `Updating — re-run with --overwrite, not --yes: on a file you have changed, --yes prompts in a terminal and silently skips when non-interactive.`,
 
     `Full machine-readable reference for agents: ${LLMS_URL}. Per-component usage guides at /usage/<name>.md.`,
   ]
