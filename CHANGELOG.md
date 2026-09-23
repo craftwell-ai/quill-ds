@@ -12,6 +12,34 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.12.1] — 2026-09-23
+
+Parity 6 (CRA-224): the nightly picture check. Nothing an app receives changes.
+
+### Added
+- **`scripts/figma-visual-diff.mjs` + a `visual` job in `figma-parity.yml`.** For every
+  mirrored pattern page and template (50 pairs): export the Figma frame at 2×, render the
+  block's canonical story in a desktop viewport with the block pinned to the frame's width
+  (the pages are drawn at their desktop layouts and Tailwind's breakpoints read the viewport,
+  not the container), flatten the transparent export onto paper, freeze animations, and diff
+  with `pixelmatch` (anti-aliasing ignored). Per pair: `diffPct`, sizes, and a
+  Figma | Storybook | diff strip; a summary table in the job summary and the strips as an
+  artifact. `figma/visual-baseline.json` holds the accepted numbers; a **regression** is more
+  than 1.0 point above the accepted `diffPct` or more than 8 px of size drift. Report-only
+  (`continue-on-error`) until the tolerance has held; then `--strict`. Spec:
+  `docs/superpowers/specs/2026-09-23-figma-visual-diff-design.md`.
+- **First baseline:** 50 pairs, median 3.16 %, max 7.51 % (`signup`), 0 errors; a strict
+  re-run against it is clean. The residual is font rasterisation. **Real differences it
+  surfaced, for a human to settle** (size drift > 8 px, Figma → Storybook, CSS px):
+  `calendar-range` 557 → 451 tall, `calendar-page` 444 → 354, `feature-section` 368 → 427
+  (the headline wraps to two lines in code's `max-w-xl`; Figma draws it on one), `tabs-page`
+  256 → 212, `faq` 457 → 420, `footer` 304 → 274, `profile-card` 327 → 348,
+  `example-marketing-page` 2403 → 2427, `notifications` 285 → 266, `checkout` 446 → 462,
+  `contact-form` 481 → 466, `settings` 400 → 386, `cookie-consent` 532×124 → 520×112, and
+  `theme-selector`, whose Figma page is the 91×28 trigger while the story shows the open
+  panel (521×367) — a pair to re-cut.
+- Dev dependencies: `pixelmatch`, `pngjs` (the latter was only transitive before).
+
 ## [0.12.0] — 2026-09-23
 
 The file channel works. An app that installs the theme as a file now gets every Quill

@@ -29,6 +29,26 @@
    bound to `deprecated/text-strong`, constraints SCALE so it resizes cleanly inside a slot.
    Last run: 2026-09-18 — 91 icons (40 refreshed in place, 51 created).
 
+## Visual diff (nightly, CRA-224)
+
+The picture check. `scripts/figma-visual-diff.mjs` exports every mirrored pattern page and
+template from Figma at 2x, renders the block's canonical story in a desktop viewport with the
+block pinned to the frame's width, and diffs the two (`pixelmatch`, anti-aliasing ignored —
+Figma and Chromium rasterise glyphs differently). Each pair gets a Figma | Storybook | diff
+strip; the run writes a table (`summary.md`) and, in CI, uploads the strips as an artifact.
+
+`figma/visual-baseline.json` holds the accepted `diffPct` and sizes per pair. A run reports a
+**regression** only when a pair is more than 1.0 point above its accepted value or its size
+drifted by more than 8 px; report-only until `--strict`. First baseline 2026-09-23: 50 pairs,
+median 3.2 %, max 7.5 % (charts). The residual is font rasterisation; the size drifts listed
+in the CHANGELOG are real content differences for a human to settle, not noise.
+
+```bash
+npm run build-storybook -- -o .visual/sb --quiet
+npm run figma:visual                        # FIGMA_TOKEN from .env; --pairs a,b to narrow
+node --env-file=.env scripts/figma-visual-diff.mjs --out .visual/out --sb .visual/sb --update-baseline   # after reading the strips
+```
+
 ## Names
 
 A variable is its CSS name with one group level: `--paper-warm` is `color/paper-warm`, `--space-2_5` is `space/2_5`,
