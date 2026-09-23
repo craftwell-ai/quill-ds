@@ -8,7 +8,7 @@ import { join, relative, resolve, dirname, extname } from 'node:path'
 import { createRequire } from 'node:module'
 
 export const DATA = {
- "version": "0.12.3",
+ "version": "0.13.0",
  "prefixes": [
   "bg",
   "text",
@@ -818,38 +818,6 @@ export const DATA = {
   "caret-indigo-deep",
   "accent-indigo-deep",
   "shadow-indigo-deep",
-  "bg-indigo-brand",
-  "text-indigo-brand",
-  "border-indigo-brand",
-  "ring-indigo-brand",
-  "outline-indigo-brand",
-  "fill-indigo-brand",
-  "stroke-indigo-brand",
-  "from-indigo-brand",
-  "to-indigo-brand",
-  "via-indigo-brand",
-  "decoration-indigo-brand",
-  "divide-indigo-brand",
-  "placeholder-indigo-brand",
-  "caret-indigo-brand",
-  "accent-indigo-brand",
-  "shadow-indigo-brand",
-  "bg-indigo-brand-deep",
-  "text-indigo-brand-deep",
-  "border-indigo-brand-deep",
-  "ring-indigo-brand-deep",
-  "outline-indigo-brand-deep",
-  "fill-indigo-brand-deep",
-  "stroke-indigo-brand-deep",
-  "from-indigo-brand-deep",
-  "to-indigo-brand-deep",
-  "via-indigo-brand-deep",
-  "decoration-indigo-brand-deep",
-  "divide-indigo-brand-deep",
-  "placeholder-indigo-brand-deep",
-  "caret-indigo-brand-deep",
-  "accent-indigo-brand-deep",
-  "shadow-indigo-brand-deep",
   "bg-gold",
   "text-gold",
   "border-gold",
@@ -1033,8 +1001,8 @@ export const DATA = {
   "--terracotta-deep": "terracotta-deep",
   "--moss": "moss",
   "--moss-deep": "moss-deep",
-  "--indigo": "indigo-brand",
-  "--indigo-deep": "indigo-brand-deep",
+  "--indigo": "indigo",
+  "--indigo-deep": "indigo-deep",
   "--gold": "gold",
   "--gold-deep": "gold-deep",
   "--gold-text": "gold-text",
@@ -1101,57 +1069,70 @@ export const DATA = {
   "classes": {
    "indigo-brand": {
     "use": "indigo",
-    "since": "0.9.60"
+    "since": "0.9.60",
+    "removed": "0.13.0"
    },
    "indigo-brand-deep": {
     "use": "indigo-deep",
-    "since": "0.9.60"
+    "since": "0.9.60",
+    "removed": "0.13.0"
    }
   },
   "vars": {
    "--surface-page": {
     "aliases": "var(--paper)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--surface-card": {
     "aliases": "var(--paper-warm)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--surface-well": {
     "aliases": "var(--paper-deep)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--text-strong": {
     "aliases": "var(--ink)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--text-body": {
     "aliases": "var(--ink-soft)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--text-muted-color": {
     "aliases": "var(--ink-muted)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--text-on-ink": {
     "aliases": "var(--paper)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--border-card": {
     "aliases": "var(--line-soft)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--border-field": {
     "aliases": "var(--line-control)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--border-divider": {
     "aliases": "var(--line-faint)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    },
    "--danger": {
     "aliases": "var(--terracotta-deep)",
-    "since": "0.10.0"
+    "since": "0.10.0",
+    "removed": "0.13.0"
    }
   }
  },
@@ -1508,7 +1489,7 @@ export function retiredRule(base) {
   for (const name of Object.keys(DATA.retired.classes).sort((a, b) => b.length - a.length)) {
     if (base.includes(name)) {
       const r = DATA.retired.classes[name]
-      return { rule: 'retired', fix: `→ ${base.replace(name, r.use)} (renamed in ${r.since})` }
+      return { rule: 'retired', fix: `→ ${base.replace(name, r.use)} (renamed in ${r.since}; the old name compiles to nothing since ${r.removed})` }
     }
   }
   return null
@@ -1544,7 +1525,7 @@ export function rawColourFindings(lines) {
     }
     for (const m of text.matchAll(/var\((--[a-z0-9-]+)\)/g)) {
       const r = DATA.retired.vars[m[1]]
-      if (r) out.push({ line: i + 1, col: m.index + 1, rule: 'retired', value: m[0], fix: `→ retired in ${r.since}; it aliases ${r.aliases} — use the role that owns that value (roles section of .claude/rules/quill.md)` })
+      if (r) out.push({ line: i + 1, col: m.index + 1, rule: 'retired', value: m[0], fix: `→ retired in ${r.since} and gone since ${r.removed}, so it resolves to nothing; it was ${r.aliases} — use the role that owns that value (roles section of .claude/rules/quill.md)` })
     }
   })
   return out

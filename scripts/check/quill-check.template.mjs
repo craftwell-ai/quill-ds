@@ -182,7 +182,7 @@ export function retiredRule(base) {
   for (const name of Object.keys(DATA.retired.classes).sort((a, b) => b.length - a.length)) {
     if (base.includes(name)) {
       const r = DATA.retired.classes[name]
-      return { rule: 'retired', fix: `→ ${base.replace(name, r.use)} (renamed in ${r.since})` }
+      return { rule: 'retired', fix: `→ ${base.replace(name, r.use)} (renamed in ${r.since}; the old name compiles to nothing since ${r.removed})` }
     }
   }
   return null
@@ -218,7 +218,7 @@ export function rawColourFindings(lines) {
     }
     for (const m of text.matchAll(/var\((--[a-z0-9-]+)\)/g)) {
       const r = DATA.retired.vars[m[1]]
-      if (r) out.push({ line: i + 1, col: m.index + 1, rule: 'retired', value: m[0], fix: `→ retired in ${r.since}; it aliases ${r.aliases} — use the role that owns that value (roles section of .claude/rules/quill.md)` })
+      if (r) out.push({ line: i + 1, col: m.index + 1, rule: 'retired', value: m[0], fix: `→ retired in ${r.since} and gone since ${r.removed}, so it resolves to nothing; it was ${r.aliases} — use the role that owns that value (roles section of .claude/rules/quill.md)` })
     }
   })
   return out

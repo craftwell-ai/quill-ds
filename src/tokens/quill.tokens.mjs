@@ -302,12 +302,13 @@ export const tokens = {
     // A secondary badge rendered as a link hovers to `bg-secondary/80`.
     { of: 'secondary', pct: 80 },
   ],
-  // Retired 0.10.0. A second vocabulary for what the contract already says
-  // (`--surface-card` is `--card`), which no shipped component and no utility ever
-  // used while DESIGN.md told agents to reach for it. Still emitted so an app that
-  // wrote `var(--text-strong)` keeps its colour; gone from Figma's picker, the
-  // docs and this repo's code (deprecated-tokens.test.mjs). Remove in a later minor.
-  deprecated: {
+  // Retired 0.10.0, removed from the CSS 0.13.0. A second vocabulary for what the
+  // contract already says (`--surface-card` is `--card`), which no shipped component
+  // and no utility ever used while DESIGN.md told agents to reach for it. No longer
+  // emitted anywhere: the list stays so `@quill/check` can name each one with the
+  // value it had (retired-tokens.test.mjs), and so Figma keeps its variable parked
+  // under `deprecated/*` — the Icon vector fill is still bound to one.
+  retired: {
     'surface-page': 'var(--paper)', 'surface-card': 'var(--paper-warm)', 'surface-well': 'var(--paper-deep)',
     'text-strong': 'var(--ink)', 'text-body': 'var(--ink-soft)', 'text-muted-color': 'var(--ink-muted)',
     'text-on-ink': 'var(--paper)',
