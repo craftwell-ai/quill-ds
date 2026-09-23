@@ -371,3 +371,52 @@ export async function runCheck({ cwd = process.cwd(), dirs, includeUi = false, c
   findings.sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line || a.col - b.col))
   return { findings, layout, notes }
 }
+
+// ------------------------------------------------------------------ output
+const RULE_LABEL = { unresolved: 'unresolved', palette: 'palette', 'raw-color': 'raw colour', bracket: 'bracket', retired: 'retired', 'allow-without-reason': 'allow' }
+
+export function formatText({ findings, layout, notes }, { quiet = false } = {}) {
+  const lines = []
+  const active = findings.filter((f) => !f.allowed)
+  if (!quiet) {
+    let current = null
+    for (const f of findings) {
+      if (f.file !== current) {
+        current = f.file
+        if (lines.length) lines.push('')
+        lines.push(f.file)
+      }
+      lines.push(`  ${String(f.line).padStart(4)}  ${f.value.padEnd(28)}  ${RULE_LABEL[f.rule].padEnd(10)}  ${f.allowed ? `allowed — ${f.allowed}` : f.fix}`)
+    }
+    if (lines.length) lines.push('')
+  }
+  lines.push(`${active.length} finding${active.length === 1 ? '' : 's'} · ${findings.length - active.length} allowed · ${layout} layout size${layout === 1 ? '' : 's'} not checked`)
+  for (const n of notes) lines.push(n)
+  return lines.join('\n')
+}
+
+export async function main(argv = process.argv.slice(2)) {
+  const opts = { dirs: [], includeUi: false, json: false, quiet: false, css: undefined }
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i]
+    if (a === '--dir') opts.dirs.push(resolve(process.cwd(), argv[++i]))
+    else if (a === '--css') opts.css = argv[++i]
+    else if (a === '--include-ui') opts.includeUi = true
+    else if (a === '--json') opts.json = true
+    else if (a === '--quiet') opts.quiet = true
+    else if (a === '--help' || a === '-h') {
+      console.log(`quill-check ${DATA.version}\n  node scripts/quill-check.mjs [--dir <path>]... [--css <tailwind entry>] [--include-ui] [--json] [--quiet]\n  Lists every place the code stepped outside Quill, with the fix to write. Exit 1 when anything is found.`)
+      return 0
+    } else {
+      console.error(`unknown option ${a} — try --help`)
+      return 2
+    }
+  }
+  const result = await runCheck({ cwd: process.cwd(), dirs: opts.dirs.length ? opts.dirs : undefined, includeUi: opts.includeUi, css: opts.css })
+  const active = result.findings.filter((f) => !f.allowed).length
+  if (opts.json) console.log(JSON.stringify({ version: DATA.version, summary: { findings: active, allowed: result.findings.length - active, layout: result.layout, notes: result.notes }, findings: result.findings }, null, 1))
+  else console.log(formatText(result, { quiet: opts.quiet }))
+  return active ? 1 : 0
+}
+
+if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) process.exit(await main())

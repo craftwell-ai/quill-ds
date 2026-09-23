@@ -91,3 +91,31 @@ test('rule 1 is skipped, not guessed, when Tailwind cannot be loaded', async () 
   assert.equal(notes.length, 1)
   assert.match(notes[0], /rule 1 skipped/)
 })
+
+// ---------------------------------------------------------------- CLI
+import { execFileSync } from 'node:child_process'
+import { writeFileSync, mkdtempSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+
+const runCli = (args) => {
+  try { return { out: execFileSync(process.execPath, [CHECK_PATH, ...args], { cwd: repoRoot, encoding: 'utf8' }), code: 0 } } catch (e) { return { out: e.stdout, code: e.status } }
+}
+
+test('CLI: text output groups by file with a fix per line, summary counts allows and layout, exit 1 on findings', () => {
+  const { out, code } = runCli(['--dir', join(here, 'check/fixture'), '--css', join(repoRoot, 'src/app/globals.css')])
+  assert.equal(code, 1)
+  assert.match(out, /^scripts\/check\/fixture\/fixture\.tsx$/m)
+  assert.match(out, /^\s+\d+\s+bg-white\s+palette\s+→/m)
+  assert.match(out, /\d+ findings · 1 allowed · 3 layout sizes not checked/)
+})
+
+test('CLI: --json is machine-readable and exit 0 when every finding is allowed', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'quill-check-'))
+  writeFileSync(join(dir, 'ok.tsx'), '{/* quill-check: allow raw-color — brand mark */}\nexport const A = () => <i style={{ color: "#4285F4" }} className="bg-card" />\n')
+  const { out, code } = runCli(['--dir', dir, '--css', join(repoRoot, 'src/app/globals.css'), '--json'])
+  assert.equal(code, 0)
+  const j = JSON.parse(out)
+  assert.equal(j.summary.findings, 0)
+  assert.equal(j.summary.allowed, 1)
+  assert.equal(j.findings[0].allowed, 'brand mark')
+})
