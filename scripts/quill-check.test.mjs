@@ -122,6 +122,20 @@ test('CLI: --json is machine-readable and exit 0 when every finding is allowed',
   assert.equal(j.findings[0].allowed, 'brand mark')
 })
 
+test('CLI: --json arrives whole when the report is larger than a pipe buffer', () => {
+  // main() used to end with process.exit(code): on macOS, stdout to a pipe is asynchronous, so
+  // a report past ~64 KB lost its tail and an agent parsing it got "Unterminated string".
+  // Seen on tech-careers (2,197 findings). process.exitCode lets the pipe drain first.
+  const dir = mkdtempSync(join(tmpdir(), 'quill-check-'))
+  const lines = Array.from({ length: 1500 }, (_, i) => `<i style={{ color: "#${((i * 7919) % 0xffffff).toString(16).padStart(6, '0')}" }} />`)
+  writeFileSync(join(dir, 'big.tsx'), `export const B = () => <>${lines.join('\n')}</>\n`)
+  const { out, code } = runCli(['--dir', dir, '--css', join(repoRoot, 'src/app/globals.css'), '--json'])
+  assert.equal(code, 1)
+  assert.ok(out.length > 65536, `the report should exceed the 64 KB pipe buffer, got ${out.length}`)
+  const j = JSON.parse(out) // throws on a truncated report
+  assert.equal(j.summary.findings, 1500)
+})
+
 // ---------------------------------------------------------------- dogfood
 test("the check runs clean on Quill's own shipped blocks, lib and examples", async () => {
   const dirs = ['registry/blocks', 'registry/lib', 'registry/examples'].map((d) => join(repoRoot, d))
@@ -144,4 +158,20 @@ test('rule dark-variant: a stock @custom-variant dark line below the import over
   writeFileSync(join(dir, 'globals.css'), `@import "tailwindcss";\n@custom-variant dark (&:is(.dark *));\n@import "${join(repoRoot, 'registry/themes/quill.css')}";\n`)
   const ok = await check.runCheck({ cwd: repoRoot, dirs: [dir], css: join(dir, 'globals.css') })
   assert.equal(ok.findings.filter((f) => f.rule === 'dark-variant').length, 0)
+})
+
+test('rule dark-variant: a theme imported from the layout, not the stylesheet, gets told to add the import — not to move one', async () => {
+  // tech-careers 2026-09-23: the stylesheet held shadcn's @theme (so bg-background resolved) and
+  // the stock dark line, and quill-theme.css was imported from layout.tsx. The fix text said the
+  // stock line "sits below Quill's" — there was no Quill import to sit above.
+  const dir = mkdtempSync(join(tmpdir(), 'quill-check-'))
+  writeFileSync(join(dir, 'globals.css'), '@import "tailwindcss";\n@custom-variant dark (&:is(.dark *));\n@theme inline {\n  --color-background: var(--background);\n  --color-card: var(--card);\n}\n')
+  writeFileSync(join(dir, 'page.tsx'), 'export const P = () => <div className="bg-background dark:bg-card">x</div>\n')
+  const { findings } = await check.runCheck({ cwd: repoRoot, dirs: [dir], css: join(dir, 'globals.css') })
+  const dv = findings.filter((f) => f.rule === 'dark-variant')
+  assert.equal(dv.length, 1)
+  assert.equal(dv[0].line, 2)
+  assert.match(dv[0].fix, /not imported from this stylesheet/)
+  assert.match(dv[0].fix, /directly below this line/)
+  assert.doesNotMatch(dv[0].fix, /sits below Quill's/)
 })
