@@ -7,11 +7,12 @@ This app is built on Quill (https://www.quilldesignsystem.com): a token layer wi
 ## Theming contract
 
 - Themes — set data-theme on <html>: unset (or data-theme="light") → Dawn (default) · data-theme="dark" → Dusk · data-theme="classic-light" → Classic Light · data-theme="classic-dark" → Classic Dark · data-theme="intelligent" → Intelligent. 5 themes in total.
-- Accents — set data-accent on <html>, independently of the theme: terracotta · moss (default) · indigo · gold. The accent drives links, eyebrows, focus rings and accent italics. The two attributes are separate axes; a dark ground and an accent choice do not constrain each other.
-- Runtime contract — the theme-selector block owns both attributes: after hydration it reads localStorage ("quill-theme", "quill-accent") and stamps <html>. Prerendered markup is always Dawn + moss, so server output and first paint agree.
+- Accents — set data-accent on <html>, independently of the theme: terracotta · moss (default) · indigo · gold. The accent drives links, eyebrows, focus rings and accent italics. The two axes are independent.
+- Runtime contract — the theme-selector block owns both attributes: after hydration it reads localStorage ("quill-theme", "quill-accent") and stamps <html>. Prerendered markup is always Dawn + moss, so first paint matches the server.
 - Charts — use the chart tokens (--chart-series-1..5, the sequential and diverging ramps), never raw pigments. Assign series colours in that fixed order and never reorder or cycle survivors when a filter drops one: the order keeps the palette distinguishable under all three dichromacies.
-- Fonts — Raleway (body) and Fraunces (display) load through the theme file's Google Fonts @import; no next/font setup. Never load them again under another family name: the theme matches the literal names.
-- dark: utilities — stock primitives carry dark: tweaks that only fire on the .dark class. A CLI install adds the rule that makes them follow Quill's dark themes; a file install needs this line after @import "tailwindcss": @custom-variant dark (&:is(.dark *, [data-theme="dark"] *, [data-theme="classic-dark"] *, [data-theme="intelligent"] *));
+- Fonts — Raleway (body) and Fraunces (display) load through the theme file's @import; no next/font. Never load them again under another name: the theme matches literal names.
+- Wiring — the CLI install merges the theme into your Tailwind stylesheet. A theme FILE must be imported from inside that stylesheet — `@import "./quill-theme.css"` after `@import "tailwindcss"` and below any `@custom-variant dark` line shadcn wrote (the last wins) — never from layout.tsx, where every Quill utility is dead.
+- dark: utilities — stock primitives' dark: tweaks follow Quill's dark themes (and the .dark class) once the theme is wired; nothing to add by hand.
 - Self-check — after changing UI, run `node scripts/quill-check.mjs` (install once: `npx shadcn@latest add @quill/check`) and clear every finding: stock colours, raw colours, bracket values where a token exists, retired names, dead classes. An exception: `// quill-check: allow <rule> — <why>` on the line above.
 - Updating — re-run with --overwrite, not --yes: on a file you have changed, --yes prompts in a terminal and silently skips when non-interactive.
 - Full machine-readable reference for agents: https://www.quilldesignsystem.com/llms.txt. Per-component usage guides at /usage/<name>.md.
@@ -210,7 +211,7 @@ Whole pages composed from the blocks above. Install one (`npx shadcn@latest add 
 
 ## Primitives
 
-Stock shadcn components restyled by the token layer — install them from shadcn (`npx shadcn@latest add button`), never hand-roll them. Quill-specific usage rules exist at `https://www.quilldesignsystem.com/usage/<name>.md` for: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox, collapsible, combobox, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card, icon, input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group, tone-badge, tooltip.
+Stock shadcn components restyled by the token layer — install from shadcn (`npx shadcn@latest add button`), never hand-roll. Quill usage rules at `https://www.quilldesignsystem.com/usage/<name>.md` for: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox, collapsible, combobox, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card, icon, input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group, tone-badge, tooltip.
 
 ## Updating and verifying
 

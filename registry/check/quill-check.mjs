@@ -8,7 +8,7 @@ import { join, relative, resolve, dirname, extname } from 'node:path'
 import { createRequire } from 'node:module'
 
 export const DATA = {
- "version": "0.11.1",
+ "version": "0.12.0",
  "prefixes": [
   "bg",
   "text",
@@ -1651,9 +1651,13 @@ export async function resolveWithTailwind({ cwd, css, candidates }) {
     return { base: dirname(p), content: readFileSync(p, 'utf8') }
   }
   const compiled = await tw.compile(readFileSync(entry, 'utf8'), { base: dirname(entry), loadStylesheet, loadModule: async () => ({ base: cwd, module: {} }) })
-  const out = compiled.build([...candidates])
+  const out = compiled.build([...candidates, 'dark:bg-background'])
   const unresolved = new Set([...candidates].filter((c) => !out.includes('.' + escapeClass(c))))
-  return { unresolved, entry }
+  // Tailwind keeps the LAST @custom-variant dark. shadcn init writes a stock one (.dark only);
+  // if it sits below Quill's, dark: stops following data-theme while everything else works.
+  const darkRule = out.match(/\.dark\\:bg-background[^{]*/)?.[0] ?? ''
+  const darkFollowsThemes = darkRule.includes('[data-theme=')
+  return { unresolved, entry, darkFollowsThemes }
 }
 
 const editDistance = (a, b) => {
@@ -1663,7 +1667,7 @@ const editDistance = (a, b) => {
   return d[a.length][b.length]
 }
 
-const NOT_WIRED = "→ Quill's theme is not wired into Tailwind here: font-heading, the role classes and the status classes are all dead. Import the theme from inside the stylesheet that holds @import \"tailwindcss\" (Theme section of .claude/rules/quill.md)"
+const NOT_WIRED = "→ Quill's theme is not wired into Tailwind here, so font-heading, the role classes and the status classes are all dead. Add `@import \"./quill-theme.css\"` to the stylesheet that holds `@import \"tailwindcss\"` (not to layout.tsx), or install with the CLI: npx shadcn@latest add @quill/quill"
 
 // ------------------------------------------------------------------ run
 export async function runCheck({ cwd = process.cwd(), dirs, includeUi = false, css, tailwind = true } = {}) {
@@ -1685,6 +1689,12 @@ export async function runCheck({ cwd = process.cwd(), dirs, includeUi = false, c
     const r = await resolveWithTailwind({ cwd, css, candidates: [...candidates.keys()] })
     if (r.skipped) notes.push(r.skipped)
     else {
+      // wired (bg-background resolves) but dark: ignores data-theme: the stock variant line won
+      if (!r.unresolved.has('bg-background') && !r.darkFollowsThemes && candidates.has('bg-background')) {
+        const entryText = readFileSync(r.entry, 'utf8').split('\n')
+        const stock = entryText.findIndex((l) => /@custom-variant\s+dark\b/.test(l) && !l.includes('data-theme'))
+        findings.push({ file: relative(cwd, r.entry), line: stock + 1 || 1, col: 1, rule: 'dark-variant', value: '@custom-variant dark', fix: "→ this stock line sits below Quill's and wins, so dark: fires only on .dark and never on data-theme: move the @import of quill-theme.css below it (or delete it — Quill's variant keeps .dark working)" })
+      }
       const dead = [...r.unresolved].filter((t) => !flagged.has(t))
       // Three or more Quill classes dead at once is not three typos — the theme is missing.
       const notWired = dead.filter((t) => QUILL.has(baseOf(t))).length >= 3
@@ -1705,7 +1715,7 @@ export async function runCheck({ cwd = process.cwd(), dirs, includeUi = false, c
 }
 
 // ------------------------------------------------------------------ output
-const RULE_LABEL = { unresolved: 'unresolved', palette: 'palette', 'raw-color': 'raw colour', bracket: 'bracket', retired: 'retired', 'allow-without-reason': 'allow' }
+const RULE_LABEL = { unresolved: 'unresolved', palette: 'palette', 'raw-color': 'raw colour', bracket: 'bracket', retired: 'retired', 'dark-variant': 'dark:', 'allow-without-reason': 'allow' }
 
 export function formatText({ findings, layout, notes }, { quiet = false } = {}) {
   const lines = []

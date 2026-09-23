@@ -191,9 +191,10 @@ export function injectMarkers(source, block) {
 // selector still named only two of the three dark themes. A sixth theme now
 // joins automatically.
 // Apps get it too, through the registry item's `css` field (the CLI writes an
-// at-rule into the app's main stylesheet, where Tailwind processes it). It cannot
-// ride in the theme FILE: that is imported from a layout, outside the Tailwind
-// entry, so a file-channel app adds the line by hand (theme-docs.mjs says so).
+// at-rule into the app's main stylesheet, where Tailwind processes it) AND at the
+// top of the theme FILE since 0.12.0: imported from inside the stylesheet that
+// holds `@import "tailwindcss"`, the file's variant and @theme are honoured
+// (measured 2026-09-23); imported from a layout they are inert, as before.
 // `stockClass` keeps `.dark *` in the rule: Tailwind honours the LAST definition
 // of a custom variant, and an app toggling shadcn's stock class must keep working.
 export function darkVariant(modes = MODES, { stockClass = false } = {}) {
@@ -202,8 +203,15 @@ export function darkVariant(modes = MODES, { stockClass = false } = {}) {
   return `@custom-variant dark (&:is(${selector}));`
 }
 
+// The shipped theme file. Until 0.12.0 it carried only variables, because an @theme
+// block is inert when the file is imported from a layout — and that was the only
+// wiring the docs described. Imported from inside the Tailwind stylesheet
+// (`@import "./quill-theme.css"` after `@import "tailwindcss"`) the @theme block and the
+// dark variant are honoured, so the file channel gets every Quill utility from one
+// import line. The stock `.dark *` stays in the variant for apps that toggle the class.
+// scripts/file-channel.test.mjs proves both wirings on the built file.
 export function registryBlock(css) {
-  return `:root {\n${css.root}\n}\n\n${modeBlocks(css)}`
+  return `${darkVariant(MODES, { stockClass: true })}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}`
 }
 
 // --- shadcn registry payload (the channel that actually reaches an app) ---
