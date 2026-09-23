@@ -17,7 +17,8 @@
       "marketing",
       "content"
     ],
-    "use_when": "You need a customer-quote card with a serif pull-quote and attribution."
+    "use_when": "You need a customer-quote card with a serif pull-quote and attribution.",
+    "not_for": "you're introducing people, not quoting what a customer said about the product → team-section; the proof point is a number, not a quote → stats-band"
   },
   "docs": "A customer-quote card with a serif pull-quote, avatar initials, and attribution. Do: Pair every quote with a real name, role, and organization — an anonymous quote reads as unverifiable. Don't: Ship a testimonial with no attribution, or attribution too small/muted to actually read. Use team-section when you're introducing people, not quoting what a customer said about the product. Use stats-band when the proof point is a number, not a quote.",
   "categories": [

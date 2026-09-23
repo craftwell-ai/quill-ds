@@ -23,7 +23,8 @@
     "intent": [
       "form"
     ],
-    "use_when": "You need a get-in-touch form with name, email, topic, and message fields."
+    "use_when": "You need a get-in-touch form with name, email, topic, and message fields.",
+    "not_for": "you only need a single email field to grow a list, not a full multi-field inquiry form → newsletter; the fields are updating an existing profile, not sending a one-off message → settings"
   },
   "docs": "A get-in-touch card — name, email, a topic select, and a message field. Do: State a response-time expectation in the description (\"We usually reply within one working day.\") so the form doesn't feel like it disappears into a void. Don't: Leave users with no sense of whether or when they'll hear back. Use newsletter when you only need a single email field to grow a list, not a full multi-field inquiry form. Use settings when the fields are updating an existing profile, not sending a one-off message.",
   "categories": [

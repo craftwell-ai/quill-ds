@@ -25,7 +25,8 @@
       "scheduling",
       "form"
     ],
-    "use_when": "You need to book a span of days with a two-month range picker and confirm/clear actions."
+    "use_when": "You need to book a span of days with a two-month range picker and confirm/clear actions.",
+    "not_for": "the user is picking a single day to view, not a multi-day span to reserve → calendar-page; the range is just one field within a larger purchase flow, not the whole card → checkout"
   },
   "docs": "A stateful two-month range calendar for booking a span of days, with clear and reserve actions. Do: Keep the Clear action available whenever a range is selected, separate from Reserve. Don't: Force a user to re-click through the whole range to correct a mis-click — that's what Clear is for. Do: Disable Reserve until both a start and end date are selected. Don't: Let a half-made range (just a start date) submit as if it were a valid booking. Use calendar-page when the user is picking a single day to view, not a multi-day span to reserve. Use checkout when the range is just one field within a larger purchase flow, not the whole card.",
   "categories": [

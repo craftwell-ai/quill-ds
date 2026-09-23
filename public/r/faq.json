@@ -20,7 +20,8 @@
       "content",
       "marketing"
     ],
-    "use_when": "You need to answer common questions in an accordion with a contact fallback."
+    "use_when": "You need to answer common questions in an accordion with a contact fallback.",
+    "not_for": "you need a bare accordion with no marketing framing (heading, contact footer) around it → accordion; the user needs to ask something not covered — this pattern only offers a CTA button, not the form itself → contact-form"
   },
   "docs": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer. Do: Open the first question by default (defaultValue=['item-0']) so the section doesn't read as empty on load. Don't: Start every item collapsed and force a first click just to prove the section has content. Use accordion when you need a bare accordion with no marketing framing (heading, contact footer) around it. Use contact-form when the user needs to ask something not covered — this pattern only offers a CTA button, not the form itself.",
   "categories": [

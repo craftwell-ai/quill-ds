@@ -28,6 +28,13 @@ function esc(s, format) {
  * published pages with `{ format: 'markdown' }`. Every docs page derives from
  * this one function, so the human-facing docs cannot drift from the usage source.
  */
+// The selection-time "not for": every alternative is a job this item should NOT be picked
+// for, and the name to pick instead. Derived, never written twice, so it cannot drift from
+// the usage guide. Lower-cased first letter because it follows "Not for:".
+export function renderNotFor(u) {
+  return (u.alternatives ?? []).map((alt) => `${alt.when.replace(/[.\s]+$/, '')} → ${alt.name}`).join('; ')
+}
+
 export function renderUsageDocs(u, { format = 'mdx' } = {}) {
   const L = []
   const p = (s = '') => L.push(s)

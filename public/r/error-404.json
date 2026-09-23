@@ -19,7 +19,8 @@
     "intent": [
       "feedback"
     ],
-    "use_when": "You need a full-page not-found state with recovery actions."
+    "use_when": "You need a full-page not-found state with recovery actions.",
+    "not_for": "the resource exists but is legitimately empty (no items yet), not missing or misrouted → empty-state; the error is recoverable inline on the current page, not a full-page dead end that needs its own route → alerts"
   },
   "docs": "A full-page 404 error state with go-back and home recovery actions. Do: Offer both a contextual escape (Go back) and an absolute one (Take me home) — never strand the user with only one recovery path. Don't: Leave a 404 page with no action at all, or only a single 'Home' link buried in a header the user has to hunt for. Use empty-state when the resource exists but is legitimately empty (no items yet), not missing or misrouted. Use alerts when the error is recoverable inline on the current page, not a full-page dead end that needs its own route.",
   "categories": [

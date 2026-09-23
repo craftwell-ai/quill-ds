@@ -27,6 +27,9 @@ test('llms.txt carries the chart fixed-order rule and every block', () => {
   const registry = JSON.parse(readFileSync(new URL('../registry.json', import.meta.url), 'utf8'))
   for (const b of registry.items.filter((i) => i.type === 'registry:block')) {
     assert.ok(committed.includes(`/r/${b.name}.json`), `llms.txt is missing block '${b.name}'`)
+    // the selection line: use_when AND the not-for list, on the same line as the link
+    const line = committed.split('\n').find((l) => l.includes(`/r/${b.name}.json`) && l.startsWith('- ['))
+    assert.ok(line && / Not for: .+ → [a-z0-9-]+/.test(line), `llms.txt block line for '${b.name}' lacks its "Not for: … → block" list`)
   }
 })
 

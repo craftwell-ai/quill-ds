@@ -12,6 +12,24 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.11.1] — 2026-09-23
+
+Agent-readiness: every block now says what it is *not* for, at the moment an agent picks one.
+
+### Added
+- **`meta.not_for` on every block, and a `Not for:` list on every block line in `llms.txt`.**
+  Picking the wrong block is the most common selection error, and the block list an agent
+  scans showed only intent and `use_when`. Each usage module already carried the answer as
+  `alternatives` ("reach for X instead when…", 208 entries across 105 modules), so the new
+  field is derived from them — `when → name`, joined by semicolons — never written a second
+  time, and cannot drift from the usage guide. Example (pricing): *Not for: you're describing
+  capabilities in general, not comparing specific paid tiers against each other →
+  feature-section; the user has already chosen a plan and is now reviewing a specific purchase
+  → order-summary.* Guards: `registry-meta.test` fails on a block without one (add an
+  `alternatives` entry to its usage module); `build-llms.test` checks every block line carries
+  its list. `llms.txt` grows 53 → 65 KB; the rules file installed in apps is unchanged (its block
+  index is names + titles by budget).
+
 ## [0.11.0] — 2026-09-23
 
 `@quill/check` — a self-check agents run in their own app. Spec:

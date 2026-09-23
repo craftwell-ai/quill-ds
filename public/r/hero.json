@@ -20,7 +20,8 @@
     "intent": [
       "marketing"
     ],
-    "use_when": "You need the top-of-page marketing statement — headline, supporting copy, and calls to action."
+    "use_when": "You need the top-of-page marketing statement — headline, supporting copy, and calls to action.",
+    "not_for": "you're past the opening statement and need to break down specific product capabilities → feature-section; the message is a small, dismissible update, not the page's primary opening statement → announcement-banner"
   },
   "docs": "A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action. Do: Keep exactly one primary (default-variant) button — the single most important action — with any secondary action as outline/ghost. Don't: Give two calls-to-action equal visual weight; competing primaries dilute the one action that matters most. Use feature-section when you're past the opening statement and need to break down specific product capabilities. Use announcement-banner when the message is a small, dismissible update, not the page's primary opening statement.",
   "categories": [

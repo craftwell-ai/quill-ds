@@ -22,7 +22,8 @@
     "intent": [
       "marketing"
     ],
-    "use_when": "You need a marketing team grid with member cards, roles, and contact actions."
+    "use_when": "You need a marketing team grid with member cards, roles, and contact actions.",
+    "not_for": "you're showing one person in detail (stats, follow/message), not a grid of many team members at a glance → profile-card; you're quoting what someone said, not introducing who's on the team → testimonial"
   },
   "docs": "A marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action. Do: Give every team member their own contact action, labeled with their name (e.g. \"Email Ada Lovelace\"). Don't: Ship one generic \"Contact us\" action for the whole grid — it defeats the point of a per-person team grid. Use profile-card when you're showing one person in detail (stats, follow/message), not a grid of many team members at a glance. Use testimonial when you're quoting what someone said, not introducing who's on the team.",
   "categories": [

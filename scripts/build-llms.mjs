@@ -117,12 +117,13 @@ export function renderLlms(t = tokens) {
 
   p('## Components')
   p()
-  p('Each block is a composition of restyled primitives. `intent` lists its jobs; `use_when` says when to reach for it.')
+  p('Each block is a composition of restyled primitives. `intent` lists its jobs; `use_when` says when to reach for it; `Not for` names the jobs it is the wrong pick for, with the block to pick instead.')
   p()
   for (const b of blocks) {
     const intent = (b.meta?.intent ?? []).join(', ')
     const guide = usageByName.has(b.name) ? ` · [usage guide](${HOME}/usage/${b.name}.md)` : ''
-    p(`- [${b.title ?? b.name}](${HOME}/r/${b.name}.json) — _[${intent}]_ ${b.meta?.use_when ?? b.description}${guide}`)
+    const notFor = b.meta?.not_for ? ` Not for: ${b.meta.not_for}.` : ''
+    p(`- [${b.title ?? b.name}](${HOME}/r/${b.name}.json) — _[${intent}]_ ${b.meta?.use_when ?? b.description}${notFor}${guide}`)
   }
   p()
 

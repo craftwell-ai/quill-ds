@@ -22,7 +22,8 @@
     "intent": [
       "auth"
     ],
-    "use_when": "You need signup that leads with OAuth providers and falls back to email/password."
+    "use_when": "You need signup that leads with OAuth providers and falls back to email/password.",
+    "not_for": "you don't have OAuth providers configured, or want email/password as the primary path, not a fallback → signup; this is sign-in, not new-account creation — login-oauth is the matching pattern for returning users → login-oauth"
   },
   "docs": "Signup that leads with GitHub and Google provider buttons, falling back to an email/password form. Do: Put the provider buttons above the divider and the email/password fields below it, matching login-oauth's provider-first order. Don't: Bury the provider buttons below a full email/password form — that defeats the point of offering them. Use signup when you don't have OAuth providers configured, or want email/password as the primary path, not a fallback. Use login-oauth when this is sign-in, not new-account creation — login-oauth is the matching pattern for returning users.",
   "categories": [

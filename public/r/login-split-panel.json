@@ -23,7 +23,8 @@
       "auth",
       "marketing"
     ],
-    "use_when": "You need a branded full-page sign-in with a testimonial side panel and magic-link option."
+    "use_when": "You need a branded full-page sign-in with a testimonial side panel and magic-link option.",
+    "not_for": "the sign-in is an embedded card inside an existing page shell, not its own full page → login; you don't have a testimonial or brand story worth the real estate — go bare instead → login-minimal"
   },
   "docs": "A full-page, branded sign-in — a testimonial panel beside an email/password form with a magic-link option. Do: Let the brand panel drop out on small viewports and let the form take the full width. Don't: Force the two-column grid at phone widths — the testimonial panel has no room to be legible. Use login when the sign-in is an embedded card inside an existing page shell, not its own full page. Use login-minimal when you don't have a testimonial or brand story worth the real estate — go bare instead.",
   "categories": [
