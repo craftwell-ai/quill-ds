@@ -33,7 +33,7 @@ const check = await import(CHECK_PATH)
 const byRule = (findings) => findings.reduce((m, f) => ((m[f.rule] ??= []).push(f), m), {})
 
 test('rules 2–5 flag one of each violation in the fixture (static mode) and nothing else', async () => {
-  const { findings, layout } = await check.runCheck({ cwd: here, dirs: [join(here, 'check')], tailwind: false })
+  const { findings, layout } = await check.runCheck({ cwd: here, dirs: [join(here, 'check/fixture')], tailwind: false })
   const r = byRule(findings.filter((f) => !f.allowed))
   assert.deepEqual((r.palette ?? []).map((f) => f.value).sort(), ['bg-white', 'font-serif', 'md:hover:bg-red-600', 'text-black', 'text-gray-500'])
   assert.deepEqual((r.bracket ?? []).map((f) => f.value).sort(), ['bg-[#F5EDDD]', 'rounded-[10px]', 'text-[13px]', 'text-[var(--accent-pigment-text)]', 'tracking-[0.15em]'])
@@ -50,7 +50,7 @@ test('rules 2–5 flag one of each violation in the fixture (static mode) and no
 })
 
 test('fix text names the token or role an agent should write', async () => {
-  const { findings } = await check.runCheck({ cwd: here, dirs: [join(here, 'check')], tailwind: false })
+  const { findings } = await check.runCheck({ cwd: here, dirs: [join(here, 'check/fixture')], tailwind: false })
   const fix = (v) => findings.find((f) => f.value === v)?.fix ?? ''
   assert.match(fix('text-[13px]'), /text-sm/)
   assert.match(fix('tracking-[0.15em]'), /tracking-eyebrow/)
@@ -61,4 +61,33 @@ test('fix text names the token or role an agent should write', async () => {
   assert.match(fix('var(--text-strong)'), /0\.10\.0/)
   assert.match(fix('font-serif'), /font-heading/)
   assert.match(fix('bg-[#F5EDDD]'), /bg-background|bg-paper/)
+})
+
+// ---------------------------------------------------------------- rule 1: the app's own Tailwind
+test('rule 1: a class that produces no CSS is unresolved, with a typo hint; Quill classes resolve', async () => {
+  const { findings, notes } = await check.runCheck({ cwd: repoRoot, dirs: [join(here, 'check/fixture')], css: join(repoRoot, 'src/app/globals.css') })
+  const un = findings.filter((f) => f.rule === 'unresolved').map((f) => f.value)
+  assert.deepEqual(un, ['bg-nope'])
+  assert.match(findings.find((f) => f.value === 'bg-nope').fix, /typo|no such utility/)
+  assert.ok(!findings.some((f) => f.value === 'text-2xs'), 'text-2xs resolves on the site entry')
+  assert.deepEqual(notes, [])
+})
+
+test('rule 1: when Quill classes fail together the fix says the theme is not wired', async () => {
+  const { writeFileSync, mkdtempSync } = await import('node:fs')
+  const { tmpdir } = await import('node:os')
+  const dir = mkdtempSync(join(tmpdir(), 'quill-check-'))
+  writeFileSync(join(dir, 'globals.css'), '@import "tailwindcss";\n')
+  writeFileSync(join(dir, 'page.tsx'), 'export const P = () => <div className="font-heading text-2xs bg-background text-muted-foreground">x</div>\n')
+  const { findings } = await check.runCheck({ cwd: repoRoot, dirs: [dir], css: join(dir, 'globals.css') })
+  const un = findings.filter((f) => f.rule === 'unresolved')
+  assert.equal(un.length, 4)
+  assert.match(un[0].fix, /not wired into Tailwind/)
+})
+
+test('rule 1 is skipped, not guessed, when Tailwind cannot be loaded', async () => {
+  const { findings, notes } = await check.runCheck({ cwd: here, dirs: [join(here, 'check/fixture')], css: '/nonexistent.css' })
+  assert.ok(!findings.some((f) => f.rule === 'unresolved'))
+  assert.equal(notes.length, 1)
+  assert.match(notes[0], /rule 1 skipped/)
 })

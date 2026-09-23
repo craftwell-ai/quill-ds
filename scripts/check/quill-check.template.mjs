@@ -11,7 +11,9 @@ export const DATA = /*__DATA__*/ null
 
 // ------------------------------------------------------------------ files
 const SKIP_DIRS = new Set(['node_modules', '.next', 'dist', 'build', 'out', 'storybook-static', 'public', '.git', 'coverage', '.figma-type-audit'])
-const EXTS = new Set(['.tsx', '.jsx', '.ts', '.js', '.mjs', '.mdx', '.html'])
+const EXTS = new Set(['.tsx', '.jsx', '.ts', '.js', '.mdx', '.html'])
+// Never scan the check itself (its fix strings look like classes).
+const SELF = /(^|[\\/])quill-check(\.template)?\.mjs$/
 
 export function listFiles(root, { dirs = [root], includeUi = false } = {}) {
   const out = []
@@ -23,7 +25,7 @@ export function listFiles(root, { dirs = [root], includeUi = false } = {}) {
         // Stock shadcn primitives are restyled by tokens and never edited — not the agent's code.
         if (!includeUi && name === 'ui' && /(^|[\\/])components$/.test(dir)) continue
         walk(p)
-      } else if (EXTS.has(extname(name)) && !name.endsWith('.d.ts')) out.push(p)
+      } else if (EXTS.has(extname(name)) && !name.endsWith('.d.ts') && !SELF.test(p)) out.push(p)
     }
   }
   for (const d of dirs) if (existsSync(d)) walk(d)
@@ -48,9 +50,10 @@ export function baseOf(token) {
   return token.slice(cut + 1).replace(/^!/, '').replace(/^-(?=[a-z])/, '')
 }
 
+// A utility we read is `prefix-something`: a bare word (`text`, `from`) is prose, not a class.
 // Bracket utilities of every prefix pass too: layout ones are counted in the summary.
 const looksLikeUtility = (base) => {
-  const m = base.match(/^([a-z]+)(?:-|$)/)
+  const m = base.match(/^([a-z]+)-[a-z0-9([]/)
   return !!m && (PREFIX_SET.has(m[1]) || QUILL.has(base) || /-\[.+\]$/.test(base))
 }
 
@@ -74,7 +77,9 @@ export function extractCandidates(text) {
     const literal = (m[1] ?? m[2] ?? m[3]).replace(/\$\{[^}]*\}/g, (h) => ' '.repeat(h.length))
     const start = m.index + 1
     for (const t of literal.matchAll(/\S+/g)) {
-      const token = t[0]
+      // prose punctuation glued to a class (`font-heading,`) is not part of it
+      const token = t[0].replace(/[.,;:!?'"]+$/, '')
+      if (!token) continue
       const base = baseOf(token)
       if (!looksLikeUtility(base)) continue
       const idx = start + t.index
@@ -259,19 +264,110 @@ export function scanFile(file, text) {
   return { findings, layout }
 }
 
+// ------------------------------------------------------------------ rule 1: ask the app's own Tailwind
+// A Tailwind v4 utility exists only if the app's entry stylesheet defines its token. Compiling
+// every candidate with the app's installed Tailwind is exact and needs no maintained list; a
+// class that emits no CSS is dead in THIS app — a typo, or a theme that is not wired in.
+const ENTRY_CANDIDATES = ['app/globals.css', 'src/app/globals.css', 'styles/globals.css', 'src/styles/globals.css']
+const escapeClass = (s) => s.replace(/[^a-zA-Z0-9_-]/g, (ch) => '\\' + ch)
+
+// A CSS package (tailwindcss, tw-animate-css, shadcn/tailwind.css) is not a JS module: its
+// package.json points at the stylesheet through `exports[…].style`, `style` or a .css main, so
+// Node's own resolver throws. Walk node_modules up from the importing file, then from cwd.
+const findPackage = (name, from) => {
+  let dir = from
+  for (;;) {
+    const p = join(dir, 'node_modules', name, 'package.json')
+    if (existsSync(p)) return dirname(p)
+    const up = dirname(dir)
+    if (up === dir) return null
+    dir = up
+  }
+}
+export function resolveCssImport(id, base, cwd) {
+  if (id.startsWith('.') || id.startsWith('/')) return resolve(base, id)
+  const m = id.match(/^(@[^/]+\/[^/]+|[^/]+)(\/.*)?$/)
+  const dir = findPackage(m[1], base) ?? findPackage(m[1], cwd)
+  if (!dir) throw new Error('cannot find package ' + m[1] + ' from ' + base)
+  const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'))
+  const sub = m[2] ? '.' + m[2] : '.'
+  const pick = (e) => (typeof e === 'string' ? e : e && typeof e === 'object' ? pick(e.style ?? e.default ?? e.import ?? Object.values(e)[0]) : null)
+  let rel = pkg.exports ? pick(pkg.exports[sub] ?? (sub === '.' ? pkg.exports : null)) : null
+  if (!rel && sub !== '.') rel = sub
+  if (!rel) rel = pkg.style ?? (typeof pkg.main === 'string' && pkg.main.endsWith('.css') ? pkg.main : 'index.css')
+  return join(dir, rel)
+}
+
+export async function resolveWithTailwind({ cwd, css, candidates }) {
+  const entry = css
+    ? resolve(cwd, css)
+    : ENTRY_CANDIDATES.map((p) => join(cwd, p)).find((p) => existsSync(p) && /@import\s+["']tailwindcss["']/.test(readFileSync(p, 'utf8')))
+  if (!entry || !existsSync(entry)) return { skipped: 'rule 1 skipped: no Tailwind entry found (a stylesheet with @import "tailwindcss") — run from the app root or pass --css <path>' }
+  let tw
+  let req
+  try {
+    req = createRequire(join(cwd, 'package.json'))
+    // require.resolve lands on the CommonJS build, whose exports sit under `default`.
+    const mod = await import(req.resolve('tailwindcss'))
+    tw = typeof mod.compile === 'function' ? mod : mod.default
+  } catch {
+    return { skipped: 'rule 1 skipped: tailwindcss v4 not found from ' + cwd + ' — run from the app root' }
+  }
+  if (typeof tw.compile !== 'function') return { skipped: 'rule 1 skipped: tailwindcss v4 (compile API) is required' }
+  const loadStylesheet = async (id, base) => {
+    const p = resolveCssImport(id, base, cwd)
+    return { base: dirname(p), content: readFileSync(p, 'utf8') }
+  }
+  const compiled = await tw.compile(readFileSync(entry, 'utf8'), { base: dirname(entry), loadStylesheet, loadModule: async () => ({ base: cwd, module: {} }) })
+  const out = compiled.build([...candidates])
+  const unresolved = new Set([...candidates].filter((c) => !out.includes('.' + escapeClass(c))))
+  return { unresolved, entry }
+}
+
+const editDistance = (a, b) => {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)])
+  for (let j = 1; j <= b.length; j++) d[0][j] = j
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))
+  return d[a.length][b.length]
+}
+
+const NOT_WIRED = "→ Quill's theme is not wired into Tailwind here: font-heading, the role classes and the status classes are all dead. Import the theme from inside the stylesheet that holds @import \"tailwindcss\" (Theme section of .claude/rules/quill.md)"
+
 // ------------------------------------------------------------------ run
 export async function runCheck({ cwd = process.cwd(), dirs, includeUi = false, css, tailwind = true } = {}) {
   const files = listFiles(cwd, { dirs: dirs ?? [cwd], includeUi })
   const findings = []
   const notes = []
   let layout = 0
+  const candidates = new Map() // token → [{ file, line, col }]
   for (const f of files) {
     const text = readFileSync(f, 'utf8')
-    const r = scanFile(relative(cwd, f), text)
+    const rel = relative(cwd, f)
+    const r = scanFile(rel, text)
     findings.push(...r.findings)
     layout += r.layout
+    for (const c of extractCandidates(text)) (candidates.get(c.token) ?? candidates.set(c.token, []).get(c.token)).push({ file: rel, line: c.line, col: c.col })
   }
-  if (tailwind) notes.push('rule 1 (unresolved classes) arrives in Task 3')
+  if (tailwind) {
+    const flagged = new Set(findings.map((f) => f.value))
+    const r = await resolveWithTailwind({ cwd, css, candidates: [...candidates.keys()] })
+    if (r.skipped) notes.push(r.skipped)
+    else {
+      const dead = [...r.unresolved].filter((t) => !flagged.has(t))
+      // Three or more Quill classes dead at once is not three typos — the theme is missing.
+      const notWired = dead.filter((t) => QUILL.has(baseOf(t))).length >= 3
+      for (const t of dead) {
+        const base = baseOf(t)
+        let fix
+        if (notWired && QUILL.has(base)) fix = NOT_WIRED
+        else {
+          const near = DATA.quillClasses.map((q) => [q, editDistance(base, q)]).filter(([, d]) => d <= 2).sort((a, b) => a[1] - b[1])[0]
+          fix = near ? `→ no such utility — looks like a typo of ${near[0]}` : '→ no such utility in this app (it produces no CSS)'
+        }
+        for (const loc of candidates.get(t)) findings.push({ ...loc, rule: 'unresolved', value: t, fix })
+      }
+    }
+  }
   findings.sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line || a.col - b.col))
   return { findings, layout, notes }
 }
