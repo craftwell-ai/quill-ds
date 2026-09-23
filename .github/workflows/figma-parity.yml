@@ -167,3 +167,38 @@ jobs:
             echo '> and auto-merge cannot complete. Add an `AUTOMATION_TOKEN` secret to close'
             echo '> the loop — see scripts/DRIFT-AUDIT.md.'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # Parity 6 (CRA-224): the picture check. Structural checks compare values; this
+  # exports every mirrored page from Figma, renders its story at the same width, and
+  # diffs the two with a tolerance for font rasterisation, against the accepted
+  # numbers in figma/visual-baseline.json. Report-only (continue-on-error) until the
+  # tolerance has held for a while; then drop that line and add --strict.
+  # Its own job: it needs npm ci, a Storybook build and a browser, which the
+  # dependency-free parity job deliberately does not.
+  visual:
+    needs: parity
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    env:
+      FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: Build Storybook
+        run: npm run build-storybook -- -o .visual/sb --quiet
+      - name: Figma ↔ Storybook visual diff
+        run: node scripts/figma-visual-diff.mjs --out .visual/out --sb .visual/sb
+      - name: Upload the strips (Figma | Storybook | diff, per pair)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: figma-visual-diff
+          path: .visual/out
+          retention-days: 14

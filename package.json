@@ -1,6 +1,6 @@
 {
   "name": "quill-ds",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -33,7 +33,8 @@
     "pretest-storybook:coverage": "npm run build:icons",
     "test-storybook:coverage": "vitest --project=storybook run --coverage",
     "pretest-storybook:theme": "npm run build:icons",
-    "test-storybook:theme": "vitest --config scripts/theme-qa/vitest.config.ts --project=storybook run --reporter=dot --reporter=json --outputFile.json=.figma-type-audit/theme-qa/${QUILL_THEME:-light}.json"
+    "test-storybook:theme": "vitest --config scripts/theme-qa/vitest.config.ts --project=storybook run --reporter=dot --reporter=json --outputFile.json=.figma-type-audit/theme-qa/${QUILL_THEME:-light}.json",
+    "figma:visual": "node --env-file=.env scripts/figma-visual-diff.mjs --out .visual/out --sb .visual/sb"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -72,7 +73,9 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.5",
     "eslint-plugin-storybook": "^10.6.0",
+    "pixelmatch": "^7.2.0",
     "playwright": "^1.63.0",
+    "pngjs": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "storybook": "^10.5.5",
     "tailwindcss": "^4.3.3",

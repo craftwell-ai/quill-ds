@@ -68,3 +68,6 @@ public/storybook
 
 # scratch for scripts/figma-type-audit
 .figma-type-audit/
+
+# scratch for scripts/figma-visual-diff.mjs (static Storybook + pair images)
+.visual/
