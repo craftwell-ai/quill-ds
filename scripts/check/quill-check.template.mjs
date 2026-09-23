@@ -8,3 +8,270 @@ import { join, relative, resolve, dirname, extname } from 'node:path'
 import { createRequire } from 'node:module'
 
 export const DATA = /*__DATA__*/ null
+
+// ------------------------------------------------------------------ files
+const SKIP_DIRS = new Set(['node_modules', '.next', 'dist', 'build', 'out', 'storybook-static', 'public', '.git', 'coverage', '.figma-type-audit'])
+const EXTS = new Set(['.tsx', '.jsx', '.ts', '.js', '.mjs', '.mdx', '.html'])
+
+export function listFiles(root, { dirs = [root], includeUi = false } = {}) {
+  const out = []
+  const walk = (dir) => {
+    for (const name of readdirSync(dir).sort()) {
+      const p = join(dir, name)
+      if (statSync(p).isDirectory()) {
+        if (SKIP_DIRS.has(name)) continue
+        // Stock shadcn primitives are restyled by tokens and never edited — not the agent's code.
+        if (!includeUi && name === 'ui' && /(^|[\\/])components$/.test(dir)) continue
+        walk(p)
+      } else if (EXTS.has(extname(name)) && !name.endsWith('.d.ts')) out.push(p)
+    }
+  }
+  for (const d of dirs) if (existsSync(d)) walk(d)
+  return out
+}
+
+// ------------------------------------------------------------------ candidates
+const PREFIX_SET = new Set(DATA.prefixes)
+const QUILL = new Set(DATA.quillClasses)
+
+// The utility after its variants: the segment after the last `:` that sits outside brackets,
+// so `data-[state=open]:bg-x` and `has-[[aria-invalid=true]]:border-x` split correctly.
+export function baseOf(token) {
+  let depth = 0
+  let cut = -1
+  for (let i = 0; i < token.length; i++) {
+    const ch = token[i]
+    if (ch === '[' || ch === '(') depth++
+    else if (ch === ']' || ch === ')') depth--
+    else if (ch === ':' && depth === 0) cut = i
+  }
+  return token.slice(cut + 1).replace(/^!/, '').replace(/^-(?=[a-z])/, '')
+}
+
+// Bracket utilities of every prefix pass too: layout ones are counted in the summary.
+const looksLikeUtility = (base) => {
+  const m = base.match(/^([a-z]+)(?:-|$)/)
+  return !!m && (PREFIX_SET.has(m[1]) || QUILL.has(base) || /-\[.+\]$/.test(base))
+}
+
+// Every whitespace-separated token inside a string literal that looks like a utility we read.
+// Template-literal holes become spaces so `${cond ? 'a' : 'b'}` never glues onto a class.
+export function extractCandidates(text) {
+  const out = []
+  const lineStarts = [0]
+  for (let i = 0; i < text.length; i++) if (text[i] === '\n') lineStarts.push(i + 1)
+  const lineOf = (idx) => {
+    let lo = 0
+    let hi = lineStarts.length - 1
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1
+      if (lineStarts[mid] <= idx) lo = mid
+      else hi = mid - 1
+    }
+    return lo
+  }
+  for (const m of text.matchAll(/'([^'\n]*)'|"([^"\n]*)"|`([^`]*)`/g)) {
+    const literal = (m[1] ?? m[2] ?? m[3]).replace(/\$\{[^}]*\}/g, (h) => ' '.repeat(h.length))
+    const start = m.index + 1
+    for (const t of literal.matchAll(/\S+/g)) {
+      const token = t[0]
+      const base = baseOf(token)
+      if (!looksLikeUtility(base)) continue
+      const idx = start + t.index
+      const line = lineOf(idx)
+      out.push({ token, base, line: line + 1, col: idx - lineStarts[line] + 1 })
+    }
+  }
+  return out
+}
+
+// ------------------------------------------------------------------ rules 2–5 (pure)
+const COLOR_PREFIXES = new Set(['bg', 'text', 'border', 'ring', 'outline', 'fill', 'stroke', 'from', 'to', 'via', 'decoration', 'divide', 'placeholder', 'caret', 'accent', 'shadow'])
+const HUE_GROUP = { white: 'white', black: 'black', slate: 'grey', gray: 'grey', zinc: 'grey', neutral: 'grey', stone: 'grey', red: 'red', rose: 'red', orange: 'yellow', amber: 'yellow', yellow: 'yellow', lime: 'green', green: 'green', emerald: 'green', teal: 'blue', cyan: 'blue', sky: 'blue', blue: 'blue', indigo: 'blue', violet: 'purple', purple: 'purple', fuchsia: 'purple', pink: 'purple' }
+const STOCK_SHADE = /^([a-z]+)-(50|[1-9]00|950)$/
+const family = (prefix) => (['text', 'placeholder', 'caret', 'decoration', 'fill', 'stroke'].includes(prefix) ? 'text' : ['border', 'ring', 'outline', 'divide'].includes(prefix) ? 'border' : 'bg')
+const withIntent = (prefix, role) => `${prefix}-${role}${DATA.roles[role] ? ` (${DATA.roles[role]})` : ''}`
+
+// Rule 2: Tailwind's stock palette. Bare `indigo`, `teal`, `moss`… are Quill pigments and pass;
+// only `white`, `black` and numbered shades are stock.
+export function paletteRule(base) {
+  const m = base.match(/^([a-z]+)-(.+?)(\/\d{1,3})?$/)
+  if (!m) return null
+  const [, prefix, rest] = m
+  if (prefix === 'font' && rest === 'serif') return { rule: 'palette', fix: '→ font-heading (Fraunces, the display face)' }
+  if (!COLOR_PREFIXES.has(prefix)) return null
+  let hue = null
+  if (rest === 'white' || rest === 'black') hue = rest
+  else {
+    const s = rest.match(STOCK_SHADE)
+    if (s && HUE_GROUP[s[1]]) hue = s[1]
+  }
+  if (!hue) return null
+  const roles = DATA.palette[family(prefix)][HUE_GROUP[hue]] ?? []
+  const fix = roles.length
+    ? `→ ${roles.map((r) => withIntent(prefix, r)).join(' or ')}`
+    : '→ no Quill pigment sits here — pick a role by job (roles section of .claude/rules/quill.md)'
+  return { rule: 'palette', fix }
+}
+
+const LAYOUT = new Set(['w', 'h', 'min', 'max', 'size', 'grid', 'inset', 'top', 'left', 'right', 'bottom', 'start', 'end', 'translate', 'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl', 'ps', 'pe', 'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml', 'ms', 'me', 'gap', 'space', 'basis', 'col', 'row', 'aspect', 'z', 'order', 'flex', 'scroll', 'indent', 'columns', 'auto', 'content', 'origin', 'rotate', 'scale', 'skew', 'perspective', 'mask', 'clip', 'object', 'line', 'list', 'transition', 'delay', 'animate', 'will', 'backdrop', 'blur', 'brightness', 'contrast', 'opacity'])
+const toPx = (v) => {
+  const m = v.match(/^(-?[\d.]+)(px|rem|em)?$/)
+  if (!m) return null
+  const n = parseFloat(m[1])
+  return m[2] === 'rem' || m[2] === 'em' ? n * 16 : n
+}
+const nearest = (table, n) => Object.entries(table).sort((a, b) => Math.abs(a[1] - n) - Math.abs(b[1] - n))[0]
+const scale = (util, table, unit) => Object.entries(table).map(([k, v]) => `${util}-${k} ${v}${unit}`).join(' · ')
+const motionFix = (kind) => kind === 'duration'
+  ? `→ ${Object.entries(DATA.tokens.motion.duration).map(([v, n]) => `duration-(${v}) ${n}ms`).join(' · ')}`
+  : `→ ${DATA.tokens.motion.ease.map((v) => `ease-(${v})`).join(' · ')}`
+
+// Rule 4: a bracket value where Quill has a token. Returns a finding, 'layout' (counted), or
+// null (not a bracket). Widths on border/ring/outline are layout: Tailwind's own scale, no token.
+export function bracketRule(base) {
+  const m = base.match(/^([a-z]+)((?:-[a-z]+)*)-\[(.+)\]$/)
+  if (!m) return null
+  const [, prefix, , inner] = m
+  if (LAYOUT.has(prefix) || inner.startsWith('url(')) return 'layout'
+  const colourLike = /^(#|rgba?\(|hsla?\(|oklch\(|oklab\()/.test(inner)
+  const varRef = inner.match(/^var\((--[a-z0-9-]+)\)$/)
+  if (COLOR_PREFIXES.has(prefix) && prefix !== 'text' && prefix !== 'shadow') {
+    if (varRef) return DATA.vars[varRef[1]] ? { rule: 'bracket', fix: `→ ${prefix}-${DATA.vars[varRef[1]]}` } : 'layout'
+    return colourLike ? { rule: 'bracket', fix: `→ a role or pigment — nearest ${hexHint(inner, prefix)}` } : 'layout'
+  }
+  if (prefix === 'text') {
+    if (varRef) return DATA.vars[varRef[1]] ? { rule: 'bracket', fix: `→ text-${DATA.vars[varRef[1]]}` } : 'layout'
+    if (colourLike) return { rule: 'bracket', fix: `→ a role or pigment — nearest ${hexHint(inner, 'text')}` }
+    const n = toPx(inner)
+    if (n === null) return 'layout'
+    const [k, v] = nearest(DATA.tokens.text, n)
+    return { rule: 'bracket', fix: Math.abs(v - n) < 0.05 ? `→ text-${k}` : `→ nearest text-${k} (${v}px); the scale: ${scale('text', DATA.tokens.text, 'px')}` }
+  }
+  if (prefix === 'rounded') {
+    const n = toPx(inner)
+    if (n === null) return { rule: 'bracket', fix: `→ one of ${scale('rounded', DATA.tokens.radius, 'px')}` }
+    const [k, v] = nearest(DATA.tokens.radius, n)
+    return { rule: 'bracket', fix: Math.abs(v - n) < 0.05 ? `→ rounded-${k}` : `→ nearest rounded-${k} (${v}px); the scale: ${scale('rounded', DATA.tokens.radius, 'px')}` }
+  }
+  if (prefix === 'tracking') {
+    const n = parseFloat(inner)
+    const [k, v] = nearest(DATA.tokens.tracking, n)
+    return { rule: 'bracket', fix: Math.abs(v - n) < 0.005 ? `→ tracking-${k}` : `→ one of ${scale('tracking', DATA.tokens.tracking, 'em')}` }
+  }
+  if (prefix === 'leading') {
+    const n = parseFloat(inner)
+    const [k, v] = nearest(DATA.tokens.leading, n)
+    return { rule: 'bracket', fix: Math.abs(v - n) < 0.005 ? `→ leading-${k}` : `→ one of ${scale('leading', DATA.tokens.leading, '')}` }
+  }
+  if (prefix === 'shadow') return { rule: 'bracket', fix: `→ one of ${DATA.tokens.shadow.map((s) => `shadow-${s}`).join(' · ')}` }
+  if (prefix === 'font') return { rule: 'bracket', fix: inner.includes('family') ? '→ font-heading (Fraunces) or font-sans (Raleway) — the theme loads both' : '→ font-medium / font-semibold; Quill uses 400 / 500 / 600 only' }
+  if (prefix === 'duration') return { rule: 'bracket', fix: motionFix('duration') }
+  if (prefix === 'ease') return { rule: 'bracket', fix: motionFix('ease') }
+  return 'layout'
+}
+
+// Rule 5 (classes): a retired Quill utility name. Longest name first so `indigo-brand-deep`
+// is never reported as `indigo-brand`.
+export function retiredRule(base) {
+  for (const name of Object.keys(DATA.retired.classes).sort((a, b) => b.length - a.length)) {
+    if (base.includes(name)) {
+      const r = DATA.retired.classes[name]
+      return { rule: 'retired', fix: `→ ${base.replace(name, r.use)} (renamed in ${r.since})` }
+    }
+  }
+  return null
+}
+
+// ------------------------------------------------------------------ raw colours + retired vars (whole text)
+// A hex inside a bracket utility (bg-[#F5EDDD]) is rule 4's finding, not a second raw-colour one: `[` is in the lookbehind.
+const HEX_RE = /(?<![\w&#[-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g
+const FN_RE = /\b(?:rgba?|hsla?|oklch|oklab)\([^)]*\)/g
+const NOT_COLOUR_ATTR = /(?:href|to|id|htmlFor|key|name|aria-[a-z]+|data-[a-z-]+)=["'{`]?$/
+const hex2rgb = (h) => {
+  const s = h.length === 4 || h.length === 5 ? h.slice(1, 4).split('').map((c) => c + c).join('') : h.slice(1, 7)
+  return [0, 2, 4].map((i) => parseInt(s.slice(i, i + 2), 16))
+}
+export function hexHint(value, prefix = 'bg') {
+  if (!value.startsWith('#')) return Object.keys(DATA.swatches).slice(0, 4).map((r) => `${prefix}-${r}`).join(', ') + ', …'
+  const [r, g, b] = hex2rgb(value)
+  const near = Object.entries(DATA.swatches)
+    .map(([name, hex]) => { const [x, y, z] = hex2rgb(hex); return [name, (x - r) ** 2 + (y - g) ** 2 + (z - b) ** 2] })
+    .sort((a, b) => a[1] - b[1])
+    .slice(0, 2)
+  return near.map(([name]) => `${prefix}-${name} (${DATA.swatches[name]})`).join(' or ')
+}
+
+export function rawColourFindings(lines) {
+  const out = []
+  lines.forEach((text, i) => {
+    for (const re of [HEX_RE, FN_RE]) {
+      for (const m of text.matchAll(re)) {
+        if (NOT_COLOUR_ATTR.test(text.slice(Math.max(0, m.index - 12), m.index))) continue
+        out.push({ line: i + 1, col: m.index + 1, rule: 'raw-color', value: m[0], fix: `→ a role or pigment — nearest ${hexHint(m[0])}; a brand mark takes \`// quill-check: allow raw-color — <why>\` on the line above` })
+      }
+    }
+    for (const m of text.matchAll(/var\((--[a-z0-9-]+)\)/g)) {
+      const r = DATA.retired.vars[m[1]]
+      if (r) out.push({ line: i + 1, col: m.index + 1, rule: 'retired', value: m[0], fix: `→ retired in ${r.since}; it aliases ${r.aliases} — use the role that owns that value (roles section of .claude/rules/quill.md)` })
+    }
+  })
+  return out
+}
+
+// ------------------------------------------------------------------ allows
+// `quill-check: allow <rule> — <why>` on the same line or the line above. The reason is
+// mandatory: an allow without one is itself a finding, so exceptions never go quiet.
+const ALLOW_RE = /quill-check:\s*allow\s+([a-z-]+)(?:\s*[—–-]+\s*(.*?))?\s*(?:\*\/|-->|\}|$)/
+export function allowsFor(lines, lineNo) {
+  const found = []
+  for (const l of [lineNo - 1, lineNo]) {
+    const m = lines[l - 1]?.match(ALLOW_RE)
+    if (m) found.push({ rule: m[1], reason: (m[2] ?? '').trim(), line: l })
+  }
+  return found
+}
+
+// ------------------------------------------------------------------ one file
+export function scanFile(file, text) {
+  const lines = text.split('\n')
+  const findings = []
+  let layout = 0
+  for (const c of extractCandidates(text)) {
+    const hit = retiredRule(c.base) ?? paletteRule(c.base)
+    if (hit) { findings.push({ file, line: c.line, col: c.col, rule: hit.rule, value: c.token, fix: hit.fix }); continue }
+    const b = bracketRule(c.base)
+    if (b === 'layout') layout++
+    else if (b) findings.push({ file, line: c.line, col: c.col, rule: b.rule, value: c.token, fix: b.fix })
+  }
+  for (const f of rawColourFindings(lines)) findings.push({ file, ...f })
+  const seenAllow = new Set()
+  for (const f of findings) {
+    for (const a of allowsFor(lines, f.line)) {
+      if (a.rule !== f.rule) continue
+      if (a.reason) f.allowed = a.reason
+      else if (!seenAllow.has(a.line)) {
+        seenAllow.add(a.line)
+        findings.push({ file, line: a.line, col: 1, rule: 'allow-without-reason', value: a.rule, fix: `→ write the reason after a dash: \`quill-check: allow ${a.rule} — why this one is right\`` })
+      }
+    }
+  }
+  return { findings, layout }
+}
+
+// ------------------------------------------------------------------ run
+export async function runCheck({ cwd = process.cwd(), dirs, includeUi = false, css, tailwind = true } = {}) {
+  const files = listFiles(cwd, { dirs: dirs ?? [cwd], includeUi })
+  const findings = []
+  const notes = []
+  let layout = 0
+  for (const f of files) {
+    const text = readFileSync(f, 'utf8')
+    const r = scanFile(relative(cwd, f), text)
+    findings.push(...r.findings)
+    layout += r.layout
+  }
+  if (tailwind) notes.push('rule 1 (unresolved classes) arrives in Task 3')
+  findings.sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line || a.col - b.col))
+  return { findings, layout, notes }
+}
