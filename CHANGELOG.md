@@ -12,6 +12,16 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.13.2] — 2026-09-23
+
+### Fixed
+- **Pricing: the Starter card's footer band stopped short of the card's bottom edge.** The grid
+  stretches the three cards to one height, but nothing inside the card absorbed the extra space,
+  so on the shorter plan (three features against four) it collected below the footer — a 27px
+  bare strip under the button band, visible since the band gained its fill in 0.12.3. `CardFooter`
+  now carries `mt-auto`, which pins the band to the bottom of every card whatever its feature
+  count; stock shadcn's Card is already a flex column, so it holds in consumer apps too.
+
 ## [0.13.1] — 2026-09-23
 
 Two `@quill/check` fixes found by running it on a live app (tech-careers, 2,197 findings).
