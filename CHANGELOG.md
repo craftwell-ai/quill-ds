@@ -12,6 +12,16 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.12.2] — 2026-09-23
+
+### Fixed
+- **The visual-diff baseline is Linux numbers, from CI.** The first nightly-shaped run on
+  ubuntu reported 5 regressions against the baseline captured on macOS: text rasterises
+  differently there (median +0.2 points, `chat` +3.0, and `team-section` / `notifications` wrap
+  to a different height). `--baseline-from <summary.json>` builds the baseline from a run's
+  artifact; `summary.json` records the platform; the baseline is rebuilt from run 35881241310
+  (50 pairs, median 3.52 %, max 7.61 %). A local `--update-baseline` now warns.
+
 ## [0.12.1] — 2026-09-23
 
 Parity 6 (CRA-224): the nightly picture check. Nothing an app receives changes.

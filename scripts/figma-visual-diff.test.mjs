@@ -69,3 +69,15 @@ test('the summary is a table with one row per pair and the counts in its heading
   assert.match(md, /880×400 → 880×460 ⚠ \| regression/)
   assert.match(md, /template\/app-page \| — \| — \| — \| error: no story/)
 })
+
+test('baselineFrom builds the accepted numbers from a run\'s summary.json, keeping pairs the run did not cover', async () => {
+  const { baselineFrom } = await import('./figma-visual-diff.mjs')
+  const summary = { at: '2026-09-23T15:27:27.803Z', platform: 'linux (CI)', rows: [
+    { name: 'hero', story: 'p--hero', frameId: '1:1', diffPct: 3.5, size: { figma: [880, 610], storybook: [880, 611] } },
+    { name: 'faq', error: 'no story' },
+  ] }
+  const b = baselineFrom(summary, { pairs: { kanban: { diffPct: 1.4 } } })
+  assert.equal(b.platform, 'linux (CI)')
+  assert.deepEqual(Object.keys(b.pairs).sort(), ['hero', 'kanban'])
+  assert.deepEqual(b.pairs.hero, { diffPct: 3.5, figma: [880, 610], storybook: [880, 611], story: 'p--hero', frameId: '1:1', at: '2026-09-23' })
+})
