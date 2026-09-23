@@ -44,28 +44,28 @@
    "at": "2026-09-23"
   },
   "calendar-page": {
-   "diffPct": 2.18,
+   "diffPct": 2.28,
    "figma": [
     510,
-    444
+    354
    ],
    "storybook": [
     510,
-    354
+    353
    ],
    "story": "patterns-data-calendar-page--calendar-page",
    "frameId": "696:5",
    "at": "2026-09-23"
   },
   "calendar-range": {
-   "diffPct": 4.27,
+   "diffPct": 3.31,
    "figma": [
     458,
-    557
+    451
    ],
    "storybook": [
     458,
-    451
+    450
    ],
    "story": "patterns-data-calendar-range--calendar-range",
    "frameId": "696:6",
@@ -86,10 +86,10 @@
    "at": "2026-09-23"
   },
   "checkout": {
-   "diffPct": 6.89,
+   "diffPct": 5.98,
    "figma": [
     820,
-    446
+    468
    ],
    "storybook": [
     820,
@@ -100,10 +100,10 @@
    "at": "2026-09-23"
   },
   "contact-form": {
-   "diffPct": 6.42,
+   "diffPct": 6.08,
    "figma": [
     440,
-    481
+    473
    ],
    "storybook": [
     440,
@@ -114,10 +114,10 @@
    "at": "2026-09-23"
   },
   "cookie-consent": {
-   "diffPct": 4.64,
+   "diffPct": 3.97,
    "figma": [
-    532,
-    124
+    520,
+    112
    ],
    "storybook": [
     520,
@@ -184,10 +184,10 @@
    "at": "2026-09-23"
   },
   "faq": {
-   "diffPct": 2.42,
+   "diffPct": 2.49,
    "figma": [
     560,
-    457
+    417
    ],
    "storybook": [
     560,
@@ -198,10 +198,10 @@
    "at": "2026-09-23"
   },
   "feature-section": {
-   "diffPct": 3.55,
+   "diffPct": 1.09,
    "figma": [
     880,
-    368
+    426
    ],
    "storybook": [
     880,
@@ -212,28 +212,28 @@
    "at": "2026-09-23"
   },
   "file-upload": {
-   "diffPct": 3.16,
+   "diffPct": 3.13,
    "figma": [
     440,
     485
    ],
    "storybook": [
     440,
-    483
+    484
    ],
    "story": "patterns-forms-file-upload--file-upload",
    "frameId": "696:21",
    "at": "2026-09-23"
   },
   "footer": {
-   "diffPct": 1.29,
+   "diffPct": 1.28,
    "figma": [
     880,
     304
    ],
    "storybook": [
     880,
-    274
+    307
    ],
    "story": "patterns-marketing-footer--footer",
    "frameId": "696:22",
@@ -268,14 +268,14 @@
    "at": "2026-09-23"
   },
   "invoice": {
-   "diffPct": 2.04,
+   "diffPct": 1.99,
    "figma": [
     640,
     423
    ],
    "storybook": [
     640,
-    429
+    430
    ],
    "story": "patterns-data-invoice--invoice",
    "frameId": "696:26",
@@ -296,7 +296,7 @@
    "at": "2026-09-23"
   },
   "list-detail": {
-   "diffPct": 1.22,
+   "diffPct": 1.21,
    "figma": [
     880,
     520
@@ -366,7 +366,7 @@
    "at": "2026-09-23"
   },
   "mail-shell": {
-   "diffPct": 1.87,
+   "diffPct": 1.81,
    "figma": [
     960,
     560
@@ -408,14 +408,14 @@
    "at": "2026-09-23"
   },
   "notifications": {
-   "diffPct": 2.75,
+   "diffPct": 3.3,
    "figma": [
     360,
-    285
+    266
    ],
    "storybook": [
     360,
-    304
+    306
    ],
    "story": "patterns-data-notifications--notifications",
    "frameId": "699:789",
@@ -478,42 +478,42 @@
    "at": "2026-09-23"
   },
   "profile-card": {
-   "diffPct": 6.84,
+   "diffPct": 1.71,
    "figma": [
     340,
-    327
+    351
    ],
    "storybook": [
     340,
-    348
+    349
    ],
    "story": "patterns-data-profile-card--profile-card",
    "frameId": "696:52",
    "at": "2026-09-23"
   },
   "search-results": {
-   "diffPct": 1.96,
+   "diffPct": 3.52,
    "figma": [
     440,
     313
    ],
    "storybook": [
     440,
-    312
+    316
    ],
    "story": "patterns-data-search-results--search-results",
    "frameId": "699:787",
    "at": "2026-09-23"
   },
   "settings": {
-   "diffPct": 5.19,
+   "diffPct": 4.47,
    "figma": [
     560,
-    400
+    392
    ],
    "storybook": [
     560,
-    386
+    387
    ],
    "story": "patterns-forms-settings--settings",
    "frameId": "696:53",
@@ -576,7 +576,7 @@
    "at": "2026-09-23"
   },
   "stats-band": {
-   "diffPct": 2.16,
+   "diffPct": 2.15,
    "figma": [
     880,
     250
@@ -590,14 +590,14 @@
    "at": "2026-09-23"
   },
   "tabs-page": {
-   "diffPct": 3.93,
+   "diffPct": 4.38,
    "figma": [
     560,
     256
    ],
    "storybook": [
     560,
-    212
+    252
    ],
    "story": "patterns-shells-tabs-page--tabs-page",
    "frameId": "696:63",
@@ -632,14 +632,14 @@
    "at": "2026-09-23"
   },
   "theme-selector": {
-   "diffPct": 4.25,
+   "diffPct": 5.66,
    "figma": [
     91,
     28
    ],
    "storybook": [
-    521,
-    367
+    94,
+    29
    ],
    "story": "patterns-nav-theme-selector--theme-selector",
    "frameId": "696:71",
@@ -688,14 +688,14 @@
    "at": "2026-09-23"
   },
   "example-marketing-page": {
-   "diffPct": 3.89,
+   "diffPct": 2.3,
    "figma": [
     880,
-    2403
+    2461
    ],
    "storybook": [
     880,
-    2427
+    2461
    ],
    "story": "examples-marketing-page--marketing-page",
    "frameId": "697:233",
