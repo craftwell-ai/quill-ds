@@ -3,7 +3,7 @@ export const usage = {
   kind: 'pattern',
   summary: 'The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code.',
   useWhen: [
-    'You need the leanest possible sign-in — a single field for one-time-code entry.',
+    'You need the leanest possible sign-in — one email field that sends a one-time code, no password.',
   ],
   alternatives: [
     { name: 'login', when: "you're collecting a password, not sending a one-time code — this pattern has no password field at all." },

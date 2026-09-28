@@ -7,7 +7,6 @@ export const usage = {
     'You need an icon-only action trigger (use an icon size with an aria-label).',
   ],
   alternatives: [
-    { name: 'link', when: 'the action navigates somewhere — use the link variant or a real anchor.' },
     { name: 'button-group', when: 'several related actions belong together as one segmented control.' },
     { name: 'toggle', when: 'the control switches a state on/off rather than firing an action.' },
   ],
@@ -22,6 +21,12 @@ export const usage = {
       id: 'focus-ring-accent',
       do: 'Leave the focus ring on --ring, the accent-driven ink ring.',
       dont: 'Restyle the focus ring with a hardcoded pigment such as terracotta.',
+      visual: false,
+    },
+    {
+      id: 'navigate-with-a-link',
+      do: "When the action goes to another page, render a real anchor (or your router's Link), styled with the button's link variant if it should look like one.",
+      dont: 'Navigate from a button onClick — it cannot be opened in a new tab and announces as a button, not a link.',
       visual: false,
     },
     {

@@ -12,6 +12,25 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.14.1] — 2026-09-28
+
+Three errors in the usage guides, found when the new `quill-components` skill put them in
+front of a code reviewer (Greptile, on the tech-careers sync). Each was already live in
+Storybook, llms.txt and the web guides; the fix is in the usage files, so every one updates.
+
+### Fixed
+- **Button suggested a `link` component that does not exist.** "Reach for instead" named
+  `link`, which is a Button variant, not a component with a guide, so an agent following the
+  skill opened a file that is not there. It is now a rule: navigate with a real anchor (or the
+  router's Link), styled with the link variant if it should look like a button.
+- **Chart said "four themes".** Quill has five since Intelligent. The guide now says "every
+  Quill theme", so the count cannot go stale again.
+- **Login (minimal) was described as code entry.** Its field is email; the code is typed on
+  the next screen (`otp-verification`). "When to use" now says so.
+
+### Added
+- **A test that every "reach for instead" names a component with its own usage guide.**
+
 ## [0.14.0] — 2026-09-28
 
 Agents in an app can now tell which component to use, not just which ones exist.

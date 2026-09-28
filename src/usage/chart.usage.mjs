@@ -3,7 +3,7 @@ export const usage = {
   kind: 'component',
   summary: 'A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend.',
   useWhen: [
-    'You need a bar, line, area, or other Recharts chart that automatically re-colors across all four Quill themes and stays colorblind-safe.',
+    'You need a bar, line, area, or other Recharts chart that automatically re-colors across every Quill theme and stays colorblind-safe.',
   ],
   alternatives: [
     { name: 'data-table', when: 'the audience needs to read or compare exact values, not the shape of change — a table beats a chart for precision.' },
@@ -24,8 +24,8 @@ export const usage = {
     },
     {
       id: 'prefer-color-over-theme',
-      do: 'Prefer `color: "var(--chart-N)"` in a series config entry — the tokens already re-cut correctly for all four Quill themes.',
-      dont: 'Reach for the `theme` field (`{ light, dark }`) expecting it to map Quill\'s four themes one-to-one — it only distinguishes two CSS buckets (light vs. the two dark themes), so hand-authored hex pairs there won\'t track Quill\'s palette the way a token reference does.',
+      do: 'Prefer `color: "var(--chart-N)"` in a series config entry — the tokens already re-cut correctly for every Quill theme.',
+      dont: 'Reach for the `theme` field (`{ light, dark }`) expecting it to map Quill\'s themes one-to-one — it only distinguishes two CSS buckets, light and dark, and Quill has more themes than that, so hand-authored hex pairs there won\'t track Quill\'s palette the way a token reference does.',
       visual: false,
     },
   ],

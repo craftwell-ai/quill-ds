@@ -7,13 +7,13 @@ Buttons trigger actions. The default (primary) variant is the single most import
 - You need an icon-only action trigger (use an icon size with an aria-label).
 
 ### Reach for instead
-- **link** — when the action navigates somewhere — use the link variant or a real anchor.
 - **button-group** — when several related actions belong together as one segmented control.
 - **toggle** — when the control switches a state on/off rather than firing an action.
 
 ### Rules
 - **Do:** Use one default (primary) button per surface, for the single most important action. **Don't:** Scatter several primary buttons on one surface — they compete and none reads as primary.
 - **Do:** Leave the focus ring on --ring, the accent-driven ink ring. **Don't:** Restyle the focus ring with a hardcoded pigment such as terracotta.
+- **Do:** When the action goes to another page, render a real anchor (or your router's Link), styled with the button's link variant if it should look like one. **Don't:** Navigate from a button onClick — it cannot be opened in a new tab and announces as a button, not a link.
 - **Do:** Give every icon-only button an explicit aria-label. **Don't:** Ship an icon-only button with no accessible name.
 
 ### Accessibility
