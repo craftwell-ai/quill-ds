@@ -1,0 +1,731 @@
+{
+  "meta": {
+    "date": "2026-09-28",
+    "set": "hard",
+    "repeat": 1,
+    "model": "claude-opus-5-5",
+    "cost": 6.067134200000002
+  },
+  "rows": [
+    {
+      "case": {
+        "id": "unsaved-changes",
+        "expect": "alert-dialog",
+        "request": "When someone closes the editor with unsaved changes, ask whether to throw those changes away."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **alert-dialog** primitive (stock shadcn, restyled by Quill's tokens).\n\n**Why this one:**\n- **It's a confirmation, not a form.** The user has to decide before they can leave, so the prompt should block the page and not close when they click outside it. That's how alert-dialog behaves; a plain `dialog` can be dismissed by clicking away, which is wrong for a destructive choice.\n- **No block is a better fit.** `alerts` and `announcement-banner` show messages inline and don't ask for a decision. `empty-state` and `notifications` are for other jobs. Quill has no dedicated \"discard changes\" block, and the rules say to use the primitive rather than build your own.\n\n**How to set it up in Quill:**\n- Say what happens, then why, in sentence case. For example, title: \"Discard unsaved changes?\" Description: \"Your edits since the last save will be lost.\"\n- Two actions: **Cancel** / \"Keep editing\" (the safe choice, and where focus should land) and **Discard**.\n- The Discard button uses the `destructive` role as a 10% tint with destructive text (`bg-destructive/10`), never a solid fill. Don't make it the ink `primary` button, because ink is for the main action.\n- If you also want \"Save and close,\" that becomes the ink `primary` action, with Discard as the tinted destructive one.\n- Read https://www.quilldesignsystem.com/usage/alert-dialog.md before installing. Install with `npx shadcn@latest add alert-dialog`.\n\nPICK: alert-dialog",
+          "cost": 0.12194319999999999,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For this, use **`alert-dialog`**, the stock shadcn primitive restyled by Quill.\n\nThrowing away unsaved changes can't be undone, and the Quill guide lists \"discarding unsaved work\" as a case for this primitive. An alert dialog makes the person choose either \"Discard\" or \"Keep editing\" before the editor closes.\n\nOther options, and why not:\n- **`dialog`** is for focused tasks or actions that can be undone. Losing work can't be undone, so it's the wrong fit.\n- **`sonner`**, **`alert`** and **`alerts`** only show a message. None of them makes the person choose before the editor closes.\n- **No block** covers this. It's a single confirmation, so the primitive is the right level.\n\nQuill rules for building it:\n- **Keep editing** should be the default, focused action.\n- **Discard** is the destructive choice. Style it with the destructive tint (`bg-destructive/10` with destructive text), not a solid red fill.\n- Write the title as a plain decision, for example \"Discard unsaved changes?\", and say what will be lost in the description.\n\nThis only works if the editor can tell it has unsaved changes and can hold off closing until the person answers. If \"closing\" means closing the browser tab, the browser's own `beforeunload` prompt takes over and no Quill component can appear there.\n\nPICK: alert-dialog",
+          "cost": 0.18341000000000002,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "author-preview",
+        "expect": "hover-card",
+        "request": "Pointing at an author's name in a comment should show their photo, short bio and follower count, without leaving the page."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **hover-card** primitive, which is shadcn's `HoverCard` restyled by Quill's tokens.\n\nIt fits what you described:\n\n- **It opens when you point at it.** It shows on hover or keyboard focus of a trigger and closes when you move away. The page doesn't navigate, and nobody has to click. That's the right behaviour for an author name inside a comment.\n- **It's for preview content.** A photo, a short bio and a follower count is a small read-only preview of a person, which is what a hover card is for.\n- **The styling is already correct.** It floats, so it uses the `popover` surface with `--shadow`, and it picks up every theme and accent automatically.\n\nTwo other options that don't fit as well:\n\n- **`profile-card` block.** It's a profile card placed in the page layout, not something that opens from a link. You could reuse its layout (avatar, name, bio, stats) as the content inside the hover card, but it can't be the hover behaviour itself.\n- **`tooltip`.** It's for short plain-text labels and can't hold a photo and stats.\n- **`popover`.** It opens on click, not when you point at something.\n\nSome practical points:\n\n- Make the author name a real link to their profile page, so touch and keyboard users still have a way in.\n- Use the `avatar` primitive for the photo.\n- Keep the follower count as plain `foreground` / `muted-foreground` text, not a tinted badge.\n- Read https://www.quilldesignsystem.com/usage/hover-card.md before building it.\n\nPICK: hover-card",
+          "cost": 0.1216512,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "hover-card",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "hover-card"
+          ],
+          "text": "Use the **hover-card** primitive (`npx shadcn@latest add hover-card`). Quill's guide lists this exact job as its use case: \"a richer preview on hover — a link destination, an author bio, expanded metadata — without navigating away.\"\n\n**Why not the others:**\n- **tooltip** is for a one-line hint on a control. It's too small for a photo, a bio and a count.\n- **popover** opens on a click. You want it to open when someone points at the name.\n- **profile-card** is a full profile card that sits in the page, with follow and message buttons. It isn't a floating preview. You could reuse its layout inside the hover card, but not its buttons.\n\n**Rules for using it:**\n- **Keep the card read-only.** Show the avatar (`avatar` primitive), the bio and the follower count. Leave out the Follow button: hover doesn't work on touch screens, so a button there can't be reached. If you need a Follow action, use `popover` instead.\n- **Make the author's name a real link** to their profile page. Touch and screen-reader users never see a hover card, so the photo, bio and follower count must also be on that page.\n- **Keep the default opening delay** (about 600ms), so the card doesn't flash open when the pointer just passes over a name.\n- **Use the component's own styling** (`popover` surface, `rounded-lg`, the theme's shadow) rather than adding your own.\n\nPICK: hover-card",
+          "cost": 0.20085279999999997,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "hover-card",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "loading-rows",
+        "expect": "skeleton",
+        "request": "While order history is still loading, show placeholders shaped like the rows so the page doesn't jump when they arrive."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "I'd use the stock shadcn **Skeleton** primitive, which the Quill token layer restyles. Install it with `npx shadcn@latest add skeleton`.\n\n- **Why Skeleton:** Skeleton is the tool for loading placeholders. You build a few rows that match the real order-history rows: same height, column widths, gaps and padding. When the data arrives, it takes the same space, so nothing jumps.\n- **How to lay it out:** If the table comes from the `data-table` block (or the `table` primitive), render the loading state inside that same table. Put Skeleton bars in the cells of 5–8 placeholder rows, so the header and column widths stay fixed.\n- **What not to use:** `spinner` is for short waits where you don't know the size of what's coming. It doesn't hold the rows' shape, so the page still jumps. `empty-state` is for when there are no orders, not for while they load.\n- **Accessibility:** Mark the loading region `aria-busy=\"true\"` and hide the skeletons from screen readers. Give the region a short visually hidden label such as \"Loading order history\" so screen reader users know what's happening. Any pulse animation should stop under `prefers-reduced-motion`.\n\nCheck the Quill guide at https://www.quilldesignsystem.com/usage/skeleton.md before building it.\n\nPICK: skeleton",
+          "cost": 0.1064768,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "skeleton",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "You want the **Skeleton** primitive (`npx shadcn@latest add skeleton`).\n\n- **Why it fits:** Skeleton is Quill's placeholder for content that hasn't arrived yet, like list rows. It holds the space the real content will take, so the page doesn't jump when the order history loads.\n- **Spinner:** not a good fit here. It only says \"something is loading\" and doesn't hold any space, so the page would still jump.\n- **Progress:** needs a real completion percentage, which a data fetch doesn't have.\n- **Empty:** shows a list that loaded with nothing in it. It's what you'd switch to if the order history comes back with no orders.\n\n**How to use it:** show a few Skeleton rows, and match each one's height, padding and columns to a real row: a bar for the date, one for the order number, one for the total, and a pill for the status. Then the real rows drop straight into the same space. If the history ends up in the `data-table` block or the `table` primitive, put the skeleton bars inside the actual table rows and cells so the columns line up exactly.\n\nPICK: skeleton",
+          "cost": 0.16774499999999998,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "skeleton",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "unknown-wait",
+        "expect": "spinner",
+        "request": "While a report is being generated, and we can't tell how long it will take, show that something is happening."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a report of unknown length, I'd use the **Spinner** primitive (stock shadcn `spinner`, restyled by the Quill tokens).\n\n- **Why not Progress:** a progress bar shows how much is done, like 40%. You can't say how long the report will take, so any bar would be made up.\n- **Why not Skeleton:** skeletons show the shape of content that's about to appear, like rows or cards. They fit a known layout loading quickly, not a long job running in the background.\n- **Why not a block:** none of Quill's blocks covers \"work in progress.\" `empty-state` and `alerts` are for final states, not ongoing work.\n\n**How to use it:**\n- Put the spinner next to a short, sentence-case label such as \"Generating report…\". Mark the label up so screen readers announce the change (`role=\"status\"` / `aria-live=\"polite\"`).\n- If the user starts the report with a button, show the spinner inside that button and disable it while the report runs.\n- Keep the default token colour, which is ink or `muted-foreground`. Don't use the accent pigment or a hand-picked colour.\n- A spinner loops, and Quill's motion rules say to respect reduced motion. When `prefers-reduced-motion` is set, stop the spin or slow it right down and let the label carry the message.\n- If the backend can later report real progress, switch to `progress`.\n\nThe Quill usage guide for this primitive is at https://www.quilldesignsystem.com/usage/spinner.md. I haven't read it for this answer, so check it before you build.\n\nPICK: spinner",
+          "cost": 0.1092128,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "spinner",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "spinner"
+          ],
+          "text": "Use the **spinner** primitive (`npx shadcn@latest add spinner`). You can't say how long the report will take, so there's no real percentage to show. A spinner just tells people something is happening.\n\n**Why not the other two:**\n- **progress** is for when you know how far along the work is, like a known percentage. A progress bar that isn't tied to real progress misleads people.\n- **skeleton** previews the layout of content that is loading. It works for a page that fills in quickly, but less well for a report job with no clear end.\n\n**How to use it:**\n- Put a short status line next to it, such as \"Generating report…\". A spinner by itself doesn't say what is loading.\n- It already has `role=\"status\"` and `aria-label=\"Loading\"`. Pass a more specific label, like `aria-label=\"Generating report\"`. Don't wrap it in an `aria-hidden` container or add another live region.\n- Let it take its colour from the text around it (`currentColor`), not a fixed colour.\n\nIf the backend can report how far along it is later, switch to **progress** at that point.\n\nPICK: spinner",
+          "cost": 0.1829952,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "spinner",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "setup-checklist",
+        "expect": "onboarding",
+        "request": "New workspace owners have a few setup tasks (invite the team, connect a calendar, add billing) to do over the next few days, and should see how far along they are."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **`onboarding`** block, which Quill lists as \"Onboarding checklist\" under productivity. Your case is exactly what it's built for:\n\n- **A short, fixed set of setup tasks:** inviting the team, connecting a calendar and adding billing each become a checklist item with a done or not-done state.\n- **Progress over several days:** it shows how far along the owner is, so they can come back and see what's left.\n- **It fits the theme:** finished items use `primary` (ink) for the done state and follow the theme tokens, so you don't need custom colours for status.\n\nOther options I ruled out:\n- **`wizard`** handles one setup step at a time in a single session. Your tasks happen in any order over several days, so a checklist fits better.\n- **`progress`** (a primitive) only draws a progress bar. You'd have to build the task list around it yourself, and the rules say to use an existing block before building one.\n- **`empty-state`** and **`announcement-banner`** can nudge people to start setup, but they don't track progress.\n\nRead the usage guide before installing: https://www.quilldesignsystem.com/usage/onboarding.md. The install command is `npx shadcn@latest add @quill/onboarding`.\n\nPICK: onboarding",
+          "cost": 0.1062608,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "onboarding",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "onboarding"
+          ],
+          "text": "Use the **`onboarding`** block. It's a setup checklist card that shows a progress bar, which tasks are done and which are still pending, and a start link for each remaining step. That fits your case: a few independent tasks (invite the team, connect a calendar, add billing) that owners come back to over several days while tracking how far along they are.\n\n**Why not the others:**\n- **`wizard`** is for steps that must be done in a strict order in one sitting. Your tasks can be done in any order across several visits.\n- **`empty-state`** is for a single next action, not several tasks you need to track.\n- **`progress` on its own** would only give you the bar. The block already combines the bar with the task list and links.\n\n**When you build it:**\n- Show a text count next to the bar, like \"1 of 3 complete\", so progress isn't shown by bar width alone.\n- Give each \"Start\" link a label that names its task, like \"Start: Invite your team\". The sample content uses the same \"Start\" label for every link, which screen-reader users can't tell apart.\n- Keep both signals on finished tasks: the filled check icon and the strikethrough text.\n\nInstall it with `npx shadcn@latest add @quill/onboarding` and replace the sample tasks with your three.\n\nPICK: onboarding",
+          "cost": 0.18302480000000002,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "onboarding",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "store-steps",
+        "expect": "wizard",
+        "request": "Creating a new store takes four steps that must be done in order, in one sitting, with back and continue buttons."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **`wizard`** block (setup wizard step, in the form group). It's built for this exact case: an ordered, multi-step setup done in one session, with a step indicator and back and continue controls.\n\nTwo other blocks come close, but don't fit:\n- **`onboarding`** is a checklist. People can do the tasks in any order and come back later, so it doesn't enforce your \"in order, in one sitting\" rule.\n- **`tabs-page`** lets people jump freely between sections. That breaks the required order.\n\nBefore installing, read the usage guide at https://www.quilldesignsystem.com/usage/wizard.md. To install it later: `npx shadcn@latest add @quill/wizard`.\n\nPICK: wizard",
+          "cost": 0.1030808,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "wizard",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "wizard"
+          ],
+          "text": "I'd use the **`wizard`** block. It's Quill's multi-step setup flow: a card with a progress stepper and separate Back and Continue buttons, which is what creating a store needs.\n\n- **Why not `onboarding`:** that block is a checklist of tasks people finish over time, in any order. Your four steps have a fixed order and happen in one sitting, which is the case `wizard` is meant for.\n- **Why not `settings` or `tabs-page`:** those are single screens with no sequence to follow.\n- **Rule to keep:** show all four steps in the stepper from the start, each marked done, current or to do, so people can see how much is left. Don't reveal steps one at a time.\n- **Accessibility:** mark each step's state with an icon, its position and text colour together, not colour alone. Keep Back and Continue as two clearly labelled buttons, not one \"Next\" button whose meaning changes.\n\nTo install it: `npx shadcn@latest add @quill/wizard`, then replace the sample workspace fields with your store fields.\n\nPICK: wizard",
+          "cost": 0.18049359999999998,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "wizard",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "text-align",
+        "expect": "toggle-group",
+        "request": "In a text editor toolbar, users choose left, center or right alignment with three icon buttons, and the current one stays highlighted."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **toggle-group** primitive (`npx shadcn@latest add toggle-group`) with `type=\"single\"`.\n\n- **Single selection:** Exactly one alignment is active at a time. With `type=\"single\"`, choosing one clears the others, and the active item keeps its \"on\" state. It gets `aria-pressed` and roving arrow-key focus, so you don't have to build any of that yourself.\n- **Why not `toggle`:** A single `toggle` is on or off by itself, like bold or italic. Three separate toggles would let two alignments be on at once.\n- **Why not `button-group`:** It only groups buttons visually and doesn't track which one is selected.\n- **Icons:** `format_align_left`, `format_align_center` and `format_align_right` are all in the core icon set. Because each button shows only an icon, give every item an `aria-label` (\"Align left\" and so on).\n- **Quill styling:** The \"on\" state uses the ink/`primary` treatment and hover uses the `muted` wash, so you don't need to add any colour yourself. The usage guide is at https://www.quilldesignsystem.com/usage/toggle-group.md.\n- **Keeping one selected:** Radix lets the user click the active item again to clear it, which would leave no alignment set. Ignore an empty value in `onValueChange` so one always stays highlighted.\n\nPICK: toggle-group",
+          "cost": 0.1075768,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "toggle-group",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "toggle-group"
+          ],
+          "text": "I'd use **toggle-group** in single-select mode, which means leaving off the `multiple` prop.\n\n- **Why it fits:** Alignment is one choice out of several, and the current choice has to stay highlighted. In single-select mode, picking one option clears the others. Quill's own guide uses alignment as the example for this mode, and bold, italic and underline as the example for `multiple`.\n- **Why not the alternatives:**\n  - `button-group` is for buttons that each do something once. They don't stay pressed.\n  - `radio-group` suits options described in words. Your options are icons.\n  - `toggle` is a single on/off button. Three of them wouldn't share one selection.\n- **How to set it up:**\n  - Use `format_align_left`, `format_align_center` and `format_align_right` from Quill's `<Icon>` component. All three are in the core icon set.\n  - Give each item an `aria-label`, because the icons have no visible text.\n  - Set `spacing={0}` if you want the three buttons joined into one control.\n  - Set `variant` and `size` on the group, not on each item.\n  - Keyboard support comes built in: the group acts as a toolbar and arrow keys move between items.\n- **Install:** `npx shadcn@latest add toggle-group`\n\nPICK: toggle-group",
+          "cost": 0.1839684,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "toggle-group",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "bold-button",
+        "expect": "toggle",
+        "request": "A bold button in the editor toolbar that stays pressed while bold is on."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **Toggle** primitive (`npx shadcn@latest add toggle`). It's a two-state button that sets `aria-pressed` for you. Bind `pressed` to the editor's bold state and put `<Icon name=\"format_bold\" />` inside. That icon is in the core set.\n\nA few notes from the Quill rules:\n- **Accessible name:** the icon is the only content, so give the Toggle `aria-label=\"Bold\"`. Leave the Icon decorative.\n- **Pressed state:** the pressed styling comes from the token layer, so don't set colours by hand. On hover it washes with `muted` like other toggles. Don't use a Button with a manually swapped variant.\n- **Other formatting buttons:** if bold sits next to italic and underline, wrap them in `toggle-group` (`type=\"multiple\"`), and each item still works as its own pressed/unpressed button. For a single bold button, a plain Toggle is enough.\n\nPICK: toggle",
+          "cost": 0.1049088,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "toggle",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the **Toggle** primitive (`npx shadcn@latest add toggle`). Quill's guide describes it as \"a single button whose on/off (pressed) state sticks after clicking — bold, italic, a filter chip.\" That is exactly your case.\n\n**Why not the nearby options:**\n- **Button** fires an action but has no pressed state that stays on.\n- **Switch** is for settings that take effect immediately, like notifications or dark mode. It's not meant for formatting controls in a toolbar.\n- **Toggle group** only makes sense if you're grouping bold with italic and underline as one control. Even then, each item is still a toggle. For a single bold button, a plain Toggle is enough.\n\n**How to use it:**\n- Put `<Icon name=\"format_bold\" />` inside it. That name is in the core icon set.\n- The icon is decorative by default and the button has no visible text, so give the Toggle itself `aria-label=\"Bold\"`.\n- Bind its pressed state to whether bold is on at the cursor. It then sets `aria-pressed` for screen readers and shows the pressed styling for you.\n\nPICK: toggle",
+          "cost": 0.1680428,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "toggle",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "accept-terms",
+        "expect": "checkbox",
+        "request": "In the sign-up form, people agree to the terms of service before they submit."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **checkbox** primitive (`npx shadcn@latest add checkbox`), paired with a `label` or wrapped in a `field` so the agreement text is clickable and read aloud with the box.\n\n- **Why not a switch:** a switch is for a setting that takes effect right away. Agreeing to terms is a choice that only counts when the form is submitted, and that's what a checkbox is for.\n- **Link to the terms:** put a `text-link` link to the terms in the label text.\n- **Edge colour:** the box should use the `input` edge colour, which keeps the 3:1 contrast needed for controls you toggle.\n- **If they don't tick it:** block submission and show the message through the field's error state, using destructive text on a `bg-destructive/10` tint, not a solid fill.\n- **If you're rebuilding the whole page:** start from the `signup` block and keep its structure. The consent control inside it is still a checkbox.\n\nPICK: checkbox",
+          "cost": 0.10521280000000001,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "checkbox",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "checkbox",
+            "signup"
+          ],
+          "text": "Use the **checkbox** primitive. The form itself can stay the `signup` block (or `signup-social`). That block has name, email and password fields but no terms control, so the agreement is the one piece you add to it.\n\nWhy checkbox:\n- **It fits the job.** Quill's guide lists \"accept terms\" as a use for checkbox: a yes/no value collected as part of a form.\n- **Switch is wrong here.** A switch is for a setting that takes effect the moment it's flipped. Agreeing to terms is a value you send when the form is submitted.\n- **Radio group is wrong too.** This is one independent yes/no, not a choice among options.\n\nHow to use it (from the checkbox guide):\n- Link it to a `Label` with `htmlFor`/`id`, or wrap both in one label. A checkbox sitting next to plain text has no name for screen readers. Wrapping it in `field` gives you the label and error message wired together.\n- Put the \"terms of service\" link inside the label text as a real `<a>` styled with `text-link`.\n- If someone submits without checking it, set `aria-invalid` on the checkbox. The destructive border and ring then appear on their own, so don't add your own red classes. Put the error text in the `field` error slot.\n- Install it with `npx shadcn@latest add checkbox`. Don't build your own.\n\nPICK: checkbox",
+          "cost": 0.1998122,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "checkbox",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "price-range",
+        "expect": "slider",
+        "request": "Shoppers filter products to a price between a minimum and a maximum by dragging."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **Slider** primitive, a stock shadcn component that Quill restyles through its tokens. Install it with `npx shadcn@latest add slider`.\n\n- **Why it fits:** Give it a two-value `defaultValue` or `value`, such as `[min, max]`, and it shows two thumbs on one track. Shoppers drag them to set the lowest and highest price. That's a standard range slider, so you don't need to build one.\n- **Why not a block:** None of the 51 Quill blocks is a price or range filter. `data-table` and `search-results` could hold the filter, but they don't provide the dragging control.\n- **Quill details to keep:**\n  - Use the accent `ring` for keyboard focus on the thumbs.\n  - Keep `primary` (ink) for the filled part of the track between the thumbs.\n  - Show the current min and max as text labels next to the slider, and give each thumb an accessible label (e.g. \"Minimum price\", \"Maximum price\"). That way the value doesn't depend on colour alone, and screen readers announce both ends.\n  - For shoppers who want exact figures, you can add two small `input` fields that stay in sync with the thumbs.\n- **Before building:** Read https://www.quilldesignsystem.com/usage/slider.md for Quill's specific rules.\n\nPICK: slider",
+          "cost": 0.10676479999999999,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "slider",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the **slider** primitive, set up as a two-thumb range slider (min and max). Its guide describes this exact job: picking \"one number, or a two-ended range, between a min and max by dragging rather than typing.\"\n\n- **No block fits.** None of the 51 blocks is a price or range filter. The closest, `calendar-range`, picks dates, not numbers.\n- **Its alternatives don't fit either.** `input` is for typing a value, not dragging. `progress` only displays a percentage; it isn't an input.\n- **Install it from stock shadcn:** `npx shadcn@latest add slider`. Pass a two-value array (for example `[min, max]`) to get two thumbs.\n- **Accessibility:** Give each thumb its own label (\"Minimum price\", \"Maximum price\"). Also show the current values as text next to the slider (for example \"$20 – $150\"), so the range can be read without dragging.\n- **Optional:** You can add two small number inputs linked to the thumbs for shoppers who want exact prices. That goes beyond the core pick; the slider handles the dragging on its own.\n\nPICK: slider",
+          "cost": 0.16810719999999998,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "slider",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "past-payment",
+        "expect": "invoice",
+        "request": "Show a customer the full record of a payment they made last month, with line items, totals and a way to download it."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For this, use the **`invoice`** block (commerce group).\n\n- **It fits the job.** The customer is looking back at a payment they already made, and they want the whole record: line items, subtotal, tax and total. That record is what `invoice` presents, and a download action belongs naturally in its header.\n- **`order-summary` is the wrong choice.** It's the compact recap shown during a purchase, usually next to `checkout`. It isn't a finished record the customer can keep.\n- **`data-table` is too generic.** It could show the line items, but you'd have to build the totals, the payer and payee details, and the download yourself. The rules say to use an existing block rather than build your own.\n- **`activity-feed` is for a list of past payments.** Use it (or a `data-table`) for the list the customer picks a payment from, then open the chosen payment in `invoice`.\n\nBefore installing, read the block's usage guide at `https://www.quilldesignsystem.com/usage/invoice.md`. Then install it with `npx shadcn@latest add @quill/invoice`. For the download button, keep the ink `primary` or `variant=\"outline\"` style, and use the `download` icon from the core set.\n\nPICK: invoice",
+          "cost": 0.1064968,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "invoice",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "invoice"
+          ],
+          "text": "Use the **`invoice`** block. It's built for this: a printable record of a finished transaction, with sender and recipient details, a line-item table with totals, a \"Paid\" status badge and a download action.\n\n**Why the close alternatives don't fit:**\n- **`order-summary`** is a cart you review before paying, with a promo code field and a pay button. It's the wrong fit for a payment the customer already made last month.\n- **`data-table`** is for browsing many records, such as a list of all invoices. It could be the page that links into this one, but it doesn't show the full detail of a single payment.\n\n**Worth keeping when you fill it in:**\n- Put the total in the table footer, in its own right-aligned row, so it reads as the sum and not as another charge. The block already uses a real table footer, so screen readers can tell the total apart from the line items.\n- Keep the status as a badge with visible text (\"Paid\"), so it isn't shown by colour alone.\n\nInstall it with `npx shadcn@latest add @quill/invoice`, then replace the sample content with the customer's payment data.\n\nPICK: invoice",
+          "cost": 0.1819142,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "invoice",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "cart-review",
+        "expect": "order-summary",
+        "request": "Before paying, customers look over what they are buying, apply a promo code and see the total. Card details are collected on the next screen."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **`order-summary`** block from the commerce group. It covers the screen you describe: customers review what they're buying, apply a promo code and see the total before they pay.\n\n- **Not `checkout`:** that block also collects payment details. Your card fields are on the next screen, so `checkout` belongs there.\n- **Not `invoice`:** it shows a bill after the purchase, not a review step before paying.\n\nCheck the usage guide at https://www.quilldesignsystem.com/usage/order-summary.md before installing to confirm the promo-code field works the way you need. Install it with `npx shadcn@latest add @quill/order-summary`.\n\nPICK: order-summary",
+          "cost": 0.1034808,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "order-summary",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "order-summary"
+          ],
+          "text": "Use the **`order-summary`** block. It's a cart-review card with line items, a promo code field, a total and a pay button, which is exactly what this screen needs.\n\n**Why not the other two:**\n- **`checkout`** puts the card and billing fields next to the summary. You're collecting card details on the next screen, so it would put payment fields on this one too early.\n- **`invoice`** is a record of a purchase that's already been paid. This is a cart that hasn't been paid yet.\n\n**Rules from its usage guide:**\n- Update the total as soon as a promo code is applied or a line item changes. Customers shouldn't have to refresh or take another step to see it.\n- Show an applied promo as its own line with the discount amount, so the lines add up to the total.\n- Give the total its own row in a larger size, not just bold text among the line items.\n- Keep the visible text on the pay button (for example \"Pay now\") next to its icon. Since this button now leads to the card screen, you might change the label to \"Continue to payment\". An icon alone isn't a good enough accessible name.\n\nInstall it with `npx shadcn@latest add @quill/order-summary` and swap in your own content.\n\nPICK: order-summary",
+          "cost": 0.1828676,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "order-summary",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "dead-link",
+        "expect": "error-404",
+        "request": "A user follows an old link to a project that has since been deleted."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **`error-404`** block.\n\nThe old link points to something that no longer exists, so this is a not-found page, not an empty state. `empty-state` is for a place that exists but has nothing in it yet, like a new project with no items, and it usually offers a \"create the first one\" action. Showing it here would suggest the project is still there and just empty.\n\nHow to adapt it:\n- **Copy:** say what happened, then what to do next, in sentence case. For example, the headline \"This project was *deleted*\" (one accent word) and supporting text like \"The link you followed points to a project that no longer exists.\"\n- **Actions:** one ink primary action back to somewhere useful, such as the projects list or home. Add a secondary link only if there's a real second option, like contacting the project owner.\n- **Status:** if you can tell \"deleted\" apart from \"never existed\", return 410 Gone rather than 404. Keep the same block either way.\n- **Shell:** if the user is signed in, show it inside the normal app shell so they don't lose their navigation.\n\nPICK: error-404",
+          "cost": 0.1085208,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "error-404",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "error-404"
+          ],
+          "text": "I'd use the **`error-404`** block.\n\nThe job here is a dead end: the link points to a project that no longer exists, so the page has nothing to show. That's what `error-404` is for. It's a full-page \"not found\" state with two ways out: \"Go back\" and \"Take me home.\"\n\nThe two closest alternatives don't fit:\n- **`empty-state`** is for something that exists but has no content yet, like a project with no items. Here the project is gone, so it's the wrong message.\n- **`alerts`** is for an error the user can fix on the page they're already on. A deleted project leaves nothing on the page to fix, so it's a full-page dead end instead.\n\nIf you want, change the sample text to say the project was deleted (for example, a heading like \"This project no longer exists\"). Keep a real `<h1>` as the page title and keep both buttons. You could also point \"Take me home\" at the projects list, since that's the most useful place to send them.\n\nPICK: error-404",
+          "cost": 0.17950359999999999,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "error-404",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "right-click-file",
+        "expect": "context-menu",
+        "request": "On desktop, right-clicking a file in the list shows rename, move and delete."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "The context-menu primitive (stock shadcn, restyled by Quill's tokens) is the right fit. It's built for a menu that opens on right-click and is tied to the item under the pointer, which is exactly rename, move and delete on a file row.\n\nWhy the other options fit less well:\n- **dropdown-menu** opens from a visible trigger, such as a `more_vert` button. It's still worth adding to each row alongside the context menu, because right-click alone can't be found by touch or keyboard users. Both menus can share the same three items.\n- **command**, the command-palette block, runs global commands and isn't scoped to one file.\n- No Quill block covers a per-row file menu, so the primitive is the right level.\n\nA few Quill rules apply here:\n- Items highlight with `accent` on hover. This is the menu-item job for `accent`, not `muted`.\n- Put a separator before Delete and give it destructive text colour, never a solid fill.\n- Delete should open an **alert-dialog** to confirm before anything is removed.\n- The icons `edit`, `forward` and `delete` are all in the core set.\n\nPICK: context-menu",
+          "cost": 0.1048768,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "context-menu",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "context-menu"
+          ],
+          "text": "Use **context-menu**. The job is a set of secondary actions on one item that desktop users open by right-clicking, and that's exactly what Quill's guide says it's for. It also opens on long-press on touch screens, and once open it works with the keyboard: arrow keys, typeahead, and Escape.\n\nHow to set it up for rename, move and delete:\n- **Delete goes last.** Give it `variant=\"destructive\"` and put a `ContextMenuSeparator` above it so a slip doesn't land on it.\n- **Keep the menu short.** Three actions is well within the guide's limit of about 8.\n- **Make it discoverable.** Right-click has no visible button. Give the file rows a hover state or a hint so people know the menu is there.\n- **Add a visible trigger too.** The guide says right-click shouldn't be the only way to reach these actions. If rename, move and delete aren't available anywhere else, add a `dropdown-menu` behind a `more_vert` icon button on each row. It can list the same items.\n\nPICK: context-menu",
+          "cost": 0.1834624,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "context-menu",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "row-more",
+        "expect": "dropdown-menu",
+        "request": "Each row in the members table has a \"⋯\" button that opens edit, resend invite and remove."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a \"⋯\" button that opens a short list of actions on a row, use the stock shadcn **dropdown-menu** primitive. Quill restyles it, so you don't need to build anything.\n\n- **Trigger:** a ghost icon `Button` wrapping `<Icon name=\"more_horiz\" aria-label=\"Actions for …\" />`. The icon stands alone, so it needs the label, and the label should name the member. Hover washes with `muted`, like other buttons.\n- **Items:** Edit, Resend invite, Remove. Menu items highlight with `accent` on hover, and the menu surface is `popover`.\n- **Remove:** put a `DropdownMenuSeparator` above it and use `variant=\"destructive\"` so it gets destructive text. Don't give it a solid red fill. Removing a member can't be undone, so have it open an **alert-dialog** to confirm instead of acting straight away.\n- **Other options:** context-menu only works on right-click, which is hard to discover for a row action. A popover is for free-form content, not a list of commands. If your members table comes from the `data-table` block, its row-actions column already uses this same pattern, so match it.\n\nPICK: dropdown-menu",
+          "cost": 0.1065288,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "dropdown-menu",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "dropdown-menu"
+          ],
+          "text": "Use the **dropdown-menu** primitive. The job is a set of actions behind one visible trigger button on each row, and that's exactly the case the Quill guide gives it (\"a row's 'more actions' menu\").\n\nThe alternatives don't fit:\n- **context-menu** is for secondary actions people find by right-clicking or long-pressing. Here the menu opens from a visible \"⋯\" button.\n- **menubar** is a permanent row of top-level menus, not a menu on each row.\n- **data-table** already ships row actions, but it's a whole table block. If your members table is already built, you only need the menu itself.\n\nQuill's rules for this menu:\n- The \"⋯\" button has no visible text, so give it an `aria-label`, for example \"More actions for {member name}\", and use the `more_horiz` icon.\n- Put \"Remove\" last, after a `DropdownMenuSeparator`, so it's set apart from \"Edit\" and \"Resend invite\".\n- If \"Remove\" can't be undone, have it open an **alert-dialog** to confirm. Don't remove the member straight from the menu item.\n\nPICK: dropdown-menu",
+          "cost": 0.1842002,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "dropdown-menu",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "editor-menus",
+        "expect": "menubar",
+        "request": "Our in-browser design tool needs File, Edit and View menus across the top, like a desktop app."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the stock shadcn **Menubar** primitive (`npx shadcn@latest add menubar`). The token layer restyles it for Quill.\n\nIt's the right fit because it's built for exactly this: a row of desktop-style menus (File, Edit, View) that stays visible across the top. Each menu opens a dropdown that can hold items, separators, submenus, checkbox and radio items (useful in View for things like \"Show grid\"), and shortcut hints. Keyboard navigation works the way it does in a desktop app: arrow keys move between menus and through items.\n\nWhy not the alternatives:\n- **Navbar** (block) and **navigation-menu** are for moving between site pages, not for running app commands.\n- **dropdown-menu** gives you one menu at a time. You'd have to wire up the menubar behaviour yourself, like moving between menus with the arrow keys.\n- **command-palette** works well alongside a menubar for ⌘K search, but it doesn't replace one.\n\nQuill-specific notes:\n- Read https://www.quilldesignsystem.com/usage/menubar.md before building.\n- The open menus use the `popover` surface, and items highlight with `accent` on hover.\n- For shortcut hints like ⌘S, use the `MenubarShortcut` slot or the `kbd` primitive.\n\nPICK: menubar",
+          "cost": 0.1067248,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "menubar",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the **`menubar`** primitive. Install it with `npx shadcn@latest add menubar`. Quill's guide describes it as \"a persistent horizontal row of top-level menus — editor toolbars, desktop-app chrome,\" which is what File / Edit / View is.\n\n**Why not the similar options:**\n- **`dropdown-menu`** is one menu behind one button, like a row's \"more actions.\" You could line up three of them, but you'd lose menubar keyboard behaviour. With a menubar, the arrow keys move between File, Edit and View, and once one menu is open, pointing at the next one opens it.\n- **`navigation-menu`** is for site links that go to other pages. Your menus hold commands like Undo, Zoom in and Export, not links.\n- **`command-palette`** makes a good extra: a ⌘K search over the same commands. It doesn't replace the visible menus.\n\n**Pieces that work well inside the menus:**\n- `kbd` for shortcut hints such as ⌘Z. (The Menubar's own shortcut slot also works.)\n- The Menubar's built-in checkbox and radio items for View toggles like \"Show grid\" or \"Zoom 100%.\"\n- `separator` between groups of items.\n- `icon`, but only names from the 91-name core set.\n\nThe menu surfaces pick up the `popover` role, and highlighted items use `accent`, so you don't need to add any colour yourself.\n\nPICK: menubar",
+          "cost": 0.1698402,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "menubar",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "marketing-numbers",
+        "expect": "stats-band",
+        "request": "On the marketing homepage, a strip that reads \"10,000 teams · 99.9% uptime · 40 countries\"."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **`stats-band`** block from the marketing group.\n\n- **Why this one:** It's the marketing block made for a row of headline figures on a landing page, like \"10,000 teams · 99.9% uptime · 40 countries\". It fits between blocks such as `hero` and `feature-section`, and its spacing, type and AA-checked tokens are already set up.\n- **Not `stat-cards`:** That's a data-display block for app dashboards (KPI tiles with deltas). On a marketing page it would look like the generic dashboard style Quill tells you to avoid.\n- **Not a hand-built row:** Don't lay out `Separator` and text yourself. Quill's rule is to use a block before building one, because a hand-built copy drifts from the tokens.\n\nBefore installing, read the usage guide at https://www.quilldesignsystem.com/usage/stats-band.md. Then install with `npx shadcn@latest add @quill/stats-band` and replace the sample figures with yours.\n\nPICK: stats-band",
+          "cost": 0.1052608,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "stats-band",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "stats-band"
+          ],
+          "text": "I'd use the **`stats-band`** block (`npx shadcn@latest add @quill/stats-band`). It's the marketing block made for this: a single flat band of headline numbers separated by dividers.\n\nTwo other blocks come close but don't fit as well:\n- **`stat-cards`** puts each number in its own card with a change-since-last-period figure. That suits a dashboard, but not a homepage strip. A row of KPI cards on a landing page is the generic look Quill tries to avoid.\n- **`feature-section`** is for describing product features, not showing numbers.\n\nSome notes from the block's guide that affect your content:\n- **Give each number a label.** The block puts a short visible label under every number. Split your line into three pairs: \"10,000\" / \"Teams\", \"99.9%\" / \"Uptime\", \"40\" / \"Countries\". Don't keep it as one sentence with \"·\" between the parts. The labels are what tell a reader what each number counts.\n- **Keep the block's colour for the numbers.** They take the accent's text colour (`--accent-pigment-text`), so they follow whichever accent the site uses and stay readable in every theme. Don't switch them to `--accent-pigment` or a fixed colour like terracotta: those fail the contrast minimum on light backgrounds.\n- **The dividers are only decoration.** They hide when the band stacks on narrow screens, and the numbers and labels still carry the meaning.\n\nPICK: stats-band",
+          "cost": 0.1852596,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "stats-band",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "tshirt-size",
+        "expect": "native-select",
+        "request": "Most of our shoppers are on phones. They pick a T-shirt size (S, M, L, XL) and it should use the phone's own picker."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use **native-select**, the stock shadcn primitive that Quill's tokens restyle.\n\n- **It uses the phone's own picker.** It renders a real `<select>`, so iOS and Android open their built-in picker. The `select` primitive is a custom Radix popover, so phones get a web dropdown instead.\n- **It fits a short, fixed list.** S, M, L and XL are four known options with no search or rich content. That's what a native select is for.\n- **It's accessible without extra work.** Keyboard, screen-reader and OS text-size support come from the browser. The edge uses the `input` role, which holds 3:1 contrast, and focus uses the `ring` role, so it follows the theme and accent axes on its own.\n\n**Other options:**\n- **toggle-group** is the usual choice for a desktop shop, where you'd show all four sizes as buttons. You asked for the phone picker, so it doesn't fit here.\n- **radio-group** is similar: every option stays visible, but the phone picker never opens.\n\nInstall it with `npx shadcn@latest add native-select`. Read the Quill usage guide at `https://www.quilldesignsystem.com/usage/native-select.md` before wiring it in.\n\nPICK: native-select",
+          "cost": 0.10641679999999999,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "native-select",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the **native-select** primitive (`npx shadcn@latest add native-select`).\n\nThe requirement that settles it is using the phone's own picker. Quill's guide describes `native-select` as the component for \"a short, simple option list\" when you want \"the OS-native picker (mobile scroll wheel, keyboard type-ahead, zero extra JS)\" rather than a custom popover. Four sizes is a short, simple list, so it's a close match.\n\nThe two it's most often confused with don't fit here:\n- **`select`** draws its own dropdown instead of the OS picker. It's for when you need grouped labels, separators or the same look on every device.\n- **`combobox`** is for filtering a long list by typing, or picking several values at once. You don't need that for four sizes.\n\n`radio-group` or `toggle-group` would work if you wanted all four sizes visible as buttons. You asked for the phone's own picker, though, and only a native `<select>` gives you that.\n\nWrap it in `field` so it has a visible \"Size\" label. Quill requires a label on every form control.\n\nPICK: native-select",
+          "cost": 0.167131,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "native-select",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "authenticator-code",
+        "expect": "input-otp",
+        "request": "In account security settings, a field where users type the 6-digit code from their authenticator app to turn on two-step login."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **`input-otp`** primitive (`npx shadcn@latest add input-otp`), placed inside your existing settings form.\n\n- **Why not the `otp-verification` block:** that block is a whole auth screen, meant for verifying a login or sign-up. You need a single field inside an account security page, which is exactly what the primitive is for. The `settings` block, if you use it, provides the page around it.\n- **Setup:** one group of 6 slots, with `maxLength={6}` and numeric-only input. Add `autoComplete=\"one-time-code\"` so password managers and phones can fill the code.\n- **Label and help text:** give it a visible label in sentence case, such as \"Authentication code\". Supporting text like \"Enter the 6-digit code from your authenticator app\" goes in `muted-foreground`.\n- **Errors:** show a wrong or expired code as `text-destructive` text below the field, with `aria-invalid` on the input. The slots already carry the `ring-3 ring-destructive/20` tint, so don't add a solid fill.\n- **Submit:** use a primary (ink) Button such as \"Turn on two-step login\". Either disable it until all 6 digits are in, or submit automatically when the last digit is entered.\n- **Before building:** read https://www.quilldesignsystem.com/usage/input-otp.md.\n\nPICK: input-otp",
+          "cost": 0.1082288,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "input-otp",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "I'd use the **`input-otp`** primitive (`npx shadcn@latest add input-otp`).\n\n- **Why it fits:** Quill says to use it when you're \"collecting a fixed-length code (verification, 2FA, PIN)\" and want one box per digit. A 6-digit authenticator code is exactly that.\n- **Why not the `otp-verification` block:** that block is a full card for confirming an email address, with a resend action. An authenticator app code can't be resent, and you need one field inside an existing security settings page, not a separate auth screen.\n- **Why not a plain `input`:** Quill lists `input` for free-form text and points to `input-otp` for fixed-length codes.\n- **Around it:** wrap it in a `field` so it gets a label, helper text and an error message. Add a primary `button` to confirm and turn on two-step login.\n\nPICK: input-otp",
+          "cost": 0.16751680000000002,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "input-otp",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "settings-sections",
+        "expect": "tabs-page",
+        "request": "Account settings are split into account, notifications and security sections that users move between on one screen."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "I'd use the **`settings`** block. Your screen is an account-settings page, and that is the block Quill ships for \"configuration and preferences\". The project rules say to use a block before building one, and this block already uses Quill's form fields, input borders and ink primary action, all of which meet the contrast requirements. Put your three groups (account, notifications, security) in as its sections and keep them on one screen, rather than splitting them into separate routes.\n\nI couldn't open the block's usage guide because the fetch permission wasn't granted. So I haven't confirmed that its built-in navigation fits three sections you switch between. Read https://www.quilldesignsystem.com/usage/settings.md before installing (`npx shadcn@latest add @quill/settings`).\n\nIf the guide shows it's a single long form with no section switching, use the `tabs-page` block instead, with Account, Notifications and Security as its tabs. Or wrap the settings sections in the stock `tabs` primitive. Don't hand-build a section switcher.\n\nPICK: settings",
+          "cost": 0.1350564,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "settings",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "tabs-page"
+          ],
+          "text": "Use the **`tabs-page`** block. Its guide describes this exact case: a settings screen split into account, notifications and security tabs, where people switch between the sections on one screen.\n\nWhy the other two close options don't fit:\n- **`settings`** is a single form for name, bio and notification preferences. It suits settings that fit on one page without separate sections, and yours has three.\n- **`wizard`** is for steps completed once, in order. Account settings are independent sections that people come back to and edit in any order.\n\n`tabs-page` also handles accessibility for you. Arrow keys move between tabs, and each panel is its own card with its own heading, so switching tabs never leaves content under one unclear title. Install it with `npx shadcn@latest add @quill/tabs-page` and replace the sample content. If you rename a section, change the tab's `value` and its panel's `value` together. If they don't match, the tab still highlights but its panel shows up empty.\n\nPICK: tabs-page",
+          "cost": 0.1815024,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "tabs-page",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "rich-text",
+        "expect": "none",
+        "request": "A rich-text editor for writing blog posts with headings, links and embedded images."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Quill has nothing that does this. None of its 51 blocks or its primitives is a rich-text editor. The closest things don't fit:\n\n- **`textarea`** only takes plain text. It can't show headings, links or embedded images as you edit. It would only work if you're happy for authors to write raw Markdown and see it rendered later.\n- **`file-upload`** handles picking and uploading an image, but it doesn't put the image into a document. You could use it inside an editor's \"insert image\" dialog.\n- **`toggle-group`** / **`button-group`**, with the `format_bold`, `format_italic`, `format_underlined`, `link` and `format_align_*` icons, make a good toolbar. You'd still need an editing engine underneath.\n\nThe practical route is an editor library such as Tiptap or Lexical, styled with Quill's tokens:\n- Use `bg-card` for the editing surface, with `ring-1 ring-foreground/10`.\n- Use `border-input` for the edge of the editing area and `ring-ring` for focus.\n- Headings inside the content already pick up Fraunces from the base layer.\n- Use `text-link` for links.\n- Build the toolbar from Quill's `toggle-group` and `Icon`.\n\nThe name \"Quill\" also belongs to the Quill.js rich-text editor, which has nothing to do with this design system. If you use Quill.js, you'd have to restyle it fully to match these tokens.\n\nPICK: none",
+          "cost": 0.1097368,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Quill has no rich-text editor. Nothing in its blocks or primitives covers editing formatted content like headings, links and inline images.\n\nThe closest ones don't do the job:\n- **`textarea`** is multi-line plain text only. It has no formatting, links or embedded images.\n- **`toggle-group`**, **`toggle`** and **`menubar`** could make up the editor's toolbar, but they don't do the editing.\n- **`file-upload`** handles drag-and-drop uploads, which could feed the image-embed step, but it isn't an editor.\n\nIf you build it, use a third-party editing engine such as Tiptap or Lexical for the writing area. Build the chrome around it from Quill parts:\n- **Toolbar:** `toggle-group` for bold, italic and underline, and a `select` or `dropdown-menu` for heading level.\n- **Link editing:** a `popover` with an `input`.\n- **Image insert:** a `dialog`.\n- **Icons:** the core set already has the names you need, including `format_bold`, `format_italic`, `format_underlined`, `link`, `photo_library` and the `format_align_*` icons.\n- **Writing area:** style it with Quill tokens, with Fraunces for headings and Raleway with `leading-reading` for body text.\n\nThat editing area is the gap in Quill.\n\nPICK: none",
+          "cost": 0.171067,
+          "model": "claude-opus-5-5",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

@@ -31,4 +31,36 @@ export const CASES = [
   { id: 'office-map', expect: 'none', request: 'Show our office locations on an interactive map that users can pan and zoom.' },
 ]
 
+/**
+ * Harder requests: each sits on a line a usage guide draws, where the obvious
+ * pick is the wrong one (discarding work is destructive, a wait with no known
+ * end is not progress, a short list on a phone wants the OS picker). The first
+ * run of CASES scored 19/20 without the skill, too easy to tell the arms apart.
+ */
+export const HARD_CASES = [
+  { id: 'unsaved-changes', expect: 'alert-dialog', request: 'When someone closes the editor with unsaved changes, ask whether to throw those changes away.' },
+  { id: 'author-preview', expect: 'hover-card', request: "Pointing at an author's name in a comment should show their photo, short bio and follower count, without leaving the page." },
+  { id: 'loading-rows', expect: 'skeleton', request: "While order history is still loading, show placeholders shaped like the rows so the page doesn't jump when they arrive." },
+  { id: 'unknown-wait', expect: 'spinner', request: "While a report is being generated, and we can't tell how long it will take, show that something is happening." },
+  { id: 'setup-checklist', expect: 'onboarding', request: 'New workspace owners have a few setup tasks (invite the team, connect a calendar, add billing) to do over the next few days, and should see how far along they are.' },
+  { id: 'store-steps', expect: 'wizard', request: 'Creating a new store takes four steps that must be done in order, in one sitting, with back and continue buttons.' },
+  { id: 'text-align', expect: 'toggle-group', request: 'In a text editor toolbar, users choose left, center or right alignment with three icon buttons, and the current one stays highlighted.' },
+  { id: 'bold-button', expect: 'toggle', request: 'A bold button in the editor toolbar that stays pressed while bold is on.' },
+  { id: 'accept-terms', expect: 'checkbox', request: 'In the sign-up form, people agree to the terms of service before they submit.' },
+  { id: 'price-range', expect: 'slider', request: 'Shoppers filter products to a price between a minimum and a maximum by dragging.' },
+  { id: 'past-payment', expect: 'invoice', request: 'Show a customer the full record of a payment they made last month, with line items, totals and a way to download it.' },
+  { id: 'cart-review', expect: 'order-summary', request: 'Before paying, customers look over what they are buying, apply a promo code and see the total. Card details are collected on the next screen.' },
+  { id: 'dead-link', expect: 'error-404', request: 'A user follows an old link to a project that has since been deleted.' },
+  { id: 'right-click-file', expect: 'context-menu', request: 'On desktop, right-clicking a file in the list shows rename, move and delete.' },
+  { id: 'row-more', expect: 'dropdown-menu', request: 'Each row in the members table has a "⋯" button that opens edit, resend invite and remove.' },
+  { id: 'editor-menus', expect: 'menubar', request: 'Our in-browser design tool needs File, Edit and View menus across the top, like a desktop app.' },
+  { id: 'marketing-numbers', expect: 'stats-band', request: 'On the marketing homepage, a strip that reads "10,000 teams · 99.9% uptime · 40 countries".' },
+  { id: 'tshirt-size', expect: 'native-select', request: "Most of our shoppers are on phones. They pick a T-shirt size (S, M, L, XL) and it should use the phone's own picker." },
+  { id: 'authenticator-code', expect: 'input-otp', request: 'In account security settings, a field where users type the 6-digit code from their authenticator app to turn on two-step login.' },
+  { id: 'settings-sections', expect: 'tabs-page', request: 'Account settings are split into account, notifications and security sections that users move between on one screen.' },
+  { id: 'rich-text', expect: 'none', request: 'A rich-text editor for writing blog posts with headings, links and embedded images.' },
+]
+
+export const SETS = { core: CASES, hard: HARD_CASES }
+
 export const acceptedPicks = (c) => [c.expect, ...(c.accept ?? [])]
