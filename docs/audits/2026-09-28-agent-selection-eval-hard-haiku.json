@@ -1,0 +1,698 @@
+{
+  "meta": {
+    "date": "2026-09-28",
+    "set": "hard",
+    "repeat": 1,
+    "model": "claude-haiku-4-5-20251001",
+    "cost": 1.2891873
+  },
+  "rows": [
+    {
+      "case": {
+        "id": "unsaved-changes",
+        "expect": "alert-dialog",
+        "request": "When someone closes the editor with unsaved changes, ask whether to throw those changes away."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For an unsaved-changes confirmation when closing the editor, use **alert-dialog** — it's the Quill primitive designed for critical confirmations that require explicit user choice before an action proceeds. It provides clear button options (Discard, Save, Cancel) and focuses attention on the decision without being dismissible.\n\nPICK: alert-dialog",
+          "cost": 0.0302981,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a confirmation dialog asking whether to discard unsaved changes before closing, you want a component that interrupts the user's flow and requires an explicit choice between two actions.\n\nThe **alert-dialog** primitive is designed exactly for this: it's a modal confirmation dialog for potentially destructive actions. It pairs a cancel (keep working) and confirm (discard changes) button, with focus management that defaults to the safer path.\n\nPICK: alert-dialog",
+          "cost": 0.0300181,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "author-preview",
+        "expect": "hover-card",
+        "request": "Pointing at an author's name in a comment should show their photo, short bio and follower count, without leaving the page."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the Quill component inventory, you need something that appears on hover over an author's name and displays contextual information (photo, bio, follower count) without navigation.\n\nThe `hover-card` primitive is built exactly for this pattern — it shows rich information about a linked element on hover. It's a standard shadcn component restyled by Quill's token layer, designed for showing profile previews, user cards, and other contextual details on hover.\n\nPICK: hover-card",
+          "cost": 0.031196099999999997,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "hover-card",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "`hover-card` is the exact fit. It's designed for richer previews on hover — specifically mentioning author bio and expanded metadata — without navigating away. The profile card is a full page component; hover-card gives you the lightweight contextual preview you need.\n\nPICK: hover-card",
+          "cost": 0.046022099999999996,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "hover-card",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "loading-rows",
+        "expect": "skeleton",
+        "request": "While order history is still loading, show placeholders shaped like the rows so the page doesn't jump when they arrive."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For showing placeholders shaped like the rows while order history loads, you should use the **`skeleton`** primitive. It's designed to render placeholder shapes that match your actual content, preventing layout shift (CLS) as data arrives.\n\nPICK: skeleton",
+          "cost": 0.023413700000000003,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "skeleton",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For loading placeholders shaped like order history rows, use **`skeleton`** — it reserves layout space for content that hasn't arrived yet and prevents the page from jumping when rows load.\n\nPICK: skeleton",
+          "cost": 0.0374656,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "skeleton",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "unknown-wait",
+        "expect": "spinner",
+        "request": "While a report is being generated, and we can't tell how long it will take, show that something is happening."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For an indeterminate loading state where you can't predict duration, use the **spinner** primitive. It shows continuous animation without implying a known completion time, making it ideal for \"something is happening\" scenarios like report generation.\n\nPICK: spinner",
+          "cost": 0.0225487,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "spinner",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For showing indeterminate progress while a report generates with unknown duration, the job is to display that something is happening without a measurable percentage.\n\n**spinner** is the primitive for exactly this: \"You need to show that something is loading but have no measurable percentage to report\" (instead of `progress` for when you know the completion percentage, or `skeleton` for layout placeholders).\n\nPICK: spinner",
+          "cost": 0.0393496,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "spinner",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "setup-checklist",
+        "expect": "onboarding",
+        "request": "New workspace owners have a few setup tasks (invite the team, connect a calendar, add billing) to do over the next few days, and should see how far along they are."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "This is a classic onboarding checklist — a set of setup tasks with progress tracking. Quill ships the **`onboarding`** block under productivity, designed exactly for this: showing users a checklist of tasks they need to complete as part of initial setup, with status and completion tracking.\n\nPICK: onboarding",
+          "cost": 0.0230697,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "onboarding",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Looking at your description — setup tasks to complete over the next few days with progress tracking — the `onboarding` block is the fit. It's built for setup checklists that show progress and link to remaining steps, exactly matching your use case of tracking multiple independent tasks (invite team, connect calendar, add billing) where users can see completion at a glance.\n\n`wizard` would be the alternative if these tasks needed to run sequentially with guided steps, but since users are completing them independently over time, `onboarding` is the right choice.\n\nPICK: onboarding",
+          "cost": 0.040080899999999996,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "onboarding",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "store-steps",
+        "expect": "wizard",
+        "request": "Creating a new store takes four steps that must be done in order, in one sitting, with back and continue buttons."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a multi-step sequential process that users must complete in one sitting with back and continue buttons, use the **`wizard`** block. It's designed exactly for this — structured, ordered setup flows with built-in navigation controls.\n\nPICK: wizard",
+          "cost": 0.022743700000000002,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "wizard",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Looking at your requirements — a multi-step flow that must proceed in order with back and continue navigation — the `wizard` block is the right fit. It's built specifically for setup flows with a progress stepper and sequential navigation.\n\nPICK: wizard",
+          "cost": 0.0369786,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "wizard",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "text-align",
+        "expect": "toggle-group",
+        "request": "In a text editor toolbar, users choose left, center or right alignment with three icon buttons, and the current one stays highlighted."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a mutually exclusive alignment toolbar where only one button is active at a time, you want **toggle-group**. It's designed exactly for this pattern — multiple options where only one can be selected, with built-in visual highlighting of the current state. Each icon button becomes a toggle within the group, and Quill's token layer handles the styling so the active alignment button stays visually distinct.\n\nPICK: toggle-group",
+          "cost": 0.0234327,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "toggle-group",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "The alignment selector you're describing is a perfect use case for the **toggle-group** primitive. It provides a group of toggles where exactly one can be selected and highlighted at a time — the standard UI for text alignment and similar mutually exclusive options.\n\nPICK: toggle-group",
+          "cost": 0.022448899999999997,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "toggle-group",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "bold-button",
+        "expect": "toggle",
+        "request": "A bold button in the editor toolbar that stays pressed while bold is on."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a button in an editor toolbar that maintains a pressed state based on formatting status, you want **toggle-group** — it's designed for toolbar-style collections of toggle buttons where each can independently maintain a pressed/active state.\n\nIf you later add italic, underline, and other formatting buttons to the same toolbar, they all live in the same toggle-group. The pressed state of each button reflects whether that formatting is currently applied to the selection.\n\nPICK: toggle-group",
+          "cost": 0.0251957,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "toggle-group",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Based on the skill, a bold button that stays pressed while bold is on is exactly what a **toggle** is designed for. The reference specifically mentions \"bold, italic, a filter chip\" as examples of when to use it.\n\n`PICK: toggle`",
+          "cost": 0.0369497,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "toggle",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "accept-terms",
+        "expect": "checkbox",
+        "request": "In the sign-up form, people agree to the terms of service before they submit."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a sign-up form where users agree to terms of service before submitting, you should use the **`signup`** block. It's designed specifically for sign-up flows and includes form fields, validation, and standard patterns like terms acceptance checkboxes.\n\nIf you already have a sign-up form built and just need to add a checkbox for terms agreement, the **`checkbox`** primitive would be the right component to use within that form.\n\nPICK: signup",
+          "cost": 0.0265667,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "signup",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a terms of service agreement checkbox in a sign-up form, use the **checkbox** primitive. The checkbox is explicitly designed for boolean choices like accepting terms, and sits naturally in a form alongside other input controls like email and password fields.\n\nPICK: checkbox",
+          "cost": 0.037999000000000005,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "checkbox",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "price-range",
+        "expect": "slider",
+        "request": "Shoppers filter products to a price between a minimum and a maximum by dragging."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a price range filter where shoppers drag to set minimum and maximum values, you need a component that supports dual-handle range input.\n\nThe **slider** primitive is designed exactly for this—it's a stock shadcn component restyled with Quill tokens, and it supports range mode with two draggable handles for min and max. This gives you accessible, themed range selection out of the box.\n\nYou could alternatively use two `input` components (one for min, one for max) if you prefer typed entry alongside or instead of dragging, but the slider alone handles the drag interaction directly.\n\n`PICK: slider`",
+          "cost": 0.0240517,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "slider",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For shoppers to filter products to a price range by dragging, use the **slider** primitive. It's designed specifically for users to pick a range between min and max by dragging rather than typing, which matches your price-range interaction exactly.\n\nPICK: slider",
+          "cost": 0.036925,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "slider",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "past-payment",
+        "expect": "invoice",
+        "request": "Show a customer the full record of a payment they made last month, with line items, totals and a way to download it."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For displaying a payment record with line items and totals that a customer can download, the **`invoice`** block is the perfect fit. It's designed exactly for this use case—showing itemized billing details with subtotals and a download action.\n\nPICK: invoice",
+          "cost": 0.0225947,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "invoice",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For displaying a past payment record with line items, totals, and a download action, the `invoice` block is the exact fit. It's built specifically for \"a printable invoice with parties, line-item totals, and a download action.\"\n\n`order-summary` is close but wrong—it's for reviewing items *before* purchase with a pay button. `data-table` is too generic. `invoice` is what you need.\n\nPICK: invoice",
+          "cost": 0.039033899999999996,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "invoice",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "cart-review",
+        "expect": "order-summary",
+        "request": "Before paying, customers look over what they are buying, apply a promo code and see the total. Card details are collected on the next screen."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at your requirements—customers reviewing items, applying a promo code, and seeing the total before moving to payment—this is a classic order review screen.\n\nThe `order-summary` block from Quill's commerce collection is built exactly for this: it displays line items, subtotals, handles promo code entry, and shows the final total. It bridges the gap between cart and payment details perfectly.\n\nPICK: order-summary",
+          "cost": 0.0226857,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "order-summary",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Based on the skill output, **`order-summary`** is the exact fit. It's described as \"a cart-review card with line items, a promo field, a total, and a pay button\" — which matches your flow perfectly: customers review items, apply a promo code, see the total, then proceed. The `checkout` block would be the alternative if you were collecting payment details on the same screen, but since that's next, `order-summary` is the right choice.\n\nPICK: order-summary",
+          "cost": 0.0399442,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "order-summary",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "dead-link",
+        "expect": "error-404",
+        "request": "A user follows an old link to a project that has since been deleted."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "The user is hitting a deleted resource—a 404/not-found scenario. Quill ships an `error-404` block under feedback, designed for exactly this case: guiding users when they land on a missing page.\n\nPICK: error-404",
+          "cost": 0.0227107,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "error-404",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "A user following an old link to a deleted project is a full-page \"not found\" state — the resource they're looking for no longer exists. This needs a recovery path (link back to projects list, or create a new one).\n\nPICK: error-404",
+          "cost": 0.0391527,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "error-404",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "right-click-file",
+        "expect": "context-menu",
+        "request": "On desktop, right-clicking a file in the list shows rename, move and delete."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a right-click context menu on desktop with actions like rename, move, and delete, use the **context-menu** primitive. It's designed for exactly this pattern — ephemeral action menus triggered by secondary interaction — and it integrates with Quill's theming and motion conventions.\n\nPICK: context-menu",
+          "cost": 0.0223917,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "context-menu",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Looking at your use case — a right-click menu on a file with rename, move, and delete actions — the choice is clear:\n\n**`context-menu`** is the primitive for secondary actions discovered by right-clicking (desktop) or long-pressing (touch). It's built for exactly this pattern: a file, a right-click, and a set of item-specific actions.\n\n`dropdown-menu` would be the alternative if you had a visible \"more actions\" button instead, but since this is desktop right-click behavior, `context-menu` is the fit.\n\nPICK: context-menu",
+          "cost": 0.038214,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "context-menu",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "row-more",
+        "expect": "dropdown-menu",
+        "request": "Each row in the members table has a \"⋯\" button that opens edit, resend invite and remove."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a \"⋯\" button that opens a menu with actions (edit, resend invite, remove), use the `dropdown-menu` primitive. Style the button with the `more_vert` icon from the icon set, and the dropdown will handle the menu appearance and interaction.\n\nPICK: dropdown-menu",
+          "cost": 0.0230837,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "dropdown-menu",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a three-dot button that opens a menu with actions (edit, resend invite, remove) in each table row, use `dropdown-menu`. It's the standard pattern for row actions — click the button, menu appears with your action options.\n\nPICK: dropdown-menu",
+          "cost": 0.0223099,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "dropdown-menu",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "editor-menus",
+        "expect": "menubar",
+        "request": "Our in-browser design tool needs File, Edit and View menus across the top, like a desktop app."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a desktop app-style menu bar with File, Edit, and View menus, use the **menubar** primitive. It's specifically designed for application menu structures with dropdown menus, which matches your use case exactly.\n\n`PICK: menubar`",
+          "cost": 0.0225267,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "menubar",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a desktop app-style menu bar with File, Edit, and View menus, use **`menubar`**. It's a persistent horizontal row of top-level menus — exactly what you're describing. Each menu label (File, Edit, View) would open its own dropdown with actions.\n\n`navbar` is for site-level navigation with a wordmark; `dropdown-menu` is for a single trigger button. `menubar` is the primitive designed for editor toolbars and desktop-app chrome.\n\nPICK: menubar",
+          "cost": 0.038420499999999996,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "menubar",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "marketing-numbers",
+        "expect": "stats-band",
+        "request": "On the marketing homepage, a strip that reads \"10,000 teams · 99.9% uptime · 40 countries\"."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the Quill blocks, a horizontal strip of key metrics on a marketing homepage fits the purpose of **`stats-band`** — it's specifically designed for marketing pages to display statistics in a band format, exactly like the metric strip you're describing (teams, uptime, countries).\n\n`stat-cards` is data-display (for dashboards and app screens), while `stats-band` is marketed as a promotional block for landing pages.\n\nPICK: stats-band",
+          "cost": 0.0232987,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "stats-band",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a marketing homepage strip displaying headline statistics separated by dividers, `stats-band` is the perfect fit. It's built exactly for this — a band of statistics on a marketing page. `stat-cards` shows KPI cards with deltas (period-over-period changes), which doesn't match your use case here.\n\nPICK: stats-band",
+          "cost": 0.0388681,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "stats-band",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "tshirt-size",
+        "expect": "native-select",
+        "request": "Most of our shoppers are on phones. They pick a T-shirt size (S, M, L, XL) and it should use the phone's own picker."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a mobile-first size picker that leverages the device's native selection UI, **`native-select`** is the right choice. It renders as HTML's native `<select>` element, which on phones triggers the OS picker (iOS wheel picker, Android list menu) rather than a custom dropdown.\n\n`PICK: native-select`",
+          "cost": 0.0229477,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "native-select",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a T-shirt size picker on mobile that uses the phone's native picker, use **`native-select`** — it renders the OS-native picker (scroll wheel on iOS, dropdown on Android) for short option lists, needs zero extra JavaScript, and gives the best user experience on phones.\n\nThe alternative `select` builds a custom popup that doesn't match native patterns, and `radio-group` takes up space with always-visible buttons instead of collapsing to a picker.\n\nPICK: native-select",
+          "cost": 0.0381118,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "native-select",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "authenticator-code",
+        "expect": "input-otp",
+        "request": "In account security settings, a field where users type the 6-digit code from their authenticator app to turn on two-step login."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at your use case—a single field in account security settings for entering a 6-digit authenticator code—Quill has two options:\n\n- **`input-otp`** (primitive): A focused input component specifically for one-time password entry, ideal for a single field within a form or settings page.\n- **`otp-verification`** (block): A complete verification flow with instructions, the input field, and submission logic—typically used as a standalone page or modal during authentication.\n\nSince this is embedded in your account settings (not a dedicated auth flow page), `input-otp` is the better fit. It's designed exactly for this: a user entering a code from their authenticator app within a larger form context.\n\nPICK: input-otp",
+          "cost": 0.0279987,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "input-otp",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a 6-digit authenticator code field in account security settings, the `input-otp` primitive is the right pick. It's specifically designed for fixed-length codes (verification, 2FA, PIN) and renders one boxed slot per character, which is better UX than a single text field for this use.\n\nThe `otp-verification` block would be overkill here—it's for full email-verification flows with resend logic, not a single field in a settings form.\n\nPICK: input-otp",
+          "cost": 0.0406671,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "input-otp",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "settings-sections",
+        "expect": "tabs-page",
+        "request": "Account settings are split into account, notifications and security sections that users move between on one screen."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For account settings split into multiple sections (account, notifications, security) that users navigate between on a single screen, **`tabs-page`** is the ideal choice. It's designed for exactly this pattern — organizing content into distinct sections with tab navigation while keeping everything on one page.\n\nThe alternative would be `settings` (a settings form block), but that's more general-purpose for a single settings form, whereas `tabs-page` is purpose-built for the multi-section navigation pattern you're describing.\n\nPICK: tabs-page",
+          "cost": 0.0238887,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "tabs-page",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a settings screen split into account, notifications, and security sections on one screen, the `tabs-page` block is exactly what you need—it's built precisely for this pattern.\n\nPICK: tabs-page",
+          "cost": 0.0396921,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "tabs-page",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "rich-text",
+        "expect": "none",
+        "request": "A rich-text editor for writing blog posts with headings, links and embedded images."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the available Quill blocks and primitives, there's no dedicated rich-text editor component in the system. The form blocks (`contact-form`, `file-upload`, `wizard`) and primitives (`textarea`, `input`) are designed for structured, simple data entry—not the complexity of headings, links, and embedded images that a blog post editor requires.\n\nThe Quill principle is to reach for a shipped block before building, but when nothing fits (as here), you'll need to integrate an external rich-text library (like Tiptap or Slate) and theme it using Quill's semantic tokens (`--paper`, `--ink`, `--ring`, etc.) to match the design system.\n\nPICK: none",
+          "cost": 0.0243217,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Looking through Quill's blocks and primitives, there's no ready-made rich-text editor for blog authoring. The form blocks (`contact-form`, `wizard`) don't cover structured content creation with headings, links, and embedded images. The messaging and productivity blocks (`chat`, `kanban`) serve different purposes.\n\nQuill ships primitives like `textarea` for multi-line text and `file-upload` for asset handling, but no component that combines them into a full WYSIWYG or markdown editor with formatting controls.\n\nYou'd need to either compose from primitives (`textarea` + `file-upload` + custom formatting toolbar) and build the editor interaction yourself, or integrate a third-party rich-text library (Slate, TipTap, Lexical, etc.) styled within Quill's token system.\n\nPICK: none",
+          "cost": 0.03957,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

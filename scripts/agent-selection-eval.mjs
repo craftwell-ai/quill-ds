@@ -36,8 +36,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const BEFORE_REF = 'v0.13.2'
 const RULES_SRC = 'registry/agent-rules/quill.md'
 
+// Framed as the thing to build: Haiku read a bare request that opens with a
+// clause ("Before a project is deleted, …") as background and asked what to build.
 export function promptFor(c) {
-  return `${c.request}
+  return `Here is what I'm adding to the app: ${c.request}
 
 Which Quill component should I use for this? Don't write or change any code. End your reply with one line in exactly this form: \`PICK: <name>\`, the single Quill block or primitive you would use, or \`PICK: none\` if nothing in Quill fits.`
 }
@@ -132,7 +134,8 @@ function tally(runs) {
   for (const r of runs) counts.set(r.pick ?? '—', (counts.get(r.pick ?? '—') ?? 0) + 1)
   const picks = [...counts].sort((a, b) => b[1] - a[1]).map(([pick, n]) => (n > 1 ? `${pick} ×${n}` : pick)).join(', ')
   const errors = [...new Set(runs.map((r) => r.error).filter(Boolean))]
-  return { right, total: runs.length, picks, errors }
+  const unanswered = runs.filter((r) => !r.pick).length
+  return { right, total: runs.length, picks, errors, unanswered }
 }
 
 function report(rows, arms, meta) {
@@ -147,7 +150,10 @@ function report(rows, arms, meta) {
   L.push('')
   for (const arm of arms) {
     const every = repeat > 1 ? `, ${always(arm)}/${rows.length} cases right every time` : ''
-    L.push(`- **${arm}:** ${answers(arm)}/${rows.length * repeat} answers correct${every}`)
+    // A session that never names a pick did not choose wrong; it did not choose. Count it apart.
+    const silent = rows.reduce((sum, r) => sum + tally(r[arm]).unanswered, 0)
+    const none = silent ? `, ${silent} with no pick at all` : ''
+    L.push(`- **${arm}:** ${answers(arm)}/${rows.length * repeat} answers correct${every}${none}`)
   }
   if (afterRuns.length) L.push(`- **Skill loaded (after):** ${afterRuns.filter((r) => r.skills.includes('quill-components')).length}/${afterRuns.length} sessions`)
   L.push('')

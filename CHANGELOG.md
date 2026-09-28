@@ -12,6 +12,28 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.14.4] — 2026-09-28
+
+### Fixed
+- **The eval's prompt now reads as the thing to build.** Haiku took a bare request that opens
+  with a clause ("Before a project is permanently deleted, …") as background and asked what to
+  build, on five cases, in both arms. That scored as a wrong pick when it was no pick at all.
+  The request is now framed "Here is what I'm adding to the app: …", and the report counts
+  sessions with no pick apart from wrong ones.
+
+### Added
+- **Eval runs on Sonnet and Haiku, both sets** (reports in `docs/audits/2026-09-28-*`):
+
+  | Model | Before (names only) | After (rules + skill) |
+  |---|---|---|
+  | Opus 5.5 | 39/41 | 41/41 |
+  | Sonnet | 39/41 | 41/41 |
+  | Haiku 4.5 | 35/41 | 41/41 |
+
+  The smaller the model, the more the skill matters: without it Haiku mixed up toast and
+  notifications, switch and the settings block, drawer and sheet, checkbox and the signup
+  block. Opus and Sonnet ran with the earlier prompt wording, which gave them no trouble.
+
 ## [0.14.3] — 2026-09-28
 
 ### Added
