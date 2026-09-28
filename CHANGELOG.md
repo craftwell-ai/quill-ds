@@ -12,6 +12,20 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.14.2] — 2026-09-28
+
+### Added
+- **An agent-selection eval** (`npm run eval:selection`). It asks 20 everyday UI requests,
+  each describing the job rather than naming a component, of fresh Claude Code sessions in
+  a throwaway app, and checks each pick against the component Quill's usage guides call
+  right. Every request runs twice: with the rules file as of 0.13.2 (block names only, no
+  skill) and with this checkout's rules file and `quill-components` skill. Sessions see only
+  the app's project files, no personal instructions or plugins, and can read but not write.
+  It is a paid model run, so it stays out of CI. A tested list of cases guards its inputs:
+  every right answer must still have a usage guide, and no request may name its own answer.
+  First run (Opus 5.5, $5.80): before 19/20, after 20/20, skill loaded in 20/20 sessions.
+  Report in `docs/audits/2026-09-28-agent-selection-eval.md`.
+
 ## [0.14.1] — 2026-09-28
 
 Three errors in the usage guides, found when the new `quill-components` skill put them in
