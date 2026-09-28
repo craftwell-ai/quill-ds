@@ -1,0 +1,678 @@
+{
+  "meta": {
+    "date": "2026-09-28",
+    "set": "core",
+    "repeat": 1,
+    "model": "claude-haiku-4-5-20251001",
+    "cost": 1.2250328999999995
+  },
+  "rows": [
+    {
+      "case": {
+        "id": "delete-project",
+        "expect": "alert-dialog",
+        "request": "Before a project is permanently deleted, the user has to confirm it."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For confirming a destructive action like permanent project deletion, use **alert-dialog** — it's a modal that interrupts the user and requires an explicit choice to proceed or cancel. It's the standard pattern for this kind of confirmation, and Quill has it as a restyled primitive with a usage guide at `https://www.quilldesignsystem.com/usage/alert-dialog.md`.\n\nPICK: alert-dialog",
+          "cost": 0.030465100000000002,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a confirmation dialog before permanent deletion, you need a modal that blocks interaction until the user explicitly confirms or cancels the action. This is a critical decision point.\n\n`alert-dialog` is the right choice — it's designed for high-consequence confirmations like deletions, ensuring the user makes an intentional choice before the action proceeds.\n\nPICK: alert-dialog",
+          "cost": 0.0300591,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "edit-role",
+        "expect": "dialog",
+        "accept": [
+          "sheet"
+        ],
+        "request": "Admins change a team member's role with a short form, without leaving the members page."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at this pattern: admins need to update a team member's role via a short form while staying on the members page.\n\nThis is a classic use case for a modal dialog — it keeps the user in context on the members page while presenting a focused form for the role change. A `dialog` primitive lets you display a simple form (likely just a select/combobox for the new role) in a centered modal that overlays the page without navigation.\n\nAlternatives like `popover` could work for something even lighter, but `dialog` is the standard pattern for a short form interaction that stays on the current page.\n\nPICK: dialog",
+          "cost": 0.0340521,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "dialog",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For admins to change a team member's role with a short form while staying on the members page, the best fit is **dialog**.\n\nThe `dialog` primitive is explicitly designed for \"the user to complete a focused task without leaving the page — edit a record, fill a short form, confirm a reversible action.\" It gives you a modal container for your role-change form, keeps the members page in context behind it, and provides clear confirm/cancel actions.\n\nPICK: dialog",
+          "cost": 0.0537291,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "dialog",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "account-history",
+        "expect": "activity-feed",
+        "request": "Show what has happened on an account recently: who did what, and when."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For showing account activity—who did what and when—the `activity-feed` block from Quill's data-display group is the right fit. It's built for presenting a chronological record of events, which is exactly what you're describing.\n\nPICK: activity-feed",
+          "cost": 0.022222699999999998,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "activity-feed",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Based on the Quill components guide, **`activity-feed`** is the right choice for showing recent account activity. The skill describes it as: \"You need to show a chronological history of what happened — recent events with who, what, and when.\"\n\nThis matches your requirement exactly—displaying who did what and when in chronological order. The alternatives listed (notifications and data-table) are less suited: notifications are for transient alerts, and data-table is for records you need to filter or act on, not a timeline view.\n\n`PICK: activity-feed`",
+          "cost": 0.038019399999999995,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "activity-feed",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "unread-alerts",
+        "expect": "notifications",
+        "request": "Give users one place to see everything that needs their attention, with unread items marked and a way to mark them all as read."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at your requirements — one place to see everything needing attention, with unread markers and bulk mark-as-read — this maps well to Quill's notification and inbox components.\n\nThe two strongest candidates are:\n\n**`notifications`** (feedback section) — explicitly designed for alerts and items that need attention, with built-in support for unread states and batch actions.\n\n**`mail-shell`** (messaging section) — provides a full inbox interface with read/unread concepts already baked in, if you want more structure like a traditional email inbox.\n\nFor a general \"attention center\" that aggregates different types of items needing action, `notifications` is the most direct fit. If you want an inbox-like experience with folders, search, and thread-like organization, `mail-shell` would be better.\n\nCheck the usage guides at `https://www.quilldesignsystem.com/usage/notifications.md` and `https://www.quilldesignsystem.com/usage/mail-shell.md` to see which interaction model matches your needs.\n\nPICK: notifications",
+          "cost": 0.028869699999999998,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "notifications",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Based on the component descriptions, the job you're describing — one place to see everything that needs attention, with unread indicators and a way to mark them all as read — maps directly to a built-in block.\n\nThe **notifications** block is specifically designed for this: \"You need a notifications center with unread indicators and a mark-all-read action.\"\n\nPICK: notifications",
+          "cost": 0.0400175,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "notifications",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "customer-list",
+        "expect": "data-table",
+        "request": "Admins need to filter and sort a few hundred customer records and take an action on each one."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For filtering and sorting customer records with per-row actions, use the **data-table** block. It's built for this exact use case — records in rows, column sorting, filtering UI, and row-level actions (edit, delete, bulk select). The block includes row selection and action menus by default.\n\nPICK: data-table",
+          "cost": 0.0224977,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "data-table",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "The skill confirms: **`data-table`** — \"You need a filterable, actionable table of records with tone-mapped status pills and row actions.\"\n\nThis is purpose-built for managing hundreds of customer records with filtering, sorting, and per-row actions. It's a full block you can install and customize.\n\nPICK: data-table",
+          "cost": 0.0384539,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "data-table",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "saved-feedback",
+        "expect": "sonner",
+        "request": "After the user saves their profile, briefly confirm it worked without interrupting them."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a brief, non-interrupting confirmation after a save action, you want a transient message that appears and dismisses automatically. That's **notifications** — it's designed exactly for this use case: ephemeral feedback that doesn't block the user's workflow.\n\nPICK: notifications",
+          "cost": 0.022752699999999997,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "notifications",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a brief confirmation after saving that doesn't interrupt the user, **`sonner`** is the right pick. It delivers self-dismissing feedback about the action without blocking the page or requiring the user to close anything.\n\nThis matches its purpose exactly: \"brief, self-dismissing feedback about an action the user just took (saved, deleted, upload failed) that shouldn't block the page or require explicit dismissal.\"\n\n`alert` (the persistent inline variant) would be wrong here because it sticks around and requires manual dismissal. `alerts` (the block) is for stacked status messages within a page, not transient action feedback.\n\nPICK: sonner",
+          "cost": 0.04079239999999999,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "sonner",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "section-error",
+        "expect": "alert",
+        "accept": [
+          "alerts"
+        ],
+        "request": "One section of a checkout form needs a persistent message saying the billing address couldn't be verified."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a persistent error message about billing address verification in a checkout form, you want the **alert** primitive. It's designed to display system status messages (including errors) that stay visible, and it integrates directly into forms where users need to see the issue clearly.\n\nAn `alerts` block would be overkill for a single message in context; a primitive `alert` lets you place the message exactly where it belongs in your form flow.\n\nPICK: alert",
+          "cost": 0.0236237,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "alert",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a persistent error message about billing address verification that stays visible in a specific section of the checkout form, the `alert` primitive is the right fit. It's designed for exactly this: one inline status message (error in this case) that remains attached to a particular part of a page, not a transient notification that dismisses itself.\n\nThe `alerts` block would be overkill if you only have one message; `sonner` is for self-dismissing feedback after an action, not persistent validation states.\n\nPICK: alert",
+          "cost": 0.038923700000000006,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "alert",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "site-announcement",
+        "expect": "announcement-banner",
+        "request": "Announce a new feature across the whole site, and let people dismiss the message."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "The `announcement-banner` block is designed exactly for this: it announces information across the site and supports dismissal. It's part of Quill's feedback section for system status messaging.\n\nPICK: announcement-banner",
+          "cost": 0.0225197,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "announcement-banner",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a site-wide dismissible feature announcement, use `announcement-banner` — it's explicitly designed for this: \"You need to announce something site-wide with a dismissible banner, either inline or full-bleed.\"\n\nPICK: announcement-banner",
+          "cost": 0.038513500000000006,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "announcement-banner",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "country-picker",
+        "expect": "combobox",
+        "request": "Users pick their country from about 200 options and should be able to type to narrow the list."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a searchable selection from ~200 options, use the **combobox** primitive. It's a text input with a dropdown list that filters as the user types—exactly the pattern you need for country selection.\n\nThe combobox is designed for this use case: accessible, built into shadcn (and restyled by Quill's tokens), and avoids the scrolling fatigue of a plain dropdown with 200 items.\n\nPICK: combobox",
+          "cost": 0.0230427,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "combobox",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a searchable list of ~200 country options, `combobox` is the right pick. It's designed to \"filter a long option list by typing\" — exactly what you need. `select` and `native-select` cap out around 20 options and lack typeahead filtering.\n\nPICK: combobox",
+          "cost": 0.0374919,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "combobox",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "shipping-speed",
+        "expect": "radio-group",
+        "request": "Customers choose one of three shipping speeds, with all three options visible at once."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For displaying three shipping speed options where the customer selects one with all three visible at once, **radio-group** is the right choice. It's the semantic primitive for single-selection scenarios where all options must be visible for comparison—exactly what you need for shipping speeds where users can see delivery times, costs, or other attributes side-by-side before choosing.\n\nPICK: radio-group",
+          "cost": 0.0234197,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "radio-group",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For a choice among three mutually exclusive shipping speeds with all options visible at once, you need a control where the user picks exactly one from a short, always-visible list.\n\n`PICK: radio-group`",
+          "cost": 0.03951350000000001,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "radio-group",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "email-toggle",
+        "expect": "switch",
+        "request": "A setting that turns email notifications on or off and takes effect immediately."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the Quill components for a preference that controls behavior:\n\nThis is a configuration setting (on/off toggle for notifications). Quill has a `settings` block specifically for \"Configuration and preferences\" — that's the semantic fit.\n\nHowever, if this toggle appears in isolation or within an existing component context (not as part of a dedicated settings page), the `switch` primitive would work equally well and is simpler.\n\nSince you're describing it as \"a setting,\" I'd recommend the `settings` block as the primary choice (it's designed exactly for this), but `switch` is also valid if it's embedded elsewhere.\n\nPICK: settings",
+          "cost": 0.024743699999999997,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "settings",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a setting that toggles email notifications on or off with immediate effect, you need a control component, not a full settings layout. The `switch` primitive is designed exactly for this — a binary on/off control that users can interact with directly.\n\nIf you're building a full settings page with multiple configuration options, you might reach for the `settings` block as the overall container, but the individual toggle itself should use `switch`.\n\nPICK: switch",
+          "cost": 0.0246508,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "switch",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "passwordless-signin",
+        "expect": "login-minimal",
+        "request": "A sign-in screen where people enter their email and we send them a code. No passwords."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at your passwordless flow — email entry + code verification — the best fit from Quill's auth blocks is **`otp-verification`**. It's purpose-built for one-time code authentication, which is exactly what you're describing. It should handle both the email capture and the code entry steps.\n\nPICK: otp-verification",
+          "cost": 0.0246257,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "otp-verification",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Based on your requirement—email entry that sends a one-time code, no password—the exact fit is **login-minimal**: \"the leanest possible sign-in — one email field that sends a one-time code, no password.\"\n\nIt handles the complete flow: email input and code delivery in one component. `otp-verification` (which handles six-digit verification and resend) is for the *second screen* if you need it.\n\nPICK: login-minimal",
+          "cost": 0.038910799999999995,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "login-minimal",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "enter-code",
+        "expect": "otp-verification",
+        "request": "The screen where users type the six-digit code we just emailed them."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the Quill auth blocks, there's a perfect fit for a screen where users enter an emailed six-digit code: `otp-verification` under the **auth** group is specifically designed for OTP (One-Time Password) verification flows.\n\nIf you want just the input primitive without the full auth screen layout, Quill also ships `input-otp` as a primitive, but `otp-verification` is the complete block built for exactly this use case.\n\nPICK: otp-verification",
+          "cost": 0.0227927,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "otp-verification",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Based on the skill guidance, the `otp-verification` block is designed exactly for this: verifying an email with a six-digit one-time passcode and resend capability.\n\nPICK: otp-verification",
+          "cost": 0.0379544,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "otp-verification",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "kpis",
+        "expect": "stat-cards",
+        "request": "At the top of a dashboard, show this month's revenue, churn and active users, each with the change from last month."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the Quill blocks, `stat-cards` is designed for presenting metrics and key numbers at the top of a dashboard. It's commonly paired with change indicators (like month-over-month deltas), which is exactly what you need for revenue, churn, and active users with last month's comparison.\n\nThe design system even shows this pattern in the example (`example-app-page`: sidebar-nav → page-header → **stat-cards** → data-table), positioning stat cards at the top before other content.\n\nPICK: stat-cards",
+          "cost": 0.0233497,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "stat-cards",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For displaying multiple metrics with month-over-month comparisons at the top of a dashboard, `stat-cards` is the Quill block designed exactly for this—it presents records, lists, and metrics for reading, and it's shown in the example app layout right after the page header.\n\nPICK: stat-cards",
+          "cost": 0.023711799999999998,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "stat-cards",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "revenue-trend",
+        "expect": "analytics-charts",
+        "accept": [
+          "chart"
+        ],
+        "request": "Show how revenue has trended over the last twelve months."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For showing revenue trends over the last twelve months, you need a time-series chart. The **`analytics-charts`** block from Quill's data-viz category is designed exactly for this—it displays quantitative data over time and uses the CVD-safe chart tokens the design system provides.\n\nIf you wanted to pair it with summary metrics (like total revenue or YoY growth), you could also add `stat-cards`, but the chart itself is your primary component.\n\nPICK: analytics-charts",
+          "cost": 0.023159700000000002,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "analytics-charts",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For showing revenue trends over the last twelve months, use **`analytics-charts`** — it's designed specifically for dashboard views showing trends over time, with area and bar charts on card surfaces. This matches your use case perfectly.\n\nPICK: analytics-charts",
+          "cost": 0.039057,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "analytics-charts",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "first-project",
+        "expect": "empty-state",
+        "accept": [
+          "empty"
+        ],
+        "request": "A brand-new user opens the projects page and has no projects yet. Help them create the first one."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "When a user first lands on an empty projects page, they need clear guidance on what to do next. The **empty-state** block is designed exactly for this — it shows a friendly message explaining the empty view and provides a prominent call-to-action button. This guides the user naturally toward creating their first project without requiring them to hunt for an action elsewhere on the page.\n\nPICK: empty-state",
+          "cost": 0.0227647,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "empty-state",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "For a brand-new user with no projects who needs a clear path to create their first one, you want to show them an empty state with a call-to-action. Quill's `empty-state` block is designed for exactly this—it presents a message when a container is empty and includes a prominent button to take action. It's under the feedback category for system status messaging.\n\nPICK: empty-state",
+          "cost": 0.022126800000000002,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "empty-state",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "mobile-filters",
+        "expect": "drawer",
+        "request": "On phones, filters should slide up from the bottom and be swiped away to close."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the Quill components, the **sheet** primitive is designed for exactly this use case — it's a bottom sheet that slides up from the bottom of the screen on mobile and can be dismissed by swiping or tapping outside. It's commonly used for temporary content like filters, menus, or options that need to slide in from below and be easily swiped away.\n\nPICK: sheet",
+          "cost": 0.0228887,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "sheet",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Looking at the Quill components, the `drawer` primitive is built exactly for this pattern. Its description explicitly states: \"You need a mobile-first interaction — filters, quick actions, secondary navigation — that slides in from an edge and can be dragged closed.\"\n\nThis matches your requirement perfectly: it's optimized for mobile, mentions filters as a primary use case, slides in from an edge (the bottom), and emphasizes dragging/swiping to close.\n\nPICK: drawer",
+          "cost": 0.0425417,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "drawer",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "cmd-k",
+        "expect": "command-palette",
+        "accept": [
+          "command"
+        ],
+        "request": "Power users want to press Cmd+K to jump to any page or run an action."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "The Quill design system has a purpose-built component for this: `command-palette`. It's a navigation block designed specifically for keyboard-accessible command menus, which is the standard pattern for Cmd+K shortcuts that let users jump to pages or trigger actions.\n\nPICK: command-palette",
+          "cost": 0.022438700000000002,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "command-palette",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Looking at the navigation section, Quill has a block built exactly for this:\n\n**`command-palette`** — \"You need a searchable ⌘K launcher for actions and quick navigation.\"\n\nThis block is purpose-built for letting users press Cmd+K to jump between pages and trigger actions.\n\nPICK: command-palette",
+          "cost": 0.037341700000000005,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "command-palette",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "task-board",
+        "expect": "kanban",
+        "request": "Track tasks by status (to do, in progress, done) and move cards between the columns."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "A task board with status columns and draggable cards is exactly what the Quill **kanban** block is designed for. It handles the column layout, card management, and drag-and-drop interactions, plus it's built on Quill's tokens so it'll theme automatically.\n\nRead the usage guide at `https://www.quilldesignsystem.com/usage/kanban.md` before installing to confirm the interaction model fits your needs.\n\nPICK: kanban",
+          "cost": 0.0220607,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "kanban",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "For managing work across status columns with draggable task cards, the `kanban` block is built exactly for this. It handles the to-do, in-progress, and done columns with drag-and-drop card movement.\n\nPICK: kanban",
+          "cost": 0.0378488,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "kanban",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "office-map",
+        "expect": "none",
+        "request": "Show our office locations on an interactive map that users can pan and zoom."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Looking at the Quill component library, there's no built-in map block or primitive for interactive geographical visualization. Quill's data-viz blocks focus on charts for quantitative data, and the other components don't cover location-based interactive mapping.\n\nYou'll need to integrate a third-party mapping library like Google Maps, Mapbox, or Leaflet to display and interact with office locations on a map.\n\nPICK: none",
+          "cost": 0.0236207,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Quill doesn't ship a map component. Office-location maps with pan-and-zoom are geo-spatial UIs that fall outside Quill's scope — you'll need to integrate a third-party library (Leaflet, Mapbox, Google Maps, etc.) and wrap it in a card or container styled with Quill's semantic tokens (`--card`, `--foreground`, `--border`, etc.) to match the design system. The map library itself will handle the interactive behavior.\n\nPICK: none",
+          "cost": 0.0394643,
+          "model": "claude-haiku-4-5-20251001",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

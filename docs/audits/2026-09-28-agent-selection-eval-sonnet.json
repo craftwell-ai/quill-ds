@@ -1,0 +1,705 @@
+{
+  "meta": {
+    "date": "2026-09-28",
+    "set": "core",
+    "repeat": 1,
+    "model": "claude-sonnet-5-5",
+    "cost": 2.9690145999999995
+  },
+  "rows": [
+    {
+      "case": {
+        "id": "delete-project",
+        "expect": "alert-dialog",
+        "request": "Before a project is permanently deleted, the user has to confirm it."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the stock shadcn **alert-dialog** primitive, which Quill restyles through its token layer.\n\n- **Why it fits:** Permanent deletion is a destructive action that needs an explicit confirm or cancel. An alert dialog is modal and interrupts the user. It doesn't dismiss on an outside click, so the user has to choose. A plain `dialog` is meant for general content or forms.\n- **Buttons:** The confirm action should follow Quill's destructive role: a 10% tint with destructive text, not a solid fill. Cancel stays a neutral button. Primary is ink and is for the main non-destructive action, so it isn't the right style for the delete button.\n- **Copy:** Use sentence case. Say what will be deleted, then why it can't be undone. Use no emoji and no hype punctuation.\n- **Optional extra friction:** If you want the user to type the project name before deleting, add an `input` inside the alert dialog.\n- **Blocks:** None of the 51 blocks covers a delete confirmation. `alerts` and `notifications` are for status messages, not for blocking decisions.\n- **Install:** `npx shadcn@latest add alert-dialog`. Quill's usage guide is at `https://www.quilldesignsystem.com/usage/alert-dialog.md`, and I haven't read it, so check it before building.\n\nPICK: alert-dialog",
+          "cost": 0.0611672,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "alert-dialog",
+            "dialog"
+          ],
+          "text": "Use **`alert-dialog`**, the stock shadcn primitive. It's installed with `npx shadcn@latest add alert-dialog`.\n\nPermanently deleting a project is destructive and irreversible, which is the job the `alert-dialog` guide describes. Three of its properties matter here:\n- **Explicit response:** it doesn't close when the user clicks the backdrop. Only Escape or a Cancel/Action button dismisses it, so nobody confirms a deletion by accident.\n- **Accessibility:** it renders `role=\"alertdialog\"` and traps focus. Always render `AlertDialogTitle`, because that's the accessible name.\n- **Not `dialog`:** the `dialog` guide says to use it for non-destructive tasks and to use `alert-dialog` for deletes and overwrites. It closes too easily for this.\n\nRules from the guide:\n- Make the trigger a destructive-variant Button.\n- Label the action with its consequence, such as \"Delete project\", not \"Confirm\" or \"OK\".\n- Follow the Quill rule that `destructive` is a 10% tint with destructive text, not a solid fill.\n\nNo block fits this. It's a single confirmation step, and the `alerts`, `empty-state` and `settings` blocks don't cover it.\n\nPICK: alert-dialog",
+          "cost": 0.1109162,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "alert-dialog",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "edit-role",
+        "expect": "dialog",
+        "accept": [
+          "sheet"
+        ],
+        "request": "Admins change a team member's role with a short form, without leaving the members page."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use a **Dialog**. The admin opens it from the member's row, picks a role in a `select` inside a `field`, and confirms with a primary (ink) button. The members page stays in place behind it.\n\n- **Why not a block:** none of the 51 blocks covers this. `settings` is a full page-level preferences form, and `data-table` and `profile-card` show members but don't edit them. Reaching for a block would mean stripping most of it out.\n- **Why not the alternatives:**\n  - A `popover` is too light for a form with a confirm step.\n  - A `sheet` suits longer forms, and this one is a single field.\n  - A bare `select` in the row would work only if a role change needs no confirmation.\n- **Quill rules to follow:**\n  - Make the confirm button primary (ink), not the accent colour.\n  - Use `rounded-lg` on the controls.\n  - If the change is destructive, such as demoting an admin, show that as a `destructive` 10% tint rather than a solid fill.\n\nPICK: dialog",
+          "cost": 0.0618012,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "dialog",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "dialog",
+            "popover"
+          ],
+          "text": "Use **Dialog**. A role change is a short, focused form, and the admin stays on the members page while it's open. I only read the guides for `dialog` and `popover`. Nothing else in the skill list is a closer fit for this job.\n\n- **Why Dialog:** its \"When to use\" is \"complete a focused task without leaving the page — edit a record, fill a short form\". The trigger can be an outline or default button in the member's row, such as \"Change role\".\n- **Why not Popover:** it suits a quick inline edit, but its content is fixed at 288px wide. A role select plus a confirm/cancel footer, and possibly a description of what each role can do, would be cramped. Popover also has no close button.\n- **Why not AlertDialog:** a role change is reversible, so it isn't a destructive confirmation. Use AlertDialog only if the change removes access, such as demoting the last admin.\n- **Why not Sheet or Drawer:** they suit secondary context or touch-first panels, and this is a small form.\n- **Why not Settings or Wizard blocks:** those are full-page forms or multi-step flows, which is more than a one-field change needs.\n\nInside the Dialog, use `select` for the role, or `radio-group` if there are only a few roles and each needs a description. Wrap it in `field` for the label and error. Always render `DialogTitle`, for example \"Change role for Jamie\".\n\nPICK: dialog",
+          "cost": 0.1114492,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "dialog",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "account-history",
+        "expect": "activity-feed",
+        "request": "Show what has happened on an account recently: who did what, and when."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `activity-feed` block. It's the Quill block for showing who did what and when on an account, and it's in the data-display group. Reaching for it first is what the project rules ask, and it keeps the timeline on the AA-checked tokens.\n\nInstall it with `npx shadcn@latest add @quill/activity-feed`. Read `https://www.quilldesignsystem.com/usage/activity-feed.md` before you do.\n\nTwo alternatives don't fit as well:\n- `data-table` suits a sortable, filterable audit log where you scan many rows and columns. It reads as a table, not a timeline.\n- `notifications` is for alerts addressed to the current user. It isn't a record of actions taken on an account.\n\nPICK: activity-feed",
+          "cost": 0.0525488,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "activity-feed",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the `activity-feed` block. It's the Quill block for a chronological history of recent events showing who did what and when. That is the job you described.\n\nI picked it from the skill's catalogue and didn't open its reference guide (`reference/activity-feed.md`), so I haven't checked its rules in detail.\n\nI ruled out these alternatives:\n- **`notifications`**: This is for a notifications center with unread indicators and a mark-all-read action. It's about alerting the current user, not an account's audit history.\n- **`data-table`**: This is for filterable, actionable records with row actions. It would suit a sortable audit log, but the job here is a readable timeline.\n\nInstall it with `npx shadcn@latest add @quill/activity-feed`, then replace the sample events with the account's actions.\n\nPICK: activity-feed",
+          "cost": 0.08715500000000001,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "activity-feed",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "unread-alerts",
+        "expect": "notifications",
+        "request": "Give users one place to see everything that needs their attention, with unread items marked and a way to mark them all as read."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `notifications` block from the feedback group. It's Quill's block for a single place to see everything that needs attention, and it covers unread markers and marking items as read. Its usage guide is at `https://www.quilldesignsystem.com/usage/notifications.md`. Read it before installing with `npx shadcn@latest add @quill/notifications`.\n\nThe alternatives fit less well:\n- `activity-feed` shows a history of events, not items awaiting action.\n- `alerts` and `announcement-banner` are transient status messages, not a triaged inbox.\n\nI picked this from the block descriptions in the project rules, and I haven't read the usage guide, so I haven't checked that it has a \"mark all as read\" control.\n\nPICK: notifications",
+          "cost": 0.0525848,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "notifications",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the `notifications` block. It's described as a notifications center with unread indicators and a mark-all-read action, which is what you asked for: one place for items needing attention, unread items marked, and a way to mark them all as read.\n\nI didn't open `reference/notifications.md`. The skill says to read it before committing, so check it before you install the block. The choice rests on the one-line descriptions in the skill listing.\n\nTwo nearby components fit less well:\n- `activity-feed` is a read-only history of what happened. It has no unread state and no mark-all-read.\n- `sonner` is for brief toasts after an action. It isn't a persistent place to see everything.\n\nInstall it with `npx shadcn@latest add @quill/notifications`.\n\nPICK: notifications",
+          "cost": 0.0863398,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "notifications",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "customer-list",
+        "expect": "data-table",
+        "request": "Admins need to filter and sort a few hundred customer records and take an action on each one."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `data-table` block. It's the Quill block for presenting records that need sorting, filtering and a per-row action, and a few hundred customer records fits it.\n\n- **Sort and filter:** A few hundred rows is small enough to sort and filter on the client, so you don't need server-side paging to start.\n- **Per-row action:** Put the action for each customer in a row action, such as a `more_horiz` dropdown menu, or a single primary button if there's one dominant action.\n- **Why not the alternatives:**\n  - `stat-cards` and `activity-feed` present summaries or event streams, not records you act on.\n  - `list-detail` suits browsing one record at a time, not scanning and sorting a few hundred.\n  - A bare `table` primitive would mean hand-building the sorting and filtering that the block already covers, and the rules say to reach for a block first.\n\nBefore installing, read the usage guide at `https://www.quilldesignsystem.com/usage/data-table.md`. Install it with `npx shadcn@latest add @quill/data-table`. If this is an app page, `example-app-page` already composes it under `sidebar-nav`, `page-header` and `stat-cards`. Don't add a stat-card row above the table unless the metrics matter, because the design rules discourage hero-metric rows above a grid.\n\nI haven't fetched that usage guide, so I can't confirm the block's exact filtering and sorting features. Check it before committing.\n\nPICK: data-table",
+          "cost": 0.0549368,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "data-table",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "data-table"
+          ],
+          "text": "Use the `data-table` block. It's built for a filterable, actionable table of records, which matches what admins need here: find customers among a few hundred and act on each one.\n\n- **Fit:** It has a filter toolbar, a per-row actions menu, and status pills (`tone-badge`) for things like customer state.\n- **Sorting:** The guide doesn't mention sorting, so I can't confirm the block sorts. You may need to add sortable column headers.\n- **Scale:** A few hundred rows may call for `pagination` on top of the block. That's a primitive and it pairs with the table.\n- **Accessibility:** Give each row's action button its own label, such as \"Actions for Ada Lovelace\". The guide requires this.\n- **Alternatives I ruled out:**\n  - `table` is the bare primitive with no filtering or row actions.\n  - `kanban` groups records by status columns, which doesn't suit a long list you filter and sort.\n  - `activity-feed` is read-only.\n\nInstall with `npx shadcn@latest add @quill/data-table`, then swap in the customer fields.\n\nPICK: data-table",
+          "cost": 0.0980516,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "data-table",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "saved-feedback",
+        "expect": "sonner",
+        "request": "After the user saves their profile, briefly confirm it worked without interrupting them."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use a toast from `sonner`. It appears briefly after the save, dismisses itself, and doesn't take focus or block the form, so the user isn't interrupted. An `alert` would sit inline and push the layout around. `alert-dialog` and `dialog` are modal, which is the interruption you want to avoid. The `notifications` block is for a persistent notification list, not a one-off confirmation.\n\nKeep the copy in sentence case with no emoji, for example \"Profile saved\". Use the standard success toast rather than a custom colour, since Quill uses status colours as text only. Read `https://www.quilldesignsystem.com/usage/sonner.md` before installing with `npx shadcn@latest add sonner`.\n\nPICK: sonner",
+          "cost": 0.0539028,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "sonner",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use `sonner`, Quill's toast primitive. It's meant for brief, self-dismissing feedback about an action the user just took, such as \"saved\". It doesn't block the page or need dismissing, which fits your \"without interrupting them\" requirement.\n\nI'm going by the skill's summary line for `sonner`. I didn't open its `reference/sonner.md` guide, so I haven't checked its rules.\n\nThe alternatives fit less well:\n- `alert` and `alerts` are persistent inline messages, not transient confirmations.\n- `alert-dialog` and `dialog` interrupt the user.\n\nPICK: sonner",
+          "cost": 0.0868782,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "sonner",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "section-error",
+        "expect": "alert",
+        "accept": [
+          "alerts"
+        ],
+        "request": "One section of a checkout form needs a persistent message saying the billing address couldn't be verified."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **`alert`** primitive, with `variant=\"destructive\"` if you treat the failure as an error. Otherwise use the default variant.\n\n- **Why it fits:** an alert is an inline, persistent message scoped to the section it sits in. It stays until the user fixes the address. That matches \"one section of a form needs a persistent message.\"\n- **Why not the others:**\n  - `sonner` is a transient toast. It disappears, and it isn't tied to the section.\n  - `alerts` is a block, a stack of alerts for a page. It's more than you need for one message.\n  - `announcement-banner` is page-wide.\n  - `field` error text is for a single input, not a whole address section.\n- **Styling rules from the Quill guide:**\n  - Destructive is a 10% tint (`bg-destructive/10`) with destructive text, never a solid fill.\n  - Put an icon in it, such as `warning` or `error` from `<Icon>`.\n  - Use sentence case with no emoji. Say what happened, then the reason or next step. For example: \"We couldn't verify this billing address. Check the street and postcode, or continue with it as entered.\"\n- **Unchecked detail:** I haven't read `https://www.quilldesignsystem.com/usage/alert.md`. Read it before installing, in case it says more about placement or `role`.\n\nPICK: alert",
+          "cost": 0.0545588,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "alert",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the `alert` primitive. Its guide describes exactly this job: one persistent, inline status message attached to a specific page section.\n\n- **Why not `alerts`:** that block is a stack of several messages, and you only need one.\n- **Why not `sonner`:** toasts are for brief feedback after an action, and this message has to stay visible.\n- **Why not `announcement-banner`:** that's for site-wide notices, and this one belongs to a single section of the form.\n\nSome usage notes from the guide:\n- Use `variant=\"destructive\"` if you treat the failed verification as a blocking error. Use the default variant if it's only advisory.\n- Include an `Icon` so severity doesn't rely on colour alone.\n- `Alert` renders `role=\"alert\"`, so screen readers announce it when it mounts.\n- If the user can act on it, such as re-entering the address, put a Button in `AlertAction`. Give that Button an `aria-label`.\n\nPICK: alert",
+          "cost": 0.1005578,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "alert",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "site-announcement",
+        "expect": "announcement-banner",
+        "request": "Announce a new feature across the whole site, and let people dismiss the message."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `announcement-banner` block. It sits in the feedback group and is described as \"Announcement banners\". That fits a site-wide message about a new feature, and banners of this kind normally include a dismiss control.\n\nI picked it from the block list in the project rules. I haven't opened its usage guide at `https://www.quilldesignsystem.com/usage/announcement-banner.md`. Before installing, check that guide for how it handles dismissal. In particular, check whether the dismissed state persists across pages and reloads.\n\nAlternatives I ruled out:\n- `alerts` is a stack of in-page status messages, not a site-wide announcement.\n- `notifications` is for a per-user event list.\n- `cookie-consent` is a dismissible bar, but it is scoped to consent.\n\nInstall it with `npx shadcn@latest add @quill/announcement-banner`.\n\nPICK: announcement-banner",
+          "cost": 0.053054800000000006,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "announcement-banner",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use `announcement-banner`. Its guide describes it as the block for announcing something site-wide with a dismissible banner, either inline or full-bleed. That matches both parts of your request: it covers the whole site, and people can dismiss it.\n\nThe alternatives fit less well:\n- **`alerts` / `alert`** are inline status messages tied to one section of a page. They aren't site-wide announcements.\n- **`sonner`** is for brief toasts that follow an action the user just took. A feature announcement shouldn't disappear on a timer.\n- **`cookie-consent`** is a compliance banner with accept and reject choices, so it's the wrong purpose.\n- **`hero`** is a marketing section on a single page, not a site-wide message.\n\nI haven't read `reference/announcement-banner.md`, so I haven't checked its rules. Read it before you install the block with `npx shadcn@latest add @quill/announcement-banner`. Place the banner once in the shared layout so it appears on every page. The block may not store the dismissed state across visits. If it doesn't, you'll need to add that, for example with localStorage.\n\nPICK: announcement-banner",
+          "cost": 0.0876078,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "announcement-banner",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "country-picker",
+        "expect": "combobox",
+        "request": "Users pick their country from about 200 options and should be able to type to narrow the list."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the **combobox** primitive. It's a stock shadcn component that the Quill tokens restyle, and it's built for picking one value from a long list by typing to filter. With about 200 countries, a plain `select` or `native-select` would leave people scrolling. `command` and `command-palette` are for actions and navigation, not for choosing a form value.\n\nInstall it with `npx shadcn@latest add combobox`. Quill's rules for it are at https://www.quilldesignsystem.com/usage/combobox.md. I didn't fetch that page, so check it for the specific rules before you build.\n\nPICK: combobox",
+          "cost": 0.0528728,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "combobox",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use `combobox`. The skill says to read the guide before committing, but I haven't opened `reference/combobox.md` or the guides for `select` and `native-select`. The pick rests on the skill's one-line summaries.\n\nHere is why it fits:\n- **The job:** the user picks one value from a long list, about 200 countries, and narrows it by typing.\n- **`combobox`:** its \"when to use\" is filtering a long option list by typing.\n- **`select`:** it's meant for up to roughly 20 options and has no type-to-filter.\n- **`native-select`:** it's meant for short lists and only gives the OS picker's type-ahead, not filtering.\n- **`command`:** it's for searchable lists of actions or destinations, not a form value.\n\nInstall it with `npx shadcn@latest add combobox`. Wrap it in `field` so it gets a label and an error message.\n\nPICK: combobox",
+          "cost": 0.08678820000000001,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "combobox",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "shipping-speed",
+        "expect": "radio-group",
+        "request": "Customers choose one of three shipping speeds, with all three options visible at once."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use **radio-group**, the stock shadcn primitive that Quill restyles. Shipping speed is a single choice from a small set, and all three options need to be visible together. That is what a radio group is for.\n\n- **Why not `select` or `native-select`:** they hide the options behind a click, which breaks the \"all visible at once\" requirement.\n- **Why not `toggle-group`:** it suits toolbar-style controls, such as text alignment, more than a form choice that has to be submitted. A radio group also has better form semantics and accessibility for this.\n- **Why not `checkbox`:** it allows multiple selections.\n- **Layout:** each option can carry a label and description, for example \"Standard, 5–7 days, free\", by wrapping the items in `field`. The selected item takes the `ring` role, as Quill's colour rules specify.\n- **Checkout context:** the `checkout` block may already include a shipping-method step. Check `https://www.quilldesignsystem.com/usage/checkout.md` before hand-building the surrounding form. The control itself is still the radio group.\n\nPICK: radio-group",
+          "cost": 0.0537188,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "radio-group",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "radio-group"
+          ],
+          "text": "Use `radio-group`. The job is choosing exactly one of three options, with every option visible at once. That is what its \"When to use\" says: one choice from a short list that isn't collapsed behind a dropdown.\n\nEach shipping speed would be a `RadioGroupItem` paired with a `Label`. You can put the price and delivery estimate in the label text. Arrow keys move between the options, and Tab treats the group as a single stop.\n\nI ruled out the alternatives for these reasons:\n- **`select`** and **`native-select`** hide the options behind a trigger, so they fail the \"all visible\" requirement.\n- **`checkbox`** allows more than one choice.\n- **`toggle-group`** suits icon-style choices such as view modes, not labelled options with prices.\n- No block covers this. `checkout` and `order-summary` are whole sections, not a selection control.\n\nIf you build the shipping step inside a checkout, wrap each control in `field` for helper text and error messages.\n\nPICK: radio-group",
+          "cost": 0.0988208,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "radio-group",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "email-toggle",
+        "expect": "switch",
+        "request": "A setting that turns email notifications on or off and takes effect immediately."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the stock shadcn **`switch`** primitive. It's a binary control that applies immediately, with no save step, which is what this setting needs. A checkbox implies a form submit. A toggle is a pressed-state button, not a setting.\n\n- Put it in a `field` (label plus description), laid out horizontally with the switch on the right.\n- If it sits on a settings page with other preferences, the `settings` block already composes this pattern. For a single setting, the primitive alone is enough.\n- Per Quill's rules, the on state is ink (`primary`), and the edge uses the `input` role. Both come from the theme, so you don't add any styling.\n\nI haven't read `https://www.quilldesignsystem.com/usage/switch.md`. Read it before implementing.\n\nPICK: switch",
+          "cost": 0.0526808,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "switch",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the `switch` primitive. It's a boolean setting that applies the moment it's flipped, and the primitive's \"when to use\" line names notifications as an example. The alternatives fit worse:\n\n- **`checkbox`:** it suits choices that are submitted later, such as a form or a table selection.\n- **`toggle`:** it's a pressed-state button, like bold or a filter chip, not a setting.\n- **`settings` block:** it's a whole profile form. That's more than a single setting needs, though it would fit if the switch sat inside a larger preferences screen.\n\nI didn't open `reference/switch.md` before choosing. The pick rests on the skill's index line.\n\nPair the switch with a `label`, or use `field` for label and helper text. Because the change applies immediately, there's no save button. You could add a `sonner` toast to confirm the change.\n\nPICK: switch",
+          "cost": 0.0866476,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "switch",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "passwordless-signin",
+        "expect": "login-minimal",
+        "request": "A sign-in screen where people enter their email and we send them a code. No passwords."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `otp-verification` block for the code-entry step, and put it behind a plain email step. Quill has no dedicated passwordless sign-in block, so this is a composition rather than a single install.\n\n- **Code step:** `otp-verification` is built for entering a one-time code. It is the screen people see after you send the email, and it's the part of this flow that is specific to passwordless sign-in.\n- **Email step:** The closest fit is `login-minimal`, with its password field removed. `forgot-password` is another option, since it is also a single email field followed by a \"we sent you something\" state. Neither is a perfect match, so I'd take whichever has the layout you prefer. If you want a split-panel look, `login-split-panel` works too.\n- **Primitives underneath:** The blocks already use `input`, `field`, `button` and `input-otp`. Don't hand-roll those.\n\nI haven't read the per-block usage guides at `/usage/<name>.md`. Check `otp-verification` there before installing, to confirm it fits a sign-in flow and not only a verification flow.\n\nPICK: otp-verification",
+          "cost": 0.0537128,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "otp-verification",
+          "pass": false
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "login-minimal",
+            "otp-verification"
+          ],
+          "text": "Use `login-minimal`. It's Quill's passwordless sign-in: one email field that sends a one-time code, with no password field at all. That matches \"enter your email, we send a code\".\n\nTwo related blocks cover other parts of the flow:\n- **`otp-verification`** is the next screen, where the person types the six-digit code. Its guide says it is a separate step that comes after `login-minimal`. You'll probably want both to finish the flow.\n- **`login`** and **`login-split-panel`** are password-based, or lead with a magic link and a testimonial panel. Choose `login-split-panel` only if you want a branded full-page layout.\n\n`login-minimal` has no card chrome, so put it on a page or in a modal that already frames it. Don't drop it onto a busy background.\n\nInstall with `npx shadcn@latest add @quill/login-minimal`.\n\nPICK: login-minimal",
+          "cost": 0.10099639999999999,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "login-minimal",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "enter-code",
+        "expect": "otp-verification",
+        "request": "The screen where users type the six-digit code we just emailed them."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `otp-verification` block. It's the auth block for the screen where a user types the one-time code that was just emailed to them. It sits alongside `login`, `signup` and `forgot-password`.\n\nDon't build it from the `input-otp` primitive. The rules say to reach for a block before building one, and the block should already wrap `input-otp` with the right layout and states. I haven't opened `https://www.quilldesignsystem.com/usage/otp-verification.md`, so check it for the six-digit length and the resend and error handling before you install. Install with `npx shadcn@latest add @quill/otp-verification`.\n\nPICK: otp-verification",
+          "cost": 0.0522288,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "otp-verification",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `otp-verification` block. It's in the auth group and covers this screen: entering a one-time code that was just emailed, with six-digit input. It's built on the `input-otp` primitive.\n\nI'd install it with `npx shadcn@latest add @quill/otp-verification`, then swap in the app's own copy and verify handler. I didn't change any code.\n\nPICK: otp-verification",
+          "cost": 0.0504828,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "otp-verification",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "kpis",
+        "expect": "stat-cards",
+        "request": "At the top of a dashboard, show this month's revenue, churn and active users, each with the change from last month."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `stat-cards` block (data-display). It's built for a row of headline metrics that each carry a value and a change from a prior period. That matches revenue, churn and active users, each compared with last month.\n\nTwo things to watch when you use it:\n\n- **Placement:** The rules warn against a hero-metric row sitting directly above an identical card grid. If the dashboard is mostly more cards, let the numbers sit inside the main content instead of leading with a row of them. Since you want them at the top, make sure the content below is something different, such as a data table or chart. The `example-app-page` composition (sidebar-nav → page-header → stat-cards → data-table) follows this pattern.\n- **Colour of the deltas:** Status colours are text only, never a fill behind text. Use `text-success` and `text-warning` for the change figures. Churn is the case to get right: a drop is the good direction, so don't colour it by sign alone.\n\nI haven't read `https://www.quilldesignsystem.com/usage/stat-cards.md`. Read it before installing with `npx shadcn@latest add @quill/stat-cards`. It covers the block's exact props and accessibility rules.\n\nPICK: stat-cards",
+          "cost": 0.0540408,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "stat-cards",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "stat-cards"
+          ],
+          "text": "Use the `stat-cards` block. It's a responsive row of KPI cards, each showing a value with a delta badge against last month. That matches this request: three metrics (revenue, churn, active users), each with its change from last month. Install it with `npx shadcn@latest add @quill/stat-cards` and replace the sample content.\n\n- **Churn tone:** Match each delta's tone to whether the change is good news, not to whether the number went up. Rising churn is bad, so it gets the destructive tone. Rising revenue and active users are good news.\n- **Delta text:** Show the sign and unit as visible text, such as \"+12.4%\" or \"−0.3%\", and label the comparison period (\"vs last month\") on each card.\n- **Alternatives:** `analytics-charts` shows trend shape over time, so add it below if you want trends. `data-table` suits many metrics at once. Neither fits a three-number summary.\n- **Layout:** Quill's composition rules warn against a hero-metric row above an identical card grid. If the rest of the dashboard is also cards, lead with what the page is about and let these numbers sit alongside it. The `dashboard` block already pairs `stat-cards` with the app shell, if you need the full layout.\n\nPICK: stat-cards",
+          "cost": 0.09925640000000001,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "stat-cards",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "revenue-trend",
+        "expect": "analytics-charts",
+        "accept": [
+          "chart"
+        ],
+        "request": "Show how revenue has trended over the last twelve months."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use `analytics-charts`, the block in the data-viz group. A twelve-month revenue trend is a time series, so a line or area chart fits. That block is Quill's chart composition, and it is built on the chart tokens.\n\nFollow these Quill rules when you use it:\n- Use the chart tokens (`--chart-1` to `--chart-5`) in their fixed order. Never use raw colours.\n- Revenue is a single series, so it takes `--chart-1`.\n- Put the trend in the page's main content. Don't lead with a row of stat tiles above an identical card grid. Let the numbers sit inside the chart.\n- If you also want a headline figure, such as the total or the change against the prior period, put it in the chart's header. `stat-cards` is the alternative only if you need standalone KPI tiles.\n- Use sentence case for the headline. Italicize at most one word in it, in the accent.\n\nPICK: analytics-charts",
+          "cost": 0.0531508,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "analytics-charts",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the `chart` primitive: a single area or line chart of monthly revenue, with the 12 months on the x-axis. Put it in a `card` if it needs a bounded surface.\n\n- **Why not `analytics-charts`:** that block is a dashboard pair of an area chart and a bar chart. You only need one trend, so you'd be deleting half of it. If this ends up on a dashboard next to a second chart, it becomes the better starting point.\n- **Why not `stat-cards`:** it shows a current value with one delta. It can't show how revenue moved over twelve months.\n- **Why not `data-table`:** it suits exact per-row values, not the shape of a trend.\n\nRules from the `chart` guide:\n- Colour the series with `var(--chart-1)`, not a raw pigment.\n- Include `ChartTooltip` with `ChartTooltipContent` so exact monthly values are readable on hover and keyboard focus.\n- A single series doesn't need a legend, but add `ChartLegend` if you plot more, such as a prior-year comparison.\n\nPICK: chart",
+          "cost": 0.10688419999999998,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "chart",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "first-project",
+        "expect": "empty-state",
+        "accept": [
+          "empty"
+        ],
+        "request": "A brand-new user opens the projects page and has no projects yet. Help them create the first one."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `empty-state` block. It's in the feedback group and built for the case where a list or page has nothing in it yet. It pairs a short heading, a line of supporting copy, and a primary action, which here would be a \"Create project\" button. Primary actions are ink in Quill, so the button needs no accent colour.\n\nWhy not the other options:\n- `wizard` suits a multi-step setup. Creating a first project is one action, so it would be heavier than needed. If creation needs several fields, the empty state's button can open a dialog or a form.\n- `onboarding` is a checklist for a broader getting-started flow, not one blank list.\n- `data-table` is what the page shows once projects exist. The empty state replaces it while the list is empty.\n\nFollowing the Quill rules, the heading should be in sentence case with at most one italic accent word. An example is \"Start your first *project*\". The copy should say what a project is and why to create one, with no emoji or hype punctuation. Before installing, read `https://www.quilldesignsystem.com/usage/empty-state.md`. After installing, run `node scripts/quill-check.mjs`.\n\nPICK: empty-state",
+          "cost": 0.053844800000000005,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "empty-state",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Use the `empty-state` block. A new user with no projects is looking at a view that is empty because they haven't created anything yet. The block is built for that case: an icon, a short explanation, and one primary action such as \"New project\" that fills the view.\n\nThe alternatives fit less well:\n- **`empty`** is the lower-level primitive for the same job. The block already composes that pattern on Quill tokens, and the guidance is to reach for a block before building one.\n- **`onboarding`** is for a multi-step setup checklist. Creating the first project is a single action.\n- **`error-404`** is for a missing resource or a wrong route, which isn't the situation here.\n\nTwo rules from the guide apply. Pair the explanation with a real \"New project\" button that starts creation, so the screen doesn't dead-end. Use an icon that matches projects, such as `folder_open`, rather than a generic one.\n\nInstall it with `npx shadcn@latest add @quill/empty-state`. I haven't changed any code.\n\nPICK: empty-state",
+          "cost": 0.1020096,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "empty-state",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "mobile-filters",
+        "expect": "drawer",
+        "request": "On phones, filters should slide up from the bottom and be swiped away to close."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the stock shadcn **`drawer`** primitive. It's built on Vaul, so it slides up from the bottom and closes when the user swipes it down. `sheet` also slides in from an edge, but it isn't swipe-to-dismiss. `dialog` is centered, so it doesn't fit.\n\nQuill has no filter-drawer block. The closest blocks are `data-table` and `search-results`. You could put the filter controls inside the drawer's content on phones.\n\nI didn't fetch `https://www.quilldesignsystem.com/usage/drawer.md`, so check it before you install.\n\nPICK: drawer",
+          "cost": 0.0521788,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "drawer",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "drawer"
+          ],
+          "text": "Use the **`drawer`** primitive. Its guide lists \"filters\" as a use case, and it slides up from the bottom and closes with a drag.\n\n- **Bottom slide-up:** The default `direction=\"bottom\"` gives you the slide-up panel. It's also the only direction that shows the drag handle.\n- **Swipe to close:** It's built on Vaul, so dragging the panel down dismisses it.\n- **Why not the others:** `sheet` is the same kind of edge panel but has no swipe-to-dismiss. `dialog` is a centered modal, which isn't the slide-up behavior you asked for.\n\nA few things to follow when you build it:\n- Use `asChild` on `DrawerTrigger`. Drawer has no `render` prop.\n- Always render a `DrawerTitle`, because it's the accessible name.\n- Keep a `DrawerClose` button in the panel. Swipe is touch-only, so Escape and the close button are the keyboard and screen-reader ways out.\n- If desktop should show inline filters or a popover instead, switch between the two by breakpoint. Quill has no block that does this for you.\n\nPICK: drawer",
+          "cost": 0.09967859999999999,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "drawer",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "cmd-k",
+        "expect": "command-palette",
+        "accept": [
+          "command"
+        ],
+        "request": "Power users want to press Cmd+K to jump to any page or run an action."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `command-palette` block. It's Quill's Cmd+K-style menu for jumping to pages and running actions. It's built on the `command` primitive, so you don't need to hand-roll it. Install it with `npx shadcn@latest add @quill/command-palette`. Before you do, read its usage guide at `https://www.quilldesignsystem.com/usage/command-palette.md`.\n\nThe block is the better choice over the raw `command` primitive because it's already composed and checked against the Quill tokens. You'd only need to add the Cmd+K key listener and your own page and action entries.\n\nPICK: command-palette",
+          "cost": 0.0521548,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "command-palette",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "command-palette"
+          ],
+          "text": "Use the `command-palette` block. Its \"When to use\" line in the Quill guide is \"a searchable ⌘K launcher for actions and quick navigation\", which is your Cmd+K request.\n\n- **Why not the neighbours:** `search-results` is for results shown inline on a page, not a global keyboard-triggered overlay. `dropdown-menu` is for a small option list tied to one trigger.\n- **Underlying primitive:** the block is built on the `command` primitive. Use `command` directly only if you need a custom composition that the block doesn't cover.\n- **Install:** `npx shadcn@latest add @quill/command-palette`. Then replace the sample content with your real pages and actions.\n- **Grouping:** put items into labeled groups such as Pages, Actions and Recent, as the guide asks. Don't use one flat list.\n- **Shortcuts:** the shortcut hints (`CommandShortcut`) are only hints. Every item must also work by typing its label and pressing Enter.\n- **Opening it:** the guide doesn't cover the global Cmd+K listener, so you'll need to wire that up yourself.\n\nPICK: command-palette",
+          "cost": 0.09822660000000001,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "command-palette",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "task-board",
+        "expect": "kanban",
+        "request": "Track tasks by status (to do, in progress, done) and move cards between the columns."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Use the `kanban` block. It is Quill's board for tracking tasks in columns, and it matches your to do, in progress and done statuses and moving cards between them. Install it with `npx shadcn@latest add @quill/kanban`. Read `https://www.quilldesignsystem.com/usage/kanban.md` first. I haven't fetched that guide, so I can't confirm its specifics.\n\nIf you only wanted a plain checklist of steps, `onboarding` would be closer. Your description is a multi-column board, so `kanban` fits better.\n\nPICK: kanban",
+          "cost": 0.0520268,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "kanban",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [
+            "kanban"
+          ],
+          "text": "Use the `kanban` block. Your request is to track tasks in to do, in progress and done columns and move cards between them. That is the \"manage work across status columns with draggable, tagged task cards\" job the block covers.\n\nI ruled out the two alternatives its guide lists:\n- **`data-table`** fits when status is one column among many sortable fields. Here the columns are the status, so a table isn't the right shape.\n- **`onboarding`** fits a single sequential checklist. Your tasks are parallel work items that move between independent columns.\n\nTwo things to handle when you install it with `npx shadcn@latest add @quill/kanban`:\n- **Column count:** the block ships three columns, which matches to do, in progress and done. You only need to rename them and swap in your own cards.\n- **Keyboard moves:** the shipped story is a static layout, and drag-and-drop alone excludes keyboard and screen-reader users. Add a keyboard-operable way to move a card, such as a menu action. A `dropdown-menu` on each card would do it.\n- **Counts:** keep each column's card-count badge in sync as cards move.\n\nPICK: kanban",
+          "cost": 0.09833739999999999,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "kanban",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "id": "office-map",
+        "expect": "none",
+        "request": "Show our office locations on an interactive map that users can pan and zoom."
+      },
+      "before": [
+        {
+          "skills": [],
+          "guidesRead": [],
+          "text": "Nothing in Quill fits an interactive, pannable and zoomable map.\n\n- **Blocks:** none is a map. The closest are `team-section` and `footer`, and `contact-form` or `feature-section` could carry a location list. All of them are static content, so none gives you pan or zoom.\n- **Primitives:** `card`, `tabs` and `item` can list the offices. `carousel`, `scroll-area` and `resizable` scroll or resize content, but none of them pans or zooms a map.\n- **Charts:** `analytics-charts` and the `chart` primitive are for quantitative data. The rules say chart tokens are never used as UI colour, and neither one renders geographic tiles.\n\nA map needs a dedicated library, such as Leaflet, MapLibre GL or Mapbox. Quill could still style the surrounding UI:\n\n- **Location list:** `card` or `item` for each office.\n- **Selection state:** `ring` for the selected office.\n- **Popups:** `popover` for anything floating over the map.\n- **Controls:** `button` or `toggle-group` for the zoom and layer controls.\n- **Theming:** semantic tokens only, with no raw hex values, so every theme works.\n- **Icons:** the core `Icon` set has no map-pin name. `location_on` isn't among the 91 names, so it would render an empty box. Use a different core icon, or a custom marker from the map library.\n\nPICK: none",
+          "cost": 0.0548208,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ],
+      "after": [
+        {
+          "skills": [
+            "quill-components"
+          ],
+          "guidesRead": [],
+          "text": "Quill has nothing that fits an interactive map. I checked the block and primitive lists for anything that renders a pannable, zoomable map and found nothing. The nearest candidates don't do the job:\n\n- `aspect-ratio` could hold a map embed, but it is only a sizing wrapper. It gives no map behavior.\n- `item` or `card` could list the office addresses, but that is a list, not a map.\n- `resizable` and `scroll-area` are layout and scrolling helpers. Neither pans or zooms.\n- `team-section`, `profile-card` and `feature-section` are marketing and people layouts, not maps.\n\nQuill's rules for this case are to compose from primitives and semantic tokens and say which part Quill doesn't cover. For your page, that means:\n\n- **Map itself (not covered):** use a third-party map library such as Leaflet, MapLibre or Google Maps. Quill has no map component or map tokens.\n- **Surrounding UI (covered):**\n  - Wrap the map in a `card` with `rounded-xl` and the hairline `ring-1 ring-foreground/10`, with no shadow.\n  - Use `aspect-ratio` to reserve the map's space.\n  - List the offices next to it as `item` rows.\n  - Put a Quill `page-header` or an eyebrow plus headline above, with one italic accent word.\n- **Styling (covered):** use semantic tokens and no raw colors. Set map controls and popups on `popover` surfaces with Quill's radii, and use `icon` (e.g. `home` or `language`) for markers. Keep pin colors on tokens, not raw hex. Tile colors will come from the map provider and won't follow Quill's five themes unless you pick a light/dark style per theme.\n\nIf you'd like, I can sketch the layout, but I haven't written or changed any code.\n\nPICK: none",
+          "cost": 0.0899436,
+          "model": "claude-sonnet-5-5",
+          "error": null,
+          "pick": "none",
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

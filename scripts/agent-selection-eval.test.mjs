@@ -49,7 +49,8 @@ test('the prompt asks for a pick without naming a component', () => {
   const prompt = promptFor(CASES[0])
   assert.match(prompt, /PICK: <name>/)
   assert.match(prompt, /PICK: none/)
-  assert.ok(prompt.startsWith(CASES[0].request))
+  assert.ok(prompt.includes(CASES[0].request))
+  assert.match(prompt, /^Here is what I'm adding to the app: /, 'the request must read as the thing to build')
 })
 
 // CI checks out one commit with no tags, so this runs where the eval does: locally.
