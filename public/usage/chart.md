@@ -3,7 +3,7 @@
 A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend.
 
 ### When to use
-- You need a bar, line, area, or other Recharts chart that automatically re-colors across all four Quill themes and stays colorblind-safe.
+- You need a bar, line, area, or other Recharts chart that automatically re-colors across every Quill theme and stays colorblind-safe.
 
 ### Reach for instead
 - **data-table** — when the audience needs to read or compare exact values, not the shape of change — a table beats a chart for precision.
@@ -12,7 +12,7 @@ A themeable wrapper around Recharts — ChartContainer wires a config object to 
 ### Rules
 - **Do:** Color each series from the chart token set in fixed order (--chart-1 first, then --chart-2, …) via `config.color`, as chartConfig does here. **Don't:** Hardcode a raw accent pigment (e.g. `#BC6751`, `var(--terracotta)`) for a series, or reorder which chart-N a survivor gets when a filter drops one — raw pigments fail the colorblind-distinguishability checks these tokens were built to pass.
 - **Do:** Always include ChartTooltip (with ChartTooltipContent), as every story here does, so hovering or focusing a data point surfaces its exact value. **Don't:** Ship a chart with no ChartTooltip — the shape communicates a trend, but exact values become invisible to anyone who can't precisely read pixel height.
-- **Do:** Prefer `color: "var(--chart-N)"` in a series config entry — the tokens already re-cut correctly for all four Quill themes. **Don't:** Reach for the `theme` field (`{ light, dark }`) expecting it to map Quill's four themes one-to-one — it only distinguishes two CSS buckets (light vs. the two dark themes), so hand-authored hex pairs there won't track Quill's palette the way a token reference does.
+- **Do:** Prefer `color: "var(--chart-N)"` in a series config entry — the tokens already re-cut correctly for every Quill theme. **Don't:** Reach for the `theme` field (`{ light, dark }`) expecting it to map Quill's themes one-to-one — it only distinguishes two CSS buckets, light and dark, and Quill has more themes than that, so hand-authored hex pairs there won't track Quill's palette the way a token reference does.
 
 ### Accessibility
 - Each chart needs a ChartTooltip so exact values are available on hover and keyboard focus, not just visually inferred from the shape.

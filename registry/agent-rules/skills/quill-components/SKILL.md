@@ -22,7 +22,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 ### auth — Authentication and account access — sign-in, sign-up, recovery, verification.
 - `forgot-password` — You need a password-reset request card that sends a recovery link. · instead: `otp-verification`, `login`
 - `login` — You need the standard email-and-password sign-in with remember-me and reset links. · instead: `login-split-panel`, `login-minimal`, `login-oauth`, `forgot-password`
-- `login-minimal` — You need the leanest possible sign-in — a single field for one-time-code entry. · instead: `login`, `login-oauth`, `otp-verification`
+- `login-minimal` — You need the leanest possible sign-in — one email field that sends a one-time code, no password. · instead: `login`, `login-oauth`, `otp-verification`
 - `login-oauth` — Identity comes from a provider (Google, GitHub, Apple) rather than a password you store. · instead: `signup-social`, `login`, `login-minimal`
 - `login-split-panel` — You need a branded full-page sign-in with a testimonial side panel and magic-link option. · instead: `login`, `login-minimal`
 - `otp-verification` — You need to verify an email with a six-digit one-time passcode and resend. · instead: `login-minimal`, `forgot-password`
@@ -107,12 +107,12 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `avatar` — You need to represent a person or entity visually — a profile photo, initials, or a generic icon — in a list row, header, or comment. · instead: `item`
 - `badge` — You need a compact visual label for a status, category, or count next to other content — a course card, a table cell, a nav item. · instead: `tone-badge`, `button`
 - `breadcrumb` — You need to show where the current page sits inside a multi-level hierarchy (Home > Courses > Watercolor Basics) so users can jump back up a level. · instead: `page-header`
-- `button` — You need to trigger an action — submit, confirm, start a flow — rather than navigate to a page. · instead: `link`, `button-group`, `toggle`
+- `button` — You need to trigger an action — submit, confirm, start a flow — rather than navigate to a page. · instead: `button-group`, `toggle`
 - `button-group` — You have several related Buttons that should read as one compound control — sequential actions like prev/next, or a segmented set of mutually exclusive views. · instead: `button`, `toggle-group`
 - `calendar` — You're composing your own date-picking UI directly — a form field, a filter, a custom layout — rather than reaching for a pre-built scheduling pattern. · instead: `calendar-page`, `calendar-range`, `popover`
 - `card` — You need to group related content (a course, a stat, a settings section) in a bounded surface with consistent padding and optional header/footer regions. · instead: `item`
 - `carousel` — You need to page through a set of same-shaped items (cards, images) one view at a time within a constrained width. · instead: `scroll-area`, `tabs`
-- `chart` — You need a bar, line, area, or other Recharts chart that automatically re-colors across all four Quill themes and stays colorblind-safe. · instead: `data-table`, `stat-cards`
+- `chart` — You need a bar, line, area, or other Recharts chart that automatically re-colors across every Quill theme and stays colorblind-safe. · instead: `data-table`, `stat-cards`
 - `checkbox` — You need one or more independent boolean choices — accept terms, opt into a list, select several rows in a table. · instead: `radio-group`, `switch`
 - `collapsible` — You need one standalone show/hide toggle — a "view more" panel, an expandable filter section — without Accordion's multi-item structure. · instead: `accordion`
 - `combobox` — You need to filter a long option list by typing, or let users select multiple values as removable chips. · instead: `select`, `native-select`

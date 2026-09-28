@@ -29,3 +29,14 @@ test('the usage index exports every usage file on disk, and nothing else', () =>
   }
   assert.equal(ALL_USAGE.length, files.length, 'index exports entries with no file on disk')
 })
+
+test('every "reach for instead" names a component that has its own usage guide', () => {
+  // The quill-components skill tells agents to open reference/<name>.md for each
+  // alternative, so a name with no guide sends them to a file that does not exist.
+  const names = new Set(ALL_USAGE.map((u) => u.name))
+  for (const u of ALL_USAGE) {
+    for (const a of u.alternatives) {
+      assert.ok(names.has(a.name), `'${u.name}' suggests '${a.name}', which has no usage guide`)
+    }
+  }
+})

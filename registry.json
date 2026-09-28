@@ -2241,7 +2241,7 @@
         "intent": [
           "auth"
         ],
-        "use_when": "You need the leanest possible sign-in — a single field for one-time-code entry.",
+        "use_when": "You need the leanest possible sign-in — one email field that sends a one-time code, no password.",
         "not_for": "you're collecting a password, not sending a one-time code — this pattern has no password field at all → login; you want a provider-first flow instead of email-only → login-oauth; the user already submitted their email and you're now showing the six-digit code entry — that's a separate step from this one → otp-verification"
       },
       "registryDependencies": [
