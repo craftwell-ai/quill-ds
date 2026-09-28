@@ -2,7 +2,10 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
-import { renderAgentRules, RULES_PATH } from './build-agent-rules.mjs'
+import { join } from 'node:path'
+
+import { renderAgentRules, RULES_PATH, skillFiles, agentRulesItemFiles, SKILL_SRC } from './build-agent-rules.mjs'
+import { ALL_USAGE } from '../src/usage/index.mjs'
 import { ALL_MODES } from './build-tokens.mjs'
 import { icons } from '../src/components/ui/icons.core.mjs'
 
@@ -32,16 +35,48 @@ test('the registry ships the rules file to the project root, with install docs',
   const item = registry.items.find((i) => i.name === 'agent-rules')
   assert.ok(item, 'registry.json has no agent-rules item')
   assert.equal(item.type, 'registry:file')
-  assert.deepEqual(item.files.map((f) => f.target), ['~/.claude/rules/quill.md'])
+  assert.deepEqual(item.files, agentRulesItemFiles(), 'the agent-rules file list is stale — run `npm run build:agent-rules`')
+  assert.equal(item.files[0].target, '~/.claude/rules/quill.md')
   assert.ok(typeof item.docs === 'string' && item.docs.includes('--overwrite'), 'the item docs must state the update rule')
 })
 
 test('the rules file stays small enough to load into every session', () => {
-  // Claude Code loads .claude/rules/*.md into every session of the app. The
-  // block index is names + titles for that reason; use_when and rules live in
-  // the linked usage pages.
+  // Claude Code loads .claude/rules/*.md into every session of the app, and its
+  // docs set a 200-line target: longer files cost context and reduce adherence.
+  // So the block index is names only, one line per intent, and which component
+  // to pick lives in the quill-components skill, which loads only when needed.
   // Raised from 18 to 19.5 KB in 0.10.0 for the colour-role guidance: the file named
   // 3 of the 31 roles, and picking a colour is what an agent does most. It gets the
   // 1.8 KB compact form; the full 12 KB table lives in llms.txt. Spend on nothing else.
   assert.ok(committed.length < 19_500, `rules file is ${committed.length} bytes — trim it, every session pays for it`)
+  const lines = committed.split('\n').length
+  assert.ok(lines <= 200, `rules file is ${lines} lines — Claude Code's target is 200; move detail into the skill`)
+})
+
+test('the rules file sends agents to the skill before they choose a component', () => {
+  assert.match(committed, /load the `quill-components` skill/)
+})
+
+test('the quill-components skill is committed and current (run `npm run build:agent-rules`)', () => {
+  for (const f of skillFiles()) {
+    const path = join(new URL('..', import.meta.url).pathname, f.path)
+    assert.equal(readFileSync(path, 'utf8'), f.content, `${f.path} is stale — run \`npm run build:agent-rules\``)
+  }
+})
+
+test('the skill names every block and primitive, and ships every usage guide as a reference', () => {
+  const skill = skillFiles().find((f) => f.rel === 'SKILL.md').content
+  assert.match(skill, /^---\nname: quill-components\ndescription: .{80,}\n---\n/, 'SKILL.md needs name + a real description in its frontmatter')
+  // Claude Code's skills guidance: keep SKILL.md under 500 lines, detail in reference files.
+  const lines = skill.split('\n').length
+  assert.ok(lines < 500, `SKILL.md is ${lines} lines — move detail into reference/`)
+  for (const b of registry.items.filter((i) => i.type === 'registry:block')) {
+    assert.ok(skill.includes(`- \`${b.name}\` — `), `block '${b.name}' is missing from the skill`)
+  }
+  for (const u of ALL_USAGE) {
+    if (u.kind === 'component') assert.ok(skill.includes(`- \`${u.name}\``), `primitive '${u.name}' is missing from the skill`)
+    assert.ok(skillFiles().some((f) => f.rel === `reference/${u.name}.md`), `no reference guide for '${u.name}'`)
+  }
+  assert.match(skill, /If nothing fits/, 'the skill must say what to do when nothing fits')
+  assert.ok(SKILL_SRC.startsWith('registry/'), 'shadcn build reads item files from the repo; keep the skill under registry/')
 })

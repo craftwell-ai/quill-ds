@@ -30,14 +30,16 @@ test('readRegistryItems returns every indexed item with writable files', () => {
 // here therefore means the next sync PR there is refused — fail-closed by
 // design, but silently so. This test makes the upstream change loud: add the
 // new target to this list AND to the downstream SYNC_PATHS, in that order.
-// Two directories are the sync's own: blocks under `components/quill/` and
-// the page compositions under `components/examples/` (CRA-205), which an app
-// only ever receives after installing one, like a block.
+// Three directories are the sync's own: blocks under `components/quill/`, the
+// page compositions under `components/examples/` (CRA-205), which an app only
+// ever receives after installing one, like a block, and the quill-components
+// skill under `.claude/skills/quill-components/`, which arrives with the rules file.
 test('non-block registry targets are exactly the seven the downstream gate knows', () => {
   const items = readRegistryItems(root)
   const targets = new Set()
   for (const item of items) for (const f of item.files ?? []) targets.add(f.target)
-  const nonBlock = [...targets].filter((t) => !t.startsWith('components/quill/') && !t.startsWith('components/examples/')).sort()
+  const own = ['components/quill/', 'components/examples/', '~/.claude/skills/quill-components/']
+  const nonBlock = [...targets].filter((t) => !own.some((dir) => t.startsWith(dir))).sort()
   assert.deepEqual(nonBlock, [
     'app/quill-theme.css',
     'components/ui/icon.tsx',
@@ -61,6 +63,13 @@ test('planSync writes a ~/ target at the project root, never under src/', () => 
   assert.deepEqual(plan.itemNames, ['agent-rules'])
   // never installed: left alone, like every other item
   assert.deepEqual(planSync([rules], ['app/quill-theme.css']).writes, [])
+})
+
+test('an app that carries the rules file receives the quill-components skill with it', () => {
+  const rules = readRegistryItems(root).find((i) => i.name === 'agent-rules')
+  const paths = planSync([rules], ['.claude/rules/quill.md']).writes.map((w) => w.path)
+  assert.ok(paths.includes('.claude/skills/quill-components/SKILL.md'), 'the skill does not arrive with the rules file')
+  assert.ok(paths.includes('.claude/skills/quill-components/reference/dialog.md'), 'the reference guides do not arrive with the skill')
 })
 
 // --- Planning ---

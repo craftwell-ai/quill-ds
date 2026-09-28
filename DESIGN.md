@@ -502,7 +502,7 @@ Three principles name the point of view; the rules underneath are how they show 
 ### Rules
 - **Author against semantic tokens** — `--paper`, `--ink`, `--card`, `--primary`, `--ring` and the rest; never the per-theme `dk-*` / `cl-*` / `cd-*` / `int-*` sets and never a raw hex. That is what makes every theme free.
 - **Ink for actions, accent for meaning** — primary actions are ink (`--primary`). The accent pigment (moss by default; `--accent-pigment-text` for text, `--link`, `--ring`) is reserved for the one accent word, eyebrows, links and the focus ring. Terracotta is the danger pigment: never a hover colour, and a focus ring only when it is the chosen accent.
-- **Reach for a block before building one** — the registry ships 51 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands.
+- **Reach for a block before building one** — the registry ships 51 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands. When no block or primitive fits, compose from primitives and semantic tokens within these rules and name the gap, rather than inventing a new pattern.
 - **Made for people** — WCAG 2.1 AA is a feature, not a checkbox: text cuts clear 4.5:1 on every theme ground, interactive borders clear 3:1, charts use the CVD-safe chart tokens in fixed order, motion has a reduced-motion path.
 - **Content** — sentence case everywhere (uppercase only for eyebrows); state the decision, then the reason; no hype punctuation, no emoji.
 

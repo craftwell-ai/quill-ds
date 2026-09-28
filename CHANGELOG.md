@@ -12,6 +12,33 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.14.0] — 2026-09-28
+
+Agents in an app can now tell which component to use, not just which ones exist.
+Apps that carry the rules file receive all of this with the next library-sync; others
+run `npx shadcn@latest add @quill/agent-rules --overwrite`.
+
+### Added
+- **The `quill-components` skill ships with `@quill/agent-rules`**, installed to
+  `.claude/skills/quill-components/`. `SKILL.md` gives the way to choose (block first, then
+  primitives, then what to do when nothing fits) and one line per block and primitive: when to
+  use it and which components it is most often confused with. Beside it, `reference/<name>.md`
+  carries each of the 107 usage guides, so an agent reads the two or three it is deciding
+  between rather than all of them. It is generated from the same usage files as Storybook and
+  llms.txt, so nothing is written twice. Claude Code loads a skill's body only when it is used,
+  which is its documented home for long reference material; the rules file, loaded every
+  session, keeps only foundations and names.
+- **A "nothing fits" rule.** "Reach for a block before building one" now says what to do when no
+  block or primitive fits: compose from primitives and semantic tokens within the rules and name
+  the gap, rather than inventing a new pattern. It reaches DESIGN.md, llms.txt and the rules file
+  from one source.
+
+### Changed
+- **The rules file is 168 lines, down from 219**, under Claude Code's 200-line target for files
+  loaded every session. The block index is one line per intent instead of one per block, every
+  name kept, and it tells the agent to load the skill before choosing a block or primitive. A
+  test now holds the file to 200 lines and the skill to 500.
+
 ## [0.13.2] — 2026-09-23
 
 ### Fixed

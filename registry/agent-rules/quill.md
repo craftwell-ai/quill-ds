@@ -112,7 +112,7 @@ Three principles name the point of view; the rules underneath are how they show 
 ### Rules
 - **Author against semantic tokens** — `--paper`, `--ink`, `--card`, `--primary`, `--ring` and the rest; never the per-theme `dk-*` / `cl-*` / `cd-*` / `int-*` sets and never a raw hex. That is what makes every theme free.
 - **Ink for actions, accent for meaning** — primary actions are ink (`--primary`). The accent pigment (moss by default; `--accent-pigment-text` for text, `--link`, `--ring`) is reserved for the one accent word, eyebrows, links and the focus ring. Terracotta is the danger pigment: never a hover colour, and a focus ring only when it is the chosen accent.
-- **Reach for a block before building one** — the registry ships 51 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands.
+- **Reach for a block before building one** — the registry ships 51 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands. When no block or primitive fits, compose from primitives and semantic tokens within these rules and name the gap, rather than inventing a new pattern.
 - **Made for people** — WCAG 2.1 AA is a feature, not a checkbox: text cuts clear 4.5:1 on every theme ground, interactive borders clear 3:1, charts use the CVD-safe chart tokens in fixed order, motion has a reduced-motion path.
 - **Content** — sentence case everywhere (uppercase only for eyebrows); state the decision, then the reason; no hype punctuation, no emoji.
 
@@ -134,73 +134,22 @@ account_balance, add, add_circle, archive, arrow_back, arrow_downward, arrow_for
 
 ## Blocks — reach for one before building
 
-Install: `npx shadcn@latest add @quill/<name>`. Update: add `--overwrite`. Grouped by primary intent. Every block has a usage guide at `https://www.quilldesignsystem.com/usage/<name>.md` (when to use, what to reach for instead, rules, accessibility) — read it before installing.
+**Before choosing a block or a primitive, load the `quill-components` skill** (`.claude/skills/quill-components/`): when to use each one, what to reach for instead, and what to do when nothing fits. Install a block with `npx shadcn@latest add @quill/<name>`; update with `--overwrite`. The same guides are online at `https://www.quilldesignsystem.com/usage/<name>.md`. Blocks by primary intent:
 
-- **auth** — Authentication and account access — sign-in, sign-up, recovery, verification.
-  - `forgot-password` — Forgot password
-  - `login` — Login
-  - `login-minimal` — Minimal login
-  - `login-oauth` — Login with OAuth providers
-  - `login-split-panel` — Login with split panel
-  - `otp-verification` — OTP verification
-  - `signup` — Sign up
-  - `signup-social` — Signup — social first
-- **form** — Structured data entry and validation.
-  - `contact-form` — Contact form
-  - `file-upload` — File upload
-  - `wizard` — Setup wizard step
-- **data-display** — Presenting records, lists, and metrics for reading.
-  - `activity-feed` — Activity feed
-  - `badge-on-card` — Badges on card
-  - `data-table` — Data table
-  - `profile-card` — Profile card
-  - `stat-cards` — Stat cards
-- **data-viz** — Charts and quantitative visuals.
-  - `analytics-charts` — Analytics charts
-- **navigation** — Moving around an app — bars, breadcrumbs, tabs, command menus.
-  - `command-palette` — Command palette
-  - `navbar` — Navbar
-  - `page-header` — Page header
-  - `search-results` — Search results
-  - `tabs-page` — Tabs page
-- **app-shell** — Full-page layout scaffolding for application screens.
-  - `dashboard` — Dashboard shell
-  - `sidebar-nav` — Sidebar navigation shell
-- **feedback** — System status — alerts, notifications, empty and error states.
-  - `alerts` — Alert stack
-  - `announcement-banner` — Announcement banners
-  - `cookie-consent` — Cookie consent
-  - `empty-state` — Empty state
-  - `error-404` — 404 page
-  - `notifications` — Notifications
-- **marketing** — Landing-page and promotional sections.
-  - `feature-section` — Feature section
-  - `footer` — Site footer
-  - `hero` — Hero
-  - `newsletter` — Newsletter signup
-  - `pricing` — Pricing
-  - `stats-band` — Stats band
-  - `team-section` — Team section
-  - `testimonial` — Testimonial
-- **commerce** — Purchase, checkout, and billing.
-  - `checkout` — Checkout
-  - `invoice` — Invoice
-  - `order-summary` — Order summary
-- **messaging** — Conversational and inbox interfaces.
-  - `chat` — Chat panel
-  - `list-detail` — List + detail
-  - `mail-shell` — Mail inbox shell
-- **scheduling** — Dates, calendars, and bookings.
-  - `calendar-page` — Calendar page
-  - `calendar-range` — Calendar range picker
-- **productivity** — Task and workflow management.
-  - `kanban` — Kanban board
-  - `onboarding` — Onboarding checklist
-- **content** — Editorial and informational blocks.
-  - `faq` — FAQ section
-- **settings** — Configuration and preferences.
-  - `theme-selector` — Theme selector
-  - `settings` — Settings form
+- **auth** (Authentication and account access — sign-in, sign-up, recovery, verification): `forgot-password`, `login`, `login-minimal`, `login-oauth`, `login-split-panel`, `otp-verification`, `signup`, `signup-social`
+- **form** (Structured data entry and validation): `contact-form`, `file-upload`, `wizard`
+- **data-display** (Presenting records, lists, and metrics for reading): `activity-feed`, `badge-on-card`, `data-table`, `profile-card`, `stat-cards`
+- **data-viz** (Charts and quantitative visuals): `analytics-charts`
+- **navigation** (Moving around an app — bars, breadcrumbs, tabs, command menus): `command-palette`, `navbar`, `page-header`, `search-results`, `tabs-page`
+- **app-shell** (Full-page layout scaffolding for application screens): `dashboard`, `sidebar-nav`
+- **feedback** (System status — alerts, notifications, empty and error states): `alerts`, `announcement-banner`, `cookie-consent`, `empty-state`, `error-404`, `notifications`
+- **marketing** (Landing-page and promotional sections): `feature-section`, `footer`, `hero`, `newsletter`, `pricing`, `stats-band`, `team-section`, `testimonial`
+- **commerce** (Purchase, checkout, and billing): `checkout`, `invoice`, `order-summary`
+- **messaging** (Conversational and inbox interfaces): `chat`, `list-detail`, `mail-shell`
+- **scheduling** (Dates, calendars, and bookings): `calendar-page`, `calendar-range`
+- **productivity** (Task and workflow management): `kanban`, `onboarding`
+- **content** (Editorial and informational blocks): `faq`
+- **settings** (Configuration and preferences): `theme-selector`, `settings`
 
 ## Examples — start from a page
 
@@ -211,7 +160,7 @@ Whole pages composed from the blocks above. Install one (`npx shadcn@latest add 
 
 ## Primitives
 
-Stock shadcn components restyled by the token layer — install from shadcn (`npx shadcn@latest add button`), never hand-roll. Quill usage rules at `https://www.quilldesignsystem.com/usage/<name>.md` for: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox, collapsible, combobox, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card, icon, input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group, tone-badge, tooltip.
+Stock shadcn components restyled by the token layer — install from shadcn (`npx shadcn@latest add button`), never hand-roll; `icon` and `tone-badge` come from `@quill/`. Which one to pick is in the `quill-components` skill, for: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox, collapsible, combobox, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card, icon, input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group, tone-badge, tooltip.
 
 ## Updating and verifying
 
