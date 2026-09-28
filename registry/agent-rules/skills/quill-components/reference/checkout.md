@@ -1,0 +1,22 @@
+# checkout (pattern)
+
+A two-column checkout — payment method picker and card form beside an order summary sidebar.
+
+### When to use
+- You need to collect payment and card details alongside an order summary.
+
+### Reach for instead
+- **order-summary** — when you only need the cart-review card, not the full payment form beside it.
+- **wizard** — when payment is one step in a longer multi-step flow, not a single standalone page.
+
+### Rules
+- **Do:** Use a RadioGroup for payment-method choice (Card/Bank/Wallet) — it's a single mutually exclusive choice, styled as cards. **Don't:** Use checkboxes or a dropdown for a single mutually exclusive payment method.
+- **Do:** Pair the payment submit button with a lock icon, so the action itself visibly reads as a secure transaction. **Don't:** Ship the payment submit button with no lock icon — nothing on the button signals that submitting card data is secure.
+
+### Accessibility
+- The RadioGroup carries an explicit aria-label ("Payment method") since there is no visible fieldset legend for the icon-card options.
+- Each payment-method option's actual radio input is sr-only, but the whole label (icon + text) is the click target and carries the accessible name.
+
+### Design tokens
+`--card` · `--input` · `--primary` · `--ring` · `--border`
+

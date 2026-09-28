@@ -15,8 +15,15 @@
  * block index from registry.json. Run BEFORE `build:registry`, which inlines
  * the file's content into public/r/agent-rules.json.
  * `scripts/build-agent-rules.test.mjs` fails CI when the committed file is stale.
+ *
+ * The same item also ships the `quill-components` skill to
+ * `.claude/skills/quill-components/`. The rules file loads every session, so it
+ * holds only foundations and names; which component to pick, and what to reach
+ * for instead, lives in the skill, whose body loads only when an agent is
+ * choosing UI. Each usage guide ships beside it as `reference/<name>.md`, so an
+ * agent reads the two or three it is deciding between, not all 107.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
@@ -27,12 +34,32 @@ import { renderRolesCompact } from '../src/usage/roles.mjs'
 import { ALL_USAGE } from '../src/usage/index.mjs'
 import { EXAMPLES } from '../src/usage/examples.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
+import { renderUsagePage } from './build-usage.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const RULES_PATH = join(root, 'registry/agent-rules/quill.md')
+export const SKILL_NAME = 'quill-components'
+export const SKILL_SRC = `registry/agent-rules/skills/${SKILL_NAME}`
+const SKILL_TARGET = `~/.claude/skills/${SKILL_NAME}`
+const REGISTRY_PATH = join(root, 'registry.json')
+
+const readRegistry = () => JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'))
+
+/** Blocks grouped by their primary intent, in the vocabulary's order; untagged last. */
+function blocksByIntent(blocks) {
+  const byIntent = new Map()
+  for (const b of blocks) {
+    const intent = b.meta?.intent?.[0] ?? 'other'
+    if (!byIntent.has(intent)) byIntent.set(intent, [])
+    byIntent.get(intent).push(b)
+  }
+  const known = Object.keys(INTENT_TAGS).filter((t) => byIntent.has(t))
+  const rest = [...byIntent.keys()].filter((t) => !INTENT_TAGS[t])
+  return [...known, ...rest].map((tag) => ({ tag, def: INTENT_TAGS[tag], list: byIntent.get(tag) }))
+}
 
 export function renderAgentRules() {
-  const registry = JSON.parse(readFileSync(join(root, 'registry.json'), 'utf8'))
+  const registry = readRegistry()
   const HOME = registry.homepage.replace(/\/$/, '')
   const blocks = registry.items.filter((i) => i.type === 'registry:block')
   const coreNames = Object.keys(icons).sort()
@@ -77,24 +104,11 @@ export function renderAgentRules() {
 
   p('## Blocks — reach for one before building')
   p()
-  p(`Install: \`npx shadcn@latest add @quill/<name>\`. Update: add \`--overwrite\`. Grouped by primary intent. Every block has a usage guide at \`${HOME}/usage/<name>.md\` (when to use, what to reach for instead, rules, accessibility) — read it before installing.`)
+  p(`**Before choosing a block or a primitive, load the \`${SKILL_NAME}\` skill** (\`.claude/skills/${SKILL_NAME}/\`): when to use each one, what to reach for instead, and what to do when nothing fits. Install a block with \`npx shadcn@latest add @quill/<name>\`; update with \`--overwrite\`. The same guides are online at \`${HOME}/usage/<name>.md\`. Blocks by primary intent:`)
   p()
-  const byIntent = new Map()
-  for (const b of blocks) {
-    const intent = b.meta?.intent?.[0] ?? 'other'
-    if (!byIntent.has(intent)) byIntent.set(intent, [])
-    byIntent.get(intent).push(b)
-  }
-  for (const [tag, def] of Object.entries(INTENT_TAGS)) {
-    const list = byIntent.get(tag)
-    if (!list?.length) continue
-    p(`- **${tag}** — ${def}`)
-    for (const b of list) p(`  - \`${b.name}\` — ${b.title ?? b.name}`)
-  }
-  for (const [tag, list] of byIntent) {
-    if (INTENT_TAGS[tag]) continue
-    p(`- **${tag}**`)
-    for (const b of list) p(`  - \`${b.name}\` — ${b.title ?? b.name}`)
+  // One line per intent: this file loads every session, so the names stay and the guidance moves to the skill.
+  for (const { tag, def, list } of blocksByIntent(blocks)) {
+    p(`- **${tag}**${def ? ` (${def.replace(/\.$/, '')})` : ''}: ${list.map((b) => `\`${b.name}\``).join(', ')}`)
   }
   p()
 
@@ -107,8 +121,8 @@ export function renderAgentRules() {
   const primitives = ALL_USAGE.filter((u) => u.kind === 'component').map((u) => u.name)
   p('## Primitives')
   p()
-  // Names only: the per-primitive rules live in the usage pages, and this file is budgeted.
-  p(`Stock shadcn components restyled by the token layer — install from shadcn (\`npx shadcn@latest add button\`), never hand-roll. Quill usage rules at \`${HOME}/usage/<name>.md\` for: ${primitives.join(', ')}.`)
+  // Names only: the per-primitive guidance lives in the skill, and this file is budgeted.
+  p(`Stock shadcn components restyled by the token layer — install from shadcn (\`npx shadcn@latest add button\`), never hand-roll; \`icon\` and \`tone-badge\` come from \`@quill/\`. Which one to pick is in the \`${SKILL_NAME}\` skill, for: ${primitives.join(', ')}.`)
   p()
 
   p('## Updating and verifying')
@@ -119,8 +133,88 @@ export function renderAgentRules() {
   return L.join('\n')
 }
 
+/** "Reach for instead" names only; the reasons are in the reference guide the line points to. */
+const insteadOf = (u) => (u.alternatives.length ? ` · instead: ${u.alternatives.map((a) => `\`${a.name}\``).join(', ')}` : '')
+
+export function renderSkill() {
+  const registry = readRegistry()
+  const byName = new Map(ALL_USAGE.map((u) => [u.name, u]))
+  const quillItems = new Set(registry.items.map((i) => i.name))
+  const blocks = registry.items.filter((i) => i.type === 'registry:block')
+  const primitives = ALL_USAGE.filter((u) => u.kind === 'component')
+  const L = []
+  const p = (s = '') => L.push(s)
+
+  p('---')
+  p(`name: ${SKILL_NAME}`)
+  // The description is all Claude sees before deciding to load the skill, so it names the moments, not the contents.
+  p(`description: Choose the right Quill block or primitive for a UI request — when to use each, what to reach for instead, and what to do when nothing fits. Use before building or changing any page, screen, section, form, dialog, menu, table, list, chart or navigation in this app, and before hand-building anything a component might already do.`)
+  p('---')
+  p()
+  p('# Choosing Quill components')
+  p()
+  p('<!-- Generated by quill-ds (scripts/build-agent-rules.mjs). Do not edit by hand: update with `npx shadcn@latest add @quill/agent-rules --overwrite`. -->')
+  p()
+  p('## How to choose')
+  p()
+  p('1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.')
+  p('2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.')
+  p('3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`icon` and `tone-badge` with `@quill/<name>`). Never hand-roll one.')
+  p('4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.')
+  p('5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.')
+  p()
+  p('Each line below is: name — when to use it · instead: the components it is most often confused with.')
+  p()
+  p('## Blocks')
+  for (const { tag, def, list } of blocksByIntent(blocks)) {
+    p()
+    p(`### ${tag}${def ? ` — ${def}` : ''}`)
+    for (const b of list) {
+      const u = byName.get(b.name)
+      p(`- \`${b.name}\` — ${u?.useWhen[0] ?? b.meta?.use_when ?? b.description}${u ? insteadOf(u) : ''}`)
+    }
+  }
+  p()
+  p('## Primitives')
+  p()
+  for (const u of primitives) {
+    const from = quillItems.has(u.name) ? ' (`@quill/`)' : ''
+    p(`- \`${u.name}\`${from} — ${u.useWhen[0]}${insteadOf(u)}`)
+  }
+  p()
+  return L.join('\n')
+}
+
+/** Every file the skill ships: SKILL.md, then one reference guide per usage entry. */
+export function skillFiles() {
+  return [
+    { rel: 'SKILL.md', content: renderSkill() },
+    ...ALL_USAGE.map((u) => ({ rel: `reference/${u.name}.md`, content: renderUsagePage(u) })),
+  ].map((f) => ({ ...f, path: `${SKILL_SRC}/${f.rel}`, target: `${SKILL_TARGET}/${f.rel}` }))
+}
+
+/** The agent-rules item's file list, derived here so the 108 skill entries are never typed. */
+export function agentRulesItemFiles() {
+  return [
+    { path: 'registry/agent-rules/quill.md', type: 'registry:file', target: '~/.claude/rules/quill.md' },
+    ...skillFiles().map(({ path, target }) => ({ path, type: 'registry:file', target })),
+  ]
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
   mkdirSync(dirname(RULES_PATH), { recursive: true })
   writeFileSync(RULES_PATH, renderAgentRules())
-  console.log('wrote registry/agent-rules/quill.md')
+  // Cleared first so a retired usage entry does not leave its guide behind.
+  rmSync(join(root, SKILL_SRC), { recursive: true, force: true })
+  const files = skillFiles()
+  for (const f of files) {
+    mkdirSync(dirname(join(root, f.path)), { recursive: true })
+    writeFileSync(join(root, f.path), f.content)
+  }
+  const registry = readRegistry()
+  const item = registry.items.find((i) => i.name === 'agent-rules')
+  item.files = agentRulesItemFiles()
+  // Same format build-usage writes: no trailing newline.
+  writeFileSync(REGISTRY_PATH, JSON.stringify(registry, null, 2))
+  console.log(`wrote registry/agent-rules/quill.md and the ${SKILL_NAME} skill (${files.length} files)`)
 }
