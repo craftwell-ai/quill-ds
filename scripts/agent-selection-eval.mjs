@@ -13,9 +13,13 @@
  * Not part of CI: every run is a paid model call. Run it on demand:
  *   npm run eval:selection                       both arms, all cases
  *   npm run eval:selection -- --arm after --only kpis,cmd-k
+ *   npm run eval:selection -- --set hard --repeat 3
  *   npm run eval:selection -- --model sonnet --concurrency 2
- * A full run writes docs/audits/<date>-agent-selection-eval.md and a .json of
- * every answer beside it.
+ * `--set core` (default) holds everyday requests; `--set hard` sits on the lines
+ * the guides draw between look-alikes. `--repeat` asks each case several
+ * times, since one answer per case cannot tell a real gap from chance.
+ * A full run writes docs/audits/<date>-agent-selection-eval[-set][-model].md
+ * and a .json of every answer beside it.
  */
 import { spawn, execFileSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, cpSync, rmSync } from 'node:fs'
@@ -24,7 +28,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { parseArgs } from 'node:util'
 
-import { CASES, acceptedPicks } from './agent-selection-cases.mjs'
+import { SETS, acceptedPicks } from './agent-selection-cases.mjs'
 import { SKILL_SRC } from './build-agent-rules.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -121,23 +125,43 @@ async function pool(jobs, size) {
   return results
 }
 
+/** One arm's answers to one case: how many were right, and what it picked each time. */
+function tally(runs) {
+  const right = runs.filter((r) => r.pass).length
+  const counts = new Map()
+  for (const r of runs) counts.set(r.pick ?? '—', (counts.get(r.pick ?? '—') ?? 0) + 1)
+  const picks = [...counts].sort((a, b) => b[1] - a[1]).map(([pick, n]) => (n > 1 ? `${pick} ×${n}` : pick)).join(', ')
+  const errors = [...new Set(runs.map((r) => r.error).filter(Boolean))]
+  return { right, total: runs.length, picks, errors }
+}
+
 function report(rows, arms, meta) {
-  const score = (arm) => rows.filter((r) => r[arm]?.pass).length
-  const loaded = rows.filter((r) => r.after?.skills.includes('quill-components')).length
+  const repeat = meta.repeat
+  const answers = (arm) => rows.reduce((sum, r) => sum + tally(r[arm]).right, 0)
+  const always = (arm) => rows.filter((r) => tally(r[arm]).right === repeat).length
+  const afterRuns = arms.includes('after') ? rows.flatMap((r) => r.after) : []
   const L = []
-  L.push(`# Agent-selection eval — ${meta.date}`)
+  L.push(`# Agent-selection eval (${meta.set}) — ${meta.date}`)
   L.push('')
-  L.push(`Model: ${meta.model ?? 'default'} · Cases: ${rows.length} · Before = rules file at ${BEFORE_REF} (names only, no skill) · After = this checkout (rules + quill-components skill) · Cost: $${meta.cost.toFixed(2)}`)
+  L.push(`Model: ${meta.model ?? 'default'} · Set: ${meta.set} · Cases: ${rows.length} · Runs per case: ${repeat} · Before = rules file at ${BEFORE_REF} (names only, no skill) · After = this checkout (rules + quill-components skill) · Cost: $${meta.cost.toFixed(2)}`)
   L.push('')
-  for (const arm of arms) L.push(`- **${arm}:** ${score(arm)}/${rows.length} correct`)
-  if (arms.includes('after')) L.push(`- **Skill loaded (after):** ${loaded}/${rows.length}`)
+  for (const arm of arms) {
+    const every = repeat > 1 ? `, ${always(arm)}/${rows.length} cases right every time` : ''
+    L.push(`- **${arm}:** ${answers(arm)}/${rows.length * repeat} answers correct${every}`)
+  }
+  if (afterRuns.length) L.push(`- **Skill loaded (after):** ${afterRuns.filter((r) => r.skills.includes('quill-components')).length}/${afterRuns.length} sessions`)
   L.push('')
-  L.push(`| Case | Right answer | ${arms.map((a) => `${a} pick`).join(' | ')}${arms.includes('after') ? ' | Guides read (after)' : ''} |`)
+  L.push(`| Case | Right answer | ${arms.map((a) => `${a}`).join(' | ')}${arms.includes('after') ? ' | Guides read (after)' : ''} |`)
   L.push(`|---|---|${arms.map(() => '---|').join('')}${arms.includes('after') ? '---|' : ''}`)
   for (const r of rows) {
     const right = [r.case.expect, ...(r.case.accept ?? []).map((a) => `(${a})`)].join(' ')
-    const cells = arms.map((a) => `${r[a].pass ? '✓' : '✗'} ${r[a].pick ?? '—'}${r[a].error ? ` [${r[a].error}]` : ''}`)
-    const guides = arms.includes('after') ? ` | ${r.after.guidesRead.join(', ') || '—'}` : ''
+    const cells = arms.map((a) => {
+      const t = tally(r[a])
+      const mark = t.right === t.total ? '✓' : t.right === 0 ? '✗' : '~'
+      const count = repeat > 1 ? ` ${t.right}/${t.total}` : ''
+      return `${mark}${count} ${t.picks}${t.errors.length ? ` [${t.errors.join(', ')}]` : ''}`
+    })
+    const guides = arms.includes('after') ? ` | ${[...new Set(r.after.flatMap((x) => x.guidesRead))].join(', ') || '—'}` : ''
     L.push(`| ${r.case.id} | ${right} | ${cells.join(' | ')}${guides} |`)
   }
   return L.join('\n') + '\n'
@@ -146,34 +170,41 @@ function report(rows, arms, meta) {
 async function main() {
   const { values } = parseArgs({
     options: {
+      set: { type: 'string', default: 'core' },
       arm: { type: 'string', default: 'both' },
       only: { type: 'string' },
       model: { type: 'string' },
+      repeat: { type: 'string', default: '1' },
       concurrency: { type: 'string', default: '4' },
       budget: { type: 'string', default: '1' },
     },
   })
+  if (!SETS[values.set]) throw new Error(`unknown --set '${values.set}'; use one of: ${Object.keys(SETS).join(', ')}`)
   const arms = values.arm === 'both' ? ['before', 'after'] : [values.arm]
+  const repeat = Number(values.repeat)
   const only = values.only?.split(',')
-  const cases = only ? CASES.filter((c) => only.includes(c.id)) : CASES
+  const cases = only ? SETS[values.set].filter((c) => only.includes(c.id)) : SETS[values.set]
   const apps = Object.fromEntries(arms.map((arm) => [arm, makeApp(arm)]))
   const options = { model: values.model, budget: Number(values.budget) }
 
-  console.log(`asking ${cases.length} cases × ${arms.join(' + ')} (${cases.length * arms.length} sessions)…`)
-  const jobs = cases.flatMap((c) => arms.map((arm) => async () => {
+  const total = cases.length * arms.length * repeat
+  console.log(`asking ${cases.length} '${values.set}' cases × ${arms.join(' + ')} × ${repeat} (${total} sessions)…`)
+  const jobs = cases.flatMap((c) => arms.flatMap((arm) => Array.from({ length: repeat }, () => async () => {
     const result = await ask(c, apps[arm], options)
     console.log(`  ${result.pass ? '✓' : '✗'} ${arm.padEnd(6)} ${c.id.padEnd(20)} picked ${result.pick ?? '—'} (right: ${acceptedPicks(c).join(' / ')})${result.error ? ` [${result.error}]` : ''}`)
     return { id: c.id, arm, result }
-  }))
+  })))
   const flat = await pool(jobs, Number(values.concurrency))
   for (const dir of Object.values(apps)) rmSync(dir, { recursive: true, force: true })
 
   const rows = cases.map((c) => Object.fromEntries([
     ['case', c],
-    ...arms.map((arm) => [arm, flat.find((f) => f.id === c.id && f.arm === arm).result]),
+    ...arms.map((arm) => [arm, flat.filter((f) => f.id === c.id && f.arm === arm).map((f) => f.result)]),
   ]))
   const meta = {
     date: new Date().toISOString().slice(0, 10),
+    set: values.set,
+    repeat,
     model: flat.find((f) => f.result.model)?.result.model,
     cost: flat.reduce((sum, f) => sum + f.result.cost, 0),
   }
@@ -181,10 +212,12 @@ async function main() {
   console.log(`\n${markdown}`)
   // Partial runs are for poking at one case; only a full run is worth keeping.
   if (!only && arms.length === 2) {
-    const base = join(root, 'docs/audits', `${meta.date}-agent-selection-eval`)
+    const suffix = [values.set === 'core' ? '' : values.set, values.model ?? ''].filter(Boolean).join('-')
+    const name = `${meta.date}-agent-selection-eval${suffix ? `-${suffix}` : ''}`
+    const base = join(root, 'docs/audits', name)
     writeFileSync(`${base}.md`, markdown)
     writeFileSync(`${base}.json`, JSON.stringify({ meta, rows }, null, 2) + '\n')
-    console.log(`wrote docs/audits/${meta.date}-agent-selection-eval.md (+ .json)`)
+    console.log(`wrote docs/audits/${name}.md (+ .json)`)
   }
 }
 

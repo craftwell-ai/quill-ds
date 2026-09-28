@@ -12,6 +12,19 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.14.3] — 2026-09-28
+
+### Added
+- **A harder eval set** (`npm run eval:selection -- --set hard`): 21 requests that each sit on
+  a line a usage guide draws, where the obvious pick is wrong (discarding unsaved work is
+  destructive, a wait with no known end is not progress, a short list on a phone wants the
+  OS picker, a rich-text editor is not something Quill has). The eval also gains `--repeat`,
+  which asks each case several times so a one-case gap can be told from chance.
+  First run (Opus 5.5, $6.07): before 20/21, after 21/21, skill loaded 21/21. The one miss
+  without the skill was again a Quill-specific block (`settings` for `tabs-page`); generic
+  choices such as context menu against dropdown menu came out right either way. Report in
+  `docs/audits/2026-09-28-agent-selection-eval-hard.md`.
+
 ## [0.14.2] — 2026-09-28
 
 ### Added
