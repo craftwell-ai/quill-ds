@@ -79,3 +79,51 @@ export function getComponent(name) {
     text: `No Quill component is named "${name}". Closest real names: ${suggestions.join(', ')}. Or call \`find_component\` with the job you need done.\n`,
   }
 }
+
+const STOP = new Set(
+  'a an and the to of for in on with my our your their i we you it is are be need needs want wants show shows that this some from or as at by when user users page'.split(' '),
+)
+// Crude stem so "deleting"/"delete" and "files"/"file" meet. Word overlap, not an
+// embedding: free, predictable, and good enough when the guides name their jobs.
+const stem = (w) => w.replace(/(ing|ed|s)$/, '').replace(/e$/, '')
+const words = (s) => (String(s).toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((w) => w.length > 1 && !STOP.has(w)).map(stem)
+
+const searchIndex = ALL_USAGE.map((u) => {
+  const meta = registryByName.get(u.name)?.meta
+  const nameWords = new Set(words(u.name.replace(/-/g, ' ')))
+  const hay = new Set(words([u.name.replace(/-/g, ' '), u.summary, ...u.useWhen, ...(meta?.intent ?? []), meta?.use_when ?? ''].join(' ')))
+  const notFor = new Set(words(meta?.not_for ?? u.alternatives.map((a) => a.when).join(' ')))
+  return { u, nameWords, hay, notFor }
+})
+
+export function findComponent(task, limit = 5) {
+  const taskWords = new Set(words(task))
+  const ranked = searchIndex
+    .map(({ u, nameWords, hay, notFor }) => {
+      let score = 0
+      for (const w of taskWords) {
+        if (hay.has(w)) score += 1
+        if (nameWords.has(w)) score += 1
+        // A word only its "not for" line mentions means another item owns this job.
+        if (notFor.has(w) && !hay.has(w)) score -= 0.5
+      }
+      return { u, score }
+    })
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score || a.u.name.localeCompare(b.u.name))
+    .slice(0, limit)
+
+  if (!ranked.length) {
+    return {
+      ok: false,
+      names: [],
+      text: 'No Quill component fits that description. Compose it from the stock primitives with Quill tokens (call `get_foundations`), and do not invent a component name.\n',
+    }
+  }
+  const lines = ranked.map(({ u }) => `- **${u.name}** (${u.kind}) — ${u.summary}\n  Use when: ${u.useWhen[0]}`)
+  return {
+    ok: true,
+    names: ranked.map((r) => r.u.name),
+    text: `Best matches, best first. Call \`get_component\` on your pick for its rules and install line.\n\n${lines.join('\n')}\n`,
+  }
+}

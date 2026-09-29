@@ -5,7 +5,7 @@ import { join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
 import { USAGE_DIR } from './build-usage.mjs'
-import { getComponent, installCommand, normalizeName, HOME } from '../src/mcp/tools.mjs'
+import { getComponent, findComponent, installCommand, normalizeName, HOME } from '../src/mcp/tools.mjs'
 
 const registry = JSON.parse(readFileSync(new URL('../registry.json', import.meta.url), 'utf8'))
 const registryNames = new Set(registry.items.map((i) => i.name))
@@ -51,4 +51,32 @@ test('registry items without a usage guide point somewhere useful', () => {
   const ex = getComponent('example-auth-page')
   assert.ok(ex.ok)
   assert.match(ex.text, /example-auth-page\.json/)
+})
+
+test('find_component ranks the obvious pick first', () => {
+  const cases = {
+    'confirm deleting an account': 'alert-dialog',
+    'sign in with a one-time email code': 'login-minimal',
+    'upload files': 'file-upload',
+    'show a list of recent activity': 'activity-feed',
+  }
+  for (const [task, want] of Object.entries(cases)) {
+    assert.equal(findComponent(task).names[0], want, task)
+  }
+})
+
+test('find_component returns at most five real names with their use-when', () => {
+  const res = findComponent('confirm deleting an account')
+  assert.ok(res.names.length > 0 && res.names.length <= 5)
+  for (const n of res.names) assert.ok(getComponent(n).ok, n)
+  assert.match(res.text, /When to use|use when/i)
+})
+
+test('find_component with nothing to match says so instead of guessing', () => {
+  for (const task of ['', '   ', 'xyzzy']) {
+    const res = findComponent(task)
+    assert.equal(res.ok, false, JSON.stringify(task))
+    assert.deepEqual(res.names, [])
+    assert.match(res.text, /No Quill component fits/)
+  }
 })
