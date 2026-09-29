@@ -12,6 +12,16 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.15.0] — 2026-09-29
+
+### Added
+- **Quill MCP server** at `https://www.quilldesignsystem.com/mcp/`, so Cursor, Claude Desktop,
+  claude.ai and any other MCP client get Quill's guidance without installing anything. Four
+  read-only tools: `find_component` (describe the job, get the best-fitting components),
+  `get_component` (the published usage guide verbatim plus its install command), `get_setup`
+  and `get_foundations`. Answers are read from the usage modules and registry, so they cannot
+  drift from the guides. New dependencies: `mcp-handler`, `@modelcontextprotocol/server`, `zod`.
+
 ## [0.14.4] — 2026-09-28
 
 ### Fixed
