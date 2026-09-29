@@ -9,6 +9,7 @@ import {
   getFoundations,
   FOUNDATION_TOPICS,
   SERVER_INSTRUCTIONS,
+  MAX_NAME,
 } from '@/mcp/tools.mjs'
 
 const text = (body: string, isError = false) => ({ content: [{ type: 'text' as const, text: body }], isError })
@@ -20,7 +21,7 @@ const handler = createMcpHandler(
       {
         title: 'Find a Quill component',
         description: 'Describe the job ("confirm deleting an account") and get up to five Quill components that fit, best first.',
-        inputSchema: z.object({ task: z.string().describe('What the UI needs to do, in plain words') }),
+        inputSchema: z.object({ task: z.string().max(500).describe('What the UI needs to do, in plain words') }),
       },
       async ({ task }) => {
         const res = findComponent(task)
@@ -32,7 +33,7 @@ const handler = createMcpHandler(
       {
         title: 'Get a Quill component guide',
         description: "A component's usage guide — when to use it, what to reach for instead, Do/Don't rules, accessibility, tokens — and its exact install command.",
-        inputSchema: z.object({ name: z.string().describe('Component name, e.g. "alert-dialog" or "login-minimal"') }),
+        inputSchema: z.object({ name: z.string().max(MAX_NAME).describe('Component name, e.g. "alert-dialog" or "login-minimal"') }),
       },
       async ({ name }) => {
         const res = getComponent(name)

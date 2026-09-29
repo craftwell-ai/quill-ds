@@ -23,6 +23,8 @@ const registryByName = new Map(registry.items.map((i) => [i.name, i]))
 const compact = (s) => s.replace(/-/g, '')
 const byCompactName = new Map(ALL_USAGE.map((u) => [compact(u.name), u.name]))
 
+export const MAX_NAME = 64
+
 export function normalizeName(name) {
   const kebab = String(name).trim().toLowerCase().replace(/[\s_]+/g, '-')
   return usageByName.has(kebab) || registryByName.has(kebab) ? kebab : byCompactName.get(compact(kebab)) ?? kebab
@@ -69,8 +71,13 @@ export function getComponent(name) {
   if (registryByName.has(key)) {
     return {
       ok: true,
-      text: `\`${key}\` is part of Quill's setup, not a component. Call \`get_setup\` for how to install and wire it.\n`,
+      text: `\`${key}\` is part of Quill's setup, not a component. Install: \`${installCommand(key)}\`. Call \`get_setup\` for the theming contract.\n`,
     }
+  }
+  // Public endpoint: no real name is this long, so skip the per-name edit distance
+  // (cost grows with input) and never echo an unbounded string back.
+  if (key.length > MAX_NAME) {
+    return { ok: false, text: `No Quill component has a name that long. Call \`find_component\` with the job you need done.\n` }
   }
   const suggestions = ALL_USAGE.map((x) => [x.name, editDistance(key, x.name)])
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]))

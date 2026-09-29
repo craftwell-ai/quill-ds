@@ -110,3 +110,18 @@ test('server instructions send agents to find_component first', () => {
   assert.match(SERVER_INSTRUCTIONS, /find_component/)
   assert.match(SERVER_INSTRUCTIONS, /get_component/)
 })
+
+test('a huge name is cheap to answer and is not echoed back', () => {
+  const huge = 'x'.repeat(300_000)
+  const started = performance.now()
+  const res = getComponent(huge)
+  assert.ok(performance.now() - started < 50, 'unknown-name lookup should not scale with input size')
+  assert.equal(res.ok, false)
+  assert.ok(res.text.length < 500, `reply echoed ${res.text.length} chars`)
+})
+
+test('setup items give their own install line', () => {
+  for (const name of ['quill', 'agent-rules', 'check']) {
+    assert.ok(getComponent(name).text.includes(installCommand(name)), name)
+  }
+})
