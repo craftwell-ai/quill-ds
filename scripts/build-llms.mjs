@@ -68,6 +68,7 @@ export function renderLlms(t = tokens) {
   p()
   p(`1. Install the token layer: \`npx shadcn@latest add @quill/quill\` — the \`@quill\` namespace is listed in shadcn's registry directory, so it needs no configuration (to pin the URL yourself, add \`"@quill": "${HOME}/r/{name}.json"\` to \`components.json\` \`registries\`, or install by URL: \`npx shadcn@latest add ${HOME}/r/quill.json\`). Read what the CLI prints: it is the theming contract. List everything with \`npx shadcn@latest search @quill\`.`)
   p('2. Install the rules file for AI agents: `npx shadcn@latest add @quill/agent-rules` writes `.claude/rules/quill.md` at the project root, which Claude Code loads every session (theming contract, foundations, principles, icon names, block index).')
+  p(`   Not in Claude Code? Connect any MCP client (Cursor, Claude Desktop, claude.ai) to \`${HOME}/mcp/\` — tools: find_component, get_component, get_setup, get_foundations.`)
   p('3. Set `data-theme` and `data-accent` on `<html>` (see Theming). The `theme-selector` block owns both at runtime.')
   p('4. Before hand-building a section, pick a block from Components below by its intent and install it: `npx shadcn@latest add @quill/<name>`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme.')
   p(`5. Read the usage guide for everything you use — \`${HOME}/usage/<name>.md\` — for the rules, what to reach for instead, and the accessibility notes.`)

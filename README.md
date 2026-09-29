@@ -45,6 +45,21 @@ Per-component usage guides live at `/usage/<name>.md`.
 
 Quill is released under the [MIT License](LICENSE).
 
+## Connect your AI tool
+
+Any MCP client can read Quill's component guides live. Add this server:
+
+```json
+{ "quill": { "url": "https://www.quilldesignsystem.com/mcp/" } }
+```
+
+Keep the trailing slash. Clients that only run local commands can bridge with
+`npx -y mcp-remote https://www.quilldesignsystem.com/mcp/`. Tools:
+`find_component` (describe the job, get the best-fitting components),
+`get_component` (full usage guide + install command), `get_setup`, and
+`get_foundations`. Claude Code apps already get the same guidance from
+`@quill/agent-rules`.
+
 ## Theming
 
 Five themes, set with `data-theme` on `<html>`:
