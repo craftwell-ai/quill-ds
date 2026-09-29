@@ -5,12 +5,24 @@ breaking token/API changes bump major (minor while pre-1.0), new features bump m
 fixes bump patch.
 
 **Release routine (every feature/fix PR):** bump `version` in `package.json`, add an
-entry here, and run `npm run build:llms` (llms.txt embeds the version). **Never tag or
+entry here, and run `npm run build:check && npm run build:registry && npm run build:llms`
+(llms.txt and the check script both embed the version). **Never tag or
 publish a release by hand.** After the PR merges, the release bot
 (`.github/workflows/release.yml`) tags the commit and publishes the GitHub release
 within a minute, and that release is what triggers `library-sync` into the apps; a
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
+
+## [0.15.1] — 2026-09-29
+
+### Fixed
+- **The release bot's version PRs pass CI again.** Since v0.11.0 the `check` script embeds the
+  version, but `release.yml` only rebuilt `llms.txt`, so every automatic release PR (#242,
+  #251) failed the generated-files gate. The bot now runs `build:check` and `build:registry`
+  too and commits `registry/check` and `public/r` with the bump.
+
+### Changed
+- chore(deps): Bump undici from 7.29.0 to 7.30.0
 
 ## [0.15.0] — 2026-09-29
 
