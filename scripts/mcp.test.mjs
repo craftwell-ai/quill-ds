@@ -5,7 +5,9 @@ import { join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
 import { USAGE_DIR } from './build-usage.mjs'
-import { getComponent, findComponent, installCommand, normalizeName, HOME } from '../src/mcp/tools.mjs'
+import { getComponent, findComponent, installCommand, normalizeName, HOME, getSetup, getFoundations, FOUNDATION_TOPICS, SERVER_INSTRUCTIONS } from '../src/mcp/tools.mjs'
+import { ALL_MODES } from '../src/tokens/themes.mjs'
+import { accentNames } from '../src/usage/theme-docs.mjs'
 
 const registry = JSON.parse(readFileSync(new URL('../registry.json', import.meta.url), 'utf8'))
 const registryNames = new Set(registry.items.map((i) => i.name))
@@ -79,4 +81,32 @@ test('find_component with nothing to match says so instead of guessing', () => {
     assert.deepEqual(res.names, [])
     assert.match(res.text, /No Quill component fits/)
   }
+})
+
+test('get_setup names every theme and accent from the source, and the install command', () => {
+  const text = getSetup()
+  for (const m of ALL_MODES) assert.ok(text.includes(m.label), `missing theme ${m.label}`)
+  for (const a of accentNames()) assert.ok(text.includes(a), `missing accent ${a}`)
+  assert.ok(text.includes(`${HOME}/r/quill.json`))
+})
+
+test('get_foundations returns each topic, and all four with no topic', () => {
+  const all = getFoundations()
+  assert.ok(all.ok)
+  for (const t of FOUNDATION_TOPICS) {
+    const res = getFoundations(t)
+    assert.ok(res.ok && res.text.trim().length > 100, t)
+    assert.ok(all.text.includes(res.text.trim()), `all-topics output lacks ${t}`)
+  }
+})
+
+test('get_foundations rejects an unknown topic and lists the valid ones', () => {
+  const res = getFoundations('color')
+  assert.equal(res.ok, false)
+  for (const t of FOUNDATION_TOPICS) assert.ok(res.text.includes(t))
+})
+
+test('server instructions send agents to find_component first', () => {
+  assert.match(SERVER_INSTRUCTIONS, /find_component/)
+  assert.match(SERVER_INSTRUCTIONS, /get_component/)
 })

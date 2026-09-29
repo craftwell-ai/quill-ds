@@ -10,6 +10,8 @@ import registry from '../../registry.json' with { type: 'json' }
 import { ALL_USAGE } from '../usage/index.mjs'
 import { renderUsageDocs } from '../usage/render.mjs'
 import { EXAMPLES } from '../usage/examples.mjs'
+import { themeDocsParagraphs } from '../usage/theme-docs.mjs'
+import { renderTypeSection, renderSpacingSection, renderEffectsSection, renderPrinciples } from '../usage/foundations.mjs'
 
 export const HOME = registry.homepage.replace(/\/$/, '')
 // Trailing slash: next.config.ts sets trailingSlash, so the bare path 308-redirects.
@@ -127,3 +129,43 @@ export function findComponent(task, limit = 5) {
     text: `Best matches, best first. Call \`get_component\` on your pick for its rules and install line.\n\n${lines.join('\n')}\n`,
   }
 }
+
+export function getSetup() {
+  return [
+    '# Setting up Quill',
+    '',
+    `Install the theme: \`npx shadcn@latest add ${HOME}/r/quill.json\`. Then add blocks by URL (\`get_component\` gives each one's command). Primitives are stock shadcn — \`npx shadcn@latest add <name>\` — restyled by the theme.`,
+    '',
+    'Use only tokens the theme ships: semantic classes such as `bg-card`, `text-ink`, `text-primary`, never raw hex or stock palette colours (`bg-blue-500`).',
+    '',
+    ...themeDocsParagraphs().map((p) => `- ${p}`),
+    '',
+  ].join('\n')
+}
+
+export const FOUNDATION_TOPICS = ['type', 'spacing', 'effects', 'principles']
+const blockCount = registry.items.filter((i) => i.type === 'registry:block').length
+const FOUNDATIONS = {
+  type: () => renderTypeSection(),
+  spacing: () => renderSpacingSection(),
+  effects: () => renderEffectsSection(),
+  principles: () => renderPrinciples({ blockCount }),
+}
+const TITLES = { type: 'Type', spacing: 'Spacing & layout', effects: 'Effects', principles: 'Principles' }
+
+export function getFoundations(topic) {
+  const picked = topic ? [String(topic).trim().toLowerCase()] : FOUNDATION_TOPICS
+  const unknown = picked.find((t) => !FOUNDATIONS[t])
+  if (unknown) {
+    return { ok: false, text: `Unknown topic "${topic}". Choose one of: ${FOUNDATION_TOPICS.join(', ')} — or omit it for all four.\n` }
+  }
+  return { ok: true, text: picked.map((t) => `## ${TITLES[t]}\n\n${FOUNDATIONS[t]()}`).join('\n\n') + '\n' }
+}
+
+export const SERVER_INSTRUCTIONS = [
+  'Quill is a design system installed with the shadcn CLI.',
+  'Before building any UI, call find_component with the job you need done; prefer a Quill block over hand-building.',
+  "Call get_component on your pick and follow its Do/Don't rules and accessibility notes; use its install command exactly.",
+  'Call get_setup once per app for the theme install and theming contract, and get_foundations for type, spacing, effects and principles.',
+  'Use only tokens the theme ships. Never invent a component name.',
+].join(' ')
