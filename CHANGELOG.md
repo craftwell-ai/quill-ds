@@ -12,6 +12,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.15.1] — 2026-09-29
+
+### Changed
+- chore(deps): Bump undici from 7.29.0 to 7.30.0
+
 ## [0.15.0] — 2026-09-29
 
 ### Added
