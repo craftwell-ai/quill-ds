@@ -13,6 +13,12 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.15.2] — 2026-09-30
+
+### Changed
+- chore(ci): Bump actions/upload-artifact from 4 to 7
+- chore(deps): Bump fast-uri from 3.1.7 to 3.1.8
+
 ## [0.15.1] — 2026-09-29
 
 ### Fixed
