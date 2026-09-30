@@ -201,7 +201,7 @@ jobs:
         run: node scripts/figma-visual-diff.mjs --out .visual/out --sb .visual/sb
       - name: Upload the strips (Figma | Storybook | diff, per pair)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: figma-visual-diff
           path: .visual/out
