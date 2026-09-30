@@ -94,14 +94,17 @@ jobs:
           fi
           [ "$STATUS" -eq 0 ] || exit "$STATUS"
 
-          # llms.txt embeds the version string, so it must be rebuilt in the same
-          # commit or the generated-files gate fails this very PR.
+          # llms.txt and the check script both embed the version string, so they
+          # must be rebuilt in the same commit or the generated-files gate fails
+          # this very PR. build:registry copies the check script into public/r.
+          npm run build:check
+          npm run build:registry
           npm run build:llms
 
           git config user.name  'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git checkout -B "$BRANCH"
-          git add package.json CHANGELOG.md public/llms.txt
+          git add package.json CHANGELOG.md public/llms.txt registry/check public/r
           git commit \
             -m "chore(release): v$NEXT" \
             -m 'Opened automatically by .github/workflows/release.yml to version changes that reached main without a bump. The entry lists the commit subjects since the last tag; edit it before merging if it deserves better prose.'
