@@ -70,19 +70,42 @@ export function PromptComposer({
   // The selected tab lights with the box; :focus-within cannot reach a sibling, so track focus.
   const [focused, setFocused] = React.useState(false)
 
-  const listId = React.useId()
   const match = /(^|\s)([/@])([\w-]*)$/.exec(text)
   const trigger = match?.[2] as '/' | '@' | undefined
   const query = match?.[3] ?? ''
   const options = trigger ? (commands ?? []).filter((c) => c.trigger === trigger && c.value.startsWith(query.toLowerCase())) : []
   const [active, setActive] = React.useState(0)
   // Back to the first option whenever the match changes (reset during render, not in an effect).
-  const matchKey = `${trigger ?? ''}${query}`
+  const matchKey = `${trigger ?? ''}|${query}|${options.map((o) => o.value).join(',')}`
   const [seenMatchKey, setSeenMatchKey] = React.useState(matchKey)
   if (seenMatchKey !== matchKey) { setSeenMatchKey(matchKey); setActive(0) }
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+  // Clamp: the options can shrink between renders while `active` still points past the end.
+  const activeIndex = Math.min(active, options.length - 1)
+  const menuRef = React.useRef<HTMLDivElement>(null)
+  const menuOpen = options.length > 0
+  // cmdk gives the list and every option its own id (it ignores ours), so aria-controls and aria-activedescendant have to follow the option cmdk marks
+  // selected. Watch the menu and mirror that id onto the textbox, so a screen reader announces the arrowing.
+  React.useEffect(() => {
+    const menu = menuRef.current
+    const box = textareaRef.current
+    if (!menuOpen || !menu || !box) return
+    const sync = () => {
+      const listId = menu.querySelector('[role="listbox"]')?.id
+      if (listId) box.setAttribute('aria-controls', listId)
+      const id = menu.querySelector('[role="option"][aria-selected="true"]')?.id
+      if (id) box.setAttribute('aria-activedescendant', id)
+      else box.removeAttribute('aria-activedescendant')
+    }
+    sync()
+    const observer = new MutationObserver(sync)
+    observer.observe(menu, { subtree: true, childList: true, attributes: true, attributeFilter: ['aria-selected'] })
+    return () => { observer.disconnect(); box.removeAttribute('aria-activedescendant'); box.removeAttribute('aria-controls') }
+  }, [menuOpen])
   const pick = (c: ComposerCommand) => {
     setText(text.slice(0, text.length - query.length - 1) + `${c.trigger}${c.value} `)
     onCommand?.(c)
+    textareaRef.current?.focus()
   }
 
   const submit = () => {
@@ -95,9 +118,9 @@ export function PromptComposer({
     <div className={cn('grid gap-1.5', className)}>
       <div className="relative">
         {options.length ? (
-          <Command className="absolute inset-x-0 bottom-full z-20 mb-2 h-auto rounded-xl border border-border shadow-lg" shouldFilter={false}
-            value={options[active]?.value} onValueChange={(v) => setActive(Math.max(0, options.findIndex((o) => o.value === v)))}>
-            <CommandList id={listId}>
+          <Command ref={menuRef} className="absolute inset-x-0 bottom-full z-20 mb-2 h-auto rounded-xl border border-border shadow-lg" shouldFilter={false}
+            value={options[activeIndex]?.value} onMouseDown={(e) => e.preventDefault()} onValueChange={(v) => setActive(Math.max(0, options.findIndex((o) => o.value === v)))}>
+            <CommandList>
               <CommandEmpty>No matches</CommandEmpty>
               <CommandGroup heading={trigger === '/' ? 'Commands' : 'Add context'}>
                 {options.map((c) => (
@@ -121,15 +144,13 @@ export function PromptComposer({
                   role="tab"
                   aria-selected={selected}
                   data-lit={selected && focused ? '' : undefined}
-                  // Rounded on top only; Tailwind's rounded-t-* is not in the theme consumers receive.
-                  style={{ borderRadius: '1rem 1rem 0 0' }}
                   onClick={() => { if (mode === undefined) setInnerMode(m.value); onModeChange?.(m.value) }}
                   className={cn(
-                    'relative inline-flex items-center gap-1.5 px-3.5 pt-1.5 pb-2 text-sm font-semibold',
+                    'relative inline-flex items-center gap-1.5 rounded-t-xl px-3.5 pt-1.5 pb-2 text-sm font-semibold',
                     // The selected tab shares the AI edge; the after: strip covers the box's top
                     // edge under it so tab and box read as one shape (approved 2026-10-02).
                     selected
-                      ? 'ai-edge border-b-[0px] text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
+                      ? 'ai-edge border-b-0 text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
                       : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
@@ -178,7 +199,7 @@ export function PromptComposer({
             aria-describedby={status === 'error' && error ? errorId : undefined}
             disabled={disabled}
             placeholder={activeMode?.placeholder ?? placeholder}
-            aria-controls={options.length ? listId : undefined}
+            ref={textareaRef}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             value={text}
@@ -190,7 +211,7 @@ export function PromptComposer({
                 if (e.key === 'ArrowUp') { e.preventDefault(); setActive((i) => (i - 1 + options.length) % options.length); return }
                 if (e.key === 'Enter') {
                   if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return
-                  e.preventDefault(); pick(options[active]); return
+                  e.preventDefault(); pick(options[activeIndex]); return
                 }
                 // A trailing space ends the match, which closes the menu.
                 if (e.key === 'Escape') { e.preventDefault(); setText(text + ' '); return }

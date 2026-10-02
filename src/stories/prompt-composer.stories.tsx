@@ -1,5 +1,6 @@
+import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent } from 'storybook/test'
+import { expect, fn, userEvent, waitFor } from 'storybook/test'
 import { PromptComposer } from '../../registry/lib/prompt-composer'
 import { usage } from '@/usage/prompt-composer.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
@@ -140,6 +141,72 @@ export const SlashCommands: Story = {
     await expect(box).toHaveValue('/summarize ')
     await expect(args.onSubmit).not.toHaveBeenCalled() // Enter picked the command, it did not send
     void option
+  },
+}
+
+export const MenuAnnouncesActiveOption: Story = {
+  args: {
+    size: 'sm',
+    commands: [
+      { value: 'summarize', label: '/summarize', trigger: '/' },
+      { value: 'remind', label: '/remind', trigger: '/' },
+    ],
+  },
+  play: async ({ canvas }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, '/')
+    const options = await canvas.findAllByRole('option')
+    await waitFor(() => expect(box).toHaveAttribute('aria-activedescendant', options[0].id))
+    await userEvent.keyboard('{ArrowDown}')
+    await waitFor(() => expect(box).toHaveAttribute('aria-activedescendant', options[1].id))
+    await expect(options[1]).toHaveAttribute('aria-selected', 'true')
+    await expect(box).not.toHaveAttribute('aria-expanded')
+  },
+}
+
+export const ClickingAnOptionKeepsFocus: Story = {
+  args: {
+    size: 'sm',
+    commands: [{ value: 'summarize', label: '/summarize', trigger: '/' }],
+    onCommand: fn(),
+  },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, '/')
+    await userEvent.click(await canvas.findByRole('option', { name: /summarize/ }))
+    await expect(args.onCommand).toHaveBeenCalled()
+    await expect(box).toHaveValue('/summarize ')
+    await expect(box).toHaveFocus()
+  },
+}
+
+const ALL_COMMANDS = [
+  { value: 'summarize', label: '/summarize', trigger: '/' as const },
+  { value: 'remind', label: '/remind', trigger: '/' as const },
+  { value: 'search', label: '/search', trigger: '/' as const },
+]
+
+export const MenuShrinksUnderTheCursor: Story = {
+  args: { size: 'sm', onCommand: fn() },
+  render: (args) => {
+    const [commands, setCommands] = React.useState(ALL_COMMANDS)
+    return (
+      <>
+        <PromptComposer {...args} commands={commands} />
+        <button type="button" onClick={() => setCommands(ALL_COMMANDS.slice(0, 2))}>Fewer commands</button>
+      </>
+    )
+  },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, '/')
+    await canvas.findAllByRole('option')
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}') // last of three
+    await userEvent.click(canvas.getByRole('button', { name: 'Fewer commands' }))
+    box.focus()
+    await userEvent.keyboard('{Enter}') // must not throw: the active index was past the end
+    // The list changed, so the highlight went back to the first remaining option.
+    await expect(args.onCommand).toHaveBeenCalledWith(expect.objectContaining({ value: 'summarize' }))
   },
 }
 
