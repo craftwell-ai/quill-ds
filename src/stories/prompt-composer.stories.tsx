@@ -50,6 +50,19 @@ export const IgnoresEnterWhileComposing: Story = {
   },
 }
 
+export const IgnoresEnterKeyCode229: Story = {
+  args: { size: 'sm' },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, 'ni')
+    // WebKit confirms an IME word with Enter, isComposing false and keyCode 229.
+    const evt = new KeyboardEvent('keydown', { key: 'Enter', keyCode: 229, bubbles: true })
+    if (evt.keyCode !== 229) Object.defineProperty(evt, 'keyCode', { get: () => 229 })
+    box.dispatchEvent(evt)
+    await expect(args.onSubmit).not.toHaveBeenCalled()
+  },
+}
+
 export const Working: Story = {
   args: { status: 'working', defaultValue: 'Draft the Q3 summary' },
   play: async ({ canvas, args }) => {

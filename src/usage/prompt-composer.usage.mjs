@@ -29,6 +29,12 @@ export const usage = {
       visual: false,
     },
     {
+      id: 'controlled-clears-in-parent',
+      do: 'When you pass `value`, clear it yourself in `onSubmit` (set it to an empty string).',
+      dont: 'Pass `value` and expect the composer to empty itself after sending — it only clears its own state when uncontrolled.',
+      visual: false,
+    },
+    {
       id: 'stop-while-working',
       do: 'Set `status="working"` while the AI answers and pass `onStop`.',
       dont: 'Disable the whole composer while the AI works — people should be able to stop it.',

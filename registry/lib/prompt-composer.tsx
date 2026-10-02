@@ -25,6 +25,7 @@ export type PromptComposerProps = {
   className?: string
 }
 
+// Controlled use: when you pass `value`, clear it yourself in `onSubmit`; the composer only empties its own state when uncontrolled.
 /** The box people type to an AI in — grows with the text, sends on Enter, turns Send into Stop while the AI works, with slots for tools, files and a model picker. */
 export function PromptComposer({
   onSubmit, onStop, value, defaultValue = '', onValueChange, status = 'idle', error,
@@ -65,14 +66,17 @@ export function PromptComposer({
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
             // isComposing: an input method (Japanese, Chinese) uses Enter to confirm a word.
-            if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+            // WebKit reports the confirming Enter with isComposing false but keyCode 229.
+            if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.nativeEvent.keyCode !== 229) {
               e.preventDefault()
               submit()
             }
           }}
           className={cn(
-            'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent',
-            size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base' : 'min-h-11 px-3 pt-2.5 text-sm',
+            // aria-invalid:* cancel the stock textarea's red ring; the AI edge and the alert carry the error.
+            'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
+            // md:text-* overrides the stock textarea's md:text-sm, which would shrink lg on desktop.
+            size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base md:text-base' : 'min-h-11 px-3 pt-2.5 text-sm md:text-sm',
           )}
         />
         <div className={cn('flex items-center gap-1.5', size === 'lg' ? 'px-2.5 pb-2.5' : 'px-1.5 pb-1.5')}>
