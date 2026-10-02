@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.16.5] — 2026-10-02
+
+### Fixed
+- **Composer: the selected mode tab now curves into the box.** Where its sides met the box's top edge there was a hard corner, and the ends of a thin bottom border poked past it (`ai-edge`'s border shorthand outranked `border-b-0`, so the tab kept a bottom border). Each base corner now has an inward curve the size of the tab's own corner radius, coloured from the tab side into the box edge, at rest and lit. The selected tab draws above its neighbour so the curve is never covered, and the tab row starts 24px in (the box's 16px corner plus the 8px curve) so the curve meets the box's straight edge. Figma twin matches.
+
 ## [0.16.4] — 2026-10-02
 
 ### Fixed

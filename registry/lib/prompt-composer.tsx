@@ -14,6 +14,37 @@ export type ComposerStatus = 'idle' | 'working' | 'disabled' | 'error'
 // gap and is far shorter than a deliberate second Enter to send.
 const IME_SETTLE_MS = 100
 
+// The selected tab flares into the box: at each base corner a small piece draws an inward curve (CURVE, 8px, the size
+// of the tab's own top corners) in place of the hard T where the tab's side meets the box's top edge. The curve is a ring the
+// edge's 1.5px thickness, coloured from the tab side's colour into the box edge's, with the page showing inside it
+// and the field colour outside it (which hides the straight edge and side it replaces).
+// A fixed size, not the large-radius token: apps installed through the CLI never receive that variable.
+const CURVE = '0.5rem'
+const EDGE_A = 'color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from))'
+const EDGE_REST = (c: string) => `color-mix(in oklab, ${c} 45%, var(--line-control))`
+function filletStyle(side: 'left' | 'right', lit: boolean, notebook: boolean): React.CSSProperties {
+  const [a, b, c] = lit ? [EDGE_A, 'var(--ai-via)', 'var(--ai-to)'] : [EDGE_REST(EDGE_A), EDGE_REST('var(--ai-via)'), EDGE_REST('var(--ai-to)')]
+  // The tabs sit near the start of the box's 115deg gradient; the notebook box has a plain border instead.
+  const box = notebook ? (lit ? 'var(--ring)' : 'var(--input)') : `color-mix(in oklab, ${a} 75%, ${b})`
+  const tabSide = side === 'left' ? `color-mix(in oklab, ${a} 70%, ${b})` : `color-mix(in oklab, ${c} 70%, ${b})`
+  const at = side === 'left' ? '0 0' : '100% 0'
+  const ring = side === 'left'
+    ? `conic-gradient(from 90deg at ${at}, ${tabSide}, ${box} 90deg)`
+    : `conic-gradient(from 180deg at ${at}, ${box}, ${tabSide} 90deg)`
+  const size = `calc(${CURVE} + 1.5px)`
+  return {
+    position: 'absolute',
+    bottom: 0,
+    [side]: `calc(-1 * ${size})`,
+    width: size,
+    height: size,
+    pointerEvents: 'none',
+    background: `radial-gradient(circle at ${at}, transparent calc(${CURVE} + 1px), var(--background) ${size}), ${ring}`,
+    // A mask reads only opacity, so any solid colour works; currentColor keeps raw colours out of shipped code.
+    mask: `radial-gradient(circle at ${at}, transparent calc(${CURVE} - 0.5px), currentColor ${CURVE})`,
+  }
+}
+
 export type ComposerAttachment = { id: string; name: string; meta?: string; kind?: string } // kind: 'PDF', 'CSV'… shown on the thumb
 export type ComposerTool = { id: string; label: string }
 
@@ -196,7 +227,8 @@ export function PromptComposer({
           </Command>
         ) : null}
         {showModes && modes?.length ? (
-          <div role="tablist" aria-label="Mode" className="relative z-10 -mb-[1.5px] flex gap-0.5 pl-5">
+          // pl-6 (24px) = the box's 16px corner + the tab's 8px base curve, so the curve meets the box's straight edge.
+          <div role="tablist" aria-label="Mode" className="relative z-10 -mb-[1.5px] flex gap-0.5 pl-6">
             {modes.map((m) => {
               const selected = m.value === currentMode
               return (
@@ -207,18 +239,28 @@ export function PromptComposer({
                   aria-selected={selected}
                   data-lit={selected && focused ? '' : undefined}
                   onClick={() => { if (mode === undefined) setInnerMode(m.value); onModeChange?.(m.value) }}
+                  // ai-edge's border shorthand outranks a border-b-0 class, which left a thin gradient bottom border
+                  // whose ends poked out past the tab's base; an inline width always wins.
+                  style={selected ? { borderBottomWidth: 0 } : undefined}
                   className={cn(
                     'relative inline-flex items-center gap-1.5 rounded-t-lg px-3.5 pt-1.5 pb-2 text-sm font-semibold',
                     // The selected tab shares the AI edge; the after: strip covers the box's top
-                    // edge under it so tab and box read as one shape (approved 2026-10-02).
+                    // edge under it so tab and box read as one shape (approved 2026-10-02). z-10 keeps its
+                    // base curves above a neighbouring tab, which would otherwise paint over the right one.
                     selected
-                      ? 'ai-edge border-b-0 text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
+                      ? 'z-10 ai-edge text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
                       // Unselected tabs keep a subtle muted fill and a hairline outline so they still
                       // read as tabs (the fill alone vanishes on the dark themes), and stop 1.5px short
                       // so the box's gradient edge runs in front of them; only the selected tab joins the box.
                       : 'mb-[1.5px] border border-b-0 border-border bg-muted text-muted-foreground hover:text-foreground',
                   )}
                 >
+                  {selected ? (
+                    <>
+                      <span aria-hidden data-slot="tab-fillet" style={filletStyle('left', focused, notebook)} />
+                      <span aria-hidden data-slot="tab-fillet" style={filletStyle('right', focused, notebook)} />
+                    </>
+                  ) : null}
                   {m.ai ? <AiMark size={18} /> : m.icon ? <span aria-hidden className="inline-grid size-[18px] place-items-center [&>svg]:size-[18px]">{m.icon}</span> : null}
                   {m.label}
                 </button>
