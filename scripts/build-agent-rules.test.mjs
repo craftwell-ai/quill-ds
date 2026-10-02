@@ -80,3 +80,17 @@ test('the skill names every block and primitive, and ships every usage guide as 
   assert.match(skill, /If nothing fits/, 'the skill must say what to do when nothing fits')
   assert.ok(SKILL_SRC.startsWith('registry/'), 'shadcn build reads item files from the repo; keep the skill under registry/')
 })
+
+test('every Quill-shipped component (registry:ui) is named as @quill/, not left to stock shadcn', () => {
+  const shipped = registry.items.filter((i) => i.type === 'registry:ui').map((i) => i.name)
+  assert.ok(shipped.length > 0, 'no registry:ui items found')
+  const primitivesLine = committed.split('\n').find((l) => l.startsWith('Stock shadcn components'))
+  assert.ok(primitivesLine, 'Primitives sentence not found')
+  const quillSentence = primitivesLine.slice(0, primitivesLine.indexOf('`@quill/`') + 9)
+  const howToChoose = readFileSync(join(SKILL_SRC, 'SKILL.md'), 'utf8')
+  for (const name of shipped) {
+    assert.ok(quillSentence.includes(`\`${name}\``), `'${name}' is not named in the "come from @quill/" sentence`)
+    assert.ok(howToChoose.includes(`\`${name}\` with \`@quill/<name>\``) || howToChoose.match(new RegExp(`\`${name}\`[^)]*with \`@quill/<name>\``)), `'${name}' is not named in the skill's @quill/<name> clause`)
+  }
+  assert.ok(!/shadcn@latest add (ai-|icon|tone)/.test(committed), 'rules file tells the agent to install a Quill component from stock shadcn')
+})

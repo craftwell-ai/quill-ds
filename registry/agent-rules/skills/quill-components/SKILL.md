@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`icon` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-mark`, `icon` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
