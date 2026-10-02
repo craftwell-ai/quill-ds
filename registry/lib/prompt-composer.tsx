@@ -127,6 +127,17 @@ export function PromptComposer({
     observer.observe(menu, { subtree: true, childList: true, attributes: true, attributeFilter: ['aria-selected'] })
     return () => { observer.disconnect(); box.removeAttribute('aria-activedescendant'); box.removeAttribute('aria-controls') }
   }, [menuOpen])
+  // The menu opens upward, over the content above the composer. A composer near the top of the screen has no room
+  // there, so the menu flips below it instead of opening off-screen.
+  const [menuBelow, setMenuBelow] = React.useState(false)
+  React.useLayoutEffect(() => {
+    const menu = menuRef.current
+    const anchor = menu?.parentElement
+    if (!menuOpen || !menu || !anchor) return
+    const { top, bottom } = anchor.getBoundingClientRect()
+    const spaceBelow = window.innerHeight - bottom
+    setMenuBelow(top < menu.offsetHeight + 8 && spaceBelow > top)
+  }, [menuOpen, options.length])
   const pick = (c: ComposerCommand) => {
     setText(text.slice(0, text.length - query.length - 1) + `${c.trigger}${c.value} `)
     onCommand?.(c)
@@ -158,7 +169,7 @@ export function PromptComposer({
     <div className={cn('grid gap-1.5', className)}>
       <div className="relative">
         {options.length ? (
-          <Command ref={menuRef} className="absolute inset-x-0 bottom-full z-20 mb-2 h-auto rounded-xl border border-border shadow-lg" shouldFilter={false}
+          <Command ref={menuRef} className={cn('absolute inset-x-0 z-20 h-auto rounded-xl border border-border shadow-lg', menuBelow ? 'top-full mt-2' : 'bottom-full mb-2')} data-side={menuBelow ? 'bottom' : 'top'} shouldFilter={false}
             value={options[activeIndex]?.value} onMouseDown={(e) => e.preventDefault()} onValueChange={(v) => setActive(Math.max(0, options.findIndex((o) => o.value === v)))}>
             <CommandList>
               <CommandEmpty>No matches</CommandEmpty>

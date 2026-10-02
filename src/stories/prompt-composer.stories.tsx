@@ -17,7 +17,11 @@ const meta = {
     size: { control: 'select', options: ['lg', 'sm'] },
     status: { control: 'select', options: ['idle', 'working', 'disabled', 'error'] },
   },
-  decorators: [(Story) => <div className="mx-auto max-w-xl"><Story /></div>],
+  // Stories with a / or @ menu leave room above the composer, where the menu opens in an app
+  // (composers sit low on the page, under a thread). MenuFlipsBelowNearTheTop opts out to test the flip.
+  decorators: [(Story, { args, parameters }) => (
+    <div className={args.commands && parameters.roomAbove !== false ? 'mx-auto max-w-xl pt-80' : 'mx-auto max-w-xl'}><Story /></div>
+  )],
 } satisfies Meta<typeof PromptComposer>
 
 export default meta
@@ -255,6 +259,37 @@ export const MenuAnnouncesActiveOption: Story = {
     await waitFor(() => expect(box).toHaveAttribute('aria-activedescendant', options[1].id))
     await expect(options[1]).toHaveAttribute('aria-selected', 'true')
     await expect(box).not.toHaveAttribute('aria-expanded')
+  },
+}
+
+// With no room above (a composer at the top of a panel), the menu opens below instead of off-screen.
+export const MenuFlipsBelowNearTheTop: Story = {
+  parameters: { roomAbove: false },
+  args: {
+    size: 'sm',
+    commands: [
+      { value: 'summarize', label: '/summarize', description: 'Condense a doc or thread', trigger: '/', ai: true },
+      { value: 'remind', label: '/remind', description: 'Set a reminder', trigger: '/' },
+    ],
+  },
+  play: async ({ canvas, canvasElement }) => {
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Message' }), '/')
+    await canvas.findAllByRole('option')
+    const menu = canvasElement.querySelector('[cmdk-root]') as HTMLElement
+    await waitFor(() => expect(menu).toHaveAttribute('data-side', 'bottom'))
+    await expect(menu.getBoundingClientRect().top).toBeGreaterThanOrEqual(0)
+  },
+}
+
+// With room above, the menu keeps its usual place over the content above the composer.
+export const MenuOpensAboveWithRoom: Story = {
+  args: MenuFlipsBelowNearTheTop.args,
+  play: async ({ canvas, canvasElement }) => {
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Message' }), '/')
+    await canvas.findAllByRole('option')
+    const menu = canvasElement.querySelector('[cmdk-root]') as HTMLElement
+    await waitFor(() => expect(menu).toHaveAttribute('data-side', 'top'))
+    await expect(menu.getBoundingClientRect().top).toBeGreaterThanOrEqual(0)
   },
 }
 
