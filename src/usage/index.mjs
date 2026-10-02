@@ -5,6 +5,7 @@
  */
 import { usage as accordion } from './accordion.usage.mjs'
 import { usage as activityFeed } from './activity-feed.usage.mjs'
+import { usage as aiButton } from './ai-button.usage.mjs'
 import { usage as aiMark } from './ai-mark.usage.mjs'
 import { usage as alert } from './alert.usage.mjs'
 import { usage as alertDialog } from './alert-dialog.usage.mjs'
@@ -115,6 +116,7 @@ import { usage as wizard } from './wizard.usage.mjs'
 export const ALL_USAGE = [
   accordion,
   activityFeed,
+  aiButton,
   aiMark,
   alert,
   alertDialog,

@@ -289,6 +289,7 @@ Each example is a whole page composed from the blocks above; its docs carry the 
 Per-primitive usage rules — when to use, what to reach for instead, do/don't, accessibility:
 
 - [accordion](https://www.quilldesignsystem.com/usage/accordion.md) — A vertically stacked set of expand/collapse sections — one open at a time by default, with an option to allow several.
+- [ai-button](https://www.quilldesignsystem.com/usage/ai-button.md) — A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink.
 - [ai-mark](https://www.quilldesignsystem.com/usage/ai-mark.md) — Quill's AI sparkle — the one icon that means AI, drawn in the AI gradient with a one-star cut for 16px and under.
 - [alert](https://www.quilldesignsystem.com/usage/alert.md) — A single inline status box for a message tied to a specific area of the page. `alerts` is this primitive already assembled into a vertical stack of several.
 - [alert-dialog](https://www.quilldesignsystem.com/usage/alert-dialog.md) — A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside.

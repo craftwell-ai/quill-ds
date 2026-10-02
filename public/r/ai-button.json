@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-button",
+  "title": "AI button",
+  "description": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink.",
+  "registryDependencies": [
+    "button",
+    "https://www.quilldesignsystem.com/r/ai-mark.json"
+  ],
+  "files": [
+    {
+      "path": "registry/lib/ai-button.tsx",
+      "content": "import * as React from 'react'\nimport { Button } from '@/components/ui/button'\nimport { AiMark } from '@/components/ui/ai-mark'\n\n/** A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink. */\nexport function AiButton({ children, ...props }: React.ComponentProps<typeof Button>) {\n  return (\n    <Button {...props}>\n      {/* size-[18px]: Button sizes any svg without a size- class to 16px. */}\n      <AiMark size={18} className=\"size-[18px]\" />\n      {children}\n    </Button>\n  )\n}\n",
+      "type": "registry:ui",
+      "target": "components/ui/ai-button.tsx"
+    }
+  ],
+  "docs": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink. Do: Let the sparkle carry the gradient and keep the label in the button's normal text colour. Don't: Fill the button or its label with the AI gradient — the gradient belongs on the mark, and a gradient fill competes with the page. Do: Use a plain Button for Accept, Replace and Use this, even inside an AI popover. Don't: Make the button that applies an AI suggestion an AiButton — acting on AI output is an ordinary decision. Use button when the action does not involve AI.",
+  "type": "registry:ui"
+}

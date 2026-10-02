@@ -938,6 +938,24 @@
       "docs": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site. Do: Leave `solid` false (the tinted default) for regular status/tier labels — it is the visually quieter option and still hits AA contrast per tone. Don't: Set `solid` on every ToneBadge in a view — solid is reserved for the one strong cue (a \"current\" marker, a live state) and loses its signal once everything is solid. Do: Render every uppercase tag pill through ToneBadge, even one-off labels. Don't: Hand-roll a `rounded-full … uppercase` span with ad hoc tone colors — it drifts from the AA-checked tint/solid pairs and the two-size scale. Do: Use ToneBadge's own size scale — `md` (20px) or `sm` (16px, the count-pill scale). Don't: Shrink a pill by hand-tightening its tracking or padding instead of passing `size=\"sm\"` — type stays `--text-2xs` at 0.1em tracking in both sizes. Use badge when the label is a generic chip outside Quill's tag-pill vocabulary — use Badge directly instead of forcing it through a tone."
     },
     {
+      "name": "ai-button",
+      "type": "registry:ui",
+      "title": "AI button",
+      "description": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink.",
+      "registryDependencies": [
+        "button",
+        "https://www.quilldesignsystem.com/r/ai-mark.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/ai-button.tsx",
+          "target": "components/ui/ai-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink. Do: Let the sparkle carry the gradient and keep the label in the button's normal text colour. Don't: Fill the button or its label with the AI gradient — the gradient belongs on the mark, and a gradient fill competes with the page. Do: Use a plain Button for Accept, Replace and Use this, even inside an AI popover. Don't: Make the button that applies an AI suggestion an AiButton — acting on AI output is an ordinary decision. Use button when the action does not involve AI."
+    },
+    {
       "name": "ai-mark",
       "type": "registry:ui",
       "title": "AI mark",
@@ -1036,6 +1054,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/activity-feed.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/activity-feed.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/ai-button.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/ai-button.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/ai-mark.md",
