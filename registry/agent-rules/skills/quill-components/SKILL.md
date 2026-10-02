@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `icon` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `icon`, `prompt-composer` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -102,7 +102,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 
 - `accordion` — You have several related content sections (FAQ answers, grouped settings) that don't all need to stay visible at once, and users scan headings before choosing one to open. · instead: `collapsible`, `tabs`
 - `ai-badge` (`@quill/`) — A card, field, list row or message holds content the AI wrote or proposed, and people should know before they rely on it. · instead: `tone-badge`, `ai-mark`
-- `ai-button` (`@quill/`) — A button starts something an AI does: Summarize, Rewrite, Ask AI, Draft a reply. · instead: `button`
+- `ai-button` (`@quill/`) — A button starts something an AI does: Summarize, Rewrite, Ask AI, Draft a reply. · instead: `button`, `prompt-composer`
 - `ai-mark` (`@quill/`) — You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page. · instead: `ai-badge`, `icon`
 - `alert` — You need one persistent, inline status message (informational or error) attached to a specific section of a page — not a whole stack of them, and not transient feedback about an action just taken. · instead: `alerts`, `sonner`
 - `alert-dialog` — You need the user to explicitly confirm or cancel a destructive, irreversible action — deleting a record, discarding unsaved work, removing access. · instead: `dialog`
@@ -140,6 +140,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `pagination` — You have a long list of records split across pages and need numbered links to jump between them, not just scroll further. · instead: `scroll-area`, `button`
 - `popover` — You need a compact, interactive surface anchored to a button — an inline form, a filter, a quick edit — that opens on an explicit click. · instead: `dialog`, `hover-card`, `tooltip`
 - `progress` — You have a real, known completion percentage to show (upload progress, a multi-step setup) — not an open-ended wait with no known duration. · instead: `spinner`, `skeleton`
+- `prompt-composer` (`@quill/`) — People type a request to an AI: an assistant page, a chat thread, a side panel, or an "ask about this" bar. · instead: `chat`, `textarea`
 - `radio-group` — You need the user to choose exactly one option from a short, always-visible list — not collapsed behind a dropdown trigger. · instead: `checkbox`, `select`, `toggle-group`
 - `resizable` — You need a layout region whose split the user can adjust themselves by dragging — a file-tree/editor/preview layout, a resizable sidebar-and-content pane. · instead: `scroll-area`, `tabs`
 - `scroll-area` — You need a scrollable region (a list, a card body) with a consistently styled scrollbar instead of each OS/browser's native chrome, inside an explicit height or width you set. · instead: `pagination`, `resizable`

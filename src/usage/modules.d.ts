@@ -401,6 +401,11 @@ declare module '@/usage/progress.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/prompt-composer.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/radio-group.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

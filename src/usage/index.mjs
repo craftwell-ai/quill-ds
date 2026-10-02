@@ -82,6 +82,7 @@ import { usage as popover } from './popover.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as progress } from './progress.usage.mjs'
+import { usage as promptComposer } from './prompt-composer.usage.mjs'
 import { usage as radioGroup } from './radio-group.usage.mjs'
 import { usage as resizable } from './resizable.usage.mjs'
 import { usage as scrollArea } from './scroll-area.usage.mjs'
@@ -194,6 +195,7 @@ export const ALL_USAGE = [
   pricing,
   profileCard,
   progress,
+  promptComposer,
   radioGroup,
   resizable,
   scrollArea,

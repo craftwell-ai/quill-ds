@@ -5,6 +5,7 @@ export const usage = {
   useWhen: ['A button starts something an AI does: Summarize, Rewrite, Ask AI, Draft a reply.'],
   alternatives: [
     { name: 'button', when: 'the action does not involve AI.' },
+    { name: 'prompt-composer', when: 'the person needs to type what they want rather than press one action.' },
   ],
   rules: [
     {

@@ -31,6 +31,7 @@ export const CASES = [
   { id: 'office-map', expect: 'none', request: 'Show our office locations on an interactive map that users can pan and zoom.' },
   { id: 'summarize-button', expect: 'ai-button', request: 'Add a Summarize button above a long document that asks AI to condense it.' },
   { id: 'ai-draft-label', expect: 'ai-badge', request: 'Reply drafts the assistant wrote should be labelled so agents know a person has not checked them yet.' },
+  { id: 'ask-assistant-box', expect: 'prompt-composer', request: 'Users type a question to our assistant; it should grow as they type and let them stop the answer halfway.' },
   { id: 'ai-icon', expect: 'ai-mark', accept: ['ai-badge'], request: 'Put a small icon next to the Summarize button so people can tell it uses AI.' },
 ]
 

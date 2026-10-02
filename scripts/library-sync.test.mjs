@@ -34,7 +34,7 @@ test('readRegistryItems returns every indexed item with writable files', () => {
 // page compositions under `components/examples/` (CRA-205), which an app only
 // ever receives after installing one, like a block, and the quill-components
 // skill under `.claude/skills/quill-components/`, which arrives with the rules file.
-test('non-block registry targets are exactly the ten the downstream gate knows', () => {
+test('non-block registry targets are exactly the eleven the downstream gate knows', () => {
   const items = readRegistryItems(root)
   const targets = new Set()
   for (const item of items) for (const f of item.files ?? []) targets.add(f.target)
@@ -51,6 +51,8 @@ test('non-block registry targets are exactly the ten the downstream gate knows',
     'components/ui/icon.tsx',
     'components/ui/icons.core.d.mts',
     'components/ui/icons.core.mjs',
+    // @quill/prompt-composer (AI kit). Downstream SYNC_PATHS must list components/ui/prompt-composer.tsx before an app installs it.
+    'components/ui/prompt-composer.tsx',
     'components/ui/tone-badge.tsx',
     '~/.claude/rules/quill.md',
     // @quill/check (0.11.0). Downstream SYNC_PATHS must list scripts/quill-check.mjs before an app installs it.

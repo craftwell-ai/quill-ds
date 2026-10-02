@@ -7,6 +7,7 @@ A stock Quill button that runs an AI action, marked with the AI sparkle; the lab
 
 ### Reach for instead
 - **button** — when the action does not involve AI.
+- **prompt-composer** — when the person needs to type what they want rather than press one action.
 
 ### Rules
 - **Do:** Let the sparkle carry the gradient and keep the label in the button's normal text colour. **Don't:** Fill the button or its label with the AI gradient — the gradient belongs on the mark, and a gradient fill competes with the page.
