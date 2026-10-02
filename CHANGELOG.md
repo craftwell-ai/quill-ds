@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.16.3] — 2026-10-02
+
+### Changed
+- **Composer mode tabs: an unselected tab keeps a subtle muted fill** with the same 8px top corners, so it still reads as a tab (as in ClickUp). It stops just above the box, so the AI edge runs in front of it; only the selected tab joins the box. Label contrast on the fill is AA in every theme (lowest 4.60:1, Dawn).
+
 ## [0.16.2] — 2026-10-02
 
 ### Changed

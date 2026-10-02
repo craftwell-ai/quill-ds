@@ -191,7 +191,9 @@ export function PromptComposer({
                     // edge under it so tab and box read as one shape (approved 2026-10-02).
                     selected
                       ? 'ai-edge border-b-0 text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
-                      : 'text-muted-foreground hover:text-foreground',
+                      // Unselected tabs keep a subtle muted fill so they still read as tabs, and stop
+              // 1.5px short so the box's gradient edge runs in front of them; only the selected tab joins the box.
+              : 'mb-[1.5px] bg-muted text-muted-foreground hover:text-foreground',
                   )}
                 >
                   {m.ai ? <AiMark size={18} /> : m.icon ? <span aria-hidden className="inline-grid size-[18px] place-items-center [&>svg]:size-[18px]">{m.icon}</span> : null}
