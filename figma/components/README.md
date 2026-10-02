@@ -329,7 +329,7 @@ Code twins in `registry/lib` (the `src/components/ui` files are re-export shims,
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
-| ai-home | ❖ AI home | 1073:2 | 1073:3 | 1024×512; `ai-glow` = two radial fills (centre stop bound to color/ai-from / ai-to, paint opacity 0.18, transparent end at 0.7) over semantic/background; Display/M greeting in color/ink with a 28px AiMark; Ask tab = AI/Edge (rest) on three sides with a 2px background strip over the box edge, `itemReverseZIndex` + −1.5 gap so it sits over the box; PromptComposer lg idle instance with the block's placeholder; four starter cards (semantic/card, border, radius/lg, space/3 · 2_5 · 0_5) |
+| ai-home | ❖ AI home | 1073:2 | 1073:3 | 1024×512; `ai-glow` = two radial fills (centre stop bound to color/ai-from / ai-to, paint opacity 0.18, transparent end at 0.7) over semantic/background; Display/M greeting in color/ink with a 28px AiMark; Ask tab = AI/Edge (rest) on three sides with a 2px background strip over the box edge, `itemReverseZIndex` + −1.5 gap so it sits over the box; PromptComposer lg idle instance with the block's placeholder; four starter cards (semantic/card, border, radius/lg, space/3 · 2_5 · 0_5). **Visual baseline pending** — reports `unbaselined` until a CI run is accepted (`../README.md`, "Visual diff") |
 
 ### Accent (2026-07-11; re-pinned to moss 2026-07-20)
 

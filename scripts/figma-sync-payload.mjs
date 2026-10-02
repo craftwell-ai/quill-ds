@@ -37,6 +37,7 @@ export function syncPayload() {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const payload = syncPayload()
   process.stdout.write(payload)
-  process.stderr.write(`${payload.length} characters (use_figma limit ${LIMIT})${payload.length > LIMIT ? ' — OVER THE LIMIT' : ''}\n`)
+  const headroom = LIMIT - payload.length
+  process.stderr.write(`${payload.length} characters (use_figma limit ${LIMIT}) — ${headroom >= 0 ? `${headroom} to spare` : `OVER THE LIMIT by ${-headroom}; split the run (figma/README.md, "Payload size")`}\n`)
   if (payload.length > LIMIT) process.exitCode = 1
 }
