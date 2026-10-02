@@ -13,6 +13,15 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.16.2] — 2026-10-02
+
+### Changed
+- **The monthly Figma ↔ Storybook visual diff now fails on a regression.** It ran report-only
+  while the tolerance for font rasterisation proved itself; the 1 October run came back 50 pairs,
+  0 regressions, 0 errors, so `figma-parity.yml` drops `continue-on-error` and passes `--strict`.
+  A deliberate visual change is accepted by rebuilding `figma/visual-baseline.json` from the run.
+  Pairs with no baseline yet (ai-home) report as unbaselined and do not fail it.
+
 ## [0.16.1] — 2026-10-02
 
 ### Fixed
