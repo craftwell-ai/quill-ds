@@ -179,16 +179,16 @@ instance keeps its link to the twin, which a hand-composed button would lose.
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
-| hero | ❖ Hero | 568:2 | 568:3 | Badge secondary + Display/M + two lg Buttons |
-| navbar | ❖ Navbar | 571:2 | 571:3 | bottom stroke only (per-side weight → border-width/1) |
-| footer | ❖ Footer | 571:19 | 571:20 | Separator instance FILL; wordmark Fraunces + text/xl |
-| feature-section | ❖ Feature section | 572:2 | 572:3 | Eyebrow → semantic/primary; icon tiles palette / dashboard / check_circle |
-| testimonial | ❖ Testimonial | 572:27 | 572:28 | Heading/M pull-quote, initials disc |
-| pricing | ❖ Pricing | 574:2 | 574:3 | Pro card stroke → semantic/ring @ border-width/2; check icons → primary |
-| page-header | ❖ Page header | 574:85 | 574:86 | Breadcrumb instance with crumb text overrides |
-| error-404 | ❖ Error 404 | 574:104 | 574:105 | 880×500 fixed; Display/L "404" in muted-foreground |
-| empty-state | ❖ Empty state | 574:115 | 574:116 | dashed stroke (`dashPattern [4,4]`), round icon tile |
-| cookie-consent | ❖ Cookie consent | 574:125 | 574:126 | Elevation/base; three sm Buttons, wrap enabled |
+| hero | ❖ Hero | 568:2 | 696:25 | Badge secondary + Display/M + two lg Buttons |
+| navbar | ❖ Navbar | 571:2 | 696:39 | bottom stroke only (per-side weight → border-width/1) |
+| footer | ❖ Footer | 571:19 | 696:22 | Separator instance FILL; wordmark Fraunces + text/xl |
+| feature-section | ❖ Feature section | 572:2 | 696:20 | Eyebrow → semantic/primary; icon tiles palette / dashboard / check_circle |
+| testimonial | ❖ Testimonial | 572:27 | 696:65 | Heading/M pull-quote, initials disc |
+| pricing | ❖ Pricing | 574:2 | 696:51 | Pro card stroke → semantic/ring @ border-width/2; check icons → primary |
+| page-header | ❖ Page header | 574:85 | 696:50 | Breadcrumb instance with crumb text overrides |
+| error-404 | ❖ Error 404 | 574:104 | 696:18 | 880×500 fixed; Display/L "404" in muted-foreground |
+| empty-state | ❖ Empty state | 574:115 | 696:17 | dashed stroke (`dashPattern [4,4]`), round icon tile |
+| cookie-consent | ❖ Cookie consent | 574:125 | 696:10 | Elevation/base; three sm Buttons, wrap enabled |
 
 
 ### Pattern pages built — session B, app pages (2026-09-18)
@@ -201,25 +201,25 @@ set `characters` on the twin's text node (fonts loaded from the node's own segme
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
-| dashboard | ❖ Dashboard | 578:2 | 578:3 | 880×600; sidebar fill → semantic/sidebar, active nav → semantic/accent; Input instance; KPI cards with Badge deltas |
-| data-table | ❖ Data table | 579:2 | 579:3 | hand-built table (header h 40, per-row bottom stroke) like the Table twin; **ToneBadge instances** moss / gold |
-| list-detail | ❖ List detail | 580:2 | 580:3 | 880×520; active thread → semantic/accent; Separator instances; composed ghost icon buttons |
-| settings | ❖ Settings | 580:45 | 580:46 | Label + Input / Textarea instances, Separator, Switch `Checked=on` |
-| tabs-page | ❖ Tabs page | 580:80 | 580:81 | Tabs instance (Variant=default) with label overrides, tab frames set to hug; only the active Account panel is drawn, as in the story |
-| profile-card | ❖ Profile card | 580:104 | 580:105 | 64px initials disc, Badge secondary, two FILL Buttons |
-| notifications | ❖ Notifications | 581:2 | 581:3 | link sm Button; unread dot 8px → semantic/primary |
-| search-results | ❖ Search results | 581:40 | 581:41 | Input instance with value override; outline Badges |
-| kanban | ❖ Kanban | 581:85 | 581:86 | columns fill → semantic/muted @ 0.5; card tags outline Badge |
-| chat | ❖ Chat | 581:159 | 581:160 | 400×480; bubbles radius → radius/2xl, primary / muted; composed primary send button |
+| dashboard | ❖ Dashboard | 578:2 | 696:11 | 880×600; sidebar fill → semantic/sidebar, active nav → semantic/accent; Input instance; KPI cards with Badge deltas |
+| data-table | ❖ Data table | 579:2 | 696:12 | hand-built table (header h 40, per-row bottom stroke) like the Table twin; **ToneBadge instances** moss / gold |
+| list-detail | ❖ List detail | 580:2 | 696:28 | 880×520; active thread → semantic/accent; Separator instances; composed ghost icon buttons |
+| settings | ❖ Settings | 580:45 | 696:53 | Label + Input / Textarea instances, Separator, Switch `Checked=on` |
+| tabs-page | ❖ Tabs page | 580:80 | 696:63 | Tabs instance (Variant=default) with label overrides, tab frames set to hug; only the active Account panel is drawn, as in the story |
+| profile-card | ❖ Profile card | 580:104 | 696:52 | 64px initials disc, Badge secondary, two FILL Buttons |
+| notifications | ❖ Notifications | 581:2 | 699:789 | link sm Button; unread dot 8px → semantic/primary |
+| search-results | ❖ Search results | 581:40 | 699:787 | Input instance with value override; outline Badges |
+| kanban | ❖ Kanban | 581:85 | 696:27 | columns fill → semantic/muted @ 0.5; card tags outline Badge |
+| chat | ❖ Chat | 581:159 | 696:7 | 400×480; bubbles radius → radius/2xl, primary / muted; composed primary send button |
 
 ### Pattern pages built — session C, flows (2026-09-18)
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
-| signup | ❖ Signup | 584:2 | 584:3 | three Label + Input fields; "Sign in" link → semantic/primary, underlined |
-| login-oauth | ❖ Login — OAuth | 585:2 | 585:3 | provider buttons are composed (paints copied from the Button outline variant) so they can carry the brand marks inlined from the source — Google keeps its four colours, GitHub / Apple bind to semantic/foreground; two Separator instances flank "or" |
-| wizard | ❖ Wizard | 585:38 | 585:39 | stepper: done → primary disc + check, current → primary @ 0.1 with primary stroke, todo → muted; connectors → semantic/border |
-| onboarding | ❖ Onboarding | 585:75 | 585:76 | progress track → semantic/muted, fill → semantic/primary at 50 %; done rows strikethrough; link sm Buttons |
+| signup | ❖ Signup | 584:2 | 696:54 | three Label + Input fields; "Sign in" link → semantic/primary, underlined |
+| login-oauth | ❖ Login — OAuth | 585:2 | 696:36 | provider buttons are composed (paints copied from the Button outline variant) so they can carry the brand marks inlined from the source — Google keeps its four colours, GitHub / Apple bind to semantic/foreground; two Separator instances flank "or" |
+| wizard | ❖ Wizard | 585:38 | 696:72 | stepper: done → primary disc + check, current → primary @ 0.1 with primary stroke, todo → muted; connectors → semantic/border |
+| onboarding | ❖ Onboarding | 585:75 | 696:41 | progress track → semantic/muted, fill → semantic/primary at 50 %; done rows strikethrough; link sm Buttons |
 
 ### Pattern pages built — session D, the July pages rebuilt (2026-09-18)
 
@@ -230,28 +230,28 @@ new frame ids), stamped, and its content baseline re-read, so the stale list in
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
-| contact-form | ❖ Contact form | 200:2 | 630:15 | Card anatomy; two-column name fields; Select and Textarea instances |
-| forgot-password | ❖ Forgot password | 182:2 | 630:66 | vertical footer band; ghost Button with a start `arrow_back` |
-| login | ❖ Login | 103:2 | 630:91 | Checkbox instance row; link Button in the footer |
-| file-upload | ❖ File upload | 201:2 | 631:17 | dashed dropzone; Progress instance; ghost icon-sm close Buttons |
-| announcement-banner | ❖ Announcement banner | 205:2 | 628:30 | card banner and primary banner; link Button with the default end arrow |
-| newsletter | ❖ Newsletter | 185:2 | 632:7 | card-styled section; the round tile is a hard 9999 radius (no `rounded-full` token) |
-| stat-cards | ❖ Stat cards | 105:2 | 632:26 | Fraunces `text/2xl` values; Badge default / secondary / destructive |
-| signup-social | ❖ Signup — social first | 184:2 | 633:16 | page-local `brand/github` (633:9) and `brand/google` (633:15) components fill the outline Buttons' icon slot |
-| checkout | ❖ Checkout | 203:2 | 634:10 | method tiles (the checked one → ring stroke + muted fill); `size="sm"` summary card |
-| otp-verification | ❖ OTP verification | 183:2 | 637:8 | InputOTP instance with its sample digits hidden; the description is the three text runs the code renders |
-| login-minimal | ❖ Login — minimal | 215:187 | 637:47 | no card; primary Button with the default end arrow |
-| login-split-panel | ❖ Login — split panel | 215:154 | 637:73 | 960 × 560; primary brand panel; link xs "Forgot?" |
-| activity-feed | ❖ Activity feed | 208:2 | 638:7 | three text runs per line; absolute 1 px rule behind 32 px Avatars with a 4 px card ring |
-| mail-shell | ❖ Mail inbox | 215:2 | 639:20 | 960 × 560 two panes; preview lines truncate to one line |
-| faq | ❖ FAQ | 207:76 | 641:21 | accordion composed (the twin has three fixed items); `keyboard_arrow_up` on the open item |
-| team-section | ❖ Team section | 207:2 | 642:19 | four `size="sm"` cards; 40 px Avatars; ghost icon-sm mail Buttons |
-| stats-band | ❖ Stats band | 204:2 | 642:77 | values bind `semantic/text-accent-color`; eyebrows bind `color/ink-muted` |
-| sidebar-nav | ❖ Sidebar navigation | 214:2 | 645:3 | 256 px sidebar on the `shadcn/sidebar-*` tokens; composed breadcrumb; `dock_to_left` trigger |
-| calendar-page | ❖ Calendar page | 210:2 | 646:5 | composed react-day-picker month: 28 px cells, outside days, July 14 selected |
-| calendar-range | ❖ Calendar range | 211:2 | 647:9 | two months; July 20–24 with start / middle / end states |
-| analytics-charts | ❖ Analytics charts | 213:2 | 648:3 | area paths and bars drawn as vectors from the block data; ticks and legend are text (client-drawn in code, so the test only requires the block's strings) |
-| theme-selector | ❖ Theme selector | 231:2 | 648:77 | the tracked frame is the closed trigger — all the server render shows; the open menu sits beside it as an untracked reference (648:84) |
+| contact-form | ❖ Contact form | 200:2 | 696:9 | Card anatomy; two-column name fields; Select and Textarea instances |
+| forgot-password | ❖ Forgot password | 182:2 | 696:23 | vertical footer band; ghost Button with a start `arrow_back` |
+| login | ❖ Login | 103:2 | 696:29 | Checkbox instance row; link Button in the footer |
+| file-upload | ❖ File upload | 201:2 | 696:21 | dashed dropzone; Progress instance; ghost icon-sm close Buttons |
+| announcement-banner | ❖ Announcement banner | 205:2 | 696:4 | card banner and primary banner; link Button with the default end arrow |
+| newsletter | ❖ Newsletter | 185:2 | 696:40 | card-styled section; the round tile is a hard 9999 radius (no `rounded-full` token) |
+| stat-cards | ❖ Stat cards | 105:2 | 699:786 | Fraunces `text/2xl` values; Badge default / secondary / destructive |
+| signup-social | ❖ Signup — social first | 184:2 | 696:55 | page-local `brand/github` (633:9) and `brand/google` (633:15) components fill the outline Buttons' icon slot |
+| checkout | ❖ Checkout | 203:2 | 696:8 | method tiles (the checked one → ring stroke + muted fill); `size="sm"` summary card |
+| otp-verification | ❖ OTP verification | 183:2 | 696:42 | InputOTP instance with its sample digits hidden; the description is the three text runs the code renders |
+| login-minimal | ❖ Login — minimal | 215:187 | 696:35 | no card; primary Button with the default end arrow |
+| login-split-panel | ❖ Login — split panel | 215:154 | 696:37 | 960 × 560; primary brand panel; link xs "Forgot?" |
+| activity-feed | ❖ Activity feed | 208:2 | 696:2 | three text runs per line; absolute 1 px rule behind 32 px Avatars with a 4 px card ring |
+| mail-shell | ❖ Mail inbox | 215:2 | 696:38 | 960 × 560 two panes; preview lines truncate to one line |
+| faq | ❖ FAQ | 207:76 | 696:19 | accordion composed (the twin has three fixed items); `keyboard_arrow_up` on the open item |
+| team-section | ❖ Team section | 207:2 | 696:64 | four `size="sm"` cards; 40 px Avatars; ghost icon-sm mail Buttons |
+| stats-band | ❖ Stats band | 204:2 | 696:56 | values bind `semantic/text-accent-color`; eyebrows bind `color/ink-muted` |
+| sidebar-nav | ❖ Sidebar navigation | 214:2 | 699:788 | 256 px sidebar on the `shadcn/sidebar-*` tokens; composed breadcrumb; `dock_to_left` trigger |
+| calendar-page | ❖ Calendar page | 210:2 | 696:5 | composed react-day-picker month: 28 px cells, outside days, July 14 selected |
+| calendar-range | ❖ Calendar range | 211:2 | 696:6 | two months; July 20–24 with start / middle / end states |
+| analytics-charts | ❖ Analytics charts | 213:2 | 696:3 | area paths and bars drawn as vectors from the block data; ticks and legend are text (client-drawn in code, so the test only requires the block's strings) |
+| theme-selector | ❖ Theme selector | 231:2 | 696:71 | the tracked frame is the closed trigger — all the server render shows; the open menu sits beside it as an untracked reference (648:84) |
 
 Thirteen Card-primitive frames on the September pages (pricing × 3, dashboard
 × 3, settings, tabs page, profile card, notifications, signup, wizard,
