@@ -213,8 +213,20 @@ export const MenuShrinksUnderTheCursor: Story = {
 export const Notebook: Story = {
   args: { variant: 'notebook', placeholder: 'Start writing what you need…' },
   play: async ({ canvas }) => {
-    await userEvent.type(canvas.getByRole('textbox', { name: 'Message' }), 'Write a launch brief for the October release')
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    const page = canvas.getByRole('textbox', { name: 'Message' }).closest('[data-slot="prompt-composer"]') as HTMLElement
+    // Focus must be visible without the AI edge: the page's border or shadow changes.
+    const before = getComputedStyle(page)
+    const [borderBefore, shadowBefore] = [before.borderTopColor, before.boxShadow]
+    await userEvent.type(box, 'Write a launch brief for the October release')
     await expect(canvas.getByText('8 words')).toBeVisible()
+    const after = getComputedStyle(page)
+    await expect(after.borderTopColor !== borderBefore || after.boxShadow !== shadowBefore).toBe(true)
+    // The ruling is drawn on the textarea: its offset must equal the top padding, and lines are 32px, or text and rules drift apart.
+    const style = getComputedStyle(box)
+    await expect(style.lineHeight).toBe('32px')
+    await expect(style.backgroundPositionY).toBe(style.paddingTop)
+    await expect(style.backgroundAttachment).toContain('local')
   },
 }
 

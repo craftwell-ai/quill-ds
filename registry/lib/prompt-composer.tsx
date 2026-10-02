@@ -174,8 +174,8 @@ export function PromptComposer({
           className={cn(
             'shadow-md',
             notebook
-              // Ruled page: 32px lines (leading-8) with the margin rule and border replacing the AI edge.
-              ? 'relative overflow-hidden rounded-l-sm rounded-r-2xl border border-input bg-background bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_31px,var(--line-soft)_31px,var(--line-soft)_32px)] bg-[position:0_14px]'
+              // The margin rule and border replace the AI edge; focus-within stands in for the textarea's cancelled ring.
+              ? 'relative overflow-hidden rounded-l-sm rounded-r-2xl border border-input bg-background focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/40'
               : cn('rounded-2xl', working ? 'ai-edge-working' : 'ai-edge'),
             disabled && 'opacity-60',
           )}
@@ -238,7 +238,9 @@ export function PromptComposer({
               'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
               // md:text-* overrides the stock textarea's md:text-sm, which would shrink lg on desktop.
               notebook
-                ? 'font-heading text-lg leading-8 md:text-lg pl-6 placeholder:italic'
+                ? // The rules live on the textarea so they scroll with the text (bg-local) and follow its padding. Each 32px line (leading-8) starts
+                // at the top padding (pt-3.5 = 14px) and its rule is the line's last pixel, so the background y offset must equal that padding.
+                'font-heading text-lg leading-8 md:text-lg pt-3.5 pl-6 placeholder:italic bg-local bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_31px,var(--line-soft)_31px,var(--line-soft)_32px)] bg-[position:0_14px]'
                 : size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base md:text-base' : 'min-h-11 px-3 pt-2.5 text-sm md:text-sm',
             )}
           />
