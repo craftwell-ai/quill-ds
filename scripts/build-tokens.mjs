@@ -208,9 +208,15 @@ export function darkVariant(modes = MODES, { stockClass = false } = {}) {
 // keys verbatim). Plain classes would be dropped by the CLI channel.
 export const AI_UTILITIES = ['ai-text', 'ai-edge', 'ai-edge-working', 'ai-wash', 'ai-glow', 'ai-line', 'ai-shimmer']
 
-const AI_STOPS = 'var(--ai-from), var(--ai-via) 50%, var(--ai-to)'
 const AI_SWEEP = 'var(--ai-from), var(--ai-via), var(--ai-to), var(--ai-via), var(--ai-from)'
-const mute = (v) => `color-mix(in oklab, var(${v}) 45%, var(--line-control))`
+// The composer's edge is a control boundary, so every stop must reach WCAG 1.4.11's
+// 3:1 against the paper. Raw gold measured 2.33:1 lit on Dawn (2.72:1 Classic Light),
+// so the edges alone pull their gold end 45% toward the gold text cut; the hue stays
+// gold and the other stops are untouched. build-tokens.test.mjs recomputes every stop.
+const EDGE_FROM = 'color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from))'
+const EDGE_STOPS = `${EDGE_FROM}, var(--ai-via) 50%, var(--ai-to)`
+const EDGE_SWEEP = `${EDGE_FROM}, var(--ai-via), var(--ai-to), var(--ai-via), ${EDGE_FROM}`
+const mute = (color) => `color-mix(in oklab, ${color} 45%, var(--line-control))`
 const PAD = 'linear-gradient(var(--background), var(--background)) padding-box'
 
 export const AI_RULES = {
@@ -222,12 +228,12 @@ export const AI_RULES = {
   },
   '@utility ai-edge': {
     border: '1.5px solid transparent',
-    background: `${PAD}, linear-gradient(115deg, ${mute('--ai-from')}, ${mute('--ai-via')} 50%, ${mute('--ai-to')}) border-box`,
-    '&:focus-within, &[data-lit]': { background: `${PAD}, linear-gradient(115deg, ${AI_STOPS}) border-box` },
+    background: `${PAD}, linear-gradient(115deg, ${mute(EDGE_FROM)}, ${mute('var(--ai-via)')} 50%, ${mute('var(--ai-to)')}) border-box`,
+    '&:focus-within, &[data-lit]': { background: `${PAD}, linear-gradient(115deg, ${EDGE_STOPS}) border-box` },
   },
   '@utility ai-edge-working': {
     border: '1.5px solid transparent',
-    background: `${PAD}, linear-gradient(90deg, ${AI_SWEEP}) border-box`,
+    background: `${PAD}, linear-gradient(90deg, ${EDGE_SWEEP}) border-box`,
     'background-size': '100% 100%, 300% 100%',
     animation: 'ai-sweep 2.4s linear infinite',
     '@media (prefers-reduced-motion: reduce)': { animation: 'none', 'background-size': '100% 100%, 100% 100%' },
