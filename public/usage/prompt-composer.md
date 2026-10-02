@@ -25,7 +25,10 @@ The box people type to an AI in — grows with the text, sends on Enter, turns S
 - Enter sends, Shift+Enter adds a line, and Enter while an input method is composing text (Japanese, Chinese) never sends.
 - While working, the send button becomes "Stop" and keeps focus position; the edge animation stops under reduced motion.
 - Errors are announced with `role="alert"` under the box.
+- The `/` and `@` menu: Arrow Up and Down move through the options, Enter picks one, and Escape closes the menu without changing the text. Focus stays in the box; the active option is announced through `aria-activedescendant`.
+- Mode tabs (Ask, Agent) are a `tablist` of `tab` buttons named by their label, with the selected one marked `aria-selected`; Tab reaches them and Enter or Space switches mode.
+- The notebook word count is visible text, not a live region, so a screen reader is not interrupted after every word.
 
 ### Design tokens
-`--ai-from` · `--ai-via` · `--ai-to` · `--background` · `--line-control` · `--primary` · `--primary-foreground` · `--destructive`
+`--ai-from` · `--ai-via` · `--ai-to` · `--background` · `--line-control` · `--line-soft` · `--input` · `--ring` · `--muted-foreground` · `--card` · `--primary` · `--primary-foreground` · `--destructive`
 

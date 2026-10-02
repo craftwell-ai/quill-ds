@@ -46,6 +46,10 @@ export type PromptComposerProps = {
   onCommand?: (command: ComposerCommand) => void
   /** `notebook`: ruled page, serif text, the AI gradient as a margin rule, and a word count — for prompts that are writing. */
   variant?: 'default' | 'notebook'
+  /** Focus the textbox on mount (an AI home page, a chat that opens on demand). */
+  autoFocus?: boolean
+  /** The textbox, so a page can focus it (after a starter card fills it, say). */
+  ref?: React.Ref<HTMLTextAreaElement>
   className?: string
 }
 
@@ -55,7 +59,7 @@ export function PromptComposer({
   onSubmit, onStop, value, defaultValue = '', onValueChange, status = 'idle', error,
   size = 'lg', label = 'Message', placeholder, onMic, leading, trailing, className,
   attachments, onRemoveAttachment, onFilesDropped, tools, onRemoveTool,
-  modes, mode, onModeChange, commands, onCommand, variant = 'default',
+  modes, mode, onModeChange, commands, onCommand, variant = 'default', autoFocus, ref,
 }: PromptComposerProps) {
   const [inner, setInner] = React.useState(defaultValue)
   const text = value ?? inner
@@ -67,6 +71,7 @@ export function PromptComposer({
   const wordCount = hasText ? text.trim().split(/\s+/).length : 0
   const errorId = React.useId()
   const [dragging, setDragging] = React.useState(false)
+  const dropTarget = onFilesDropped && !disabled
 
   const [innerMode, setInnerMode] = React.useState(modes?.[0]?.value)
   const currentMode = mode ?? innerMode
@@ -77,13 +82,23 @@ export function PromptComposer({
   const match = /(^|\s)([/@])([\w-]*)$/.exec(text)
   const trigger = match?.[2] as '/' | '@' | undefined
   const query = match?.[3] ?? ''
-  const options = trigger ? (commands ?? []).filter((c) => c.trigger === trigger && c.value.startsWith(query.toLowerCase())) : []
+  const matches = trigger ? (commands ?? []).filter((c) => c.trigger === trigger && c.value.startsWith(query.toLowerCase())) : []
   const [active, setActive] = React.useState(0)
   // Back to the first option whenever the match changes (reset during render, not in an effect).
-  const matchKey = `${trigger ?? ''}|${query}|${options.map((o) => o.value).join(',')}`
+  const matchKey = `${trigger ?? ''}|${query}|${matches.map((o) => o.value).join(',')}`
+  // Escape closes the menu for this match only; typing changes the key and reopens it. The text is never touched.
+  const [dismissedKey, setDismissedKey] = React.useState<string | null>(null)
   const [seenMatchKey, setSeenMatchKey] = React.useState(matchKey)
-  if (seenMatchKey !== matchKey) { setSeenMatchKey(matchKey); setActive(0) }
+  if (seenMatchKey !== matchKey) { setSeenMatchKey(matchKey); setActive(0); setDismissedKey(null) }
+  const options = dismissedKey === matchKey ? [] : matches
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+  // Merge the caller's ref with ours: the menu, Send and pick all need the textbox too.
+  const setTextareaRef = React.useCallback((node: HTMLTextAreaElement | null) => {
+    textareaRef.current = node
+    if (typeof ref === 'function') return ref(node)
+    if (ref) (ref as React.RefObject<HTMLTextAreaElement | null>).current = node
+  }, [ref])
+  React.useEffect(() => { if (autoFocus) textareaRef.current?.focus() }, [autoFocus])
   // Clamp: the options can shrink between renders while `active` still points past the end.
   const activeIndex = Math.min(active, options.length - 1)
   const menuRef = React.useRef<HTMLDivElement>(null)
@@ -116,6 +131,8 @@ export function PromptComposer({
     if (!hasText || working || disabled) return
     onSubmit(text)
     if (value === undefined) setInner('')
+    // Clicking Send disables it (the box is now empty), which would drop focus to the page.
+    textareaRef.current?.focus()
   }
 
   return (
@@ -168,9 +185,10 @@ export function PromptComposer({
         <div
           data-slot="prompt-composer"
           data-size={size}
-          onDragOver={onFilesDropped ? (e) => { e.preventDefault(); setDragging(true) } : undefined}
-          onDragLeave={onFilesDropped ? () => setDragging(false) : undefined}
-          onDrop={onFilesDropped ? (e) => { e.preventDefault(); setDragging(false); onFilesDropped([...e.dataTransfer.files]) } : undefined}
+          onDragOver={dropTarget ? (e) => { e.preventDefault(); setDragging(true) } : undefined}
+          // dragleave also fires when the pointer moves onto a child (the textarea, the hint); only leaving the box ends the drag.
+          onDragLeave={dropTarget ? (e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false) } : undefined}
+          onDrop={dropTarget ? (e) => { e.preventDefault(); setDragging(false); onFilesDropped([...e.dataTransfer.files]) } : undefined}
           className={cn(
             'shadow-md',
             notebook
@@ -202,14 +220,14 @@ export function PromptComposer({
               ))}
             </ul>
           ) : null}
-          {dragging ? <p className="mx-3.5 mt-2 rounded-lg border-[1.5px] border-dashed border-input p-2 text-center text-xs text-muted-foreground">Drop files to attach</p> : null}
+          {dragging && dropTarget ? <p className="mx-3.5 mt-2 rounded-lg border-[1.5px] border-dashed border-input p-2 text-center text-xs text-muted-foreground">Drop files to attach</p> : null}
           <Textarea
             aria-label={label}
             aria-invalid={status === 'error' || undefined}
             aria-describedby={status === 'error' && error ? errorId : undefined}
             disabled={disabled}
             placeholder={activeMode?.placeholder ?? placeholder}
-            ref={textareaRef}
+            ref={setTextareaRef}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             value={text}
@@ -223,8 +241,7 @@ export function PromptComposer({
                   if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return
                   e.preventDefault(); pick(options[activeIndex]); return
                 }
-                // A trailing space ends the match, which closes the menu.
-                if (e.key === 'Escape') { e.preventDefault(); setText(text + ' '); return }
+                if (e.key === 'Escape') { e.preventDefault(); setDismissedKey(matchKey); return }
               }
               // isComposing: an input method (Japanese, Chinese) uses Enter to confirm a word.
               // WebKit reports the confirming Enter with isComposing false but keyCode 229.
@@ -261,7 +278,8 @@ export function PromptComposer({
             <span className="flex-1" />
             {trailing}
             {notebook ? (
-              <span className="text-xs text-muted-foreground tabular-nums" aria-live="polite">
+              // Plain text, not a live region: announcing every word as it is typed is noise.
+              <span className="text-xs text-muted-foreground tabular-nums">
                 {wordCount === 1 ? '1 word' : `${wordCount} words`}
               </span>
             ) : null}

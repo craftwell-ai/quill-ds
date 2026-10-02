@@ -22,14 +22,18 @@ export function AiHome({
   onSubmit?: (value: string) => void
 }) {
   const [value, setValue] = React.useState('')
+  const composerRef = React.useRef<HTMLTextAreaElement>(null)
   return (
-    <section className="ai-glow grid min-h-[32rem] place-content-center gap-5 px-4 py-16">
+    // Not place-content-center: that sizes the one column to its widest child (the
+    // starter row, 592px), so the composer's max-w-2xl never reached 672px.
+    <section className="ai-glow grid min-h-[32rem] content-center justify-items-center gap-5 px-4 py-16">
       <h1 className="flex items-center justify-center gap-2.5 text-center font-heading text-3xl">
         <AiMark size={28} />
         {greeting}
       </h1>
       <div className="w-full max-w-2xl">
         <PromptComposer
+          ref={composerRef}
           size="lg"
           value={value}
           onValueChange={setValue}
@@ -43,7 +47,7 @@ export function AiHome({
       <ul className="grid w-full max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
         {starters.map((s) => (
           <li key={s.title}>
-            <button type="button" onClick={() => setValue(s.prompt)}
+            <button type="button" onClick={() => { setValue(s.prompt); composerRef.current?.focus() }}
               className="grid w-full gap-0.5 rounded-lg border border-border bg-card px-3 py-2.5 text-left hover:border-input">
               <span className="text-sm font-semibold">{s.title}</span>
               <span className="truncate text-xs text-muted-foreground">{s.detail}</span>

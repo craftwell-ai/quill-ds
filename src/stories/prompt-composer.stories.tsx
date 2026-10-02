@@ -210,6 +210,70 @@ export const MenuShrinksUnderTheCursor: Story = {
   },
 }
 
+export const EscapeClosesMenuKeepsText: Story = {
+  args: { size: 'sm', commands: ALL_COMMANDS },
+  play: async ({ canvas }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, '/su')
+    await canvas.findByRole('option', { name: /summarize/ })
+    await userEvent.keyboard('{Escape}')
+    await expect(box).toHaveValue('/su') // the person's text is never changed to close the menu
+    await waitFor(() => expect(canvas.queryByRole('option')).toBeNull())
+    await userEvent.type(box, 'm')
+    await expect(await canvas.findByRole('option', { name: /summarize/ })).toBeVisible() // typing reopens it
+  },
+}
+
+export const SendKeepsFocus: Story = {
+  args: { size: 'sm' },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, 'Summarize my week')
+    await userEvent.click(canvas.getByRole('button', { name: 'Send' }))
+    await expect(args.onSubmit).toHaveBeenCalledWith('Summarize my week')
+    // Send is now disabled (the box is empty); focus must come back to the box, not drop to the page.
+    await expect(box).toHaveFocus()
+  },
+}
+
+const drag = (target: Element, type: 'dragover' | 'dragleave', relatedTarget?: EventTarget | null) =>
+  target.dispatchEvent(new DragEvent(type, { bubbles: true, cancelable: true, relatedTarget: relatedTarget ?? null }))
+
+export const DropHintSurvivesMovingOntoChildren: Story = {
+  args: { onFilesDropped: fn() },
+  play: async ({ canvas }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    const target = box.closest('[data-slot="prompt-composer"]') as HTMLElement
+    drag(target, 'dragover')
+    await expect(await canvas.findByText('Drop files to attach')).toBeVisible()
+    // The pointer moved from the box onto the textarea inside it: still dragging over the box.
+    drag(target, 'dragleave', box)
+    await new Promise((resolve) => setTimeout(resolve, 50)) // let React re-render before looking
+    await expect(canvas.getByText('Drop files to attach')).toBeVisible()
+    // Leaving the box for the page ends it.
+    drag(target, 'dragleave', document.body)
+    await waitFor(() => expect(canvas.queryByText('Drop files to attach')).toBeNull())
+  },
+}
+
+export const DisabledIgnoresDrops: Story = {
+  args: { status: 'disabled', onFilesDropped: fn() },
+  play: async ({ canvas, args }) => {
+    const target = canvas.getByRole('textbox', { name: 'Message' }).closest('[data-slot="prompt-composer"]') as HTMLElement
+    const accepted = !drag(target, 'dragover') // preventDefault on dragover is what makes an element a drop target
+    await expect(accepted).toBe(false)
+    await expect(canvas.queryByText('Drop files to attach')).toBeNull()
+    await expect(args.onFilesDropped).not.toHaveBeenCalled()
+  },
+}
+
+export const AutoFocus: Story = {
+  args: { size: 'sm', autoFocus: true },
+  play: async ({ canvas }) => {
+    await waitFor(() => expect(canvas.getByRole('textbox', { name: 'Message' })).toHaveFocus())
+  },
+}
+
 export const Notebook: Story = {
   args: { variant: 'notebook', placeholder: 'Start writing what you need…' },
   play: async ({ canvas }) => {
@@ -220,6 +284,8 @@ export const Notebook: Story = {
     const [borderBefore, shadowBefore] = [before.borderTopColor, before.boxShadow]
     await userEvent.type(box, 'Write a launch brief for the October release')
     await expect(canvas.getByText('8 words')).toBeVisible()
+    // Visible, not announced: a live region would read the count after every word.
+    await expect(canvas.getByText('8 words').closest('[aria-live]')).toBeNull()
     const after = getComputedStyle(page)
     await expect(after.borderTopColor !== borderBefore || after.boxShadow !== shadowBefore).toBe(true)
     // The ruling is drawn on the textarea: its offset must equal the top padding, and lines are 32px, or text and rules drift apart.
