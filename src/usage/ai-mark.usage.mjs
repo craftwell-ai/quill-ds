@@ -1,0 +1,37 @@
+export const usage = {
+  name: 'ai-mark',
+  kind: 'component',
+  summary: "Quill's AI sparkle — the one icon that means AI, drawn in the AI gradient with a one-star cut for 16px and under.",
+  useWhen: [
+    'You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page.',
+  ],
+  alternatives: [
+    { name: 'icon', when: 'the icon means anything other than AI — every other icon comes from the Material Symbols set.' },
+  ],
+  rules: [
+    {
+      id: 'mark-only-means-ai',
+      do: 'Use the AI mark only where the thing it sits on calls an AI or was made by one.',
+      dont: 'Use the sparkle as decoration, a "new" marker or a rating star — once it appears on non-AI things it stops meaning AI.',
+      visual: true,
+    },
+    {
+      id: 'mark-keeps-its-gradient',
+      do: 'Let the mark draw its own gradient at every size; pass `size`, never a colour.',
+      dont: 'Recolour the mark with a text colour or a single pigment — the gradient is what makes it read as AI.',
+      visual: true,
+    },
+    {
+      id: 'label-when-alone',
+      do: 'Pass `label` when the mark is the only thing that says "AI" (an icon-only button or avatar).',
+      dont: 'Leave a standalone mark unlabelled — screen readers hear nothing.',
+      visual: false,
+    },
+  ],
+  a11y: [
+    'Decorative by default (`aria-hidden`), because it usually sits beside words that already say AI.',
+    'With `label`, it renders as `role="img"` with that accessible name.',
+    'Each instance generates its own gradient ids, so several marks on one page all render in colour.',
+  ],
+  tokens: ['--ai-from', '--ai-via', '--ai-to'],
+}

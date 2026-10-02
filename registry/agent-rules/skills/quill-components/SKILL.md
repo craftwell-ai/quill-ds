@@ -101,6 +101,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 ## Primitives
 
 - `accordion` — You have several related content sections (FAQ answers, grouped settings) that don't all need to stay visible at once, and users scan headings before choosing one to open. · instead: `collapsible`, `tabs`
+- `ai-mark` (`@quill/`) — You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page. · instead: `icon`
 - `alert` — You need one persistent, inline status message (informational or error) attached to a specific section of a page — not a whole stack of them, and not transient feedback about an action just taken. · instead: `alerts`, `sonner`
 - `alert-dialog` — You need the user to explicitly confirm or cancel a destructive, irreversible action — deleting a record, discarding unsaved work, removing access. · instead: `dialog`
 - `aspect-ratio` — You're placing an image, video, or embed that must keep a consistent shape (16:9, 1:1, 4:3) regardless of its container's width, and want to reserve that space before the media loads. · instead: `resizable`

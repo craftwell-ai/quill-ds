@@ -29,6 +29,7 @@ export const CASES = [
   { id: 'cmd-k', expect: 'command-palette', accept: ['command'], request: 'Power users want to press Cmd+K to jump to any page or run an action.' },
   { id: 'task-board', expect: 'kanban', request: 'Track tasks by status (to do, in progress, done) and move cards between the columns.' },
   { id: 'office-map', expect: 'none', request: 'Show our office locations on an interactive map that users can pan and zoom.' },
+  { id: 'ai-icon', expect: 'ai-mark', request: 'Put a small icon next to the Summarize button so people can tell it uses AI.' },
 ]
 
 /**

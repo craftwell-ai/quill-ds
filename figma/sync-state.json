@@ -2143,6 +2143,11 @@
   },
   "declined": [
     {
+      "name": "ai-mark",
+      "codeFile": "src/components/ui/ai-mark.tsx",
+      "reason": "site shim that re-exports registry/lib/ai-mark.tsx; the Figma twin is drawn with the AI kit in a later phase-1 task"
+    },
+    {
       "name": "aspect-ratio",
       "codeFile": "src/components/ui/aspect-ratio.tsx",
       "reason": "trivial CSS wrapper — sets an aspect-ratio custom property on a div; no fill, border or token of its own to draw"

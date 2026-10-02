@@ -160,7 +160,7 @@ Whole pages composed from the blocks above. Install one (`npx shadcn@latest add 
 
 ## Primitives
 
-Stock shadcn components restyled by the token layer — install from shadcn (`npx shadcn@latest add button`), never hand-roll; `icon` and `tone-badge` come from `@quill/`. Which one to pick is in the `quill-components` skill, for: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox, collapsible, combobox, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card, icon, input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group, tone-badge, tooltip.
+Stock shadcn components restyled by the token layer — install from shadcn (`npx shadcn@latest add button`), never hand-roll; `icon` and `tone-badge` come from `@quill/`. Which one to pick is in the `quill-components` skill, for: accordion, ai-mark, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox, collapsible, combobox, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card, icon, input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group, tone-badge, tooltip.
 
 ## Updating and verifying
 
