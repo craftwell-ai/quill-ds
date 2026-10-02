@@ -1783,10 +1783,11 @@
           "raw": 6
         },
         "texts": {
+          "Label": "Agent",
           "Placeholder": "Ask anything"
         },
         "childSignature": [
-          "Box:FRAME"
+          "Field:FRAME"
         ]
       },
       "code": {
@@ -1810,7 +1811,7 @@
       "page": "❖ AI home",
       "pageId": "1073:2",
       "frameId": "1073:3",
-      "codeHash": "aa0bbbd94354682d",
+      "codeHash": "e9a8e477c78216ea",
       "syncedAt": "2026-10-02"
     },
     {
