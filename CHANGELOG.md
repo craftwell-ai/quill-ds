@@ -13,6 +13,21 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.16.0] — 2026-10-02
+
+### Added
+- **The AI gradient.** A new colour family, `--ai-from/via/to` and three text stops, in all five themes (Ember: gold → terracotta → indigo; Dawn/Dusk at 1.5x chroma, Classic and Intelligent their own pigments), and seven utilities that ship to both install channels: `ai-text`, `ai-edge`, `ai-edge-working`, `ai-wash`, `ai-glow`, `ai-line`, `ai-shimmer`. DESIGN.md's gradient ban gains its one exception: the gradient that means AI.
+- **`ai-mark`**, the AI sparkle (two stars, a one-star cut at 16px and under).
+- **`ai-button`** and **`ai-badge`**.
+- **`prompt-composer`**: large and small sizes; send, Stop, disabled and error states; attachments with a drop target; AI tool chips; Ask/Agent mode tabs that share the AI edge; a `/` and `@` menu; a notebook style with its own ruled-page details. It takes `autoFocus` and forwards its ref.
+- **`ai-home`**, an AI assistant start page block.
+- **Figma:** AI gradient variables and styles, and five AI twins.
+
+### Changed
+- The composer edge's gold end is darkened (55% `ai-from` + 45% `ai-text-from`) so the edge clears 3:1 (WCAG 1.4.11) in every theme.
+- The agent rules and `llms.txt` now list Quill-shipped components straight from the registry and send agents to `@quill/` for them.
+- The consumer-reachability guard now understands side-prefixed utilities.
+
 ## [0.15.2] — 2026-09-30
 
 ### Changed
