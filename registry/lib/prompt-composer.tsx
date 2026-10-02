@@ -5,12 +5,16 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Icon } from '@/components/ui/icon'
 import { AiMark } from '@/components/ui/ai-mark'
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
 
 export type ComposerStatus = 'idle' | 'working' | 'disabled' | 'error'
 
 export type ComposerAttachment = { id: string; name: string; meta?: string; kind?: string } // kind: 'PDF', 'CSV'… shown on the thumb
 export type ComposerTool = { id: string; label: string }
+
+export type ComposerMode = { value: string; label: string; placeholder?: string; ai?: boolean } // ai: show the mark on the tab
+export type ComposerCommand = { value: string; label: string; description?: string; trigger: '/' | '@'; ai?: boolean }
 
 export type PromptComposerProps = {
   onSubmit: (value: string) => void
@@ -33,6 +37,13 @@ export type PromptComposerProps = {
   /** Active AI tools, shown as chips with the mark. */
   tools?: ComposerTool[]
   onRemoveTool?: (id: string) => void
+  /** Mode tabs above the box (Ask, Agent…); the selected tab shares the AI edge. */
+  modes?: ComposerMode[]
+  mode?: string
+  onModeChange?: (value: string) => void
+  /** Items for the `/` and `@` menu. Picking one inserts `${trigger}${value} ` and calls onCommand. */
+  commands?: ComposerCommand[]
+  onCommand?: (command: ComposerCommand) => void
   className?: string
 }
 
@@ -42,6 +53,7 @@ export function PromptComposer({
   onSubmit, onStop, value, defaultValue = '', onValueChange, status = 'idle', error,
   size = 'lg', label = 'Message', placeholder, onMic, leading, trailing, className,
   attachments, onRemoveAttachment, onFilesDropped, tools, onRemoveTool,
+  modes, mode, onModeChange, commands, onCommand,
 }: PromptComposerProps) {
   const [inner, setInner] = React.useState(defaultValue)
   const text = value ?? inner
@@ -52,6 +64,27 @@ export function PromptComposer({
   const errorId = React.useId()
   const [dragging, setDragging] = React.useState(false)
 
+  const [innerMode, setInnerMode] = React.useState(modes?.[0]?.value)
+  const currentMode = mode ?? innerMode
+  const activeMode = modes?.find((m) => m.value === currentMode)
+  // The selected tab lights with the box; :focus-within cannot reach a sibling, so track focus.
+  const [focused, setFocused] = React.useState(false)
+
+  const listId = React.useId()
+  const match = /(^|\s)([/@])([\w-]*)$/.exec(text)
+  const trigger = match?.[2] as '/' | '@' | undefined
+  const query = match?.[3] ?? ''
+  const options = trigger ? (commands ?? []).filter((c) => c.trigger === trigger && c.value.startsWith(query.toLowerCase())) : []
+  const [active, setActive] = React.useState(0)
+  // Back to the first option whenever the match changes (reset during render, not in an effect).
+  const matchKey = `${trigger ?? ''}${query}`
+  const [seenMatchKey, setSeenMatchKey] = React.useState(matchKey)
+  if (seenMatchKey !== matchKey) { setSeenMatchKey(matchKey); setActive(0) }
+  const pick = (c: ComposerCommand) => {
+    setText(text.slice(0, text.length - query.length - 1) + `${c.trigger}${c.value} `)
+    onCommand?.(c)
+  }
+
   const submit = () => {
     if (!hasText || working || disabled) return
     onSubmit(text)
@@ -60,90 +93,152 @@ export function PromptComposer({
 
   return (
     <div className={cn('grid gap-1.5', className)}>
-      <div
-        data-slot="prompt-composer"
-        data-size={size}
-        onDragOver={onFilesDropped ? (e) => { e.preventDefault(); setDragging(true) } : undefined}
-        onDragLeave={onFilesDropped ? () => setDragging(false) : undefined}
-        onDrop={onFilesDropped ? (e) => { e.preventDefault(); setDragging(false); onFilesDropped([...e.dataTransfer.files]) } : undefined}
-        className={cn(
-          'rounded-2xl shadow-md',
-          working ? 'ai-edge-working' : 'ai-edge',
-          disabled && 'opacity-60',
-        )}
-      >
-        {attachments?.length ? (
-          <ul className={cn('flex flex-wrap gap-2', size === 'lg' ? 'px-3.5 pt-3' : 'px-2.5 pt-2')} aria-label="Attached files">
-            {attachments.map((a) => (
-              <li key={a.id} className="relative flex max-w-56 items-center gap-2 rounded-lg border border-border bg-card py-1.5 pr-8 pl-1.5 text-xs">
-                {a.kind ? <span className="grid size-8 shrink-0 place-items-center rounded-md bg-muted text-2xs font-semibold text-ink-soft">{a.kind}</span> : null}
-                <span className="min-w-0">
-                  <span className="block truncate font-semibold text-foreground">{a.name}</span>
-                  {a.meta ? <span className="block text-muted-foreground">{a.meta}</span> : null}
-                </span>
-                {onRemoveAttachment ? (
-                  <button type="button" aria-label={`Remove ${a.name}`} onClick={() => onRemoveAttachment(a.id)}
-                    className="absolute top-1/2 right-1 grid size-6 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
-                    <Icon name="close" className="size-3.5" />
+      <div className="relative">
+        {options.length ? (
+          <Command className="absolute inset-x-0 bottom-full z-20 mb-2 h-auto rounded-xl border border-border shadow-lg" shouldFilter={false}
+            value={options[active]?.value} onValueChange={(v) => setActive(Math.max(0, options.findIndex((o) => o.value === v)))}>
+            <CommandList id={listId}>
+              <CommandEmpty>No matches</CommandEmpty>
+              <CommandGroup heading={trigger === '/' ? 'Commands' : 'Add context'}>
+                {options.map((c) => (
+                  <CommandItem key={c.value} value={c.value} onSelect={() => pick(c)} className="gap-2.5">
+                    {c.ai ? <AiMark size={18} /> : null}
+                    <span className="grid"><span>{c.label}</span>{c.description ? <span className="text-xs text-muted-foreground">{c.description}</span> : null}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        ) : null}
+        {modes?.length ? (
+          <div role="tablist" aria-label="Mode" className="relative z-10 -mb-[1.5px] flex gap-0.5 pl-5">
+            {modes.map((m) => {
+              const selected = m.value === currentMode
+              return (
+                <button
+                  key={m.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={selected}
+                  data-lit={selected && focused ? '' : undefined}
+                  // Rounded on top only; Tailwind's rounded-t-* is not in the theme consumers receive.
+                  style={{ borderRadius: '1rem 1rem 0 0' }}
+                  onClick={() => { if (mode === undefined) setInnerMode(m.value); onModeChange?.(m.value) }}
+                  className={cn(
+                    'relative inline-flex items-center gap-1.5 px-3.5 pt-1.5 pb-2 text-sm font-semibold',
+                    // The selected tab shares the AI edge; the after: strip covers the box's top
+                    // edge under it so tab and box read as one shape (approved 2026-10-02).
+                    selected
+                      ? 'ai-edge border-b-[0px] text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {m.ai ? <AiMark size={18} /> : null}
+                  {m.label}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
+        <div
+          data-slot="prompt-composer"
+          data-size={size}
+          onDragOver={onFilesDropped ? (e) => { e.preventDefault(); setDragging(true) } : undefined}
+          onDragLeave={onFilesDropped ? () => setDragging(false) : undefined}
+          onDrop={onFilesDropped ? (e) => { e.preventDefault(); setDragging(false); onFilesDropped([...e.dataTransfer.files]) } : undefined}
+          className={cn(
+            'rounded-2xl shadow-md',
+            working ? 'ai-edge-working' : 'ai-edge',
+            disabled && 'opacity-60',
+          )}
+        >
+          {attachments?.length ? (
+            <ul className={cn('flex flex-wrap gap-2', size === 'lg' ? 'px-3.5 pt-3' : 'px-2.5 pt-2')} aria-label="Attached files">
+              {attachments.map((a) => (
+                <li key={a.id} className="relative flex max-w-56 items-center gap-2 rounded-lg border border-border bg-card py-1.5 pr-8 pl-1.5 text-xs">
+                  {a.kind ? <span className="grid size-8 shrink-0 place-items-center rounded-md bg-muted text-2xs font-semibold text-ink-soft">{a.kind}</span> : null}
+                  <span className="min-w-0">
+                    <span className="block truncate font-semibold text-foreground">{a.name}</span>
+                    {a.meta ? <span className="block text-muted-foreground">{a.meta}</span> : null}
+                  </span>
+                  {onRemoveAttachment ? (
+                    <button type="button" aria-label={`Remove ${a.name}`} onClick={() => onRemoveAttachment(a.id)}
+                      className="absolute top-1/2 right-1 grid size-6 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+                      <Icon name="close" className="size-3.5" />
+                    </button>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {dragging ? <p className="mx-3.5 mt-2 rounded-lg border-[1.5px] border-dashed border-input p-2 text-center text-xs text-muted-foreground">Drop files to attach</p> : null}
+          <Textarea
+            aria-label={label}
+            aria-invalid={status === 'error' || undefined}
+            aria-describedby={status === 'error' && error ? errorId : undefined}
+            disabled={disabled}
+            placeholder={activeMode?.placeholder ?? placeholder}
+            aria-controls={options.length ? listId : undefined}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              // The menu goes first so Enter picks a command instead of sending. It honours the same IME guard.
+              if (options.length) {
+                if (e.key === 'ArrowDown') { e.preventDefault(); setActive((i) => (i + 1) % options.length); return }
+                if (e.key === 'ArrowUp') { e.preventDefault(); setActive((i) => (i - 1 + options.length) % options.length); return }
+                if (e.key === 'Enter') {
+                  if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return
+                  e.preventDefault(); pick(options[active]); return
+                }
+                // A trailing space ends the match, which closes the menu.
+                if (e.key === 'Escape') { e.preventDefault(); setText(text + ' '); return }
+              }
+              // isComposing: an input method (Japanese, Chinese) uses Enter to confirm a word.
+              // WebKit reports the confirming Enter with isComposing false but keyCode 229.
+              if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.nativeEvent.keyCode !== 229) {
+                e.preventDefault()
+                submit()
+              }
+            }}
+            className={cn(
+              // aria-invalid:* cancel the stock textarea's red ring; the AI edge and the alert carry the error.
+              'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
+              // md:text-* overrides the stock textarea's md:text-sm, which would shrink lg on desktop.
+              size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base md:text-base' : 'min-h-11 px-3 pt-2.5 text-sm md:text-sm',
+            )}
+          />
+          <div className={cn('flex items-center gap-1.5', size === 'lg' ? 'px-2.5 pb-2.5' : 'px-1.5 pb-1.5')}>
+            {leading}
+            {tools?.map((t) => (
+              <span key={t.id} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-card pr-1 pl-2 text-xs font-semibold text-foreground">
+                <AiMark size={13} />
+                {t.label}
+                {onRemoveTool ? (
+                  <button type="button" aria-label={`Turn off ${t.label}`} onClick={() => onRemoveTool(t.id)}
+                    className="grid size-5 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+                    <Icon name="close" className="size-3" />
                   </button>
                 ) : null}
-              </li>
+              </span>
             ))}
-          </ul>
-        ) : null}
-        {dragging ? <p className="mx-3.5 mt-2 rounded-lg border-[1.5px] border-dashed border-input p-2 text-center text-xs text-muted-foreground">Drop files to attach</p> : null}
-        <Textarea
-          aria-label={label}
-          aria-invalid={status === 'error' || undefined}
-          aria-describedby={status === 'error' && error ? errorId : undefined}
-          disabled={disabled}
-          placeholder={placeholder}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            // isComposing: an input method (Japanese, Chinese) uses Enter to confirm a word.
-            // WebKit reports the confirming Enter with isComposing false but keyCode 229.
-            if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.nativeEvent.keyCode !== 229) {
-              e.preventDefault()
-              submit()
-            }
-          }}
-          className={cn(
-            // aria-invalid:* cancel the stock textarea's red ring; the AI edge and the alert carry the error.
-            'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
-            // md:text-* overrides the stock textarea's md:text-sm, which would shrink lg on desktop.
-            size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base md:text-base' : 'min-h-11 px-3 pt-2.5 text-sm md:text-sm',
-          )}
-        />
-        <div className={cn('flex items-center gap-1.5', size === 'lg' ? 'px-2.5 pb-2.5' : 'px-1.5 pb-1.5')}>
-          {leading}
-          {tools?.map((t) => (
-            <span key={t.id} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-card pr-1 pl-2 text-xs font-semibold text-foreground">
-              <AiMark size={13} />
-              {t.label}
-              {onRemoveTool ? (
-                <button type="button" aria-label={`Turn off ${t.label}`} onClick={() => onRemoveTool(t.id)}
-                  className="grid size-5 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
-                  <Icon name="close" className="size-3" />
-                </button>
-              ) : null}
-            </span>
-          ))}
-          <span className="flex-1" />
-          {trailing}
-          {working ? (
-            <Button type="button" size="icon" className="rounded-full" aria-label="Stop" onClick={onStop}>
-              <Icon name="stop" className="size-4" />
-            </Button>
-          ) : !hasText && onMic ? (
-            <Button type="button" size="icon" variant="ghost" className="rounded-full" aria-label="Dictate" onClick={onMic} disabled={disabled}>
-              <Icon name="mic" className="size-4" />
-            </Button>
-          ) : (
-            <Button type="button" size="icon" className="rounded-full" aria-label="Send" onClick={submit} disabled={!hasText || disabled}>
-              <Icon name="arrow_upward" className="size-4" />
-            </Button>
-          )}
+            <span className="flex-1" />
+            {trailing}
+            {working ? (
+              <Button type="button" size="icon" className="rounded-full" aria-label="Stop" onClick={onStop}>
+                <Icon name="stop" className="size-4" />
+              </Button>
+            ) : !hasText && onMic ? (
+              <Button type="button" size="icon" variant="ghost" className="rounded-full" aria-label="Dictate" onClick={onMic} disabled={disabled}>
+                <Icon name="mic" className="size-4" />
+              </Button>
+            ) : (
+              <Button type="button" size="icon" className="rounded-full" aria-label="Send" onClick={submit} disabled={!hasText || disabled}>
+                <Icon name="arrow_upward" className="size-4" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
       {status === 'error' && error ? (

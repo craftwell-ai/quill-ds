@@ -105,6 +105,44 @@ export const WithAttachments: Story = {
   },
 }
 
+export const WithModes: Story = {
+  args: {
+    modes: [
+      { value: 'ask', label: 'Ask', ai: true, placeholder: 'Ask anything. Type / for skills, @ to add context' },
+      { value: 'agent', label: 'Agent', placeholder: 'What should your agent take on?' },
+    ],
+    onModeChange: fn(),
+  },
+  play: async ({ canvas, args }) => {
+    await expect(canvas.getByRole('tab', { name: 'Ask', selected: true })).toBeVisible()
+    await userEvent.click(canvas.getByRole('tab', { name: 'Agent' }))
+    await expect(args.onModeChange).toHaveBeenCalledWith('agent')
+    await expect(canvas.getByRole('textbox', { name: 'Message' })).toHaveAttribute('placeholder', 'What should your agent take on?')
+  },
+}
+
+export const SlashCommands: Story = {
+  args: {
+    size: 'sm',
+    commands: [
+      { value: 'summarize', label: '/summarize', description: 'Condense a doc or thread', trigger: '/', ai: true },
+      { value: 'remind', label: '/remind', description: 'Set a reminder', trigger: '/' },
+      { value: 'q3-deck', label: 'Q3 board deck', description: 'Document', trigger: '@' },
+    ],
+    onCommand: fn(),
+  },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, '/su')
+    const option = await canvas.findByRole('option', { name: /summarize/ })
+    await userEvent.keyboard('{Enter}')
+    await expect(args.onCommand).toHaveBeenCalledWith(expect.objectContaining({ value: 'summarize' }))
+    await expect(box).toHaveValue('/summarize ')
+    await expect(args.onSubmit).not.toHaveBeenCalled() // Enter picked the command, it did not send
+    void option
+  },
+}
+
 export const DoDont: Story = {
   render: (args) => (
     <div className="grid gap-6">

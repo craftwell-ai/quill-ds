@@ -41,6 +41,12 @@ export const usage = {
       visual: false,
     },
     {
+      id: 'mark-ai-commands',
+      do: 'Mark AI commands in the / menu with the AI sparkle and leave ordinary app commands unmarked.',
+      dont: 'Mark every command — the mark is how people tell which actions call the AI.',
+      visual: false,
+    },
+    {
       id: 'stop-while-working',
       do: 'Set `status="working"` while the AI answers and pass `onStop`.',
       dont: 'Disable the whole composer while the AI works — people should be able to stop it.',
