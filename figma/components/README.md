@@ -300,6 +300,37 @@ pigment with `color/paper` text. Listed in `sync-state.json` → `candidates` fo
 the next adopt run. The ❖ Invoice "Paid" chip (built before ToneBadge existed) was
 swapped in place to a `Tone=moss` instance (node 581:188).
 
+### AI kit twins (2026-10-02)
+
+Code twins in `registry/lib` (the `src/components/ui` files are re-export shims, declined in
+`sync-state.json` the way `tone-badge` is). All four are in `components` (adopted 2026-10-02 by
+`figma-drift.mjs --adopt`). Edge styles and the `ai-edge/*` variables: `../README.md`, "AI edge".
+
+| Twin | Page (id) | Node | Structure | Key bindings |
+|---|---|---|---|---|
+| AiMark | ❖ AI mark (1068:2) | set **1068:10** | Stars=two (1068:6, 18px) · Stars=one (1068:9, 16px) | each star its own gradient, corner to corner of the star, stops 0.28 / 0.5 / 0.72 bound to color/ai-from · via · to; vectors scale with the instance |
+| AiBadge | ❖ AI badge (1068:11) | component **1068:12** | AiMark Stars=one at 13px + Label (TEXT property `Label`) | outline Badge anatomy: fill→semantic/background, stroke→semantic/border @ border-width/1, h→space/5, padding→space/2, gap→space/1, radius→radius/4xl; Label/Small in color/ink-soft |
+| AiButton | ❖ AI button (1069:2) | set **1069:143** | Variant(outline / ghost / default / secondary) × Size(xs / sm / default / lg / icon) = 20; TEXT property `Label` | each variant is a ❖ Button variant detached in place (its bindings kept), with AiMark Stars=two at 18px in the start slot |
+| PromptComposer | ❖ Prompt composer (1072:2) | set **1072:79** | Variant=default × Size(lg / sm) × Status(idle / working / error) + Variant=notebook (lg, idle) = 7 | box fill→semantic/background, radius→radius/2xl, Elevation/base, edge = AI/Edge (rest) or (working) as a 1.5px INSIDE stroke; Send / Stop are ❖ Button `Size=icon` instances (Send `State=Disabled` with no text), radius→radius/4xl; error Text/sm in semantic/destructive |
+
+- **AiButton is not a live Button instance.** Code sizes the mark 18px (`size-[18px]`; Button
+  would shrink an svg to 16). The Button twin's icon slot forbids a size override on a nested
+  instance, so each variant was built from a Button instance and detached in place, keeping
+  every binding (fills, strokes, radius, padding, height). A change to the Button twin does
+  not reach AiButton — push both.
+- **Not drawn:** the composer's attachments, tool chips, `/` and `@` menu, drop hint, mic and
+  `disabled` status (stories, not variants). The mode tabs live on ❖ AI home, where the block
+  uses them. The working edge is the static full sweep; the 2.4s animation is CSS-only.
+- **Notebook:** Fraunces Italic placeholder on 32px lines; the ruling is two 1px
+  `color/line-soft` rules at 13 and 45px (code's repeating background tiles upward from its
+  14px offset too); the 4px margin rule binds ai-from / via / to top to bottom.
+- **Icons:** `icon/stop` and `icon/mic` were missing from the Icons page (code has 93) and were
+  added by the icon sync.
+
+| Block | Page | Page id | Frame id | Notes |
+|---|---|---|---|---|
+| ai-home | ❖ AI home | 1073:2 | 1073:3 | 1024×512; `ai-glow` = two radial fills (centre stop bound to color/ai-from / ai-to, paint opacity 0.18, transparent end at 0.7) over semantic/background; Display/M greeting in color/ink with a 28px AiMark; Ask tab = AI/Edge (rest) on three sides with a 2px background strip over the box edge, `itemReverseZIndex` + −1.5 gap so it sits over the box; PromptComposer lg idle instance with the block's placeholder; four starter cards (semantic/card, border, radius/lg, space/3 · 2_5 · 0_5) |
+
 ### Accent (2026-07-11; re-pinned to moss 2026-07-20)
 
 Code adds `data-accent="terracotta|moss|indigo|gold"` (eyebrows, accent italics,

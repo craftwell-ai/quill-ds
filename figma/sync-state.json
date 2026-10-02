@@ -1661,6 +1661,137 @@
       "code": {
         "classes": "group/tabs flex gap-2 data-horizontal:flex-col"
       }
+    },
+    {
+      "name": "AiMark",
+      "nodeId": "1068:6",
+      "variantOf": "1068:10",
+      "variant": "Stars=two",
+      "codeFile": "registry/lib/ai-mark.tsx",
+      "lastSynced": "2026-10-02",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 0.75
+        },
+        "texts": {},
+        "childSignature": [
+          "Star:VECTOR",
+          "Star small:VECTOR"
+        ]
+      },
+      "code": {
+        "classes": "inline-block shrink-0"
+      }
+    },
+    {
+      "name": "AiButton",
+      "nodeId": "1069:93",
+      "variantOf": "1069:143",
+      "variant": "Variant=default, Size=default",
+      "codeFile": "registry/lib/ai-button.tsx",
+      "lastSynced": "2026-10-02",
+      "figma": {
+        "fill": {
+          "var": "semantic/primary",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "itemSpacing": {
+          "var": "space/1_5",
+          "raw": 6
+        },
+        "texts": {
+          "Label": "Ask AI"
+        },
+        "childSignature": [
+          "AiMark:INSTANCE",
+          "Label:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "className=\"size-[18px]\""
+      }
+    },
+    {
+      "name": "AiBadge",
+      "nodeId": "1068:12",
+      "codeFile": "registry/lib/ai-badge.tsx",
+      "lastSynced": "2026-10-02",
+      "figma": {
+        "fill": {
+          "var": "semantic/background",
+          "raw": "#F5EDDD"
+        },
+        "stroke": {
+          "var": "semantic/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 40
+        },
+        "padding": {
+          "var": "space/2",
+          "raw": 8
+        },
+        "itemSpacing": {
+          "var": "space/1",
+          "raw": 4
+        },
+        "texts": {
+          "Label": "AI draft"
+        },
+        "childSignature": [
+          "AiMark:INSTANCE",
+          "Label:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "gap-1 bg-background text-ink-soft"
+      }
+    },
+    {
+      "name": "PromptComposer",
+      "nodeId": "1072:3",
+      "variantOf": "1072:79",
+      "variant": "Variant=default, Size=lg, Status=idle",
+      "codeFile": "registry/lib/prompt-composer.tsx",
+      "lastSynced": "2026-10-02",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": "space/1_5",
+          "raw": 6
+        },
+        "texts": {
+          "Placeholder": "Ask anything"
+        },
+        "childSignature": [
+          "Box:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid gap-1.5"
+      }
     }
   ],
   "patterns": [
@@ -1675,8 +1806,12 @@
     },
     {
       "block": "ai-home",
-      "status": "missing",
-      "reason": "placeholder until the Figma twin is drawn with the AI kit in a later phase-1 task"
+      "status": "mirrored",
+      "page": "❖ AI home",
+      "pageId": "1073:2",
+      "frameId": "1073:3",
+      "codeHash": "aa0bbbd94354682d",
+      "syncedAt": "2026-10-02"
     },
     {
       "block": "alerts",
@@ -2150,22 +2285,22 @@
     {
       "name": "ai-badge",
       "codeFile": "src/components/ui/ai-badge.tsx",
-      "reason": "site shim that re-exports registry/lib/ai-badge.tsx; the Figma twin is drawn with the AI kit in a later phase-1 task"
+      "reason": "site shim that re-exports registry/lib/ai-badge.tsx; the twin (❖ AI badge, component 1068:12) is tracked through the AiBadge entry"
     },
     {
       "name": "ai-button",
       "codeFile": "src/components/ui/ai-button.tsx",
-      "reason": "site shim that re-exports registry/lib/ai-button.tsx; the Figma twin is drawn with the AI kit in a later phase-1 task"
+      "reason": "site shim that re-exports registry/lib/ai-button.tsx; the twin (❖ AI button, set 1069:143) is tracked through the AiButton entry"
     },
     {
       "name": "prompt-composer",
       "codeFile": "src/components/ui/prompt-composer.tsx",
-      "reason": "site shim that re-exports registry/lib/prompt-composer.tsx; the Figma twin is drawn with the AI kit in a later phase-1 task"
+      "reason": "site shim that re-exports registry/lib/prompt-composer.tsx; the twin (❖ Prompt composer, set 1072:79) is tracked through the PromptComposer entry"
     },
     {
       "name": "ai-mark",
       "codeFile": "src/components/ui/ai-mark.tsx",
-      "reason": "site shim that re-exports registry/lib/ai-mark.tsx; the Figma twin is drawn with the AI kit in a later phase-1 task"
+      "reason": "site shim that re-exports registry/lib/ai-mark.tsx; the twin (❖ AI mark, set 1068:10) is tracked through the AiMark entry"
     },
     {
       "name": "aspect-ratio",

@@ -17,6 +17,14 @@
 4. Stamp the token source: `node scripts/figma-stamp.mjs --tokens`. `scripts/figma-restamp.test.mjs`
    fails whenever `src/tokens/quill.tokens.mjs` changes without this re-sync.
 
+**Payload size.** Pasted as written, step 2 is ~81k characters (the export alone is ~58k); `use_figma` takes
+at most 50,000. `node scripts/figma-sync-payload.mjs > /tmp/sync.js` prints the call already trimmed: the
+export minified, its `$description` keys and Intelligent mode values dropped (the sync reads neither), and
+the script without whole-line comments or indentation. Nothing the sync reads changes. It prints the size to
+stderr and exits 1 when the result is still over. On 2026-10-02 it came to 49,699 — about 300 characters of
+headroom, so the next sizeable token or sync addition will need more: split the run into two calls (the
+colour, scalar and semantic steps, then the rest — each step upserts by name, so either half can re-run).
+
 ## Re-run the icon sync
 
 1. Build the icon modules: `npm run build:icons` — `src/components/ui/icons.core.mjs` is the sync core.
@@ -27,7 +35,9 @@
    the instances inside Toast, Command, Dropdown Menu, Toggle Group… stay live); new names are created;
    names no longer in code are reported, never removed. Every icon is one vector named `Vector`, fill
    bound to `deprecated/text-strong`, constraints SCALE so it resizes cleanly inside a slot.
-   Last run: 2026-09-18 — 91 icons (40 refreshed in place, 51 created).
+   Last run: 2026-09-18 — 91 icons (40 refreshed in place, 51 created). 2026-10-02: `stop` (1071:4) and
+   `mic` (1071:7) created for the prompt composer — the run passed just those two names; the other 91 were
+   unchanged in code, so nothing else needed refreshing.
 
 ## Visual diff (nightly, CRA-224)
 
@@ -71,6 +81,33 @@ The foundations sync upserts the style by name (`syncAiGradient`), so a re-sync 
 Figma's gradient matrix with CSS's own gradient-line length, so on a square it lands corner to corner exactly as the
 browser draws it; on a wide frame it is close, not identical (CSS re-fits the line to each box, a style cannot). The text
 colours (`color/ai-text-*`) are variables only — no paint style, since gradient text is a CSS clip with no Figma style twin.
+
+## AI edge (2026-10-02)
+
+The prompt composer's border is not the raw gradient. To clear 3:1 against the paper, code mixes its gold end toward the
+gold text cut (`color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from))`), and at rest mixes every stop 45% toward
+`--line-control` (`AI_RULES` in `scripts/build-tokens.mjs`). A gradient stop can bind a variable but not a mix, so the
+sync (`syncAiEdge`) computes each mix per mode, in OKLab as the browser does, into four **derived** variables —
+`ai-edge/from`, `ai-edge/rest-from`, `ai-edge/rest-via`, `ai-edge/rest-to` (Primitives, four modes, scope stroke, code
+syntax = the color-mix) — the same idea as `tint/*`: derived from the base variables on every run, never typed. Three
+paint styles bind them:
+
+| Style | Code | Stops |
+|---|---|---|
+| `AI/Edge` | `ai-edge` lit (`:focus-within`, `[data-lit]`) | 115° · ai-edge/from, ai-via 50 %, ai-to |
+| `AI/Edge (rest)` | `ai-edge` | 115° · ai-edge/rest-from, rest-via, rest-to |
+| `AI/Edge (working)` | `ai-edge-working` | 90° · from, via, to, via, from — the full sweep, as code shows it under reduced motion |
+
+Apply one as a 1.5px INSIDE stroke (`setStrokeStyleIdAsync`). So every stop is bound and follows the theme — nothing is
+a typed per-mode value. The recipe is a second copy of `AI_RULES`; `scripts/figma-ai-edge.test.mjs` reads both and fails
+when a percentage, stop or angle parts. Light values on 2026-10-02 matched a Node recomputation exactly
+(`#9E752B` · `#937B54` · `#B36F51` · `#717783`).
+
+Two Plugin-API facts found on the way: a **bound gradient stop loses its alpha** (a stop bound at `a: 0.18` reads back
+`a: 1`), so `ai-glow` on ❖ AI home binds only each radial's centre stop and carries the 18 % as the paint's opacity, with
+a literal transparent end stop; and a nested instance inside the ❖ Button twin's icon slot **cannot be resized**
+("This property cannot be overridden in an instance: size"), which is why AiButton's variants are detached Buttons
+(see `components/README.md`).
 
 ## Names
 

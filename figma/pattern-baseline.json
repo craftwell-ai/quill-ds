@@ -60,6 +60,57 @@
         "text/base"
       ]
     },
+    "ai-home": {
+      "frameId": "1073:3",
+      "texts": [
+        "What should we work on?",
+        "Ask",
+        "Agent",
+        "Ask anything. Type / for skills, @ to add context",
+        "Brainstorm",
+        "Ideas for a launch",
+        "Draft a brief",
+        "From my notes",
+        "Plan my week",
+        "Around my meetings",
+        "Find",
+        "Tasks due soon"
+      ],
+      "icons": [
+        "arrow_upward"
+      ],
+      "instances": [
+        "AiMark",
+        "AiMark",
+        "PromptComposer"
+      ],
+      "vars": [
+        "ai-edge/rest-from",
+        "ai-edge/rest-to",
+        "ai-edge/rest-via",
+        "border-width/1",
+        "color/ai-from",
+        "color/ai-to",
+        "color/ink",
+        "color/ink-soft",
+        "radius/lg",
+        "radius/xl",
+        "semantic/background",
+        "semantic/border",
+        "semantic/card",
+        "semantic/foreground",
+        "semantic/muted-foreground",
+        "space/0_5",
+        "space/16",
+        "space/1_5",
+        "space/2",
+        "space/2_5",
+        "space/3",
+        "space/4",
+        "space/5",
+        "text/sm"
+      ]
+    },
     "analytics-charts": {
       "frameId": "696:3",
       "texts": [

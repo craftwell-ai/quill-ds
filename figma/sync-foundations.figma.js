@@ -445,6 +445,82 @@ async function syncAiGradient() {
   return { created, id: ps.id, bound: bound.every(Boolean) }
 }
 
+// ---- AI edge: the composer's 1.5px gradient border (scripts/build-tokens.mjs, AI_RULES) ----
+// Code mixes two of its stops (`color-mix(in oklab, …)`) so every stop clears 3:1 on the
+// paper; a gradient stop cannot bind a mix, so the mixes become derived variables
+// (`ai-edge/*`, computed per mode from the base variables, like `tint/*`) and the three
+// edge styles bind those. scripts/figma-ai-edge.test.mjs holds this recipe to AI_RULES.
+// recipe: name → [a, weight of a, b] = color-mix(in oklab, a weight%, b)
+const AI_EDGE_MIX = {
+  'ai-edge/from': ['color/ai-from', 55, 'color/ai-text-from'],
+  'ai-edge/rest-from': ['ai-edge/from', 45, 'color/line-control'],
+  'ai-edge/rest-via': ['color/ai-via', 45, 'color/line-control'],
+  'ai-edge/rest-to': ['color/ai-to', 45, 'color/line-control'],
+}
+const AI_EDGE_STYLES = [
+  { name: 'AI/Edge', angle: 115, stops: [['ai-edge/from', 0], ['color/ai-via', 0.5], ['color/ai-to', 1]], description: 'The composer edge, lit (focus, or a selected mode tab while the box has focus). 1.5px INSIDE stroke. The gold end is ai-edge/from, a mix that clears 3:1.' },
+  { name: 'AI/Edge (rest)', angle: 115, stops: [['ai-edge/rest-from', 0], ['ai-edge/rest-via', 0.5], ['ai-edge/rest-to', 1]], description: 'The composer edge at rest: each lit stop 45% toward line-control. 1.5px INSIDE stroke.' },
+  { name: 'AI/Edge (working)', angle: 90, stops: [['ai-edge/from', 0], ['color/ai-via', 0.25], ['color/ai-to', 0.5], ['color/ai-via', 0.75], ['ai-edge/from', 1]], description: 'The composer edge while the AI works. Code sweeps this 300%-wide gradient sideways; Figma shows the whole sweep, as code does under reduced motion.' },
+]
+// The CSS a stop stands for: `color/ai-via` → var(--ai-via); a derived one → its color-mix.
+function aiEdgeCss(name) {
+  const mix = AI_EDGE_MIX[name]
+  if (!mix) return `var(--${name.slice('color/'.length)})`
+  return `color-mix(in oklab, ${aiEdgeCss(mix[0])} ${mix[1]}%, ${aiEdgeCss(mix[2])})`
+}
+const toLin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+const toGam = (c) => Math.min(1, Math.max(0, c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055))
+function toOklab({ r, g, b }) {
+  const [R, G, B] = [r, g, b].map(toLin)
+  const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B)
+  const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B)
+  const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B)
+  return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s]
+}
+function fromOklab([L, A, B]) {
+  const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3
+  const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3
+  const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3
+  const [r, g, b] = [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s].map(toGam)
+  return { r, g, b, a: 1 }
+}
+
+async function syncAiEdge() {
+  const prim = await upsertCollection('Quill Primitives')
+  const vars = await varsInCollection(prim)
+  let created = 0
+  for (const [name, [aName, weight, bName]] of Object.entries(AI_EDGE_MIX)) {
+    const a = vars[aName]
+    const b = vars[bName]
+    if (!a || !b) throw new Error(`${name}: ${aName} or ${bName} missing — run the colour sync first`)
+    let v = vars[name]
+    if (!v) { v = figma.variables.createVariable(name, prim, 'COLOR'); vars[name] = v; created++ }
+    for (const mode of prim.modes) {
+      const [x, y] = [toOklab(a.valuesByMode[mode.modeId]), toOklab(b.valuesByMode[mode.modeId])]
+      v.setValueForMode(mode.modeId, fromOklab(x.map((c, i) => c * (weight / 100) + y[i] * (1 - weight / 100))))
+    }
+    v.scopes = ['STROKE_COLOR']
+    v.setVariableCodeSyntax('WEB', aiEdgeCss(name))
+    v.description = `Derived, not a token: ${aName} ${weight}% mixed with ${bName} in OKLab — a stop of the composer's AI edge (AI_RULES in scripts/build-tokens.mjs).`
+  }
+  const light = prim.modes.find((m) => m.name === 'Light').modeId
+  const styles = await figma.getLocalPaintStylesAsync()
+  const out = {}
+  for (const spec of AI_EDGE_STYLES) {
+    const gradientStops = spec.stops.map(([name, position]) => {
+      const c = vars[name].valuesByMode[light]
+      return { position, color: { r: c.r, g: c.g, b: c.b, a: 1 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: vars[name].id } } }
+    })
+    let ps = styles.find((s) => s.name === spec.name)
+    if (!ps) { ps = figma.createPaintStyle(); created++ }
+    ps.name = spec.name
+    ps.paints = [{ type: 'GRADIENT_LINEAR', gradientTransform: cssAngleTransform(spec.angle), gradientStops }]
+    ps.description = spec.description
+    out[spec.name] = ps.id
+  }
+  return { created, styles: out }
+}
+
 async function syncFoundations(DTCG) {
   const results = {}
   results.colors = await syncPrimitiveColors(DTCG)
@@ -455,6 +531,7 @@ async function syncFoundations(DTCG) {
   results.effects = await syncEffectStyles(DTCG)
   results.tints = await syncTints(DTCG)
   results.aiGradient = await syncAiGradient()
+  results.aiEdge = await syncAiEdge()
   results.renamed = renamed
   return results
 }
