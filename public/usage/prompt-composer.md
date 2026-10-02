@@ -6,6 +6,7 @@ The box people type to an AI in — grows with the text, sends on Enter, turns S
 - People type a request to an AI: an assistant page, a chat thread, a side panel, or an "ask about this" bar.
 
 ### Reach for instead
+- **ai-home** — when you need the whole AI start page around the composer, not just the box.
 - **chat** — when two people are messaging each other and no AI is involved.
 - **textarea** — when it is an ordinary form field whose text is saved, not sent to an AI.
 

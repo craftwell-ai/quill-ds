@@ -98,6 +98,9 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `theme-selector` — You need to let users switch among Quill's five themes and four accents, persisted to localStorage. · instead: `settings`
 - `settings` — You need a profile settings form with name, bio, and notification preferences. · instead: `contact-form`, `wizard`
 
+### ai — AI features — composers, assistant pages, AI replies and agent controls.
+- `ai-home` — An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet. · instead: `prompt-composer`, `chat`
+
 ## Primitives
 
 - `accordion` — You have several related content sections (FAQ answers, grouped settings) that don't all need to stay visible at once, and users scan headings before choosing one to open. · instead: `collapsible`, `tabs`
@@ -140,7 +143,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `pagination` — You have a long list of records split across pages and need numbered links to jump between them, not just scroll further. · instead: `scroll-area`, `button`
 - `popover` — You need a compact, interactive surface anchored to a button — an inline form, a filter, a quick edit — that opens on an explicit click. · instead: `dialog`, `hover-card`, `tooltip`
 - `progress` — You have a real, known completion percentage to show (upload progress, a multi-step setup) — not an open-ended wait with no known duration. · instead: `spinner`, `skeleton`
-- `prompt-composer` (`@quill/`) — People type a request to an AI: an assistant page, a chat thread, a side panel, or an "ask about this" bar. · instead: `chat`, `textarea`
+- `prompt-composer` (`@quill/`) — People type a request to an AI: an assistant page, a chat thread, a side panel, or an "ask about this" bar. · instead: `ai-home`, `chat`, `textarea`
 - `radio-group` — You need the user to choose exactly one option from a short, always-visible list — not collapsed behind a dropdown trigger. · instead: `checkbox`, `select`, `toggle-group`
 - `resizable` — You need a layout region whose split the user can adjust themselves by dragging — a file-tree/editor/preview layout, a resizable sidebar-and-content pane. · instead: `scroll-area`, `tabs`
 - `scroll-area` — You need a scrollable region (a list, a card body) with a consistently styled scrollbar instead of each OS/browser's native chrome, inside an explicit height or width you set. · instead: `pagination`, `resizable`

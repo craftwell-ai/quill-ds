@@ -1,0 +1,30 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-home",
+  "title": "AI home",
+  "description": "An AI assistant's start page — a soft AI glow, a greeting with the AI mark, the large composer with Ask/Agent modes, and starter cards.",
+  "registryDependencies": [
+    "https://www.quilldesignsystem.com/r/prompt-composer.json",
+    "https://www.quilldesignsystem.com/r/ai-mark.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/ai-home.tsx",
+      "content": "'use client'\n\nimport * as React from 'react'\nimport { PromptComposer } from '@/components/ui/prompt-composer'\nimport { AiMark } from '@/components/ui/ai-mark'\n\nconst STARTERS = [\n  { title: 'Brainstorm', detail: 'Ideas for a launch', prompt: 'Brainstorm ideas for our next launch' },\n  { title: 'Draft a brief', detail: 'From my notes', prompt: 'Draft a brief from my notes' },\n  { title: 'Plan my week', detail: 'Around my meetings', prompt: 'Plan my week around my meetings' },\n  { title: 'Find', detail: 'Tasks due soon', prompt: 'Find tasks due soon' },\n]\n\n/** An AI assistant's start page — a soft AI glow, a greeting with the AI mark, the large composer with Ask/Agent modes, and starter cards. */\nexport function AiHome({\n  greeting = 'What should we work on?',\n  starters = STARTERS,\n  onSubmit = () => {},\n}: {\n  greeting?: string\n  starters?: { title: string; detail: string; prompt: string }[]\n  onSubmit?: (value: string) => void\n}) {\n  const [value, setValue] = React.useState('')\n  return (\n    <section className=\"ai-glow grid min-h-[32rem] place-content-center gap-5 px-4 py-16\">\n      <h1 className=\"flex items-center justify-center gap-2.5 text-center font-heading text-3xl\">\n        <AiMark size={28} />\n        {greeting}\n      </h1>\n      <div className=\"w-full max-w-2xl\">\n        <PromptComposer\n          size=\"lg\"\n          value={value}\n          onValueChange={setValue}\n          onSubmit={(v) => { onSubmit(v); setValue('') }}\n          modes={[\n            { value: 'ask', label: 'Ask', ai: true, placeholder: 'Ask anything. Type / for skills, @ to add context' },\n            { value: 'agent', label: 'Agent', placeholder: 'What should your agent take on?' },\n          ]}\n        />\n      </div>\n      <ul className=\"grid w-full max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4\">\n        {starters.map((s) => (\n          <li key={s.title}>\n            <button type=\"button\" onClick={() => setValue(s.prompt)}\n              className=\"grid w-full gap-0.5 rounded-lg border border-border bg-card px-3 py-2.5 text-left hover:border-input\">\n              <span className=\"text-sm font-semibold\">{s.title}</span>\n              <span className=\"truncate text-xs text-muted-foreground\">{s.detail}</span>\n            </button>\n          </li>\n        ))}\n      </ul>\n    </section>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/quill/ai-home.tsx"
+    }
+  ],
+  "meta": {
+    "intent": [
+      "ai"
+    ],
+    "use_when": "An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet.",
+    "not_for": "you only need the box, inside a page that is about something else → prompt-composer; two people are messaging; there is no AI → chat"
+  },
+  "docs": "An AI assistant's start page — a soft AI glow, a greeting with the AI mark, the large composer with Ask/Agent modes, and starter cards. Do: Keep the AI glow to this one start page. Don't: Add the glow behind other sections or pages — it marks the AI home, and repeated it becomes decoration. Use prompt-composer when you only need the box, inside a page that is about something else. Use chat when two people are messaging; there is no AI.",
+  "categories": [
+    "ai"
+  ],
+  "type": "registry:block"
+}

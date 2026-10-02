@@ -27,6 +27,7 @@ import { usage as card } from './card.usage.mjs'
 import { usage as carousel } from './carousel.usage.mjs'
 import { usage as chart } from './chart.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
+import { usage as aiHome } from './ai-home.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as collapsible } from './collapsible.usage.mjs'
@@ -140,6 +141,7 @@ export const ALL_USAGE = [
   carousel,
   chart,
   chat,
+  aiHome,
   checkbox,
   checkout,
   collapsible,

@@ -26,6 +26,7 @@ export const INTENT_TAGS = {
   productivity: 'Task and workflow management.',
   content: 'Editorial and informational blocks.',
   settings: 'Configuration and preferences.',
+  ai: 'AI features — composers, assistant pages, AI replies and agent controls.',
 }
 
 export const INTENT_TAG_NAMES = Object.keys(INTENT_TAGS)

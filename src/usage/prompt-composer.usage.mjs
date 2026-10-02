@@ -6,6 +6,7 @@ export const usage = {
     'People type a request to an AI: an assistant page, a chat thread, a side panel, or an "ask about this" bar.',
   ],
   alternatives: [
+    { name: 'ai-home', when: 'you need the whole AI start page around the composer, not just the box.' },
     { name: 'chat', when: 'two people are messaging each other and no AI is involved.' },
     { name: 'textarea', when: 'it is an ordinary form field whose text is saved, not sent to an AI.' },
   ],

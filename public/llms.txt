@@ -1,6 +1,6 @@
 # Quill Design System
 
-> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 51 composable blocks. Version 0.15.2.
+> Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 52 composable blocks. Version 0.15.2.
 
 Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.
 
@@ -187,7 +187,7 @@ Three principles name the point of view; the rules underneath are how they show 
 ### Rules
 - **Author against semantic tokens** — `--paper`, `--ink`, `--card`, `--primary`, `--ring` and the rest; never the per-theme `dk-*` / `cl-*` / `cd-*` / `int-*` sets and never a raw hex. That is what makes every theme free.
 - **Ink for actions, accent for meaning** — primary actions are ink (`--primary`). The accent pigment (moss by default; `--accent-pigment-text` for text, `--link`, `--ring`) is reserved for the one accent word, eyebrows, links and the focus ring. Terracotta is the danger pigment: never a hover colour, and a focus ring only when it is the chosen accent.
-- **Reach for a block before building one** — the registry ships 51 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands. When no block or primitive fits, compose from primitives and semantic tokens within these rules and name the gap, rather than inventing a new pattern.
+- **Reach for a block before building one** — the registry ships 52 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands. When no block or primitive fits, compose from primitives and semantic tokens within these rules and name the gap, rather than inventing a new pattern.
 - **Made for people** — WCAG 2.1 AA is a feature, not a checkbox: text cuts clear 4.5:1 on every theme ground, interactive borders clear 3:1, charts use the CVD-safe chart tokens in fixed order, motion has a reduced-motion path.
 - **Content** — sentence case everywhere (uppercase only for eyebrows); state the decision, then the reason; no hype punctuation, no emoji.
 
@@ -219,6 +219,7 @@ Blocks are tagged with an intent vocabulary so you can pick by the job to be don
 - `productivity` — Task and workflow management.
 - `content` — Editorial and informational blocks.
 - `settings` — Configuration and preferences.
+- `ai` — AI features — composers, assistant pages, AI replies and agent controls.
 
 ## Components
 
@@ -231,6 +232,7 @@ Each block is a composition of restyled primitives. `intent` lists its jobs; `us
 - [Badges on card](https://www.quilldesignsystem.com/r/badge-on-card.json) — _[data-display]_ You need to show status or category badges attached to a content card. Not for: you need a badge whose color is driven by a semantic tone token rather than the three fixed variants here → tone-badge; the badges are actually per-row status in a list of records, not a single card's labels → data-table. · [usage guide](https://www.quilldesignsystem.com/usage/badge-on-card.md)
 - [Calendar page](https://www.quilldesignsystem.com/r/calendar-page.json) — _[scheduling]_ You need to pick a single date and show what's scheduled that day. Not for: the user is booking a span of days, not viewing what's scheduled on one → calendar-range; you want a chronological history of past events, not a schedule of upcoming sessions tied to a picked date → activity-feed. · [usage guide](https://www.quilldesignsystem.com/usage/calendar-page.md)
 - [Calendar range picker](https://www.quilldesignsystem.com/r/calendar-range.json) — _[scheduling, form]_ You need to book a span of days with a two-month range picker and confirm/clear actions. Not for: the user is picking a single day to view, not a multi-day span to reserve → calendar-page; the range is just one field within a larger purchase flow, not the whole card → checkout. · [usage guide](https://www.quilldesignsystem.com/usage/calendar-range.md)
+- [AI home](https://www.quilldesignsystem.com/r/ai-home.json) — _[ai]_ An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet. Not for: you only need the box, inside a page that is about something else → prompt-composer; two people are messaging; there is no AI → chat. · [usage guide](https://www.quilldesignsystem.com/usage/ai-home.md)
 - [Chat panel](https://www.quilldesignsystem.com/r/chat.json) — _[messaging]_ You need a one-on-one messaging panel with a contact header, bubbles, and a composer. Not for: you need a list of conversations alongside the open thread, not just the single open thread → list-detail; the messages are one-way system alerts, not a two-way conversation with someone → notifications. · [usage guide](https://www.quilldesignsystem.com/usage/chat.md)
 - [Checkout](https://www.quilldesignsystem.com/r/checkout.json) — _[commerce, form]_ You need to collect payment and card details alongside an order summary. Not for: you only need the cart-review card, not the full payment form beside it → order-summary; payment is one step in a longer multi-step flow, not a single standalone page → wizard. · [usage guide](https://www.quilldesignsystem.com/usage/checkout.md)
 - [Command palette](https://www.quilldesignsystem.com/r/command-palette.json) — _[navigation]_ You need a searchable ⌘K launcher for actions and quick navigation. Not for: search results should live inline on the page, not in a global keyboard-triggered overlay → search-results; the list of options is small and tied to a specific trigger element, not a global searchable launcher → dropdown-menu. · [usage guide](https://www.quilldesignsystem.com/usage/command-palette.md)
