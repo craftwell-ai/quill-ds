@@ -11,16 +11,20 @@ const meta = {
   title: 'Components / PromptComposer',
   component: PromptComposer,
   tags: ['autodocs'],
-  parameters: { layout: 'padded', docs: { description: { component: renderUsageDocs(usage) } } },
+  parameters: { layout: 'fullscreen', docs: { description: { component: renderUsageDocs(usage) } } },
   args: { onSubmit: fn(), onStop: fn() },
   argTypes: {
     size: { control: 'select', options: ['lg', 'sm'] },
     status: { control: 'select', options: ['idle', 'working', 'disabled', 'error'] },
   },
-  // Stories with a / or @ menu leave room above the composer, where the menu opens in an app
-  // (composers sit low on the page, under a thread). MenuFlipsBelowNearTheTop opts out to test the flip.
-  decorators: [(Story, { args, parameters }) => (
-    <div className={args.commands && parameters.roomAbove !== false ? 'mx-auto max-w-xl pt-80' : 'mx-auto max-w-xl'}><Story /></div>
+  // Every story frames the composer the same way: centred across and down the canvas at one width. On a story
+  // page the frame fills the screen, less the preview's 24px padding; on the Docs page each example keeps its own
+  // height. The / and @ menu has room to open upward from the centre. MenuFlipsBelowNearTheTop pins the composer
+  // to the top to test the flip.
+  decorators: [(Story, { parameters, viewMode }) => (
+    <div className={parameters.pinTop ? 'p-4' : viewMode === 'story' ? 'grid min-h-[calc(100vh-3rem)] place-items-center p-4' : 'grid place-items-center p-4'}>
+      <div className="mx-auto w-full max-w-xl"><Story /></div>
+    </div>
   )],
 } satisfies Meta<typeof PromptComposer>
 
@@ -264,7 +268,7 @@ export const MenuAnnouncesActiveOption: Story = {
 
 // With no room above (a composer at the top of a panel), the menu opens below instead of off-screen.
 export const MenuFlipsBelowNearTheTop: Story = {
-  parameters: { roomAbove: false },
+  parameters: { pinTop: true },
   args: {
     size: 'sm',
     commands: [

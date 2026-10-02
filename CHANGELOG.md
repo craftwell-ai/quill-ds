@@ -19,7 +19,8 @@ footer reads `package.json` directly, so the displayed version updates with the 
 - **Composer mode tabs: an unselected tab keeps a subtle muted fill and a hairline outline** with the same 8px top corners, so it still reads as a tab (as in ClickUp). It stops just above the box, so the AI edge runs in front of it; only the selected tab joins the box. The outline (the soft card line) is there because the fill alone almost vanished on Dusk, Classic Dark and Intelligent. Label contrast on the fill is AA in every theme (lowest 4.60:1, Dawn).
 
 ### Fixed
-- **Composer `/` and `@` menu no longer opens off-screen.** It opens upward when there is room and flips below the composer when there is not (a composer near the top of a panel or page). Stories that open the menu now leave room above, as an app does; `MenuFlipsBelowNearTheTop` and `MenuOpensAboveWithRoom` pin both placements.
+- **Composer `/` and `@` menu no longer opens off-screen.** It opens upward when there is room and flips below the composer when there is not (a composer near the top of a panel or page). `MenuFlipsBelowNearTheTop` and `MenuOpensAboveWithRoom` pin both placements.
+- **Composer stories are framed the same way:** every story page centres the composer across and down the canvas at one width (only `MenuFlipsBelowNearTheTop` sits at the top, which is what it tests).
 
 ## [0.16.2] — 2026-10-02
 
