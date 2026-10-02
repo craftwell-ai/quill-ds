@@ -10,7 +10,7 @@ the token source by `npm run build:llms` — edit `src/usage/foundations.mjs`, n
 the text between the markers; the same renderer feeds llms.txt.
 
 > **Brand in one line:** A low-contrast, editorial-derived visual language. Warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning. No
-> emoji, no decorative gradients (the AI gradient, which marks AI and nothing else, is the one exception — DESIGN.md).
+> emoji, no decorative gradients (the AI gradient, which marks AI and nothing else, is the one exception — see Do / Don't below).
 
 **Related files**
 - `src/tokens/quill.tokens.mjs` — the source of truth for every value below;

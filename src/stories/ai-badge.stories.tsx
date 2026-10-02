@@ -35,7 +35,7 @@ export const DoDont: Story = {
       dontExample={<AiBadge>Active</AiBadge>} />
   ),
 }
-// ToneBadge import is used in the docs comparison below the pair.
+// ToneBadge import is used by BesideToneBadge.
 export const BesideToneBadge: Story = {
   args: { children: 'Suggested' },
   render: () => <div className="flex gap-2"><ToneBadge tone="moss">current</ToneBadge><AiBadge>Suggested</AiBadge></div>,

@@ -28,6 +28,23 @@ export const Outline: Story = {
 }
 export const Ghost: Story = { args: { variant: 'ghost', children: 'Summarize' } }
 
+// Every Button size, so the 18px mark can be judged in the small ones (xs is 24px tall).
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex items-center gap-3">
+      {(['xs', 'sm', 'default', 'lg'] as const).map((size) => (
+        <AiButton key={size} variant="outline" size={size}>Ask AI ({size})</AiButton>
+      ))}
+      {/* An icon-only AiButton: the mark is the whole face, so the button carries the name. */}
+      <AiButton variant="outline" size="icon" aria-label="Ask AI" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    for (const size of ['xs', 'sm', 'default', 'lg']) await expect(canvas.getByRole('button', { name: `Ask AI (${size})` })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: 'Ask AI' })).toBeVisible()
+  },
+}
+
 export const DoDont: Story = {
   render: () => (
     <DoDontPair usage={usage} id="gradient-on-mark-not-label"
