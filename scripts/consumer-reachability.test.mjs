@@ -233,3 +233,18 @@ test('shipped code reads no CSS variable an app never receives', () => {
   assert.ok(files > 50, `expected 50+ shipped files, read ${files}`)
   assert.deepEqual([...new Set(offenders)], [])
 })
+
+test('every ai-* utility in shipped code is a utility the shipped item defines', () => {
+  const defined = new Set(Object.keys(item.css ?? {}).filter((k) => k.startsWith('@utility ')).map((k) => k.slice('@utility '.length)))
+  const used = new Set()
+  for (const dir of ['registry/blocks', 'registry/lib']) {
+    for (const file of readdirSync(join(root, dir)).filter((f) => f.endsWith('.tsx'))) {
+      for (const m of readFileSync(join(root, dir, file), 'utf8').matchAll(/(?<![\w-])(ai-[a-z-]+)(?![\w-])/g)) {
+        if (/^ai-(mark|button|badge|home)$/.test(m[1])) continue // component/file names, not utilities
+        used.add(m[1])
+      }
+    }
+  }
+  const missing = [...used].filter((u) => !defined.has(u))
+  assert.deepEqual(missing, [], `shipped code uses ai-* utilities the CLI item does not define: ${missing.join(', ')}`)
+})

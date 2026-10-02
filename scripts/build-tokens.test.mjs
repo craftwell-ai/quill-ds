@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { transform } from 'lightningcss'
 import { readFileSync } from 'node:fs'
-import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES } from './build-tokens.mjs'
+import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES, renderAiUtilities, AI_UTILITIES, AI_RULES } from './build-tokens.mjs'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 
 test('generated CSS survives strict minification (LightningCSS) with light primitives intact', () => {
@@ -357,7 +357,7 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
     for (const k of Object.keys(vars)) assert.ok(!k.startsWith('--'), `cssVars.${bucket} key '${k}' must be bare`)
   }
   const selectors = Object.keys(payload.css)
-  assert.equal(selectors.length, 2 + css.modes.length + css.accents.length) // the dark variant + ':root' + themes + accents
+  assert.equal(selectors.length, 2 + css.modes.length + css.accents.length + Object.keys(AI_RULES).length) // the dark variant + ':root' + themes + accents + AI utilities/keyframes
   for (const [selector, block] of Object.entries(payload.css)) {
     if (selector.startsWith('@')) continue // an at-rule carries no declarations
     const keys = Object.keys(block)
@@ -369,4 +369,21 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
   const declared = [...darkBody.matchAll(/^\s*--([a-z0-9-]+)\s*:/gm)].length
   assert.equal(Object.keys(payload.css['[data-theme="dark"]']).length, declared)
   assert.equal(payload.css['[data-theme="dark"]']['--paper'], 'var(--dk-paper)')
+})
+
+test('AI utilities: every one is generated, with reduced-motion stills for the animated ones', () => {
+  const css = renderAiUtilities()
+  for (const name of AI_UTILITIES) assert.match(css, new RegExp(`@utility ${name} \\{`), `missing @utility ${name}`)
+  for (const name of ['ai-edge-working', 'ai-line', 'ai-shimmer']) {
+    const block = css.slice(css.indexOf(`@utility ${name} {`))
+    assert.match(block.slice(0, block.indexOf('\n}\n') + 2), /prefers-reduced-motion: reduce[\s\S]*animation: none/, `${name} must stop under reduced motion`)
+  }
+  for (const k of ['ai-sweep', 'ai-line', 'ai-shimmer']) assert.match(css, new RegExp(`@keyframes ${k} \\{`))
+  assert.doesNotMatch(css, /accent-pigment/, 'the AI gradient is fixed across accents')
+})
+
+test('AI utilities ride in the CLI payload as well as the theme file', () => {
+  const payload = registryPayload(renderCss(tokens))
+  for (const name of AI_UTILITIES) assert.ok(payload.css[`@utility ${name}`], `CLI payload lacks @utility ${name}`)
+  for (const k of ['ai-sweep', 'ai-line', 'ai-shimmer']) assert.ok(payload.css[`@keyframes ${k}`], `CLI payload lacks @keyframes ${k}`)
 })

@@ -824,6 +824,74 @@
         "[data-accent=\"gold\"]": {
           "--accent-pigment": "var(--gold-deep)",
           "--accent-pigment-text": "var(--gold-text)"
+        },
+        "@utility ai-text": {
+          "background-image": "linear-gradient(115deg, var(--ai-text-from), var(--ai-text-via) 50%, var(--ai-text-to))",
+          "-webkit-background-clip": "text",
+          "background-clip": "text",
+          "color": "transparent"
+        },
+        "@utility ai-edge": {
+          "border": "1.5px solid transparent",
+          "background": "linear-gradient(var(--background), var(--background)) padding-box, linear-gradient(115deg, color-mix(in oklab, var(--ai-from) 45%, var(--line-control)), color-mix(in oklab, var(--ai-via) 45%, var(--line-control)) 50%, color-mix(in oklab, var(--ai-to) 45%, var(--line-control))) border-box",
+          "&:focus-within, &[data-lit]": {
+            "background": "linear-gradient(var(--background), var(--background)) padding-box, linear-gradient(115deg, var(--ai-from), var(--ai-via) 50%, var(--ai-to)) border-box"
+          }
+        },
+        "@utility ai-edge-working": {
+          "border": "1.5px solid transparent",
+          "background": "linear-gradient(var(--background), var(--background)) padding-box, linear-gradient(90deg, var(--ai-from), var(--ai-via), var(--ai-to), var(--ai-via), var(--ai-from)) border-box",
+          "background-size": "100% 100%, 300% 100%",
+          "animation": "ai-sweep 2.4s linear infinite",
+          "@media (prefers-reduced-motion: reduce)": {
+            "animation": "none",
+            "background-size": "100% 100%, 100% 100%"
+          }
+        },
+        "@utility ai-wash": {
+          "background-image": "linear-gradient(180deg, color-mix(in oklab, var(--ai-from) 16%, transparent) 0%, color-mix(in oklab, var(--ai-via) 8%, transparent) 45%, transparent 100%)"
+        },
+        "@utility ai-glow": {
+          "background-image": "radial-gradient(60% 70% at 30% 40%, color-mix(in oklab, var(--ai-from) 18%, transparent), transparent 70%), radial-gradient(55% 65% at 75% 60%, color-mix(in oklab, var(--ai-to) 18%, transparent), transparent 70%)"
+        },
+        "@utility ai-line": {
+          "height": "2px",
+          "border-radius": "2px",
+          "background-image": "linear-gradient(90deg, var(--ai-from), var(--ai-via), var(--ai-to), var(--ai-via), var(--ai-from))",
+          "background-size": "300% 100%",
+          "animation": "ai-line 1.6s linear infinite",
+          "@media (prefers-reduced-motion: reduce)": {
+            "animation": "none",
+            "background-size": "100% 100%"
+          }
+        },
+        "@utility ai-shimmer": {
+          "background-image": "linear-gradient(90deg, var(--muted-foreground), var(--ai-text-via), var(--muted-foreground))",
+          "background-size": "200% 100%",
+          "-webkit-background-clip": "text",
+          "background-clip": "text",
+          "color": "transparent",
+          "animation": "ai-shimmer 2.2s linear infinite",
+          "@media (prefers-reduced-motion: reduce)": {
+            "animation": "none",
+            "color": "var(--muted-foreground)",
+            "background-image": "none"
+          }
+        },
+        "@keyframes ai-sweep": {
+          "to": {
+            "background-position": "0 0, -300% 0"
+          }
+        },
+        "@keyframes ai-line": {
+          "to": {
+            "background-position": "-300% 0"
+          }
+        },
+        "@keyframes ai-shimmer": {
+          "to": {
+            "background-position": "-200% 0"
+          }
         }
       },
       "docs": "Themes — set data-theme on <html>: unset (or data-theme=\"light\") → Dawn (default) · data-theme=\"dark\" → Dusk · data-theme=\"classic-light\" → Classic Light · data-theme=\"classic-dark\" → Classic Dark · data-theme=\"intelligent\" → Intelligent. 5 themes in total. Accents — set data-accent on <html>, independently of the theme: terracotta · moss (default) · indigo · gold. The accent drives links, eyebrows, focus rings and accent italics. The two axes are independent. Runtime contract — the theme-selector block owns both attributes: after hydration it reads localStorage (\"quill-theme\", \"quill-accent\") and stamps <html>. Prerendered markup is always Dawn + moss, so first paint matches the server. Charts — use the chart tokens (--chart-series-1..5, the sequential and diverging ramps), never raw pigments. Assign series colours in that fixed order and never reorder or cycle survivors when a filter drops one: the order keeps the palette distinguishable under all three dichromacies. Fonts — Raleway (body) and Fraunces (display) load through the theme file's @import; no next/font. Never load them again under another name: the theme matches literal names. Wiring — the CLI install merges the theme into your Tailwind stylesheet. A theme FILE must be imported from inside that stylesheet — `@import \"./quill-theme.css\"` after `@import \"tailwindcss\"` and below any `@custom-variant dark` line shadcn wrote (the last wins) — never from layout.tsx, where every Quill utility is dead. dark: utilities — stock primitives' dark: tweaks follow Quill's dark themes (and the .dark class) once the theme is wired; nothing to add by hand. Self-check — after changing UI, run `node scripts/quill-check.mjs` (install once: `npx shadcn@latest add @quill/check`) and clear every finding: stock colours, raw colours, bracket values where a token exists, retired names, dead classes. An exception: `// quill-check: allow <rule> — <why>` on the line above. Updating — re-run with --overwrite, not --yes: on a file you have changed, --yes prompts in a terminal and silently skips when non-interactive. Full machine-readable reference for agents: https://www.quilldesignsystem.com/llms.txt. Per-component usage guides at /usage/<name>.md."
