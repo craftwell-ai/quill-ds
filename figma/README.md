@@ -57,6 +57,21 @@ gh run download <run id> -n figma-visual-diff -D .visual/ci && node scripts/figm
 
 A paint built from a literal and then bound — `setBoundVariableForPaint({ type: 'SOLID', color: {0,0,0} }, 'color', v)` — keeps the binding but RENDERS the literal (solid black), in the plugin export and the REST export alike. Every binding that works carries the variable's resolved `color` and, for a `tint/*`, `opacity` = its alpha. So either copy a paint from a node that already uses the variable (`JSON.parse(JSON.stringify(node.fills[0]))`) or set `color`/`opacity` to the light-mode value yourself before binding. Proven with a 1×1 slice export: black → (235, 224, 199).
 
+## AI gradient (2026-10-01)
+
+Code paints AI surfaces with `linear-gradient(115deg, ai-from, ai-via 50%, ai-to)`. Figma has **one** paint style for it,
+`AI/Gradient`, and it follows the theme on its own: each of its three colour stops (0, 0.5, 1) is bound to a variable
+(`color/ai-from`, `color/ai-via`, `color/ai-to`), the same way a solid fill binds a colour. Switch a frame to Dark and the
+gradient switches with it — no per-theme copies. The Plugin API accepts this: a stop carries
+`boundVariables: { color: { type: 'VARIABLE_ALIAS', id } }` alongside its Light colour (the colour matters, see the gotcha
+above). The fallback in the plan — four styles `AI/Gradient/Light|Dark|Classic Light|Classic Dark` with typed hex values —
+was **not needed** and does not exist.
+
+The foundations sync upserts the style by name (`syncAiGradient`), so a re-sync keeps it. The 115° angle is converted to
+Figma's gradient matrix with CSS's own gradient-line length, so on a square it lands corner to corner exactly as the
+browser draws it; on a wide frame it is close, not identical (CSS re-fits the line to each box, a style cannot). The text
+colours (`color/ai-text-*`) are variables only — no paint style, since gradient text is a CSS clip with no Figma style twin.
+
 ## Names
 
 A variable is its CSS name with one group level: `--paper-warm` is `color/paper-warm`, `--space-2_5` is `space/2_5`,

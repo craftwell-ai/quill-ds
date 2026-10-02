@@ -405,6 +405,46 @@ async function syncTints(DTCG) {
   return { created, updated, total: DTCG.Tints.length }
 }
 
+// ---- AI gradient: one paint style whose three stops bind color/ai-from|via|to ----
+// Code's AI utilities paint `linear-gradient(115deg, from, via 50%, to)`. Binding
+// each stop to its variable keeps the style mode-aware: one style, four themes.
+// Each stop also carries the variable's Light value — a bound paint built from a
+// literal renders the literal (README, "Binding a colour on a NEW paint").
+const AI_GRADIENT = { name: 'AI/Gradient', angle: 115, stops: [['color/ai-from', 0], ['color/ai-via', 0.5], ['color/ai-to', 1]] }
+
+// CSS angle (0deg = up, clockwise) → Figma gradientTransform over a unit box,
+// with CSS's gradient-line length, so the ends meet the corners as code draws them.
+function cssAngleTransform(deg) {
+  const rad = (deg * Math.PI) / 180
+  const dx = Math.sin(rad)
+  const dy = -Math.cos(rad)
+  const len = Math.abs(dx) + Math.abs(dy)
+  const a = dx / len
+  const b = dy / len
+  return [[a, b, 0.5 - 0.5 * (a + b)], [-b, a, 0.5 - 0.5 * (a - b)]]
+}
+
+async function syncAiGradient() {
+  const prim = await upsertCollection('Quill Primitives')
+  const vars = await varsInCollection(prim)
+  const light = prim.modes.find((m) => m.name === 'Light').modeId
+  const gradientStops = AI_GRADIENT.stops.map(([name, position]) => {
+    const v = vars[name]
+    if (!v) throw new Error(`${name} missing — run the colour sync first`)
+    const c = v.valuesByMode[light]
+    return { position, color: { r: c.r, g: c.g, b: c.b, a: c.a }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: v.id } } }
+  })
+  const styles = await figma.getLocalPaintStylesAsync()
+  let ps = styles.find((s) => s.name === AI_GRADIENT.name)
+  const created = !ps
+  if (!ps) ps = figma.createPaintStyle()
+  ps.name = AI_GRADIENT.name
+  ps.paints = [{ type: 'GRADIENT_LINEAR', gradientTransform: cssAngleTransform(AI_GRADIENT.angle), gradientStops }]
+  ps.description = 'The AI gradient (115°, ai-from → ai-via → ai-to). Stops bind color/ai-* so it follows the theme. Reserved for AI surfaces — DESIGN.md, the gradient exception.'
+  const bound = ps.paints[0].gradientStops.map((s) => (s.boundVariables && s.boundVariables.color ? s.boundVariables.color.id : null))
+  return { created, id: ps.id, bound: bound.every(Boolean) }
+}
+
 async function syncFoundations(DTCG) {
   const results = {}
   results.colors = await syncPrimitiveColors(DTCG)
@@ -414,6 +454,7 @@ async function syncFoundations(DTCG) {
   results.text = await syncTextStyles(DTCG)
   results.effects = await syncEffectStyles(DTCG)
   results.tints = await syncTints(DTCG)
+  results.aiGradient = await syncAiGradient()
   results.renamed = renamed
   return results
 }
