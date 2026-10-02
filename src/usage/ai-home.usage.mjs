@@ -1,7 +1,7 @@
 export const usage = {
   name: 'ai-home',
   kind: 'pattern',
-  summary: "An AI assistant's start page — a soft AI glow, a greeting with the AI mark, the large composer with Ask/Agent modes, and starter cards.",
+  summary: "An AI assistant's start page — a soft AI glow, a greeting, the large composer with Ask/Agent modes, and starter cards.",
   useWhen: ['An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet.'],
   alternatives: [
     { name: 'prompt-composer', when: 'you only need the box, inside a page that is about something else.' },

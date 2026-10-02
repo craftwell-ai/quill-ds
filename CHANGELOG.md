@@ -13,6 +13,15 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.16.1] — 2026-10-02
+
+### Fixed
+- **The composer and AI home now match the approved sketch.** Quill's radius scale is larger than Tailwind's default (`xl` = 16px, `2xl` = 24px), and 0.16.0 shipped the composer at 24px and its tab at 16px; they are now 16px and 8px (the notebook's right corners 16px). A story pins both.
+- **AI home's heading** is the sketch's calmer Fraunces text cut at 24px with no AI mark in front; the page gains the + button and the mic (`onAdd`, `onMic`).
+
+### Added
+- **Composer mode icons and an on/off switch for the tabs.** A mode takes its own `icon` (Agent shows a person); `showModes={false}` hides the tabs without dropping the modes.
+
 ## [0.16.0] — 2026-10-02
 
 ### Added

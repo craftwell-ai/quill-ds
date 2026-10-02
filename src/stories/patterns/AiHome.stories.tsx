@@ -9,7 +9,7 @@ const meta = {
   component: AiHome,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: renderUsageDocs(usage) } } },
-  args: { onSubmit: fn() },
+  args: { onSubmit: fn(), onAdd: fn(), onMic: fn() },
 } satisfies Meta<typeof AiHome>
 
 export default meta
@@ -25,7 +25,16 @@ export const Default: Story = {
   parameters: { viewport: { options: VIEWPORTS } },
   globals: { viewport: { value: 'desktop', isRotated: false } },
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole('heading', { name: 'What should we work on?' })).toBeVisible()
+    const heading = canvas.getByRole('heading', { name: 'What should we work on?' })
+    await expect(heading).toBeVisible()
+    // Matches the approved sketch: a calm 24px heading with no AI mark in front of it.
+    await expect(heading.querySelector('svg')).toBeNull()
+    await expect(getComputedStyle(heading).fontSize).toBe('24px')
+    await expect(getComputedStyle(heading).fontFamily).toMatch(/Fraunces/)
+    // The toolbar carries the + menu and the mic, as in the sketch; the Agent tab has its icon.
+    await expect(canvas.getByRole('button', { name: 'Add files or context' })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: 'Dictate' })).toBeVisible()
+    await expect(canvas.getByRole('tab', { name: 'Agent' }).querySelector('svg')).not.toBeNull()
     // The composer takes its full max-w-2xl (672px) once the page is wider than that.
     const composer = canvas.getByRole('textbox', { name: 'Message' }).closest('[data-slot="prompt-composer"]') as HTMLElement
     await expect(composer.getBoundingClientRect().width).toBeCloseTo(672, 0)

@@ -1,6 +1,6 @@
 # ai-home (pattern)
 
-An AI assistant's start page — a soft AI glow, a greeting with the AI mark, the large composer with Ask/Agent modes, and starter cards.
+An AI assistant's start page — a soft AI glow, a greeting, the large composer with Ask/Agent modes, and starter cards.
 
 ### When to use
 - An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet.

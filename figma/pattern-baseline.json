@@ -77,28 +77,24 @@
         "Tasks due soon"
       ],
       "icons": [
-        "arrow_upward"
+        "add",
+        "mic",
+        "person"
       ],
       "instances": [
-        "AiMark",
-        "AiMark",
         "PromptComposer"
       ],
       "vars": [
-        "ai-edge/rest-from",
-        "ai-edge/rest-to",
-        "ai-edge/rest-via",
         "border-width/1",
         "color/ai-from",
         "color/ai-to",
         "color/ink",
         "color/ink-soft",
+        "font/heading",
         "radius/lg",
-        "radius/xl",
         "semantic/background",
         "semantic/border",
         "semantic/card",
-        "semantic/foreground",
         "semantic/muted-foreground",
         "space/0_5",
         "space/16",
@@ -108,7 +104,8 @@
         "space/3",
         "space/4",
         "space/5",
-        "text/sm"
+        "text/sm",
+        "text/xl"
       ]
     },
     "analytics-charts": {
