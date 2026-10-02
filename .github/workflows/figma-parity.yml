@@ -173,8 +173,9 @@ jobs:
   # exports every mirrored page from Figma, renders its story at the same width, and
   # diffs the two with a tolerance for font rasterisation, against the accepted
   # numbers in figma/visual-baseline.json (Linux numbers from a CI run — rebuild with
-  # --baseline-from after a run whose strips a human has read). Report-only
-  # (continue-on-error) until the tolerance has held; then drop that line and add --strict.
+  # --baseline-from after a run whose strips a human has read). Strict since v0.16.2:
+  # the tolerance held across the report-only runs (1 Oct 2026: 50 pairs, 0 regressions),
+  # so a regression now fails the job. Accept a deliberate change by rebuilding the baseline.
   # Its own job: it needs npm ci, a Storybook build and a browser, which the
   # dependency-free parity job deliberately does not.
   visual:
@@ -184,7 +185,6 @@ jobs:
     if: always() && (github.event_name == 'workflow_dispatch' || github.event.schedule == '0 13 1 * *')
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    continue-on-error: true
     env:
       FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
     steps:
@@ -198,7 +198,7 @@ jobs:
       - name: Build Storybook
         run: npm run build-storybook -- -o .visual/sb --quiet
       - name: Figma ↔ Storybook visual diff
-        run: node scripts/figma-visual-diff.mjs --out .visual/out --sb .visual/sb
+        run: node scripts/figma-visual-diff.mjs --out .visual/out --sb .visual/sb --strict
       - name: Upload the strips (Figma | Storybook | diff, per pair)
         if: always()
         uses: actions/upload-artifact@v7

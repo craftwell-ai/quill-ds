@@ -49,7 +49,8 @@ strip; the run writes a table (`summary.md`) and, in CI, uploads the strips as a
 
 `figma/visual-baseline.json` holds the accepted `diffPct` and sizes per pair. A run reports a
 **regression** only when a pair is more than 1.0 point above its accepted value or its size
-drifted by more than 8 px; report-only until `--strict`. **The baseline is Linux numbers from a
+drifted by more than 8 px. CI runs with `--strict`, so a regression fails the job; a local
+run is report-only unless you pass it. **The baseline is Linux numbers from a
 CI run** — text rasterises differently on macOS (median 0.2 points, up to 3, and two pairs wrap
 differently), so refresh it from the artifact, never from a laptop: download
 `figma-visual-diff` from the run and `node scripts/figma-visual-diff.mjs --baseline-from
