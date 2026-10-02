@@ -10,7 +10,7 @@ the token source by `npm run build:llms` — edit `src/usage/foundations.mjs`, n
 the text between the markers; the same renderer feeds llms.txt.
 
 > **Brand in one line:** A low-contrast, editorial-derived visual language. Warm neutral grounds, ink-toned type, and a narrow accent palette reserved for meaning. No
-> emoji, no decorative gradients.
+> emoji, no decorative gradients (the AI gradient, which marks AI and nothing else, is the one exception — DESIGN.md).
 
 **Related files**
 - `src/tokens/quill.tokens.mjs` — the source of truth for every value below;
@@ -18,8 +18,8 @@ the text between the markers; the same renderer feeds llms.txt.
 - `registry/themes/quill.css` — the shipped token layer an app installs (it lands
   as `app/quill-theme.css`); `src/app/globals.css` is the site's cut of the same
   source.
-- `registry/blocks` and `registry/lib` — the 51 blocks and the two shipped
-  components (`icon`, `tone-badge`).
+- `registry/blocks` and `registry/lib` — the 52 blocks and the six shipped
+  components (`ai-badge`, `ai-button`, `ai-mark`, `icon`, `prompt-composer`, `tone-badge`).
 - `src/components/ui` — the stock shadcn primitives the token layer restyles
   (apps install these from shadcn, not from Quill).
 - `public/usage` — one usage page per component and block, generated from
@@ -367,9 +367,10 @@ border for `ring`.
 Primitives are **stock shadcn** (Base UI + Tailwind) restyled by the token layer —
 Quill does not re-ship its own Button, Card or Input. Apps install them with
 `npx shadcn@latest add button …`; the site's copies live in `src/components/ui`
-and are what the entries below describe. Quill ships two components of its own
-through the registry — `icon` (`registry/lib/icon.tsx`) and `tone-badge`
-(`registry/lib/tone-badge.tsx`) — plus 51 blocks under `registry/blocks`. The
+and are what the entries below describe. Quill ships six components of its own
+through the registry — `icon` (`registry/lib/icon.tsx`), `tone-badge`
+(`registry/lib/tone-badge.tsx`), and the AI kit (`ai-badge`, `ai-button`,
+`ai-mark`, `prompt-composer`) — plus 52 blocks under `registry/blocks`. The
 per-component rules live in `public/usage` (one page per name), written once in
 `src/usage`.
 
@@ -509,7 +510,9 @@ Three principles name the point of view; the rules underneath are how they show 
 ### Do / Don't
 **Do** — sit everything on digital paper; reserve the accent for the one accent word, eyebrows, links and the focus ring; use ink for primary actions; warm layered shadows; Fraunces light and tight for headings.
 
-**Don't** — pure white or pure black in Dawn and Dusk (the Classic themes use them by design); a hand-set focus colour (`--ring` belongs to the accent axis); terracotta on hover; blue-purple gradients; glassmorphism or purple-glow dark mode; emoji; heavy or bold Fraunces; tight body leading; bouncy or looping motion.
+**Don't** — pure white or pure black in Dawn and Dusk (the Classic themes use them by design); a hand-set focus colour (`--ring` belongs to the accent axis); terracotta on hover; blue-purple gradients; any gradient except the AI gradient in its six placements; glassmorphism or purple-glow dark mode; emoji; heavy or bold Fraunces; tight body leading; bouncy or looping motion.
+
+**The AI gradient** is the only gradient Quill ships and means one thing: AI. Ember (gold → terracotta → indigo), fixed across accents, via the `ai-*` utilities only. Six placements: the AI mark; the composer's edge; a top-to-bottom wash on an AI panel; motion while AI works; one soft glow on an AI home page; gradient text on an AI feature's heading. Never on answer text; Accept, Replace or Send; charts; status colours; anything not AI. One of `ai-edge` / `ai-edge-working` per element (same background); the edge fills with `--background`, so use it on page-background surfaces.
 
 ### Anti-references
 - The generic SaaS/shadcn default look: white cards, blue accents, hero-metric rows, identical card grids.

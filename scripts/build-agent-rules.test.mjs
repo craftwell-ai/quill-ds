@@ -48,7 +48,9 @@ test('the rules file stays small enough to load into every session', () => {
   // Raised from 18 to 19.5 KB in 0.10.0 for the colour-role guidance: the file named
   // 3 of the 31 roles, and picking a colour is what an agent does most. It gets the
   // 1.8 KB compact form; the full 12 KB table lives in llms.txt. Spend on nothing else.
-  assert.ok(committed.length < 19_500, `rules file is ${committed.length} bytes — trim it, every session pays for it`)
+  // Raised from 19.5 to 20 KB for the AI gradient exception (~650 B): an agent that
+  // does not see the rule will either use the gradient on non-AI UI or avoid it for AI.
+  assert.ok(committed.length < 20_000, `rules file is ${committed.length} bytes — trim it, every session pays for it`)
   const lines = committed.split('\n').length
   assert.ok(lines <= 200, `rules file is ${lines} lines — Claude Code's target is 200; move detail into the skill`)
 })

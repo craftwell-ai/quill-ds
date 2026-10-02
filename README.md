@@ -38,7 +38,7 @@ npx shadcn@latest search @quill             # list everything
 
 **Primitives are stock shadcn, restyled by the token layer.** Quill does not re-ship its own
 copies of Button, Card or Dialog — install those from shadcn as usual and the theme restyles
-them. Quill ships the theme, two components (`icon`, `tone-badge`), and 51 composable blocks.
+them. Quill ships the theme, six components (`ai-badge`, `ai-button`, `ai-mark`, `icon`, `prompt-composer`, `tone-badge`), and 52 composable blocks.
 
 Machine-readable summary for coding agents: **[llms.txt](https://www.quilldesignsystem.com/llms.txt)**.
 Per-component usage guides live at `/usage/<name>.md`.
