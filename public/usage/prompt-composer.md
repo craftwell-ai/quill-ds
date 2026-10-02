@@ -19,6 +19,7 @@ The box people type to an AI in — grows with the text, sends on Enter, turns S
 - **Do:** Mark AI commands in the / menu with the AI sparkle and leave ordinary app commands unmarked. **Don't:** Mark every command — the mark is how people tell which actions call the AI.
 - **Do:** Set `status="working"` while the AI answers and pass `onStop`. **Don't:** Disable the whole composer while the AI works — people should be able to stop it.
 - **Do:** Use `variant="notebook"` where the prompt is a piece of writing — a brief, a spec, a long instruction. **Don't:** Use the notebook for quick questions or a help widget — its ruled page reads as "write at length".
+- **Do:** Give each mode its own icon (`icon`) — the AI mode uses `ai: true` for the mark — and use `showModes={false}` to hide the tabs where a page has only one mode. **Don't:** Remove the `modes` list just to hide the tabs; that also drops each mode's placeholder.
 
 ### Accessibility
 - The text box has an accessible name (`label`, default "Message").

@@ -5,6 +5,7 @@ import { PromptComposer } from '../../registry/lib/prompt-composer'
 import { usage } from '@/usage/prompt-composer.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
+import { Icon } from '@/components/ui/icon'
 
 const meta = {
   title: 'Components / PromptComposer',
@@ -163,15 +164,48 @@ export const WithModes: Story = {
   args: {
     modes: [
       { value: 'ask', label: 'Ask', ai: true, placeholder: 'Ask anything. Type / for skills, @ to add context' },
-      { value: 'agent', label: 'Agent', placeholder: 'What should your agent take on?' },
+      { value: 'agent', label: 'Agent', icon: <Icon name="person" />, placeholder: 'What should your agent take on?' },
     ],
     onModeChange: fn(),
   },
   play: async ({ canvas, args }) => {
     await expect(canvas.getByRole('tab', { name: 'Ask', selected: true })).toBeVisible()
+    // A non-AI mode shows its own icon (the person for Agent); the AI mode shows the mark.
+    await expect(canvas.getByRole('tab', { name: 'Agent' }).querySelector('svg')).not.toBeNull()
     await userEvent.click(canvas.getByRole('tab', { name: 'Agent' }))
     await expect(args.onModeChange).toHaveBeenCalledWith('agent')
     await expect(canvas.getByRole('textbox', { name: 'Message' })).toHaveAttribute('placeholder', 'What should your agent take on?')
+  },
+}
+
+export const TabsTurnedOff: Story = {
+  args: {
+    showModes: false,
+    modes: [
+      { value: 'ask', label: 'Ask', ai: true },
+      { value: 'agent', label: 'Agent', icon: <Icon name="person" /> },
+    ],
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.queryByRole('tablist')).toBeNull()
+    await expect(canvas.getByRole('textbox', { name: 'Message' })).toBeVisible()
+  },
+}
+
+// Pins the approved sketch's shape: Quill's radius scale is larger than Tailwind's default
+// (xl = 16px, 2xl = 24px), and shipping 2xl made the box visibly rounder than approved.
+export const MatchesApprovedShape: Story = {
+  args: {
+    modes: [
+      { value: 'ask', label: 'Ask', ai: true },
+      { value: 'agent', label: 'Agent', icon: <Icon name="person" /> },
+    ],
+  },
+  play: async ({ canvas }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' }).closest('[data-slot="prompt-composer"]') as HTMLElement
+    await expect(getComputedStyle(box).borderTopLeftRadius).toBe('16px')
+    const tab = canvas.getByRole('tab', { name: 'Ask' })
+    await expect(getComputedStyle(tab).borderTopLeftRadius).toBe('8px')
   },
 }
 

@@ -59,6 +59,12 @@ export const usage = {
       dont: 'Use the notebook for quick questions or a help widget — its ruled page reads as "write at length".',
       visual: false,
     },
+    {
+      id: 'tabs-on-off',
+      do: 'Give each mode its own icon (`icon`) — the AI mode uses `ai: true` for the mark — and use `showModes={false}` to hide the tabs where a page has only one mode.',
+      dont: 'Remove the `modes` list just to hide the tabs; that also drops each mode\'s placeholder.',
+      visual: false,
+    },
   ],
   a11y: [
     'The text box has an accessible name (`label`, default "Message").',

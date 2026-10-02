@@ -17,7 +17,8 @@ const IME_SETTLE_MS = 100
 export type ComposerAttachment = { id: string; name: string; meta?: string; kind?: string } // kind: 'PDF', 'CSV'… shown on the thumb
 export type ComposerTool = { id: string; label: string }
 
-export type ComposerMode = { value: string; label: string; placeholder?: string; ai?: boolean } // ai: show the mark on the tab
+// ai: the tab shows the AI mark. icon: any other mode's own icon (e.g. a person for Agent); ignored when ai is set.
+export type ComposerMode = { value: string; label: string; placeholder?: string; ai?: boolean; icon?: React.ReactNode }
 export type ComposerCommand = { value: string; label: string; description?: string; trigger: '/' | '@'; ai?: boolean }
 
 export type PromptComposerProps = {
@@ -43,6 +44,7 @@ export type PromptComposerProps = {
   onRemoveTool?: (id: string) => void
   /** Mode tabs above the box (Ask, Agent…); the selected tab shares the AI edge. */
   modes?: ComposerMode[]
+  showModes?: boolean // false hides the tabs without removing the modes; default true
   mode?: string
   onModeChange?: (value: string) => void
   /** Items for the `/` and `@` menu. Picking one inserts `${trigger}${value} ` and calls onCommand. */
@@ -63,7 +65,7 @@ export function PromptComposer({
   onSubmit, onStop, value, defaultValue = '', onValueChange, status = 'idle', error,
   size = 'lg', label = 'Message', placeholder, onMic, leading, trailing, className,
   attachments, onRemoveAttachment, onFilesDropped, tools, onRemoveTool,
-  modes, mode, onModeChange, commands, onCommand, variant = 'default', autoFocus, ref,
+  modes, showModes = true, mode, onModeChange, commands, onCommand, variant = 'default', autoFocus, ref,
 }: PromptComposerProps) {
   const [inner, setInner] = React.useState(defaultValue)
   const text = value ?? inner
@@ -171,7 +173,7 @@ export function PromptComposer({
             </CommandList>
           </Command>
         ) : null}
-        {modes?.length ? (
+        {showModes && modes?.length ? (
           <div role="tablist" aria-label="Mode" className="relative z-10 -mb-[1.5px] flex gap-0.5 pl-5">
             {modes.map((m) => {
               const selected = m.value === currentMode
@@ -184,7 +186,7 @@ export function PromptComposer({
                   data-lit={selected && focused ? '' : undefined}
                   onClick={() => { if (mode === undefined) setInnerMode(m.value); onModeChange?.(m.value) }}
                   className={cn(
-                    'relative inline-flex items-center gap-1.5 rounded-t-xl px-3.5 pt-1.5 pb-2 text-sm font-semibold',
+                    'relative inline-flex items-center gap-1.5 rounded-t-lg px-3.5 pt-1.5 pb-2 text-sm font-semibold',
                     // The selected tab shares the AI edge; the after: strip covers the box's top
                     // edge under it so tab and box read as one shape (approved 2026-10-02).
                     selected
@@ -192,7 +194,7 @@ export function PromptComposer({
                       : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
-                  {m.ai ? <AiMark size={18} /> : null}
+                  {m.ai ? <AiMark size={18} /> : m.icon ? <span aria-hidden className="inline-grid size-[18px] place-items-center [&>svg]:size-[18px]">{m.icon}</span> : null}
                   {m.label}
                 </button>
               )
@@ -210,8 +212,8 @@ export function PromptComposer({
             'shadow-md',
             notebook
               // The margin rule and border replace the AI edge; focus-within stands in for the textarea's cancelled ring.
-              ? 'relative overflow-hidden rounded-l-sm rounded-r-2xl border border-input bg-background focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/40'
-              : cn('rounded-2xl', working ? 'ai-edge-working' : 'ai-edge'),
+              ? 'relative overflow-hidden rounded-l-sm rounded-r-xl border border-input bg-background focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/40'
+              : cn('rounded-xl', working ? 'ai-edge-working' : 'ai-edge'),
             disabled && 'opacity-60',
           )}
         >
