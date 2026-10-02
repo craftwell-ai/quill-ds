@@ -1,0 +1,324 @@
+'use client'
+
+import * as React from 'react'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Icon } from '@/components/ui/icon'
+import { AiMark } from '@/components/ui/ai-mark'
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
+import { cn } from '@/lib/utils'
+
+export type ComposerStatus = 'idle' | 'working' | 'disabled' | 'error'
+
+// Safari delivers the word-confirming Enter just after the input pop-up closes; 100ms covers that
+// gap and is far shorter than a deliberate second Enter to send.
+const IME_SETTLE_MS = 100
+
+export type ComposerAttachment = { id: string; name: string; meta?: string; kind?: string } // kind: 'PDF', 'CSV'… shown on the thumb
+export type ComposerTool = { id: string; label: string }
+
+export type ComposerMode = { value: string; label: string; placeholder?: string; ai?: boolean } // ai: show the mark on the tab
+export type ComposerCommand = { value: string; label: string; description?: string; trigger: '/' | '@'; ai?: boolean }
+
+export type PromptComposerProps = {
+  onSubmit: (value: string) => void
+  onStop?: () => void
+  value?: string
+  defaultValue?: string
+  onValueChange?: (value: string) => void
+  status?: ComposerStatus
+  error?: string
+  size?: 'lg' | 'sm'
+  label?: string
+  placeholder?: string
+  onMic?: () => void
+  leading?: React.ReactNode
+  trailing?: React.ReactNode
+  attachments?: ComposerAttachment[]
+  onRemoveAttachment?: (id: string) => void
+  /** Enables the drop target. */
+  onFilesDropped?: (files: File[]) => void
+  /** Active AI tools, shown as chips with the mark. */
+  tools?: ComposerTool[]
+  onRemoveTool?: (id: string) => void
+  /** Mode tabs above the box (Ask, Agent…); the selected tab shares the AI edge. */
+  modes?: ComposerMode[]
+  mode?: string
+  onModeChange?: (value: string) => void
+  /** Items for the `/` and `@` menu. Picking one inserts `${trigger}${value} ` and calls onCommand. */
+  commands?: ComposerCommand[]
+  onCommand?: (command: ComposerCommand) => void
+  /** `notebook`: ruled page, serif text, the AI gradient as a margin rule, and a word count — for prompts that are writing. */
+  variant?: 'default' | 'notebook'
+  /** Focus the textbox on mount (an AI home page, a chat that opens on demand). */
+  autoFocus?: boolean
+  /** The textbox, so a page can focus it (after a starter card fills it, say). */
+  ref?: React.Ref<HTMLTextAreaElement>
+  className?: string
+}
+
+// Controlled use: when you pass `value`, clear it yourself in `onSubmit`; the composer only empties its own state when uncontrolled.
+/** The box people type to an AI in — grows with the text, sends on Enter, turns Send into Stop while the AI works, with slots for tools, files and a model picker. */
+export function PromptComposer({
+  onSubmit, onStop, value, defaultValue = '', onValueChange, status = 'idle', error,
+  size = 'lg', label = 'Message', placeholder, onMic, leading, trailing, className,
+  attachments, onRemoveAttachment, onFilesDropped, tools, onRemoveTool,
+  modes, mode, onModeChange, commands, onCommand, variant = 'default', autoFocus, ref,
+}: PromptComposerProps) {
+  const [inner, setInner] = React.useState(defaultValue)
+  const text = value ?? inner
+  const setText = (v: string) => { if (value === undefined) setInner(v); onValueChange?.(v) }
+  const working = status === 'working'
+  const disabled = status === 'disabled'
+  const hasText = text.trim().length > 0
+  const notebook = variant === 'notebook'
+  const wordCount = hasText ? text.trim().split(/\s+/).length : 0
+  const errorId = React.useId()
+  const [dragging, setDragging] = React.useState(false)
+  const dropTarget = onFilesDropped && !disabled
+
+  const [innerMode, setInnerMode] = React.useState(modes?.[0]?.value)
+  const currentMode = mode ?? innerMode
+  const activeMode = modes?.find((m) => m.value === currentMode)
+  // The selected tab lights with the box; :focus-within cannot reach a sibling, so track focus.
+  const [focused, setFocused] = React.useState(false)
+
+  const match = /(^|\s)([/@])([\w-]*)$/.exec(text)
+  const trigger = match?.[2] as '/' | '@' | undefined
+  const query = match?.[3] ?? ''
+  const matches = trigger ? (commands ?? []).filter((c) => c.trigger === trigger && c.value.startsWith(query.toLowerCase())) : []
+  const [active, setActive] = React.useState(0)
+  // Back to the first option whenever the match changes (reset during render, not in an effect).
+  const matchKey = `${trigger ?? ''}|${query}|${matches.map((o) => o.value).join(',')}`
+  // Escape closes the menu for this match only; typing changes the key and reopens it. The text is never touched.
+  const [dismissedKey, setDismissedKey] = React.useState<string | null>(null)
+  const [seenMatchKey, setSeenMatchKey] = React.useState(matchKey)
+  if (seenMatchKey !== matchKey) { setSeenMatchKey(matchKey); setActive(0); setDismissedKey(null) }
+  const options = dismissedKey === matchKey ? [] : matches
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+  // Merge the caller's ref with ours: the menu, Send and pick all need the textbox too.
+  const setTextareaRef = React.useCallback((node: HTMLTextAreaElement | null) => {
+    textareaRef.current = node
+    if (typeof ref === 'function') return ref(node)
+    if (ref) (ref as React.RefObject<HTMLTextAreaElement | null>).current = node
+  }, [ref])
+  React.useEffect(() => { if (autoFocus) textareaRef.current?.focus() }, [autoFocus])
+  // Clamp: the options can shrink between renders while `active` still points past the end.
+  const activeIndex = Math.min(active, options.length - 1)
+  const menuRef = React.useRef<HTMLDivElement>(null)
+  const menuOpen = options.length > 0
+  // cmdk gives the list and every option its own id (it ignores ours), so aria-controls and aria-activedescendant have to follow the option cmdk marks
+  // selected. Watch the menu and mirror that id onto the textbox, so a screen reader announces the arrowing.
+  React.useEffect(() => {
+    const menu = menuRef.current
+    const box = textareaRef.current
+    if (!menuOpen || !menu || !box) return
+    const sync = () => {
+      const listId = menu.querySelector('[role="listbox"]')?.id
+      if (listId) box.setAttribute('aria-controls', listId)
+      const id = menu.querySelector('[role="option"][aria-selected="true"]')?.id
+      if (id) box.setAttribute('aria-activedescendant', id)
+      else box.removeAttribute('aria-activedescendant')
+    }
+    sync()
+    const observer = new MutationObserver(sync)
+    observer.observe(menu, { subtree: true, childList: true, attributes: true, attributeFilter: ['aria-selected'] })
+    return () => { observer.disconnect(); box.removeAttribute('aria-activedescendant'); box.removeAttribute('aria-controls') }
+  }, [menuOpen])
+  const pick = (c: ComposerCommand) => {
+    setText(text.slice(0, text.length - query.length - 1) + `${c.trigger}${c.value} `)
+    onCommand?.(c)
+    textareaRef.current?.focus()
+  }
+
+  // Japanese and Chinese input open a pop-up of candidate words, and Enter confirms the chosen
+  // word. That Enter must never send or pick a command. Browsers mark it differently — Chrome
+  // sends it while the pop-up is open (isComposing), Safari just after the pop-up closes (keyCode
+  // 229, isComposing false) — so the composer also tracks the pop-up itself and treats an Enter
+  // within IME_SETTLE_MS of it closing as part of confirming the word.
+  const composingRef = React.useRef(false)
+  const compositionEndedAt = React.useRef(Number.NEGATIVE_INFINITY)
+  const isConfirmingWord = (e: React.KeyboardEvent) =>
+    e.nativeEvent.isComposing ||
+    e.nativeEvent.keyCode === 229 ||
+    composingRef.current ||
+    e.timeStamp - compositionEndedAt.current < IME_SETTLE_MS
+
+  const submit = () => {
+    if (!hasText || working || disabled) return
+    onSubmit(text)
+    if (value === undefined) setInner('')
+    // Clicking Send disables it (the box is now empty), which would drop focus to the page.
+    textareaRef.current?.focus()
+  }
+
+  return (
+    <div className={cn('grid gap-1.5', className)}>
+      <div className="relative">
+        {options.length ? (
+          <Command ref={menuRef} className="absolute inset-x-0 bottom-full z-20 mb-2 h-auto rounded-xl border border-border shadow-lg" shouldFilter={false}
+            value={options[activeIndex]?.value} onMouseDown={(e) => e.preventDefault()} onValueChange={(v) => setActive(Math.max(0, options.findIndex((o) => o.value === v)))}>
+            <CommandList>
+              <CommandEmpty>No matches</CommandEmpty>
+              <CommandGroup heading={trigger === '/' ? 'Commands' : 'Add context'}>
+                {options.map((c) => (
+                  <CommandItem key={c.value} value={c.value} onSelect={() => pick(c)} className="gap-2.5">
+                    {c.ai ? <AiMark size={18} /> : null}
+                    <span className="grid"><span>{c.label}</span>{c.description ? <span className="text-xs text-muted-foreground">{c.description}</span> : null}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        ) : null}
+        {modes?.length ? (
+          <div role="tablist" aria-label="Mode" className="relative z-10 -mb-[1.5px] flex gap-0.5 pl-5">
+            {modes.map((m) => {
+              const selected = m.value === currentMode
+              return (
+                <button
+                  key={m.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={selected}
+                  data-lit={selected && focused ? '' : undefined}
+                  onClick={() => { if (mode === undefined) setInnerMode(m.value); onModeChange?.(m.value) }}
+                  className={cn(
+                    'relative inline-flex items-center gap-1.5 rounded-t-xl px-3.5 pt-1.5 pb-2 text-sm font-semibold',
+                    // The selected tab shares the AI edge; the after: strip covers the box's top
+                    // edge under it so tab and box read as one shape (approved 2026-10-02).
+                    selected
+                      ? 'ai-edge border-b-0 text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {m.ai ? <AiMark size={18} /> : null}
+                  {m.label}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
+        <div
+          data-slot="prompt-composer"
+          data-size={size}
+          onDragOver={dropTarget ? (e) => { e.preventDefault(); setDragging(true) } : undefined}
+          // dragleave also fires when the pointer moves onto a child (the textarea, the hint); only leaving the box ends the drag.
+          onDragLeave={dropTarget ? (e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false) } : undefined}
+          onDrop={dropTarget ? (e) => { e.preventDefault(); setDragging(false); onFilesDropped([...e.dataTransfer.files]) } : undefined}
+          className={cn(
+            'shadow-md',
+            notebook
+              // The margin rule and border replace the AI edge; focus-within stands in for the textarea's cancelled ring.
+              ? 'relative overflow-hidden rounded-l-sm rounded-r-2xl border border-input bg-background focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/40'
+              : cn('rounded-2xl', working ? 'ai-edge-working' : 'ai-edge'),
+            disabled && 'opacity-60',
+          )}
+        >
+          {notebook ? <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-[linear-gradient(180deg,var(--ai-from),var(--ai-via),var(--ai-to))]" /> : null}
+          {/* The edge animation is off in notebook mode, so a sweeping top line carries the working cue. */}
+          {notebook && working ? <span aria-hidden className="ai-line absolute inset-x-0 top-0" /> : null}
+          {attachments?.length ? (
+            <ul className={cn('flex flex-wrap gap-2', size === 'lg' ? 'px-3.5 pt-3' : 'px-2.5 pt-2')} aria-label="Attached files">
+              {attachments.map((a) => (
+                <li key={a.id} className="relative flex max-w-56 items-center gap-2 rounded-lg border border-border bg-card py-1.5 pr-8 pl-1.5 text-xs">
+                  {a.kind ? <span className="grid size-8 shrink-0 place-items-center rounded-md bg-muted text-2xs font-semibold text-ink-soft">{a.kind}</span> : null}
+                  <span className="min-w-0">
+                    <span className="block truncate font-semibold text-foreground">{a.name}</span>
+                    {a.meta ? <span className="block text-muted-foreground">{a.meta}</span> : null}
+                  </span>
+                  {onRemoveAttachment ? (
+                    <button type="button" aria-label={`Remove ${a.name}`} onClick={() => onRemoveAttachment(a.id)}
+                      className="absolute top-1/2 right-1 grid size-6 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+                      <Icon name="close" className="size-3.5" />
+                    </button>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {dragging && dropTarget ? <p className="mx-3.5 mt-2 rounded-lg border-[1.5px] border-dashed border-input p-2 text-center text-xs text-muted-foreground">Drop files to attach</p> : null}
+          <Textarea
+            aria-label={label}
+            aria-invalid={status === 'error' || undefined}
+            aria-describedby={status === 'error' && error ? errorId : undefined}
+            disabled={disabled}
+            placeholder={activeMode?.placeholder ?? placeholder}
+            ref={setTextareaRef}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onCompositionStart={() => { composingRef.current = true }}
+            onCompositionEnd={(e) => { composingRef.current = false; compositionEndedAt.current = e.timeStamp }}
+            onKeyDown={(e) => {
+              // The menu goes first so Enter picks a command instead of sending. It honours the same IME guard.
+              if (options.length) {
+                if (e.key === 'ArrowDown') { e.preventDefault(); setActive((i) => (i + 1) % options.length); return }
+                if (e.key === 'ArrowUp') { e.preventDefault(); setActive((i) => (i - 1 + options.length) % options.length); return }
+                if (e.key === 'Enter') {
+                  if (isConfirmingWord(e)) return
+                  e.preventDefault(); pick(options[activeIndex]); return
+                }
+                if (e.key === 'Escape') { e.preventDefault(); setDismissedKey(matchKey); return }
+              }
+              if (e.key === 'Enter' && !e.shiftKey && !isConfirmingWord(e)) {
+                e.preventDefault()
+                submit()
+              }
+            }}
+            className={cn(
+              // aria-invalid:* cancel the stock textarea's red ring; the AI edge and the alert carry the error.
+              'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
+              // md:text-* overrides the stock textarea's md:text-sm, which would shrink lg on desktop.
+              notebook
+                ? // The rules live on the textarea so they scroll with the text (bg-local) and follow its padding. Each 32px line (leading-8) starts
+                // at the top padding (pt-3.5 = 14px) and its rule is the line's last pixel, so the background y offset must equal that padding.
+                'font-heading text-lg leading-8 md:text-lg pt-3.5 pl-6 placeholder:italic bg-local bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_31px,var(--line-soft)_31px,var(--line-soft)_32px)] bg-[position:0_14px]'
+                : size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base md:text-base' : 'min-h-11 px-3 pt-2.5 text-sm md:text-sm',
+            )}
+          />
+          <div className={cn('flex items-center gap-1.5', size === 'lg' ? 'px-2.5 pb-2.5' : 'px-1.5 pb-1.5')}>
+            {leading}
+            {tools?.map((t) => (
+              <span key={t.id} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-card pr-1 pl-2 text-xs font-semibold text-foreground">
+                <AiMark size={13} />
+                {t.label}
+                {onRemoveTool ? (
+                  <button type="button" aria-label={`Turn off ${t.label}`} onClick={() => onRemoveTool(t.id)}
+                    className="grid size-5 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+                    <Icon name="close" className="size-3" />
+                  </button>
+                ) : null}
+              </span>
+            ))}
+            <span className="flex-1" />
+            {trailing}
+            {notebook ? (
+              // Plain text, not a live region: announcing every word as it is typed is noise.
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {wordCount === 1 ? '1 word' : `${wordCount} words`}
+              </span>
+            ) : null}
+            {working ? (
+              <Button type="button" size="icon" className="rounded-full" aria-label="Stop" onClick={onStop}>
+                <Icon name="stop" className="size-4" />
+              </Button>
+            ) : !hasText && onMic ? (
+              <Button type="button" size="icon" variant="ghost" className="rounded-full" aria-label="Dictate" onClick={onMic} disabled={disabled}>
+                <Icon name="mic" className="size-4" />
+              </Button>
+            ) : (
+              <Button type="button" size="icon" className="rounded-full" aria-label="Send" onClick={submit} disabled={!hasText || disabled}>
+                <Icon name="arrow_upward" className="size-4" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+      {status === 'error' && error ? (
+        <p id={errorId} role="alert" className="px-1 text-sm text-destructive">{error}</p>
+      ) : null}
+    </div>
+  )
+}

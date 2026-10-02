@@ -201,6 +201,80 @@ export function darkVariant(modes = MODES, { stockClass = false } = {}) {
   return `@custom-variant dark (&:is(${selector}));`
 }
 
+// The six AI gradient treatments (DESIGN.md "The AI gradient"), as Tailwind
+// utilities so they ship through BOTH channels: inside the theme file (the
+// file channel honours @utility once imported into the Tailwind stylesheet)
+// and in the CLI `css` payload (the CLI writes `@utility` and `@keyframes`
+// keys verbatim). Plain classes would be dropped by the CLI channel.
+export const AI_UTILITIES = ['ai-text', 'ai-edge', 'ai-edge-working', 'ai-wash', 'ai-glow', 'ai-line', 'ai-shimmer']
+
+const AI_SWEEP = 'var(--ai-from), var(--ai-via), var(--ai-to), var(--ai-via), var(--ai-from)'
+// The composer's edge is a control boundary, so every stop must reach WCAG 1.4.11's
+// 3:1 against the paper. Raw gold measured 2.33:1 lit on Dawn (2.72:1 Classic Light),
+// so the edges alone pull their gold end 45% toward the gold text cut; the hue stays
+// gold and the other stops are untouched. build-tokens.test.mjs recomputes every stop.
+const EDGE_FROM = 'color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from))'
+const EDGE_STOPS = `${EDGE_FROM}, var(--ai-via) 50%, var(--ai-to)`
+const EDGE_SWEEP = `${EDGE_FROM}, var(--ai-via), var(--ai-to), var(--ai-via), ${EDGE_FROM}`
+const mute = (color) => `color-mix(in oklab, ${color} 45%, var(--line-control))`
+const PAD = 'linear-gradient(var(--background), var(--background)) padding-box'
+
+export const AI_RULES = {
+  '@utility ai-text': {
+    'background-image': 'linear-gradient(115deg, var(--ai-text-from), var(--ai-text-via) 50%, var(--ai-text-to))',
+    '-webkit-background-clip': 'text',
+    'background-clip': 'text',
+    color: 'transparent',
+  },
+  '@utility ai-edge': {
+    border: '1.5px solid transparent',
+    background: `${PAD}, linear-gradient(115deg, ${mute(EDGE_FROM)}, ${mute('var(--ai-via)')} 50%, ${mute('var(--ai-to)')}) border-box`,
+    '&:focus-within, &[data-lit]': { background: `${PAD}, linear-gradient(115deg, ${EDGE_STOPS}) border-box` },
+  },
+  '@utility ai-edge-working': {
+    border: '1.5px solid transparent',
+    background: `${PAD}, linear-gradient(90deg, ${EDGE_SWEEP}) border-box`,
+    'background-size': '100% 100%, 300% 100%',
+    animation: 'ai-sweep 2.4s linear infinite',
+    '@media (prefers-reduced-motion: reduce)': { animation: 'none', 'background-size': '100% 100%, 100% 100%' },
+  },
+  '@utility ai-wash': {
+    'background-image': 'linear-gradient(180deg, color-mix(in oklab, var(--ai-from) 16%, transparent) 0%, color-mix(in oklab, var(--ai-via) 8%, transparent) 45%, transparent 100%)',
+  },
+  '@utility ai-glow': {
+    'background-image': 'radial-gradient(60% 70% at 30% 40%, color-mix(in oklab, var(--ai-from) 18%, transparent), transparent 70%), radial-gradient(55% 65% at 75% 60%, color-mix(in oklab, var(--ai-to) 18%, transparent), transparent 70%)',
+  },
+  '@utility ai-line': {
+    height: '2px',
+    'border-radius': '2px',
+    'background-image': `linear-gradient(90deg, ${AI_SWEEP})`,
+    'background-size': '300% 100%',
+    animation: 'ai-line 1.6s linear infinite',
+    '@media (prefers-reduced-motion: reduce)': { animation: 'none', 'background-size': '100% 100%' },
+  },
+  '@utility ai-shimmer': {
+    'background-image': 'linear-gradient(90deg, var(--muted-foreground), var(--ai-text-via), var(--muted-foreground))',
+    'background-size': '200% 100%',
+    '-webkit-background-clip': 'text',
+    'background-clip': 'text',
+    color: 'transparent',
+    animation: 'ai-shimmer 2.2s linear infinite',
+    '@media (prefers-reduced-motion: reduce)': { animation: 'none', color: 'var(--muted-foreground)', 'background-image': 'none' },
+  },
+  '@keyframes ai-sweep': { to: { 'background-position': '0 0, -300% 0' } },
+  '@keyframes ai-line': { to: { 'background-position': '-300% 0' } },
+  '@keyframes ai-shimmer': { to: { 'background-position': '-200% 0' } },
+}
+
+// Same rules as CSS text for the theme file and the site stylesheet.
+export function renderAiUtilities(rules = AI_RULES) {
+  const body = (obj, pad) =>
+    Object.entries(obj)
+      .map(([k, v]) => (typeof v === 'object' ? `${pad}${k} {\n${body(v, pad + '  ')}\n${pad}}` : `${pad}${k}: ${v};`))
+      .join('\n')
+  return Object.entries(rules).map(([sel, decl]) => `${sel} {\n${body(decl, '  ')}\n}`).join('\n\n')
+}
+
 // The shipped theme file. Until 0.12.0 it carried only variables, because an @theme
 // block is inert when the file is imported from a layout — and that was the only
 // wiring the docs described. Imported from inside the Tailwind stylesheet
@@ -209,7 +283,7 @@ export function darkVariant(modes = MODES, { stockClass = false } = {}) {
 // import line. The stock `.dark *` stays in the variant for apps that toggle the class.
 // scripts/file-channel.test.mjs proves both wirings on the built file.
 export function registryBlock(css) {
-  return `${darkVariant(MODES, { stockClass: true })}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}`
+  return `${darkVariant(MODES, { stockClass: true })}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}\n\n${renderAiUtilities()}`
 }
 
 // --- shadcn registry payload (the channel that actually reaches an app) ---
@@ -264,6 +338,7 @@ export function registryPayload(css, t = tokens) {
       [':root', Object.fromEntries(root.filter(([k]) => !contract.has(k)).map(([k, v]) => [`--${k}`, v]))],
       ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body, literal)]),
       ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body, literal)]),
+      ...Object.entries(AI_RULES),
     ]),
   }
 }
@@ -406,7 +481,7 @@ export function renderDtcg(t) {
 
 // --- main (not exercised by unit tests) ---
 function globalsBlock(css) {
-  return `${darkVariant()}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}`
+  return `${darkVariant()}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}\n\n${renderAiUtilities()}`
 }
 
 export function main() {

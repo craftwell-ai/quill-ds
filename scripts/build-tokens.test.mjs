@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { transform } from 'lightningcss'
 import { readFileSync } from 'node:fs'
-import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES } from './build-tokens.mjs'
+import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES, renderAiUtilities, AI_UTILITIES, AI_RULES } from './build-tokens.mjs'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 
 test('generated CSS survives strict minification (LightningCSS) with light primitives intact', () => {
@@ -357,7 +357,7 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
     for (const k of Object.keys(vars)) assert.ok(!k.startsWith('--'), `cssVars.${bucket} key '${k}' must be bare`)
   }
   const selectors = Object.keys(payload.css)
-  assert.equal(selectors.length, 2 + css.modes.length + css.accents.length) // the dark variant + ':root' + themes + accents
+  assert.equal(selectors.length, 2 + css.modes.length + css.accents.length + Object.keys(AI_RULES).length) // the dark variant + ':root' + themes + accents + AI utilities/keyframes
   for (const [selector, block] of Object.entries(payload.css)) {
     if (selector.startsWith('@')) continue // an at-rule carries no declarations
     const keys = Object.keys(block)
@@ -369,4 +369,102 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
   const declared = [...darkBody.matchAll(/^\s*--([a-z0-9-]+)\s*:/gm)].length
   assert.equal(Object.keys(payload.css['[data-theme="dark"]']).length, declared)
   assert.equal(payload.css['[data-theme="dark"]']['--paper'], 'var(--dk-paper)')
+})
+
+test('AI utilities: every one is generated, with reduced-motion stills for the animated ones', () => {
+  const css = renderAiUtilities()
+  for (const name of AI_UTILITIES) assert.match(css, new RegExp(`@utility ${name} \\{`), `missing @utility ${name}`)
+  for (const name of ['ai-edge-working', 'ai-line', 'ai-shimmer']) {
+    const block = css.slice(css.indexOf(`@utility ${name} {`))
+    assert.match(block.slice(0, block.indexOf('\n}\n') + 2), /prefers-reduced-motion: reduce[\s\S]*animation: none/, `${name} must stop under reduced motion`)
+  }
+  for (const k of ['ai-sweep', 'ai-line', 'ai-shimmer']) assert.match(css, new RegExp(`@keyframes ${k} \\{`))
+  assert.doesNotMatch(css, /accent-pigment/, 'the AI gradient is fixed across accents')
+})
+
+test('AI utilities ride in the CLI payload as well as the theme file', () => {
+  const payload = registryPayload(renderCss(tokens))
+  for (const name of AI_UTILITIES) assert.ok(payload.css[`@utility ${name}`], `CLI payload lacks @utility ${name}`)
+  for (const k of ['ai-sweep', 'ai-line', 'ai-shimmer']) assert.ok(payload.css[`@keyframes ${k}`], `CLI payload lacks @keyframes ${k}`)
+})
+
+// WCAG 1.4.11: the composer's edge is the box's only boundary, so every stop of
+// every edge gradient must reach 3:1 against the paper, at rest, lit and working,
+// in every theme. The stops are read from AI_RULES and evaluated here (var() from
+// the tokens, color-mix in OKLab as the browser does), so a change to a token or to
+// a mix percentage is measured, not assumed.
+test('AI edge: every gradient stop is >= 3:1 against the paper, at rest, lit and working, in every theme', () => {
+  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
+  const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+  const toGamma = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055)
+  const toOklab = (rgb) => {
+    const [r, g, b] = rgb.map(toLinear)
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+    return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s]
+  }
+  const fromOklab = ([L, a, b]) => {
+    const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3
+    const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3
+    const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3
+    return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s]
+      .map(toGamma).map((c) => Math.min(1, Math.max(0, c)))
+  }
+  const luminance = (rgb) => { const [r, g, b] = rgb.map(toLinear); return 0.2126 * r + 0.7152 * g + 0.0722 * b }
+  const contrast = (a, b) => { const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x); return (hi + 0.05) / (lo + 0.05) }
+  // Split on top-level commas only (color-mix nests its own).
+  const splitTop = (str) => {
+    const parts = []; let depth = 0; let start = 0
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === '(') depth++
+      else if (str[i] === ')') depth--
+      else if (str[i] === ',' && depth === 0) { parts.push(str.slice(start, i).trim()); start = i + 1 }
+    }
+    return [...parts, str.slice(start).trim()]
+  }
+  const resolveVar = (name, mode) => {
+    if (name.startsWith('ai-')) return hex(tokens.color.ai[name.slice(3)][mode])
+    if (name === 'line-control') return hex(tokens.color.line.control[mode])
+    throw new Error(`edge stop uses var(--${name}); teach this test its token`)
+  }
+  const evaluate = (expr, mode) => {
+    const v = /^var\(--([a-z-]+)\)$/.exec(expr)
+    if (v) return resolveVar(v[1], mode)
+    const mix = /^color-mix\(in oklab, (.*)\)$/.exec(expr)
+    assert.ok(mix, `cannot evaluate edge stop '${expr}'`)
+    const [first, second] = splitTop(mix[1])
+    const pct = /^(.*) (\d+(?:\.\d+)?)%$/.exec(first)
+    assert.ok(pct && !/%$/.test(second), `color-mix '${expr}' must give one percentage, on its first colour`)
+    const weight = Number(pct[2]) / 100
+    const [a, b] = [toOklab(evaluate(pct[1], mode)), toOklab(evaluate(second, mode))]
+    return fromOklab(a.map((x, i) => x * weight + b[i] * (1 - weight)))
+  }
+  // The border-box layer: the second top-level layer of `background`, `linear-gradient(<angle>, stops…) border-box`.
+  const stopsOf = (background) => {
+    const layer = splitTop(background)[1]
+    const inner = /^linear-gradient\((.*)\) border-box$/.exec(layer)
+    assert.ok(inner, `unexpected edge layer '${layer}'`)
+    return splitTop(inner[1]).slice(1).map((stop) => stop.replace(/ \d+%$/, ''))
+  }
+  const states = {
+    rest: AI_RULES['@utility ai-edge'].background,
+    lit: AI_RULES['@utility ai-edge']['&:focus-within, &[data-lit]'].background,
+    working: AI_RULES['@utility ai-edge-working'].background,
+  }
+  const modes = Object.keys(tokens.color.paper.base)
+  assert.equal(modes.length, 5)
+  const failures = []
+  for (const mode of modes) {
+    const paper = hex(tokens.color.paper.base[mode])
+    for (const [state, background] of Object.entries(states)) {
+      const stops = stopsOf(background)
+      assert.ok(stops.length >= 3, `${state} edge should carry the three Ember stops`)
+      for (const stop of stops) {
+        const ratio = contrast(evaluate(stop, mode), paper)
+        if (ratio < 3) failures.push(`${mode} ${state} '${stop}' ${ratio.toFixed(2)}:1`)
+      }
+    }
+  }
+  assert.deepEqual(failures, [], `edge stops below 3:1:\n${failures.join('\n')}`)
 })

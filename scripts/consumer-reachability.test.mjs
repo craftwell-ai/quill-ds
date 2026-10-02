@@ -137,10 +137,19 @@ export function utilitiesUsed(dirs) {
   return found
 }
 
+const SIDE_PREFIXES = {
+  'rounded-': ['t', 'r', 'b', 'l', 's', 'e', 'tl', 'tr', 'br', 'bl', 'ss', 'se', 'es', 'ee'],
+  'border-': ['t', 'r', 'b', 'l', 'x', 'y', 's', 'e'],
+}
+
 export function resolves(util, available) {
   for (const [prefix, spaces] of Object.entries(NAMESPACES)) {
     if (!util.startsWith(prefix)) continue
-    const name = util.slice(prefix.length)
+    let name = util.slice(prefix.length)
+    // Side/corner variants (`rounded-t-xl`, `border-b-0`) resolve against the same token as the bare utility.
+    const sides = SIDE_PREFIXES[prefix]
+    const sided = sides && /^([a-z]+)-(.+)$/.exec(name)
+    if (sided && sides.includes(sided[1])) name = sided[2]
     if (TAILWIND_STATIC.has(name)) return true
     if (spaces.some((s) => available.has(`--${s}-${name}`))) return true
   }
@@ -182,6 +191,13 @@ test('every utility in shipped code resolves from what a consumer receives', () 
       `They render as nothing in a consumer app, however correct they look on the site:\n\n` +
       unreachable.join('\n'),
   )
+})
+
+test('side and corner variants resolve against the bare token', () => {
+  assert.ok(resolves('rounded-t-xl', available))
+  assert.ok(resolves('rounded-tl-xl', available))
+  assert.ok(!resolves('rounded-t-nope', available))
+  assert.ok(resolves('border-b-0', available))
 })
 
 test('the guard reads the shipped item, not the site stylesheet', () => {
@@ -232,4 +248,19 @@ test('shipped code reads no CSS variable an app never receives', () => {
   }
   assert.ok(files > 50, `expected 50+ shipped files, read ${files}`)
   assert.deepEqual([...new Set(offenders)], [])
+})
+
+test('every ai-* utility in shipped code is a utility the shipped item defines', () => {
+  const defined = new Set(Object.keys(item.css ?? {}).filter((k) => k.startsWith('@utility ')).map((k) => k.slice('@utility '.length)))
+  const used = new Set()
+  for (const dir of ['registry/blocks', 'registry/lib']) {
+    for (const file of readdirSync(join(root, dir)).filter((f) => f.endsWith('.tsx'))) {
+      for (const m of readFileSync(join(root, dir, file), 'utf8').matchAll(/(?<![\w-])(ai-[a-z-]+)(?![\w-])/g)) {
+        if (/^ai-(mark|button|badge|home)$/.test(m[1])) continue // component/file names, not utilities
+        used.add(m[1])
+      }
+    }
+  }
+  const missing = [...used].filter((u) => !defined.has(u))
+  assert.deepEqual(missing, [], `shipped code uses ai-* utilities the CLI item does not define: ${missing.join(', ')}`)
 })

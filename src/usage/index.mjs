@@ -5,6 +5,9 @@
  */
 import { usage as accordion } from './accordion.usage.mjs'
 import { usage as activityFeed } from './activity-feed.usage.mjs'
+import { usage as aiBadge } from './ai-badge.usage.mjs'
+import { usage as aiButton } from './ai-button.usage.mjs'
+import { usage as aiMark } from './ai-mark.usage.mjs'
 import { usage as alert } from './alert.usage.mjs'
 import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
@@ -24,6 +27,7 @@ import { usage as card } from './card.usage.mjs'
 import { usage as carousel } from './carousel.usage.mjs'
 import { usage as chart } from './chart.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
+import { usage as aiHome } from './ai-home.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as collapsible } from './collapsible.usage.mjs'
@@ -79,6 +83,7 @@ import { usage as popover } from './popover.usage.mjs'
 import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as progress } from './progress.usage.mjs'
+import { usage as promptComposer } from './prompt-composer.usage.mjs'
 import { usage as radioGroup } from './radio-group.usage.mjs'
 import { usage as resizable } from './resizable.usage.mjs'
 import { usage as scrollArea } from './scroll-area.usage.mjs'
@@ -114,6 +119,9 @@ import { usage as wizard } from './wizard.usage.mjs'
 export const ALL_USAGE = [
   accordion,
   activityFeed,
+  aiBadge,
+  aiButton,
+  aiMark,
   alert,
   alertDialog,
   alerts,
@@ -133,6 +141,7 @@ export const ALL_USAGE = [
   carousel,
   chart,
   chat,
+  aiHome,
   checkbox,
   checkout,
   collapsible,
@@ -188,6 +197,7 @@ export const ALL_USAGE = [
   pricing,
   profileCard,
   progress,
+  promptComposer,
   radioGroup,
   resizable,
   scrollArea,

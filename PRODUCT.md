@@ -27,7 +27,7 @@ Taste turned into a system that people and AI agents can ship: warm, editorial, 
 - Secondary CTA: install it — `npx shadcn add https://www.quilldesignsystem.com/r/quill.json`.
 - The line a visitor remembers: "A design system, made for people."
 - Belief ladder: this looks genuinely crafted → it's a real system (tokens, themes, foundations), not a skin → the components are comprehensive, tested, and accessible → I can have it in my project with one command.
-- Proof on hand: the site itself is built from Quill components; a live Storybook with tested, WCAG-checked components; 51 installable blocks; five switchable themes; version-stamped releases.
+- Proof on hand: the site itself is built from Quill components; a live Storybook with tested, WCAG-checked components; 52 installable blocks; five switchable themes; version-stamped releases.
 
 ## Brand Personality
 
@@ -38,7 +38,7 @@ Warm, unhurried, quietly confident — the voice of "an exclusive, premium and t
 - The generic SaaS/shadcn default look: white cards, blue accents, hero-metric rows, identical card grids.
 - Cold gray enterprise-dashboard flavor — a dashboard where a notebook belongs.
 - Loud startup maximalism: neon gradients, glassmorphism, purple-glow dark mode.
-- Standing visual bans from DESIGN.md: no pure white, no pure black (Classic themes excepted), no emoji, no decorative gradients.
+- Standing visual bans from DESIGN.md: no pure white, no pure black (Classic themes excepted), no emoji, no blue-purple gradients or other decorative gradients (the AI gradient, which marks AI and nothing else, is the one exception — DESIGN.md).
 
 ## Design Principles
 

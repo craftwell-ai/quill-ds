@@ -154,6 +154,12 @@
   --line: rgba(42, 38, 34, 0.15);
   --line-strong: rgba(42, 38, 34, 0.20);
   --line-control: #8A7F6E;
+  --ai-from: #C49544;
+  --ai-via: #DE501B;
+  --ai-to: #536A99;
+  --ai-text-from: #714F07;
+  --ai-text-via: #9D3209;
+  --ai-text-to: #3D507A;
   --shadow-xs: 0 1px 2px -1px rgba(42, 38, 34, 0.12), 0 0 0 1px rgba(42, 38, 34, 0.05);
   --shadow-sm: 0 2px 4px -1px rgba(42, 38, 34, 0.14), 0 1px 2px -1px rgba(42, 38, 34, 0.08);
   --shadow: 0 4px 8px -2px rgba(42, 38, 34, 0.16), 0 2px 4px -2px rgba(42, 38, 34, 0.10);
@@ -388,6 +394,30 @@
   --cl-line-control: #858585;
   --cd-line-control: #757575;
   --int-line-control: #767663;
+  --dk-ai-from: #E2B764;
+  --cl-ai-from: #C49544;
+  --cd-ai-from: #E2B764;
+  --int-ai-from: #E0A340;
+  --dk-ai-via: #F57345;
+  --cl-ai-via: #DE501B;
+  --cd-ai-via: #F57345;
+  --int-ai-via: #C96F4C;
+  --dk-ai-to: #8AA2D2;
+  --cl-ai-to: #536A99;
+  --cd-ai-to: #8AA2D2;
+  --int-ai-to: #8B8FD8;
+  --dk-ai-text-from: #ECC883;
+  --cl-ai-text-from: #7C5814;
+  --cd-ai-text-from: #ECC883;
+  --int-ai-text-from: #E8BC72;
+  --dk-ai-text-via: #FF8B64;
+  --cl-ai-text-via: #9D3209;
+  --cd-ai-text-via: #FE8D67;
+  --int-ai-text-via: #E08A66;
+  --dk-ai-text-to: #A3B8E2;
+  --cl-ai-text-to: #3D507A;
+  --cd-ai-text-to: #A3B8E2;
+  --int-ai-text-to: #A6AAE3;
   --dk-shadow-xs: 0 1px 2px -1px rgba(8, 5, 3, 0.40), 0 0 0 1px rgba(8, 5, 3, 0.18);
   --cl-shadow-xs: 0 1px 2px -1px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
   --cd-shadow-xs: 0 1px 2px -1px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -450,6 +480,12 @@
   --line: var(--dk-line);
   --line-strong: var(--dk-line-strong);
   --line-control: var(--dk-line-control);
+  --ai-from: var(--dk-ai-from);
+  --ai-via: var(--dk-ai-via);
+  --ai-to: var(--dk-ai-to);
+  --ai-text-from: var(--dk-ai-text-from);
+  --ai-text-via: var(--dk-ai-text-via);
+  --ai-text-to: var(--dk-ai-text-to);
   --shadow-xs: var(--dk-shadow-xs);
   --shadow-sm: var(--dk-shadow-sm);
   --shadow: var(--dk-shadow);
@@ -537,6 +573,12 @@
   --line: var(--cl-line);
   --line-strong: var(--cl-line-strong);
   --line-control: var(--cl-line-control);
+  --ai-from: var(--cl-ai-from);
+  --ai-via: var(--cl-ai-via);
+  --ai-to: var(--cl-ai-to);
+  --ai-text-from: var(--cl-ai-text-from);
+  --ai-text-via: var(--cl-ai-text-via);
+  --ai-text-to: var(--cl-ai-text-to);
   --shadow-xs: var(--cl-shadow-xs);
   --shadow-sm: var(--cl-shadow-sm);
   --shadow: var(--cl-shadow);
@@ -624,6 +666,12 @@
   --line: var(--cd-line);
   --line-strong: var(--cd-line-strong);
   --line-control: var(--cd-line-control);
+  --ai-from: var(--cd-ai-from);
+  --ai-via: var(--cd-ai-via);
+  --ai-to: var(--cd-ai-to);
+  --ai-text-from: var(--cd-ai-text-from);
+  --ai-text-via: var(--cd-ai-text-via);
+  --ai-text-to: var(--cd-ai-text-to);
   --shadow-xs: var(--cd-shadow-xs);
   --shadow-sm: var(--cd-shadow-sm);
   --shadow: var(--cd-shadow);
@@ -711,6 +759,12 @@
   --line: var(--int-line);
   --line-strong: var(--int-line-strong);
   --line-control: var(--int-line-control);
+  --ai-from: var(--int-ai-from);
+  --ai-via: var(--int-ai-via);
+  --ai-to: var(--int-ai-to);
+  --ai-text-from: var(--int-ai-text-from);
+  --ai-text-via: var(--int-ai-text-via);
+  --ai-text-to: var(--int-ai-text-to);
   --shadow-xs: var(--int-shadow-xs);
   --shadow-sm: var(--int-shadow-sm);
   --shadow: var(--int-shadow);
@@ -776,6 +830,84 @@
 [data-accent="gold"] {
   --accent-pigment: var(--gold-deep);
   --accent-pigment-text: var(--gold-text);
+}
+
+@utility ai-text {
+  background-image: linear-gradient(115deg, var(--ai-text-from), var(--ai-text-via) 50%, var(--ai-text-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility ai-edge {
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--background), var(--background)) padding-box, linear-gradient(115deg, color-mix(in oklab, color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from)) 45%, var(--line-control)), color-mix(in oklab, var(--ai-via) 45%, var(--line-control)) 50%, color-mix(in oklab, var(--ai-to) 45%, var(--line-control))) border-box;
+  &:focus-within, &[data-lit] {
+    background: linear-gradient(var(--background), var(--background)) padding-box, linear-gradient(115deg, color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from)), var(--ai-via) 50%, var(--ai-to)) border-box;
+  }
+}
+
+@utility ai-edge-working {
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--background), var(--background)) padding-box, linear-gradient(90deg, color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from)), var(--ai-via), var(--ai-to), var(--ai-via), color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from))) border-box;
+  background-size: 100% 100%, 300% 100%;
+  animation: ai-sweep 2.4s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    background-size: 100% 100%, 100% 100%;
+  }
+}
+
+@utility ai-wash {
+  background-image: linear-gradient(180deg, color-mix(in oklab, var(--ai-from) 16%, transparent) 0%, color-mix(in oklab, var(--ai-via) 8%, transparent) 45%, transparent 100%);
+}
+
+@utility ai-glow {
+  background-image: radial-gradient(60% 70% at 30% 40%, color-mix(in oklab, var(--ai-from) 18%, transparent), transparent 70%), radial-gradient(55% 65% at 75% 60%, color-mix(in oklab, var(--ai-to) 18%, transparent), transparent 70%);
+}
+
+@utility ai-line {
+  height: 2px;
+  border-radius: 2px;
+  background-image: linear-gradient(90deg, var(--ai-from), var(--ai-via), var(--ai-to), var(--ai-via), var(--ai-from));
+  background-size: 300% 100%;
+  animation: ai-line 1.6s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    background-size: 100% 100%;
+  }
+}
+
+@utility ai-shimmer {
+  background-image: linear-gradient(90deg, var(--muted-foreground), var(--ai-text-via), var(--muted-foreground));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ai-shimmer 2.2s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    color: var(--muted-foreground);
+    background-image: none;
+  }
+}
+
+@keyframes ai-sweep {
+  to {
+    background-position: 0 0, -300% 0;
+  }
+}
+
+@keyframes ai-line {
+  to {
+    background-position: -300% 0;
+  }
+}
+
+@keyframes ai-shimmer {
+  to {
+    background-position: -200% 0;
+  }
 }
 /* @quill-tokens:end */
 

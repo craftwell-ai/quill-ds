@@ -343,3 +343,35 @@ test('Fraunces presets: only the accent turns WONK on, and text lets optical siz
   }
   assert.ok(!('opsz' in axes(tokens.fraunces.text)), '--fraunces-text must not pin opsz')
 })
+
+const AI_KEYS = ['from', 'via', 'to', 'text-from', 'text-via', 'text-to']
+const MODE_KEYS = ['light', 'dark', 'classicLight', 'classicDark', 'intelligent']
+
+test('ai gradient tokens: every stop has a value in all five modes', () => {
+  for (const k of AI_KEYS) {
+    for (const m of MODE_KEYS) {
+      assert.match(tokens.color.ai[k][m], /^#[0-9A-F]{6}$/, `color.ai.${k}.${m}`)
+    }
+  }
+})
+
+test('ai gradient tokens: Ember values exactly as approved in the spec', () => {
+  assert.deepEqual(tokens.color.ai.from, { light: '#C49544', dark: '#E2B764', classicLight: '#C49544', classicDark: '#E2B764', intelligent: '#E0A340' })
+  assert.deepEqual(tokens.color.ai.via, { light: '#DE501B', dark: '#F57345', classicLight: '#DE501B', classicDark: '#F57345', intelligent: '#C96F4C' })
+  assert.deepEqual(tokens.color.ai.to, { light: '#536A99', dark: '#8AA2D2', classicLight: '#536A99', classicDark: '#8AA2D2', intelligent: '#8B8FD8' })
+})
+
+test('ai text stops pass WCAG AA (4.5:1) on every theme paper', () => {
+  const lin = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+  const lum = (hex) => {
+    const [r, g, b] = [1, 3, 5].map((i) => lin(parseInt(hex.slice(i, i + 2), 16) / 255))
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+  }
+  const ratio = (a, b) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05)
+  for (const k of ['text-from', 'text-via', 'text-to']) {
+    for (const m of MODE_KEYS) {
+      const r = ratio(tokens.color.ai[k][m], tokens.color.paper.base[m])
+      assert.ok(r >= 4.5, `color.ai.${k} on ${m} paper is ${r.toFixed(2)}:1, needs 4.5`)
+    }
+  }
+})

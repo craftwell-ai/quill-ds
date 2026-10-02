@@ -94,3 +94,11 @@ test('both base layers give font-heading text the Fraunces text preset, headings
     assert.match(src, /h1 \{[^}]*font-variation-settings: var\(--fraunces-display\)/, `${file}: h1 display preset rule missing`)
   }
 })
+
+test('the gradient ban carries the AI exception everywhere it is stated', () => {
+  for (const f of ['DESIGN.md', 'PRODUCT.md', 'public/llms.txt', 'registry/agent-rules/quill.md']) {
+    const src = readFileSync(join(root, f), 'utf8')
+    assert.match(src, /AI gradient/, `${f} must state the AI gradient exception`)
+    assert.match(src, /blue-purple gradients/, `${f} must keep the blue-purple ban`)
+  }
+})
