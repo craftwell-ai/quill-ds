@@ -127,6 +127,28 @@ export function PromptComposer({
     observer.observe(menu, { subtree: true, childList: true, attributes: true, attributeFilter: ['aria-selected'] })
     return () => { observer.disconnect(); box.removeAttribute('aria-activedescendant'); box.removeAttribute('aria-controls') }
   }, [menuOpen])
+  // The menu opens upward, over the content above the composer. A composer near the top of the screen, or of a
+  // panel that clips its content, has no room there, so the menu flips below it instead of opening out of sight.
+  const [menuBelow, setMenuBelow] = React.useState(false)
+  React.useLayoutEffect(() => {
+    const menu = menuRef.current
+    const anchor = menu?.parentElement
+    if (!menuOpen || !menu || !anchor) return
+    // The visible area is the window, cut down by the nearest ancestor that clips (a scrolling side panel, say).
+    let areaTop = 0
+    let areaBottom = window.innerHeight
+    for (let el = anchor.parentElement; el && el !== document.body; el = el.parentElement) {
+      if (getComputedStyle(el).overflowY === 'visible') continue
+      const r = el.getBoundingClientRect()
+      areaTop = Math.max(areaTop, r.top)
+      areaBottom = Math.min(areaBottom, r.bottom)
+      break
+    }
+    const { top, bottom } = anchor.getBoundingClientRect()
+    const spaceAbove = top - areaTop
+    const spaceBelow = areaBottom - bottom
+    setMenuBelow(spaceAbove < menu.offsetHeight + 8 && spaceBelow > spaceAbove)
+  }, [menuOpen, options.length])
   const pick = (c: ComposerCommand) => {
     setText(text.slice(0, text.length - query.length - 1) + `${c.trigger}${c.value} `)
     onCommand?.(c)
@@ -158,7 +180,7 @@ export function PromptComposer({
     <div className={cn('grid gap-1.5', className)}>
       <div className="relative">
         {options.length ? (
-          <Command ref={menuRef} className="absolute inset-x-0 bottom-full z-20 mb-2 h-auto rounded-xl border border-border shadow-lg" shouldFilter={false}
+          <Command ref={menuRef} className={cn('absolute inset-x-0 z-20 h-auto rounded-xl border border-border shadow-lg', menuBelow ? 'top-full mt-2' : 'bottom-full mb-2')} data-side={menuBelow ? 'bottom' : 'top'} shouldFilter={false}
             value={options[activeIndex]?.value} onMouseDown={(e) => e.preventDefault()} onValueChange={(v) => setActive(Math.max(0, options.findIndex((o) => o.value === v)))}>
             <CommandList>
               <CommandEmpty>No matches</CommandEmpty>
@@ -191,7 +213,10 @@ export function PromptComposer({
                     // edge under it so tab and box read as one shape (approved 2026-10-02).
                     selected
                       ? 'ai-edge border-b-0 text-foreground after:absolute after:inset-x-0 after:-bottom-[1.5px] after:h-0.5 after:bg-background'
-                      : 'text-muted-foreground hover:text-foreground',
+                      // Unselected tabs keep a subtle muted fill and a hairline outline so they still
+                      // read as tabs (the fill alone vanishes on the dark themes), and stop 1.5px short
+                      // so the box's gradient edge runs in front of them; only the selected tab joins the box.
+                      : 'mb-[1.5px] border border-b-0 border-border bg-muted text-muted-foreground hover:text-foreground',
                   )}
                 >
                   {m.ai ? <AiMark size={18} /> : m.icon ? <span aria-hidden className="inline-grid size-[18px] place-items-center [&>svg]:size-[18px]">{m.icon}</span> : null}
@@ -214,7 +239,7 @@ export function PromptComposer({
               // The margin rule and border replace the AI edge; focus-within stands in for the textarea's cancelled ring.
               ? 'relative overflow-hidden rounded-l-sm rounded-r-xl border border-input bg-background focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/40'
               : cn('rounded-xl', working ? 'ai-edge-working' : 'ai-edge'),
-            disabled && 'opacity-60',
+            disabled && 'cursor-not-allowed opacity-60',
           )}
         >
           {notebook ? <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-[linear-gradient(180deg,var(--ai-from),var(--ai-via),var(--ai-to))]" /> : null}
@@ -270,8 +295,9 @@ export function PromptComposer({
               }
             }}
             className={cn(
-              // aria-invalid:* cancel the stock textarea's red ring; the AI edge and the alert carry the error.
-              'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
+              // aria-invalid:* cancel the stock textarea's red ring; the AI edge and the alert carry the error. disabled:* cancel
+              // the stock grey fill and fade, which covered only the text area; the whole box fades as one instead.
+              'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 disabled:bg-transparent disabled:opacity-100 dark:disabled:bg-transparent aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
               // md:text-* overrides the stock textarea's md:text-sm, which would shrink lg on desktop.
               notebook
                 ? // The rules live on the textarea so they scroll with the text (bg-local) and follow its padding. Each 32px line (leading-8) starts
@@ -308,7 +334,7 @@ export function PromptComposer({
               </Button>
             ) : !hasText && onMic ? (
               <Button type="button" size="icon" variant="ghost" className="rounded-full" aria-label="Dictate" onClick={onMic} disabled={disabled}>
-                <Icon name="mic" className="size-4" />
+                <Icon name="mic" className="size-5" />
               </Button>
             ) : (
               <Button type="button" size="icon" className="rounded-full" aria-label="Send" onClick={submit} disabled={!hasText || disabled}>
@@ -319,7 +345,10 @@ export function PromptComposer({
         </div>
       </div>
       {status === 'error' && error ? (
-        <p id={errorId} role="alert" className="px-1 text-sm text-destructive">{error}</p>
+        <p id={errorId} role="alert" className="flex items-start gap-1.5 px-1 text-sm text-destructive">
+          <Icon name="error" size={16} className="mt-0.5 shrink-0" />
+          {error}
+        </p>
       ) : null}
     </div>
   )

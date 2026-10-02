@@ -13,6 +13,19 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.16.3] — 2026-10-02
+
+### Changed
+- **Composer mode tabs: an unselected tab keeps a subtle muted fill and a hairline outline** with the same 8px top corners, so it still reads as a tab (as in ClickUp). It stops just above the box, so the AI edge runs in front of it; only the selected tab joins the box. The outline (the soft card line) is there because the fill alone almost vanished on Dusk, Classic Dark and Intelligent. Label contrast on the fill is AA in every theme (lowest 4.60:1, Dawn).
+
+### Fixed
+- **Composer `/` and `@` menu no longer opens off-screen.** It opens upward when there is room and flips below the composer when there is not (a composer near the top of a panel or page). `MenuFlipsBelowNearTheTop` and `MenuOpensAboveWithRoom` pin both placements.
+- **Composer stories are framed the same way:** every story page centres the composer across and down the canvas at one width. `MenuFlipsBelowNearTheTop` now shows the flip inside a centred panel.
+- **The menu's flip also respects a clipping panel**, not just the window: a composer at the top of a scrolling side panel opens its menu below instead of having it cut off.
+- **Disabled composer fades as one piece.** The stock text area added its own grey fill and a second fade over only the text area, so the box looked half-filled.
+- **Composer error message leads with the error icon** (a circle with !).
+- **Composer mic icon is one Material size up** (20px), so its thin outline no longer reads small next to the send arrow.
+
 ## [0.16.2] — 2026-10-02
 
 ### Changed
