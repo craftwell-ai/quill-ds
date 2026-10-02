@@ -287,10 +287,11 @@ export const MenuAnnouncesActiveOption: Story = {
 }
 
 // A composer at the top of a panel that clips its content (a side panel, say) has no room above, so the menu opens
-// below instead of being cut off. The panel sits centred like every other story.
+// below instead of being cut off. The panel is unstyled (only its clipping matters here); its padding keeps the
+// shadows inside the clip, and the negative margin keeps the composer the same width as every other story.
 export const MenuFlipsBelowNearTheTop: Story = {
   render: (args) => (
-    <div data-testid="panel" className="h-80 overflow-y-auto rounded-xl border border-border p-3">
+    <div data-testid="panel" className="-mx-3 h-80 overflow-y-auto p-3">
       <PromptComposer {...args} />
     </div>
   ),
