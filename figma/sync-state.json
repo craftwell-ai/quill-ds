@@ -2143,6 +2143,11 @@
   },
   "declined": [
     {
+      "name": "ai-badge",
+      "codeFile": "src/components/ui/ai-badge.tsx",
+      "reason": "site shim that re-exports registry/lib/ai-badge.tsx; the Figma twin is drawn with the AI kit in a later phase-1 task"
+    },
+    {
       "name": "ai-button",
       "codeFile": "src/components/ui/ai-button.tsx",
       "reason": "site shim that re-exports registry/lib/ai-button.tsx; the Figma twin is drawn with the AI kit in a later phase-1 task"

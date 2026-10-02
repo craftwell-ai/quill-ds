@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-badge",
+  "title": "AI badge",
+  "description": "A small outline pill with the AI sparkle that marks content an AI made or suggested — \"AI draft\", \"Suggested\".",
+  "registryDependencies": [
+    "badge",
+    "https://www.quilldesignsystem.com/r/ai-mark.json"
+  ],
+  "files": [
+    {
+      "path": "registry/lib/ai-badge.tsx",
+      "content": "import * as React from 'react'\nimport { Badge } from '@/components/ui/badge'\nimport { AiMark } from '@/components/ui/ai-mark'\nimport { cn } from '@/lib/utils'\n\n/** A small outline pill with the AI sparkle that marks content an AI made or suggested — \"AI draft\", \"Suggested\". */\nexport function AiBadge({ children, className }: { children: React.ReactNode; className?: string }) {\n  return (\n    <Badge variant=\"outline\" className={cn('gap-1 bg-background text-ink-soft', className)}>\n      <AiMark size={13} />\n      {children}\n    </Badge>\n  )\n}\n",
+      "type": "registry:ui",
+      "target": "components/ui/ai-badge.tsx"
+    }
+  ],
+  "docs": "A small outline pill with the AI sparkle that marks content an AI made or suggested — \"AI draft\", \"Suggested\". Do: Use the AI badge to say who made the content: \"AI draft\", \"Suggested\", \"Generated\". Don't: Use it as a status (\"Active\", \"New\") — status belongs to ToneBadge. Use tone-badge when the label is a status, tier or category rather than \"made by AI\". Use ai-mark when there is no room for words and the mark alone is enough.",
+  "type": "registry:ui"
+}

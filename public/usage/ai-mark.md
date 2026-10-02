@@ -6,6 +6,7 @@ Quill's AI sparkle — the one icon that means AI, drawn in the AI gradient with
 - You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page.
 
 ### Reach for instead
+- **ai-badge** — when you are labelling a piece of content as AI-made; the badge carries the mark and the words.
 - **icon** — when the icon means anything other than AI — every other icon comes from the Material Symbols set.
 
 ### Rules

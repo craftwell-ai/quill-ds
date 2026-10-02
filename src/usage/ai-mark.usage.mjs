@@ -6,6 +6,7 @@ export const usage = {
     'You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page.',
   ],
   alternatives: [
+    { name: 'ai-badge', when: 'you are labelling a piece of content as AI-made; the badge carries the mark and the words.' },
     { name: 'icon', when: 'the icon means anything other than AI — every other icon comes from the Material Symbols set.' },
   ],
   rules: [
