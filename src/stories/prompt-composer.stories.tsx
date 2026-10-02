@@ -206,10 +206,13 @@ export const MatchesApprovedShape: Story = {
     await expect(getComputedStyle(box).borderTopLeftRadius).toBe('16px')
     const tab = canvas.getByRole('tab', { name: 'Ask' })
     await expect(getComputedStyle(tab).borderTopLeftRadius).toBe('8px')
-    // An unselected tab still reads as a tab: a subtle muted fill with the same 8px top corners.
+    // An unselected tab still reads as a tab: a subtle muted fill with the same 8px top corners,
+    // plus a hairline outline, because the fill alone vanishes on the dark themes.
     const other = canvas.getByRole('tab', { name: 'Agent' })
     await expect(getComputedStyle(other).backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
     await expect(getComputedStyle(other).borderTopLeftRadius).toBe('8px')
+    await expect(getComputedStyle(other).borderTopWidth).toBe('1px')
+    await expect(getComputedStyle(other).borderBottomWidth).toBe('0px')
   },
 }
 
