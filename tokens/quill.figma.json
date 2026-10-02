@@ -656,6 +656,110 @@
             }
           }
         }
+      },
+      "ai": {
+        "from": {
+          "$type": "color",
+          "$value": "#C49544",
+          "$extensions": {
+            "com.figma": {
+              "modes": {
+                "Light": "#C49544",
+                "Dark": "#E2B764",
+                "Classic Light": "#C49544",
+                "Classic Dark": "#E2B764",
+                "Intelligent": "#E0A340"
+              },
+              "name": "color/ai-from",
+              "legacyName": "color/ai/from"
+            }
+          }
+        },
+        "via": {
+          "$type": "color",
+          "$value": "#DE501B",
+          "$extensions": {
+            "com.figma": {
+              "modes": {
+                "Light": "#DE501B",
+                "Dark": "#F57345",
+                "Classic Light": "#DE501B",
+                "Classic Dark": "#F57345",
+                "Intelligent": "#C96F4C"
+              },
+              "name": "color/ai-via",
+              "legacyName": "color/ai/via"
+            }
+          }
+        },
+        "to": {
+          "$type": "color",
+          "$value": "#536A99",
+          "$extensions": {
+            "com.figma": {
+              "modes": {
+                "Light": "#536A99",
+                "Dark": "#8AA2D2",
+                "Classic Light": "#536A99",
+                "Classic Dark": "#8AA2D2",
+                "Intelligent": "#8B8FD8"
+              },
+              "name": "color/ai-to",
+              "legacyName": "color/ai/to"
+            }
+          }
+        },
+        "text-from": {
+          "$type": "color",
+          "$value": "#714F07",
+          "$extensions": {
+            "com.figma": {
+              "modes": {
+                "Light": "#714F07",
+                "Dark": "#ECC883",
+                "Classic Light": "#7C5814",
+                "Classic Dark": "#ECC883",
+                "Intelligent": "#E8BC72"
+              },
+              "name": "color/ai-text-from",
+              "legacyName": "color/ai/text-from"
+            }
+          }
+        },
+        "text-via": {
+          "$type": "color",
+          "$value": "#9D3209",
+          "$extensions": {
+            "com.figma": {
+              "modes": {
+                "Light": "#9D3209",
+                "Dark": "#FF8B64",
+                "Classic Light": "#9D3209",
+                "Classic Dark": "#FE8D67",
+                "Intelligent": "#E08A66"
+              },
+              "name": "color/ai-text-via",
+              "legacyName": "color/ai/text-via"
+            }
+          }
+        },
+        "text-to": {
+          "$type": "color",
+          "$value": "#3D507A",
+          "$extensions": {
+            "com.figma": {
+              "modes": {
+                "Light": "#3D507A",
+                "Dark": "#A3B8E2",
+                "Classic Light": "#3D507A",
+                "Classic Dark": "#A3B8E2",
+                "Intelligent": "#A6AAE3"
+              },
+              "name": "color/ai-text-to",
+              "legacyName": "color/ai/text-to"
+            }
+          }
+        }
       }
     },
     "font": {

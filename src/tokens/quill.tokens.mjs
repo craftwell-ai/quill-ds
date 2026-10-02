@@ -130,6 +130,20 @@ export const tokens = {
       // against the page. Used by the shadcn `input` token.
       control: { light: '#8A7F6E', dark: '#746B5D', classicLight: '#858585', classicDark: '#757575', intelligent: '#767663' },
     },
+    // The AI gradient (Ember): gold → terracotta → indigo. It means one thing, AI,
+    // and appears only in the six placements in DESIGN.md. Dawn/Dusk are their
+    // pigments at 1.5x OKLCH chroma (same lightness and hue); Classic already ships
+    // its pigments at exactly that chroma and Intelligent richer still, so those use
+    // their own pigments. Fixed across accents. Text stops are the deep cuts, all
+    // >= 6.2:1 on their paper. Spec: docs/superpowers/specs/2026-10-02-quill-ai-kit-design.md
+    ai: {
+      from: { light: '#C49544', dark: '#E2B764', classicLight: '#C49544', classicDark: '#E2B764', intelligent: '#E0A340' },
+      via: { light: '#DE501B', dark: '#F57345', classicLight: '#DE501B', classicDark: '#F57345', intelligent: '#C96F4C' },
+      to: { light: '#536A99', dark: '#8AA2D2', classicLight: '#536A99', classicDark: '#8AA2D2', intelligent: '#8B8FD8' },
+      'text-from': { light: '#714F07', dark: '#ECC883', classicLight: '#7C5814', classicDark: '#ECC883', intelligent: '#E8BC72' },
+      'text-via': { light: '#9D3209', dark: '#FF8B64', classicLight: '#9D3209', classicDark: '#FE8D67', intelligent: '#E08A66' },
+      'text-to': { light: '#3D507A', dark: '#A3B8E2', classicLight: '#3D507A', classicDark: '#A3B8E2', intelligent: '#A6AAE3' },
+    },
   },
   radius: {
     xs: '0.125rem', sm: '0.25rem', md: '0.375rem', lg: '0.5rem',
