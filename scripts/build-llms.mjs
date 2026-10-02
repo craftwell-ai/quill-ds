@@ -29,6 +29,7 @@ import {
   renderEffectsSection,
 } from '../src/usage/foundations.mjs'
 import { renderRolesSection } from '../src/usage/roles.mjs'
+import { shippedComponents } from './build-agent-rules.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -51,6 +52,7 @@ const countWord = (n) => COUNT_WORDS[n] ?? String(n)
 
 export function renderLlms(t = tokens) {
   const blocks = registry.items.filter((i) => i.type === 'registry:block')
+  const { shipped, shippedList, shippedCount } = shippedComponents(registry)
   const usageByName = new Map(ALL_USAGE.map((u) => [u.name, u]))
   const L = []
   const p = (s = '') => L.push(s)
@@ -61,7 +63,7 @@ export function renderLlms(t = tokens) {
   p()
   p(`> ${registry.items.find((i) => i.name === 'quill').description} A self-hosted shadcn registry with a ${countWord(ALL_MODES.length)}-theme, ${countWord(accents.length)}-accent token layer, WCAG 2.1 AA targets, and ${blocks.length} composable blocks. Version ${pkg.version}.`)
   p()
-  p(`Install any item with the shadcn CLI against \`${HOME}/r/<name>.json\` (e.g. \`npx shadcn@latest add ${HOME}/r/quill.json\` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, an icon component, and the blocks below, not re-copied primitives.`)
+  p(`Install any item with the shadcn CLI against \`${HOME}/r/<name>.json\` (e.g. \`npx shadcn@latest add ${HOME}/r/quill.json\` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, ${shippedCount} components of its own (${shippedList}, from \`@quill/\`), and the blocks below, not re-copied primitives.`)
   p()
 
   p('## Agent quick start')
@@ -70,7 +72,7 @@ export function renderLlms(t = tokens) {
   p('2. Install the rules file for AI agents: `npx shadcn@latest add @quill/agent-rules` writes `.claude/rules/quill.md` at the project root, which Claude Code loads every session (theming contract, foundations, principles, icon names, block index).')
   p(`   Not in Claude Code? Connect any MCP client (Cursor, Claude Desktop, claude.ai) to \`${HOME}/mcp/\` — tools: find_component, get_component, get_setup, get_foundations.`)
   p('3. Set `data-theme` and `data-accent` on `<html>` (see Theming). The `theme-selector` block owns both at runtime.')
-  p('4. Before hand-building a section, pick a block from Components below by its intent and install it: `npx shadcn@latest add @quill/<name>`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme.')
+  p(`4. Before hand-building a section, pick a block from Components below by its intent and install it: \`npx shadcn@latest add @quill/<name>\`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme; ${shippedList} come from \`@quill/\` (\`npx shadcn@latest add @quill/<name>\`).`)
   p(`5. Read the usage guide for everything you use — \`${HOME}/usage/<name>.md\` — for the rules, what to reach for instead, and the accessibility notes.`)
   p('6. Update an item with `npx shadcn@latest add @quill/<name> --overwrite`. `--yes` does not overwrite a changed file: it prompts in a terminal and silently skips when non-interactive.')
   p('7. Verify in the app: `npx tsc --noEmit`, `npm run lint`; then switch `data-theme` and `data-accent` and confirm both take effect.')
@@ -141,7 +143,8 @@ export function renderLlms(t = tokens) {
     p()
     p("Per-primitive usage rules — when to use, what to reach for instead, do/don't, accessibility:")
     p()
-    for (const u of primitives) p(`- [${u.name}](${HOME}/usage/${u.name}.md) — ${u.summary}`)
+    const quillUi = new Set(shipped)
+    for (const u of primitives) p(`- [${u.name}](${HOME}/usage/${u.name}.md)${quillUi.has(u.name) ? ' (`@quill/`)' : ''} — ${u.summary}`)
     p()
   }
 

@@ -59,12 +59,13 @@ function blocksByIntent(blocks) {
 }
 
 /** The Quill-shipped components (registry:ui), derived, not typed: a hand-typed pair went stale the moment ai-mark shipped. */
-function shippedComponents(registry) {
+/** Also read by build-llms.mjs, so llms.txt and the rules file name the same set. */
+export function shippedComponents(registry) {
   const shipped = registry.items.filter((i) => i.type === 'registry:ui').map((i) => i.name).sort()
   const shippedTicked = shipped.map((n) => `\`${n}\``)
   const shippedList = shippedTicked.length > 1 ? `${shippedTicked.slice(0, -1).join(', ')} and ${shippedTicked.at(-1)}` : shippedTicked[0]
   const shippedCount = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][shipped.length] ?? String(shipped.length)
-  return { shippedTicked, shippedList, shippedCount }
+  return { shipped, shippedTicked, shippedList, shippedCount }
 }
 
 export function renderAgentRules() {

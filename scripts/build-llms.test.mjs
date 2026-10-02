@@ -84,3 +84,26 @@ test('the generated spans in DESIGN.md are in sync with the foundations module (
     assert.equal(current, block, `DESIGN.md generated:${name} span is stale — run \`npm run build:llms\``)
   }
 })
+
+// llms.txt once told agents Quill ships "an icon component" and that primitives
+// "come from shadcn itself", while four new registry:ui items sat untagged in the
+// primitive list — an agent would `npx shadcn add prompt-composer` and get nothing.
+test('llms.txt sends every Quill-shipped component (registry:ui) to @quill/, never to shadcn', () => {
+  const registry = JSON.parse(readFileSync(new URL('../registry.json', import.meta.url), 'utf8'))
+  const shipped = registry.items.filter((i) => i.type === 'registry:ui').map((i) => i.name)
+  assert.ok(shipped.length > 0)
+  const lines = committed.split('\n')
+  for (const name of shipped) {
+    const entry = lines.find((l) => l.startsWith(`- [${name}](`))
+    assert.ok(entry, `llms.txt has no usage-guide line for '${name}'`)
+    assert.ok(entry.includes('(`@quill/`)'), `llms.txt lists '${name}' without its @quill/ marker`)
+    const mentions = lines.filter((l) => l.includes(`\`${name}\``) || l.includes(`[${name}]`))
+    for (const line of mentions) {
+      for (const clause of line.split(';').filter((c) => c.includes(`\`${name}\``) || c.includes(`[${name}]`))) {
+        assert.doesNotMatch(clause, /from shadcn/i, `llms.txt says '${name}' comes from shadcn: ${clause.trim()}`)
+        assert.match(clause, /@quill\//, `llms.txt names '${name}' without @quill/: ${clause.trim()}`)
+      }
+    }
+    assert.ok(lines.some((l) => l.includes('Quill ships the theme') && l.includes(`\`${name}\``)), `the llms.txt intro does not name '${name}' among what Quill ships`)
+  }
+})
