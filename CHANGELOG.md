@@ -20,7 +20,11 @@ footer reads `package.json` directly, so the displayed version updates with the 
 
 ### Fixed
 - **Composer `/` and `@` menu no longer opens off-screen.** It opens upward when there is room and flips below the composer when there is not (a composer near the top of a panel or page). `MenuFlipsBelowNearTheTop` and `MenuOpensAboveWithRoom` pin both placements.
-- **Composer stories are framed the same way:** every story page centres the composer across and down the canvas at one width (only `MenuFlipsBelowNearTheTop` sits at the top, which is what it tests).
+- **Composer stories are framed the same way:** every story page centres the composer across and down the canvas at one width. `MenuFlipsBelowNearTheTop` now shows the flip inside a centred panel.
+- **The menu's flip also respects a clipping panel**, not just the window: a composer at the top of a scrolling side panel opens its menu below instead of having it cut off.
+- **Disabled composer fades as one piece.** The stock text area added its own grey fill and a second fade over only the text area, so the box looked half-filled.
+- **Composer error message leads with the error icon** (a circle with !).
+- **Composer mic icon is one Material size up** (20px), so its thin outline no longer reads small next to the send arrow.
 
 ## [0.16.2] — 2026-10-02
 

@@ -19,10 +19,9 @@ const meta = {
   },
   // Every story frames the composer the same way: centred across and down the canvas at one width. On a story
   // page the frame fills the screen, less the preview's 24px padding; on the Docs page each example keeps its own
-  // height. The / and @ menu has room to open upward from the centre. MenuFlipsBelowNearTheTop pins the composer
-  // to the top to test the flip.
+  // height. The / and @ menu has room to open upward from the centre.
   decorators: [(Story, { parameters, viewMode }) => (
-    <div className={parameters.pinTop ? 'p-4' : viewMode === 'story' ? 'grid min-h-[calc(100vh-3rem)] place-items-center p-4' : 'grid place-items-center p-4'}>
+    <div className={viewMode === 'story' ? 'grid min-h-[calc(100vh-3rem)] place-items-center p-4' : 'grid place-items-center p-4'}>
       <div className="mx-auto w-full max-w-xl"><Story /></div>
     </div>
   )],
@@ -137,16 +136,37 @@ export const Working: Story = {
   },
 }
 
-export const Disabled: Story = { args: { status: 'disabled', placeholder: 'Assistant is offline' } }
+export const Disabled: Story = {
+  args: { status: 'disabled', placeholder: 'Assistant is offline' },
+  play: async ({ canvas }) => {
+    // The whole box fades as one piece; the text area adds no grey patch or second fade of its own.
+    const textbox = canvas.getByRole('textbox', { name: 'Message' })
+    await expect(textbox).toBeDisabled()
+    await expect(getComputedStyle(textbox).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(getComputedStyle(textbox).opacity).toBe('1')
+    const box = textbox.closest('[data-slot="prompt-composer"]') as HTMLElement
+    await expect(getComputedStyle(box).opacity).toBe('0.6')
+  },
+}
 
 export const ErrorState: Story = {
   args: { status: 'error', error: "Couldn't reach the assistant. Try again in a moment.", defaultValue: 'Summarize this' },
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole('alert')).toHaveTextContent("Couldn't reach the assistant")
+    const alert = canvas.getByRole('alert')
+    await expect(alert).toHaveTextContent("Couldn't reach the assistant")
+    // The message leads with the error icon (a circle with !).
+    await expect(alert.firstElementChild?.tagName.toLowerCase()).toBe('svg')
   },
 }
 
-export const WithMic: Story = { args: { onMic: fn() } }
+export const WithMic: Story = {
+  args: { onMic: fn() },
+  play: async ({ canvas }) => {
+    // One Material size up from the 16px send arrow: the mic's thin outline reads small at 16px.
+    const glyph = canvas.getByRole('button', { name: 'Dictate' }).querySelector('svg') as SVGElement
+    await expect(glyph.getBoundingClientRect().width).toBe(20)
+  },
+}
 
 export const WithAttachments: Story = {
   args: {
@@ -266,9 +286,14 @@ export const MenuAnnouncesActiveOption: Story = {
   },
 }
 
-// With no room above (a composer at the top of a panel), the menu opens below instead of off-screen.
+// A composer at the top of a panel that clips its content (a side panel, say) has no room above, so the menu opens
+// below instead of being cut off. The panel sits centred like every other story.
 export const MenuFlipsBelowNearTheTop: Story = {
-  parameters: { pinTop: true },
+  render: (args) => (
+    <div data-testid="panel" className="h-80 overflow-y-auto rounded-xl border border-border p-3">
+      <PromptComposer {...args} />
+    </div>
+  ),
   args: {
     size: 'sm',
     commands: [
@@ -281,7 +306,10 @@ export const MenuFlipsBelowNearTheTop: Story = {
     await canvas.findAllByRole('option')
     const menu = canvasElement.querySelector('[cmdk-root]') as HTMLElement
     await waitFor(() => expect(menu).toHaveAttribute('data-side', 'bottom'))
-    await expect(menu.getBoundingClientRect().top).toBeGreaterThanOrEqual(0)
+    const panel = canvas.getByTestId('panel').getBoundingClientRect()
+    const box = menu.getBoundingClientRect()
+    await expect(box.top).toBeGreaterThanOrEqual(panel.top)
+    await expect(box.bottom).toBeLessThanOrEqual(panel.bottom)
   },
 }
 
