@@ -52,6 +52,12 @@ export const usage = {
       dont: 'Disable the whole composer while the AI works — people should be able to stop it.',
       visual: false,
     },
+    {
+      id: 'notebook-for-writing',
+      do: 'Use `variant="notebook"` where the prompt is a piece of writing — a brief, a spec, a long instruction.',
+      dont: 'Use the notebook for quick questions or a help widget — its ruled page reads as "write at length".',
+      visual: false,
+    },
   ],
   a11y: [
     'The text box has an accessible name (`label`, default "Message").',

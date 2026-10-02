@@ -44,6 +44,8 @@ export type PromptComposerProps = {
   /** Items for the `/` and `@` menu. Picking one inserts `${trigger}${value} ` and calls onCommand. */
   commands?: ComposerCommand[]
   onCommand?: (command: ComposerCommand) => void
+  /** `notebook`: ruled page, serif text, the AI gradient as a margin rule, and a word count — for prompts that are writing. */
+  variant?: 'default' | 'notebook'
   className?: string
 }
 
@@ -53,7 +55,7 @@ export function PromptComposer({
   onSubmit, onStop, value, defaultValue = '', onValueChange, status = 'idle', error,
   size = 'lg', label = 'Message', placeholder, onMic, leading, trailing, className,
   attachments, onRemoveAttachment, onFilesDropped, tools, onRemoveTool,
-  modes, mode, onModeChange, commands, onCommand,
+  modes, mode, onModeChange, commands, onCommand, variant = 'default',
 }: PromptComposerProps) {
   const [inner, setInner] = React.useState(defaultValue)
   const text = value ?? inner
@@ -61,6 +63,8 @@ export function PromptComposer({
   const working = status === 'working'
   const disabled = status === 'disabled'
   const hasText = text.trim().length > 0
+  const notebook = variant === 'notebook'
+  const wordCount = hasText ? text.trim().split(/\s+/).length : 0
   const errorId = React.useId()
   const [dragging, setDragging] = React.useState(false)
 
@@ -168,11 +172,17 @@ export function PromptComposer({
           onDragLeave={onFilesDropped ? () => setDragging(false) : undefined}
           onDrop={onFilesDropped ? (e) => { e.preventDefault(); setDragging(false); onFilesDropped([...e.dataTransfer.files]) } : undefined}
           className={cn(
-            'rounded-2xl shadow-md',
-            working ? 'ai-edge-working' : 'ai-edge',
+            'shadow-md',
+            notebook
+              // Ruled page: 32px lines (leading-8) with the margin rule and border replacing the AI edge.
+              ? 'relative overflow-hidden rounded-l-sm rounded-r-2xl border border-input bg-background bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_31px,var(--line-soft)_31px,var(--line-soft)_32px)] bg-[position:0_14px]'
+              : cn('rounded-2xl', working ? 'ai-edge-working' : 'ai-edge'),
             disabled && 'opacity-60',
           )}
         >
+          {notebook ? <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-[linear-gradient(180deg,var(--ai-from),var(--ai-via),var(--ai-to))]" /> : null}
+          {/* The edge animation is off in notebook mode, so a sweeping top line carries the working cue. */}
+          {notebook && working ? <span aria-hidden className="ai-line absolute inset-x-0 top-0" /> : null}
           {attachments?.length ? (
             <ul className={cn('flex flex-wrap gap-2', size === 'lg' ? 'px-3.5 pt-3' : 'px-2.5 pt-2')} aria-label="Attached files">
               {attachments.map((a) => (
@@ -227,7 +237,9 @@ export function PromptComposer({
               // aria-invalid:* cancel the stock textarea's red ring; the AI edge and the alert carry the error.
               'max-h-52 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 aria-invalid:border-transparent aria-invalid:ring-0 dark:bg-transparent dark:aria-invalid:border-transparent dark:aria-invalid:ring-0',
               // md:text-* overrides the stock textarea's md:text-sm, which would shrink lg on desktop.
-              size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base md:text-base' : 'min-h-11 px-3 pt-2.5 text-sm md:text-sm',
+              notebook
+                ? 'font-heading text-lg leading-8 md:text-lg pl-6 placeholder:italic'
+                : size === 'lg' ? 'min-h-16 px-4 pt-3.5 text-base md:text-base' : 'min-h-11 px-3 pt-2.5 text-sm md:text-sm',
             )}
           />
           <div className={cn('flex items-center gap-1.5', size === 'lg' ? 'px-2.5 pb-2.5' : 'px-1.5 pb-1.5')}>
@@ -246,6 +258,11 @@ export function PromptComposer({
             ))}
             <span className="flex-1" />
             {trailing}
+            {notebook ? (
+              <span className="text-xs text-muted-foreground tabular-nums" aria-live="polite">
+                {wordCount === 1 ? '1 word' : `${wordCount} words`}
+              </span>
+            ) : null}
             {working ? (
               <Button type="button" size="icon" className="rounded-full" aria-label="Stop" onClick={onStop}>
                 <Icon name="stop" className="size-4" />

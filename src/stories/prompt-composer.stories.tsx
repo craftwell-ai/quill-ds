@@ -210,6 +210,14 @@ export const MenuShrinksUnderTheCursor: Story = {
   },
 }
 
+export const Notebook: Story = {
+  args: { variant: 'notebook', placeholder: 'Start writing what you need…' },
+  play: async ({ canvas }) => {
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Message' }), 'Write a launch brief for the October release')
+    await expect(canvas.getByText('8 words')).toBeVisible()
+  },
+}
+
 export const DoDont: Story = {
   render: (args) => (
     <div className="grid gap-6">
