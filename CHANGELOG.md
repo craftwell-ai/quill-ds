@@ -13,6 +13,13 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.16.4] — 2026-10-02
+
+### Fixed
+- **Figma: the AI home twin is now a component, so it goes out with a library publish.** It was a plain frame (1073:3); it is now component 1108:41, visually identical (same screenshot). Every other block twin was already a component.
+- **Figma: the composer's unselected tab no longer covers the box edge.** It hung 1px over the box's top edge (in all 7 variants, and so on AI home); it now ends at the edge, 1.5px shorter than the selected tab, so the edge runs unbroken in front of it as in code.
+- **Figma notes: block twin ids corrected.** The block table in `figma/components/README.md` still listed the frame ids from before the blocks became components (46 of 51 rows); it now matches `figma/pattern-baseline.json`, which the Figma tests check against the live file.
+
 ## [0.16.3] — 2026-10-02
 
 ### Changed
