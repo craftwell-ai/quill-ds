@@ -14,6 +14,7 @@ The box people type to an AI in — grows with the text, sends on Enter, turns S
 - **Do:** Keep Send and Stop solid ink in the same spot. **Don't:** Fill the Send button with the AI gradient — it competes with the edge and breaks the never-on-Send rule.
 - **Do:** Use `lg` on an AI home page and `sm` in threads, side panels and inline bars. **Don't:** Put the large composer inside a narrow panel — use `sm`.
 - **Do:** When you pass `value`, clear it yourself in `onSubmit` (set it to an empty string). **Don't:** Pass `value` and expect the composer to empty itself after sending — it only clears its own state when uncontrolled.
+- **Do:** Show active AI tools (Analyze data, Web search) as chips with the mark, and attached files as neutral file chips. **Don't:** Put the AI mark on attached files — the files are the person's, not the AI's.
 - **Do:** Set `status="working"` while the AI answers and pass `onStop`. **Don't:** Disable the whole composer while the AI works — people should be able to stop it.
 
 ### Accessibility

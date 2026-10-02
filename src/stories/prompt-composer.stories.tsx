@@ -85,6 +85,26 @@ export const ErrorState: Story = {
 
 export const WithMic: Story = { args: { onMic: fn() } }
 
+export const WithAttachments: Story = {
+  args: {
+    defaultValue: 'Compare signups against the targets in the deck.',
+    attachments: [
+      { id: 'a1', name: 'Q3 board deck.pdf', meta: '2.4 MB', kind: 'PDF' },
+      { id: 'a2', name: 'signups-sept.csv', meta: '812 rows', kind: 'CSV' },
+    ],
+    tools: [{ id: 't1', label: 'Analyze data' }],
+    onRemoveAttachment: fn(),
+    onRemoveTool: fn(),
+    onFilesDropped: fn(),
+  },
+  play: async ({ canvas, args }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Remove Q3 board deck.pdf' }))
+    await expect(args.onRemoveAttachment).toHaveBeenCalledWith('a1')
+    await userEvent.click(canvas.getByRole('button', { name: 'Turn off Analyze data' }))
+    await expect(args.onRemoveTool).toHaveBeenCalledWith('t1')
+  },
+}
+
 export const DoDont: Story = {
   render: (args) => (
     <div className="grid gap-6">

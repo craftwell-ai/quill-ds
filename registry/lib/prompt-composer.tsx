@@ -4,9 +4,13 @@ import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Icon } from '@/components/ui/icon'
+import { AiMark } from '@/components/ui/ai-mark'
 import { cn } from '@/lib/utils'
 
 export type ComposerStatus = 'idle' | 'working' | 'disabled' | 'error'
+
+export type ComposerAttachment = { id: string; name: string; meta?: string; kind?: string } // kind: 'PDF', 'CSV'… shown on the thumb
+export type ComposerTool = { id: string; label: string }
 
 export type PromptComposerProps = {
   onSubmit: (value: string) => void
@@ -22,6 +26,13 @@ export type PromptComposerProps = {
   onMic?: () => void
   leading?: React.ReactNode
   trailing?: React.ReactNode
+  attachments?: ComposerAttachment[]
+  onRemoveAttachment?: (id: string) => void
+  /** Enables the drop target. */
+  onFilesDropped?: (files: File[]) => void
+  /** Active AI tools, shown as chips with the mark. */
+  tools?: ComposerTool[]
+  onRemoveTool?: (id: string) => void
   className?: string
 }
 
@@ -30,6 +41,7 @@ export type PromptComposerProps = {
 export function PromptComposer({
   onSubmit, onStop, value, defaultValue = '', onValueChange, status = 'idle', error,
   size = 'lg', label = 'Message', placeholder, onMic, leading, trailing, className,
+  attachments, onRemoveAttachment, onFilesDropped, tools, onRemoveTool,
 }: PromptComposerProps) {
   const [inner, setInner] = React.useState(defaultValue)
   const text = value ?? inner
@@ -38,6 +50,7 @@ export function PromptComposer({
   const disabled = status === 'disabled'
   const hasText = text.trim().length > 0
   const errorId = React.useId()
+  const [dragging, setDragging] = React.useState(false)
 
   const submit = () => {
     if (!hasText || working || disabled) return
@@ -50,12 +63,35 @@ export function PromptComposer({
       <div
         data-slot="prompt-composer"
         data-size={size}
+        onDragOver={onFilesDropped ? (e) => { e.preventDefault(); setDragging(true) } : undefined}
+        onDragLeave={onFilesDropped ? () => setDragging(false) : undefined}
+        onDrop={onFilesDropped ? (e) => { e.preventDefault(); setDragging(false); onFilesDropped([...e.dataTransfer.files]) } : undefined}
         className={cn(
           'rounded-2xl shadow-md',
           working ? 'ai-edge-working' : 'ai-edge',
           disabled && 'opacity-60',
         )}
       >
+        {attachments?.length ? (
+          <ul className={cn('flex flex-wrap gap-2', size === 'lg' ? 'px-3.5 pt-3' : 'px-2.5 pt-2')} aria-label="Attached files">
+            {attachments.map((a) => (
+              <li key={a.id} className="relative flex max-w-56 items-center gap-2 rounded-lg border border-border bg-card py-1.5 pr-8 pl-1.5 text-xs">
+                {a.kind ? <span className="grid size-8 shrink-0 place-items-center rounded-md bg-muted text-2xs font-semibold text-ink-soft">{a.kind}</span> : null}
+                <span className="min-w-0">
+                  <span className="block truncate font-semibold text-foreground">{a.name}</span>
+                  {a.meta ? <span className="block text-muted-foreground">{a.meta}</span> : null}
+                </span>
+                {onRemoveAttachment ? (
+                  <button type="button" aria-label={`Remove ${a.name}`} onClick={() => onRemoveAttachment(a.id)}
+                    className="absolute top-1/2 right-1 grid size-6 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+                    <Icon name="close" className="size-3.5" />
+                  </button>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {dragging ? <p className="mx-3.5 mt-2 rounded-lg border-[1.5px] border-dashed border-input p-2 text-center text-xs text-muted-foreground">Drop files to attach</p> : null}
         <Textarea
           aria-label={label}
           aria-invalid={status === 'error' || undefined}
@@ -81,6 +117,18 @@ export function PromptComposer({
         />
         <div className={cn('flex items-center gap-1.5', size === 'lg' ? 'px-2.5 pb-2.5' : 'px-1.5 pb-1.5')}>
           {leading}
+          {tools?.map((t) => (
+            <span key={t.id} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-card pr-1 pl-2 text-xs font-semibold text-foreground">
+              <AiMark size={13} />
+              {t.label}
+              {onRemoveTool ? (
+                <button type="button" aria-label={`Turn off ${t.label}`} onClick={() => onRemoveTool(t.id)}
+                  className="grid size-5 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+                  <Icon name="close" className="size-3" />
+                </button>
+              ) : null}
+            </span>
+          ))}
           <span className="flex-1" />
           {trailing}
           {working ? (

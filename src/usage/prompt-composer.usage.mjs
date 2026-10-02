@@ -35,6 +35,12 @@ export const usage = {
       visual: false,
     },
     {
+      id: 'mark-ai-tools-not-files',
+      do: 'Show active AI tools (Analyze data, Web search) as chips with the mark, and attached files as neutral file chips.',
+      dont: 'Put the AI mark on attached files — the files are the person\'s, not the AI\'s.',
+      visual: false,
+    },
+    {
       id: 'stop-while-working',
       do: 'Set `status="working"` while the AI answers and pass `onStop`.',
       dont: 'Disable the whole composer while the AI works — people should be able to stop it.',
