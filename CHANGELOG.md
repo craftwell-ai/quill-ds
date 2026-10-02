@@ -19,7 +19,7 @@ footer reads `package.json` directly, so the displayed version updates with the 
 - **The AI gradient.** A new colour family, `--ai-from/via/to` and three text stops, in all five themes (Ember: gold → terracotta → indigo; Dawn/Dusk at 1.5x chroma, Classic and Intelligent their own pigments), and seven utilities that ship to both install channels: `ai-text`, `ai-edge`, `ai-edge-working`, `ai-wash`, `ai-glow`, `ai-line`, `ai-shimmer`. DESIGN.md's gradient ban gains its one exception: the gradient that means AI.
 - **`ai-mark`**, the AI sparkle (two stars, a one-star cut at 16px and under).
 - **`ai-button`** and **`ai-badge`**.
-- **`prompt-composer`**: large and small sizes; send, Stop, disabled and error states; attachments with a drop target; AI tool chips; Ask/Agent mode tabs that share the AI edge; a `/` and `@` menu; a notebook style with its own ruled-page details. It takes `autoFocus` and forwards its ref.
+- **`prompt-composer`**: large and small sizes; send, Stop, disabled and error states; attachments with a drop target; AI tool chips; Ask/Agent mode tabs that share the AI edge; a `/` and `@` menu; a notebook style with its own ruled-page details. It takes `autoFocus` and forwards its ref. The Enter that confirms a word in Japanese or Chinese input never sends, in every browser including Safari (the composer tracks the input pop-up itself; tested in WebKit).
 - **`ai-home`**, an AI assistant start page block.
 - **Figma:** AI gradient variables and styles, and five AI twins.
 

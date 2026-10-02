@@ -10,6 +10,10 @@ import { cn } from '@/lib/utils'
 
 export type ComposerStatus = 'idle' | 'working' | 'disabled' | 'error'
 
+// Safari delivers the word-confirming Enter just after the input pop-up closes; 100ms covers that
+// gap and is far shorter than a deliberate second Enter to send.
+const IME_SETTLE_MS = 100
+
 export type ComposerAttachment = { id: string; name: string; meta?: string; kind?: string } // kind: 'PDF', 'CSV'… shown on the thumb
 export type ComposerTool = { id: string; label: string }
 
@@ -127,6 +131,19 @@ export function PromptComposer({
     textareaRef.current?.focus()
   }
 
+  // Japanese and Chinese input open a pop-up of candidate words, and Enter confirms the chosen
+  // word. That Enter must never send or pick a command. Browsers mark it differently — Chrome
+  // sends it while the pop-up is open (isComposing), Safari just after the pop-up closes (keyCode
+  // 229, isComposing false) — so the composer also tracks the pop-up itself and treats an Enter
+  // within IME_SETTLE_MS of it closing as part of confirming the word.
+  const composingRef = React.useRef(false)
+  const compositionEndedAt = React.useRef(Number.NEGATIVE_INFINITY)
+  const isConfirmingWord = (e: React.KeyboardEvent) =>
+    e.nativeEvent.isComposing ||
+    e.nativeEvent.keyCode === 229 ||
+    composingRef.current ||
+    e.timeStamp - compositionEndedAt.current < IME_SETTLE_MS
+
   const submit = () => {
     if (!hasText || working || disabled) return
     onSubmit(text)
@@ -232,20 +249,20 @@ export function PromptComposer({
             onBlur={() => setFocused(false)}
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onCompositionStart={() => { composingRef.current = true }}
+            onCompositionEnd={(e) => { composingRef.current = false; compositionEndedAt.current = e.timeStamp }}
             onKeyDown={(e) => {
               // The menu goes first so Enter picks a command instead of sending. It honours the same IME guard.
               if (options.length) {
                 if (e.key === 'ArrowDown') { e.preventDefault(); setActive((i) => (i + 1) % options.length); return }
                 if (e.key === 'ArrowUp') { e.preventDefault(); setActive((i) => (i - 1 + options.length) % options.length); return }
                 if (e.key === 'Enter') {
-                  if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return
+                  if (isConfirmingWord(e)) return
                   e.preventDefault(); pick(options[activeIndex]); return
                 }
                 if (e.key === 'Escape') { e.preventDefault(); setDismissedKey(matchKey); return }
               }
-              // isComposing: an input method (Japanese, Chinese) uses Enter to confirm a word.
-              // WebKit reports the confirming Enter with isComposing false but keyCode 229.
-              if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.nativeEvent.keyCode !== 229) {
+              if (e.key === 'Enter' && !e.shiftKey && !isConfirmingWord(e)) {
                 e.preventDefault()
                 submit()
               }

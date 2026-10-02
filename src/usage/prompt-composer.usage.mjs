@@ -62,7 +62,7 @@ export const usage = {
   ],
   a11y: [
     'The text box has an accessible name (`label`, default "Message").',
-    'Enter sends, Shift+Enter adds a line, and Enter while an input method is composing text (Japanese, Chinese) never sends.',
+    'Enter sends, Shift+Enter adds a line. The Enter that confirms a word in a Japanese or Chinese input method never sends or picks a command, in every browser — including Safari, which delivers that Enter just after the word pop-up closes.',
     'While working, the send button becomes "Stop" and keeps focus position; the edge animation stops under reduced motion.',
     'Errors are announced with `role="alert"` under the box.',
     'The `/` and `@` menu: Arrow Up and Down move through the options, Enter picks one, and Escape closes the menu without changing the text. Focus stays in the box; the active option is announced through `aria-activedescendant`.',

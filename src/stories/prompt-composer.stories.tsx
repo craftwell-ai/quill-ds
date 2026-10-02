@@ -64,6 +64,59 @@ export const IgnoresEnterKeyCode229: Story = {
   },
 }
 
+// Real input methods announce their pop-up of candidate words with composition events, and the
+// Enter that confirms a word must never send. Chrome delivers that Enter while the pop-up is
+// open; Safari delivers it right after the pop-up closes. These replay both orders with a plain
+// Enter (no isComposing, no keyCode 229), so the composer has to track the pop-up itself.
+const pressEnter = (box: HTMLElement) =>
+  box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }))
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+export const IgnoresEnterWhilePopUpIsOpen: Story = {
+  args: { size: 'sm' },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, 'nihon')
+    box.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }))
+    pressEnter(box)
+    await expect(args.onSubmit).not.toHaveBeenCalled()
+    box.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: 'nihon' }))
+    await wait(200)
+    pressEnter(box) // pop-up closed a while ago: this Enter means send
+    await expect(args.onSubmit).toHaveBeenCalledWith('nihon')
+  },
+}
+
+export const IgnoresEnterRightAfterPopUpCloses: Story = {
+  args: { size: 'sm' },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, 'nihon')
+    box.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }))
+    box.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: 'nihon' }))
+    pressEnter(box) // Safari's order: the confirming Enter lands just after the pop-up closes
+    await expect(args.onSubmit).not.toHaveBeenCalled()
+  },
+}
+
+export const SlashMenuIgnoresConfirmingEnter: Story = {
+  args: {
+    size: 'sm',
+    commands: [{ value: 'summarize', label: '/summarize', description: 'Condense a doc or thread', trigger: '/', ai: true }],
+    onCommand: fn(),
+  },
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, '/su')
+    await canvas.findByRole('option', { name: /summarize/ })
+    box.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }))
+    pressEnter(box)
+    box.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true }))
+    pressEnter(box)
+    await expect(args.onCommand).not.toHaveBeenCalled()
+  },
+}
+
 export const Working: Story = {
   args: { status: 'working', defaultValue: 'Draft the Q3 summary' },
   play: async ({ canvas, args }) => {
