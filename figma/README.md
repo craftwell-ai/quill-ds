@@ -206,13 +206,16 @@ The Plugin API / MCP cannot publish a team library. In Figma, open the file → 
 Beyond the foundation sync above, individual components round-trip between Figma and
 code. The philosophy: **bi-directional transport, one-way authority** — edits may
 originate on either side, but when they disagree, code wins. Proven end-to-end
-2026-08-12 on the Test fixture.
+2026-08-12 on a Test card, a fixture built only for that round trip. The fixture
+was retired on 2026-10-04 (CRA-267): it was never part of the design system, and
+the daily parity run now checks every twin in `sync-state.json` → `components`,
+so nothing needs a stand-in.
 
-**The fixture pair** (keep it — it's the sanity check for this workflow):
+**A worked pair** (every entry in `components` reads the same way):
 
-- Code: `src/components/ui/test-card.tsx`, story `Sandbox / Test`
-- Figma: `❖ Test` page, component node `371:7` (binding map lives in the
-  component's description)
+- Code: `src/components/ui/button.tsx`, story `Components / Button`
+- Figma: `❖ Button` page, component set `359:267`, tracked through its default
+  variant `76:4` (`Variant=default, Size=default`)
 
 ### Pull (a designer changed a component in Figma → land it in code) — ~2 min
 
@@ -254,8 +257,8 @@ expected, not a bug.
 
 ### Adopting existing twins into the daily check
 
-The parity baseline started with one entry — the fixture — so its daily green
-proved the pipeline, not the library. `figma/sync-state.json` now also lists
+The parity baseline started with one entry — the Test card fixture, retired on
+2026-10-04 — so its daily green proved the pipeline, not the library. `figma/sync-state.json` now also lists
 `candidates`: Figma twins built earlier that are not yet under the check — since
 2026-09-18 every Wave B / Wave C twin plus ToneBadge and Switch (29). `declined`
 lists the 13 primitives that get no twin, each with its reason, and

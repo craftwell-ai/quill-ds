@@ -580,13 +580,18 @@ a rule under the last item. Rules for the next sweep:
 - **A CSS border adds to the box; a Figma inside stroke does not.** Ruled items get the
   border width added to their padding (Accordion: paddingBottom 11 on `not-last` items).
 
-## Sync fixture (2026-08-12)
+## Sync fixture (2026-08-12, retired 2026-10-04)
 
-`❖ Test` (component node `371:7`) is the **bi-directional sync fixture** — its code twin
-is `src/components/ui/test-card.tsx` (story `Sandbox / Test`). Both directions proven:
-Figma edit pulled into code (~2 min), code edit pushed onto the node in place (~1 min).
-Keep the pair in sync when testing the workflow; procedure in `../README.md`
-("Component sync — pull & push"). Code is the ultimate source of truth.
+`❖ Test` (component node `371:7`) was the **bi-directional sync fixture** — its code twin
+was `src/components/ui/test-card.tsx` (story `Sandbox / Test`). Both directions were proven
+on it: Figma edit pulled into code (~2 min), code edit pushed onto the node in place (~1 min).
+
+Retired 2026-10-04 (CRA-267). It was never part of the design system, and the daily parity
+run checks every real twin, so the stand-in had no job left. Removed together: the component
+file, its story, its `sync-state.json` entry, and in Figma the component and its `❖ Test`
+page (the page held nothing else and the component had no instances anywhere in the file).
+To walk the workflow, use a real twin such as Button (`359:267`) or ToneBadge (`577:75`);
+procedure in `../README.md` ("Component sync — pull & push"). Code is the ultimate source of truth.
 
 ## State axis, tranche 1 — form controls (2026-09-22)
 

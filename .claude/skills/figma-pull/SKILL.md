@@ -18,7 +18,9 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
 2. **Resolve the pair.** The argument is a component name or node id.
    - Node-id table (Figma component ↔ code source): `figma/components/README.md`,
      "Code Connect mapping" section.
-   - Sync fixture: `❖ Test` node `371:7` ↔ `src/components/ui/test-card.tsx`.
+   - Twins under the daily check: `components` in `figma/sync-state.json` holds
+     each one's node id and code file (Button: set `359:267`, tracked variant
+     `76:4` ↔ `src/components/ui/button.tsx`).
    - Unknown name → find the `❖ <Name>` page and its COMPONENT/COMPONENT_SET node.
 
 3. **Read the node** (read-only `use_figma`; switch to its page with
@@ -71,6 +73,5 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
   changing the value (boundTo null, raw value unchanged) — that's parity noise,
   not a design change; don't translate it, and let the next `/figma-push`
   re-assert the binding.
-- The `Sandbox / Test` story is exempt from usage-doc coverage
-  (`SANDBOX_FIXTURES` in `scripts/usage-coverage.test.mjs`); real components
-  are not — a pull that creates a new component must ship a usage file.
+- Every story needs a usage file (`scripts/usage-coverage.test.mjs` exempts
+  none) — a pull that creates a new component must ship one.
