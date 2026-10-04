@@ -29,10 +29,17 @@ export const CASES = [
   { id: 'cmd-k', expect: 'command-palette', accept: ['command'], request: 'Power users want to press Cmd+K to jump to any page or run an action.' },
   { id: 'task-board', expect: 'kanban', request: 'Track tasks by status (to do, in progress, done) and move cards between the columns.' },
   { id: 'office-map', expect: 'none', request: 'Show our office locations on an interactive map that users can pan and zoom.' },
+  { id: 'ai-disclaimer', expect: 'ai-notice', request: 'Under the assistant\'s input box, tell people the AI can get things wrong.' },
+  { id: 'ai-working-state', expect: 'ai-thinking', request: 'While the assistant is preparing its answer, show that it is working and what it is reading.' },
+  { id: 'switch-ai-model', expect: 'model-picker', request: 'Let people switch between a fast model and a slower, more careful one from the assistant\'s input box.' },
+  { id: 'follow-up-questions', expect: 'suggested-prompts', request: 'After the assistant answers, offer two or three follow-up questions people can click to ask next.' },
+  { id: 'answer-sources', expect: 'citations', request: 'The assistant\'s answers should show which document each statement came from, with the full list underneath.' },
+  { id: 'assistant-reply', expect: 'ai-message', request: 'Show the assistant\'s answer in the conversation with buttons to copy it, retry, and rate it.' },
   { id: 'summarize-button', expect: 'ai-button', request: 'Add a Summarize button above a long document that asks AI to condense it.' },
   { id: 'ai-draft-label', expect: 'ai-badge', request: 'Reply drafts the assistant wrote should be labelled so agents know a person has not checked them yet.' },
   { id: 'ask-assistant-box', expect: 'prompt-composer', accept: ['ai-home'], request: 'Users type a question to our assistant; it should grow as they type and let them stop the answer halfway.' },
   { id: 'assistant-start-page', expect: 'ai-home', accept: ['prompt-composer'], request: 'The landing page of our assistant: a greeting, a big box to ask in, and a few example tasks to start from.' },
+  { id: 'assistant-thread', expect: 'ai-chat', accept: ['ai-message'], request: 'A full page for chatting with our assistant: past conversations on the side, answers with sources, and an input at the bottom.' },
   { id: 'ai-icon', expect: 'ai-mark', accept: ['ai-badge'], request: 'Put a small icon next to the Summarize button so people can tell it uses AI.' },
 ]
 

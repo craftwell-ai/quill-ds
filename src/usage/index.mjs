@@ -8,6 +8,11 @@ import { usage as activityFeed } from './activity-feed.usage.mjs'
 import { usage as aiBadge } from './ai-badge.usage.mjs'
 import { usage as aiButton } from './ai-button.usage.mjs'
 import { usage as aiMark } from './ai-mark.usage.mjs'
+import { usage as aiMessage } from './ai-message.usage.mjs'
+import { usage as aiNotice } from './ai-notice.usage.mjs'
+import { usage as aiThinking } from './ai-thinking.usage.mjs'
+import { usage as suggestedPrompts } from './suggested-prompts.usage.mjs'
+import { usage as modelPicker } from './model-picker.usage.mjs'
 import { usage as alert } from './alert.usage.mjs'
 import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
@@ -28,8 +33,10 @@ import { usage as carousel } from './carousel.usage.mjs'
 import { usage as chart } from './chart.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as aiHome } from './ai-home.usage.mjs'
+import { usage as aiChat } from './ai-chat.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
+import { usage as citations } from './citations.usage.mjs'
 import { usage as collapsible } from './collapsible.usage.mjs'
 import { usage as combobox } from './combobox.usage.mjs'
 import { usage as command } from './command.usage.mjs'
@@ -122,6 +129,11 @@ export const ALL_USAGE = [
   aiBadge,
   aiButton,
   aiMark,
+  aiMessage,
+  aiNotice,
+  aiThinking,
+  suggestedPrompts,
+  modelPicker,
   alert,
   alertDialog,
   alerts,
@@ -142,8 +154,10 @@ export const ALL_USAGE = [
   chart,
   chat,
   aiHome,
+  aiChat,
   checkbox,
   checkout,
+  citations,
   collapsible,
   combobox,
   command,

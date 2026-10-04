@@ -4,6 +4,7 @@ import * as React from 'react'
 import { PromptComposer } from '@/components/ui/prompt-composer'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { SuggestedPrompts } from '@/components/ui/suggested-prompts'
 
 const STARTERS = [
   { title: 'Brainstorm', detail: 'Ideas for a launch', prompt: 'Brainstorm ideas for our next launch' },
@@ -53,17 +54,13 @@ export function AiHome({
           ]}
         />
       </div>
-      <ul className="grid w-full max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
-        {starters.map((s) => (
-          <li key={s.title}>
-            <button type="button" onClick={() => { setValue(s.prompt); composerRef.current?.focus() }}
-              className="grid w-full gap-0.5 rounded-lg border border-border bg-card px-3 py-2.5 text-left hover:border-input">
-              <span className="text-sm font-semibold">{s.title}</span>
-              <span className="truncate text-xs text-muted-foreground">{s.detail}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <SuggestedPrompts
+        layout="cards"
+        label="Starters"
+        className="w-full max-w-2xl"
+        suggestions={starters.map((s) => ({ label: s.title, detail: s.detail, prompt: s.prompt }))}
+        onPick={(prompt) => { setValue(prompt); composerRef.current?.focus() }}
+      />
     </section>
   )
 }

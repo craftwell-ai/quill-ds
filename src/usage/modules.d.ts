@@ -31,6 +31,31 @@ declare module '@/usage/ai-mark.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/ai-message.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/ai-notice.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/ai-thinking.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/suggested-prompts.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/model-picker.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/alert.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -131,12 +156,22 @@ declare module '@/usage/ai-home.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/ai-chat.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/checkbox.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
 
 declare module '@/usage/checkout.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/citations.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

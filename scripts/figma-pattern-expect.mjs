@@ -54,6 +54,8 @@ export function textsOf(html) {
     .replace(/<(\w+)\b[^>]*\bclass="[^"]*\bsr-only\b[^"]*"[^>]*>[\s\S]*?<\/\1>/g, '')
     // Base UI hides helper text with an inline clip-path instead of a class (Progress renders one).
     .replace(/<(\w+)\b[^>]*\bstyle="[^"]*clip-path:inset\(50%\)[^"]*"[^>]*>[\s\S]*?<\/\1>/g, '')
+    // A closed disclosure keeps its panel in the markup with the `hidden` attribute (AiThinking's steps, the Sources list); it is not drawn.
+    .replace(/<(\w+)\b[^>]*\shidden=""[^>]*>[\s\S]*?<\/\1>/g, '')
     .replace(/<(?:input|textarea)\b[^>]*>/g, (tag) => (/\svalue="/.test(tag) ? tag.replace(/\splaceholder="[^"]*"/, '') : tag))
   const texts = [...visible.matchAll(/>([^<>]+)</g)].map((m) => clean(m[1])).filter(Boolean)
   // Only a drawn field shows its placeholder or value; a button's `value` is data, and the
