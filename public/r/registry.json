@@ -974,6 +974,20 @@
       "docs": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink. Do: Let the sparkle carry the gradient and keep the label in the button's normal text colour. Don't: Fill the button or its label with the AI gradient — the gradient belongs on the mark, and a gradient fill competes with the page. Do: Use a plain Button for Accept, Replace and Use this, even inside an AI popover. Don't: Make the button that applies an AI suggestion an AiButton — acting on AI output is an ordinary decision. Use button when the action does not involve AI. Use prompt-composer when the person needs to type what they want rather than press one action."
     },
     {
+      "name": "ai-notice",
+      "type": "registry:ui",
+      "title": "AI notice",
+      "description": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies.",
+      "files": [
+        {
+          "path": "registry/lib/ai-notice.tsx",
+          "target": "components/ui/ai-notice.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies. Do: Keep the notice to one small centred line under the composer, always present. Don't: Turn it into a banner, a callout box or a toast — it is there every time, so it stays quiet. Do: Leave it in muted ink, which passes 4.5:1 in every theme. Don't: Lighten it further with opacity — a disclaimer people cannot read does not inform them. Use alert when something has actually gone wrong and needs the person to act. Use ai-badge when one piece of content was made by AI and needs labelling where it sits."
+    },
+    {
       "name": "ai-mark",
       "type": "registry:ui",
       "title": "AI mark",
@@ -1108,6 +1122,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/ai-mark.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/ai-mark.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/ai-notice.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/ai-notice.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/alert.md",

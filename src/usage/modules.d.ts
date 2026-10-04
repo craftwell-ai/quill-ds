@@ -31,6 +31,11 @@ declare module '@/usage/ai-mark.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/ai-notice.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/alert.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

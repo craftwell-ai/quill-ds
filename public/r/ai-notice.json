@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ai-notice",
+  "title": "AI notice",
+  "description": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies.",
+  "files": [
+    {
+      "path": "registry/lib/ai-notice.tsx",
+      "content": "import * as React from 'react'\nimport { cn } from '@/lib/utils'\n\n/** One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies. */\nexport function AiNotice({\n  children = 'The assistant can make mistakes. Check important details.',\n  link,\n  className,\n}: {\n  children?: React.ReactNode\n  link?: { href: string; label: string }\n  className?: string\n}) {\n  return (\n    <p data-slot=\"ai-notice\" className={cn('px-2 text-center text-xs text-muted-foreground', className)}>\n      {children}\n      {link ? (\n        <>\n          {' '}\n          <a href={link.href} className=\"underline underline-offset-2 hover:text-foreground\">{link.label}</a>\n        </>\n      ) : null}\n    </p>\n  )\n}\n",
+      "type": "registry:ui",
+      "target": "components/ui/ai-notice.tsx"
+    }
+  ],
+  "docs": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies. Do: Keep the notice to one small centred line under the composer, always present. Don't: Turn it into a banner, a callout box or a toast — it is there every time, so it stays quiet. Do: Leave it in muted ink, which passes 4.5:1 in every theme. Don't: Lighten it further with opacity — a disclaimer people cannot read does not inform them. Use alert when something has actually gone wrong and needs the person to act. Use ai-badge when one piece of content was made by AI and needs labelling where it sits.",
+  "type": "registry:ui"
+}
