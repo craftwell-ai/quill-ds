@@ -5,6 +5,7 @@ import { Citation, Sources, type Source } from '../../registry/lib/citations'
 import { usage } from '@/usage/citations.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
+import { expectFocusRing } from './focus-ring'
 
 const SOURCES: Source[] = [
   { title: 'Q3 board deck.pdf', label: 'Q3 deck', detail: 'Page 4 · Quarterly targets', snippet: 'July 4,100 · August 4,300 · September 4,800 signups.', kind: 'file' },
@@ -234,6 +235,20 @@ export const LongTitleNoLabel: Story = {
     const maxWidth = 10 * parseFloat(getComputedStyle(document.documentElement).fontSize)
     await expect(chip.getBoundingClientRect().width).toBeLessThanOrEqual(maxWidth + 1)
     await expect(chip.scrollWidth).toBeGreaterThan(chip.clientWidth)
+  },
+}
+export const ChipsShowFocusRing: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} /> and the page changed<Citation source={SOURCES[2]} />.</p>,
+  play: async ({ canvas }) => {
+    await expectFocusRing(canvas.getByRole('button', NO_HREF_CHIP))
+    await expectFocusRing(canvas.getByRole('link', { name: 'changelog, source: New pricing page' }))
+  },
+}
+export const SourcesShowFocusRing: Story = {
+  args: { defaultOpen: true },
+  play: async ({ canvas }) => {
+    await expectFocusRing(canvas.getByRole('button', { name: /3 sources/ }))
+    await expectFocusRing(canvas.getByRole('link', { name: /New pricing page/ }))
   },
 }
 export const SourcesList: Story = {

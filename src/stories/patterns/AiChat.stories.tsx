@@ -3,6 +3,7 @@ import { expect, fn, userEvent } from 'storybook/test'
 import { AiChat } from '@registry/blocks/ai-chat'
 import { usage } from '@/usage/ai-chat.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { expectFocusRing } from '../focus-ring'
 
 const meta = {
   title: 'Patterns / AI / AI Chat',
@@ -38,6 +39,14 @@ export const Default: Story = {
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
     // Stop unmounts with the working state; the cursor must land back in the box, not on the page.
     await expect(box).toHaveFocus()
+  },
+}
+
+export const SidebarLinksShowFocusRing: Story = {
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  play: async ({ canvas }) => {
+    await expectFocusRing(canvas.getByRole('link', { name: 'Launch brief draft' }))
   },
 }
 

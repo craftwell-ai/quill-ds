@@ -4,6 +4,7 @@ import { AiThinking, formatThoughtFor } from '../../registry/lib/ai-thinking'
 import { usage } from '@/usage/ai-thinking.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
+import { expectFocusRing } from './focus-ring'
 
 const meta = {
   title: 'Components / AiThinking',
@@ -35,6 +36,12 @@ export const Done: Story = {
     await userEvent.click(toggle)
     await expect(toggle).toHaveAttribute('aria-expanded', 'true')
     await expect(canvas.getByText(STEPS[0])).toBeVisible()
+  },
+}
+export const ToggleShowsFocusRing: Story = {
+  args: { status: 'done', seconds: 8, steps: STEPS },
+  play: async ({ canvas }) => {
+    await expectFocusRing(canvas.getByRole('button', { name: 'Thought for 8 s' }))
   },
 }
 export const DoneWithoutSteps: Story = {

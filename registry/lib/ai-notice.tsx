@@ -17,7 +17,7 @@ export function AiNotice({
       {link ? (
         <>
           {' '}
-          <a href={link.href} className="underline underline-offset-2 hover:text-foreground">{link.label}</a>
+          <a href={link.href} className="rounded-sm underline underline-offset-2 hover:text-foreground outline-none focus-visible:ring-3 focus-visible:ring-ring/50">{link.label}</a>
         </>
       ) : null}
     </p>

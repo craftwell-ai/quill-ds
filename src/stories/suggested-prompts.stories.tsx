@@ -4,6 +4,7 @@ import { SuggestedPrompts } from '../../registry/lib/suggested-prompts'
 import { usage } from '@/usage/suggested-prompts.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
+import { expectFocusRing } from './focus-ring'
 
 const FOLLOW_UPS = [{ label: 'Break September down by week' }, { label: 'Compare with Q2' }, { label: 'Draft a note to the team' }]
 const STARTERS = [
@@ -48,6 +49,20 @@ export const List: Story = {
     await expect(getComputedStyle(lastRow).borderBottomWidth).toBe('1px')
     await userEvent.click(lastRow)
     await expect(args.onPick).toHaveBeenCalledWith('What changed since Monday?')
+  },
+}
+export const ShowFocusRing: Story = {
+  render: (args) => (
+    <div className="grid gap-4">
+      <SuggestedPrompts {...args} layout="chips" suggestions={[{ label: 'Chip one' }]} />
+      <SuggestedPrompts {...args} layout="cards" suggestions={[{ label: 'Card one', detail: 'Detail' }]} />
+      <SuggestedPrompts {...args} layout="list" suggestions={[{ label: 'List one' }]} />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expectFocusRing(canvas.getByRole('button', { name: 'Chip one' }))
+    await expectFocusRing(canvas.getByRole('button', { name: /Card one/ }))
+    await expectFocusRing(canvas.getByRole('button', { name: 'List one' }))
   },
 }
 export const DoDont: Story = {

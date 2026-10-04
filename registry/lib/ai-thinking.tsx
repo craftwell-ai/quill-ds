@@ -48,7 +48,7 @@ export function AiThinking({ status, label = 'Thinking', activity, seconds, step
     <div data-slot="ai-thinking" data-status="done" className={cn('grid gap-1', className)}>
       {hasSteps ? (
         <button type="button" aria-expanded={open} aria-controls={listId} onClick={() => setOpen((o) => !o)}
-          className="inline-flex w-fit items-center gap-1 rounded-sm text-sm text-muted-foreground hover:text-foreground">
+          className="inline-flex w-fit items-center gap-1 rounded-sm text-sm text-muted-foreground hover:text-foreground outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
           <Icon name="chevron_right" size={14} className={cn('transition-transform motion-reduce:transition-none', open && 'rotate-90')} />
           {summary}
         </button>
