@@ -22,7 +22,7 @@ export const usage = {
     },
   ],
   a11y: [
-    'Each chip is a link (or a button when there is no address) named "Source: Q3 board deck.pdf" with the full title, even when the chip shows a short label; keyboard focus opens the same preview as hover.',
+    'Each chip is a link (or a button when there is no address) named "Q3 deck, source: Q3 board deck.pdf" (the visible label first, then the full title; "Source: <title>" when there is no label); keyboard focus opens the same preview as hover.',
     'Chips are 20px tall, larger than a superscript mark, so they are easy to hit.',
     'The sources pill is a disclosure button with aria-expanded controlling the list.',
   ],

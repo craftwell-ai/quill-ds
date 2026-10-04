@@ -30,7 +30,8 @@ function where(s: Source) {
 
 /** Shows where an AI answer came from — a small chip after each claim, named for its source, that previews it, and an "N sources" list under the answer. */
 export function Citation({ source, className }: { source: Source; className?: string }) {
-  const name = `Source: ${source.title}`
+  // WCAG 2.5.3: the accessible name must start with the visible chip text.
+  const name = source.label ? `${source.label}, source: ${source.title}` : `Source: ${source.title}`
   return (
     <HoverCard>
       <HoverCardTrigger

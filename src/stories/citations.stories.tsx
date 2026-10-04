@@ -32,10 +32,12 @@ const Answer = () => (
 export const InAnAnswer: Story = {
   render: (args) => <div className="grid gap-3"><Answer /><Sources {...args} /></div>,
   play: async ({ canvas }) => {
-    const chip = canvas.getByRole('button', { name: 'Source: Q3 board deck.pdf' })
+    const chip = canvas.getByRole('button', { name: 'Q3 deck, source: Q3 board deck.pdf' })
     await expect(chip).toHaveTextContent('Q3 deck')
+    // Label in Name (WCAG 2.5.3): the accessible name starts with the visible text.
+    await expect(chip.getAttribute('aria-label')?.startsWith(chip.textContent ?? '')).toBe(true)
     await expect(chip.getBoundingClientRect().height).toBeGreaterThanOrEqual(20)
-    await expect(canvas.getByRole('link', { name: 'Source: New pricing page' })).toHaveAttribute('href', 'https://craftwell.ai/changelog')
+    await expect(canvas.getByRole('link', { name: 'changelog, source: New pricing page' })).toHaveAttribute('href', 'https://craftwell.ai/changelog')
     // Keyboard focus opens the same preview as hover (it renders in a portal on the page body).
     chip.focus()
     await waitFor(() => expect(within(document.body).getByText('July 4,100 · August 4,300 · September 4,800 signups.')).toBeVisible())
@@ -60,6 +62,7 @@ export const SourcesList: Story = {
   play: async ({ canvas }) => {
     const pill = canvas.getByRole('button', { name: /3 sources/ })
     await expect(pill).toHaveAttribute('aria-expanded', 'false')
+    await expect(canvas.getByText('signups-sept.csv')).not.toBeVisible()
     await userEvent.click(pill)
     await expect(canvas.getByText('signups-sept.csv')).toBeVisible()
   },
