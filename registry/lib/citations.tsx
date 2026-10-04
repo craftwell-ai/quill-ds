@@ -13,7 +13,7 @@ export type Source = {
   detail?: string
   /** A line from the source, shown in the preview. */
   snippet?: string
-  /** Opens in a new tab when given; without it the chip is a button. */
+  /** Opens in a new tab when given; without it the chip is a button that opens its preview when pressed. */
   href?: string
   kind?: 'file' | 'web'
 }
@@ -32,14 +32,36 @@ function where(s: Source) {
 export function Citation({ source, className }: { source: Source; className?: string }) {
   // WCAG 2.5.3: the accessible name must start with the visible chip text.
   const name = source.label ? `${source.label}, source: ${source.title}` : `Source: ${source.title}`
+  // A chip with a link already has a press (follow it); one without gets the preview as its press.
+  const pressable = !source.href
+  const [open, setOpen] = React.useState(false)
+  // A tap or click focuses the button before the click lands. Focus would open the card and the click would
+  // then toggle it shut again, so a focus that comes from a pointer press is left to the click to handle.
+  const pointerPressing = React.useRef(false)
   return (
-    <HoverCard>
+    <HoverCard
+      open={pressable ? open : undefined}
+      onOpenChange={pressable
+        ? (nextOpen, details) => {
+            if (nextOpen && details.reason === 'trigger-focus' && pointerPressing.current) return
+            setOpen(nextOpen)
+          }
+        : undefined}
+    >
       <HoverCardTrigger
         render={source.href
           ? <a href={source.href} target="_blank" rel="noreferrer" aria-label={name} />
-          : <button type="button" aria-label={name} />}
+          : <button type="button" aria-label={name} aria-expanded={open} />}
         data-slot="citation"
         className={cn(CHIP, className)}
+        {...(pressable && {
+          onPointerDown: () => { pointerPressing.current = true },
+          onBlur: () => { pointerPressing.current = false },
+          onClick: () => {
+            pointerPressing.current = false
+            setOpen((wasOpen) => !wasOpen)
+          },
+        })}
       >
         {source.label ?? source.title}
       </HoverCardTrigger>

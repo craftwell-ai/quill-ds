@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.17.1] — 2026-10-04
+
+### Fixed
+- **Pressing a citation chip that has no link now opens its preview.** It did nothing before, so a tap on a phone or a screen-reader activation went nowhere. Escape, a second press, or a press outside closes it; the chip reports its state with `aria-expanded`. Chips that link to a source are unchanged.
+
 ## [0.17.0] — 2026-10-04
 
 ### Added
