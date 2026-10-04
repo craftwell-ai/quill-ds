@@ -9,7 +9,7 @@ export type Source = {
   title: string
   /** Short chip text, e.g. "Q3 deck". Without it the chip shows the title, truncated. */
   label?: string
-  /** Where in the source, or its address: "Page 4", "craftwell.ai/changelog". */
+  /** Where in the source, or its address: "Page 4", "example.com/changelog". */
   detail?: string
   /** A line from the source, shown in the preview. */
   snippet?: string
@@ -38,6 +38,7 @@ export function Citation({ source, className }: { source: Source; className?: st
         render={source.href
           ? <a href={source.href} target="_blank" rel="noreferrer" aria-label={name} />
           : <button type="button" aria-label={name} />}
+        data-slot="citation"
         className={cn(CHIP, className)}
       >
         {source.label ?? source.title}

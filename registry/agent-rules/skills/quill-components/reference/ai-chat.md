@@ -14,7 +14,7 @@ A full AI conversation page — past chats on the left, the thread in a readable
 
 ### Accessibility
 - The sidebar is a navigation landmark named "Chats" with the open chat marked aria-current; the thread is a region named "Conversation".
-- Each reply is an article; the working reply announces "Thinking" through its status region.
+- Each reply is an article; the working reply has a status region (role="status"), so activity updates are announced as they change.
 
 ### Design tokens
 `--background` · `--border` · `--muted` · `--muted-foreground` · `--ai-from` · `--ai-via` · `--ai-to`

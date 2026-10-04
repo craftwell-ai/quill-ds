@@ -22,7 +22,7 @@ export const usage = {
     },
   ],
   a11y: [
-    'The working state is a polite live region (role="status"), so "Thinking" and each activity line are announced without moving focus.',
+    'The working state is a polite live region (role="status"), so activity updates are announced as they change, without moving focus.',
     'The finished row is a button with aria-expanded that controls the reasoning list.',
     'Under reduced motion the shimmer and sweeping line hold still; the label stays readable.',
   ],

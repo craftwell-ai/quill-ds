@@ -20,10 +20,11 @@ footer reads `package.json` directly, so the displayed version updates with the 
   - **`ai-message`** — an AI reply with the mark on its avatar, plain answer text, and Copy, Try again and thumbs; ships `UserMessage` for the person's side. Streams with a caret and holds its actions until the answer is done.
   - **`ai-thinking`** — "Thinking" with a live activity line while the AI works, folding into "Thought for 8 s" that opens the reasoning.
   - **`citations`** — source chips after each claim, named for their source (hover or focus previews it), and an "N sources" list.
-  - **`suggested-prompts`** — chips, cards and list layouts; picking one fills the composer. `ai-home`'s starters now use it.
+  - **`suggested-prompts`** — chips, cards and list layouts; picking one fills the composer. `ai-home`'s starters now use it, so `ai-home` now depends on `suggested-prompts`.
   - **`model-picker`** — choose the AI model from the composer, Auto first.
   - **`ai-notice`** — the AI-can-be-wrong line under a composer.
   - **`ai-chat`** — a full AI conversation page block built from the pieces above.
+- The `icon` core set grew from 93 to 95 (`thumb_up`, `thumb_down`).
 - Figma twins for all seven. The PromptComposer twin gained a `Model picker` boolean.
 
 ### Changed

@@ -48,9 +48,19 @@ export function AiMessage({
     if (feedback === undefined) setOwnFeedback(next)
     onFeedback?.(next)
   }
+  // Citation chips and the caret are inline, so innerText would glue their labels onto the sentence; copy the prose only.
+  const answerText = () => {
+    const body = bodyRef.current
+    if (!body) return ''
+    const clone = body.cloneNode(true) as HTMLElement
+    clone.querySelectorAll('[data-slot="citation"], [data-slot="caret"]').forEach((node) => node.remove())
+    const blocks = Array.from(clone.children)
+    if (!blocks.length) return clone.textContent ?? ''
+    return blocks.map((block) => block.textContent ?? '').join('\n\n')
+  }
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(copyText ?? bodyRef.current?.innerText ?? '')
+      await navigator.clipboard.writeText(copyText ?? answerText())
       setCopied(true)
       window.setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -90,8 +100,8 @@ export function AiMessage({
             ) : null}
             {onFeedback ? (
               <>
-                <Button type="button" variant="ghost" size="icon-sm" aria-label="Good answer" aria-pressed={current === 'up'} onClick={() => vote('up')}><Icon name="thumb_up" /></Button>
-                <Button type="button" variant="ghost" size="icon-sm" aria-label="Bad answer" aria-pressed={current === 'down'} onClick={() => vote('down')}><Icon name="thumb_down" /></Button>
+                <Button type="button" variant="ghost" size="icon-sm" className="aria-pressed:bg-muted aria-pressed:text-foreground" aria-label="Good answer" aria-pressed={current === 'up'} onClick={() => vote('up')}><Icon name="thumb_up" /></Button>
+                <Button type="button" variant="ghost" size="icon-sm" className="aria-pressed:bg-muted aria-pressed:text-foreground" aria-label="Bad answer" aria-pressed={current === 'down'} onClick={() => vote('down')}><Icon name="thumb_down" /></Button>
               </>
             ) : null}
           </div>

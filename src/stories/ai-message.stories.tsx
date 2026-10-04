@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, fn, userEvent, waitFor } from 'storybook/test'
 import { AiMessage, UserMessage } from '../../registry/lib/ai-message'
 import { AiThinking } from '../../registry/lib/ai-thinking'
+import { Citation } from '../../registry/lib/citations'
 import { usage } from '@/usage/ai-message.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
@@ -94,6 +95,39 @@ export const CopyWorks: Story = {
     await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
     await expect(writeText).toHaveBeenCalledWith(expect.stringContaining('4% ahead'))
     await expect(canvas.getByRole('button', { name: 'Copied' })).toBeVisible()
+  },
+}
+export const CopyLeavesChipsOut: Story = {
+  args: {
+    children: (
+      <>
+        <p>September missed target by 12%<Citation source={{ title: 'signups-sept.csv', label: 'signups-sept' }} /> but July and August beat it<Citation source={{ title: 'Q3 board deck.pdf', label: 'Q3 deck' }} />.</p>
+        <p>So the quarter closed 4% ahead.</p>
+      </>
+    ),
+  },
+  play: async ({ canvas }) => {
+    const writeText = fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+    const copied = writeText.mock.calls[0][0] as string
+    await expect(copied).not.toContain('signups-sept')
+    await expect(copied).not.toContain('Q3 deck')
+    await expect(copied.replace(/\s+/g, ' ').trim()).toBe('September missed target by 12% but July and August beat it. So the quarter closed 4% ahead.')
+  },
+}
+export const ThumbShowsPressed: Story = {
+  args: { onFeedback: fn() },
+  play: async ({ canvas }) => {
+    const good = canvas.getByRole('button', { name: 'Good answer' })
+    const bad = canvas.getByRole('button', { name: 'Bad answer' })
+    const before = getComputedStyle(good).backgroundColor
+    await userEvent.click(good)
+    await expect(good).toHaveAttribute('aria-pressed', 'true')
+    await userEvent.unhover(good)
+    // The button eases its colours, so wait for the transition to land.
+    await waitFor(() => expect(getComputedStyle(good).backgroundColor).not.toBe(getComputedStyle(bad).backgroundColor))
+    await expect(getComputedStyle(good).backgroundColor).not.toBe(before)
   },
 }
 export const CopyRefused: Story = {

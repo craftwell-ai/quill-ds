@@ -21,7 +21,7 @@ export const usage = {
     },
   ],
   a11y: [
-    'Each reply is an article; while streaming it is aria-busy so screen readers wait for the finished text.',
+    'Each reply is an article; while streaming it is marked aria-busy. To have replies announced as they arrive, render the thread inside a live region.',
     'Action buttons have names ("Copy", "Try again", "Good answer", "Bad answer"); the thumbs use aria-pressed.',
     'Copy says "Copied" for two seconds after a successful copy, and stays "Copy" if the browser refuses.',
   ],

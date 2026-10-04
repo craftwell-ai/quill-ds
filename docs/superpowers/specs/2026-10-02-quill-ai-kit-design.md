@@ -75,7 +75,7 @@ Each phase is its own PR with its own minor version. Kind: **ui** = a `registry:
 |---|---|---|
 | `ai-message` | ui | AI reply: mark on avatar, plain answer text, action row (copy, retry, thumbs up/down). |
 | `ai-thinking` | ui | Shimmer label, sweeping line, streaming text, collapsed "Thought for 8 s" disclosure. |
-| `citations` | ui | Numbered inline markers plus a sources list. |
+| `citations` | ui | Source chips named for their source (decided 2026-10-04) plus a sources list. |
 | `suggested-prompts` | ui | Chips, cards or list; empty-state starters and follow-ups. |
 | `model-picker` | ui | Grouped list with descriptions and a checkmark; shared by the composer and settings. |
 | `ai-notice` | ui | "AI can make mistakes" line under a composer. |
