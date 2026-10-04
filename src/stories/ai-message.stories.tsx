@@ -83,6 +83,8 @@ export const StoppedNoAnswer: Story = {
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
     // Nothing was written, so there is nothing to copy.
     await expect(canvas.queryByRole('button', { name: 'Copy' })).toBeNull()
+    // And no actions at all, so no empty group for a screen reader to announce.
+    await expect(canvas.queryByRole('group', { name: 'Reply actions' })).toBeNull()
   },
 }
 export const CopyWorks: Story = {

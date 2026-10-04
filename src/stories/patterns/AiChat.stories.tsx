@@ -36,6 +36,8 @@ export const Default: Story = {
     await expect(canvas.getAllByRole('status').at(-1)).toHaveTextContent('Thinking')
     await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
+    // Stop unmounts with the working state; the cursor must land back in the box, not on the page.
+    await expect(box).toHaveFocus()
   },
 }
 

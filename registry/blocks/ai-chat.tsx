@@ -6,7 +6,7 @@ import { AiMessage, UserMessage } from '@/components/ui/ai-message'
 import { AiThinking } from '@/components/ui/ai-thinking'
 import { Citation, Sources, type Source } from '@/components/ui/citations'
 import { SuggestedPrompts } from '@/components/ui/suggested-prompts'
-import { ModelPicker, type ModelOption } from '@/components/ui/model-picker'
+import { AUTO_MODEL, ModelPicker, type ModelOption } from '@/components/ui/model-picker'
 import { AiNotice } from '@/components/ui/ai-notice'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
@@ -27,7 +27,7 @@ type Turn = { id: number; ask: string; reply: 'working' | 'stopped' }
 /** A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom. */
 export function AiChat({ onSubmit = () => {} }: { onSubmit?: (value: string) => void }) {
   const [value, setValue] = React.useState('')
-  const [model, setModel] = React.useState('auto')
+  const [model, setModel] = React.useState(AUTO_MODEL.value)
   const [turns, setTurns] = React.useState<Turn[]>([])
   const composerRef = React.useRef<HTMLTextAreaElement>(null)
   const working = turns.at(-1)?.reply === 'working'
@@ -78,7 +78,11 @@ export function AiChat({ onSubmit = () => {} }: { onSubmit?: (value: string) => 
             value={value}
             onValueChange={setValue}
             status={working ? 'working' : 'idle'}
-            onStop={() => setTurns((all) => all.map((turn, index) => (index === all.length - 1 ? { ...turn, reply: 'stopped' } : turn)))}
+            onStop={() => {
+              setTurns((all) => all.map((turn, index) => (index === all.length - 1 ? { ...turn, reply: 'stopped' } : turn)))
+              // Stop unmounts as the composer goes idle; without this keyboard focus falls to the page.
+              composerRef.current?.focus()
+            }}
             onSubmit={(text) => { onSubmit(text); setTurns((all) => [...all, { id: all.length + 1, ask: text, reply: 'working' }]); setValue('') }}
             trailing={<ModelPicker models={MODELS} value={model} onValueChange={setModel} />}
             placeholder="Ask a follow-up"

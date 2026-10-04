@@ -40,6 +40,8 @@ export function AiMessage({
   const current = feedback === undefined ? ownFeedback : feedback
   // Without answer text there is nothing to put a caret beside or to copy.
   const hasAnswer = React.Children.toArray(children).length > 0
+  // A stopped reply with no answer has no actions; an empty group would still be announced.
+  const hasActions = hasAnswer || Boolean(onRetry) || Boolean(onFeedback)
 
   const vote = (value: 'up' | 'down') => {
     const next = current === value ? null : value
@@ -76,7 +78,7 @@ export function AiMessage({
         ) : null}
         {stopped ? <p className="text-xs text-muted-foreground">You stopped this answer.</p> : null}
         {sources}
-        {!streaming ? (
+        {!streaming && hasActions ? (
           <div role="group" aria-label="Reply actions" className="-ml-1.5 flex gap-0.5 text-muted-foreground">
             {hasAnswer ? (
               <Button type="button" variant="ghost" size="icon-sm" aria-label={copied ? 'Copied' : 'Copy'} onClick={copy}>
