@@ -61,6 +61,8 @@ test('the expectation drops screen-reader-only text and a placeholder hidden beh
   // Base UI hides helper text with an inline clip-path span (Progress renders one); a radio's `value` is not drawn.
   const html = '<style>[data-chart] { --x: 1 }</style><th><span class="sr-only">Actions</span></th><input placeholder="Search…" value="token"/><input placeholder="Email"/><p>Hi &amp; bye</p><span role="presentation" style="clip-path:inset(50%);overflow:hidden;width:1px">x</span><button role="radio" value="card">Card</button><input type="radio" tabindex="-1" style="clip-path:inset(50%);width:1px" aria-hidden="true" checked="" value="card"/>'
   assert.deepEqual(textsOf(html), ['Hi & bye', 'Card', 'token', 'Email'])
+  // A closed disclosure's panel stays in the markup with `hidden`; its text is not drawn.
+  assert.deepEqual(textsOf('<button aria-expanded="false">2 sources</button><ul id="l" hidden="" class="grid"><li><span>Q3 board deck.pdf</span></li></ul><p>After</p>'), ['2 sources', 'After'])
 })
 
 // The daily half: the same snapshot from a REST nodes bundle, diffed against the baseline.

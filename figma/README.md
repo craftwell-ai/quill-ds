@@ -37,7 +37,8 @@ colour, scalar and semantic steps, then the rest — each step upserts by name, 
    bound to `deprecated/text-strong`, constraints SCALE so it resizes cleanly inside a slot.
    Last run: 2026-09-18 — 91 icons (40 refreshed in place, 51 created). 2026-10-02: `stop` (1071:4) and
    `mic` (1071:7) created for the prompt composer — the run passed just those two names; the other 91 were
-   unchanged in code, so nothing else needed refreshing.
+   unchanged in code, so nothing else needed refreshing. 2026-10-04: `thumb_up` (1131:4) and `thumb_down` (1131:7)
+   created the same way for the AI reply actions (95 icons).
 
 ## Visual diff (nightly, CRA-224)
 
@@ -65,6 +66,11 @@ ai-home strip in its `figma-visual-diff` artifact, then accept the numbers:
 `gh run download <run id> -n figma-visual-diff -D .visual/ci && node scripts/figma-visual-diff.mjs --baseline-from .visual/ci/summary.json`.
 A local macOS run gave 2.16 % at 1024×512 on both sides, for orientation only. Part of that is the story's
 play step typing into the box, where the Figma frame shows the placeholder.
+
+**Pending (2026-10-04): ai-chat has no visual baseline yet.** Same as ai-home above: it reports `unbaselined`, which
+never fails the job, until a CI run of the **Figma parity** workflow is read and accepted with the same two commands.
+The frame is 1024×640 and shows the block's first render; the story's play step adds a second turn (a question and a
+stopped reply) and types into the box, so expect that part of the strip to differ.
 
 ```bash
 npm run build-storybook -- -o .visual/sb --quiet

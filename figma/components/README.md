@@ -334,6 +334,44 @@ Code twins in `registry/lib` (the `src/components/ui` files are re-export shims,
 |---|---|---|---|---|
 | ai-home | ❖ AI home | 1073:2 | 1108:41 | 1024×512; `ai-glow` = two radial fills (centre stop bound to color/ai-from / ai-to, paint opacity 0.18, transparent end at 0.7) over semantic/background; greeting in color/ink with no AI mark (v0.16.1; the old AiMark 1073:5 is hidden): no text style matches `fraunces-text font-heading text-xl font-medium tracking-normal`, so the layer binds font/heading + text/xl and carries Fraunces wght 500 · SOFT 50 · WONK 0, 140 % line height, 0 tracking; PromptComposer lg idle instance with `Show tabs`, `Add button` and `Mic` on and Send hidden, and the block's placeholder (the page's own tab row 1073:10 is hidden — the composer now draws the tabs); four starter cards (semantic/card, border, radius/lg, space/3 · 2_5 · 0_5). **Visual baseline pending** — reports `unbaselined` until a CI run is accepted (`../README.md`, "Visual diff") |
 
+### AI kit twins, Phase 2 (2026-10-04)
+
+Code twins in `registry/lib` (the `src/components/ui` files are re-export shims, declined in
+`sync-state.json`). All nine are in `components`, entered by hand from a REST read of each node
+(`extractComponent`), and `node scripts/figma-drift.mjs` reports every one in sync. A set is tracked
+through the variant named below. Sample copy is the `ai-chat` block's, so an AiChat instance needs no overrides.
+
+| Twin | Page (id) | Node | Structure | Key bindings |
+|---|---|---|---|---|
+| AiNotice | ❖ AI notice (1132:4) | component **1132:9** | one centred line; TEXT property `Text` | px-2 → space/2, Text/xs in semantic/muted-foreground. The optional link is not drawn |
+| AiThinking | ❖ AI thinking (1132:5) | set **1133:21** | Status=working, Open=false (1133:2, tracked) · Status=done, Open=false (1133:7) · Status=done, Open=true (1133:12); 320 wide | working: gap space/0_5, label = `ai-shimmer` as a gradient text fill (semantic/muted-foreground → color/ai-text-via → semantic/muted-foreground), activity Text/xs, `ai-line` 2px (color/ai-from · via · to · via · from) under an mt-1.5 (space/1_5) wrapper. done: chevron 14px + Text/sm in semantic/muted-foreground, gap space/1; open swaps the chevron for icon/keyboard_arrow_down (a rotated auto-layout child is not reliable) and shows the steps: ml-1.5, a 2px left rule (border-width/2, semantic/border), pl 14, Text/xs |
+| AiMessage | ❖ AI message (1132:3) | set **1139:112** | State=default (1139:2, tracked) · streaming (1139:76) · stopped (1139:92); 576 wide; BOOLEAN `Thinking`, `Sources` | avatar space/7, radius/4xl, semantic/background + semantic/border, AiMark Stars=two at 15px; gap space/2_5; body gap space/1_5; name row space/7 tall so "Assistant" (text/xs semibold, semantic/muted-foreground) sits on the avatar's centre line; AiThinking and Sources are instances; the answer is a wrapping row of text runs (text/sm at 162.5 %, semantic/foreground) and Citation instances, gap space/0_5 (the chip's ml-0.5), with the second chip grouped with the text after it (`Claim end`) so a comma never starts a line. streaming: caret 7×14 in semantic/foreground, no actions. stopped: "You stopped this answer." and Copy only |
+| UserMessage | ❖ AI message (1132:3) | component **1139:113** | bubble; TEXT property `Text` | semantic/card + semantic/border, radius/xl with bottom-right radius/sm, py space/2, Text/sm in color/ink-soft |
+| Citation | ❖ Citations (1132:6) | set **1135:20** | Kind=file (1135:2, tracked) · Kind=web (1135:11); TEXT `Label`, BOOLEAN `Preview` (off) | the chip shows the source's name: height space/5, px space/2, radius/md, semantic/muted, text/2xs semibold on a 20px line in color/ink-soft. `Preview` shows the hover card under the chip (absolute, 288 wide: semantic/popover, tint/foreground/10 ring, radius/lg, space/2_5, Elevation/base); Kind sets its icon (description / language, 13px) |
+| Sources | ❖ Citations (1132:6) | set **1135:56** | Open=false (1135:21, tracked) · Open=true (1135:31); 544 wide | pill: height space/7, pl space/1_5, pr space/2_5, gap space/2, radius/4xl, semantic/background + semantic/border; 18px kind discs (semantic/muted, 2px semantic/background ring, overlap −6, icon 10px in color/ink-soft); count text/xs semibold. List: radius/lg, border, space/1, gap space/0_5; each row (space/2, gap space/2_5, radius/md) leads with a 22px kind tile (radius/md, semantic/muted, icon 14px), not a number |
+| SuggestedPrompts | ❖ Suggested prompts (1132:8) | set **1136:31** | Layout=chips (1136:2, tracked) · cards (1136:9) · list (1136:22); 640 wide | chips: wrap, gap space/1_5; chip height space/8, px space/3, radius/4xl, semantic/background + semantic/border, Text/sm in color/ink-soft. cards: the ❖ AI home starter card (semantic/card, radius/lg, px space/3, py space/2_5, gap space/0_5), row gap space/2. list: rows py space/2_5, px space/1, gap space/2_5, top rule (the last one also a bottom rule) in semantic/border, icon/arrow_forward 16px in semantic/muted-foreground |
+| ModelPicker Trigger | ❖ Model picker (1132:7) | component **1138:2** | a live ❖ Button instance (Variant=ghost, Size=sm), exposed | radius/4xl override, label and the icon/keyboard_arrow_down end icon (14px) in color/ink-soft. Change the label on the nested Button |
+| ModelPicker Menu | ❖ Model picker (1132:7) | component **1138:8** | the open list, 288 wide | DropdownMenu anatomy: semantic/popover, tint/foreground/10 ring, radius/lg, Elevation/base, groups padded space/1, a semantic/border separator, "Choose" in Label/Small. Item: py and pl space/1_5, pr space/8, radius/md; the name row is space/5 tall and centres the name (Text/sm) with the badge (px space/1_5, radius/4xl, semantic/muted, text/2xs bold uppercase at 2.5 % tracking); description Text/xs; the 16px check sits on the name row's centre line |
+
+| Block | Page | Page id | Frame id | Notes |
+|---|---|---|---|---|
+| ai-chat | ❖ AI chat | 1132:2 | 1140:2 | 1024×640 component on semantic/background. Chats rail 240 wide (space/2, gap space/0_5, right rule semantic/border): ❖ Button outline sm "New chat" with the start icon, day labels text/xs semibold, links Text/sm with radius/md, the current one on semantic/muted. Conversation: a 768 column (max-w-3xl), px space/4, py space/6, gap space/5 — UserMessage right-aligned, AiMessage State=default, SuggestedPrompts Layout=chips indented 38px; docked below (pt space/2, pb space/3, gap space/1_5) the PromptComposer sm idle instance with `Show tabs` off, `Model picker` on and the block's placeholder, then AiNotice. It shows the block's first render: reasoning and sources closed, no second turn. **Visual baseline pending** (`../README.md`, "Visual diff") |
+
+- **PromptComposer gained a property.** `Model picker` (BOOLEAN, off) on set 1072:79 is the code's `trailing` slot: a hidden
+  ModelPicker Trigger instance before Send / Stop in the six `Variant=default` variants. Nothing else on the set moved; its
+  tracked entry and the ❖ AI home baseline still match (checked with `figma-drift.mjs`).
+- **The reply actions are not live Button instances.** Code draws a 16px icon in a ghost `icon-sm` button; the ❖ Button
+  twin's `icon-sm` variants hold a 14px icon that an instance cannot resize. Each action is that variant detached in place
+  (space/7, radius/md kept) with the icon at 16px in semantic/muted-foreground, the same route the composer's mic took.
+- **Two icons were missing.** `icon/thumb_up` (1131:4) and `icon/thumb_down` (1131:7) were added by the icon sync; the
+  Icons page now holds 95, as code does.
+- **No variable for three values**, left as typed numbers: 14px (`px-3.5` on UserMessage, `pl-3.5` on the steps), 38px
+  (the follow-ups indent) and the 18 / 22px disc and tile sizes. Phase 2 adds no tokens.
+- **Inline text is a wrapping row.** Figma cannot flow one paragraph around inline chips, so the answer breaks between
+  runs, not inside one; at some widths a line ends a few words earlier than the browser's.
+- **Not drawn:** the shimmer and line motion (CSS-only, shown as the full sweep), AiNotice's link, hover and focus states,
+  a reply with no answer (it has no caret, Copy or action row: hide the answer and actions on an instance).
+
 ### Accent (2026-07-11; re-pinned to moss 2026-07-20)
 
 Code adds `data-accent="terracotta|moss|indigo|gold"` (eyebrows, accent italics,

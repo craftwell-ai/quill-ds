@@ -157,7 +157,10 @@
     "VariableID:831:2": "tint/primary/80",
     "VariableID:831:3": "tint/foreground/5",
     "VariableID:831:4": "tint/destructive/40",
-    "VariableID:834:2": "tint/secondary/80"
+    "VariableID:834:2": "tint/secondary/80",
+    "VariableID:1064:2": "color/ai-from",
+    "VariableID:1064:3": "color/ai-via",
+    "VariableID:1064:4": "color/ai-to"
   },
   "candidates": [],
   "components": [
@@ -1793,6 +1796,288 @@
       "code": {
         "classes": "grid gap-1.5"
       }
+    },
+    {
+      "name": "AiNotice",
+      "nodeId": "1132:9",
+      "codeFile": "registry/lib/ai-notice.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "padding": {
+          "var": "space/2",
+          "raw": 8
+        },
+        "texts": {
+          "Text": "The assistant can make mistakes. Check important details."
+        },
+        "childSignature": [
+          "Text:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "px-2 text-center text-xs text-muted-foreground"
+      }
+    },
+    {
+      "name": "AiThinking",
+      "nodeId": "1133:2",
+      "variantOf": "1133:21",
+      "variant": "Status=working, Open=false",
+      "codeFile": "registry/lib/ai-thinking.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": "space/0_5",
+          "raw": 2
+        },
+        "texts": {
+          "Label": "Thinking",
+          "Activity": "Reading signups-sept.csv"
+        },
+        "childSignature": [
+          "Label:TEXT",
+          "Activity:TEXT",
+          "Line:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid gap-0.5"
+      }
+    },
+    {
+      "name": "AiMessage",
+      "nodeId": "1139:2",
+      "variantOf": "1139:112",
+      "variant": "State=default",
+      "codeFile": "registry/lib/ai-message.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "texts": {
+          "Name": "Assistant",
+          "Summary text": "Thought for 8 s",
+          "Text": ", so the quarter still closed 4% ahead.",
+          "Label": "signups-sept",
+          "Where text": "Page 4 · Quarterly targets",
+          "Title": "Q3 board deck.pdf",
+          "Snippet": "July 4,100 · August 4,300 · September 4,800 signups.",
+          "Count": "2 sources"
+        },
+        "childSignature": [
+          "Avatar:FRAME",
+          "Body:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid grid-cols-[1.75rem_minmax(0,1fr)] gap-2.5"
+      }
+    },
+    {
+      "name": "UserMessage",
+      "nodeId": "1139:113",
+      "codeFile": "registry/lib/ai-message.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "fill": {
+          "var": "semantic/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "semantic/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "padding": {
+          "var": null,
+          "raw": 14
+        },
+        "texts": {
+          "Text": "How did signups do against target this quarter?"
+        },
+        "childSignature": [
+          "Text:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "ml-auto w-fit max-w-[80%] rounded-xl rounded-br-sm border border-border bg-card px-3.5 py-2 text-sm"
+      }
+    },
+    {
+      "name": "Citation",
+      "nodeId": "1135:2",
+      "variantOf": "1135:20",
+      "variant": "Kind=file",
+      "codeFile": "registry/lib/citations.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "fill": {
+          "var": "semantic/muted",
+          "raw": "#E8DCC0"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 6
+        },
+        "padding": {
+          "var": "space/2",
+          "raw": 8
+        },
+        "texts": {
+          "Label": "Q3 deck",
+          "Where text": "Page 4 · Quarterly targets",
+          "Title": "Q3 board deck.pdf",
+          "Snippet": "July 4,100 · August 4,300 · September 4,800 signups."
+        },
+        "childSignature": [
+          "Label:TEXT",
+          "Preview:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "ml-0.5 inline-block h-5 max-w-40 truncate rounded-md bg-muted px-2 text-center align-middle text-2xs font-semibold leading-5 text-ink-soft no-underline hover:bg-foreground hover:text-background"
+      }
+    },
+    {
+      "name": "Sources",
+      "nodeId": "1135:21",
+      "variantOf": "1135:56",
+      "variant": "Open=false",
+      "codeFile": "registry/lib/citations.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": "space/2",
+          "raw": 8
+        },
+        "texts": {
+          "Count": "2 sources"
+        },
+        "childSignature": [
+          "Trigger:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid justify-items-start gap-2"
+      }
+    },
+    {
+      "name": "SuggestedPrompts",
+      "nodeId": "1136:2",
+      "variantOf": "1136:31",
+      "variant": "Layout=chips",
+      "codeFile": "registry/lib/suggested-prompts.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "itemSpacing": {
+          "var": "space/1_5",
+          "raw": 6
+        },
+        "texts": {
+          "Label": "Draft a note to the team"
+        },
+        "childSignature": [
+          "Chip:FRAME",
+          "Chip:FRAME",
+          "Chip:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "flex flex-wrap gap-1.5"
+      }
+    },
+    {
+      "name": "ModelPickerTrigger",
+      "nodeId": "1138:2",
+      "codeFile": "registry/lib/model-picker.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "texts": {
+          "Button": "Auto"
+        },
+        "childSignature": [
+          "Button:INSTANCE"
+        ]
+      },
+      "code": {
+        "classes": "rounded-full text-ink-soft"
+      }
+    },
+    {
+      "name": "ModelPickerMenu",
+      "nodeId": "1138:8",
+      "codeFile": "registry/lib/model-picker.tsx",
+      "lastSynced": "2026-10-04",
+      "figma": {
+        "fill": {
+          "var": "semantic/popover",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "tint/foreground/10",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "effectStyle": "Elevation/base",
+        "texts": {
+          "Name": "Deep",
+          "Description": "Thinks longer on hard problems",
+          "Label text": "Choose",
+          "Badge text": "New"
+        },
+        "childSignature": [
+          "Group:FRAME",
+          "Separator:RECTANGLE",
+          "Group:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "className=\"w-72\""
+      }
     }
   ],
   "patterns": [
@@ -1804,6 +2089,15 @@
       "frameId": "696:2",
       "codeHash": "28f29f3b67409bcf",
       "syncedAt": "2026-09-18"
+    },
+    {
+      "block": "ai-chat",
+      "status": "mirrored",
+      "page": "❖ AI chat",
+      "pageId": "1132:2",
+      "frameId": "1140:2",
+      "codeHash": "d70cae8c9df61ca6",
+      "syncedAt": "2026-10-04"
     },
     {
       "block": "ai-home",
@@ -2302,6 +2596,36 @@
       "name": "ai-mark",
       "codeFile": "src/components/ui/ai-mark.tsx",
       "reason": "site shim that re-exports registry/lib/ai-mark.tsx; the twin (❖ AI mark, set 1068:10) is tracked through the AiMark entry"
+    },
+    {
+      "name": "ai-message",
+      "codeFile": "src/components/ui/ai-message.tsx",
+      "reason": "site shim that re-exports registry/lib/ai-message.tsx; the twin (❖ AI message, set 1139:112 and component 1139:113) is tracked through the AiMessage and UserMessage entries"
+    },
+    {
+      "name": "ai-notice",
+      "codeFile": "src/components/ui/ai-notice.tsx",
+      "reason": "site shim that re-exports registry/lib/ai-notice.tsx; the twin (❖ AI notice, component 1132:9) is tracked through the AiNotice entry"
+    },
+    {
+      "name": "ai-thinking",
+      "codeFile": "src/components/ui/ai-thinking.tsx",
+      "reason": "site shim that re-exports registry/lib/ai-thinking.tsx; the twin (❖ AI thinking, set 1133:21) is tracked through the AiThinking entry"
+    },
+    {
+      "name": "citations",
+      "codeFile": "src/components/ui/citations.tsx",
+      "reason": "site shim that re-exports registry/lib/citations.tsx; the twin (❖ Citations, sets 1135:20 and 1135:56) is tracked through the Citation and Sources entries"
+    },
+    {
+      "name": "model-picker",
+      "codeFile": "src/components/ui/model-picker.tsx",
+      "reason": "site shim that re-exports registry/lib/model-picker.tsx; the twin (❖ Model picker, components 1138:2 and 1138:8) is tracked through the ModelPickerTrigger and ModelPickerMenu entries"
+    },
+    {
+      "name": "suggested-prompts",
+      "codeFile": "src/components/ui/suggested-prompts.tsx",
+      "reason": "site shim that re-exports registry/lib/suggested-prompts.tsx; the twin (❖ Suggested prompts, set 1136:31) is tracked through the SuggestedPrompts entry"
     },
     {
       "name": "aspect-ratio",
