@@ -46,6 +46,11 @@ declare module '@/usage/ai-thinking.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/suggested-prompts.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/alert.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
