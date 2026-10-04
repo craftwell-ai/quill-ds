@@ -12,6 +12,7 @@ import { usage as aiMessage } from './ai-message.usage.mjs'
 import { usage as aiNotice } from './ai-notice.usage.mjs'
 import { usage as aiThinking } from './ai-thinking.usage.mjs'
 import { usage as suggestedPrompts } from './suggested-prompts.usage.mjs'
+import { usage as modelPicker } from './model-picker.usage.mjs'
 import { usage as alert } from './alert.usage.mjs'
 import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
@@ -131,6 +132,7 @@ export const ALL_USAGE = [
   aiNotice,
   aiThinking,
   suggestedPrompts,
+  modelPicker,
   alert,
   alertDialog,
   alerts,

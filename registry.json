@@ -1059,6 +1059,25 @@
       "docs": "Ready-made things to ask an AI — chips for follow-ups under an answer, cards for starters on an empty page, a list in a narrow panel. Picking one fills the composer; it never sends. Do: Fill the composer and focus it, so people can edit before sending. Don't: Send the suggestion the moment it is clicked — people lose the chance to adjust it. Do: Use chips under an answer, cards on an empty AI page, and the list in a narrow panel. Don't: Put large starter cards under every answer — they crowd the thread. Use command when people pick from a long, searchable list of actions. Use button when the choice runs an action straight away instead of filling the composer."
     },
     {
+      "name": "model-picker",
+      "type": "registry:ui",
+      "title": "Model picker",
+      "description": "Lets people choose which AI model answers — a quiet name-and-chevron trigger in the composer that opens a list with Auto first, a line on what each model is good for, and a check on the current one.",
+      "registryDependencies": [
+        "button",
+        "dropdown-menu",
+        "https://www.quilldesignsystem.com/r/icon.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/model-picker.tsx",
+          "target": "components/ui/model-picker.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Lets people choose which AI model answers — a quiet name-and-chevron trigger in the composer that opens a list with Auto first, a line on what each model is good for, and a check on the current one. Do: Give every model a one-line description of what it is good for (\"Fast answers, fewer credits\"). Don't: List bare model names — people cannot choose between names they do not know. Do: Offer Auto first so people who do not care never have to choose. Don't: Make people pick a model before their first message. Use select when the choice is an ordinary form setting, not an AI model. Use radio-group when the model is chosen once on a settings page; show the same options as radios."
+    },
+    {
       "name": "ai-mark",
       "type": "registry:ui",
       "title": "AI mark",
@@ -1213,6 +1232,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/suggested-prompts.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/suggested-prompts.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/model-picker.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/model-picker.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/alert.md",
