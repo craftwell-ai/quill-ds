@@ -2067,7 +2067,7 @@
           "Name": "Deep",
           "Description": "Thinks longer on hard problems",
           "Label text": "Choose",
-          "Badge text": "New"
+          "Label": "New"
         },
         "childSignature": [
           "Group:FRAME",
