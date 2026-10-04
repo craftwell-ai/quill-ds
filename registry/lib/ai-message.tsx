@@ -92,7 +92,10 @@ export function AiMessage({
             {streaming ? <span aria-hidden data-slot="caret" className="ml-0.5 inline-block h-[1.05em] w-[7px] animate-pulse bg-foreground align-[-0.15em] motion-reduce:animate-none" /> : null}
           </div>
         ) : null}
-        {stopped ? <p className="text-xs text-muted-foreground">You stopped this answer.</p> : null}
+        {/* Stays mounted so the text arrives into a live region instead of appearing with it; contents keeps the empty region out of the grid. */}
+        <div role="status" className="contents">
+          {stopped ? <p className="text-xs text-muted-foreground">You stopped this answer.</p> : null}
+        </div>
         {sources}
         {!streaming && hasActions ? (
           <div role="group" aria-label="Reply actions" className="-ml-1.5 flex gap-0.5 text-muted-foreground">

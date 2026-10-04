@@ -34,7 +34,8 @@ export const Default: Story = {
     await expect(box).toHaveValue('Compare with Q2')
     await userEvent.keyboard('{Enter}')
     await expect(args.onSubmit).toHaveBeenCalledWith('Compare with Q2')
-    await expect(canvas.getAllByRole('status').at(-1)).toHaveTextContent('Thinking')
+    // Every reply now carries a (usually empty) status region, so find the working one by its text.
+    await expect(canvas.getByText('Thinking').closest('[role="status"]')).toHaveTextContent('Reading signups-sept.csv')
     await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
     // Stop unmounts with the working state; the cursor must land back in the box, not on the page.
@@ -42,6 +43,20 @@ export const Default: Story = {
   },
 }
 
+export const ThreadIsALog: Story = {
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  play: async ({ canvas }) => {
+    // The log sits inside the named region (which also holds the composer) so new turns are announced politely.
+    const region = canvas.getByRole('region', { name: 'Conversation' })
+    const log = canvas.getByRole('log', { name: 'Messages' })
+    await expect(region).toContainElement(log)
+    await expect(log).toHaveTextContent('4% ahead')
+    await expect(log).not.toContainElement(canvas.getByRole('textbox', { name: 'Message' }))
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Message' }), 'Compare with Q2{Enter}')
+    await expect(log).toHaveTextContent('Compare with Q2')
+  },
+}
 export const SidebarLinksShowFocusRing: Story = {
   parameters: { viewport: { options: VIEWPORTS } },
   globals: { viewport: { value: 'desktop', isRotated: false } },

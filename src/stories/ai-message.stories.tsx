@@ -1,3 +1,4 @@
+import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, fn, userEvent, waitFor } from 'storybook/test'
 import { AiMessage, UserMessage } from '../../registry/lib/ai-message'
@@ -76,6 +77,25 @@ export const Stopped: Story = {
   args: { stopped: true, children: <p>September missed target by 12%, but July</p> },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
+  },
+}
+// The status region is already on the page before the text arrives, so the text is announced rather than just appearing.
+export const StoppedIsAnnounced: Story = {
+  render: function Render(args) {
+    const [stopped, setStopped] = React.useState(false)
+    return (
+      <>
+        <AiMessage {...args} stopped={stopped} />
+        <button type="button" onClick={() => setStopped(true)}>Stop</button>
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    const region = canvas.getByRole('status')
+    await expect(region.textContent).toBe('')
+    await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
+    await expect(canvas.getByRole('status')).toBe(region)
+    await expect(region).toHaveTextContent('You stopped this answer.')
   },
 }
 export const StoppedNoAnswer: Story = {

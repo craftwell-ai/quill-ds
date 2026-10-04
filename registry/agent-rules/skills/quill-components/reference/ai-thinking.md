@@ -14,8 +14,8 @@ Shows an AI working before its answer — a shimmering "Thinking" with what it i
 - **Do:** Keep the reasoning folded behind "Thought for N s" once the answer is there. **Don't:** Show the reasoning open by default after the answer lands — it pushes the answer down.
 
 ### Accessibility
-- The working state is a polite live region (role="status"), so activity updates are announced as they change, without moving focus.
-- The finished row is a button with aria-expanded that controls the reasoning list.
+- A polite live region (role="status") stays on the page in both states, so the label and activity are announced as they change, without moving focus. When the work is done it empties and announces nothing, so a finished reply restored from history stays quiet.
+- The finished row is a button with aria-expanded that controls the reasoning list, with the same 3px focus ring as a Button.
 - Under reduced motion the shimmer and sweeping line hold still; the label stays readable.
 
 ### Design tokens

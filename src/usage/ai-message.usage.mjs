@@ -21,7 +21,8 @@ export const usage = {
     },
   ],
   a11y: [
-    'Each reply is an article; while streaming it is marked aria-busy. To have replies announced as they arrive, render the thread inside a live region.',
+    'Each reply is an article; while streaming it is marked aria-busy. To have replies announced as they arrive, render the thread inside a live region (the AI chat pattern uses role="log").',
+    '"You stopped this answer." is announced: it appears inside a status region that is already on the page.',
     'Action buttons have names ("Copy", "Try again", "Good answer", "Bad answer"); the thumbs use aria-pressed.',
     'Copy says "Copied" for two seconds after a successful copy, and stays "Copy" if the browser refuses.',
   ],

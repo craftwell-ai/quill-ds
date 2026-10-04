@@ -1,3 +1,4 @@
+import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent } from 'storybook/test'
 import { AiThinking, formatThoughtFor } from '../../registry/lib/ai-thinking'
@@ -36,6 +37,28 @@ export const Done: Story = {
     await userEvent.click(toggle)
     await expect(toggle).toHaveAttribute('aria-expanded', 'true')
     await expect(canvas.getByText(STEPS[0])).toBeVisible()
+  },
+}
+// A status region that mounts already filled is announced unreliably; one that stays mounted and changes text is announced.
+export const StatusRegionPersistsWhenDone: Story = {
+  render: function Render(args) {
+    const [done, setDone] = React.useState(false)
+    return (
+      <>
+        <AiThinking {...args} status={done ? 'done' : 'working'} />
+        <button type="button" onClick={() => setDone(true)}>Finish</button>
+      </>
+    )
+  },
+  args: { activity: 'Reading signups-sept.csv', seconds: 8, steps: STEPS },
+  play: async ({ canvas }) => {
+    const region = canvas.getByRole('status')
+    await expect(region).toHaveTextContent('Thinking')
+    await userEvent.click(canvas.getByRole('button', { name: 'Finish' }))
+    await expect(canvas.getByRole('status')).toBe(region)
+    await expect(region.isConnected).toBe(true)
+    await expect(region.textContent).toBe('')
+    await expect(canvas.getByRole('button', { name: 'Thought for 8 s' })).toBeVisible()
   },
 }
 export const ToggleShowsFocusRing: Story = {
