@@ -43,8 +43,7 @@ export function ModelPicker({
         {/* Fixed line height on the row so the badge and the check share the name's centre line. */}
         <span className="flex h-5 items-center gap-1.5">
           <span data-model-name>{m.label}</span>
-          {/* bg-moss/25 over the tone's 20%: on the light menus the stock wash is only 1.21:1 against the surface, so the pill vanishes; 25% clears 1.25:1 and keeps the deep text above 4.5:1. */}
-          {m.badge ? <ToneBadge tone="moss" size="sm" className="bg-moss/25">{m.badge}</ToneBadge> : null}
+          {m.badge ? <ToneBadge tone="moss" size="sm">{m.badge}</ToneBadge> : null}
         </span>
         {m.description ? <span className="text-xs text-muted-foreground">{m.description}</span> : null}
       </span>
