@@ -74,6 +74,53 @@ const capsCentreY = (element: HTMLElement, sample: string) => {
   return baseline - (metrics.actualBoundingBoxAscent - metrics.actualBoundingBoxDescent) / 2
 }
 
+// Resolve any CSS colour (rgb, oklch, color(), …) to opaque sRGB by painting it over a backdrop
+// colour on a canvas and reading the pixel back. Painting over the surface is what composites a
+// translucent tint the way the eye sees it.
+const compositeOver = (colour: string, backdrop: string): [number, number, number] => {
+  const canvas = document.createElement('canvas')
+  canvas.width = 1
+  canvas.height = 1
+  const context = canvas.getContext('2d', { colorSpace: 'srgb', willReadFrequently: true })!
+  context.fillStyle = backdrop
+  context.fillRect(0, 0, 1, 1)
+  context.fillStyle = colour
+  context.fillRect(0, 0, 1, 1)
+  const [red, green, blue] = context.getImageData(0, 0, 1, 1).data
+  return [red, green, blue]
+}
+
+const contrastRatio = (first: [number, number, number], second: [number, number, number]) => {
+  const luminance = (rgb: [number, number, number]) => {
+    const [red, green, blue] = rgb.map((channel) => {
+      const unit = channel / 255
+      return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4
+    })
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+  }
+  const [lighter, darker] = [luminance(first), luminance(second)].sort((a, b) => b - a)
+  return (lighter + 0.05) / (darker + 0.05)
+}
+
+// A grey pill at 1.1:1 vanished in the dark themes, so the badge must read as a shape and its text must stay legible.
+export const BadgeReadsAsAShape: Story = {
+  args: { value: 'balanced' },
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Model: Balanced' }))
+    const page = within(document.body)
+    const menu = await page.findByRole('menu')
+    const badge = within(menu).getByText('New')
+    const surface = compositeOver(getComputedStyle(menu).backgroundColor, 'rgb(255 255 255)')
+    const fill = compositeOver(getComputedStyle(badge).backgroundColor, `rgb(${surface.join(' ')})`)
+    const text = compositeOver(getComputedStyle(badge).color, `rgb(${fill.join(' ')})`)
+    const shape = contrastRatio(fill, surface)
+    const legibility = contrastRatio(text, fill)
+    console.log(`badge shape ${shape.toFixed(2)}:1, badge text ${legibility.toFixed(2)}:1`)
+    await expect(shape).toBeGreaterThanOrEqual(1.25)
+    await expect(legibility).toBeGreaterThanOrEqual(4.5)
+  },
+}
+
 // The badge once sat low beside the name; the check mark must share the same centre line.
 export const BadgeAndCheckAlignWithName: Story = {
   args: { value: 'balanced' },

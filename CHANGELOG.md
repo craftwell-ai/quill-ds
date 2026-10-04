@@ -21,7 +21,7 @@ footer reads `package.json` directly, so the displayed version updates with the 
   - **`ai-thinking`** — "Thinking" with a live activity line while the AI works, folding into "Thought for 8 s" that opens the reasoning.
   - **`citations`** — source chips after each claim, named for their source (hover or focus previews it), and an "N sources" list.
   - **`suggested-prompts`** — chips, cards and list layouts; picking one fills the composer. `ai-home`'s starters now use it, so `ai-home` now depends on `suggested-prompts`.
-  - **`model-picker`** — choose the AI model from the composer, Auto first.
+  - **`model-picker`** — choose the AI model from the composer, Auto first; its "New" badge is a moss tone badge.
   - **`ai-notice`** — the AI-can-be-wrong line under a composer.
   - **`ai-chat`** — a full AI conversation page block built from the pieces above.
 - The `icon` core set grew from 93 to 95 (`thumb_up`, `thumb_down`).

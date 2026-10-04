@@ -1066,7 +1066,8 @@
       "registryDependencies": [
         "button",
         "dropdown-menu",
-        "https://www.quilldesignsystem.com/r/icon.json"
+        "https://www.quilldesignsystem.com/r/icon.json",
+        "https://www.quilldesignsystem.com/r/tone-badge.json"
       ],
       "files": [
         {
