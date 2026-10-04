@@ -34,37 +34,53 @@ export function Citation({ source, className }: { source: Source; className?: st
   const name = source.label ? `${source.label}, source: ${source.title}` : `Source: ${source.title}`
   // A chip with a link already has a press (follow it); one without gets the preview as its press.
   const pressable = !source.href
+  // Always controlled, so a chip whose href comes or goes while mounted never flips the card between controlled and uncontrolled.
   const [open, setOpen] = React.useState(false)
   // A press pins the card open. Hover or focus may already have opened it, and a press must never be the thing
-  // that closes it, so the first press pins and only the next press (or Escape, an outside press, blur) lets go.
+  // that closes it, so the first press pins and only the next press (or Escape, an outside press, focus leaving) lets go.
   const [pinned, setPinned] = React.useState(false)
+  // A chip that gains or loses its link must not carry an open, pinned card across; reset during render, the React-sanctioned way to react to a prop change.
+  const [wasPressable, setWasPressable] = React.useState(pressable)
+  if (wasPressable !== pressable) {
+    setWasPressable(pressable)
+    setPinned(false)
+    setOpen(false)
+  }
+  const chipRef = React.useRef<HTMLAnchorElement>(null)
   const release = () => { setPinned(false); setOpen(false) }
   return (
     <HoverCard
-      open={pressable ? open : undefined}
-      onOpenChange={pressable
-        ? (nextOpen, details) => {
-            // While pinned the pointer leaving must not close the card.
-            if (!nextOpen && pinned && details.reason === 'trigger-hover') return
-            if (!nextOpen) setPinned(false)
-            setOpen(nextOpen)
-          }
-        : undefined}
+      open={open}
+      onOpenChange={(nextOpen, details) => {
+        // While pinned the pointer leaving must not close the card. Focus leaving does close it, and the primitive
+        // ignores focus moving into the card itself, so pressing inside the card does not count as leaving.
+        if (!nextOpen && pinned && details.reason === 'trigger-hover') return
+        if (!nextOpen) setPinned(false)
+        setOpen(nextOpen)
+      }}
     >
       <HoverCardTrigger
         render={source.href
           ? <a href={source.href} target="_blank" rel="noreferrer" aria-label={name} />
           : <button type="button" aria-label={name} aria-expanded={open} />}
+        ref={chipRef}
         data-slot="citation"
         className={cn(CHIP, className)}
         {...(pressable && {
-          onBlur: release,
           onClick: () => (pinned ? release() : (setPinned(true), setOpen(true))),
         })}
       >
         {source.label ?? source.title}
       </HoverCardTrigger>
-      <HoverCardContent className="grid w-72 gap-1">
+      {/* Focus can rest inside the card after a press in it; leaving it for anywhere but the chip or the card lets go. */}
+      <HoverCardContent
+        className="grid w-72 gap-1"
+        onBlur={(event) => {
+          const next = event.relatedTarget as Node | null
+          if (!pinned || next === chipRef.current || event.currentTarget.contains(next)) return
+          release()
+        }}
+      >
         <span className="flex items-center gap-1.5 text-xs text-muted-foreground"><Icon name={kindIcon(source)} size={13} />{where(source)}</span>
         <span className="font-semibold">{source.title}</span>
         {source.snippet ? <span className="text-muted-foreground">{source.snippet}</span> : null}

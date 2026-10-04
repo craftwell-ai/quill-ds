@@ -1,3 +1,4 @@
+import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Citation, Sources, type Source } from '../../registry/lib/citations'
@@ -116,9 +117,69 @@ export const BlurClosesPinned: Story = {
     await userEvent.keyboard('{Enter}')
     await new Promise((resolve) => setTimeout(resolve, 400))
     await expect(previewText()).toBeVisible()
-    await userEvent.tab()
+    // The card itself is focusable: pressing inside it (to select the quoted line) must not count as leaving the chip.
+    await userEvent.click(previewText()!)
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    await expect(previewText()).toBeVisible()
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    // A genuine move of focus to something else lets go.
+    canvas.getByRole('button', { name: 'Elsewhere' }).focus()
     await waitFor(() => expect(previewText()).toBeNull())
     await expect(chip).toHaveAttribute('aria-expanded', 'false')
+  },
+}
+export const TabAwayClosesPinned: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} /> <button type="button">Elsewhere</button></p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    chip.focus()
+    await userEvent.keyboard('{Enter}')
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    await expect(previewText()).toBeVisible()
+    await userEvent.tab()
+    await waitFor(() => expect(previewText()).toBeNull())
+  },
+}
+export const EscapeDoesNotLeavePinStuck: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(previewText()).toBeNull())
+    // Unpinned again: hovering opens it and leaving closes it.
+    await userEvent.hover(chip)
+    await waitFor(() => expect(previewText()).toBeVisible(), { timeout: 3000 })
+    await userEvent.unhover(chip)
+    await waitFor(() => expect(previewText()).toBeNull(), { timeout: 3000 })
+  },
+}
+function HrefSwitch() {
+  const [href, setHref] = React.useState<string | undefined>(undefined)
+  return (
+    <p className="text-sm">
+      Signups beat target<Citation source={{ ...SOURCES[0], href }} />.
+      <button type="button" data-testid="give-href" onClick={() => setHref('https://craftwell.ai/q3')}>Give it a link</button>
+    </p>
+  )
+}
+export const HrefAppearsWhileMounted: Story = {
+  render: () => <HrefSwitch />,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    // A programmatic click keeps focus on the chip, so only the re-render can close the card.
+    canvas.getByTestId('give-href').click()
+    const link = await canvas.findByRole('link', NO_HREF_CHIP)
+    await expect(link).toHaveAttribute('href', 'https://craftwell.ai/q3')
+    await expect(link).not.toHaveAttribute('aria-expanded')
+    await waitFor(() => expect(previewText()).toBeNull())
+    await userEvent.hover(link)
+    await waitFor(() => expect(previewText()).toBeVisible(), { timeout: 3000 })
+    await userEvent.unhover(link)
+    await waitFor(() => expect(previewText()).toBeNull(), { timeout: 3000 })
   },
 }
 export const PressOutsideCloses: Story = {
