@@ -18,8 +18,8 @@ the text between the markers; the same renderer feeds llms.txt.
 - `registry/themes/quill.css` — the shipped token layer an app installs (it lands
   as `app/quill-theme.css`); `src/app/globals.css` is the site's cut of the same
   source.
-- `registry/blocks` and `registry/lib` — the 53 blocks and the six shipped
-  components (`ai-badge`, `ai-button`, `ai-mark`, `icon`, `prompt-composer`, `tone-badge`).
+- `registry/blocks` and `registry/lib` — the 53 blocks and the twelve shipped
+  components (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts`, `tone-badge`).
 - `src/components/ui` — the stock shadcn primitives the token layer restyles
   (apps install these from shadcn, not from Quill).
 - `public/usage` — one usage page per component and block, generated from
@@ -367,10 +367,11 @@ border for `ring`.
 Primitives are **stock shadcn** (Base UI + Tailwind) restyled by the token layer —
 Quill does not re-ship its own Button, Card or Input. Apps install them with
 `npx shadcn@latest add button …`; the site's copies live in `src/components/ui`
-and are what the entries below describe. Quill ships six components of its own
+and are what the entries below describe. Quill ships twelve components of its own
 through the registry — `icon` (`registry/lib/icon.tsx`), `tone-badge`
 (`registry/lib/tone-badge.tsx`), and the AI kit (`ai-badge`, `ai-button`,
-`ai-mark`, `prompt-composer`) — plus 53 blocks under `registry/blocks`. The
+`ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`,
+`model-picker`, `prompt-composer`, `suggested-prompts`) — plus 53 blocks under `registry/blocks`. The
 per-component rules live in `public/usage` (one page per name), written once in
 `src/usage`.
 

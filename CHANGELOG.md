@@ -13,6 +13,24 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.17.0] — 2026-10-04
+
+### Added
+- **The AI conversation pieces (AI kit Phase 2).**
+  - **`ai-message`** — an AI reply with the mark on its avatar, plain answer text, and Copy, Try again and thumbs; ships `UserMessage` for the person's side. Streams with a caret and holds its actions until the answer is done.
+  - **`ai-thinking`** — "Thinking" with a live activity line while the AI works, folding into "Thought for 8 s" that opens the reasoning.
+  - **`citations`** — source chips after each claim, named for their source (hover or focus previews it), and an "N sources" list.
+  - **`suggested-prompts`** — chips, cards and list layouts; picking one fills the composer. `ai-home`'s starters now use it.
+  - **`model-picker`** — choose the AI model from the composer, Auto first.
+  - **`ai-notice`** — the AI-can-be-wrong line under a composer.
+  - **`ai-chat`** — a full AI conversation page block built from the pieces above.
+- Figma twins for all seven. The PromptComposer twin gained a `Model picker` boolean.
+
+### Changed
+- The shipped-component count in `README.md`, `AGENTS.md` and `DESIGN.md` is now twelve, with the full list.
+- The `ai-*` reachability guard now derives component names from the registry instead of a hand-typed list, so a new `ai-` item needs no test edit (an undefined `ai-*` utility still fails).
+- The Figma pattern-parity helper skips `hidden` elements.
+
 ## [0.16.5] — 2026-10-02
 
 ### Fixed
