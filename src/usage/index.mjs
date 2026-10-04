@@ -9,6 +9,7 @@ import { usage as aiBadge } from './ai-badge.usage.mjs'
 import { usage as aiButton } from './ai-button.usage.mjs'
 import { usage as aiMark } from './ai-mark.usage.mjs'
 import { usage as aiNotice } from './ai-notice.usage.mjs'
+import { usage as aiThinking } from './ai-thinking.usage.mjs'
 import { usage as alert } from './alert.usage.mjs'
 import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
@@ -124,6 +125,7 @@ export const ALL_USAGE = [
   aiButton,
   aiMark,
   aiNotice,
+  aiThinking,
   alert,
   alertDialog,
   alerts,

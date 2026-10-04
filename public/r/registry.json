@@ -988,6 +988,23 @@
       "docs": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies. Do: Keep the notice to one small centred line under the composer, always present. Don't: Turn it into a banner, a callout box or a toast — it is there every time, so it stays quiet. Do: Leave it in muted ink, which passes 4.5:1 in every theme. Don't: Lighten it further with opacity — a disclaimer people cannot read does not inform them. Use alert when something has actually gone wrong and needs the person to act. Use ai-badge when one piece of content was made by AI and needs labelling where it sits."
     },
     {
+      "name": "ai-thinking",
+      "type": "registry:ui",
+      "title": "AI thinking",
+      "description": "Shows an AI working before its answer — a shimmering \"Thinking\" with what it is doing — then folds into one quiet \"Thought for 8 s\" row that opens the reasoning.",
+      "registryDependencies": [
+        "https://www.quilldesignsystem.com/r/icon.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/ai-thinking.tsx",
+          "target": "components/ui/ai-thinking.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Shows an AI working before its answer — a shimmering \"Thinking\" with what it is doing — then folds into one quiet \"Thought for 8 s\" row that opens the reasoning. Do: Switch to status=\"done\" the moment the answer starts, so the shimmer and line stop. Don't: Leave the shimmer running beside a finished answer — motion means the AI is still working. Do: Keep the reasoning folded behind \"Thought for N s\" once the answer is there. Don't: Show the reasoning open by default after the answer lands — it pushes the answer down. Use spinner when something that is not AI is loading. Use skeleton when a page or card is loading its layout, not an AI thinking."
+    },
+    {
       "name": "ai-mark",
       "type": "registry:ui",
       "title": "AI mark",
@@ -1127,6 +1144,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/ai-notice.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/ai-notice.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/ai-thinking.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/ai-thinking.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/alert.md",

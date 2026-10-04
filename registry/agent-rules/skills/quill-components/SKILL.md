@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `ai-notice`, `icon`, `prompt-composer` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `ai-notice`, `ai-thinking`, `icon`, `prompt-composer` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -108,6 +108,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `ai-button` (`@quill/`) — A button starts something an AI does: Summarize, Rewrite, Ask AI, Draft a reply. · instead: `button`, `prompt-composer`
 - `ai-mark` (`@quill/`) — You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page. · instead: `ai-badge`, `icon`
 - `ai-notice` (`@quill/`) — A composer sends to an AI and people should know its answers need checking. · instead: `alert`, `ai-badge`
+- `ai-thinking` (`@quill/`) — An AI takes a noticeable moment before answering and people should see it is working, and later how it got there. · instead: `spinner`, `skeleton`
 - `alert` — You need one persistent, inline status message (informational or error) attached to a specific section of a page — not a whole stack of them, and not transient feedback about an action just taken. · instead: `alerts`, `sonner`
 - `alert-dialog` — You need the user to explicitly confirm or cancel a destructive, irreversible action — deleting a record, discarding unsaved work, removing access. · instead: `dialog`
 - `aspect-ratio` — You're placing an image, video, or embed that must keep a consistent shape (16:9, 1:1, 4:3) regardless of its container's width, and want to reserve that space before the media loads. · instead: `resizable`
