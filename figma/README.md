@@ -59,18 +59,12 @@ differently), so refresh it from the artifact, never from a laptop: download
 residual is font rasterisation; the size drifts listed in the CHANGELOG are real content
 differences for a human to settle, not noise.
 
-**Pending (2026-10-02): ai-home has no visual baseline yet.** Until it does, every run lists it as
-`unbaselined`. That never fails the job, even with `--strict` (only regressions fail it), so nothing
-turns red; it just goes unwatched. To finish: run the **Figma parity** workflow by hand, read the
-ai-home strip in its `figma-visual-diff` artifact, then accept the numbers:
-`gh run download <run id> -n figma-visual-diff -D .visual/ci && node scripts/figma-visual-diff.mjs --baseline-from .visual/ci/summary.json`.
-A local macOS run gave 2.16 % at 1024×512 on both sides, for orientation only. Part of that is the story's
-play step typing into the box, where the Figma frame shows the placeholder.
-
-**Pending (2026-10-04): ai-chat has no visual baseline yet.** Same as ai-home above: it reports `unbaselined`, which
-never fails the job, until a CI run of the **Figma parity** workflow is read and accepted with the same two commands.
-The frame is 1024×640 and shows the block's first render; the story's play step adds a second turn (a question and a
-stopped reply) and types into the box, so expect that part of the strip to differ.
+**Baselined 2026-10-04: ai-home and ai-chat.** Both were accepted from CI run 37235315497 (52 pairs,
+0 regressions): ai-home at 0.72 % (1024×512), ai-chat at 1.59 % (1024×640). What is left is expected, not
+drift: the stories' play steps (text typed into the box; on ai-chat a second turn, where the Figma frame
+shows the first render) and one answer line that wraps a word earlier in Figma. A new pair starts the same
+way: it reports `unbaselined`, which never fails the job, even with `--strict`, until a CI run of the
+**Figma parity** workflow is read and accepted with the last command below.
 
 ```bash
 npm run build-storybook -- -o .visual/sb --quiet
