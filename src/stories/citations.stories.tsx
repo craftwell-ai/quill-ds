@@ -1,3 +1,4 @@
+import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Citation, Sources, type Source } from '../../registry/lib/citations'
@@ -41,6 +42,183 @@ export const InAnAnswer: Story = {
     // Keyboard focus opens the same preview as hover (it renders in a portal on the page body).
     chip.focus()
     await waitFor(() => expect(within(document.body).getByText('July 4,100 · August 4,300 · September 4,800 signups.')).toBeVisible())
+  },
+}
+const SNIPPET = 'July 4,100 · August 4,300 · September 4,800 signups.'
+const previewText = () => within(document.body).queryByText(SNIPPET)
+const NO_HREF_CHIP = { name: 'Q3 deck, source: Q3 board deck.pdf' }
+
+// A chip with no link has nothing to open, so a press (tap, screen-reader activate) opens its preview instead.
+export const PressOpensPreview: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await expect(chip).toHaveAttribute('aria-expanded', 'false')
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+  },
+}
+export const PressAgainOrEscapeCloses: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeNull())
+    await expect(chip).toHaveAttribute('aria-expanded', 'false')
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(previewText()).toBeNull())
+    await expect(chip).toHaveAttribute('aria-expanded', 'false')
+  },
+}
+// Pressing never closes a card that hover or focus just opened: it pins it, and the next press unpins and closes.
+export const KeyboardPressPinsFocusPreview: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    chip.focus()
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.keyboard('{Enter}')
+    await expect(previewText()).toBeVisible()
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.keyboard('{Enter}')
+    await waitFor(() => expect(previewText()).toBeNull())
+    await expect(chip).toHaveAttribute('aria-expanded', 'false')
+  },
+}
+export const MousePressPinsHoverPreview: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.hover(chip)
+    await waitFor(() => expect(previewText()).toBeVisible(), { timeout: 3000 })
+    await userEvent.click(chip)
+    await expect(previewText()).toBeVisible()
+    await userEvent.unhover(chip)
+    // Past the 300ms close delay: a pinned card ignores the pointer leaving.
+    await new Promise((resolve) => setTimeout(resolve, 700))
+    await expect(previewText()).toBeVisible()
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeNull())
+  },
+}
+export const BlurClosesPinned: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} /> <button type="button">Elsewhere</button></p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    chip.focus()
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await userEvent.keyboard('{Enter}')
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    await expect(previewText()).toBeVisible()
+    // The card itself is focusable: pressing inside it (to select the quoted line) must not count as leaving the chip.
+    await userEvent.click(previewText()!)
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    await expect(previewText()).toBeVisible()
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    // A genuine move of focus to something else lets go.
+    canvas.getByRole('button', { name: 'Elsewhere' }).focus()
+    await waitFor(() => expect(previewText()).toBeNull())
+    await expect(chip).toHaveAttribute('aria-expanded', 'false')
+  },
+}
+export const TabAwayClosesPinned: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} /> <button type="button">Elsewhere</button></p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    chip.focus()
+    await userEvent.keyboard('{Enter}')
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    await expect(previewText()).toBeVisible()
+    await userEvent.tab()
+    await waitFor(() => expect(previewText()).toBeNull())
+  },
+}
+export const EscapeDoesNotLeavePinStuck: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(previewText()).toBeNull())
+    // Unpinned again: hovering opens it and leaving closes it.
+    await userEvent.hover(chip)
+    await waitFor(() => expect(previewText()).toBeVisible(), { timeout: 3000 })
+    await userEvent.unhover(chip)
+    await waitFor(() => expect(previewText()).toBeNull(), { timeout: 3000 })
+  },
+}
+function HrefSwitch() {
+  const [href, setHref] = React.useState<string | undefined>(undefined)
+  return (
+    <p className="text-sm">
+      Signups beat target<Citation source={{ ...SOURCES[0], href }} />.
+      <button type="button" data-testid="give-href" onClick={() => setHref('https://craftwell.ai/q3')}>Give it a link</button>
+    </p>
+  )
+}
+export const HrefAppearsWhileMounted: Story = {
+  render: () => <HrefSwitch />,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    // A programmatic click keeps focus on the chip, so only the re-render can close the card.
+    canvas.getByTestId('give-href').click()
+    const link = await canvas.findByRole('link', NO_HREF_CHIP)
+    await expect(link).toHaveAttribute('href', 'https://craftwell.ai/q3')
+    await expect(link).not.toHaveAttribute('aria-expanded')
+    await waitFor(() => expect(previewText()).toBeNull())
+    await userEvent.hover(link)
+    await waitFor(() => expect(previewText()).toBeVisible(), { timeout: 3000 })
+    await userEvent.unhover(link)
+    await waitFor(() => expect(previewText()).toBeNull(), { timeout: 3000 })
+  },
+}
+export const PressOutsideCloses: Story = {
+  render: () => <div className="grid gap-3"><p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p><p data-testid="elsewhere" className="text-sm">Elsewhere on the page.</p></div>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await userEvent.click(canvas.getByTestId('elsewhere'))
+    await waitFor(() => expect(previewText()).toBeNull())
+  },
+}
+export const TouchTapStaysOpen: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    const touch = (type: string) => chip.dispatchEvent(new PointerEvent(type, { pointerType: 'touch', isPrimary: true, bubbles: true, cancelable: true }))
+    // A phone tap: pointer down, the browser focuses the button, pointer up, then the click.
+    touch('pointerdown')
+    chip.focus()
+    touch('pointerup')
+    chip.click()
+    await waitFor(() => expect(previewText()).toBeVisible())
+    // Hold past the focus/hover delays: an open-then-close race would shut it here.
+    await new Promise((resolve) => setTimeout(resolve, 900))
+    await expect(previewText()).toBeVisible()
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+  },
+}
+export const LinkChipStaysALink: Story = {
+  render: () => <p className="text-sm">Annual plans shown first<Citation source={SOURCES[2]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('link', { name: 'changelog, source: New pricing page' })
+    await expect(chip).toHaveAttribute('href', 'https://craftwell.ai/changelog')
+    await expect(chip).not.toHaveAttribute('aria-expanded')
+    // Hover/focus still previews; pressing is the link's own job, so no toggle state appears.
+    chip.focus()
+    await waitFor(() => expect(within(document.body).getByText('Shipped 9 September: annual plans shown first.')).toBeVisible())
+    await expect(chip).not.toHaveAttribute('aria-expanded')
   },
 }
 export const LongTitleNoLabel: Story = {
