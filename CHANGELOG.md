@@ -13,6 +13,26 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.17.2] — 2026-10-04
+
+### Fixed
+- **Matching focus rings on the AI pieces' plain buttons and links.** The `ai-notice` link, the `ai-thinking` toggle, citation chips, the Sources pill and its links, the suggested-prompt chips, cards and rows, and the `ai-chat` sidebar links fell back to the browser's default outline. They now show the stock Button's ring; the ones with a visible border also colour it. List rows and plain links keep their border as it was.
+- **Replies and the working state are announced to screen readers.** The `ai-chat` thread is a `role="log"` named "Messages" inside the existing "Conversation" region. `ai-thinking` keeps one status region on the page in both states, so the working text is announced and a finished reply restored from history is not. `ai-message`'s "You stopped this answer." lands in a status region that was already there. The three usage accessibility sections were corrected to match.
+- **Small hardening of the AI pieces.**
+  - `model-picker` renders nothing when it has no Auto option and no models.
+  - Suggested prompts with the same label no longer share a key.
+  - Copy's "Copied" timer is cleared on a second click and when the reply unmounts.
+  - An answer that is empty (`''`, whitespace, an empty fragment or an empty paragraph) counts as no answer: no caret, no Copy, no empty body.
+  - A thinking time that is not a number, is infinite or is negative no longer prints nonsense: `ai-thinking` reads "Thought it through", and the `formatThoughtFor` helper returns "1 s", the shortest it says.
+  - A web source with no detail and no link reads "Web page".
+- **Figma: the model picker menu's parity record matches the file again.** The menu twin's "New" badge became a live Tone badge instance, but the record still named the old text layer, so the daily Figma parity check reported a removed text. The record was re-read from the file; nothing in Figma or in code changed.
+
+### Changed
+- **Figma: `ai-home` and `ai-chat` have visual baselines** (0.72 % and 1.59 %, from a CI run of 52 pairs with 0 regressions). `figma/README.md` now says so in place of the two "pending" notes.
+
+### Removed
+- **The Test card fixture (CRA-267).** It was the stand-in used to prove the Figma ↔ code round trip and was never part of the design system; the daily parity check covers every real twin. Gone: `src/components/ui/test-card.tsx`, its `Sandbox / Test` story, its parity record, the usage-coverage exemption that existed only for it, and in Figma the Test component and its `❖ Test` page. It was never a registry item, so nothing an app installs changes. The Figma notes and the `/figma-pull` and `/figma-push` skills now use Button and ToneBadge as their worked example.
+
 ## [0.17.1] — 2026-10-04
 
 ### Fixed
