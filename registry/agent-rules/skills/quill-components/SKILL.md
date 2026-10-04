@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `icon`, `prompt-composer` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `prompt-composer` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -123,6 +123,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `carousel` — You need to page through a set of same-shaped items (cards, images) one view at a time within a constrained width. · instead: `scroll-area`, `tabs`
 - `chart` — You need a bar, line, area, or other Recharts chart that automatically re-colors across every Quill theme and stays colorblind-safe. · instead: `data-table`, `stat-cards`
 - `checkbox` — You need one or more independent boolean choices — accept terms, opt into a list, select several rows in a table. · instead: `radio-group`, `switch`
+- `citations` (`@quill/`) — An AI answer draws on files, pages or records people may want to check. · instead: `hover-card`, `badge`
 - `collapsible` — You need one standalone show/hide toggle — a "view more" panel, an expandable filter section — without Accordion's multi-item structure. · instead: `accordion`
 - `combobox` — You need to filter a long option list by typing, or let users select multiple values as removable chips. · instead: `select`, `native-select`
 - `command` — You need a searchable, keyboard-navigable list of actions or destinations — settings search, a ⌘K command palette. · instead: `combobox`, `dropdown-menu`

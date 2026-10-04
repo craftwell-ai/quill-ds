@@ -2,7 +2,7 @@
 
 > Warm neutral grounds, moss accents, Fraunces display type, and ink-toned type. A low-contrast editorial theme for digital products. A self-hosted shadcn registry with a five-theme, four-accent token layer, WCAG 2.1 AA targets, and 52 composable blocks. Version 0.16.5.
 
-Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, nine components of its own (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `icon`, `prompt-composer` and `tone-badge`, from `@quill/`), and the blocks below, not re-copied primitives.
+Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/r/<name>.json` (e.g. `npx shadcn@latest add https://www.quilldesignsystem.com/r/quill.json` for the theme, then blocks). Primitives are stock shadcn restyled by the theme layer — Quill ships the theme, ten components of its own (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `prompt-composer` and `tone-badge`, from `@quill/`), and the blocks below, not re-copied primitives.
 
 ## Agent quick start
 
@@ -10,7 +10,7 @@ Install any item with the shadcn CLI against `https://www.quilldesignsystem.com/
 2. Install the rules file for AI agents: `npx shadcn@latest add @quill/agent-rules` writes `.claude/rules/quill.md` at the project root, which Claude Code loads every session (theming contract, foundations, principles, icon names, block index).
    Not in Claude Code? Connect any MCP client (Cursor, Claude Desktop, claude.ai) to `https://www.quilldesignsystem.com/mcp/` — tools: find_component, get_component, get_setup, get_foundations.
 3. Set `data-theme` and `data-accent` on `<html>` (see Theming). The `theme-selector` block owns both at runtime.
-4. Before hand-building a section, pick a block from Components below by its intent and install it: `npx shadcn@latest add @quill/<name>`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme; `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `icon`, `prompt-composer` and `tone-badge` come from `@quill/` (`npx shadcn@latest add @quill/<name>`).
+4. Before hand-building a section, pick a block from Components below by its intent and install it: `npx shadcn@latest add @quill/<name>`. Primitives (button, card, input…) come from shadcn itself and are restyled by the theme; `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `prompt-composer` and `tone-badge` come from `@quill/` (`npx shadcn@latest add @quill/<name>`).
 5. Read the usage guide for everything you use — `https://www.quilldesignsystem.com/usage/<name>.md` — for the rules, what to reach for instead, and the accessibility notes.
 6. Update an item with `npx shadcn@latest add @quill/<name> --overwrite`. `--yes` does not overwrite a changed file: it prompts in a terminal and silently skips when non-interactive.
 7. Verify in the app: `npx tsc --noEmit`, `npm run lint`; then switch `data-theme` and `data-accent` and confirm both take effect.
@@ -312,6 +312,7 @@ Per-primitive usage rules — when to use, what to reach for instead, do/don't, 
 - [carousel](https://www.quilldesignsystem.com/usage/carousel.md) — A horizontally or vertically scrolling item viewport built on Embla Carousel, with Previous/Next controls and keyboard arrow-key support.
 - [chart](https://www.quilldesignsystem.com/usage/chart.md) — A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend.
 - [checkbox](https://www.quilldesignsystem.com/usage/checkbox.md) — A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox.
+- [citations](https://www.quilldesignsystem.com/usage/citations.md) (`@quill/`) — Shows where an AI answer came from — a small chip after each claim, named for its source, that previews it, and an "N sources" list under the answer.
 - [collapsible](https://www.quilldesignsystem.com/usage/collapsible.md) — A single open/closed disclosure toggle — the lower-level primitive behind Accordion, with no item/trigger/content grouping or built-in styling.
 - [combobox](https://www.quilldesignsystem.com/usage/combobox.md) — A searchable dropdown — type to filter a list, or multi-select with removable chips.
 - [command](https://www.quilldesignsystem.com/usage/command.md) — A keyboard-first search palette — embed inline for settings search, or wrap in CommandDialog for a ⌘K-style command palette.

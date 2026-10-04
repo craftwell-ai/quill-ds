@@ -1024,6 +1024,24 @@
       "docs": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. Do: Keep the answer in plain body text; the mark on the avatar already says it is AI. Don't: Colour the answer, its bubble or its headings with the AI gradient — answers have to be easy to read at length. Do: Pass streaming while the answer arrives; the actions wait until it is done. Don't: Show Copy and thumbs on a half-written answer — there is nothing finished to copy or judge yet. Use chat when two people are messaging each other; no AI is involved."
     },
     {
+      "name": "citations",
+      "type": "registry:ui",
+      "title": "Citations",
+      "description": "Shows where an AI answer came from — a small chip after each claim, named for its source, that previews it, and an \"N sources\" list under the answer.",
+      "registryDependencies": [
+        "hover-card",
+        "https://www.quilldesignsystem.com/r/icon.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/citations.tsx",
+          "target": "components/ui/citations.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Shows where an AI answer came from — a small chip after each claim, named for its source, that previews it, and an \"N sources\" list under the answer. Do: Put the chip right after the sentence it backs, named for its source. Don't: Collect sources only in a footer — people cannot tell which source backs which claim. Do: Leave the chips and list in neutral ink. Don't: Colour citations with the AI gradient or a status colour — they are references, not AI and not status. Use hover-card when you need a preview on an ordinary link that is not an AI source. Use badge when you are labelling a category, not pointing to where a claim came from."
+    },
+    {
       "name": "ai-mark",
       "type": "registry:ui",
       "title": "AI mark",
@@ -1283,6 +1301,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/checkout.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/checkout.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/citations.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/citations.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/collapsible.md",

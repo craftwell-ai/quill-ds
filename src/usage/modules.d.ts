@@ -156,6 +156,11 @@ declare module '@/usage/checkout.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/citations.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/collapsible.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

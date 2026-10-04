@@ -33,6 +33,7 @@ import { usage as chat } from './chat.usage.mjs'
 import { usage as aiHome } from './ai-home.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
+import { usage as citations } from './citations.usage.mjs'
 import { usage as collapsible } from './collapsible.usage.mjs'
 import { usage as combobox } from './combobox.usage.mjs'
 import { usage as command } from './command.usage.mjs'
@@ -150,6 +151,7 @@ export const ALL_USAGE = [
   aiHome,
   checkbox,
   checkout,
+  citations,
   collapsible,
   combobox,
   command,
