@@ -61,6 +61,19 @@ const centreY = (box: Element) => {
   return rect.top + rect.height / 2
 }
 
+// Where the capital letters themselves sit: box centre can match while small caps still look low,
+// so measure the ink (baseline minus half the cap height) as well as the box.
+const capsCentreY = (element: HTMLElement, sample: string) => {
+  const style = getComputedStyle(element)
+  const context = document.createElement('canvas').getContext('2d')!
+  context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`
+  const metrics = context.measureText(sample)
+  const rect = element.getBoundingClientRect()
+  const lineHeight = parseFloat(style.lineHeight) || rect.height
+  const baseline = rect.top + (rect.height - lineHeight) / 2 + (lineHeight - (metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)) / 2 + metrics.fontBoundingBoxAscent
+  return baseline - (metrics.actualBoundingBoxAscent - metrics.actualBoundingBoxDescent) / 2
+}
+
 // The badge once sat low beside the name; the check mark must share the same centre line.
 export const BadgeAndCheckAlignWithName: Story = {
   args: { value: 'balanced' },
@@ -71,6 +84,7 @@ export const BadgeAndCheckAlignWithName: Story = {
     const name = item.querySelector('[data-model-name]') as HTMLElement
     const badge = within(item).getByText('New')
     await expect(Math.abs(centreY(badge) - centreY(name))).toBeLessThanOrEqual(1)
+    await expect(Math.abs(capsCentreY(badge, 'NEW') - capsCentreY(name, 'B'))).toBeLessThanOrEqual(1)
     const check = item.querySelector('[data-slot="dropdown-menu-radio-item-indicator"]') as HTMLElement
     await expect(Math.abs(centreY(check) - centreY(name))).toBeLessThanOrEqual(1)
   },
