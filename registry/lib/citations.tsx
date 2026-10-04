@@ -35,15 +35,18 @@ export function Citation({ source, className }: { source: Source; className?: st
   // A chip with a link already has a press (follow it); one without gets the preview as its press.
   const pressable = !source.href
   const [open, setOpen] = React.useState(false)
-  // A tap or click focuses the button before the click lands. Focus would open the card and the click would
-  // then toggle it shut again, so a focus that comes from a pointer press is left to the click to handle.
-  const pointerPressing = React.useRef(false)
+  // A press pins the card open. Hover or focus may already have opened it, and a press must never be the thing
+  // that closes it, so the first press pins and only the next press (or Escape, an outside press, blur) lets go.
+  const [pinned, setPinned] = React.useState(false)
+  const release = () => { setPinned(false); setOpen(false) }
   return (
     <HoverCard
       open={pressable ? open : undefined}
       onOpenChange={pressable
         ? (nextOpen, details) => {
-            if (nextOpen && details.reason === 'trigger-focus' && pointerPressing.current) return
+            // While pinned the pointer leaving must not close the card.
+            if (!nextOpen && pinned && details.reason === 'trigger-hover') return
+            if (!nextOpen) setPinned(false)
             setOpen(nextOpen)
           }
         : undefined}
@@ -55,12 +58,8 @@ export function Citation({ source, className }: { source: Source; className?: st
         data-slot="citation"
         className={cn(CHIP, className)}
         {...(pressable && {
-          onPointerDown: () => { pointerPressing.current = true },
-          onBlur: () => { pointerPressing.current = false },
-          onClick: () => {
-            pointerPressing.current = false
-            setOpen((wasOpen) => !wasOpen)
-          },
+          onBlur: release,
+          onClick: () => (pinned ? release() : (setPinned(true), setOpen(true))),
         })}
       >
         {source.label ?? source.title}

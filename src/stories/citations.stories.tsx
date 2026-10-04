@@ -74,6 +74,53 @@ export const PressAgainOrEscapeCloses: Story = {
     await expect(chip).toHaveAttribute('aria-expanded', 'false')
   },
 }
+// Pressing never closes a card that hover or focus just opened: it pins it, and the next press unpins and closes.
+export const KeyboardPressPinsFocusPreview: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    chip.focus()
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.keyboard('{Enter}')
+    await expect(previewText()).toBeVisible()
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.keyboard('{Enter}')
+    await waitFor(() => expect(previewText()).toBeNull())
+    await expect(chip).toHaveAttribute('aria-expanded', 'false')
+  },
+}
+export const MousePressPinsHoverPreview: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    await userEvent.hover(chip)
+    await waitFor(() => expect(previewText()).toBeVisible(), { timeout: 3000 })
+    await userEvent.click(chip)
+    await expect(previewText()).toBeVisible()
+    await userEvent.unhover(chip)
+    // Past the 300ms close delay: a pinned card ignores the pointer leaving.
+    await new Promise((resolve) => setTimeout(resolve, 700))
+    await expect(previewText()).toBeVisible()
+    await expect(chip).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.click(chip)
+    await waitFor(() => expect(previewText()).toBeNull())
+  },
+}
+export const BlurClosesPinned: Story = {
+  render: () => <p className="text-sm">Signups beat target<Citation source={SOURCES[0]} /> <button type="button">Elsewhere</button></p>,
+  play: async ({ canvas }) => {
+    const chip = canvas.getByRole('button', NO_HREF_CHIP)
+    chip.focus()
+    await waitFor(() => expect(previewText()).toBeVisible())
+    await userEvent.keyboard('{Enter}')
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    await expect(previewText()).toBeVisible()
+    await userEvent.tab()
+    await waitFor(() => expect(previewText()).toBeNull())
+    await expect(chip).toHaveAttribute('aria-expanded', 'false')
+  },
+}
 export const PressOutsideCloses: Story = {
   render: () => <div className="grid gap-3"><p className="text-sm">Signups beat target<Citation source={SOURCES[0]} />.</p><p data-testid="elsewhere" className="text-sm">Elsewhere on the page.</p></div>,
   play: async ({ canvas }) => {

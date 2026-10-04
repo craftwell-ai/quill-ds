@@ -16,7 +16,7 @@ footer reads `package.json` directly, so the displayed version updates with the 
 ## [0.17.1] — 2026-10-04
 
 ### Fixed
-- **Pressing a citation chip that has no link now opens its preview.** It did nothing before, so a tap on a phone or a screen-reader activation went nowhere. Escape, a second press, or a press outside closes it; the chip reports its state with `aria-expanded`. Chips that link to a source are unchanged.
+- **Pressing a citation chip that has no link now opens its preview.** It did nothing before, so a tap on a phone or a screen-reader activation went nowhere. A press keeps the preview open, even if hover or focus had already opened it; a second press, Escape, a press outside, or moving focus away closes it. The chip reports its state with `aria-expanded`. Chips that link to a source are unchanged.
 
 ## [0.17.0] — 2026-10-04
 

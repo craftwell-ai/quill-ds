@@ -23,7 +23,7 @@ export const usage = {
   ],
   a11y: [
     'Each chip is a link (or a button when there is no address) named "Q3 deck, source: Q3 board deck.pdf" (the visible label first, then the full title; "Source: <title>" when there is no label); keyboard focus opens the same preview as hover.',
-    'A chip with no address opens its preview when pressed or tapped, and tells assistive tech with aria-expanded; pressing it again, pressing Escape, or pressing outside closes it. A chip with an address stays a link.',
+    'A chip with no address opens its preview when pressed or tapped and keeps it open (a press never closes a preview that hover or focus just opened); pressing it again, pressing Escape, pressing outside, or moving focus away closes it. It tells assistive tech with aria-expanded. A chip with an address stays a link.',
     'Chips are 20px tall, larger than a superscript mark, so they are easy to hit.',
     'The sources pill is a disclosure button with aria-expanded controlling the list.',
   ],
