@@ -130,6 +130,24 @@ export const ThumbShowsPressed: Story = {
     await expect(getComputedStyle(good).backgroundColor).not.toBe(before)
   },
 }
+export const CopyKeepsListItems: Story = {
+  args: { children: <ul className="list-disc pl-5"><li>First item</li><li>Second item</li></ul> },
+  play: async ({ canvas }) => {
+    const writeText = fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+    await expect(writeText.mock.calls[0][0]).toBe('First item\nSecond item')
+  },
+}
+export const CopyKeepsBareText: Story = {
+  args: { children: <>Hello <strong>world</strong></> },
+  play: async ({ canvas }) => {
+    const writeText = fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+    await expect(writeText.mock.calls[0][0]).toBe('Hello world')
+  },
+}
 export const CopyRefused: Story = {
   play: async ({ canvas }) => {
     const writeText = fn().mockRejectedValue(new Error('NotAllowedError'))

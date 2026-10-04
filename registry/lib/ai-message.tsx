@@ -48,15 +48,21 @@ export function AiMessage({
     if (feedback === undefined) setOwnFeedback(next)
     onFeedback?.(next)
   }
-  // Citation chips and the caret are inline, so innerText would glue their labels onto the sentence; copy the prose only.
+  // Citation chips and the caret are inline, so reading the body directly would glue their labels onto the sentence.
+  // innerText only inserts line breaks for laid-out nodes, so the stripped copy is attached invisibly just long enough to read.
   const answerText = () => {
     const body = bodyRef.current
-    if (!body) return ''
+    if (!body?.parentNode) return ''
     const clone = body.cloneNode(true) as HTMLElement
     clone.querySelectorAll('[data-slot="citation"], [data-slot="caret"]').forEach((node) => node.remove())
-    const blocks = Array.from(clone.children)
-    if (!blocks.length) return clone.textContent ?? ''
-    return blocks.map((block) => block.textContent ?? '').join('\n\n')
+    clone.setAttribute('aria-hidden', 'true')
+    clone.style.cssText = 'position:absolute;opacity:0;pointer-events:none;inset-inline-start:0'
+    body.after(clone)
+    try {
+      return clone.innerText.trim().replace(/\n{3,}/g, '\n\n')
+    } finally {
+      clone.remove()
+    }
   }
   const copy = async () => {
     try {
