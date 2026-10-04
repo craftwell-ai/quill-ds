@@ -5,6 +5,7 @@ import { ToneBadge } from '../../registry/lib/tone-badge'
 import { usage } from '@/usage/ai-badge.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
+import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
 
 const meta = {
   title: 'Components / AiBadge',
@@ -23,6 +24,18 @@ export const Draft: Story = {
     // getByText returns the badge span itself (the mark is its child svg).
     const badge = canvas.getByText('AI draft')
     await expect(badge.querySelectorAll('svg path').length).toBe(1)
+  },
+}
+// The faint divider colour made the pill vanish on the dark themes; a non-text boundary needs 3:1 (WCAG 1.4.11).
+export const OutlineIsVisible: Story = {
+  args: { children: 'Suggested' },
+  play: async ({ canvas }) => {
+    const badge = canvas.getByText('Suggested')
+    const surface = surfaceBehind(badge)
+    const outline = compositeOver(getComputedStyle(badge).borderTopColor, `rgb(${surface.join(' ')})`)
+    const ratio = contrastRatio(outline, surface)
+    console.log(`ai-badge outline ${ratio.toFixed(2)}:1`)
+    await expect(ratio).toBeGreaterThanOrEqual(3)
   },
 }
 export const Suggested: Story = { args: { children: 'Suggested' } }

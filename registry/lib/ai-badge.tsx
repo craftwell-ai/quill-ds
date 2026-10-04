@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 /** A small outline pill with the AI sparkle that marks content an AI made or suggested — "AI draft", "Suggested". */
 export function AiBadge({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <Badge variant="outline" className={cn('gap-1 bg-background text-ink-soft', className)}>
+    <Badge variant="outline" className={cn('gap-1 border-input bg-background text-ink-soft', className)}>
       <AiMark size={13} />
       {children}
     </Badge>

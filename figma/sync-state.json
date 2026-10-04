@@ -1731,15 +1731,15 @@
       "name": "AiBadge",
       "nodeId": "1068:12",
       "codeFile": "registry/lib/ai-badge.tsx",
-      "lastSynced": "2026-10-02",
+      "lastSynced": "2026-10-04",
       "figma": {
         "fill": {
           "var": "semantic/background",
           "raw": "#F5EDDD"
         },
         "stroke": {
-          "var": "semantic/border",
-          "raw": "#2A2622"
+          "var": "semantic/input",
+          "raw": "#8A7F6E"
         },
         "strokeWeight": {
           "var": null,
@@ -1766,7 +1766,7 @@
         ]
       },
       "code": {
-        "classes": "gap-1 bg-background text-ink-soft"
+        "classes": "gap-1 border-input bg-background text-ink-soft"
       }
     },
     {

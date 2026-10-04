@@ -32,6 +32,9 @@ footer reads `package.json` directly, so the displayed version updates with the 
 - The `ai-*` reachability guard now derives component names from the registry instead of a hand-typed list, so a new `ai-` item needs no test edit (an undefined `ai-*` utility still fails).
 - The Figma pattern-parity helper skips `hidden` elements.
 
+### Fixed
+- `ai-badge`'s outline uses the control line colour so the pill is visible in the dark themes.
+
 ## [0.16.5] — 2026-10-02
 
 ### Fixed
