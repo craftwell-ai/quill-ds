@@ -39,6 +39,7 @@ export const CASES = [
   { id: 'ai-draft-label', expect: 'ai-badge', request: 'Reply drafts the assistant wrote should be labelled so agents know a person has not checked them yet.' },
   { id: 'ask-assistant-box', expect: 'prompt-composer', accept: ['ai-home'], request: 'Users type a question to our assistant; it should grow as they type and let them stop the answer halfway.' },
   { id: 'assistant-start-page', expect: 'ai-home', accept: ['prompt-composer'], request: 'The landing page of our assistant: a greeting, a big box to ask in, and a few example tasks to start from.' },
+  { id: 'assistant-thread', expect: 'ai-chat', accept: ['ai-message'], request: 'A full page for chatting with our assistant: past conversations on the side, answers with sources, and an input at the bottom.' },
   { id: 'ai-icon', expect: 'ai-mark', accept: ['ai-badge'], request: 'Put a small icon next to the Summarize button so people can tell it uses AI.' },
 ]
 

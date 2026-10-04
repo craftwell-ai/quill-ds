@@ -1339,6 +1339,11 @@
           "target": "~/.claude/skills/quill-components/reference/ai-home.md"
         },
         {
+          "path": "registry/agent-rules/skills/quill-components/reference/ai-chat.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/ai-chat.md"
+        },
+        {
           "path": "registry/agent-rules/skills/quill-components/reference/checkbox.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/checkbox.md"
@@ -2038,6 +2043,41 @@
         }
       ],
       "docs": "An AI assistant's start page — a soft AI glow, a greeting, the large composer with Ask/Agent modes, and starter cards. Do: Keep the AI glow to this one start page. Don't: Add the glow behind other sections or pages — it marks the AI home, and repeated it becomes decoration. Use prompt-composer when you only need the box, inside a page that is about something else. Use chat when two people are messaging; there is no AI."
+    },
+    {
+      "name": "ai-chat",
+      "type": "registry:block",
+      "title": "AI chat",
+      "description": "A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom.",
+      "meta": {
+        "intent": [
+          "ai"
+        ],
+        "use_when": "An app has a page for an ongoing conversation with its AI assistant.",
+        "not_for": "people land with nothing typed yet and need a greeting and starters, not a thread → ai-home; two people are messaging; no AI is involved → chat"
+      },
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "button",
+        "https://www.quilldesignsystem.com/r/icon.json",
+        "https://www.quilldesignsystem.com/r/prompt-composer.json",
+        "https://www.quilldesignsystem.com/r/ai-message.json",
+        "https://www.quilldesignsystem.com/r/ai-thinking.json",
+        "https://www.quilldesignsystem.com/r/citations.json",
+        "https://www.quilldesignsystem.com/r/suggested-prompts.json",
+        "https://www.quilldesignsystem.com/r/model-picker.json",
+        "https://www.quilldesignsystem.com/r/ai-notice.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/ai-chat.tsx",
+          "type": "registry:component",
+          "target": "components/quill/ai-chat.tsx"
+        }
+      ],
+      "docs": "A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom. Do: Keep the thread on the plain page; the marks and the composer edge already say AI. Don't: Add the AI glow behind the conversation — it belongs to the AI home alone. Use ai-home when people land with nothing typed yet and need a greeting and starters, not a thread. Use chat when two people are messaging; no AI is involved."
     },
     {
       "name": "chat",

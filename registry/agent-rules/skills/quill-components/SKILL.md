@@ -100,6 +100,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 
 ### ai — AI features — composers, assistant pages, AI replies and agent controls.
 - `ai-home` — An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet. · instead: `prompt-composer`, `chat`
+- `ai-chat` — An app has a page for an ongoing conversation with its AI assistant. · instead: `ai-home`, `chat`
 
 ## Primitives
 
