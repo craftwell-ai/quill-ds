@@ -50,7 +50,7 @@ export const StatusRegionPersistsWhenDone: Story = {
       </>
     )
   },
-  args: { activity: 'Reading signups-sept.csv', seconds: 8, steps: STEPS },
+  args: { status: 'working', activity: 'Reading signups-sept.csv', seconds: 8, steps: STEPS },
   play: async ({ canvas }) => {
     const region = canvas.getByRole('status')
     await expect(region).toHaveTextContent('Thinking')
@@ -81,6 +81,23 @@ export const FormatsDurations: Story = {
     await expect(formatThoughtFor(8)).toBe('8 s')
     await expect(formatThoughtFor(98)).toBe('1 min 38 s')
     await expect(formatThoughtFor(120)).toBe('2 min')
+    // Negative and non-finite values land on the 1 s floor, never "NaN s" or "Infinity min".
+    await expect(formatThoughtFor(-5)).toBe('1 s')
+    await expect(formatThoughtFor(Number.NaN)).toBe('1 s')
+    await expect(formatThoughtFor(Number.POSITIVE_INFINITY)).toBe('1 s')
+  },
+}
+export const UnusableSecondsFallBack: Story = {
+  args: { status: 'done' },
+  render: () => (
+    <div className="grid gap-1">
+      <AiThinking status="done" seconds={Number.NaN} />
+      <AiThinking status="done" seconds={Number.POSITIVE_INFINITY} />
+      <AiThinking status="done" seconds={-5} />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getAllByText('Thought it through')).toHaveLength(3)
   },
 }
 export const DoDont: Story = {

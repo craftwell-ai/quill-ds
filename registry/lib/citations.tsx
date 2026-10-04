@@ -25,7 +25,7 @@ const kindIcon = (s: Source) => (s.kind === 'web' ? 'language' : 'description')
 
 function where(s: Source) {
   if (s.detail) return s.detail
-  if (!s.href) return 'File'
+  if (!s.href) return s.kind === 'web' ? 'Web page' : 'File'
   try { return new URL(s.href).hostname } catch { return s.href }
 }
 

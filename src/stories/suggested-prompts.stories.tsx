@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent } from 'storybook/test'
+import { expect, fn, spyOn, userEvent } from 'storybook/test'
 import { SuggestedPrompts } from '../../registry/lib/suggested-prompts'
 import { usage } from '@/usage/suggested-prompts.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
@@ -51,6 +51,19 @@ export const List: Story = {
     await expect(args.onPick).toHaveBeenCalledWith('What changed since Monday?')
   },
 }
+export const SameLabelTwiceDoesNotCollide: Story = {
+  args: { suggestions: [{ label: 'Summarize', prompt: 'Summarize this page' }, { label: 'Summarize', prompt: 'Summarize this thread' }] },
+  beforeEach: () => { spyOn(console, 'error') },
+  play: async ({ canvas, args }) => {
+    const buttons = canvas.getAllByRole('button', { name: 'Summarize' })
+    await expect(buttons).toHaveLength(2)
+    await userEvent.click(buttons[1])
+    await expect(args.onPick).toHaveBeenCalledWith('Summarize this thread')
+    // React reports a repeated key through console.error.
+    await expect(callsText(console.error)).not.toMatch(/same key/)
+  },
+}
+const callsText = (spy: unknown) => (spy as { mock: { calls: unknown[][] } }).mock.calls.flat().join(' ')
 export const ShowFocusRing: Story = {
   render: (args) => (
     <div className="grid gap-4">

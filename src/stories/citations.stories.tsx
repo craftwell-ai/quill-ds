@@ -251,6 +251,17 @@ export const SourcesShowFocusRing: Story = {
     await expectFocusRing(canvas.getByRole('link', { name: /New pricing page/ }))
   },
 }
+// A web source with no address or page still says what kind of thing it is.
+export const WebSourceWithoutDetailSaysWebPage: Story = {
+  render: () => <p className="text-sm">Docs say so<Citation source={{ title: 'Vendor docs', label: 'docs', kind: 'web' }} /> and the file<Citation source={{ title: 'Notes.txt', label: 'notes', kind: 'file' }} />.</p>,
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'docs, source: Vendor docs' }))
+    await waitFor(() => expect(within(document.body).getByText('Web page')).toBeVisible())
+    await userEvent.keyboard('{Escape}')
+    await userEvent.click(canvas.getByRole('button', { name: 'notes, source: Notes.txt' }))
+    await waitFor(() => expect(within(document.body).getByText('File')).toBeVisible())
+  },
+}
 export const SourcesList: Story = {
   play: async ({ canvas }) => {
     const pill = canvas.getByRole('button', { name: /3 sources/ })

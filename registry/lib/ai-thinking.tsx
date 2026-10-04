@@ -4,9 +4,9 @@ import * as React from 'react'
 import { Icon } from '@/components/ui/icon'
 import { cn } from '@/lib/utils'
 
-/** "8 s", "1 min 38 s", "2 min" — how long the AI thought, as the finished row says it. */
+/** "8 s", "1 min 38 s", "2 min" — how long the AI thought, as the finished row says it. Under a second, negative, NaN or Infinity all read "1 s", the shortest it says; AiThinking itself shows "Thought it through" instead of a duration it cannot trust. */
 export function formatThoughtFor(seconds: number) {
-  const s = Math.max(1, Math.round(seconds))
+  const s = Number.isFinite(seconds) ? Math.max(1, Math.round(seconds)) : 1
   if (s < 60) return `${s} s`
   const m = Math.floor(s / 60)
   const r = s % 60
@@ -33,7 +33,9 @@ export function AiThinking({ status, label = 'Thinking', activity, seconds, step
   const listId = React.useId()
 
   const working = status === 'working'
-  const summary = seconds === undefined ? 'Thought it through' : `Thought for ${formatThoughtFor(seconds)}`
+  // A duration that is missing, not a number or negative would read as nonsense, so it is treated as unknown.
+  const unknownSeconds = seconds === undefined || !Number.isFinite(seconds) || seconds < 0
+  const summary = unknownSeconds ? 'Thought it through' : `Thought for ${formatThoughtFor(seconds)}`
   const hasSteps = Boolean(steps?.length)
   return (
     <div data-slot="ai-thinking" data-status={status} className={cn(working ? 'grid gap-0.5' : 'grid gap-1', className)}>

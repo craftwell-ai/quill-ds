@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent, waitFor } from 'storybook/test'
+import { expect, fn, spyOn, userEvent, waitFor } from 'storybook/test'
 import { AiMessage, UserMessage } from '../../registry/lib/ai-message'
 import { AiThinking } from '../../registry/lib/ai-thinking'
 import { Citation } from '../../registry/lib/citations'
@@ -115,6 +115,84 @@ export const CopyWorks: Story = {
     await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
     await expect(writeText).toHaveBeenCalledWith(expect.stringContaining('4% ahead'))
     await expect(canvas.getByRole('button', { name: 'Copied' })).toBeVisible()
+  },
+}
+const COPIED_MS = 2000
+// Records the id of every 2 s timer the component starts, so a test can see which ones it cancelled.
+const watchCopiedTimers = () => {
+  const setSpy = spyOn(window, 'setTimeout')
+  const clearSpy = spyOn(window, 'clearTimeout')
+  const copiedTimerIds = () => setSpy.mock.calls
+    .map((call, index) => (call[1] === COPIED_MS ? setSpy.mock.results[index].value : undefined))
+    .filter((id) => id !== undefined)
+  const stop = () => { setSpy.mockRestore(); clearSpy.mockRestore() }
+  return { clearSpy, copiedTimerIds, stop }
+}
+export const CopyTimerRestartsOnReClick: Story = {
+  play: async ({ canvas }) => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: fn().mockResolvedValue(undefined) }, configurable: true })
+    const { clearSpy, copiedTimerIds, stop } = watchCopiedTimers()
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+      await userEvent.click(await canvas.findByRole('button', { name: 'Copied' }))
+      await waitFor(() => expect(copiedTimerIds()).toHaveLength(2))
+      // The first timer must be cancelled, or it flips the label back early.
+      await expect(clearSpy).toHaveBeenCalledWith(copiedTimerIds()[0])
+    } finally {
+      stop()
+    }
+  },
+}
+export const CopyTimerClearedOnUnmount: Story = {
+  render: function Render(args) {
+    const [shown, setShown] = React.useState(true)
+    return (
+      <>
+        {shown ? <AiMessage {...args} /> : null}
+        <button type="button" onClick={() => setShown(false)}>Remove</button>
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: fn().mockResolvedValue(undefined) }, configurable: true })
+    const { clearSpy, copiedTimerIds, stop } = watchCopiedTimers()
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+      await waitFor(() => expect(copiedTimerIds()).toHaveLength(1))
+      await userEvent.click(canvas.getByRole('button', { name: 'Remove' }))
+      await expect(clearSpy).toHaveBeenCalledWith(copiedTimerIds()[0])
+    } finally {
+      stop()
+    }
+  },
+}
+// Content decides whether there is an answer, not how many children were passed.
+export const EmptyAnswersCountAsNoAnswer: Story = {
+  args: { streaming: false },
+  render: () => (
+    <div className="grid gap-4">
+      <AiMessage name="Empty string">{''}</AiMessage>
+      <AiMessage name="Whitespace">{'  \n '}</AiMessage>
+      <AiMessage name="Empty fragment"><></></AiMessage>
+      <AiMessage name="Empty paragraph"><p>{''}</p></AiMessage>
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.queryByRole('button', { name: 'Copy' })).toBeNull()
+    await expect(canvasElement.querySelector('[data-slot="reply-body"]')).toBeNull()
+  },
+}
+export const CaretWaitsForText: Story = {
+  render: () => (
+    <div className="grid gap-4">
+      <AiMessage streaming name="Waiting"><p>{''}</p></AiMessage>
+      <AiMessage streaming name="Writing"><p>September missed</p></AiMessage>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const [waiting, writing] = Array.from(canvasElement.querySelectorAll('article'))
+    await expect(waiting.querySelector('[data-slot="caret"]')).toBeNull()
+    await expect(writing.querySelector('[data-slot="caret"]')).not.toBeNull()
   },
 }
 export const CopyLeavesChipsOut: Story = {

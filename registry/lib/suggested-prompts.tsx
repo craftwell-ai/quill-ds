@@ -31,8 +31,9 @@ export function SuggestedPrompts({
   }[layout]
   return (
     <ul aria-label={label} data-slot="suggested-prompts" data-layout={layout} className={cn(list, className)}>
-      {suggestions.map((s) => (
-        <li key={s.label}>
+      {suggestions.map((s, index) => (
+        // The index keeps two suggestions with the same label apart; the list is never reordered, so it is a stable key.
+        <li key={`${index}-${s.label}`}>
           {layout === 'cards' ? (
             <button type="button" onClick={() => pick(s)}
               className="grid w-full gap-0.5 rounded-lg border border-border bg-card px-3 py-2.5 text-left hover:border-input outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">

@@ -50,6 +50,14 @@ export const WithoutAuto: Story = {
     await expect(canvas.getByRole('button', { name: 'Model: Balanced' })).toBeVisible()
   },
 }
+export const NothingToPickRendersNothing: Story = {
+  args: { auto: false, models: [] },
+  render: (args) => <div data-testid="host"><ModelPicker {...args} /></div>,
+  play: async ({ canvas }) => {
+    // With no Auto and no models there is nothing to choose, so no empty trigger is drawn (and nothing throws).
+    await expect(canvas.getByTestId('host')).toBeEmptyDOMElement()
+  },
+}
 export const UnknownValueFallsBack: Story = {
   args: { value: 'retired-model' },
   play: async ({ canvas }) => {
