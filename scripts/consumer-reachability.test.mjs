@@ -252,11 +252,14 @@ test('shipped code reads no CSS variable an app never receives', () => {
 
 test('every ai-* utility in shipped code is a utility the shipped item defines', () => {
   const defined = new Set(Object.keys(item.css ?? {}).filter((k) => k.startsWith('@utility ')).map((k) => k.slice('@utility '.length)))
+  // Component/file names come from the registry itself, so a new ai-* item needs no edit here.
+  const registry = JSON.parse(readFileSync(join(root, 'registry.json'), 'utf8'))
+  const componentNames = new Set(registry.items.map((entry) => entry.name).filter((name) => name.startsWith('ai-')))
   const used = new Set()
   for (const dir of ['registry/blocks', 'registry/lib']) {
     for (const file of readdirSync(join(root, dir)).filter((f) => f.endsWith('.tsx'))) {
       for (const m of readFileSync(join(root, dir, file), 'utf8').matchAll(/(?<![\w-])(ai-[a-z-]+)(?![\w-])/g)) {
-        if (/^ai-(mark|button|badge|home)$/.test(m[1])) continue // component/file names, not utilities
+        if (componentNames.has(m[1])) continue // component/file names, not utilities
         used.add(m[1])
       }
     }
