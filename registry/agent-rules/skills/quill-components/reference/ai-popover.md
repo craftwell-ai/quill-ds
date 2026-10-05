@@ -19,7 +19,7 @@ An AI suggestion beside the text it is about — what the AI did, the suggested 
 - The popover is a dialog named by its title. It opens on a press and focus lands on the popover itself (with a visible ring), not on a button, so a held Enter cannot press Discard. Try again keeps focus inside the popover while the suggestion is replaced, and closing it any way returns focus to its anchor, where the person was.
 - After Replace, put focus in the new text yourself: the anchor the popover wrapped may be gone, so focus has nowhere to return to.
 - The popover anchors to an element your app renders (a button, or text you wrap), not to a selection inside a text box or an editor.
-- On a short screen the popover is capped to the space left; the suggestion scrolls while the header and the buttons stay in view.
+- On a short screen the popover is capped to the space left; the suggestion scrolls while the header and the buttons stay in view. While it overflows, the scrolling area is a Tab stop named "Suggested text" with the usual focus ring, so the arrow and Page keys scroll it; a suggestion that fits adds no Tab stop.
 - It stays open while you press inside it; Escape, a press outside it, or a second press on its anchor closes it.
 - An anchor that is not a button (highlighted text) is given the button role and a place in the Tab order.
 - While the AI is writing, a polite live region (role="status") says the working label; when a suggestion follows it says "Suggestion ready". The region is in the popover from its first paint, empty, and the visible label is hidden from screen readers so it is not read twice. A popover that opens with a finished suggestion announces nothing extra.

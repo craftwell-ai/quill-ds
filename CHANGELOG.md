@@ -31,6 +31,7 @@ Six design calls on the AI kit, chosen from a side-by-side review of each piece 
 - **Figma:** the AiMessage twin gains a `Name` property (on by default) and the side panel frame turns it off; the two tiles bind the divider-line variable; the approval card's labels carry their colons. Not drawn: the fade (it only exists while scrolling), the phone width and where focus lands.
 
 ### Fixed
+- **AI popover: a long suggestion can be scrolled from the keyboard.** When the suggestion is taller than the space left on screen, its scrolling area is now a Tab stop named "Suggested text" with the usual 3px focus ring, so the arrow and Page keys scroll it in every browser (Safari does not make a scrolling area focusable on its own). A suggestion that fits adds no Tab stop. This also settles an accessibility check that failed now and then on the tall-suggestion example.
 - **Text kept for screen readers scrolls with the thread.** A reply, and the side panel's thread itself, are now positioned boxes, so the hidden text inside a reply or inside another kit piece placed in the thread (agent steps, an approval card, a question card) moves with it. It was left at its unscrolled place, which could make the page itself scroll.
 
 ## [0.18.3] — 2026-10-05
