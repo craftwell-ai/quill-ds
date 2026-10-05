@@ -37,6 +37,7 @@ import { usage as chart } from './chart.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as aiHome } from './ai-home.usage.mjs'
 import { usage as aiChat } from './ai-chat.usage.mjs'
+import { usage as aiSidePanel } from './ai-side-panel.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as citations } from './citations.usage.mjs'
@@ -162,6 +163,7 @@ export const ALL_USAGE = [
   chat,
   aiHome,
   aiChat,
+  aiSidePanel,
   checkbox,
   checkout,
   citations,

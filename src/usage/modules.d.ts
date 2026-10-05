@@ -176,6 +176,11 @@ declare module '@/usage/ai-chat.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/ai-side-panel.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/checkbox.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
