@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { PNG } from 'pngjs'
-import { canonicalStory, pairsFromState, padTo, comparePngs, strip, verdict, renderSummary, REGRESSION_PCT, REGRESSION_PX } from './figma-visual-diff.mjs'
+import { viewportSize, canonicalStory, pairsFromState, padTo, comparePngs, strip, verdict, renderSummary, REGRESSION_PCT, REGRESSION_PX } from './figma-visual-diff.mjs'
 
 // The pure half of the visual diff, on synthetic images — no Figma, no browser.
 const solid = (w, h, [r, g, b]) => { const p = new PNG({ width: w, height: h }); for (let i = 0; i < w * h; i++) { p.data[i * 4] = r; p.data[i * 4 + 1] = g; p.data[i * 4 + 2] = b; p.data[i * 4 + 3] = 255 } return p }
@@ -89,4 +89,14 @@ test('cropTo cuts the frame box out of an export that includes a shadow margin',
   assert.equal(c.width, 100); assert.equal(c.height, 60)
   assert.deepEqual([c.data[0], c.data[1], c.data[2]], [40, 40, 40], 'top-left of the crop is the frame, not the margin')
   assert.equal(cropTo(big, 0, 0, 120, 80), big, 'a full-size crop is the same object')
+})
+
+test('only a story tagged framed gets its canvas padding added to the capture window; everyone else keeps the same window', () => {
+  // the window every story had before the tag existed: width max(1280, frame + 48 + 64), height max(400, frame height)
+  const before = (w, h) => ({ width: Math.max(1280, Math.round(w + 48) + 64), height: Math.min(8000, Math.max(400, Math.round(h))) })
+  for (const [w, h] of [[1280, 800], [384, 560], [1440, 3200], [1280, 300], [1500, 9000]]) assert.deepEqual(viewportSize(w, h), before(w, h))
+  for (const [w, h] of [[1280, 800], [384, 560], [1440, 3200]]) assert.deepEqual(viewportSize(w, h, false), before(w, h))
+  // the AI side panel: a 560px frame is shown in a 608px window (560 + 24 above and below) so the panel keeps its 560px
+  assert.deepEqual(viewportSize(384, 560, true), { width: 1280, height: 608 })
+  assert.equal(viewportSize(384, 9000, true).height, 8000)
 })

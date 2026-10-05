@@ -13,11 +13,6 @@
      Scoped to :not(pre *) so fenced code blocks keep their own panel styling.
      The html/body background stops the white flash while a page loads. -->
 <style>
-  /* A centred story (parameters.quillCentered) in a canvas shorter than 38rem: 35rem example + 24px padding each side.
-     Padding goes so the example sits flush and whole, with no page scroll. !important beats the inline padding. */
-  @media (max-height: 607px) {
-    [data-canvas-fit] { padding: 0 !important; }
-  }
   html, body {
     background: #F5EDDD; /* --paper */
   }

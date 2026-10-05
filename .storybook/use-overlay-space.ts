@@ -12,8 +12,9 @@ import type { RefObject } from 'react'
  * portals and grows the wrapper's bottom padding to match, so the same
  * margin that appears above the story also appears below the open overlay.
  */
-export function useOverlaySpace(wrapperRef: RefObject<HTMLElement | null>, basePadding: number) {
+export function useOverlaySpace(wrapperRef: RefObject<HTMLElement | null>, basePadding: number, enabled = true) {
   useEffect(() => {
+    if (!enabled) return
     const wrapper = wrapperRef.current
     if (!wrapper) return
 
@@ -67,5 +68,5 @@ export function useOverlaySpace(wrapperRef: RefObject<HTMLElement | null>, baseP
       cancelAnimationFrame(frame)
       observer.disconnect()
     }
-  }, [wrapperRef, basePadding])
+  }, [wrapperRef, basePadding, enabled])
 }

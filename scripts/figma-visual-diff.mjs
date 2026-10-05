@@ -179,9 +179,20 @@ function serve(dir) {
 // (or wider for a wider frame), the frame's height tall (fullscreen stories fill it), and the
 // preview wrapper is pinned to the frame width + its own canvas padding, centred.
 const DESKTOP = 1280
-async function renderStory(page, port, storyId, widthCss, heightCss) {
+/**
+ * The window a story is rendered in. A story tagged `framed` sizes itself to its window minus the canvas padding on every
+ * side (the AI side panel shrinks to fit a short view), so the window it is captured in gets that padding added back;
+ * without it the panel would shrink below the Figma frame's height. An untagged story's window is exactly as before.
+ */
+export function viewportSize(widthCss, heightCss, framed = false) {
   const inner = Math.round(widthCss + CANVAS_PADDING * 2)
-  await page.setViewportSize({ width: Math.max(DESKTOP, inner + 64), height: Math.min(8000, Math.max(400, Math.round(heightCss))) })
+  const room = framed ? CANVAS_PADDING * 2 : 0
+  return { width: Math.max(DESKTOP, inner + 64), height: Math.min(8000, Math.max(400, Math.round(heightCss + room))) }
+}
+
+async function renderStory(page, port, storyId, widthCss, heightCss, framed = false) {
+  const inner = Math.round(widthCss + CANVAS_PADDING * 2)
+  await page.setViewportSize(viewportSize(widthCss, heightCss, framed))
   await page.goto(`http://127.0.0.1:${port}/iframe.html?id=${storyId}&viewMode=story&globals=theme:light`, { waitUntil: 'domcontentloaded' })
   await page.waitForFunction(() => document.querySelector('#storybook-root')?.children.length > 0, null, { timeout: 15000 })
   await page.addStyleTag({ content: `#storybook-root > div { width: ${inner}px !important; max-width: none !important; margin: 0 auto !important; box-sizing: border-box !important; }` })
@@ -232,6 +243,8 @@ async function main(argv = process.argv.slice(2)) {
   if (!existsSync(join(out, 'sb'))) symlinkSync(sb, join(out, 'sb'))
   execFileSync(process.execPath, [join(root, 'scripts/figma-type-audit/map-stories.mjs'), out], { stdio: 'ignore' })
   const state = JSON.parse(readFileSync(join(root, 'figma/sync-state.json'), 'utf8'))
+  const sbIndex = JSON.parse(readFileSync(join(sb, 'index.json'), 'utf8'))
+  const framedStories = new Set(Object.entries(sbIndex.entries ?? {}).filter(([, entry]) => entry.tags?.includes('framed')).map(([id]) => id))
   const rootsStories = JSON.parse(readFileSync(join(out, 'roots-stories.json'), 'utf8'))
   let pairs = pairsFromState(state, rootsStories)
   if (opts.pairs) pairs = pairs.filter((p) => opts.pairs.includes(p.name))
@@ -254,7 +267,7 @@ async function main(argv = process.argv.slice(2)) {
       let figma = flatten(PNG.sync.read(Buffer.from(await (await fetch(url)).arrayBuffer())))
       const b = bounds[p.frameId]
       if (b && b.box && b.render) figma = cropTo(figma, (b.box.x - b.render.x) * SCALE, (b.box.y - b.render.y) * SCALE, b.box.width * SCALE, b.box.height * SCALE)
-      const storybook = await renderStory(page, port, p.story, figma.width / SCALE, figma.height / SCALE)
+      const storybook = await renderStory(page, port, p.story, figma.width / SCALE, figma.height / SCALE, framedStories.has(p.story))
       const result = comparePngs(figma, storybook)
       const dir = join(out, 'pairs', p.name)
       mkdirSync(dir, { recursive: true })

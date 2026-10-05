@@ -7,25 +7,32 @@ import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind, washedTop } from '../contrast'
 import { expectFocusRing } from '../focus-ring'
 
-// In the canvas the panel gives way to a window shorter than itself (the wrapper drops its padding there, see
-// preview-head.html); on the Docs page the window is the whole long page, so it keeps its full height. The visual diff's
-// window is exactly the panel's 560px, which `min()` leaves at 560.
+// In the canvas the panel gives way to a window shorter than itself, keeping the wrapper's 24px margin (3rem both sides);
+// on the Docs page the window is the whole long page, so it keeps its full height. The story is tagged `framed` so the
+// Figma visual diff adds those 48px to its window and still captures the 560px panel.
 const fitHeight = (viewMode: string, docs: string, canvas: string) => (viewMode === 'docs' ? docs : canvas)
 
 const meta = {
   title: 'Patterns / AI / AI Side Panel',
   component: AiSidePanel,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'framed'],
   // Centred by the theme wrapper in .storybook/preview.tsx, not by Storybook's own `layout: 'centered'`: that is a
   // class on the preview page, which the test runner's page does not have, so the guard tests below could not see it.
   // The panel stays the wrapper's only element, which is what the Figma visual diff screenshots.
   parameters: { layout: 'fullscreen', quillCentered: true, docs: { description: { component: renderUsageDocs(usage) } } },
   args: { onSubmit: fn(), onHistory: fn(), onScopeRemove: fn(), onOpenChange: fn() },
+  afterEach: async ({ canvasElement, viewMode }) => {
+    // The Docs page runs this hook too, but there the window is the whole long page and the example's box is its preview.
+    if (viewMode === 'docs') return
+    const target = canvasElement.querySelector<HTMLElement>('section.ai-wash') ?? canvasElement.querySelector<HTMLElement>('button')
+    await expect(target).not.toBeNull()
+    await expectCentredWithMargin(target as HTMLElement)
+  },
   // The panel drawn inline, as one root element: this is what the docs page, the Figma frame and the visual
   // diff show. The Sheet itself is the InASheet story.
   render: (args, { viewMode }) => (
     <AiPanel title={args.title} scope={args.scope} onSubmit={args.onSubmit} onHistory={args.onHistory} onScopeRemove={args.onScopeRemove}
-      className={`${fitHeight(viewMode, 'h-[35rem]', 'h-[min(35rem,100dvh)]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />
+      className={`${fitHeight(viewMode, 'h-[35rem]', 'h-[min(35rem,calc(100dvh-3rem))]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />
   ),
 } satisfies Meta<typeof AiSidePanel>
 
@@ -38,18 +45,16 @@ const VIEWPORTS = {
   short: { name: 'Short 900x480', styles: { width: '900px', height: '480px' }, type: 'desktop' },
   phone: { name: 'Phone 375', styles: { width: '375px', height: '812px' }, type: 'mobile' },
 } as const
-// A story's example must be centred left-to-right in the window and sit wholly inside it and inside the story's own
-// root: a framing change that parks it at the top-left, or lets a fixed height hang past the bottom, fails here.
-const expectFramed = async (element: HTMLElement, canvasElement: HTMLElement) => {
+// Every example sits dead centre on both axes with an even margin on all four sides, and never past the window:
+// a framing change that parks it in a corner, lets a fixed height hang past the bottom, or crowds an edge fails here.
+// Run after every story's own play (meta `afterEach`), so the end state is what is measured, not the first paint.
+const expectCentredWithMargin = async (element: HTMLElement) => {
   const box = element.getBoundingClientRect()
-  const root = canvasElement.getBoundingClientRect()
   const pageWidth = document.documentElement.clientWidth
-  await expect(box.left).toBeGreaterThanOrEqual(0)
-  await expect(box.right).toBeLessThanOrEqual(pageWidth)
-  await expect(box.top).toBeGreaterThanOrEqual(root.top)
-  await expect(box.bottom).toBeLessThanOrEqual(root.bottom)
-  await expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
-  await expect(Math.abs(box.left + box.width / 2 - pageWidth / 2)).toBeLessThanOrEqual(1)
+  const margins = { left: box.left, right: pageWidth - box.right, top: box.top, bottom: window.innerHeight - box.bottom }
+  await expect(Math.abs(margins.left - margins.right)).toBeLessThanOrEqual(0.5)
+  await expect(Math.abs(margins.top - margins.bottom)).toBeLessThanOrEqual(0.5)
+  for (const margin of Object.values(margins)) await expect(margin).toBeGreaterThanOrEqual(16)
 }
 
 const DESKTOP = { parameters: { viewport: { options: VIEWPORTS } }, globals: { viewport: { value: 'desktop', isRotated: false } } } as const
@@ -57,9 +62,8 @@ const DESKTOP = { parameters: { viewport: { options: VIEWPORTS } }, globals: { v
 // Read-only on purpose: this is the story the Figma frame is compared with.
 export const Default: Story = {
   ...DESKTOP,
-  play: async ({ canvas, canvasElement }) => {
+  play: async ({ canvas }) => {
     const panel = canvas.getByRole('region', { name: 'Assistant' })
-    await expectFramed(panel, canvasElement)
     await expect(within(panel).getByText('Looking at: Q3 report')).toBeVisible()
     const log = within(panel).getByRole('log', { name: 'Messages' })
     await expect(log).toHaveTextContent('The September dip.')
@@ -93,6 +97,10 @@ export const FitsAShortView: Story = {
     const composer = canvas.getByRole('textbox', { name: 'Message' }).getBoundingClientRect()
     await expect(composer.bottom).toBeLessThanOrEqual(window.innerHeight)
     await expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
+    // The panel shrank to the window minus the usual 24px margin, evenly: the same margin above, below and at the sides.
+    await expect(box.top).toBeCloseTo(24, 0)
+    await expect(window.innerHeight - box.bottom).toBeCloseTo(24, 0)
+    await expect(box.height).toBeCloseTo(window.innerHeight - 48, 0)
   },
 }
 
@@ -205,7 +213,7 @@ export const LongThreadScrolls: Story = {
   ...DESKTOP,
   parameters: { docs: { description: { story: 'A long conversation scrolling inside the panel: the header and the composer stay put while the thread moves.' } } },
   // The same frame as every other example (rounded, bordered, shadowed); only the height is shorter so the thread overflows.
-  render: (args, { viewMode }) => <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory} className={`${fitHeight(viewMode, 'h-[28rem]', 'h-[min(28rem,100dvh)]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />,
+  render: (args, { viewMode }) => <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory} className={`${fitHeight(viewMode, 'h-[28rem]', 'h-[min(28rem,calc(100dvh-3rem))]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />,
   play: async ({ canvas }) => {
     const panel = canvas.getByRole('region', { name: 'Assistant' })
     const box = canvas.getByRole('textbox', { name: 'Message' })
@@ -229,15 +237,16 @@ export const LongThreadScrolls: Story = {
   },
 }
 
+// No extra wrapper: a block div around an inline button adds a line box a little taller than the button, which nudged
+// it half a pixel off-centre. The story wrapper's own padding is the margin.
 const inSheet = (args: Story['args']) => (
-  <div className="p-6"><AiSidePanel {...args} trigger={<AiButton variant="outline">Ask the assistant</AiButton>} /></div>
+  <AiSidePanel {...args} trigger={<AiButton variant="outline">Ask the assistant</AiButton>} />
 )
 
 export const InASheet: Story = {
   ...DESKTOP,
   render: inSheet,
-  play: async ({ canvas, canvasElement, args }) => {
-    await expectFramed(canvas.getByRole('button', { name: 'Ask the assistant' }), canvasElement)
+  play: async ({ canvas, args }) => {
     // The Sheet renders in a portal on the page body, outside the canvas.
     const page = within(document.body)
     const closed = () => waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
