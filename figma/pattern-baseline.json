@@ -193,6 +193,73 @@
         "text/xl"
       ]
     },
+    "ai-side-panel": {
+      "frameId": "1180:208",
+      "texts": [
+        "Assistant",
+        "Looking at: Q3 report",
+        "What's the one thing to fix?",
+        "Assistant",
+        "The September dip. It started the day the new pricing page shipped",
+        "changelog",
+        ".",
+        "Draft a fix for the pricing page",
+        "Ask about this"
+      ],
+      "icons": [
+        "arrow_forward",
+        "arrow_upward",
+        "close",
+        "content_copy",
+        "description",
+        "history"
+      ],
+      "instances": [
+        "AiMark",
+        "UserMessage",
+        "AiMessage",
+        "SuggestedPrompts",
+        "PromptComposer"
+      ],
+      "vars": [
+        "ai-edge/rest-from",
+        "ai-edge/rest-to",
+        "ai-edge/rest-via",
+        "border-width/1",
+        "color/ai-from",
+        "color/ai-to",
+        "color/ai-via",
+        "color/ink-soft",
+        "radius/4xl",
+        "radius/md",
+        "radius/sm",
+        "radius/xl",
+        "semantic/background",
+        "semantic/border",
+        "semantic/card",
+        "semantic/foreground",
+        "semantic/input",
+        "semantic/muted",
+        "semantic/muted-foreground",
+        "semantic/popover",
+        "semantic/primary",
+        "semantic/primary-foreground",
+        "shadow/base/1",
+        "shadow/base/2",
+        "space/0_5",
+        "space/1",
+        "space/1_5",
+        "space/2",
+        "space/2_5",
+        "space/3",
+        "space/5",
+        "space/7",
+        "space/8",
+        "text/2xs",
+        "text/sm",
+        "text/xs"
+      ]
+    },
     "analytics-charts": {
       "frameId": "696:3",
       "texts": [
