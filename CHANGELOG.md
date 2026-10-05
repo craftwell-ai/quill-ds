@@ -17,6 +17,8 @@ footer reads `package.json` directly, so the displayed version updates with the 
 
 ### Fixed
 - **The AI side panel's examples are centred and never clipped.** In Storybook the panel, the long-thread example and the "Ask the assistant" button used to sit in the top-left corner of the canvas and of each preview box on the Docs page; they are now centred in both, and on the Docs page each preview box fits its example instead of stretching to the window's height. In a window shorter than the panel the page scrolls with equal space above and below rather than hiding part of it. Two new checks fail if the panel (or its button) stops being centred and fully inside the window. Story framing only: the block itself is unchanged.
+- **The long-conversation example looks like the real panel.** It had a short, square-cornered, shadowless frame; it now has the same rounded, bordered, shadowed frame as the other examples, a taller 28rem box, and a one-line description saying the thread scrolls while the header and composer stay put.
+- **The tall-suggestion popover example is no longer cut off on the Docs page.** Its anchor is fixed to the window, so the inline preview box squashed it to 128px; it now renders in its own frame on that page. The other 20 popover examples were checked and none were clipped.
 
 ## [0.18.0] — 2026-10-05
 

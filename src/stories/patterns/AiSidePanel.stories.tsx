@@ -179,7 +179,9 @@ export const NoHistory: Story = {
 // A long thread scrolls inside the panel: the header and the composer stay inside the panel's box.
 export const LongThreadScrolls: Story = {
   ...DESKTOP,
-  render: (args) => <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory} className="h-80 w-full max-w-sm border border-border" />,
+  parameters: { docs: { description: { story: 'A long conversation scrolling inside the panel: the header and the composer stay put while the thread moves.' } } },
+  // The same frame as every other example (rounded, bordered, shadowed); only the height is shorter so the thread overflows.
+  render: (args) => <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory} className="h-[28rem] w-full max-w-sm rounded-xl border border-border shadow-md" />,
   play: async ({ canvas }) => {
     const panel = canvas.getByRole('region', { name: 'Assistant' })
     const box = canvas.getByRole('textbox', { name: 'Message' })
@@ -191,7 +193,7 @@ export const LongThreadScrolls: Story = {
     const scroller = log.parentElement?.parentElement as HTMLElement
     await expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight)
     const outer = panel.getBoundingClientRect()
-    await expect(panel.getBoundingClientRect().height).toBeLessThanOrEqual(321)
+    await expect(panel.getBoundingClientRect().height).toBeLessThanOrEqual(449)
     const composer = box.getBoundingClientRect()
     await expect(composer.bottom).toBeLessThanOrEqual(outer.bottom + 1)
     await expect(composer.top).toBeGreaterThanOrEqual(outer.top)
