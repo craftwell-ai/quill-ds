@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
+import * as React from 'react'
+import { expect, fn, spyOn, userEvent, waitFor, within } from 'storybook/test'
 import { AiPanel, AiSidePanel } from '@registry/blocks/ai-side-panel'
 import { AiButton } from '@/components/ui/ai-button'
+import { Button } from '@/components/ui/button'
 import { usage } from '@/usage/ai-side-panel.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind, washedTop } from '../contrast'
@@ -389,6 +391,52 @@ export const OpensWithTheCursorInTheMessageBox: Story = {
     await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
     await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
     await waitFor(() => expect(trigger).toHaveFocus())
+  },
+}
+
+// The app opens the panel itself (the `open` prop, no trigger), so the Sheet never sees what was pressed and cannot
+// tell a finger from a mouse. The panel then goes by the device: on a touch screen (a coarse pointer) focus stays on
+// the panel, so the on-screen keyboard does not cover it; anywhere else the cursor goes into the message box.
+export const OpenedByTheApp: Story = {
+  ...DESKTOP,
+  render: function Render(args) {
+    const [open, setOpen] = React.useState(false)
+    return (
+      <>
+        <Button type="button" variant="outline" onClick={() => setOpen(true)}>Open from the app</Button>
+        <AiSidePanel {...args} open={open} onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }} />
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    const page = within(document.body)
+    const opener = canvas.getByRole('button', { name: 'Open from the app' })
+    const closed = () => waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
+    // The test browser has a mouse, not a touch screen.
+    await expect(window.matchMedia('(pointer: coarse)').matches).toBe(false)
+    await userEvent.click(opener)
+    let dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole('textbox', { name: 'Message' })))
+    await userEvent.keyboard('{Escape}')
+    await closed()
+    // The same press on a touch screen. The device is stood in for by answering the one media query the panel asks;
+    // every other query gets the browser's own answer.
+    const realMatchMedia = window.matchMedia.bind(window)
+    const media = spyOn(window, 'matchMedia').mockImplementation((query: string) => (
+      query === '(pointer: coarse)' ? { ...realMatchMedia(query), matches: true, media: query } as MediaQueryList : realMatchMedia(query)
+    ))
+    try {
+      await userEvent.click(opener)
+      dialog = await page.findByRole('dialog', { name: 'Assistant' })
+      await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true))
+      await waitFor(() => expect(within(dialog).getByRole('textbox', { name: 'Message' })).toBeVisible())
+      await expect(document.activeElement).toBe(dialog)
+      await expect(media).toHaveBeenCalledWith('(pointer: coarse)')
+      await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+      await closed()
+    } finally {
+      media.mockRestore()
+    }
   },
 }
 

@@ -168,10 +168,15 @@ export function AiSidePanel({ open, defaultOpen = false, onOpenChange, trigger, 
           sheet to the panel, so its wash runs edge to edge. w-full replaces the stock three-quarter width, so on a
           phone the panel takes the whole screen; from sm up the stock max-w-sm still caps it at the same 24rem.
           People open the assistant to ask it something, so focus starts in the message box, not on the header's first
-          button. Opened by touch, focus goes to the panel itself, as the Sheet does on its own: focusing a text box
-          there would throw the on-screen keyboard over half the panel before anything has been read. */}
+          button. On a touch screen focus goes to the panel itself, as the Sheet does on its own: focusing a text box
+          there would throw the on-screen keyboard over half the panel before anything has been read. The Sheet only
+          knows a touch from its own trigger; opened by the app (the open prop) it reports nothing, so the device's
+          pointer decides instead. */}
       <SheetContent ref={sheetRef} side={side} showCloseButton={false} aria-label={title}
-        initialFocus={(openedBy) => (openedBy === 'touch' ? sheetRef.current : composerRef.current)}
+        initialFocus={(openedBy) => {
+          const onTouch = openedBy ? openedBy === 'touch' : window.matchMedia('(pointer: coarse)').matches
+          return onTouch ? sheetRef.current : composerRef.current
+        }}
         className={cn('gap-0 p-0 data-[side=left]:w-full data-[side=right]:w-full', className)}>
         <AiPanel
           {...panel}
