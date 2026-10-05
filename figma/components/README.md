@@ -392,9 +392,9 @@ stamps in `sync-state.json` read 2026-10-05: the scripts write the UTC date.
 |---|---|---|---|---|
 | ai-side-panel | ❖ AI side panel | 1180:2 | 1180:208 | 384×560 component, the `Default` story (the panel on its own; no Sheet, so no Close). semantic/popover plus the wash; the 1px semantic/border outline and radius/xl are the story's frame. Header (py and pr space/2_5, gap space/2): AiMark Stars=two at 18px, "Assistant" text/sm semibold, History. Thread (pt space/1, pb space/2_5, gap space/3, pinned to the bottom): the scope chip (height space/7, radius/4xl, semantic/background, semantic/input outline, pl space/2, pr space/1, gap space/1_5, icon/description 13px, Text/xs in color/ink-soft, a space/5 remove button with icon/close 12px); UserMessage right-aligned; AiMessage State=default with `Thinking` and `Sources` off, the block's sentence with one Citation (Kind=web) and Copy as its only action; SuggestedPrompts Layout=list with one row. Docked below (px space/3, pt space/2, pb space/3): PromptComposer sm idle, `Show tabs` off, the block's placeholder. No visual baseline yet (`../README.md`, "Visual diff") |
 
-- **The wash** (`ai-wash`: top to bottom, `ai-from` at 16 % → `ai-via` at 8 % at 45 % → transparent) is two linear fills over the
+- **The wash** (`ai-wash`: top to bottom, `ai-from` at 12 % → `ai-via` at 8 % at 45 % → transparent) is two linear fills over the
   surface fill, the same route `ai-glow` took on ❖ AI home, because a bound gradient stop loses its alpha. Fill 1: stop 0 bound
-  to color/ai-from, a transparent stop at 0.45, paint opacity 0.16. Fill 2: a transparent stop at 0, a stop at 0.45 bound to
+  to color/ai-from, a transparent stop at 0.45, paint opacity 0.12 (0.16 until 2026-10-05, when code's top stop was lowered so small grey text on the wash meets AA). Fill 2: a transparent stop at 0, a stop at 0.45 bound to
   color/ai-via, a transparent stop at 1, paint opacity 0.08. No paint style and no new variable. Checked on 2026-10-04: an
   AiPopover instance inside a component inside a frame still draws the wash (looked at in Dark at 3x).
 - **One detached Button: History.** Code draws a 16px icon in a ghost `icon-sm` button; the ❖ Button twin's `icon-sm` variant
@@ -411,7 +411,7 @@ stamps in `sync-state.json` read 2026-10-05: the scripts write the UTC date.
 - **No variable for these values**, left as typed numbers: 14px (`py-3.5` on the three cards; `px-3.5` and `pb-3.5` on the
   popover; `pl-3.5` and `px-3.5` on the panel), 19px (the one-line box, the code's `h-[1lh]`, that keeps a dot, a note or a
   radio on the first line), 30px (the detail's `ml-[1.875rem]`), 15px (the mark in the card headers), 162.5 %
-  (`leading-relaxed` on the suggestion), the wash's 0.16 / 0.08 / 0.45, and the 384×560 of the panel. Phase 3 adds no tokens.
+  (`leading-relaxed` on the suggestion), the wash's 0.12 / 0.08 / 0.45, and the 384×560 of the panel. Phase 3 adds no tokens.
 - **Each status keeps its own sample label.** A TEXT property has one default for a whole set, which would have written
   the done step's label over the failed one and the email's title over the delete card's. Step and ApprovalCard therefore
   carry no TEXT property: type on the instance.

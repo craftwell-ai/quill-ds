@@ -2145,7 +2145,7 @@
           "Label": "Subject",
           "Value": "September signups: 12% under target",
           "Body": "Hi team, September came in 12% under target, though the quarter still closed 4% ahead. The dip lines up with the pricing page change on the 9th. Chart attached.",
-          "Button": "Do not send",
+          "Button": "Don't send",
           "Consequence text": "Goes to 6 people. Nothing is sent until you choose."
         },
         "childSignature": [
