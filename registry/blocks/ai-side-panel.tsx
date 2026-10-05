@@ -160,8 +160,9 @@ export function AiSidePanel({ open, defaultOpen = false, onOpenChange, trigger, 
     <Sheet open={isOpen} onOpenChange={(next) => setOpen(next)}>
       {trigger ? <SheetTrigger render={trigger} /> : null}
       {/* The panel's header holds the one Close, so the Sheet's corner button is off. gap-0 and p-0 hand the whole
-          sheet to the panel, so its wash runs edge to edge. */}
-      <SheetContent side={side} showCloseButton={false} aria-label={title} className={cn('gap-0 p-0', className)}>
+          sheet to the panel, so its wash runs edge to edge. w-full replaces the stock three-quarter width, so on a
+          phone the panel takes the whole screen; from sm up the stock max-w-sm still caps it at the same 24rem. */}
+      <SheetContent side={side} showCloseButton={false} aria-label={title} className={cn('gap-0 p-0 data-[side=left]:w-full data-[side=right]:w-full', className)}>
         <AiPanel
           {...panel}
           title={title}

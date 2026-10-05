@@ -331,6 +331,10 @@ export const InASheet: Story = {
     // The Sheet fades in, and a faded-out element counts as hidden.
     await waitFor(() => expect(within(dialog).getByText('Looking at: Q3 report')).toBeVisible())
     await expect(within(dialog).getByRole('textbox', { name: 'Message' })).toBeVisible()
+    // On a desktop the panel is the stock Sheet's width (24rem), docked to the right edge, once it has slid in.
+    await expect(window.innerWidth).toBe(1024)
+    await waitFor(() => expect(dialog.getBoundingClientRect().right).toBe(1024))
+    await expect(dialog.getBoundingClientRect().width).toBe(384)
     // One Close: the panel's own. The Sheet's corner button is switched off.
     await expect(within(dialog).getAllByRole('button', { name: 'Close' })).toHaveLength(1)
     await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
@@ -347,17 +351,31 @@ export const InASheet: Story = {
   },
 }
 
+// On a phone the stock Sheet leaves a quarter of the screen to the page behind it. The assistant takes the whole width:
+// a 280px column is too narrow for a conversation, and the strip beside it is too thin to be useful.
 export const Phone: Story = {
   parameters: { viewport: { options: VIEWPORTS } },
   globals: { viewport: { value: 'phone', isRotated: false } },
   render: inSheet,
   play: async ({ canvas }) => {
+    await waitFor(() => expect(window.innerWidth).toBe(375))
     await userEvent.click(canvas.getByRole('button', { name: 'Ask the assistant' }))
-    const dialog = await within(document.body).findByRole('dialog', { name: 'Assistant' })
-    await expect(window.innerWidth).toBeLessThanOrEqual(375)
-    await waitFor(() => expect(dialog.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1))
-    await expect(dialog.getBoundingClientRect().width).toBeLessThanOrEqual(window.innerWidth)
+    const page = within(document.body)
+    const dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    // Edge to edge once it has slid in.
+    await waitFor(() => expect(dialog.getBoundingClientRect().right).toBe(375))
+    await expect(dialog.getBoundingClientRect().left).toBe(0)
+    await expect(dialog.getBoundingClientRect().width).toBe(375)
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
     await expect(within(dialog).getByRole('textbox', { name: 'Message' })).toBeVisible()
+    // With no page left to press beside the panel, Close has to be on screen and has to work.
+    const close = within(dialog).getByRole('button', { name: 'Close' })
+    await waitFor(() => expect(close).toBeVisible())
+    const closeBox = close.getBoundingClientRect()
+    await expect(closeBox.left).toBeGreaterThanOrEqual(0)
+    await expect(closeBox.right).toBeLessThanOrEqual(375)
+    await expect(close.contains(document.elementFromPoint(closeBox.left + closeBox.width / 2, closeBox.top + closeBox.height / 2))).toBe(true)
+    await userEvent.click(close)
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
   },
 }

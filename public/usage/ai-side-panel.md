@@ -20,6 +20,7 @@ An AI assistant docked beside the page — a header with History and Close, a re
 
 ### Accessibility
 - In the Sheet the panel is a modal dialog named by its title. Escape or Close closes it and focus returns to what opened it; opening it puts focus on the first control inside.
+- On a phone (under 640px wide) the Sheet covers the whole screen, so Close in the header is the way out besides Escape; from 640px up it is the stock 24rem panel.
 - Placed in a layout on its own (AiPanel), the panel is a region named by its title.
 - The thread is a log named "Messages", a polite live region, so each new turn is read out as it is added. The thread scrolls inside the panel; the header and the composer stay in view. Messages scrolled under the header fade out; at the top of the thread nothing fades, and a control reached by keyboard is scrolled clear of the fade.
 - Replies in the panel do not show their name, because the header already says it; the name is still read to screen readers.
