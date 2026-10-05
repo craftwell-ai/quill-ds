@@ -53,8 +53,18 @@ const WithTheme: Decorator = (Story, context) => {
   const theme = context.globals['theme'] ?? DEFAULT_MODE.attr
   const accent = context.globals['accent'] ?? DEFAULT_ACCENT
   const isFullscreen = context.parameters.layout === 'fullscreen'
+  // Opt-in (parameters.quillCentered): centre the story in the window, or in its Docs preview box. Done here rather than
+  // with Storybook's `layout: 'centered'` because that is CSS on the preview page, absent in the test runner's page, so
+  // a test could not tell whether a story is centred. In Docs the wrapper only fits its content, so a box is no taller
+  // than its example; in the canvas it fills the window and the example sits in the middle (scrolling if taller).
+  const isCentered = context.parameters.quillCentered === true
+  // The wrapper's own padding is the story's margin on every side, in every window: stories size themselves to the
+  // window minus it (see AiSidePanel.stories.tsx) rather than the wrapper giving it up.
+  const fillsWindow = isFullscreen && !(isCentered && context.viewMode === 'docs')
   const wrapperRef = useRef<HTMLDivElement | null>(null)
-  useOverlaySpace(wrapperRef, CANVAS_PADDING)
+  // A centred story is the only thing in a window-sized box; growing its bottom padding for an open overlay (the Sheet
+  // drawer is full height) would push it off-centre the moment it opens.
+  useOverlaySpace(wrapperRef, CANVAS_PADDING, !isCentered)
 
   return (
     <ThemeProvider
@@ -70,7 +80,8 @@ const WithTheme: Decorator = (Story, context) => {
         style={{
           background: THEME_BG[theme] ?? THEME_BG[DEFAULT_MODE.attr],
           padding: CANVAS_PADDING,
-          ...(isFullscreen ? { minHeight: '100vh' } : {}),
+          ...(fillsWindow ? { minHeight: '100vh' } : {}),
+          ...(isCentered ? { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' } : {}),
         }}
       >
         <Story />

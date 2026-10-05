@@ -13,6 +13,14 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.18.1] — 2026-10-05
+
+### Fixed
+- **The AI side panel's examples are centred, evenly spaced and never cut off.** In Storybook the panel, the long-conversation example and the "Ask the assistant" button used to sit in the top-left corner of the canvas and of each preview box on the Docs page; they are now exactly centred on both axes with the same 24px margin on all four sides. In a window shorter than the panel (a laptop with the sidebar and addons panel open) the panel shrinks to fit, keeping that margin, so the header and composer are both on screen, the page does not scroll and the thread scrolls inside it. On the Docs page each preview box fits its example. The Sheet button no longer sits half a pixel off-centre, and opening the Sheet no longer nudges it.
+- **The long-conversation example looks like the real panel:** the same rounded, bordered, shadowed frame as the other examples, a more believable height, and a one-line description saying the thread scrolls while the header and composer stay put.
+- **The tall-suggestion popover example is no longer cut off on the Docs page.** Its anchor is fixed to the window, so the inline preview box squashed it to 128px; it now renders in its own frame on that page. The other popover examples were checked and none were clipped.
+- **Guards:** every side-panel example is checked, after its own steps have run, to be inside the window, centred within half a pixel and at least 16px from every edge. Story framing and the Figma visual diff only (the diff gives stories tagged `framed` their 24px margin back, so it still captures the 560px panel): the block itself is unchanged.
+
 ## [0.18.0] — 2026-10-05
 
 ### Added
