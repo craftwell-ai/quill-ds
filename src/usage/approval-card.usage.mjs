@@ -35,7 +35,7 @@ export const usage = {
   ],
   a11y: [
     'The card is a group named by its title; it sits in the conversation and never takes focus on its own.',
-    'The rows are a description list (term and value).',
+    'The rows are a description list (term and value). The card ends each label with a colon ("To:"), so pass the bare word; a label that already ends in punctuation is left as it is.',
     'Edit is a toggle button (aria-pressed). Pressing it puts the cursor in the field, which is named by bodyLabel.',
     'The main button is named by the action itself. A body that was given and is now empty disables it.',
     'The outcome line appears inside a status region that is already on the page, so it is announced; while empty the region is a real box that takes no space. When the person presses the card\'s own main or decline button, the buttons go and focus moves to that line without scrolling the page, so keyboard users keep their place. An outcome that arrives on its own, with nothing in the card pressed, moves focus nowhere; nor is focus pulled back if the person has since moved to another control.',

@@ -46,6 +46,9 @@ export const SendEmail: Story = {
     await expect(canvas.getByRole('button', { name: 'Send email' })).toBeVisible()
     await expect(canvas.queryByRole('button', { name: /approve/i })).toBeNull()
     await expect(canvas.getByText('growth@example.com')).toBeVisible()
+    // The app passes "To" and "Subject"; the card ends each label with a colon.
+    await expect(canvas.getByText('To:')).toBeVisible()
+    await expect(canvas.getByText('Subject:')).toBeVisible()
     await expect(canvas.getByText(BODY)).toBeVisible()
     await expect(canvas.getByText('Goes to 6 people. Nothing is sent until you choose.')).toBeVisible()
     await userEvent.click(canvas.getByRole('button', { name: "Don't send" }))
@@ -175,8 +178,27 @@ export const OutcomeIsAnnounced: Story = {
 export const RepeatedDetailLabels: Story = {
   args: { details: [{ label: 'Cc', value: 'ana@example.com' }, { label: 'Cc', value: 'lee@example.com' }] },
   play: async ({ canvas }) => {
-    await expect(canvas.getAllByText('Cc')).toHaveLength(2)
+    await expect(canvas.getAllByText('Cc:')).toHaveLength(2)
     await expect(canvas.getByText('lee@example.com')).toBeVisible()
+  },
+}
+
+// The card adds the colon, so every app gets the same labels; a label that already ends in punctuation is left as
+// it is (no "Subject::"), and an empty label does not become a lone colon.
+export const DetailLabelsEndWithOneColon: Story = {
+  args: {
+    details: [
+      { label: 'To', value: 'growth@example.com' },
+      { label: 'Subject:', value: 'September signups' },
+      { label: 'Amount: ', value: '$240.00' },
+      { label: 'Send a copy to you?', value: 'Yes' },
+      { label: 'Total：', value: '¥2,400' },
+      { label: '', value: 'A value with no label' },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const labels = Array.from(canvasElement.querySelectorAll('dt')).map((term) => term.textContent)
+    await expect(labels).toEqual(['To:', 'Subject:', 'Amount:', 'Send a copy to you?', 'Total：', ''])
   },
 }
 

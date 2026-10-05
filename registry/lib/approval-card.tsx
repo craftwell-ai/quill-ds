@@ -9,10 +9,17 @@ import { cn } from '@/lib/utils'
 
 export type ApprovalDetail = { label: string; value: React.ReactNode }
 
+// The card ends each label with a colon so every app's rows read the same ("To:", "Subject:"). A label that already
+// ends in punctuation is left alone (no "Subject::", no "Send a copy?:"), and an empty one stays empty.
+const withColon = (label: string) => {
+  const trimmed = label.trim()
+  return trimmed === '' || /[:：;.,!?…]$/.test(trimmed) ? trimmed : `${trimmed}:`
+}
+
 export type ApprovalCardProps = {
   /** Names the action: "The agent wants to send this email". */
   title: string
-  /** Key and value rows that say exactly what will happen: To, Subject, Amount. */
+  /** Key and value rows that say exactly what will happen: To, Subject, Amount. Pass the bare word; the card adds the colon. */
   details?: ApprovalDetail[]
   /** The content itself. Controlled when passed; leave it out and use defaultBody to let the card keep its own. */
   body?: string
@@ -102,7 +109,7 @@ export function ApprovalCard({
               {rows.map((row, index) => (
                 // Labels may repeat (two Cc rows); the list is never reordered, so position is a stable key.
                 <React.Fragment key={index}>
-                  <dt className="text-muted-foreground">{row.label}</dt>
+                  <dt className="text-muted-foreground">{withColon(row.label)}</dt>
                   <dd className="min-w-0 break-words text-foreground">{row.value}</dd>
                 </React.Fragment>
               ))}
