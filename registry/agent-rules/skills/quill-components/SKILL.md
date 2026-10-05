@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -116,6 +116,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `model-picker` (`@quill/`) — An app offers more than one AI model or speed and people may want to switch per message. · instead: `select`, `radio-group`
 - `alert` — You need one persistent, inline status message (informational or error) attached to a specific section of a page — not a whole stack of them, and not transient feedback about an action just taken. · instead: `alerts`, `sonner`
 - `alert-dialog` — You need the user to explicitly confirm or cancel a destructive, irreversible action — deleting a record, discarding unsaved work, removing access. · instead: `dialog`
+- `approval-card` (`@quill/`) — An AI agent is about to do something on a person's behalf (send, post, pay, delete) and needs a yes first. · instead: `alert-dialog`, `agent-steps`
 - `aspect-ratio` — You're placing an image, video, or embed that must keep a consistent shape (16:9, 1:1, 4:3) regardless of its container's width, and want to reserve that space before the media loads. · instead: `resizable`
 - `avatar` — You need to represent a person or entity visually — a profile photo, initials, or a generic icon — in a list row, header, or comment. · instead: `item`
 - `badge` — You need a compact visual label for a status, category, or count next to other content — a course card, a table cell, a nav item. · instead: `tone-badge`, `button`

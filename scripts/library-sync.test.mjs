@@ -34,7 +34,7 @@ test('readRegistryItems returns every indexed item with writable files', () => {
 // page compositions under `components/examples/` (CRA-205), which an app only
 // ever receives after installing one, like a block, and the quill-components
 // skill under `.claude/skills/quill-components/`, which arrives with the rules file.
-test('non-block registry targets are exactly the eighteen the downstream gate knows', () => {
+test('non-block registry targets are exactly the nineteen the downstream gate knows', () => {
   const items = readRegistryItems(root)
   const targets = new Set()
   for (const item of items) for (const f of item.files ?? []) targets.add(f.target)
@@ -56,6 +56,8 @@ test('non-block registry targets are exactly the eighteen the downstream gate kn
     'components/ui/ai-notice.tsx',
     // @quill/ai-thinking (AI kit). Downstream SYNC_PATHS must list components/ui/ai-thinking.tsx before an app installs it.
     'components/ui/ai-thinking.tsx',
+    // @quill/approval-card (AI kit). Downstream SYNC_PATHS must list components/ui/approval-card.tsx before an app installs it.
+    'components/ui/approval-card.tsx',
     // @quill/citations (AI kit). Downstream SYNC_PATHS must list components/ui/citations.tsx before an app installs it.
     'components/ui/citations.tsx',
     'components/ui/icon.tsx',

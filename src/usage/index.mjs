@@ -19,6 +19,7 @@ import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
 import { usage as analyticsCharts } from './analytics-charts.usage.mjs'
 import { usage as announcementBanner } from './announcement-banner.usage.mjs'
+import { usage as approvalCard } from './approval-card.usage.mjs'
 import { usage as aspectRatio } from './aspect-ratio.usage.mjs'
 import { usage as avatar } from './avatar.usage.mjs'
 import { usage as badge } from './badge.usage.mjs'
@@ -141,6 +142,7 @@ export const ALL_USAGE = [
   alerts,
   analyticsCharts,
   announcementBanner,
+  approvalCard,
   aspectRatio,
   avatar,
   badge,

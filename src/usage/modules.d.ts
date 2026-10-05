@@ -86,6 +86,11 @@ declare module '@/usage/announcement-banner.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/approval-card.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/aspect-ratio.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

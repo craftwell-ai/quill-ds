@@ -1,0 +1,209 @@
+import * as React from 'react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, fn, userEvent, waitFor } from 'storybook/test'
+import { ApprovalCard } from '../../registry/lib/approval-card'
+import { Icon } from '@/components/ui/icon'
+import { usage } from '@/usage/approval-card.usage.mjs'
+import { renderUsageDocs } from '@/usage/render.mjs'
+import { DoDontPair } from './DoDont'
+import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
+
+const BODY = 'Hi team, September came in 12% under target, though the quarter still closed 4% ahead. The dip lines up with the pricing page change on the 9th. Chart attached.'
+const DETAILS = [
+  { label: 'To', value: 'growth@example.com' },
+  { label: 'Subject', value: 'September signups: 12% under target' },
+]
+
+const meta = {
+  title: 'Components / ApprovalCard',
+  component: ApprovalCard,
+  tags: ['autodocs'],
+  parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
+  decorators: [(Story) => <div className="w-[30rem] max-w-full"><Story /></div>],
+  args: {
+    title: 'The agent wants to send this email',
+    details: DETAILS,
+    defaultBody: BODY,
+    bodyLabel: 'Email body',
+    actionLabel: 'Send email',
+    actionIcon: <Icon name="mail" />,
+    onApprove: fn(),
+    denyLabel: 'Do not send',
+    onDeny: fn(),
+    consequence: 'Goes to 6 people. Nothing is sent until you choose.',
+  },
+} satisfies Meta<typeof ApprovalCard>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const SendEmail: Story = {
+  play: async ({ canvas, args }) => {
+    await expect(canvas.getByRole('group', { name: 'The agent wants to send this email' })).toBeVisible()
+    // The main button names the action; there is no generic Approve.
+    await expect(canvas.getByRole('button', { name: 'Send email' })).toBeVisible()
+    await expect(canvas.queryByRole('button', { name: /approve/i })).toBeNull()
+    await expect(canvas.getByText('growth@example.com')).toBeVisible()
+    await expect(canvas.getByText(BODY)).toBeVisible()
+    await expect(canvas.getByText('Goes to 6 people. Nothing is sent until you choose.')).toBeVisible()
+    await userEvent.click(canvas.getByRole('button', { name: 'Do not send' }))
+    await expect(args.onDeny).toHaveBeenCalled()
+    await userEvent.click(canvas.getByRole('button', { name: 'Send email' }))
+    await expect(args.onApprove).toHaveBeenCalledWith(BODY)
+  },
+}
+
+export const ApprovesTheEditedText: Story = {
+  play: async ({ canvas, args }) => {
+    const edit = canvas.getByRole('button', { name: 'Edit' })
+    await expect(edit).toHaveAttribute('aria-pressed', 'false')
+    await userEvent.click(edit)
+    await expect(edit).toHaveAttribute('aria-pressed', 'true')
+    const field = canvas.getByRole('textbox', { name: 'Email body' })
+    // Opening in place means the cursor is in the field.
+    await waitFor(() => expect(field).toHaveFocus())
+    await userEvent.clear(field)
+    await userEvent.type(field, 'Short version.')
+    // Approved while the field is still open: the edited text goes.
+    await userEvent.click(canvas.getByRole('button', { name: 'Send email' }))
+    await expect(args.onApprove).toHaveBeenLastCalledWith('Short version.')
+    // Closed again: the card shows the edit, and that is still what goes.
+    await userEvent.click(edit)
+    await expect(canvas.queryByRole('textbox')).toBeNull()
+    await expect(canvas.getByText('Short version.')).toBeVisible()
+    await userEvent.click(canvas.getByRole('button', { name: 'Send email' }))
+    await expect(args.onApprove).toHaveBeenLastCalledWith('Short version.')
+    await expect(args.onApprove).toHaveBeenCalledTimes(2)
+  },
+}
+
+export const BlankBodyCannotBeApproved: Story = {
+  play: async ({ canvas, args }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Edit' }))
+    const field = canvas.getByRole('textbox', { name: 'Email body' })
+    await userEvent.clear(field)
+    await userEvent.type(field, '   ')
+    await expect(canvas.getByRole('button', { name: 'Send email' })).toBeDisabled()
+    await expect(args.onApprove).not.toHaveBeenCalled()
+  },
+}
+
+export const Destructive: Story = {
+  args: {
+    title: 'The agent wants to delete 3 draft reports',
+    details: undefined,
+    defaultBody: undefined,
+    actionLabel: 'Delete 3 drafts',
+    actionIcon: <Icon name="delete" />,
+    denyLabel: 'Keep them',
+    consequence: 'This cannot be undone.',
+    destructive: true,
+  },
+  play: async ({ canvas, canvasElement, args }) => {
+    const action = canvas.getByRole('button', { name: 'Delete 3 drafts' })
+    // The stock destructive Button, not a hand-coloured one.
+    await expect(action).toHaveAttribute('data-slot', 'button')
+    await expect(action.className).toContain('bg-destructive/10')
+    // Nothing to show and nothing to edit: no tile, no Edit.
+    await expect(canvasElement.querySelector('[data-slot="proposal"]')).toBeNull()
+    await expect(canvas.queryByRole('button', { name: 'Edit' })).toBeNull()
+    await userEvent.click(action)
+    await expect(args.onApprove).toHaveBeenCalledWith(undefined)
+  },
+}
+
+export const NoDenyCallbackHidesTheButton: Story = {
+  args: { onDeny: undefined },
+  play: async ({ canvas }) => {
+    await expect(canvas.queryByRole('button', { name: 'Do not send' })).toBeNull()
+    await expect(canvas.getAllByRole('button')).toHaveLength(2)
+  },
+}
+
+export const NotEditable: Story = {
+  args: { editable: false },
+  play: async ({ canvas }) => {
+    await expect(canvas.queryByRole('button', { name: 'Edit' })).toBeNull()
+  },
+}
+
+// The app owns the text: the card shows what it is given and reports every edit.
+export const ControlledBody: Story = {
+  args: { defaultBody: undefined, onBodyChange: fn() },
+  render: function Render(args) {
+    const [body, setBody] = React.useState('First draft.')
+    return <ApprovalCard {...args} body={body} onBodyChange={(next) => { setBody(next); args.onBodyChange?.(next) }} />
+  },
+  play: async ({ canvas, args }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Edit' }))
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Email body' }), ' More.')
+    await expect(args.onBodyChange).toHaveBeenLastCalledWith('First draft. More.')
+    await userEvent.click(canvas.getByRole('button', { name: 'Send email' }))
+    await expect(args.onApprove).toHaveBeenLastCalledWith('First draft. More.')
+  },
+}
+
+// The outcome arrives into a region that was already there, and the buttons go.
+export const OutcomeIsAnnounced: Story = {
+  render: function Render(args) {
+    const [outcome, setOutcome] = React.useState<string>()
+    return <ApprovalCard {...args} outcome={outcome} onApprove={(body) => { args.onApprove(body); setOutcome('Sent to 6 people.') }} />
+  },
+  play: async ({ canvas, canvasElement }) => {
+    const region = canvas.getByRole('status')
+    await expect(region.textContent).toBe('')
+    // A real box that takes no space while empty.
+    await expect(getComputedStyle(region).display).not.toBe('contents')
+    await expect(getComputedStyle(region).display).not.toBe('none')
+    const card = canvasElement.querySelector('[data-slot="approval-card"]') as HTMLElement
+    const before = card.getBoundingClientRect().height
+    region.style.display = 'none'
+    await expect(card.getBoundingClientRect().height).toBe(before)
+    region.style.display = ''
+    await userEvent.click(canvas.getByRole('button', { name: 'Send email' }))
+    await expect(canvas.getByRole('status')).toBe(region)
+    await expect(region).toHaveTextContent('Sent to 6 people.')
+    await expect(canvas.queryByRole('button')).toBeNull()
+    await expect(canvas.queryByText('Goes to 6 people. Nothing is sent until you choose.')).toBeNull()
+    // What was approved stays readable.
+    await expect(canvas.getByText(BODY)).toBeVisible()
+  },
+}
+
+export const RepeatedDetailLabels: Story = {
+  args: { details: [{ label: 'Cc', value: 'ana@example.com' }, { label: 'Cc', value: 'lee@example.com' }] },
+  play: async ({ canvas }) => {
+    await expect(canvas.getAllByText('Cc')).toHaveLength(2)
+    await expect(canvas.getByText('lee@example.com')).toBeVisible()
+  },
+}
+
+// The tile is a fill on a fill; without a line that can be seen it vanishes in the dark themes.
+export const ProposalReadsAsAShape: Story = {
+  play: async ({ canvasElement }) => {
+    const tile = canvasElement.querySelector('[data-slot="proposal"]') as HTMLElement
+    const surface = surfaceBehind(tile)
+    const outline = compositeOver(getComputedStyle(tile).borderTopColor, `rgb(${surface.join(' ')})`)
+    const ratio = contrastRatio(outline, surface)
+    console.log(`approval-card proposal outline ${ratio.toFixed(2)}:1`)
+    await expect(ratio).toBeGreaterThanOrEqual(3)
+  },
+}
+
+// Approving is an ordinary decision: stock buttons, no gradient anywhere on them.
+export const ButtonsArePlain: Story = {
+  play: async ({ canvas }) => {
+    for (const button of canvas.getAllByRole('button')) {
+      await expect(button).toHaveAttribute('data-slot', 'button')
+      await expect(getComputedStyle(button).backgroundImage).toBe('none')
+    }
+  },
+}
+
+export const DoDont: Story = {
+  render: (args) => (
+    <DoDontPair usage={usage} id="button-names-the-action"
+      doExample={<ApprovalCard {...args} defaultBody={undefined} />}
+      dontExample={<ApprovalCard {...args} defaultBody={undefined} actionLabel="Approve" actionIcon={undefined} />} />
+  ),
+}
