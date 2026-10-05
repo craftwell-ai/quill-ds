@@ -28,6 +28,9 @@ import { Switch } from "@/components/ui/switch";
 // Footer version stamp reads the real version so it can never drift.
 import packageJson from "../../package.json";
 
+// The masthead shows major.minor only ("0.18"); the footer carries the full version with its patch number.
+const displayVersion = packageJson.version.split(".").slice(0, 2).join(".");
+
 const STORYBOOK_URL = "/storybook/";
 const storyUrl = (id: string) => `${STORYBOOK_URL}?path=/docs/${id}`;
 
@@ -326,7 +329,7 @@ export default function Home() {
         />
         <div className="relative mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-16 px-12 pt-12 pb-[104px] lg:pt-[68px] max-lg:grid-cols-1 max-sm:px-6 max-sm:pt-[15px] max-sm:pb-16">
           <div className="flex flex-col items-start gap-7 max-sm:gap-5">
-            <Eyebrow dash>The Quill design system · Issue 001</Eyebrow>
+            <Eyebrow dash>The Quill design system · Version {displayVersion}</Eyebrow>
             <h1 className="m-0 font-display text-5xl font-normal leading-display tracking-display text-foreground [font-variation-settings:var(--fraunces-display)] [text-wrap:balance]">
               A design system, made for <Accent>people</Accent>.
             </h1>
