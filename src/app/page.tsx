@@ -629,14 +629,9 @@ export default function Home() {
             <Logo />
             <span className="text-sm text-ink-soft">— A design system, made for people.</span>
           </div>
-          <div className="flex items-center gap-5">
-            <a href="/llms.txt" className={navLink}>
-              llms.txt
-            </a>
-            <span className="font-display text-sm italic text-muted-foreground [font-variation-settings:var(--fraunces-caption)]">
-              v{packageJson.version}
-            </span>
-          </div>
+          <span className="font-display text-sm italic text-muted-foreground [font-variation-settings:var(--fraunces-caption)]">
+            v{packageJson.version}
+          </span>
         </div>
       </footer>
     </div>
