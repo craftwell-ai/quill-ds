@@ -1,6 +1,5 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { page as browserPage } from 'vitest/browser'
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { AiPopover } from '../../registry/lib/ai-popover'
 import { Button } from '@/components/ui/button'
@@ -12,6 +11,13 @@ import { compositeOver, contrastRatio, washedTop } from './contrast'
 const ORIGINAL = 'Signups beat target in July and August but missed it in September by twelve percent, which we think is about the pricing page.'
 const SUGGESTION = 'Signups beat target in July and August but fell 12% short in September, likely because of the new pricing page.'
 const TITLE = 'Rewrite: shorter'
+
+// The test runner sizes its page from these (addon-vitest reads the viewport global), the same way the pattern stories do.
+const VIEWPORTS = {
+  desktop: { name: 'Desktop 1280', styles: { width: '1280px', height: '720px' }, type: 'desktop' },
+  phone320: { name: 'Phone 320', styles: { width: '320px', height: '640px' }, type: 'mobile' },
+  short: { name: 'Short 600x360', styles: { width: '600px', height: '360px' }, type: 'mobile' },
+} as const
 
 const meta = {
   title: 'Components / AiPopover',
@@ -308,27 +314,24 @@ export const WritingHoldsStillWhenReduced: Story = {
   },
 }
 
-// Long unbroken text wraps inside the popover, and on a real 320px-wide viewport the popover fits with its 1rem gutters.
-// The viewport is resized by the test runner and the width is asserted before anything is measured.
+// Long unbroken text wraps inside the popover, and on a real 320px-wide viewport the popover fits.
+// The viewport global sizes the test page and the width is asserted before anything is measured.
 export const LongTextWraps: Story = {
   args: { suggestion: 'x'.repeat(220) + ' ' + 'verylongunbrokenwordwithoutanyspacesatallthatwouldoverflow'.repeat(4) },
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'phone320', isRotated: false } },
   play: async ({ canvas }) => {
-    await browserPage.viewport(320, 640)
-    try {
-      await waitFor(() => expect(window.innerWidth).toBe(320))
-      const dialog = await openFrom(canvas)
-      const tile = dialog.querySelector('[data-slot="suggestion"]') as HTMLElement
-      const rect = dialog.getBoundingClientRect()
-      // The popup clips what overflows it, so the tile itself has to end inside the popup.
-      await expect(tile.getBoundingClientRect().right).toBeLessThanOrEqual(rect.right)
-      await expect(tile.scrollWidth).toBeLessThanOrEqual(tile.clientWidth)
-      // The width is capped to the viewport less 1rem; the positioner keeps the box inside the screen with its own small margin.
-      await expect(rect.width).toBeLessThanOrEqual(320 - 16 + 0.5)
-      await expect(rect.right).toBeLessThanOrEqual(320 - 4)
-      await expect(rect.left).toBeGreaterThanOrEqual(4)
-    } finally {
-      await browserPage.viewport(1280, 720)
-    }
+    await waitFor(() => expect(window.innerWidth).toBe(320))
+    const dialog = await openFrom(canvas)
+    const tile = dialog.querySelector('[data-slot="suggestion"]') as HTMLElement
+    const rect = dialog.getBoundingClientRect()
+    // The popup clips what overflows it, so the tile itself has to end inside the popup.
+    await expect(tile.getBoundingClientRect().right).toBeLessThanOrEqual(rect.right)
+    await expect(tile.scrollWidth).toBeLessThanOrEqual(tile.clientWidth)
+    // The width is capped to the viewport less 1rem; the positioner keeps the box inside the screen with its own small margin.
+    await expect(rect.width).toBeLessThanOrEqual(320 - 16 + 0.5)
+    await expect(rect.right).toBeLessThanOrEqual(320 - 4)
+    await expect(rect.left).toBeGreaterThanOrEqual(4)
   },
 }
 
@@ -339,25 +342,22 @@ export const TallSuggestionKeepsActionsReachable: Story = {
   render: (args) => (
     <div className="fixed inset-x-0 top-2/3 text-sm text-ink-soft"><AiPopover {...args} /></div>
   ),
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'short', isRotated: false } },
   play: async ({ canvas, args }) => {
-    await browserPage.viewport(600, 360)
-    try {
-      await waitFor(() => expect(window.innerHeight).toBe(360))
-      const dialog = await openFrom(canvas)
-      const tile = dialog.querySelector('[data-slot="suggestion"]') as HTMLElement
-      const scroller = tile.parentElement as HTMLElement
-      await expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight)
-      await expect(getComputedStyle(scroller).overflowY).toBe('auto')
-      const replace = within(dialog).getByRole('button', { name: 'Replace' })
-      const box = replace.getBoundingClientRect()
-      await expect(box.top).toBeGreaterThanOrEqual(0)
-      await expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
-      await expect(within(dialog).getByText(TITLE).getBoundingClientRect().top).toBeGreaterThanOrEqual(0)
-      await userEvent.click(replace)
-      await expect(args.onReplace).toHaveBeenCalledTimes(1)
-    } finally {
-      await browserPage.viewport(1280, 720)
-    }
+    await waitFor(() => expect(window.innerHeight).toBe(360))
+    const dialog = await openFrom(canvas)
+    const tile = dialog.querySelector('[data-slot="suggestion"]') as HTMLElement
+    const scroller = tile.parentElement as HTMLElement
+    await expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight)
+    await expect(getComputedStyle(scroller).overflowY).toBe('auto')
+    const replace = within(dialog).getByRole('button', { name: 'Replace' })
+    const box = replace.getBoundingClientRect()
+    await expect(box.top).toBeGreaterThanOrEqual(0)
+    await expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
+    await expect(within(dialog).getByText(TITLE).getBoundingClientRect().top).toBeGreaterThanOrEqual(0)
+    await userEvent.click(replace)
+    await expect(args.onReplace).toHaveBeenCalledTimes(1)
   },
 }
 
