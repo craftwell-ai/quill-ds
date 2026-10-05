@@ -32,7 +32,7 @@ export const usage = {
     'The rows are a description list (term and value).',
     'Edit is a toggle button (aria-pressed). Pressing it puts the cursor in the field, which is named by bodyLabel.',
     'The main button is named by the action itself. A body that was given and is now empty disables it.',
-    'The outcome line appears inside a status region that is already on the page, so it is announced; while empty the region is a real box that takes no space.',
+    'The outcome line appears inside a status region that is already on the page, so it is announced; while empty the region is a real box that takes no space. When the person decides, the buttons go and focus moves to that line, so keyboard users keep their place; focus is never pulled in if it was elsewhere on the page.',
   ],
   tokens: ['--card', '--background', '--border', '--input', '--muted', '--muted-foreground', '--ink-soft', '--primary', '--destructive', '--ai-from', '--ai-via', '--ai-to'],
 }

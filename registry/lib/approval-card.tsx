@@ -48,6 +48,8 @@ export function ApprovalCard({
   const [ownBody, setOwnBody] = React.useState(defaultBody ?? '')
   const [editing, setEditing] = React.useState(false)
   const fieldRef = React.useRef<HTMLTextAreaElement>(null)
+  const cardRef = React.useRef<HTMLDivElement>(null)
+  const statusRef = React.useRef<HTMLDivElement>(null)
   const hasBody = body !== undefined || defaultBody !== undefined
   const text = body === undefined ? ownBody : body
   const decided = Boolean(outcome)
@@ -55,9 +57,23 @@ export function ApprovalCard({
   const showField = editing && !decided
   // A body that was given and is now empty would send nothing; the action waits for text.
   const blank = hasBody && text.trim().length === 0
+  // A controlled body with nowhere to report edits would open a field nothing updates: hide Edit instead.
+  const canEdit = hasBody && editable && (body === undefined || Boolean(onBodyChange))
+  const showTile = rows.length > 0 || text.length > 0 || showField
+  const wasDecided = React.useRef(decided)
 
   // "Opens in place" for a keyboard user means the cursor is in the field.
   React.useEffect(() => { if (showField) fieldRef.current?.focus() }, [showField])
+
+  // Pressing the main or the decline button removes the button that had focus. Keep the person's place inside the
+  // card, but only when focus was in the card (or just fell to the page body): never pull focus from elsewhere.
+  React.useEffect(() => {
+    if (decided && !wasDecided.current) {
+      const active = document.activeElement
+      if (!active || active === document.body || cardRef.current?.contains(active)) statusRef.current?.focus()
+    }
+    wasDecided.current = decided
+  }, [decided])
 
   const change = (next: string) => {
     if (body === undefined) setOwnBody(next)
@@ -65,15 +81,15 @@ export function ApprovalCard({
   }
 
   return (
-    <div data-slot="approval-card" role="group" aria-labelledby={titleId}
-      className={cn('grid gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm shadow-sm', className)}>
+    <div ref={cardRef} data-slot="approval-card" role="group" aria-labelledby={titleId}
+      className={cn('grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm shadow-sm', className)}>
       <div className="flex items-center gap-2">
         <AiMark size={15} />
-        <p id={titleId} className="min-w-0 flex-1 font-semibold text-ink-soft">{title}</p>
+        <p id={titleId} className="min-w-0 flex-1 font-semibold break-words text-ink-soft">{title}</p>
       </div>
-      {rows.length || hasBody ? (
+      {showTile ? (
         // border-input, not the divider line: the tile has to read as a shape on the card in the dark themes.
-        <div data-slot="proposal" className="grid gap-1.5 rounded-lg border border-input bg-background px-3 py-2.5">
+        <div data-slot="proposal" className="grid grid-cols-[minmax(0,1fr)] gap-1.5 rounded-lg border border-input bg-background px-3 py-2.5">
           {rows.length ? (
             <dl className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-3 gap-y-1">
               {rows.map((row, index) => (
@@ -88,7 +104,7 @@ export function ApprovalCard({
           {showField ? (
             <Textarea ref={fieldRef} aria-label={bodyLabel} value={text} onChange={(event) => change(event.target.value)} className="min-h-24 bg-background" />
           ) : text ? (
-            <p className="whitespace-pre-wrap text-ink-soft">{text}</p>
+            <p className="whitespace-pre-wrap break-words text-ink-soft">{text}</p>
           ) : null}
         </div>
       ) : null}
@@ -98,7 +114,7 @@ export function ApprovalCard({
             {actionIcon}
             {actionLabel}
           </Button>
-          {hasBody && editable ? (
+          {canEdit ? (
             <Button type="button" variant="outline" className="aria-pressed:bg-muted" aria-pressed={editing} onClick={() => setEditing((was) => !was)}>
               <Icon name="edit" />
               Edit
@@ -109,15 +125,15 @@ export function ApprovalCard({
         </div>
       )}
       {consequence && !decided ? (
-        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <p className="flex items-center gap-1.5 text-xs break-words text-muted-foreground">
           <Icon name={destructive ? 'warning' : 'info'} size={14} />
           {consequence}
         </p>
       ) : null}
       {/* On the page from the start so the outcome arrives into a live region. While empty it is absolutely
           positioned: a real box that takes no grid row and no gap. */}
-      <div role="status" className="empty:absolute">
-        {outcome ? <p className="text-xs text-muted-foreground">{outcome}</p> : null}
+      <div ref={statusRef} role="status" tabIndex={-1} className="rounded-md outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 empty:absolute">
+        {outcome ? <p className="text-xs break-words text-muted-foreground">{outcome}</p> : null}
       </div>
     </div>
   )

@@ -5,7 +5,9 @@ import { ApprovalCard } from '../../registry/lib/approval-card'
 import { Icon } from '@/components/ui/icon'
 import { usage } from '@/usage/approval-card.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { Button } from '@/components/ui/button'
 import { DoDontPair } from './DoDont'
+import { tabTo } from './focus-ring'
 import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
 
 const BODY = 'Hi team, September came in 12% under target, though the quarter still closed 4% ahead. The dip lines up with the pricing page change on the 9th. Chart attached.'
@@ -197,6 +199,90 @@ export const ButtonsArePlain: Story = {
       await expect(button).toHaveAttribute('data-slot', 'button')
       await expect(getComputedStyle(button).backgroundImage).toBe('none')
     }
+  },
+}
+
+// Pressing the main button removes the button that had focus; the person must not be dropped on the page body.
+export const FocusStaysInTheCardOnDecision: Story = {
+  render: function Render(args) {
+    const [outcome, setOutcome] = React.useState<string>()
+    return <ApprovalCard {...args} outcome={outcome} onApprove={(body) => { args.onApprove(body); setOutcome('Sent to 6 people.') }} />
+  },
+  play: async ({ canvas, canvasElement }) => {
+    await tabTo(canvas.getByRole('button', { name: 'Send email' }))
+    await userEvent.keyboard('{Enter}')
+    const card = canvasElement.querySelector('[data-slot="approval-card"]') as HTMLElement
+    await expect(canvas.queryByRole('button')).toBeNull()
+    await expect(card.contains(document.activeElement)).toBe(true)
+    await expect(document.activeElement).toBe(canvas.getByRole('status'))
+  },
+}
+
+export const FocusStaysInTheCardAfterDeny: Story = {
+  render: function Render(args) {
+    const [outcome, setOutcome] = React.useState<string>()
+    return <ApprovalCard {...args} outcome={outcome} onDeny={() => setOutcome('Not sent.')} />
+  },
+  play: async ({ canvas }) => {
+    await tabTo(canvas.getByRole('button', { name: 'Do not send' }))
+    await userEvent.keyboard('{Enter}')
+    await expect(canvas.queryByRole('button')).toBeNull()
+    await expect(document.activeElement).toBe(canvas.getByRole('status'))
+  },
+}
+
+export const FocusElsewhereIsNotStolen: Story = {
+  render: function Render(args) {
+    const [outcome, setOutcome] = React.useState<string>()
+    return (
+      <div className="grid gap-3">
+        <ApprovalCard {...args} outcome={outcome} />
+        <Button type="button" variant="outline" onClick={() => setOutcome('Decided somewhere else.')}>Decide from outside</Button>
+      </div>
+    )
+  },
+  play: async ({ canvas }) => {
+    const outside = canvas.getByRole('button', { name: 'Decide from outside' })
+    await tabTo(outside)
+    await userEvent.keyboard('{Enter}')
+    await expect(canvas.getByRole('status')).toHaveTextContent('Decided somewhere else.')
+    await expect(outside).toHaveFocus()
+  },
+}
+
+// An unbroken string (a URL, a hash) must wrap inside the tile, not push past the card.
+export const LongUnbrokenTextStaysInside: Story = {
+  args: {
+    defaultBody: `https://example.com/${'a'.repeat(160)}`,
+    details: [{ label: 'Link', value: 'b'.repeat(160) }],
+  },
+  play: async ({ canvasElement }) => {
+    const card = canvasElement.querySelector('[data-slot="approval-card"]') as HTMLElement
+    const tile = canvasElement.querySelector('[data-slot="proposal"]') as HTMLElement
+    await expect(tile.scrollWidth).toBeLessThanOrEqual(tile.clientWidth)
+    await expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth)
+    await expect(tile.getBoundingClientRect().right).toBeLessThanOrEqual(card.getBoundingClientRect().right)
+  },
+}
+
+// A body the app holds, with no way to hear about edits, would give a field nothing updates.
+export const ControlledWithoutCallbackHidesEdit: Story = {
+  args: { defaultBody: undefined, body: BODY, onBodyChange: undefined },
+  play: async ({ canvas }) => {
+    await expect(canvas.queryByRole('button', { name: 'Edit' })).toBeNull()
+    await expect(canvas.getByText(BODY)).toBeVisible()
+  },
+}
+
+// A blank body and nothing else to show would be an empty bordered box.
+export const BlankBodyWithNoDetailsHasNoTile: Story = {
+  args: { details: undefined, defaultBody: '' },
+  play: async ({ canvasElement, canvas }) => {
+    await expect(canvasElement.querySelector('[data-slot="proposal"]')).toBeNull()
+    await expect(canvas.getByRole('button', { name: 'Send email' })).toBeDisabled()
+    // Edit still opens a field to type into.
+    await userEvent.click(canvas.getByRole('button', { name: 'Edit' }))
+    await expect(canvas.getByRole('textbox', { name: 'Email body' })).toBeVisible()
   },
 }
 
