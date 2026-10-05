@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent } from 'storybook/test'
+import { expect, fn, userEvent, waitFor } from 'storybook/test'
 import { AiChat } from '@registry/blocks/ai-chat'
 import { usage } from '@/usage/ai-chat.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
@@ -34,8 +34,8 @@ export const Default: Story = {
     await expect(box).toHaveValue('Compare with Q2')
     await userEvent.keyboard('{Enter}')
     await expect(args.onSubmit).toHaveBeenCalledWith('Compare with Q2')
-    // Every reply now carries a (usually empty) status region, so find the working one by its text.
-    await expect(canvas.getByText('Thinking').closest('[role="status"]')).toHaveTextContent('Reading signups-sept.csv')
+    // Every reply carries a (usually empty) status region; the working one fills just after it mounts.
+    await waitFor(() => expect(canvas.getAllByRole('status').some((region) => region.textContent?.includes('Reading signups-sept.csv'))).toBe(true))
     await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
     // Stop unmounts with the working state; the cursor must land back in the box, not on the page.

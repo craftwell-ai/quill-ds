@@ -31,6 +31,14 @@ export type AiThinkingProps = {
 export function AiThinking({ status, label = 'Thinking', activity, seconds, steps, defaultOpen = false, className }: AiThinkingProps) {
   const [open, setOpen] = React.useState(defaultOpen)
   const listId = React.useId()
+  // The status region is on the page from the first paint but stays empty until just after mount: a live region
+  // that arrives already filled is announced unreliably, one whose text changes is. The timer (not a direct
+  // setState in the effect) is what lets the first paint go out empty.
+  const [announcing, setAnnouncing] = React.useState(false)
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => setAnnouncing(true), 100)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   const working = status === 'working'
   // A duration that is missing, not a number or negative would read as nonsense, so it is treated as unknown.
@@ -40,18 +48,19 @@ export function AiThinking({ status, label = 'Thinking', activity, seconds, step
   return (
     <div data-slot="ai-thinking" data-status={status} className={cn(working ? 'grid gap-0.5' : 'grid gap-1', className)}>
       {/* One live region stays mounted across both states, so the working text changes into nothing instead of a
-          fresh region arriving already filled, which screen readers announce unreliably. Empty once done: the
-          finished row beside it says the rest, and a done reply restored from history must not announce itself.
-          display: contents keeps the region out of the layout, so its children are still the grid's rows. */}
-      <div role="status" className="contents">
-        {working ? (
-          <>
-            <span className="ai-shimmer w-fit text-sm font-semibold">{label}</span>
-            {activity ? <span className="text-xs text-muted-foreground">{activity}</span> : null}
-            <span aria-hidden className="ai-line mt-1.5" />
-          </>
-        ) : null}
+          fresh region arriving already filled. It is empty once done: the finished row says the rest, and a done
+          reply restored from history must not announce itself. sr-only makes it a real box that takes no space,
+          and carries the only copy a screen reader hears; the visible label below is hidden from it. */}
+      <div role="status" className="sr-only">
+        {working && announcing ? [label, activity].filter(Boolean).join('. ') : ''}
       </div>
+      {working ? (
+        <>
+          <span aria-hidden className="ai-shimmer w-fit text-sm font-semibold">{label}</span>
+          {activity ? <span aria-hidden className="text-xs text-muted-foreground">{activity}</span> : null}
+          <span aria-hidden className="ai-line mt-1.5" />
+        </>
+      ) : null}
       {working ? null : hasSteps ? (
         <button type="button" aria-expanded={open} aria-controls={listId} onClick={() => setOpen((o) => !o)}
           className="inline-flex w-fit items-center gap-1 rounded-sm text-sm text-muted-foreground hover:text-foreground outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50">

@@ -98,6 +98,19 @@ export const StoppedIsAnnounced: Story = {
     await expect(region).toHaveTextContent('You stopped this answer.')
   },
 }
+// A real box (Safari can drop display: contents from the accessibility tree) that adds nothing while empty.
+export const StatusRegionTakesNoSpaceWhileEmpty: Story = {
+  play: async ({ canvas, canvasElement }) => {
+    const region = canvas.getByRole('status')
+    await expect(getComputedStyle(region).display).not.toBe('contents')
+    await expect(getComputedStyle(region).display).not.toBe('none')
+    await expect(region.getBoundingClientRect().height).toBe(0)
+    const article = canvasElement.querySelector('article') as HTMLElement
+    const before = article.getBoundingClientRect().height
+    region.remove()
+    await expect(article.getBoundingClientRect().height).toBe(before)
+  },
+}
 export const StoppedNoAnswer: Story = {
   args: { stopped: true, children: undefined },
   play: async ({ canvas }) => {

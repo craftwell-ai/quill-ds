@@ -15,7 +15,7 @@ A full AI conversation page — past chats on the left, the thread in a readable
 ### Accessibility
 - The sidebar is a navigation landmark named "Chats" with the open chat marked aria-current; the thread and composer sit in a region named "Conversation".
 - The thread is a log named "Messages", a polite live region, so each new turn is read out as it is added, without moving focus.
-- Each reply is an article. While it works, its status region announces the activity as it changes; once it is stopped, "You stopped this answer." is announced.
+- Each reply is an article. A working reply has a status region that is empty at first, filled a moment after it mounts and then updated as the activity changes; once it is stopped, "You stopped this answer." is announced from a status region that was already there.
 - The chat links, suggestion chips, source chips and the thinking toggle show the same 3px focus ring as a Button.
 
 ### Design tokens

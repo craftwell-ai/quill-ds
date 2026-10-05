@@ -127,8 +127,9 @@ export function AiMessage({
             {streaming ? <span aria-hidden data-slot="caret" className="ml-0.5 inline-block h-[1.05em] w-[7px] animate-pulse bg-foreground align-[-0.15em] motion-reduce:animate-none" /> : null}
           </div>
         ) : null}
-        {/* Stays mounted so the text arrives into a live region instead of appearing with it; contents keeps the empty region out of the grid. */}
-        <div role="status" className="contents">
+        {/* Stays mounted so the text arrives into a live region instead of appearing with it. While empty it is
+            absolutely positioned, so it is a real box that takes no grid row (and no gap); with text it is in flow. */}
+        <div role="status" className="empty:absolute">
           {stopped ? <p className="text-xs text-muted-foreground">You stopped this answer.</p> : null}
         </div>
         {sources}
