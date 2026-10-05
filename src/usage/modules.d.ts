@@ -16,6 +16,11 @@ declare module '@/usage/activity-feed.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/agent-steps.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/ai-badge.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

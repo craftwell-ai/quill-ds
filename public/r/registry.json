@@ -1079,6 +1079,25 @@
       "docs": "Lets people choose which AI model answers — a quiet name-and-chevron trigger in the composer that opens a list with Auto first, a line on what each model is good for, and a check on the current one. Do: Give every model a one-line description of what it is good for (\"Fast answers, fewer credits\"). Don't: List bare model names — people cannot choose between names they do not know. Do: Offer Auto first so people who do not care never have to choose. Don't: Make people pick a model before their first message. Use select when the choice is an ordinary form setting, not an AI model. Use radio-group when the model is chosen once on a settings page; show the same options as radios."
     },
     {
+      "name": "agent-steps",
+      "type": "registry:ui",
+      "title": "Agent steps",
+      "description": "Shows the steps an AI agent is working through — done, running, waiting or failed — with a count in the header and rows that open to show what happened.",
+      "registryDependencies": [
+        "button",
+        "https://www.quilldesignsystem.com/r/icon.json",
+        "https://www.quilldesignsystem.com/r/ai-mark.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/agent-steps.tsx",
+          "target": "components/ui/agent-steps.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Shows the steps an AI agent is working through — done, running, waiting or failed — with a count in the header and rows that open to show what happened. Do: Leave the ticks and the spinner in moss; the AI mark in the header already says an agent is working. Don't: Paint progress with the AI gradient — the gradient marks AI, moss marks progress. Do: Let finished steps go muted so the running step stands out. Don't: Strike finished steps through — long labels become hard to read. Do: Put what a step found in its detail, opened by pressing the row. Don't: Print every step's detail in the list — the list has to stay scannable. Use ai-thinking when the AI is only thinking before one answer; there are no separate steps to follow. Use progress when you know a percentage and there is nothing to read step by step. Use wizard when the person, not the AI, moves through the steps."
+    },
+    {
       "name": "ai-mark",
       "type": "registry:ui",
       "title": "AI mark",
@@ -1198,6 +1217,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/activity-feed.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/activity-feed.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/agent-steps.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/agent-steps.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/ai-badge.md",

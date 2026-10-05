@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -105,6 +105,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 ## Primitives
 
 - `accordion` — You have several related content sections (FAQ answers, grouped settings) that don't all need to stay visible at once, and users scan headings before choosing one to open. · instead: `collapsible`, `tabs`
+- `agent-steps` (`@quill/`) — An AI agent does a task in several steps and people should see where it is, what is finished and what went wrong. · instead: `ai-thinking`, `progress`, `wizard`
 - `ai-badge` (`@quill/`) — A card, field, list row or message holds content the AI wrote or proposed, and people should know before they rely on it. · instead: `tone-badge`, `ai-mark`
 - `ai-button` (`@quill/`) — A button starts something an AI does: Summarize, Rewrite, Ask AI, Draft a reply. · instead: `button`, `prompt-composer`
 - `ai-mark` (`@quill/`) — You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page. · instead: `ai-badge`, `icon`

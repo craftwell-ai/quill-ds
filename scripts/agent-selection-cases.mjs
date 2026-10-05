@@ -30,6 +30,7 @@ export const CASES = [
   { id: 'task-board', expect: 'kanban', request: 'Track tasks by status (to do, in progress, done) and move cards between the columns.' },
   { id: 'office-map', expect: 'none', request: 'Show our office locations on an interactive map that users can pan and zoom.' },
   { id: 'ai-disclaimer', expect: 'ai-notice', request: 'Under the assistant\'s input box, tell people the AI can get things wrong.' },
+  { id: 'agent-progress', expect: 'agent-steps', request: 'Our assistant runs a task in several stages; show which are finished, which one it is on, and what is still to come.' },
   { id: 'ai-working-state', expect: 'ai-thinking', request: 'While the assistant is preparing its answer, show that it is working and what it is reading.' },
   { id: 'switch-ai-model', expect: 'model-picker', request: 'Let people switch between a fast model and a slower, more careful one from the assistant\'s input box.' },
   { id: 'follow-up-questions', expect: 'suggested-prompts', request: 'After the assistant answers, offer two or three follow-up questions people can click to ask next.' },
