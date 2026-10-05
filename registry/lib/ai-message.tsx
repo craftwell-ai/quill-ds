@@ -12,6 +12,8 @@ export type AiMessageProps = {
   /** The answer. Plain paragraphs, lists and Citation chips. Leave it out while the AI is still thinking. */
   children?: React.ReactNode
   name?: string
+  /** Hides the name from view when something nearby already says who is answering (a panel titled "Assistant"). Screen readers still read it. */
+  hideName?: boolean
   /** An AiThinking above the answer. */
   thinking?: React.ReactNode
   /** A Sources list under the answer. */
@@ -50,9 +52,13 @@ function hasVisibleContent(node: React.ReactNode): boolean {
   return true
 }
 
+// With the name hidden, the first row beside the avatar takes the centre line the name row had. Half of what is left
+// of the avatar's 28px after one line of the row's own text (1lh), so it holds for every text size.
+const LEVEL_WITH_AVATAR = 'pt-[calc((1.75rem-1lh)/2)]'
+
 /** An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. */
 export function AiMessage({
-  children, name = 'Assistant', thinking, sources, streaming = false, stopped = false,
+  children, name = 'Assistant', hideName = false, thinking, sources, streaming = false, stopped = false,
   copyText, onRetry, feedback, onFeedback, className,
 }: AiMessageProps) {
   const bodyRef = React.useRef<HTMLDivElement>(null)
@@ -64,6 +70,9 @@ export function AiMessage({
   const hasAnswer = hasVisibleContent(children)
   // A stopped reply with no answer has no actions; an empty group would still be announced.
   const hasActions = hasAnswer || Boolean(onRetry) || Boolean(onFeedback)
+  const hasThinking = thinking !== undefined && thinking !== null && thinking !== false
+  // Which row comes first beside the avatar once the name is out of view.
+  const levelRow = !hideName ? null : hasThinking ? 'thinking' : hasAnswer ? 'answer' : stopped ? 'stopped' : null
 
   const mounted = React.useRef(false)
   // The clipboard write is async, so the reply may be gone by the time it finishes: a timer started then would never be cleared.
@@ -115,22 +124,24 @@ export function AiMessage({
         <AiMark size={15} />
       </span>
       <div className="grid min-w-0 gap-1.5">
-        {/* Same 28px height as the avatar, so the name sits on the avatar's centre line. */}
-        <div data-slot="reply-name" className="flex min-h-7 items-center">
+        {/* Same 28px height as the avatar, so the name sits on the avatar's centre line. Hidden, it stays for screen
+            readers (the avatar is decoration, so the name is the only speaker label) as a box that takes no grid row. */}
+        <div data-slot="reply-name" className={hideName ? 'sr-only' : 'flex min-h-7 items-center'}>
           <p className="text-xs font-semibold text-muted-foreground">{name}</p>
         </div>
-        {thinking}
+        {/* text-sm is the size of AiThinking's first line, which is what 1lh has to measure here. */}
+        {levelRow === 'thinking' ? <div className={cn('text-sm', LEVEL_WITH_AVATAR)}>{thinking}</div> : thinking}
         {hasAnswer ? (
           // While streaming, the last paragraph runs inline so the caret sits at the end of its last line.
-          <div ref={bodyRef} data-slot="reply-body" className={cn('text-sm leading-relaxed text-foreground [&>*+*]:mt-2', streaming && '[&>p:last-of-type]:inline')}>
+          <div ref={bodyRef} data-slot="reply-body" className={cn('text-sm leading-relaxed text-foreground [&>*+*]:mt-2', streaming && '[&>p:last-of-type]:inline', levelRow === 'answer' && LEVEL_WITH_AVATAR)}>
             {children}
             {streaming ? <span aria-hidden data-slot="caret" className="ml-0.5 inline-block h-[1.05em] w-[7px] animate-pulse bg-foreground align-[-0.15em] motion-reduce:animate-none" /> : null}
           </div>
         ) : null}
         {/* Stays mounted so the text arrives into a live region instead of appearing with it. While empty it is
             absolutely positioned, so it is a real box that takes no grid row (and no gap); with text it is in flow. */}
-        <div role="status" className="empty:absolute">
-          {stopped ? <p className="text-xs text-muted-foreground">You stopped this answer.</p> : null}
+        <div role="status" className={cn('text-xs empty:absolute', levelRow === 'stopped' && LEVEL_WITH_AVATAR)}>
+          {stopped ? <p className="text-muted-foreground">You stopped this answer.</p> : null}
         </div>
         {sources}
         {!streaming && hasActions ? (

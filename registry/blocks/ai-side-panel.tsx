@@ -97,7 +97,8 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
           {/* A log is a polite live region, so each new turn is read out. */}
           <div role="log" aria-label="Messages" className="grid min-w-0 gap-3">
             <UserMessage>{"What's the one thing to fix?"}</UserMessage>
-            <AiMessage>
+            {/* hideName on every reply: the header already says who is answering. */}
+            <AiMessage hideName>
               <p>The September dip. It started the day the new pricing page shipped<Citation source={SOURCE} />.</p>
             </AiMessage>
             {turns.length === 0 ? (
@@ -109,8 +110,8 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
               <React.Fragment key={turn.id}>
                 <UserMessage>{turn.ask}</UserMessage>
                 {turn.reply === 'working'
-                  ? <AiMessage streaming thinking={<AiThinking status="working" activity="Reading the page" />} />
-                  : <AiMessage stopped />}
+                  ? <AiMessage hideName streaming thinking={<AiThinking status="working" activity="Reading the page" />} />
+                  : <AiMessage hideName stopped />}
               </React.Fragment>
             ))}
           </div>

@@ -47,6 +47,78 @@ export const AvatarAlignsWithName: Story = {
     await expect(Math.abs((a.top + a.bottom) / 2 - (n.top + n.bottom) / 2)).toBeLessThanOrEqual(1)
   },
 }
+// The vertical centre of an element's first line of text, from the glyphs' own box (a block's box would be all its lines).
+const firstLineCentre = (element: Element) => {
+  // The first text node, not the element: a range around a whole paragraph reports the paragraph's box.
+  const range = document.createRange()
+  range.selectNodeContents(document.createTreeWalker(element, NodeFilter.SHOW_TEXT).nextNode() as Text)
+  const line = range.getClientRects()[0]
+  return (line.top + line.bottom) / 2
+}
+const avatarCentre = (article: Element) => {
+  const box = (article.querySelector('[data-slot="reply-avatar"]') as HTMLElement).getBoundingClientRect()
+  return (box.top + box.bottom) / 2
+}
+// With the name hidden it is still the reply's only speaker label (the avatar is decoration), so it stays on the page
+// for screen readers as a 1px clipped box: not display: none, not aria-hidden.
+const expectNameHiddenButRead = async (article: HTMLElement, name = 'Assistant') => {
+  const label = Array.from(article.querySelectorAll('p')).find((paragraph) => paragraph.textContent === name) as HTMLElement
+  await expect(label).toBeDefined()
+  const row = article.querySelector('[data-slot="reply-name"]') as HTMLElement
+  const box = row.getBoundingClientRect()
+  await expect(box.width).toBeLessThanOrEqual(1)
+  await expect(box.height).toBeLessThanOrEqual(1)
+  await expect(getComputedStyle(row).display).not.toBe('none')
+  await expect(getComputedStyle(row).visibility).toBe('visible')
+  await expect(label.closest('[aria-hidden="true"], [hidden]')).toBeNull()
+}
+// The panel's header already names the assistant, so its replies drop the visible name. The answer then starts level
+// with the avatar: no empty row where the name was, and the first line shares the avatar's centre line.
+export const HiddenName: Story = {
+  args: { hideName: true },
+  play: async ({ canvas }) => {
+    const article = canvas.getByRole('article')
+    await expectNameHiddenButRead(article)
+    const body = article.querySelector('[data-slot="reply-body"]') as HTMLElement
+    await expect(Math.abs(firstLineCentre(body) - avatarCentre(article))).toBeLessThanOrEqual(1)
+    const avatar = (article.querySelector('[data-slot="reply-avatar"]') as HTMLElement).getBoundingClientRect()
+    await expect(body.getBoundingClientRect().top).toBeLessThan(avatar.top + avatar.height / 2)
+    // Hiding the name changes nothing else: the answer and its actions are all there.
+    await expect(canvas.getByRole('button', { name: 'Copy' })).toBeVisible()
+  },
+}
+// Whatever comes first beside the avatar takes the centre line: the working label, the finished row, or the stopped line.
+export const HiddenNameFirstRows: Story = {
+  render: () => (
+    <div className="grid gap-6">
+      <AiMessage hideName streaming thinking={<AiThinking status="working" activity="Reading signups-sept.csv" />} />
+      <AiMessage hideName thinking={<AiThinking status="done" seconds={8} />}><p>The quarter closed 4% ahead.</p></AiMessage>
+      <AiMessage hideName thinking={<AiThinking status="done" seconds={8} steps={['Loaded signups-sept.csv']} />}><p>The quarter closed 4% ahead.</p></AiMessage>
+      <AiMessage hideName stopped />
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const [working, done, doneWithSteps, stopped] = Array.from(canvasElement.querySelectorAll<HTMLElement>('article'))
+    const firstRows: Array<[HTMLElement, Element]> = [
+      [working, working.querySelector('.ai-shimmer') as Element],
+      [done, canvas.getByText('Thought for 8 s', { selector: 'span' })],
+      [doneWithSteps, canvas.getByRole('button', { name: 'Thought for 8 s' })],
+      [stopped, canvas.getByText('You stopped this answer.')],
+    ]
+    for (const [article, row] of firstRows) {
+      await expectNameHiddenButRead(article)
+      await expect(Math.abs(firstLineCentre(row) - avatarCentre(article))).toBeLessThanOrEqual(1)
+    }
+  },
+}
+// Off by default: a reply on a full chat page keeps its visible name.
+export const NameShowsByDefault: Story = {
+  play: async ({ canvas }) => {
+    const row = canvas.getByRole('article').querySelector('[data-slot="reply-name"]') as HTMLElement
+    await expect(row.getBoundingClientRect().height).toBe(28)
+    await expect(canvas.getByText('Assistant')).toBeVisible()
+  },
+}
 export const WithThinking: Story = {
   args: { thinking: <AiThinking status="done" seconds={8} steps={['Loaded signups-sept.csv', 'Compared with targets']} /> },
 }

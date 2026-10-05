@@ -62,6 +62,22 @@ const expectCentredWithMargin = async (element: HTMLElement) => {
 const threadOf = (root: HTMLElement) => root.querySelector('[data-slot="thread"]') as HTMLElement
 const fadeOf = (thread: HTMLElement) => getComputedStyle(thread).maskImage
 
+// Every "Assistant" a sighted person can see. A name kept for screen readers only is a 1px clipped box.
+const visibleNames = (root: HTMLElement, name = 'Assistant') =>
+  within(root).queryAllByText(name).filter((element) => {
+    const box = (element.closest('[data-slot="reply-name"]') ?? element).getBoundingClientRect()
+    return box.width > 1 && box.height > 1
+  })
+// A reply's avatar and the first row beside it share one centre line, measured from the first line's own glyph box.
+const expectLevelWithAvatar = async (firstRow: Element) => {
+  const avatar = (firstRow.closest('article')?.querySelector('[data-slot="reply-avatar"]') as HTMLElement).getBoundingClientRect()
+  // The first text node, not the element: a range around a whole paragraph reports the paragraph's box.
+  const range = document.createRange()
+  range.selectNodeContents(document.createTreeWalker(firstRow, NodeFilter.SHOW_TEXT).nextNode() as Text)
+  const line = range.getClientRects()[0]
+  await expect(Math.abs((line.top + line.bottom) / 2 - (avatar.top + avatar.bottom) / 2)).toBeLessThanOrEqual(1)
+}
+
 const DESKTOP = { parameters: { viewport: { options: VIEWPORTS } }, globals: { viewport: { value: 'desktop', isRotated: false } } } as const
 
 // Read-only on purpose: this is the story the Figma frame is compared with.
@@ -84,6 +100,11 @@ export const Default: Story = {
       await expect(getComputedStyle(part).backgroundImage).toBe('none')
       await expect(getComputedStyle(part).backgroundColor).toBe('rgba(0, 0, 0, 0)')
     }
+    // The header says "Assistant" once; the reply does not repeat it, but still carries it for screen readers.
+    await expect(visibleNames(log)).toHaveLength(0)
+    await expect(visibleNames(panel)).toEqual([within(panel).getByText('Assistant', { selector: 'p[id]' })])
+    await expect(within(log).getByText('Assistant')).toBeInTheDocument()
+    await expectLevelWithAvatar(log.querySelector('[data-slot="reply-body"]') as HTMLElement)
     // A short thread has nothing scrolled above it, so nothing fades: the first message is drawn in full.
     const thread = threadOf(panel)
     await expect(thread.scrollTop).toBe(0)
@@ -128,8 +149,13 @@ export const AskAndStop: Story = {
     await expect(canvas.getByRole('log', { name: 'Messages' })).toHaveTextContent('Draft a fix for the pricing page')
     // Every reply carries a (usually empty) status region; the working one fills just after it mounts.
     await waitFor(() => expect(canvas.getAllByRole('status').some((region) => region.textContent?.includes('Reading the page'))).toBe(true))
+    // The working reply has no name row either: "Thinking" sits level with its avatar.
+    const log = canvas.getByRole('log', { name: 'Messages' })
+    await expectLevelWithAvatar(log.querySelector('.ai-shimmer') as HTMLElement)
     await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
+    await expectLevelWithAvatar(canvas.getByText('You stopped this answer.'))
+    await expect(visibleNames(log)).toHaveLength(0)
     // Stop unmounts with the working state; the cursor must land back in the box, not on the page.
     await expect(box).toHaveFocus()
   },
