@@ -57,6 +57,11 @@ const expectCentredWithMargin = async (element: HTMLElement) => {
   for (const margin of Object.values(margins)) await expect(margin).toBeGreaterThanOrEqual(16)
 }
 
+// The thread's scrolling element. Messages scrolled under the header fade out through a mask, which only exists
+// while something is scrolled above: 'none' at the very top, a gradient as soon as the thread has moved.
+const threadOf = (root: HTMLElement) => root.querySelector('[data-slot="thread"]') as HTMLElement
+const fadeOf = (thread: HTMLElement) => getComputedStyle(thread).maskImage
+
 const DESKTOP = { parameters: { viewport: { options: VIEWPORTS } }, globals: { viewport: { value: 'desktop', isRotated: false } } } as const
 
 // Read-only on purpose: this is the story the Figma frame is compared with.
@@ -79,6 +84,10 @@ export const Default: Story = {
       await expect(getComputedStyle(part).backgroundImage).toBe('none')
       await expect(getComputedStyle(part).backgroundColor).toBe('rgba(0, 0, 0, 0)')
     }
+    // A short thread has nothing scrolled above it, so nothing fades: the first message is drawn in full.
+    const thread = threadOf(panel)
+    await expect(thread.scrollTop).toBe(0)
+    await expect(fadeOf(thread)).toBe('none')
   },
 }
 
@@ -221,8 +230,8 @@ export const LongThreadScrolls: Story = {
       await userEvent.type(box, `Question number ${turn}{Enter}`)
       await userEvent.click(await canvas.findByRole('button', { name: 'Stop' }))
     }
-    const log = canvas.getByRole('log', { name: 'Messages' })
-    const scroller = log.parentElement?.parentElement as HTMLElement
+    const scroller = threadOf(panel)
+    await expect(scroller).toBe(canvas.getByRole('log', { name: 'Messages' }).parentElement?.parentElement)
     await expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight)
     const outer = panel.getBoundingClientRect()
     await expect(panel.getBoundingClientRect().height).toBeLessThanOrEqual(449)
@@ -234,6 +243,43 @@ export const LongThreadScrolls: Story = {
     await expect(history.bottom).toBeLessThanOrEqual(outer.bottom)
     // The newest turn is the one in view.
     await expect(scroller.scrollTop + scroller.clientHeight).toBeGreaterThanOrEqual(scroller.scrollHeight - 2)
+    // Messages are scrolled above, so they fade out under the header: a mask (no colour, so the wash shows through
+    // in every theme), from clear at the top edge to solid 28px down.
+    await waitFor(() => expect(fadeOf(scroller)).toContain('gradient'))
+    await expect(fadeOf(scroller)).toMatch(/28px\)$/)
+    // A mask is not an element: nothing sits over the thread to take a press meant for a message.
+    const edge = scroller.getBoundingClientRect()
+    await expect(scroller.contains(document.elementFromPoint(edge.left + edge.width / 2, edge.top + 10))).toBe(true)
+    // Back at the very top there is nothing above to fade, and the first thing in the thread is drawn in full.
+    scroller.scrollTop = 0
+    await waitFor(() => expect(fadeOf(scroller)).toBe('none'))
+    scroller.scrollTop = scroller.scrollHeight
+    await waitFor(() => expect(fadeOf(scroller)).toMatch(/28px\)$/))
+    // A control reached by keyboard is scrolled clear of the fade, so its focus ring is never drawn half-faded.
+    // Walking back from the composer passes every control in the thread: the first reply's Copy and source chip
+    // (mid-thread), then the chip's remove button (the very top).
+    await userEvent.click(box)
+    let visited = 0
+    for (let press = 0; press < 6; press += 1) {
+      await userEvent.tab({ shift: true })
+      const focused = document.activeElement as HTMLElement
+      if (!scroller.contains(focused)) break
+      visited += 1
+      await waitFor(() => {
+        const fade = /([\d.]+)px\)$/.exec(fadeOf(scroller))
+        const fadeBottom = scroller.getBoundingClientRect().top + (fade ? Number(fade[1]) : 0)
+        // 3px: the focus ring is drawn outside the control.
+        expect(focused.getBoundingClientRect().top - 3).toBeGreaterThanOrEqual(fadeBottom)
+      })
+    }
+    await expect(visited).toBeGreaterThanOrEqual(3)
+    // Chromium centres a focused control; other browsers bring it just inside the nearest edge, which here is the
+    // faded one. The thread's scroll padding is what keeps it clear there, so that route is measured too.
+    const copy = canvas.getByRole('button', { name: 'Copy' })
+    scroller.scrollTop = scroller.scrollHeight
+    copy.scrollIntoView({ block: 'nearest' })
+    await waitFor(() => expect(fadeOf(scroller)).toMatch(/28px\)$/))
+    await expect(copy.getBoundingClientRect().top - 3).toBeGreaterThanOrEqual(scroller.getBoundingClientRect().top + 28)
   },
 }
 

@@ -49,7 +49,7 @@ export const usage = {
   a11y: [
     'In the Sheet the panel is a modal dialog named by its title. Escape or Close closes it and focus returns to what opened it; opening it puts focus on the first control inside.',
     'Placed in a layout on its own (AiPanel), the panel is a region named by its title.',
-    'The thread is a log named "Messages", a polite live region, so each new turn is read out as it is added. The thread scrolls inside the panel; the header and the composer stay in view.',
+    'The thread is a log named "Messages", a polite live region, so each new turn is read out as it is added. The thread scrolls inside the panel; the header and the composer stay in view. Messages scrolled under the header fade out; at the top of the thread nothing fades, and a control reached by keyboard is scrolled clear of the fade.',
     'The chip\'s remove button is named "Stop looking at" followed by the scope and shows the same 3px focus ring as a Button; removing the chip moves the cursor to the composer. A scope your app controls, with no onScopeRemove, shows no remove button.',
     'History and Close are icon buttons with names. History is drawn only when onHistory is given.',
   ],
