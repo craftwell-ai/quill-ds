@@ -13,6 +13,26 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.19.0] — 2026-10-05
+
+Six design calls on the AI kit, chosen from a side-by-side review of each piece as it was and its alternative.
+
+### Added
+- **`AiMessage` can hide its name.** A new option, `hideName` (off by default), takes the reply's name out of view where something nearby already says who is answering. Screen readers still read it: the avatar is decoration, so the name is the reply's only speaker label. With the name hidden the first row beside the avatar (the answer, the "Thinking" row or "You stopped this answer.") starts level with the avatar and shares its centre line, with no empty row where the name was.
+- **A rule for outlines in the AI kit:** read-only content tiles use the divider line (`border-border`); things people press, remove or type in use the control line (`border-input`). Written into the approval card's and the popover's usage guidance and the Figma notes.
+
+### Changed
+- **AI side panel: scrolled messages fade out under the header** instead of being cut in a straight line. The fade is a mask, so it has no colour of its own and works on the wash in every theme. It only appears while something is scrolled above: at the top of the thread the first message is drawn in full. It takes no presses, and a control reached by keyboard is scrolled clear of it. The fade is 28px deep and switches on as soon as the thread moves; it does not grow gradually.
+- **AI side panel: replies no longer repeat "Assistant".** The header already says it, so the block passes `hideName` on every reply. `ai-chat` is unchanged: on the full chat page replies keep their name.
+- **AI side panel: full width on a phone.** Below 640px the panel's Sheet covers the whole screen instead of three quarters of it. From 640px up it is the same 24rem as before. The stock Sheet is untouched.
+- **AI side panel: opens with the cursor in the message box,** not on the first button (History). Opened by touch, focus goes to the panel itself, as the stock Sheet does, so the on-screen keyboard does not cover the panel before anything has been read. Closing still returns focus to whatever opened the panel. `AiPanel` takes an optional `composerRef` for this.
+- **Read-only tiles have a softer outline.** The approval card's proposal tile and the popover's suggestion tile move from the control line to the divider line; their fill is unchanged, and the fill is now what tells them apart from the surface. The question card's option rows and the side panel's scope chip are controls and keep the control line. The two tests that held these outlines to 3:1 and 2:1 now check the fill and the 1px divider line instead, and record the measured contrast in all five themes (fill against the surface 1.07 to 1.41:1, line against the surface 1.25 to 1.45:1).
+- **Approval card: detail labels end with a colon.** "To" and "Subject" read "To:" and "Subject:". The card adds it, so apps keep passing the bare word; a label that already ends in punctuation is left as it is.
+- **Figma:** the AiMessage twin gains a `Name` property (on by default) and the side panel frame turns it off; the two tiles bind the divider-line variable; the approval card's labels carry their colons. Not drawn: the fade (it only exists while scrolling), the phone width and where focus lands.
+
+### Fixed
+- **Text kept for screen readers inside a reply now scrolls with the reply.** In a scrolling thread it was left at its unscrolled place, which could make the page itself scroll.
+
 ## [0.18.3] — 2026-10-05
 
 ### Changed
