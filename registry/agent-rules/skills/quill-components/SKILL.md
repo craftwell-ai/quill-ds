@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -153,6 +153,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `popover` — You need a compact, interactive surface anchored to a button — an inline form, a filter, a quick edit — that opens on an explicit click. · instead: `dialog`, `hover-card`, `tooltip`
 - `progress` — You have a real, known completion percentage to show (upload progress, a multi-step setup) — not an open-ended wait with no known duration. · instead: `spinner`, `skeleton`
 - `prompt-composer` (`@quill/`) — People type a request to an AI: an assistant page, a chat thread, a side panel, or an "ask about this" bar. · instead: `ai-home`, `chat`, `textarea`
+- `question-card` (`@quill/`) — An AI agent cannot go on without a choice only the person can make, and there are a few sensible answers. · instead: `radio-group`, `approval-card`
 - `radio-group` — You need the user to choose exactly one option from a short, always-visible list — not collapsed behind a dropdown trigger. · instead: `checkbox`, `select`, `toggle-group`
 - `resizable` — You need a layout region whose split the user can adjust themselves by dragging — a file-tree/editor/preview layout, a resizable sidebar-and-content pane. · instead: `scroll-area`, `tabs`
 - `scroll-area` — You need a scrollable region (a list, a card body) with a consistently styled scrollbar instead of each OS/browser's native chrome, inside an explicit height or width you set. · instead: `pagination`, `resizable`

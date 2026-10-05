@@ -456,6 +456,11 @@ declare module '@/usage/prompt-composer.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/question-card.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/radio-group.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

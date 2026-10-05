@@ -93,6 +93,7 @@ import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as progress } from './progress.usage.mjs'
 import { usage as promptComposer } from './prompt-composer.usage.mjs'
+import { usage as questionCard } from './question-card.usage.mjs'
 import { usage as radioGroup } from './radio-group.usage.mjs'
 import { usage as resizable } from './resizable.usage.mjs'
 import { usage as scrollArea } from './scroll-area.usage.mjs'
@@ -216,6 +217,7 @@ export const ALL_USAGE = [
   profileCard,
   progress,
   promptComposer,
+  questionCard,
   radioGroup,
   resizable,
   scrollArea,

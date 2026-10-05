@@ -1118,6 +1118,27 @@
       "docs": "Asks before an AI agent acts — an inline card that names the action, shows exactly what will happen, lets people edit it in place, and has a main button that says what it does. Do: Give the main button the action's own words: \"Send email\", \"Delete 3 drafts\". Don't: Label it \"Approve\", \"OK\" or \"Yes\" — people should not have to read the title to know what they are agreeing to. Do: Show the real thing: who it goes to, the subject, the text, and one line on the consequence. Don't: Ask for approval of a summary (\"Send the report?\") while hiding what will actually be sent. Do: Keep the buttons stock: solid ink for the action, destructive for anything that deletes or cannot be undone. Don't: Put the AI gradient on the action button — approving has to feel like any other decision. Use alert-dialog when a person started a destructive action themselves and has to confirm it before anything else happens. Use agent-steps when you are showing what the agent is doing, not asking permission for it."
     },
     {
+      "name": "question-card",
+      "type": "registry:ui",
+      "title": "Question card",
+      "description": "An AI agent asks the person to choose — the question, options as full rows with the recommended one first, a free-text row for anything else, and Continue that waits for an answer.",
+      "registryDependencies": [
+        "button",
+        "input",
+        "radio-group",
+        "https://www.quilldesignsystem.com/r/ai-mark.json",
+        "https://www.quilldesignsystem.com/r/tone-badge.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/question-card.tsx",
+          "target": "components/ui/question-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "An AI agent asks the person to choose — the question, options as full rows with the recommended one first, a free-text row for anything else, and Continue that waits for an answer. Do: Give every option a title and one line on what choosing it means. Don't: Offer a row of bare buttons — people cannot weigh options they have to guess at. Do: Pass the agent's pick as recommended so it comes first with the moss tag. Don't: Tag several options as recommended, or bury the recommendation in the middle of the list. Do: Keep the free-text row, and offer Skip when the agent can decide for itself. Don't: Force a choice between options when none of them may fit. Use radio-group when an ordinary form asks the question; no AI agent is waiting on it. Use approval-card when the agent already knows what it wants to do and needs a yes or a no."
+    },
+    {
       "name": "ai-mark",
       "type": "registry:ui",
       "title": "AI mark",
@@ -1677,6 +1698,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/prompt-composer.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/prompt-composer.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/question-card.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/question-card.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/radio-group.md",
