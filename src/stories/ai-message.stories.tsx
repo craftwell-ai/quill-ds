@@ -182,6 +182,42 @@ export const EmptyAnswersCountAsNoAnswer: Story = {
     await expect(canvasElement.querySelector('[data-slot="reply-body"]')).toBeNull()
   },
 }
+// Apps usually show markdown as raw HTML, which is an element with no children.
+export const RawHtmlAnswerIsAnAnswer: Story = {
+  args: { children: <div dangerouslySetInnerHTML={{ __html: '<p>Hello from <strong>markdown</strong></p>' }} /> },
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.getByText('markdown')).toBeVisible()
+    await expect(canvasElement.querySelector('[data-slot="reply-body"]')).not.toBeNull()
+    await expect(canvas.getByRole('button', { name: 'Copy' })).toBeVisible()
+  },
+}
+export const CopyThatFinishesAfterUnmountSetsNoTimer: Story = {
+  render: function Render(args) {
+    const [shown, setShown] = React.useState(true)
+    return (
+      <>
+        {shown ? <AiMessage {...args} /> : null}
+        <button type="button" onClick={() => setShown(false)}>Remove</button>
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    let finishCopy: () => void = () => {}
+    const writeText = fn().mockImplementation(() => new Promise<void>((resolve) => { finishCopy = resolve }))
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    const { copiedTimerIds, stop } = watchCopiedTimers()
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+      await userEvent.click(canvas.getByRole('button', { name: 'Remove' }))
+      finishCopy()
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      // The reply is gone; a timer started now would never be cleared.
+      await expect(copiedTimerIds()).toHaveLength(0)
+    } finally {
+      stop()
+    }
+  },
+}
 export const CaretWaitsForText: Story = {
   render: () => (
     <div className="grid gap-4">

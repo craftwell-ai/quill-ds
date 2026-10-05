@@ -30,7 +30,7 @@ export type AiMessageProps = {
 }
 
 // Elements with no children that still show something.
-const SELF_CLOSING_CONTENT = new Set(['img', 'hr', 'br', 'svg', 'video', 'audio', 'canvas', 'iframe'])
+const SELF_CLOSING_CONTENT = new Set(['img', 'hr', 'br', 'svg', 'video', 'audio', 'canvas', 'iframe', 'input', 'object', 'embed', 'math'])
 
 // Whether the answer shows anything, judged by what it contains rather than how many children there are:
 // '', whitespace, an empty fragment and <p>{''}</p> are all "no answer yet".
@@ -39,10 +39,12 @@ function hasVisibleContent(node: React.ReactNode): boolean {
   if (typeof node === 'string') return node.trim().length > 0
   if (typeof node === 'number') return true
   if (Array.isArray(node)) return node.some(hasVisibleContent)
-  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+  if (React.isValidElement<{ children?: React.ReactNode; dangerouslySetInnerHTML?: { __html?: string } }>(node)) {
     // A component (a Citation chip, say) renders something we cannot see from here, so it counts.
     if (typeof node.type !== 'string' && node.type !== React.Fragment) return true
     if (typeof node.type === 'string' && SELF_CLOSING_CONTENT.has(node.type)) return true
+    // Apps often render markdown as raw HTML, which is an element with no children at all.
+    if (node.props.dangerouslySetInnerHTML?.__html?.trim()) return true
     return hasVisibleContent(node.props.children)
   }
   return true
@@ -63,8 +65,16 @@ export function AiMessage({
   // A stopped reply with no answer has no actions; an empty group would still be announced.
   const hasActions = hasAnswer || Boolean(onRetry) || Boolean(onFeedback)
 
-  // A pending "Copied" reset must not fire after unmount or cut a second copy's two seconds short.
-  React.useEffect(() => () => window.clearTimeout(copiedTimer.current), [])
+  const mounted = React.useRef(false)
+  // The clipboard write is async, so the reply may be gone by the time it finishes: a timer started then would never be cleared.
+  // A pending "Copied" reset must also not cut a second copy's two seconds short.
+  React.useEffect(() => {
+    mounted.current = true
+    return () => {
+      mounted.current = false
+      window.clearTimeout(copiedTimer.current)
+    }
+  }, [])
 
   const vote = (value: 'up' | 'down') => {
     const next = current === value ? null : value
@@ -90,6 +100,7 @@ export function AiMessage({
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(copyText ?? answerText())
+      if (!mounted.current) return
       setCopied(true)
       window.clearTimeout(copiedTimer.current)
       copiedTimer.current = window.setTimeout(() => setCopied(false), 2000)
