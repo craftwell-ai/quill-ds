@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Quill
 
-A self-hosted [shadcn registry](https://ui.shadcn.com/docs/registry) — a token layer, twelve components (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts`, `tone-badge`), and 53 blocks — installed into consumer apps with `npx shadcn add`. Primitives are stock shadcn restyled by the token layer; Quill does not re-ship its own Button or Card. The Next.js app at the repo root is the marketing site and Storybook host.
+A self-hosted [shadcn registry](https://ui.shadcn.com/docs/registry) — a token layer, sixteen components (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts`, `tone-badge`), and 54 blocks — installed into consumer apps with `npx shadcn add`. Primitives are stock shadcn restyled by the token layer; Quill does not re-ship its own Button or Card. The Next.js app at the repo root is the marketing site and Storybook host.
 
 **Before changing anything visual, read `PRODUCT.md` and `DESIGN.md`.** Reuse documented components and tokens. If the system does not cover a design need, ask before inventing a pattern.
 
