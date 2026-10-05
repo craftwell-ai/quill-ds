@@ -125,6 +125,22 @@ export const ScopeChipReadsAsAShape: Story = {
   },
 }
 
+// Small grey text (the reply's name, a source's detail, "You stopped this answer.") can sit anywhere on the wash, so it
+// is measured where the wash is strongest: the very top. WCAG 2.1 AA asks 4.5:1 of text this size.
+export const MutedTextOnTheWashMeetsAA: Story = {
+  ...DESKTOP,
+  play: async ({ canvas }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const muted = panel.querySelector('.text-muted-foreground') as HTMLElement
+    await expect(muted).not.toBeNull()
+    const washed = washedTop(surfaceBehind(muted), muted)
+    const ink = compositeOver(getComputedStyle(muted).color, `rgb(${washed.join(' ')})`)
+    const ratio = contrastRatio(ink, washed)
+    console.log(`ai-side-panel muted text on the wash top ${ratio.toFixed(2)}:1`)
+    await expect(ratio).toBeGreaterThanOrEqual(4.5)
+  },
+}
+
 export const ChipButtonShowsFocusRing: Story = {
   ...DESKTOP,
   play: async ({ canvas }) => {
