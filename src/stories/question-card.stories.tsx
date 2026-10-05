@@ -10,6 +10,8 @@ import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
 import { tabTo } from './focus-ring'
 
 const QUESTION = 'Who should get the September report?'
+// The field is named by the question and the free-text option it belongs to.
+const FIELD_NAME = `${QUESTION}: Someone else`
 // The recommended option is second here on purpose: the card must move it to the top.
 const OPTIONS: QuestionOption[] = [
   { value: 'leadership', label: 'Leadership', description: '3 people. Shorter version, numbers only.' },
@@ -66,8 +68,9 @@ export const FreeTextRow: Story = {
     const go = canvas.getByRole('button', { name: 'Continue' })
     await expect(canvas.queryByRole('textbox')).toBeNull()
     await userEvent.click(canvas.getByText('Someone else'))
-    const field = canvas.getByRole('textbox', { name: QUESTION })
+    const field = canvas.getByRole('textbox', { name: FIELD_NAME })
     await expect(field).toHaveAttribute('placeholder', 'e.g. Priya and the pricing team')
+    await expect(field).toHaveAccessibleDescription('Tell the agent who.')
     await expect(go).toBeDisabled()
     // Spaces are not an answer.
     await userEvent.type(field, '   ')
@@ -78,7 +81,7 @@ export const FreeTextRow: Story = {
     await userEvent.click(canvas.getByText('Leadership'))
     await expect(canvas.queryByRole('textbox')).toBeNull()
     await userEvent.click(canvas.getByText('Someone else'))
-    await expect(canvas.getByRole('textbox', { name: QUESTION })).toHaveValue('   Priya')
+    await expect(canvas.getByRole('textbox', { name: FIELD_NAME })).toHaveValue('   Priya')
     await userEvent.click(go)
     await expect(args.onContinue).toHaveBeenCalledWith({ value: OTHER_ANSWER, text: 'Priya' })
   },
@@ -87,7 +90,7 @@ export const FreeTextRow: Story = {
 export const EnterInTheFieldContinues: Story = {
   play: async ({ canvas, args }) => {
     await userEvent.click(canvas.getByText('Someone else'))
-    const field = canvas.getByRole('textbox', { name: QUESTION })
+    const field = canvas.getByRole('textbox', { name: FIELD_NAME })
     await userEvent.click(field)
     await userEvent.keyboard('{Enter}')
     await expect(args.onContinue).not.toHaveBeenCalled()
@@ -107,13 +110,66 @@ export const ArrowKeysChoose: Story = {
     await expect(radios[2]).toHaveFocus()
     await expect(radios[2]).toHaveAttribute('aria-checked', 'true')
     // The field appeared but did not steal the cursor, so the arrows still work.
-    await expect(canvas.getByRole('textbox', { name: QUESTION })).not.toHaveFocus()
+    await expect(canvas.getByRole('textbox', { name: FIELD_NAME })).not.toHaveFocus()
     await userEvent.keyboard('{ArrowUp}')
     await expect(radios[1]).toHaveFocus()
     await expect(radios[1]).toHaveAttribute('aria-checked', 'true')
     // The group is one Tab stop: Tab leaves it for the next control.
     await userEvent.tab()
     await expect(canvas.getByRole('button', { name: 'Continue' })).toHaveFocus()
+  },
+}
+
+// In the field the arrow keys belong to the caret: at either end of the text they must not jump to another option.
+export const ArrowKeysStayInTheField: Story = {
+  play: async ({ canvas }) => {
+    const other = canvas.getAllByRole('radio')[2]
+    await userEvent.click(canvas.getByText('Someone else'))
+    const field = canvas.getByRole('textbox', { name: FIELD_NAME })
+    await tabTo(field)
+    // Empty field: the caret is at both ends at once.
+    await userEvent.keyboard('{ArrowDown}{ArrowUp}')
+    await expect(canvas.getByRole('textbox', { name: FIELD_NAME })).toBe(field)
+    await expect(field).toHaveFocus()
+    await expect(other).toHaveAttribute('aria-checked', 'true')
+    await userEvent.keyboard('Priya{ArrowRight}{ArrowDown}')
+    await expect(field).toHaveFocus()
+    await expect(other).toHaveAttribute('aria-checked', 'true')
+    await userEvent.keyboard('{Home}{ArrowLeft}{ArrowUp}')
+    await expect(canvas.getByRole('textbox', { name: FIELD_NAME })).toBe(field)
+    await expect(field).toHaveFocus()
+    await expect(other).toHaveAttribute('aria-checked', 'true')
+    await expect(field).toHaveValue('Priya')
+  },
+}
+
+// From the chosen free-text radio, Tab goes into its field and Shift+Tab comes back.
+export const TabMovesBetweenRadioAndField: Story = {
+  play: async ({ canvas }) => {
+    const radios = canvas.getAllByRole('radio')
+    const other = radios[2]
+    // Chosen by keyboard, as the person this test is about would: arrows from the first radio.
+    await tabTo(radios[0])
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}')
+    await expect(other).toHaveFocus()
+    await expect(other).toHaveAttribute('aria-checked', 'true')
+    await userEvent.tab()
+    await expect(canvas.getByRole('textbox', { name: FIELD_NAME })).toHaveFocus()
+    await userEvent.tab({ shift: true })
+    await expect(other).toHaveFocus()
+  },
+}
+
+// Safari confirms an input-method word with Enter, isComposing false and keyCode 229: that is not "continue".
+export const IgnoresEnterKeyCode229: Story = {
+  play: async ({ canvas, args }) => {
+    await userEvent.click(canvas.getByText('Someone else'))
+    const field = canvas.getByRole('textbox', { name: FIELD_NAME })
+    await userEvent.type(field, 'ni')
+    const evt = new KeyboardEvent('keydown', { key: 'Enter', keyCode: 229, bubbles: true })
+    if (evt.keyCode !== 229) Object.defineProperty(evt, 'keyCode', { get: () => 229 })
+    field.dispatchEvent(evt)
+    await expect(args.onContinue).not.toHaveBeenCalled()
   },
 }
 

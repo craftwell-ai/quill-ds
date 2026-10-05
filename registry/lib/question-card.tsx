@@ -118,10 +118,11 @@ export function QuestionCard({
           const tagId = `${baseId}-tag-${index}`
           const lineId = `${baseId}-line-${index}`
           return (
-            // The whole row is the target. A press on the radio (or on the hidden input it presses) is left to the
-            // radio group, so one press never reports two changes; a press in the field is typing, not choosing.
+            // The whole row is the target. A press on the radio is left to the radio group (it clicks its own hidden
+            // input, whose click does not reach this row), so one press never reports two changes. A press in the
+            // field reaches the row but the row is already chosen, so choose() does nothing.
             <div key={option.value} data-slot="question-option"
-              onClick={(event) => { if (!(event.target as HTMLElement).closest('[role="radio"], input')) choose(option.value) }}
+              onClick={(event) => { if (!(event.target as HTMLElement).closest('[role="radio"]')) choose(option.value) }}
               className={cn(
                 'grid grid-cols-[1rem_minmax(0,1fr)] items-start gap-x-2.5 rounded-lg border bg-background px-3 py-2.5',
                 // border-input, not the divider line: an option row is a control and must read as a shape in the dark themes.
@@ -141,14 +142,21 @@ export function QuestionCard({
                 {option.description ? <span id={lineId} className="text-xs break-words text-muted-foreground">{option.description}</span> : null}
                 {option.value === OTHER_ANSWER && selected ? (
                   <Input
-                    aria-label={question}
+                    aria-label={`${question}: ${option.label}`}
+                    aria-describedby={option.description ? lineId : undefined}
                     placeholder={otherPlaceholder}
                     value={text}
                     disabled={locked}
                     className="mt-1.5 bg-background"
                     onChange={(event) => { lastText.current = event.target.value; change({ value: OTHER_ANSWER, text: event.target.value }) }}
-                    // Enter that only confirms a word in an input method (Japanese, Chinese, Korean) is not "continue".
-                    onKeyDown={(event) => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) submit() }}
+                    onKeyDown={(event) => {
+                      // The radio group listens for arrow keys on everything inside it, and with the caret at either end
+                      // of the text it would move to (and choose) another option. In the field, arrows move the caret.
+                      if (event.key.startsWith('Arrow')) { event.stopPropagation(); return }
+                      // Enter that only confirms a word in an input method (Japanese, Chinese, Korean) is not "continue".
+                      // Chrome marks it isComposing; Safari sends it just after, as keyCode 229.
+                      if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) submit()
+                    }}
                   />
                 ) : null}
               </span>

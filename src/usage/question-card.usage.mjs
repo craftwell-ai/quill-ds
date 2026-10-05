@@ -30,7 +30,7 @@ export const usage = {
   a11y: [
     'The card is a group named by the question. The options are a radio group named by the question: one Tab stop, arrow keys move between options and choose.',
     'Each radio is named by its title (the recommended one adds "Recommended") and described by its one line.',
-    'Choosing the free-text row shows its field, named by the question; the cursor stays on the radio so the arrow keys keep working, and Tab moves into the field.',
+    'Choosing the free-text row shows its field, named by the question and that option ("Who should get it?: Someone else") and described by that option\'s line; the cursor stays on the radio so the arrow keys keep working, and Tab moves into the field. In the field, arrow keys move the caret and never change the choice; Shift+Tab goes back to the radio.',
     'Continue is disabled until there is an answer. Enter in the field continues.',
     'The outcome line appears inside a status region that is already on the page, so it is announced; while empty the region is a real box that takes no space.',
     'When the outcome arrives, the buttons go away; if the cursor was in the card, it moves to the outcome line so the person keeps their place, and it stays where it was if it was elsewhere on the page.',
