@@ -14,7 +14,7 @@ export type AiMessageProps = {
   name?: string
   /** Hides the name from view when something nearby already says who is answering (a panel titled "Assistant"). Screen readers still read it. */
   hideName?: boolean
-  /** An AiThinking above the answer. */
+  /** An AiThinking above the answer. Leave it out when there is none: with hideName, a component passed here that renders nothing still counts as the first row beside the avatar. */
   thinking?: React.ReactNode
   /** A Sources list under the answer. */
   sources?: React.ReactNode

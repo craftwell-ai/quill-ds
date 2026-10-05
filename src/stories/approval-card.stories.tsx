@@ -183,8 +183,10 @@ export const RepeatedDetailLabels: Story = {
   },
 }
 
-// The card adds the colon, so every app gets the same labels; a label that already ends in punctuation is left as
-// it is (no "Subject::"), and an empty label does not become a lone colon.
+// The card adds the colon, so every app gets the same labels. Only a label that already ends in a colon or a
+// question mark (in any script) is left as it is: no "Subject::", no "Send a copy?:". An abbreviation's full stop is
+// not the end of a label, so "Qty." gets its colon like its neighbours. An empty label does not become a lone colon,
+// and a label that is not text (a plain-JS app can pass a node) is drawn as given.
 export const DetailLabelsEndWithOneColon: Story = {
   args: {
     details: [
@@ -193,12 +195,17 @@ export const DetailLabelsEndWithOneColon: Story = {
       { label: 'Amount: ', value: '$240.00' },
       { label: 'Send a copy to you?', value: 'Yes' },
       { label: 'Total：', value: '¥2,400' },
+      { label: 'Qty.', value: '3' },
+      { label: 'Acct. No.', value: '0042' },
+      { label: '送りますか？', value: 'はい' },
+      { label: 'هل ترسل؟', value: 'نعم' },
       { label: '', value: 'A value with no label' },
+      { label: <em>Via</em> as unknown as string, value: 'Email' },
     ],
   },
   play: async ({ canvasElement }) => {
     const labels = Array.from(canvasElement.querySelectorAll('dt')).map((term) => term.textContent)
-    await expect(labels).toEqual(['To:', 'Subject:', 'Amount:', 'Send a copy to you?', 'Total：', ''])
+    await expect(labels).toEqual(['To:', 'Subject:', 'Amount:', 'Send a copy to you?', 'Total：', 'Qty.:', 'Acct. No.:', '送りますか？', 'هل ترسل؟', '', 'Via'])
   },
 }
 
@@ -210,7 +217,7 @@ export const DetailLabelsEndWithOneColon: Story = {
 //   Dawn 1.08:1 · 1.25:1    Dusk 1.10:1 · 1.33:1    Classic Light 1.07:1 · 1.29:1
 //   Classic Dark 1.11:1 · 1.37:1    Intelligent 1.09:1 · 1.31:1
 // (Until 0.19.0 the tile wore the control line and this test held it to 3:1; that floor now belongs to controls only.)
-export const ProposalReadsAsAShape: Story = {
+export const ProposalTakesTheDividerLine: Story = {
   play: async ({ canvasElement }) => {
     const tile = canvasElement.querySelector('[data-slot="proposal"]') as HTMLElement
     const surface = surfaceBehind(tile)

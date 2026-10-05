@@ -217,7 +217,7 @@ export const EmptySuggestion: Story = {
 //   Dawn 1.18:1 · 1.25:1    Dusk 1.41:1 · 1.34:1    Classic Light 1.19:1 · 1.28:1
 //   Classic Dark 1.36:1 · 1.45:1    Intelligent 1.33:1 · 1.34:1
 // (Until 0.19.0 the tile wore the control line and this test held it to 2:1 on the wash; that floor now belongs to controls only.)
-export const SuggestionReadsAsAShape: Story = {
+export const SuggestionTakesTheDividerLine: Story = {
   play: async ({ canvas }) => {
     const dialog = await openFrom(canvas)
     const tile = dialog.querySelector('[data-slot="suggestion"]') as HTMLElement

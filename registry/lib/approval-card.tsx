@@ -10,10 +10,13 @@ import { cn } from '@/lib/utils'
 export type ApprovalDetail = { label: string; value: React.ReactNode }
 
 // The card ends each label with a colon so every app's rows read the same ("To:", "Subject:"). A label that already
-// ends in punctuation is left alone (no "Subject::", no "Send a copy?:"), and an empty one stays empty.
-const withColon = (label: string) => {
+// ends in a colon or a question mark, in any script, is left alone (no "Subject::", no "Send a copy?:"); a full stop
+// is not one of them, because it usually closes an abbreviation ("Qty."). An empty label stays empty, and a label
+// that is not text (a plain-JS app can pass a node) is drawn as given.
+const withColon = (label: React.ReactNode) => {
+  if (typeof label !== 'string') return label
   const trimmed = label.trim()
-  return trimmed === '' || /[:：;.,!?…]$/.test(trimmed) ? trimmed : `${trimmed}:`
+  return trimmed === '' || /[:：?？؟]$/.test(trimmed) ? trimmed : `${trimmed}:`
 }
 
 export type ApprovalCardProps = {

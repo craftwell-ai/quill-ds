@@ -28,6 +28,11 @@ export const Default: Story = {
   play: async ({ canvas, args }) => {
     await expect(canvas.getByRole('navigation', { name: 'Chats' })).toBeVisible()
     await expect(canvas.getByRole('region', { name: 'Conversation' })).toHaveTextContent('4% ahead')
+    // On the full chat page nothing else says who is answering, so the reply keeps its visible name.
+    const name = canvas.getByRole('log', { name: 'Messages' }).querySelector('[data-slot="reply-name"]') as HTMLElement
+    await expect(name).toHaveTextContent('Assistant')
+    await expect(name.getBoundingClientRect().height).toBe(28)
+    await expect(name).toBeVisible()
     await expect(canvas.getByRole('button', { name: 'Q3 deck, source: Q3 board deck.pdf' })).toBeVisible()
     await userEvent.click(canvas.getByRole('button', { name: 'Compare with Q2' }))
     const box = canvas.getByRole('textbox', { name: 'Message' })

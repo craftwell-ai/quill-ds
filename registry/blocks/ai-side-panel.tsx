@@ -20,6 +20,9 @@ type Turn = { id: number; ask: string; reply: 'working' | 'stopped' }
 // its own shows a single close (the chip's). The Sheet's Close reuses this.
 const closeIcon = (size?: number) => <Icon name="close" size={size} />
 
+// The thread has to move this many px before the fade appears: its top padding. Less than that and nothing has gone
+// under the header yet, so a trackpad nudge would only fade the scope chip where it sits.
+const THREAD_FADE_AFTER = 4
 
 export type AiPanelProps = {
   title?: string
@@ -50,7 +53,7 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
   const composerRef = givenComposerRef ?? ownComposerRef
   const scrollerRef = React.useRef<HTMLDivElement>(null)
   const working = turns.at(-1)?.reply === 'working'
-  // Whether anything is scrolled above the top of the thread: only then is there something to fade under the header.
+  // Whether a message has been scrolled under the header: only then is there something to fade.
   const [scrolled, setScrolled] = React.useState(false)
 
   // A new turn is added at the bottom of a thread that may already be scrolled; keep the newest in view.
@@ -80,9 +83,11 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
           keeps the top reachable when the thread grows past the panel and scrolls. */}
       {/* Messages scrolled under the header fade out through a mask: it has no colour of its own, so the wash shows
           through in every theme, and it is not an element, so it takes no presses. The fade is as deep as a reply's
-          avatar. scroll-pt keeps a control reached by keyboard below it, where its focus ring is drawn in full. */}
-      <div ref={scrollerRef} data-slot="thread" onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 0)}
-        className={cn('flex min-h-0 scroll-pt-8 flex-col overflow-y-auto px-3.5 pt-1 pb-2.5', scrolled && '[mask-image:linear-gradient(to_bottom,transparent,black_1.75rem)]')}>
+          avatar. scroll-pt keeps a control reached by keyboard below it, where its focus ring is drawn in full.
+          relative: kit pieces placed in the thread keep absolutely positioned boxes for screen readers, which must
+          take their place from the thread to scroll with it instead of hanging below the panel. */}
+      <div ref={scrollerRef} data-slot="thread" onScroll={(event) => setScrolled(event.currentTarget.scrollTop > THREAD_FADE_AFTER)}
+        className={cn('relative flex min-h-0 scroll-pt-8 flex-col overflow-y-auto px-3.5 pt-1 pb-2.5', scrolled && '[mask-image:linear-gradient(to_bottom,transparent,black_1.75rem)]')}>
         <div className="mt-auto grid min-w-0 gap-3">
           {currentScope ? (
             // border-input, not the divider line: the chip has to read as a shape on the wash in the dark themes.

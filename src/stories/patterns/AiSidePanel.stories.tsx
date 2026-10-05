@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import * as React from 'react'
+import { createPortal } from 'react-dom'
 import { expect, fn, spyOn, userEvent, waitFor, within } from 'storybook/test'
 import { AiPanel, AiSidePanel } from '@registry/blocks/ai-side-panel'
 import { AiButton } from '@/components/ui/ai-button'
 import { Button } from '@/components/ui/button'
+import { ApprovalCard } from '@/components/ui/approval-card'
+import { AgentSteps } from '@/components/ui/agent-steps'
 import { usage } from '@/usage/ai-side-panel.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind, washedTop } from '../contrast'
@@ -281,6 +284,13 @@ export const LongThreadScrolls: Story = {
     // Back at the very top there is nothing above to fade, and the first thing in the thread is drawn in full.
     scroller.scrollTop = 0
     await waitFor(() => expect(fadeOf(scroller)).toBe('none'))
+    // A nudge that only moves the thread's own 4px of top padding fades nothing: no message is under the header yet.
+    scroller.scrollTop = 4
+    await new Promise((resolve) => window.setTimeout(resolve, 100))
+    await expect(scroller.scrollTop).toBe(4)
+    await expect(fadeOf(scroller)).toBe('none')
+    scroller.scrollTop = 5
+    await waitFor(() => expect(fadeOf(scroller)).toContain('gradient'))
     scroller.scrollTop = scroller.scrollHeight
     await waitFor(() => expect(fadeOf(scroller)).toMatch(/28px\)$/))
     // A control reached by keyboard is scrolled clear of the fade, so its focus ring is never drawn half-faded.
@@ -321,6 +331,55 @@ export const LongThreadScrolls: Story = {
     await userEvent.click(box)
     scroller.scrollTop = scroller.scrollHeight
     await waitFor(() => expect(scroller.scrollTop + scroller.clientHeight).toBeGreaterThanOrEqual(scroller.scrollHeight - 2))
+  },
+}
+
+// The block's thread is sample content an app replaces in its own copy, often with other kit pieces. Those carry
+// boxes kept for screen readers that are absolutely positioned; the thread is their positioned ancestor, so they
+// scroll with it. Left to the page, they would sit at their unscrolled places below the panel and make the page scroll.
+// The pieces are put into the real thread through a portal, the nearest a story can get to an edited copy.
+function KitPiecesInTheThread() {
+  const [log, setLog] = React.useState<Element | null>(null)
+  const anchor = React.useRef<HTMLSpanElement>(null)
+  React.useEffect(() => { setLog(anchor.current?.parentElement?.querySelector('[role="log"]') ?? null) }, [])
+  return (
+    <>
+      <span ref={anchor} hidden />
+      {log ? createPortal(
+        <>
+          {[1, 2, 3].map((draft) => (
+            <ApprovalCard key={draft} title={`The agent wants to publish draft ${draft}`} details={[{ label: 'Page', value: 'Pricing' }]}
+              defaultBody="Annual plans move back under monthly ones, as they were before 9 September." actionLabel="Publish" onApprove={() => {}} onDeny={() => {}} />
+          ))}
+          <AgentSteps title="Fixing the pricing page" steps={[{ label: 'Read the page', status: 'done' }, { label: 'Draft the change', status: 'running' }, { label: 'Check the links', status: 'waiting' }]} />
+        </>,
+        log,
+      ) : null}
+    </>
+  )
+}
+
+export const ThreadHoldsOtherKitPieces: Story = {
+  ...DESKTOP,
+  parameters: { ...DESKTOP.parameters, docs: { description: { story: 'Other kit pieces in the thread scroll with it, including the text they keep for screen readers.' } } },
+  render: (args, { viewMode }) => (
+    <>
+      <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory}
+        className={`${fitHeight(viewMode, 'h-[28rem]', 'h-[min(28rem,calc(100dvh-3rem))]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />
+      <KitPiecesInTheThread />
+    </>
+  ),
+  play: async ({ canvas }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const thread = threadOf(panel)
+    await waitFor(() => expect(within(thread).getAllByRole('button', { name: 'Publish' })).toHaveLength(3))
+    await expect(within(thread).getByText('Fixing the pricing page')).toBeInTheDocument()
+    // Far more than the window holds, so anything left at its unscrolled place would hang below the window.
+    await expect(thread.scrollHeight).toBeGreaterThan(window.innerHeight)
+    thread.scrollTop = thread.scrollHeight
+    await waitFor(() => expect(fadeOf(thread)).toContain('gradient'))
+    await expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
   },
 }
 
