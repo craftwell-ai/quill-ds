@@ -17,7 +17,7 @@ footer reads `package.json` directly, so the displayed version updates with the 
 
 ### Fixed
 - **Matching focus rings on the AI pieces' plain buttons and links.** The `ai-notice` link, the `ai-thinking` toggle, citation chips, the Sources pill and its links, the suggested-prompt chips, cards and rows, and the `ai-chat` sidebar links fell back to the browser's default outline. They now show the stock Button's ring; the ones with a visible border also colour it. List rows and plain links keep their border as it was.
-- **Replies and the working state are announced to screen readers.** The `ai-chat` thread is a `role="log"` named "Messages" inside the existing "Conversation" region. `ai-thinking` keeps one status region on the page in both states, so the working text is announced and a finished reply restored from history is not. `ai-message`'s "You stopped this answer." lands in a status region that was already there. The three usage accessibility sections were corrected to match.
+- **Replies and the working state are announced to screen readers.** The `ai-chat` thread is a `role="log"` named "Messages" inside the existing "Conversation" region. `ai-thinking` keeps one status region on the page in both states: it paints empty, is filled a moment after mount and follows the activity as it changes, while the visible label is hidden from screen readers so nothing is read twice; a finished reply restored from history is not announced. `ai-message`'s "You stopped this answer." lands in a status region that was already there. Both regions are real boxes that take no space. The three usage accessibility sections were corrected to match.
 - **Small hardening of the AI pieces.**
   - `model-picker` renders nothing when it has no Auto option and no models.
   - Suggested prompts with the same label no longer share a key.
@@ -25,9 +25,14 @@ footer reads `package.json` directly, so the displayed version updates with the 
   - An answer that is empty (`''`, whitespace, an empty fragment or an empty paragraph) counts as no answer: no caret, no Copy, no empty body.
   - A thinking time that is not a number, is infinite or is negative no longer prints nonsense: `ai-thinking` reads "Thought it through", and the `formatThoughtFor` helper returns "1 s", the shortest it says.
   - A web source with no detail and no link reads "Web page".
+  - An answer given as raw HTML (`dangerouslySetInnerHTML`) counts as an answer, as do `input`, `object`, `embed` and `math` elements.
+  - The answer body now carries `data-slot="reply-body"`.
+  - Copy does nothing if the reply unmounted while the clipboard write was pending.
+  - The focus rings use `outline-hidden`, so a visible outline remains in Windows High Contrast (forced-colors) mode.
 - **Figma: the model picker menu's parity record matches the file again.** The menu twin's "New" badge became a live Tone badge instance, but the record still named the old text layer, so the daily Figma parity check reported a removed text. The record was re-read from the file; nothing in Figma or in code changed.
 
 ### Changed
+- **Visual baseline refreshed.** Re-stamping the baseline moved every pair's date and `pricing` from 3.63 to 3.67.
 - **Figma: `ai-home` and `ai-chat` have visual baselines** (0.72 % and 1.59 %, from a CI run of 52 pairs with 0 regressions). `figma/README.md` now says so in place of the two "pending" notes.
 
 ### Removed
