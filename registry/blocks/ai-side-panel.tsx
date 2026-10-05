@@ -31,12 +31,14 @@ export type AiPanelProps = {
   onHistory?: () => void
   /** A close control for the header. AiSidePanel passes the Sheet's own. */
   close?: React.ReactNode
+  /** The message box, for a wrapper that sends focus there. AiSidePanel passes its own, to open with the cursor in the box. */
+  composerRef?: React.RefObject<HTMLTextAreaElement | null>
   onSubmit?: (value: string) => void
   className?: string
 }
 
 /** The assistant panel on its own (header, scope chip, thread and composer on one AI wash), for a layout that gives it its own column. */
-export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, close, onSubmit = () => {}, className }: AiPanelProps) {
+export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, close, composerRef: givenComposerRef, onSubmit = () => {}, className }: AiPanelProps) {
   const titleId = React.useId()
   const [ownScope, setOwnScope] = React.useState<string | null>('Q3 report')
   const currentScope = scope === undefined ? ownScope : scope
@@ -44,7 +46,8 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
   const removable = scope === undefined || Boolean(onScopeRemove)
   const [value, setValue] = React.useState('')
   const [turns, setTurns] = React.useState<Turn[]>([])
-  const composerRef = React.useRef<HTMLTextAreaElement>(null)
+  const ownComposerRef = React.useRef<HTMLTextAreaElement>(null)
+  const composerRef = givenComposerRef ?? ownComposerRef
   const scrollerRef = React.useRef<HTMLDivElement>(null)
   const working = turns.at(-1)?.reply === 'working'
   // Whether anything is scrolled above the top of the thread: only then is there something to fade under the header.
@@ -137,7 +140,7 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
   )
 }
 
-export type AiSidePanelProps = Omit<AiPanelProps, 'close' | 'className'> & {
+export type AiSidePanelProps = Omit<AiPanelProps, 'close' | 'className' | 'composerRef'> & {
   /** Controlled when passed; leave it out to let the panel keep its own. */
   open?: boolean
   defaultOpen?: boolean
@@ -156,16 +159,24 @@ export function AiSidePanel({ open, defaultOpen = false, onOpenChange, trigger, 
     if (open === undefined) setOwnOpen(next)
     onOpenChange?.(next)
   }
+  const composerRef = React.useRef<HTMLTextAreaElement>(null)
+  const sheetRef = React.useRef<HTMLDivElement>(null)
   return (
     <Sheet open={isOpen} onOpenChange={(next) => setOpen(next)}>
       {trigger ? <SheetTrigger render={trigger} /> : null}
       {/* The panel's header holds the one Close, so the Sheet's corner button is off. gap-0 and p-0 hand the whole
           sheet to the panel, so its wash runs edge to edge. w-full replaces the stock three-quarter width, so on a
-          phone the panel takes the whole screen; from sm up the stock max-w-sm still caps it at the same 24rem. */}
-      <SheetContent side={side} showCloseButton={false} aria-label={title} className={cn('gap-0 p-0 data-[side=left]:w-full data-[side=right]:w-full', className)}>
+          phone the panel takes the whole screen; from sm up the stock max-w-sm still caps it at the same 24rem.
+          People open the assistant to ask it something, so focus starts in the message box, not on the header's first
+          button. Opened by touch, focus goes to the panel itself, as the Sheet does on its own: focusing a text box
+          there would throw the on-screen keyboard over half the panel before anything has been read. */}
+      <SheetContent ref={sheetRef} side={side} showCloseButton={false} aria-label={title}
+        initialFocus={(openedBy) => (openedBy === 'touch' ? sheetRef.current : composerRef.current)}
+        className={cn('gap-0 p-0 data-[side=left]:w-full data-[side=right]:w-full', className)}>
         <AiPanel
           {...panel}
           title={title}
+          composerRef={composerRef}
           className="min-h-0 flex-1"
           close={(
             <SheetClose render={<Button type="button" variant="ghost" size="icon-sm" />}>

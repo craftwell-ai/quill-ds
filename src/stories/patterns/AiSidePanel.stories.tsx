@@ -5,7 +5,7 @@ import { AiButton } from '@/components/ui/ai-button'
 import { usage } from '@/usage/ai-side-panel.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind, washedTop } from '../contrast'
-import { expectFocusRing } from '../focus-ring'
+import { expectFocusRing, tabTo } from '../focus-ring'
 
 // In the canvas the panel gives way to a window shorter than itself, keeping the wrapper's 24px margin (3rem both sides);
 // on the Docs page the window is the whole long page, so it keeps its full height. The story is tagged `framed` so the
@@ -351,6 +351,34 @@ export const InASheet: Story = {
   },
 }
 
+// People open the assistant to ask it something, so the cursor is in the message box, not on History (the first
+// button, where the Sheet would put it). Closing still hands focus back to whatever opened the panel.
+export const OpensWithTheCursorInTheMessageBox: Story = {
+  ...DESKTOP,
+  render: inSheet,
+  play: async ({ canvas }) => {
+    const page = within(document.body)
+    const trigger = canvas.getByRole('button', { name: 'Ask the assistant' })
+    await tabTo(trigger)
+    await userEvent.keyboard('{Enter}')
+    let dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole('textbox', { name: 'Message' })))
+    // Typing goes straight into the box.
+    await userEvent.keyboard('Why the dip?')
+    await expect(within(dialog).getByRole('textbox', { name: 'Message' })).toHaveValue('Why the dip?')
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
+    await waitFor(() => expect(trigger).toHaveFocus())
+    // Opened with the mouse, the same.
+    await userEvent.click(trigger)
+    dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole('textbox', { name: 'Message' })))
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
+    await waitFor(() => expect(trigger).toHaveFocus())
+  },
+}
+
 // On a phone the stock Sheet leaves a quarter of the screen to the page behind it. The assistant takes the whole width:
 // a 280px column is too narrow for a conversation, and the strip beside it is too thin to be useful.
 export const Phone: Story = {
@@ -359,9 +387,13 @@ export const Phone: Story = {
   render: inSheet,
   play: async ({ canvas }) => {
     await waitFor(() => expect(window.innerWidth).toBe(375))
-    await userEvent.click(canvas.getByRole('button', { name: 'Ask the assistant' }))
+    // A finger, not a mouse: this is how the panel is opened on a phone.
+    await userEvent.pointer({ keys: '[TouchA]', target: canvas.getByRole('button', { name: 'Ask the assistant' }) })
     const page = within(document.body)
     const dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    // Opened by touch, focus goes to the panel itself, not into the message box: that would throw the on-screen
+    // keyboard over half the panel before anything has been read.
+    await waitFor(() => expect(document.activeElement).toBe(dialog))
     // Edge to edge once it has slid in.
     await waitFor(() => expect(dialog.getBoundingClientRect().right).toBe(375))
     await expect(dialog.getBoundingClientRect().left).toBe(0)
