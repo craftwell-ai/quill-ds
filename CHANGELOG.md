@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.18.2] — 2026-10-05
+
+### Changed
+- **The homepage masthead shows the version.** "The Quill design system · Issue 001" now reads "The Quill design system · Version 0.18". The number comes from `package.json` (major.minor), so it follows each release; the footer still carries the full version.
+
 ## [0.18.1] — 2026-10-05
 
 ### Fixed
