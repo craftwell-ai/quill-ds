@@ -18,8 +18,8 @@ the text between the markers; the same renderer feeds llms.txt.
 - `registry/themes/quill.css` — the shipped token layer an app installs (it lands
   as `app/quill-theme.css`); `src/app/globals.css` is the site's cut of the same
   source.
-- `registry/blocks` and `registry/lib` — the 53 blocks and the twelve shipped
-  components (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts`, `tone-badge`).
+- `registry/blocks` and `registry/lib` — the 54 blocks and the sixteen shipped
+  components (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts`, `tone-badge`).
 - `src/components/ui` — the stock shadcn primitives the token layer restyles
   (apps install these from shadcn, not from Quill).
 - `public/usage` — one usage page per component and block, generated from
@@ -367,11 +367,12 @@ border for `ring`.
 Primitives are **stock shadcn** (Base UI + Tailwind) restyled by the token layer —
 Quill does not re-ship its own Button, Card or Input. Apps install them with
 `npx shadcn@latest add button …`; the site's copies live in `src/components/ui`
-and are what the entries below describe. Quill ships twelve components of its own
+and are what the entries below describe. Quill ships sixteen components of its own
 through the registry — `icon` (`registry/lib/icon.tsx`), `tone-badge`
-(`registry/lib/tone-badge.tsx`), and the AI kit (`ai-badge`, `ai-button`,
-`ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`,
-`model-picker`, `prompt-composer`, `suggested-prompts`) — plus 53 blocks under `registry/blocks`. The
+(`registry/lib/tone-badge.tsx`), and the AI kit (`agent-steps`, `ai-badge`,
+`ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`,
+`approval-card`, `citations`, `model-picker`, `prompt-composer`, `question-card`,
+`suggested-prompts`) — plus 54 blocks under `registry/blocks`. The
 per-component rules live in `public/usage` (one page per name), written once in
 `src/usage`.
 
@@ -504,7 +505,7 @@ Three principles name the point of view; the rules underneath are how they show 
 ### Rules
 - **Author against semantic tokens** — `--paper`, `--ink`, `--card`, `--primary`, `--ring` and the rest; never the per-theme `dk-*` / `cl-*` / `cd-*` / `int-*` sets and never a raw hex. That is what makes every theme free.
 - **Ink for actions, accent for meaning** — primary actions are ink (`--primary`). The accent pigment (moss by default; `--accent-pigment-text` for text, `--link`, `--ring`) is reserved for the one accent word, eyebrows, links and the focus ring. Terracotta is the danger pigment: never a hover colour, and a focus ring only when it is the chosen accent.
-- **Reach for a block before building one** — the registry ships 53 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands. When no block or primitive fits, compose from primitives and semantic tokens within these rules and name the gap, rather than inventing a new pattern.
+- **Reach for a block before building one** — the registry ships 54 composable blocks (activity feed, empty state, page header, theme selector, data table…). A hand-built copy drifts from the AA-checked tokens the moment it lands. When no block or primitive fits, compose from primitives and semantic tokens within these rules and name the gap, rather than inventing a new pattern.
 - **Made for people** — WCAG 2.1 AA is a feature, not a checkbox: text cuts clear 4.5:1 on every theme ground, interactive borders clear 3:1, charts use the CVD-safe chart tokens in fixed order, motion has a reduced-motion path.
 - **Content** — sentence case everywhere (uppercase only for eyebrows); state the decision, then the reason; no hype punctuation, no emoji.
 
@@ -513,7 +514,7 @@ Three principles name the point of view; the rules underneath are how they show 
 
 **Don't** — pure white or pure black in Dawn and Dusk (the Classic themes use them by design); a hand-set focus colour (`--ring` belongs to the accent axis); terracotta on hover; blue-purple gradients; any gradient except the AI gradient in its six placements; glassmorphism or purple-glow dark mode; emoji; heavy or bold Fraunces; tight body leading; bouncy or looping motion.
 
-**The AI gradient** is the only gradient Quill ships and means one thing: AI. Ember (gold → terracotta → indigo), fixed across accents, via the `ai-*` utilities only. Six placements: the AI mark; the composer's edge; a top-to-bottom wash on an AI panel; motion while AI works; one soft glow on an AI home page; gradient text on an AI feature's heading. Never on answer text; Accept, Replace or Send; charts; status colours; anything not AI. One of `ai-edge` / `ai-edge-working` per element (same background); the edge fills with `--background`, so use it on page-background surfaces.
+**The AI gradient** is the only gradient Quill ships and means one thing: AI. Ember (gold → terracotta → indigo), fixed across accents, via the `ai-*` utilities only. Six placements: the AI mark; the composer's edge; a top-to-bottom wash on an AI panel or popover; motion while AI works; one soft glow on an AI home page; gradient text on an AI feature's heading. Never on answer text; Accept, Replace or Send; charts; status colours; anything not AI. One of `ai-edge` / `ai-edge-working` per element (same background); the edge fills with `--background`, so use it on page-background surfaces.
 
 ### Anti-references
 - The generic SaaS/shadcn default look: white cards, blue accents, hero-metric rows, identical card grids.

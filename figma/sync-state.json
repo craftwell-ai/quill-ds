@@ -2033,6 +2033,268 @@
       "code": {
         "classes": "className=\"w-72\""
       }
+    },
+    {
+      "name": "AgentSteps",
+      "nodeId": "1172:151",
+      "codeFile": "registry/lib/agent-steps.tsx",
+      "lastSynced": "2026-10-05",
+      "figma": {
+        "fill": {
+          "var": "semantic/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "semantic/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "padding": {
+          "var": "space/4",
+          "raw": 16
+        },
+        "itemSpacing": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "effectStyle": "Elevation/sm",
+        "texts": {
+          "Title": "Preparing the September report",
+          "Count": "2 of 5 done",
+          "Label": "Email it to the growth team",
+          "Meta text": "running",
+          "Detail text": "July +3%, August +5%, September down 12%."
+        },
+        "childSignature": [
+          "Header:FRAME",
+          "Steps:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm shadow-sm"
+      }
+    },
+    {
+      "name": "AgentStep",
+      "nodeId": "1172:19",
+      "variantOf": "1172:69",
+      "variant": "Status=done",
+      "codeFile": "registry/lib/agent-steps.tsx",
+      "lastSynced": "2026-10-05",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "texts": {
+          "Label": "Read signups-sept.csv",
+          "Meta text": "4 s",
+          "Detail text": "July +3%, August +5%, September down 12%."
+        },
+        "childSignature": [
+          "Line:FRAME",
+          "Detail:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "flex min-w-0 flex-1 items-start gap-2.5 rounded-md px-1 py-1.5 text-left"
+      }
+    },
+    {
+      "name": "ApprovalCard",
+      "nodeId": "1174:37",
+      "variantOf": "1174:94",
+      "variant": "Kind=default, Editing=false",
+      "codeFile": "registry/lib/approval-card.tsx",
+      "lastSynced": "2026-10-05",
+      "figma": {
+        "fill": {
+          "var": "semantic/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "semantic/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "padding": {
+          "var": "space/4",
+          "raw": 16
+        },
+        "itemSpacing": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "effectStyle": "Elevation/sm",
+        "texts": {
+          "Title": "The agent wants to send this email",
+          "Label": "Subject",
+          "Value": "September signups: 12% under target",
+          "Body": "Hi team, September came in 12% under target, though the quarter still closed 4% ahead. The dip lines up with the pricing page change on the 9th. Chart attached.",
+          "Button": "Don't send",
+          "Consequence text": "Goes to 6 people. Nothing is sent until you choose."
+        },
+        "childSignature": [
+          "Header:FRAME",
+          "Proposal:FRAME",
+          "Actions:FRAME",
+          "Consequence:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm shadow-sm"
+      }
+    },
+    {
+      "name": "QuestionCard",
+      "nodeId": "1175:85",
+      "codeFile": "registry/lib/question-card.tsx",
+      "lastSynced": "2026-10-05",
+      "figma": {
+        "fill": {
+          "var": "semantic/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "semantic/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "padding": {
+          "var": "space/4",
+          "raw": 16
+        },
+        "itemSpacing": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "effectStyle": "Elevation/sm",
+        "texts": {
+          "Title": "Someone else",
+          "Question": "Who should get the September report?",
+          "Label": "Recommended",
+          "Description": "Tell the agent who.",
+          "Placeholder": "e.g. Priya and the pricing team",
+          "Button": "Skip, let the agent decide"
+        },
+        "childSignature": [
+          "Header:FRAME",
+          "Question:TEXT",
+          "Options:FRAME",
+          "Actions:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm shadow-sm"
+      }
+    },
+    {
+      "name": "QuestionOption",
+      "nodeId": "1175:15",
+      "variantOf": "1175:31",
+      "variant": "Selected=false",
+      "codeFile": "registry/lib/question-card.tsx",
+      "lastSynced": "2026-10-05",
+      "figma": {
+        "fill": {
+          "var": "semantic/background",
+          "raw": "#F5EDDD"
+        },
+        "stroke": {
+          "var": "semantic/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "space/3",
+          "raw": 12
+        },
+        "itemSpacing": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "texts": {
+          "Title": "The growth team",
+          "Label": "Recommended",
+          "Description": "6 people. They own signups and asked for it last month.",
+          "Placeholder": "e.g. Priya and the pricing team"
+        },
+        "childSignature": [
+          "Radio box:FRAME",
+          "Body:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid grid-cols-[1rem_minmax(0,1fr)] items-start gap-x-2.5 rounded-lg border bg-background px-3 py-2.5"
+      }
+    },
+    {
+      "name": "AiPopover",
+      "nodeId": "1176:30",
+      "variantOf": "1176:60",
+      "variant": "State=ready",
+      "codeFile": "registry/lib/ai-popover.tsx",
+      "lastSynced": "2026-10-05",
+      "figma": {
+        "fill": {
+          "var": "semantic/popover",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "tint/foreground/10",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "effectStyle": "Elevation/base",
+        "texts": {
+          "Title": "Rewrite: shorter",
+          "Suggestion text": "Signups beat target in July and August but fell 12% short in September, likely because of the new pricing page.",
+          "Button": "Replace"
+        },
+        "childSignature": [
+          "Header:FRAME",
+          "Body:FRAME",
+          "Actions:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "ai-wash w-96 max-w-[calc(100vw-2rem)] max-h-(--available-height) gap-0 overflow-hidden p-0 focus-visible:ring-3 focus-visible:ring-ring/50"
+      }
     }
   ],
   "patterns": [
@@ -2062,6 +2324,15 @@
       "frameId": "1108:41",
       "codeHash": "db26b377fbf6c76d",
       "syncedAt": "2026-10-04"
+    },
+    {
+      "block": "ai-side-panel",
+      "status": "mirrored",
+      "page": "❖ AI side panel",
+      "pageId": "1180:2",
+      "frameId": "1180:208",
+      "codeHash": "3e3c2bd70b5d92fb",
+      "syncedAt": "2026-10-05"
     },
     {
       "block": "alerts",
@@ -2581,6 +2852,26 @@
       "name": "suggested-prompts",
       "codeFile": "src/components/ui/suggested-prompts.tsx",
       "reason": "site shim that re-exports registry/lib/suggested-prompts.tsx; the twin (❖ Suggested prompts, set 1136:31) is tracked through the SuggestedPrompts entry"
+    },
+    {
+      "name": "agent-steps",
+      "codeFile": "src/components/ui/agent-steps.tsx",
+      "reason": "site shim that re-exports registry/lib/agent-steps.tsx; the twin (❖ Agent steps, set 1172:69 and component 1172:151) is tracked through the AgentSteps and AgentStep entries"
+    },
+    {
+      "name": "approval-card",
+      "codeFile": "src/components/ui/approval-card.tsx",
+      "reason": "site shim that re-exports registry/lib/approval-card.tsx; the twin (❖ Approval card, set 1174:94) is tracked through the ApprovalCard entry"
+    },
+    {
+      "name": "question-card",
+      "codeFile": "src/components/ui/question-card.tsx",
+      "reason": "site shim that re-exports registry/lib/question-card.tsx; the twin (❖ Question card, set 1175:31 and component 1175:85) is tracked through the QuestionCard and QuestionOption entries"
+    },
+    {
+      "name": "ai-popover",
+      "codeFile": "src/components/ui/ai-popover.tsx",
+      "reason": "site shim that re-exports registry/lib/ai-popover.tsx; the twin (❖ AI popover, set 1176:60) is tracked through the AiPopover entry"
     },
     {
       "name": "aspect-ratio",

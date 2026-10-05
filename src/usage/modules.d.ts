@@ -16,6 +16,11 @@ declare module '@/usage/activity-feed.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/agent-steps.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/ai-badge.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -37,6 +42,11 @@ declare module '@/usage/ai-message.usage.mjs' {
 }
 
 declare module '@/usage/ai-notice.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/ai-popover.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -77,6 +87,11 @@ declare module '@/usage/analytics-charts.usage.mjs' {
 }
 
 declare module '@/usage/announcement-banner.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/approval-card.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -157,6 +172,11 @@ declare module '@/usage/ai-home.usage.mjs' {
 }
 
 declare module '@/usage/ai-chat.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/ai-side-panel.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -442,6 +462,11 @@ declare module '@/usage/progress.usage.mjs' {
 }
 
 declare module '@/usage/prompt-composer.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/question-card.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

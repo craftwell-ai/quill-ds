@@ -86,7 +86,7 @@ Each phase is its own PR with its own minor version. Kind: **ui** = a `registry:
 | Piece | Kind | Notes |
 |---|---|---|
 | `agent-steps` | ui | Done, in progress, waiting; each step expands. Progress ticks stay moss. |
-| `approval-card` | ui | "The agent wants to send this email": Approve, Edit, Deny. Plain buttons. |
+| `approval-card` | ui | "The agent wants to send this email": the main button names the action ("Send email"), plus Edit and a decline button. Plain buttons. (Decided 2026-10-04; there is no generic "Approve".) |
 | `question-card` | ui | Agent asks the user to choose; recommended option marked. |
 | `ai-popover` | ui | Inline rewrite or suggestion with wash; Accept and Replace stay plain. |
 | `ai-side-panel` | block | Docked assistant with wash and "Looking at" scope chip, on the existing Sheet. |
@@ -107,11 +107,11 @@ The same set every existing component has (enumerated from where `chat` and `ton
 
 1. **Source**: `registry/lib/<name>.tsx` (ui) or `registry/blocks/<name>.tsx` (block), using only tokens consumers receive.
 2. **Registry item** in `registry.json`, with dependencies and targets.
-3. **Usage module** `src/usage/<name>.usage.mjs` (summary, useWhen, alternatives, rules, not_for), registered in `src/usage/index.mjs` and `modules.d.ts`; plus role entries in `src/usage/roles.mjs` where the piece introduces a role.
+3. **Usage module** `src/usage/<name>.usage.mjs` (summary, useWhen, alternatives, rules, not_for; note 2026-10-05: `not_for` lines are generated from `alternatives`, not written by hand), registered in `src/usage/index.mjs` and `modules.d.ts`; plus role entries in `src/usage/roles.mjs` where the piece introduces a role.
 4. **Storybook**: a story per state and size, a usage Docs page, and the Do/Don't visual pairs (e.g. gradient on the mark vs gradient on Replace).
 5. **Generated outputs** rebuilt in the AGENTS.md order: `public/usage/<name>.md`, `public/r/<name>.json`, `public/llms.txt`, the agent-rules file, and the `quill-components` skill reference page. The MCP `find_component` picks it up from the usage module.
 6. **Agent eval**: new cases in `scripts/agent-selection-cases.mjs` so agents pick the right AI piece for a job.
-7. **Figma twin**: component with variants in the Quill library, bound to variables; an entry in `figma/components/README.md`, `figma/sync-state.json` and, for blocks, `figma/pattern-baseline.json` and `figma/visual-baseline.json`.
+7. **Figma twin**: component with variants in the Quill library, bound to variables; an entry in `figma/components/README.md`, `figma/sync-state.json` and, for blocks, `figma/pattern-baseline.json` and `figma/visual-baseline.json` (note 2026-10-05: `visual-baseline.json` only comes from a CI run of the Figma parity workflow, so a new block is left unbaselined until then).
 8. **Tests green**: `test:tokens` (incl. consumer reachability, theme enumeration, AA contrast for the new text stops), `test-storybook` with axe, the theme run, lint, `tsc`.
 9. **Release**: version bump + CHANGELOG entry + `build:check`, `build:registry`, `build:llms`.
 

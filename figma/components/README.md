@@ -372,6 +372,57 @@ through the variant named below. Sample copy is the `ai-chat` block's, so an AiC
 - **Not drawn:** the shimmer and line motion (CSS-only, shown as the full sweep), AiNotice's link, hover and focus states,
   a reply with no answer (it has no caret, Copy or action row: hide the answer and actions on an instance).
 
+### AI kit twins, Phase 3 (2026-10-04)
+
+Code twins in `registry/lib` (the `src/components/ui` files are re-export shims, declined in `sync-state.json`). Six entries
+are in `components`, entered by hand from a REST read of each node (`extractComponent`), and `node scripts/figma-drift.mjs`
+reports every one in sync. A set is tracked through the variant named below. Sample copy is each piece's first story. The
+stamps in `sync-state.json` read 2026-10-05: the scripts write the UTC date.
+
+| Twin | Page (id) | Node | Structure | Key bindings |
+|---|---|---|---|---|
+| AgentSteps | ❖ Agent steps (1172:2) | component **1172:151** | 448 wide; Header + five Step instances with the `InProgress` story's copy (the second one with `Detail` on, as the story opens it); TEXT `Title`, `Count` | card: semantic/card, semantic/border @ border-width/1, radius/xl, px space/4, py 14, gap space/2_5, Elevation/sm. Header gap space/2: AiMark Stars=one at 15px, title text/sm semibold in color/ink-soft, count Label/Small in semantic/muted-foreground. Rows gap space/0_5 |
+| Step | ❖ Agent steps (1172:2) | set **1172:69** | Status=done (1172:19, tracked) · running (1172:35) · waiting (1172:48) · failed (1172:68); 414 wide; BOOLEAN `Detail` (off), `Retry` (off, failed only) | row: gap space/2_5, px space/1, py space/1_5, radius/md. Dots 16px (space/4, radius/4xl): done = color/moss-deep with icon/check 12px in color/paper; failed = color/terracotta-deep with icon/close; waiting = a 2px (border-width/2) semantic/input ring; running = icon/progress_activity in color/moss-deep. Label: done Text/sm in semantic/muted-foreground, running text/sm semibold in semantic/foreground, waiting and failed Text/sm in color/ink-soft. Meta Label/Small in semantic/muted-foreground. `Detail` shows the chevron (icon/keyboard_arrow_down 14px) and the detail: pt space/0_5, pb space/1_5, a 2px left rule in semantic/border, pl space/2_5, Text/xs. `Retry` shows a ❖ Button instance (ghost, xs) under pt space/1, label in semantic/destructive |
+| ApprovalCard | ❖ Approval card (1174:2) | set **1174:94** | Kind=default, Editing=false (1174:37, tracked) · Kind=default, Editing=true (1174:72) · Kind=destructive, Editing=false (1174:93); 480 wide | the same card. Proposal tile: semantic/background, semantic/input outline (the control line), radius/lg, px space/3, py space/2_5, gap space/1_5; details are a label column (Text/sm, semantic/muted-foreground) and a value column (semantic/foreground), gap space/3 and space/1; body Text/sm in color/ink-soft. Editing=true swaps the body for a ❖ Textarea instance (height space/24, the code's `min-h-24`) and shows Edit pressed. Buttons are ❖ Button instances with the start icon slot: default + icon/mail, outline + icon/edit, ghost on the right; destructive = the stock destructive Button + icon/delete. Consequence: icon/info (or icon/warning) 14px + Text/xs in semantic/muted-foreground, gap space/1_5 |
+| QuestionCard | ❖ Question card (1175:2) | component **1175:85** | 480 wide; Header, question, three Option instances (the recommended one first, the free-text row last), actions; TEXT `Title`, `Question` | the same card. Question text/sm semibold in semantic/foreground; options gap space/1_5. Continue is the ❖ Button default in `State=Disabled` (nothing is chosen in the first render); Skip is the ghost Button |
+| Option | ❖ Question card (1175:2) | set **1175:31** | Selected=false (1175:15, tracked) · Selected=true (1175:30); 446 wide; TEXT `Title`, `Description`; BOOLEAN `Recommended` (off), `Field` (off) | row: semantic/background, semantic/input outline @ border-width/1, radius/lg, px space/3, py space/2_5, gap space/2_5. ❖ Radio instance (off / on). Title text/sm semibold in semantic/foreground; `Recommended` shows a live ❖ Tone badge instance (Tone=moss, Size=sm), gap space/1_5; description Text/xs in semantic/muted-foreground, gap space/0_5; `Field` shows a ❖ Input instance under pt space/1_5. Selected=true: the outline binds semantic/foreground and a locked `Ring` rectangle (absolute, stretched, 2px INSIDE stroke @ border-width/2) draws the code's 1px inset ring, so the padding does not move |
+| AiPopover | ❖ AI popover (1176:2) | set **1176:60** | State=ready (1176:30, tracked) · State=working (1176:59); 384 wide; TEXT `Title`; BOOLEAN `Insert below` (off) | Popover anatomy: semantic/popover, tint/foreground/10 ring @ border-width/1 (outside the layout, as a CSS ring), radius/lg, Elevation/base, plus the wash. Header (pt space/3, pb space/1, gap space/2): AiMark Stars=two at 18px, title text/sm semibold in semantic/foreground. Body pt space/1_5. ready: the suggestion tile (semantic/background, semantic/input outline, radius/lg, px space/3, py space/2, text/sm at 162.5 % in semantic/foreground). working: gap space/1_5, the `ai-shimmer` label and the `ai-line` drawn exactly as the AiThinking twin draws them (the label's gradient fill and the Sweep rectangle are copies of 1133:3 and 1133:6). Actions (pt space/2_5, gap space/1_5): ❖ Button ghost Discard, outline Try again and Insert below, default Replace (plain solid, never the gradient); in working the last three are the `State=Disabled` variants |
+
+| Block | Page | Page id | Frame id | Notes |
+|---|---|---|---|---|
+| ai-side-panel | ❖ AI side panel | 1180:2 | 1180:208 | 384×560 component, the `Default` story (the panel on its own; no Sheet, so no Close). semantic/popover plus the wash; the 1px semantic/border outline and radius/xl are the story's frame. Header (py and pr space/2_5, gap space/2): AiMark Stars=two at 18px, "Assistant" text/sm semibold, History. Thread (pt space/1, pb space/2_5, gap space/3, pinned to the bottom): the scope chip (height space/7, radius/4xl, semantic/background, semantic/input outline, pl space/2, pr space/1, gap space/1_5, icon/description 13px, Text/xs in color/ink-soft, a space/5 remove button with icon/close 12px); UserMessage right-aligned; AiMessage State=default with `Thinking` and `Sources` off, the block's sentence with one Citation (Kind=web) and Copy as its only action; SuggestedPrompts Layout=list with one row. Docked below (px space/3, pt space/2, pb space/3): PromptComposer sm idle, `Show tabs` off, the block's placeholder. No visual baseline yet (`../README.md`, "Visual diff") |
+
+- **The wash** (`ai-wash`: top to bottom, `ai-from` at 12 % → `ai-via` at 8 % at 45 % → transparent) is two linear fills over the
+  surface fill, the same route `ai-glow` took on ❖ AI home, because a bound gradient stop loses its alpha. Fill 1: stop 0 bound
+  to color/ai-from, a transparent stop at 0.45, paint opacity 0.12 (0.16 until 2026-10-05, when code's top stop was lowered so small grey text on the wash meets AA). Fill 2: a transparent stop at 0, a stop at 0.45 bound to
+  color/ai-via, a transparent stop at 1, paint opacity 0.08. No paint style and no new variable. Checked on 2026-10-04: an
+  AiPopover instance inside a component inside a frame still draws the wash (looked at in Dark at 3x).
+- **One detached Button: History.** Code draws a 16px icon in a ghost `icon-sm` button; the ❖ Button twin's `icon-sm` variant
+  holds a 14px icon that an instance cannot resize. It is that variant detached in place (space/7, radius/md kept) with
+  icon/history at 16px, the route Phase 2's reply actions took. Every other button is a live ❖ Button instance.
+- **Overrides on live instances** (each paint is a full variable binding, never a paint opacity). Edit pressed
+  (ApprovalCard, Editing=true) is the outline Button with its fill set to semantic/muted, copied from the `State=Hover`
+  variant: that variant does not link its icon to the `Icon start` property, so an instance of it cannot show the
+  icon. Retry's label is semantic/destructive. In the block, the UserMessage text and the follow-up label bind
+  semantic/foreground: they inherit the panel's `text-popover-foreground`, where on a page they inherit the body's
+  color/ink-soft. The block's AiMessage keeps its link to the twin: the answer row is bottom-aligned, its first text grows
+  to fill the row, the second text run, the second chip and three of the four reply actions are hidden.
+- **`icon/history` was missing.** Added by the icon sync (1171:4); the Icons page now holds 96, as code does.
+- **No variable for these values**, left as typed numbers: 14px (`py-3.5` on the three cards; `px-3.5` and `pb-3.5` on the
+  popover; `pl-3.5` and `px-3.5` on the panel), 19px (the one-line box, the code's `h-[1lh]`, that keeps a dot, a note or a
+  radio on the first line), 30px (the detail's `ml-[1.875rem]`), 15px (the mark in the card headers), 162.5 %
+  (`leading-relaxed` on the suggestion), the wash's 0.12 / 0.08 / 0.45, and the 384×560 of the panel. Phase 3 adds no tokens.
+- **Each status keeps its own sample label.** A TEXT property has one default for a whole set, which would have written
+  the done step's label over the failed one and the email's title over the delete card's. Step and ApprovalCard therefore
+  carry no TEXT property: type on the instance.
+- **Inline text is a wrapping row** (as in Phase 2): in the block the answer breaks one word earlier than the browser's,
+  and the chip sits at the end of the row instead of straight after "shipped".
+- **Not drawn:** hover and focus states; the spinner's motion and the shimmer and line motion (CSS-only, shown as the full
+  sweep); the outcome line that replaces the buttons once the person has decided, on both cards; a step that has detail
+  but is closed (`Detail` draws it open); the destructive card with a proposal tile (the story has nothing to show, so
+  no tile is drawn); the popover's height cap and scrolling body, and the text it is anchored to; the History button's
+  behaviour, the Sheet around the panel and its Close; `tabular-nums` on the counts.
+
 ### Accent (2026-07-11; re-pinned to moss 2026-07-20)
 
 Code adds `data-accent="terracotta|moss|indigo|gold"` (eyebrows, accent italics,

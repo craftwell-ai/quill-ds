@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-thinking`, `citations`, `icon`, `model-picker`, `prompt-composer`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -101,20 +101,24 @@ Each line below is: name — when to use it · instead: the components it is mos
 ### ai — AI features — composers, assistant pages, AI replies and agent controls.
 - `ai-home` — An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet. · instead: `prompt-composer`, `chat`
 - `ai-chat` — An app has a page for an ongoing conversation with its AI assistant. · instead: `ai-home`, `chat`
+- `ai-side-panel` — People are working on a page (a report, a record, a document) and should be able to ask the AI about it without leaving. · instead: `ai-chat`, `sheet`, `ai-popover`
 
 ## Primitives
 
 - `accordion` — You have several related content sections (FAQ answers, grouped settings) that don't all need to stay visible at once, and users scan headings before choosing one to open. · instead: `collapsible`, `tabs`
+- `agent-steps` (`@quill/`) — An AI agent does a task in several steps and people should see where it is, what is finished and what went wrong. · instead: `ai-thinking`, `progress`, `wizard`
 - `ai-badge` (`@quill/`) — A card, field, list row or message holds content the AI wrote or proposed, and people should know before they rely on it. · instead: `tone-badge`, `ai-mark`
 - `ai-button` (`@quill/`) — A button starts something an AI does: Summarize, Rewrite, Ask AI, Draft a reply. · instead: `button`, `prompt-composer`
 - `ai-mark` (`@quill/`) — You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page. · instead: `ai-badge`, `icon`
-- `ai-message` (`@quill/`) — A conversation shows answers from an AI, with or without the reasoning and sources behind them. · instead: `chat`
+- `ai-message` (`@quill/`) — A conversation shows answers from an AI, with or without the reasoning and sources behind them. · instead: `chat`, `ai-popover`
 - `ai-notice` (`@quill/`) — A composer sends to an AI and people should know its answers need checking. · instead: `alert`, `ai-badge`
+- `ai-popover` (`@quill/`) — Someone selects text (or presses an AI action on a field) and the AI offers a rewrite they can take or leave without leaving the page. · instead: `popover`, `ai-message`
 - `ai-thinking` (`@quill/`) — An AI takes a noticeable moment before answering and people should see it is working, and later how it got there. · instead: `spinner`, `skeleton`
 - `suggested-prompts` (`@quill/`) — An AI page is empty and people need a first thing to ask. · instead: `command`, `button`
 - `model-picker` (`@quill/`) — An app offers more than one AI model or speed and people may want to switch per message. · instead: `select`, `radio-group`
 - `alert` — You need one persistent, inline status message (informational or error) attached to a specific section of a page — not a whole stack of them, and not transient feedback about an action just taken. · instead: `alerts`, `sonner`
 - `alert-dialog` — You need the user to explicitly confirm or cancel a destructive, irreversible action — deleting a record, discarding unsaved work, removing access. · instead: `dialog`
+- `approval-card` (`@quill/`) — An AI agent is about to do something on a person's behalf (send, post, pay, delete) and needs a yes first. · instead: `alert-dialog`, `agent-steps`
 - `aspect-ratio` — You're placing an image, video, or embed that must keep a consistent shape (16:9, 1:1, 4:3) regardless of its container's width, and want to reserve that space before the media loads. · instead: `resizable`
 - `avatar` — You need to represent a person or entity visually — a profile photo, initials, or a generic icon — in a list row, header, or comment. · instead: `item`
 - `badge` — You need a compact visual label for a status, category, or count next to other content — a course card, a table cell, a nav item. · instead: `tone-badge`, `button`
@@ -151,6 +155,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `popover` — You need a compact, interactive surface anchored to a button — an inline form, a filter, a quick edit — that opens on an explicit click. · instead: `dialog`, `hover-card`, `tooltip`
 - `progress` — You have a real, known completion percentage to show (upload progress, a multi-step setup) — not an open-ended wait with no known duration. · instead: `spinner`, `skeleton`
 - `prompt-composer` (`@quill/`) — People type a request to an AI: an assistant page, a chat thread, a side panel, or an "ask about this" bar. · instead: `ai-home`, `chat`, `textarea`
+- `question-card` (`@quill/`) — An AI agent cannot go on without a choice only the person can make, and there are a few sensible answers. · instead: `radio-group`, `approval-card`
 - `radio-group` — You need the user to choose exactly one option from a short, always-visible list — not collapsed behind a dropdown trigger. · instead: `checkbox`, `select`, `toggle-group`
 - `resizable` — You need a layout region whose split the user can adjust themselves by dragging — a file-tree/editor/preview layout, a resizable sidebar-and-content pane. · instead: `scroll-area`, `tabs`
 - `scroll-area` — You need a scrollable region (a list, a card body) with a consistently styled scrollbar instead of each OS/browser's native chrome, inside an explicit height or width you set. · instead: `pagination`, `resizable`

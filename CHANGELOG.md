@@ -13,6 +13,29 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.18.0] — 2026-10-05
+
+### Added
+- **The AI agent pieces (AI kit Phase 3).** Five new pieces, each with usage guidance, stories, Figma twin and agent-selection cases.
+  - **`agent-steps`** — the steps an AI agent is working through: done, running, waiting or failed, with a count in the header. A row with detail opens to show it; a failed row offers Retry, its own small button beside the row. Every state is also said in words for screen readers, and progress is announced as it changes. Ticks and the spinner stay moss.
+  - **`approval-card`** — asks before an agent acts. The card sits in the conversation, shows exactly what will happen, and lets people edit the text in place; the edited text is what gets approved. The main button names the action ("Send email"), which the app supplies; there is no generic "Approve". Destructive actions use the destructive Button. When the person presses the card's own main or decline button, the buttons go and keyboard focus moves to the outcome line inside the card instead of dropping to the page, without scrolling. An outcome that arrives on its own, with nothing in the card pressed, leaves focus where it was.
+  - **`question-card`** — the agent asks the person to choose. Options are full rows with the recommended one first, there is always a free-text row, Continue waits for an answer, and Skip lets the agent decide. It is a real radio group: one Tab stop, arrow keys choose. In the free-text field the arrow keys move the caret and never change the choice, and the field is named by the question and the option it belongs to. The card is named by its title and the options by the question, so a screen reader reads the question once. After Continue, Skip or Enter in the field, focus moves to the outcome line as on the approval card.
+  - **`ai-popover`** — an AI suggestion beside the text it is about, on the AI wash: Discard and Replace, plus Try again and Insert below when the app passes a callback for each. Replace is a plain solid Button. It anchors to an element the app renders (a button or wrapped text), not to a selection inside a text box or editor; after Replace the app places focus in the new text. On a short screen the popover is capped to the space left and the suggestion scrolls while the buttons stay in view. Focus lands on the popover itself when it opens, so a held Enter cannot press Discard. While the AI is writing it shows a shimmering label and switches the buttons off, and says so to screen readers.
+  - **`ai-side-panel`** — a block: an AI assistant docked beside the page on the stock Sheet, with a "Looking at" chip the person can remove, a short thread and the small composer on one top-to-bottom wash. It exports two things: `AiSidePanel` (the panel inside a Sheet) and `AiPanel` (the panel on its own, for a layout that gives it a column). The History button only calls `onHistory` and is not drawn without it; the past-chats view is a later release. The conversation shown is sample content: the block does not yet take an app's own messages.
+- **New icon `history`** in the core set (95 → 96 names).
+- **Figma twins** for all five pieces.
+- **Repo guard `scripts/stories-no-test-imports.test.mjs`.** No story may import or re-export a test-runner-only module (such as `vitest/browser`) at the top level, on one line or several, because that shows an error page in a plain Storybook. An `import()` inside a function is allowed.
+- **Story helper `washedTop`** in `src/stories/contrast.ts`, which measures a line against the AI wash's strongest point, read from the computed gradient.
+
+### Changed
+- **The AI wash is lighter at the top, so small grey text on it meets WCAG AA. This changes a shipped treatment:** `ai-wash` has been in the theme since 0.16.0, and its top stop moves from 16% to 12% of `--ai-from` (the 8% middle stop and the fade to transparent are unchanged). Small `text-muted-foreground` text at the very top of the wash measured 4.42:1 in Dawn and 4.48:1 in Dusk, under the 4.5:1 that AA asks; it now measures 4.55 (Dawn), 4.88 (Dusk), 5.47 (Classic Light), 5.90 (Classic Dark) and 5.34 (Intelligent), and a story holds it there. The outlines measured on the wash got slightly stronger (2.78 to 2.86 in Dawn, 2.18 to 2.38 in Dusk). An app that uses `ai-wash` on its own surfaces gets the lighter top with this release. The Figma twins follow.
+- **Outlines on washed surfaces use the control line and are measured on the wash.** The popover's suggestion tile and the side panel's scope chip use `border-input`, and their stories measure the outline against the wash with a 2:1 floor (it is a grouping outline, not a control).
+- **The AI gradient rule says "AI panel or popover".** The top-to-bottom wash placement now covers popovers, as the AI kit spec always had it. It is still six placements.
+- `ai-message`'s usage guide lists `ai-popover` as the alternative for edits to selected text.
+- `ai-chat`'s usage guide says its conversation is sample content: the block does not yet take an app's own messages.
+- The generated agent-rules file's size cap moved from 20,000 to 21,000 characters (it stays under the 200-line guidance) to make room for the four new names.
+- Hand-written counts in `AGENTS.md`, `README.md`, `DESIGN.md` and `PRODUCT.md` now say sixteen components and 54 blocks.
+
 ## [0.17.2] — 2026-10-04
 
 ### Fixed

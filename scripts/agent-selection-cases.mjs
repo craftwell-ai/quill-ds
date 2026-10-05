@@ -30,6 +30,10 @@ export const CASES = [
   { id: 'task-board', expect: 'kanban', request: 'Track tasks by status (to do, in progress, done) and move cards between the columns.' },
   { id: 'office-map', expect: 'none', request: 'Show our office locations on an interactive map that users can pan and zoom.' },
   { id: 'ai-disclaimer', expect: 'ai-notice', request: 'Under the assistant\'s input box, tell people the AI can get things wrong.' },
+  { id: 'agent-progress', expect: 'agent-steps', request: 'Our assistant runs a task in several stages; show which are finished, which one it is on, and what is still to come.' },
+  { id: 'agent-asks-permission', expect: 'approval-card', accept: ['alert-dialog'], request: 'Before the assistant sends an email on someone\'s behalf, show them the email and let them send it, change it or say no.' },
+  { id: 'agent-asks-a-choice', expect: 'question-card', accept: ['radio-group'], request: 'The assistant is unsure who a report is for and needs the person to pick from a few options or type their own answer.' },
+  { id: 'inline-rewrite', expect: 'ai-popover', accept: ['popover'], request: 'When someone selects a paragraph and asks AI to shorten it, show the new version next to the text with a way to swap it in.' },
   { id: 'ai-working-state', expect: 'ai-thinking', request: 'While the assistant is preparing its answer, show that it is working and what it is reading.' },
   { id: 'switch-ai-model', expect: 'model-picker', request: 'Let people switch between a fast model and a slower, more careful one from the assistant\'s input box.' },
   { id: 'follow-up-questions', expect: 'suggested-prompts', request: 'After the assistant answers, offer two or three follow-up questions people can click to ask next.' },
@@ -40,6 +44,7 @@ export const CASES = [
   { id: 'ask-assistant-box', expect: 'prompt-composer', accept: ['ai-home'], request: 'Users type a question to our assistant; it should grow as they type and let them stop the answer halfway.' },
   { id: 'assistant-start-page', expect: 'ai-home', accept: ['prompt-composer'], request: 'The landing page of our assistant: a greeting, a big box to ask in, and a few example tasks to start from.' },
   { id: 'assistant-thread', expect: 'ai-chat', accept: ['ai-message'], request: 'A full page for chatting with our assistant: past conversations on the side, answers with sources, and an input at the bottom.' },
+  { id: 'assistant-beside-page', expect: 'ai-side-panel', accept: ['sheet', 'ai-chat'], request: 'People should be able to open the assistant next to the report they are reading and ask about it without leaving the page.' },
   { id: 'ai-icon', expect: 'ai-mark', accept: ['ai-badge'], request: 'Put a small icon next to the Summarize button so people can tell it uses AI.' },
 ]
 

@@ -33,3 +33,13 @@ export const surfaceBehind = (element: Element): [number, number, number] => {
   for (let node = element.parentElement; node; node = node.parentElement) layers.unshift(getComputedStyle(node).backgroundColor)
   return layers.reduce<[number, number, number]>((below, layer) => compositeOver(layer, `rgb(${below.join(' ')})`), [255, 255, 255])
 }
+
+// A wash such as `ai-wash` is a background image, which surfaceBehind cannot see. Its strongest point is the top, so the
+// surface is built from the computed gradient's own first stop (no hard-coded alpha): a retuned wash is followed, and a
+// host with no gradient fails loudly. A line measured against this is measured where it is hardest to see.
+export const washedTop = (surface: [number, number, number], host: Element): [number, number, number] => {
+  const image = getComputedStyle(host.closest('.ai-wash') ?? host).backgroundImage
+  const firstStop = /^linear-gradient\((.+?) 0%,/.exec(image)
+  if (!firstStop) throw new Error(`washedTop: no top-to-bottom wash on the host (${image})`)
+  return compositeOver(firstStop[1], `rgb(${surface.join(' ')})`)
+}

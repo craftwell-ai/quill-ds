@@ -5,11 +5,13 @@
  */
 import { usage as accordion } from './accordion.usage.mjs'
 import { usage as activityFeed } from './activity-feed.usage.mjs'
+import { usage as agentSteps } from './agent-steps.usage.mjs'
 import { usage as aiBadge } from './ai-badge.usage.mjs'
 import { usage as aiButton } from './ai-button.usage.mjs'
 import { usage as aiMark } from './ai-mark.usage.mjs'
 import { usage as aiMessage } from './ai-message.usage.mjs'
 import { usage as aiNotice } from './ai-notice.usage.mjs'
+import { usage as aiPopover } from './ai-popover.usage.mjs'
 import { usage as aiThinking } from './ai-thinking.usage.mjs'
 import { usage as suggestedPrompts } from './suggested-prompts.usage.mjs'
 import { usage as modelPicker } from './model-picker.usage.mjs'
@@ -18,6 +20,7 @@ import { usage as alertDialog } from './alert-dialog.usage.mjs'
 import { usage as alerts } from './alerts.usage.mjs'
 import { usage as analyticsCharts } from './analytics-charts.usage.mjs'
 import { usage as announcementBanner } from './announcement-banner.usage.mjs'
+import { usage as approvalCard } from './approval-card.usage.mjs'
 import { usage as aspectRatio } from './aspect-ratio.usage.mjs'
 import { usage as avatar } from './avatar.usage.mjs'
 import { usage as badge } from './badge.usage.mjs'
@@ -34,6 +37,7 @@ import { usage as chart } from './chart.usage.mjs'
 import { usage as chat } from './chat.usage.mjs'
 import { usage as aiHome } from './ai-home.usage.mjs'
 import { usage as aiChat } from './ai-chat.usage.mjs'
+import { usage as aiSidePanel } from './ai-side-panel.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as citations } from './citations.usage.mjs'
@@ -91,6 +95,7 @@ import { usage as pricing } from './pricing.usage.mjs'
 import { usage as profileCard } from './profile-card.usage.mjs'
 import { usage as progress } from './progress.usage.mjs'
 import { usage as promptComposer } from './prompt-composer.usage.mjs'
+import { usage as questionCard } from './question-card.usage.mjs'
 import { usage as radioGroup } from './radio-group.usage.mjs'
 import { usage as resizable } from './resizable.usage.mjs'
 import { usage as scrollArea } from './scroll-area.usage.mjs'
@@ -126,11 +131,13 @@ import { usage as wizard } from './wizard.usage.mjs'
 export const ALL_USAGE = [
   accordion,
   activityFeed,
+  agentSteps,
   aiBadge,
   aiButton,
   aiMark,
   aiMessage,
   aiNotice,
+  aiPopover,
   aiThinking,
   suggestedPrompts,
   modelPicker,
@@ -139,6 +146,7 @@ export const ALL_USAGE = [
   alerts,
   analyticsCharts,
   announcementBanner,
+  approvalCard,
   aspectRatio,
   avatar,
   badge,
@@ -155,6 +163,7 @@ export const ALL_USAGE = [
   chat,
   aiHome,
   aiChat,
+  aiSidePanel,
   checkbox,
   checkout,
   citations,
@@ -212,6 +221,7 @@ export const ALL_USAGE = [
   profileCard,
   progress,
   promptComposer,
+  questionCard,
   radioGroup,
   resizable,
   scrollArea,

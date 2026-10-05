@@ -5,6 +5,7 @@ export const usage = {
   useWhen: ['A conversation shows answers from an AI, with or without the reasoning and sources behind them.'],
   alternatives: [
     { name: 'chat', when: 'two people are messaging each other; no AI is involved.' },
+    { name: 'ai-popover', when: 'the AI suggests an edit to selected text rather than answering in a thread.' },
   ],
   rules: [
     {

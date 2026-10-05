@@ -7,6 +7,7 @@ An AI's reply in a conversation — the AI mark on its avatar, the answer as pla
 
 ### Reach for instead
 - **chat** — when two people are messaging each other; no AI is involved.
+- **ai-popover** — when the AI suggests an edit to selected text rather than answering in a thread.
 
 ### Rules
 - **Do:** Keep the answer in plain body text; the mark on the avatar already says it is AI. **Don't:** Colour the answer, its bubble or its headings with the AI gradient — answers have to be easy to read at length.
