@@ -306,6 +306,19 @@ export const LongThreadScrolls: Story = {
     copy.scrollIntoView({ block: 'nearest' })
     await waitFor(() => expect(fadeOf(scroller)).toMatch(/28px\)$/))
     await expect(copy.getBoundingClientRect().top - 3).toBeGreaterThanOrEqual(scroller.getBoundingClientRect().top + 28)
+    // The names kept for screen readers scroll with their replies. Left behind at their unscrolled places they would
+    // hang below the panel and make the page itself scroll.
+    await expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
+    for (const name of Array.from(scroller.querySelectorAll('[data-slot="reply-name"]'))) {
+      const reply = (name.closest('article') as HTMLElement).getBoundingClientRect()
+      await expect(name.getBoundingClientRect().top).toBeGreaterThanOrEqual(reply.top - 1)
+      await expect(name.getBoundingClientRect().bottom).toBeLessThanOrEqual(reply.bottom + 1)
+    }
+    // Leave the example as people meet it: the cursor in the box, the newest turn in view, the older ones fading out
+    // under the header.
+    await userEvent.click(box)
+    scroller.scrollTop = scroller.scrollHeight
+    await waitFor(() => expect(scroller.scrollTop + scroller.clientHeight).toBeGreaterThanOrEqual(scroller.scrollHeight - 2))
   },
 }
 

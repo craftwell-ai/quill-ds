@@ -119,7 +119,9 @@ export function AiMessage({
   }
 
   return (
-    <article data-slot="ai-message" aria-busy={streaming || undefined} className={cn('grid grid-cols-[1.75rem_minmax(0,1fr)] gap-2.5', className)}>
+    // relative: the boxes kept for screen readers only (the hidden name, AiThinking's status) are absolutely
+    // positioned, and must take their place from this reply so they scroll with it inside a scrolling thread.
+    <article data-slot="ai-message" aria-busy={streaming || undefined} className={cn('relative grid grid-cols-[1.75rem_minmax(0,1fr)] gap-2.5', className)}>
       <span aria-hidden data-slot="reply-avatar" className="grid size-7 place-items-center rounded-full border border-border bg-background">
         <AiMark size={15} />
       </span>
