@@ -91,7 +91,7 @@ export function AiPopover({
             </div>
           ) : ready ? (
             // border-input, not the divider line: the tile has to read as a shape on the popover in the dark themes.
-            <div data-slot="suggestion" className="rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed wrap-anywhere text-foreground">{suggestion}</div>
+            <div data-slot="suggestion" className="rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed [overflow-wrap:anywhere] text-foreground">{suggestion}</div>
           ) : null}
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-1.5 px-3.5 pt-2.5 pb-3.5">

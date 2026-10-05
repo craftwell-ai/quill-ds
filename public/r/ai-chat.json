@@ -29,7 +29,7 @@
     "use_when": "An app has a page for an ongoing conversation with its AI assistant.",
     "not_for": "people land with nothing typed yet and need a greeting and starters, not a thread → ai-home; two people are messaging; no AI is involved → chat"
   },
-  "docs": "A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom. Do: Keep the thread on the plain page; the marks and the composer edge already say AI. Don't: Add the AI glow behind the conversation — it belongs to the AI home alone. Use ai-home when people land with nothing typed yet and need a greeting and starters, not a thread. Use chat when two people are messaging; no AI is involved.",
+  "docs": "A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom. Do: Keep the thread on the plain page; the marks and the composer edge already say AI. Don't: Add the AI glow behind the conversation — it belongs to the AI home alone. Do: Treat the conversation shown as sample content: the block does not yet take your app's own messages, so put yours in by editing the thread in your copy of the block. Don't: Ship the sample conversation, or look for a prop that takes messages. Use ai-home when people land with nothing typed yet and need a greeting and starters, not a thread. Use chat when two people are messaging; no AI is involved.",
   "categories": [
     "ai"
   ],

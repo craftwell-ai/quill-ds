@@ -44,7 +44,9 @@ const centreY = (rect: DOMRect) => rect.top + rect.height / 2
 
 export const Default: Story = {
   play: async ({ canvas, args }) => {
-    await expect(canvas.getByRole('group', { name: QUESTION })).toBeVisible()
+    // The card is named by its title and the options by the question, so the question is read once.
+    await expect(canvas.getByRole('group', { name: 'The agent has a question' })).toBeVisible()
+    await expect(canvas.queryByRole('group', { name: QUESTION })).toBeNull()
     const radios = within(canvas.getByRole('radiogroup', { name: QUESTION })).getAllByRole('radio')
     await expect(radios).toHaveLength(3)
     // The recommendation comes first, says so in its name, and the free-text row is last.

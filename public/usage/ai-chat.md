@@ -11,6 +11,7 @@ A full AI conversation page — past chats on the left, the thread in a readable
 
 ### Rules
 - **Do:** Keep the thread on the plain page; the marks and the composer edge already say AI. **Don't:** Add the AI glow behind the conversation — it belongs to the AI home alone.
+- **Do:** Treat the conversation shown as sample content: the block does not yet take your app's own messages, so put yours in by editing the thread in your copy of the block. **Don't:** Ship the sample conversation, or look for a prop that takes messages.
 
 ### Accessibility
 - The sidebar is a navigation landmark named "Chats" with the open chat marked aria-current; the thread and composer sit in a region named "Conversation".

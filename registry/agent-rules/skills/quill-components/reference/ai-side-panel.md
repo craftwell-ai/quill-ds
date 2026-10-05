@@ -15,6 +15,8 @@ An AI assistant docked beside the page — a header with History and Close, a re
 - **Do:** Let the one wash run from the top of the panel to the bottom, behind the header, the thread and the composer. **Don't:** Give the header its own gradient band or add a second wash — a band reads as a hard edge.
 - **Do:** Wire History to your own list of past chats with onHistory. It only calls onHistory: Quill's past-chats view (conversation-history) comes in a later release. Leave onHistory out and the button is not drawn. **Don't:** Ship a History button that does nothing.
 - **Do:** Use the small composer and the list layout for suggestions; the panel is narrow. **Don't:** Put the large composer or starter cards in the panel — they belong to the AI home page.
+- **Do:** Treat the conversation shown as sample content: the block does not yet take your app's own messages, so put yours in by editing the thread in your copy of the block. **Don't:** Ship the sample conversation, or look for a prop that takes messages.
+- **Do:** Keep the composer's gradient edge on the washed panel here. It is on purpose, even though the general rule puts the edge on page-background surfaces. **Don't:** Take it as a reason to put the edge on other tinted surfaces.
 
 ### Accessibility
 - In the Sheet the panel is a modal dialog named by its title. Escape or Close closes it and focus returns to what opened it; opening it puts focus on the first control inside.

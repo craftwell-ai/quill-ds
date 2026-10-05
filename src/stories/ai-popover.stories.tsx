@@ -28,7 +28,7 @@ const meta = {
   // decorator) so the stories with their own render, and the Do/Don't pair, are not wrapped in the sentence.
   render: (args) => (
     <div className="w-[26rem] max-w-full text-sm leading-relaxed text-ink-soft">
-      Q3 closed ahead of plan. <AiPopover {...args} /> <span data-testid="after">We will revisit in October.</span>
+      Q3 closed ahead of plan. <AiPopover {...args} /> <span data-testid="after">We&apos;ll revisit in October.</span>
     </div>
   ),
   args: {

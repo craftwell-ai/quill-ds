@@ -15,7 +15,7 @@ const STEPS: AgentStep[] = [
   { label: 'Make the chart', status: 'waiting' },
   { label: 'Email it to the growth team', status: 'waiting' },
 ]
-const FAILED: AgentStep[] = [{ label: 'Could not open Q2 board deck.pdf', status: 'failed' }]
+const FAILED: AgentStep[] = [{ label: "Couldn't open Q2 board deck.pdf", status: 'failed' }]
 
 const meta = {
   title: 'Components / AgentSteps',
@@ -67,12 +67,12 @@ export const InProgress: Story = {
 export const Failed: Story = {
   args: { title: 'Preparing the September report', steps: FAILED, onRetry: fn() },
   play: async ({ canvas, args }) => {
-    await expect(canvas.getByRole('listitem')).toHaveTextContent('Failed: Could not open Q2 board deck.pdf')
-    const retry = canvas.getByRole('button', { name: 'Retry: Could not open Q2 board deck.pdf' })
+    await expect(canvas.getByRole('listitem')).toHaveTextContent("Failed: Couldn't open Q2 board deck.pdf")
+    const retry = canvas.getByRole('button', { name: "Retry: Couldn't open Q2 board deck.pdf" })
     await expect(retry).toHaveTextContent('Retry')
     await userEvent.click(retry)
     await expect(args.onRetry).toHaveBeenCalledWith(0)
-    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('Failed: Could not open Q2 board deck.pdf. 0 of 1 done'))
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent("Failed: Couldn't open Q2 board deck.pdf. 0 of 1 done"))
   },
 }
 

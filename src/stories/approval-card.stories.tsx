@@ -30,7 +30,7 @@ const meta = {
     actionLabel: 'Send email',
     actionIcon: <Icon name="mail" />,
     onApprove: fn(),
-    denyLabel: 'Do not send',
+    denyLabel: "Don't send",
     onDeny: fn(),
     consequence: 'Goes to 6 people. Nothing is sent until you choose.',
   },
@@ -48,7 +48,7 @@ export const SendEmail: Story = {
     await expect(canvas.getByText('growth@example.com')).toBeVisible()
     await expect(canvas.getByText(BODY)).toBeVisible()
     await expect(canvas.getByText('Goes to 6 people. Nothing is sent until you choose.')).toBeVisible()
-    await userEvent.click(canvas.getByRole('button', { name: 'Do not send' }))
+    await userEvent.click(canvas.getByRole('button', { name: "Don't send" }))
     await expect(args.onDeny).toHaveBeenCalled()
     await userEvent.click(canvas.getByRole('button', { name: 'Send email' }))
     await expect(args.onApprove).toHaveBeenCalledWith(BODY)
@@ -98,7 +98,7 @@ export const Destructive: Story = {
     actionLabel: 'Delete 3 drafts',
     actionIcon: <Icon name="delete" />,
     denyLabel: 'Keep them',
-    consequence: 'This cannot be undone.',
+    consequence: "This can't be undone.",
     destructive: true,
   },
   play: async ({ canvas, canvasElement, args }) => {
@@ -117,7 +117,7 @@ export const Destructive: Story = {
 export const NoDenyCallbackHidesTheButton: Story = {
   args: { onDeny: undefined },
   play: async ({ canvas }) => {
-    await expect(canvas.queryByRole('button', { name: 'Do not send' })).toBeNull()
+    await expect(canvas.queryByRole('button', { name: "Don't send" })).toBeNull()
     await expect(canvas.getAllByRole('button')).toHaveLength(2)
   },
 }
@@ -224,7 +224,7 @@ export const FocusStaysInTheCardAfterDeny: Story = {
     return <ApprovalCard {...args} outcome={outcome} onDeny={() => setOutcome('Not sent.')} />
   },
   play: async ({ canvas }) => {
-    await tabTo(canvas.getByRole('button', { name: 'Do not send' }))
+    await tabTo(canvas.getByRole('button', { name: "Don't send" }))
     await userEvent.keyboard('{Enter}')
     await expect(canvas.queryByRole('button')).toBeNull()
     await expect(document.activeElement).toBe(canvas.getByRole('status'))

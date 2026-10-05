@@ -33,6 +33,18 @@ export const usage = {
       dont: 'Put the large composer or starter cards in the panel — they belong to the AI home page.',
       visual: false,
     },
+    {
+      id: 'thread-is-sample-content',
+      do: 'Treat the conversation shown as sample content: the block does not yet take your app\'s own messages, so put yours in by editing the thread in your copy of the block.',
+      dont: 'Ship the sample conversation, or look for a prop that takes messages.',
+      visual: false,
+    },
+    {
+      id: 'composer-edge-on-the-wash',
+      do: 'Keep the composer\'s gradient edge on the washed panel here. It is on purpose, even though the general rule puts the edge on page-background surfaces.',
+      dont: 'Take it as a reason to put the edge on other tinted surfaces.',
+      visual: false,
+    },
   ],
   a11y: [
     'In the Sheet the panel is a modal dialog named by its title. Escape or Close closes it and focus returns to what opened it; opening it puts focus on the first control inside.',

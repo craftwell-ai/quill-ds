@@ -25,6 +25,7 @@ export type QuestionCardProps = {
   /** The question, in plain words. It names the radio group. */
   question: string
   options: QuestionOption[]
+  /** Names the card for screen readers; the question names the options, so each is read once. */
   title?: string
   /** The value of the agent's pick: it moves to the top and gets the "Recommended" tag. */
   recommended?: string
@@ -110,11 +111,11 @@ export function QuestionCard({
   }
 
   return (
-    <div ref={cardRef} data-slot="question-card" role="group" aria-labelledby={`${baseId}-question`}
+    <div ref={cardRef} data-slot="question-card" role="group" aria-labelledby={`${baseId}-card-title`}
       className={cn('grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm shadow-sm', className)}>
       <div className="flex items-center gap-2">
         <AiMark size={15} />
-        <p className="min-w-0 flex-1 font-semibold break-words text-ink-soft">{title}</p>
+        <p id={`${baseId}-card-title`} className="min-w-0 flex-1 font-semibold break-words text-ink-soft">{title}</p>
       </div>
       <p id={`${baseId}-question`} className="font-semibold break-words text-foreground">{question}</p>
       <RadioGroup aria-labelledby={`${baseId}-question`} value={current?.value ?? null} onValueChange={(value) => choose(String(value))} disabled={locked} className="grid-cols-[minmax(0,1fr)] gap-1.5">
