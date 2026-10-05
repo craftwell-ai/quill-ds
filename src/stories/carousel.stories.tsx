@@ -10,7 +10,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { usage } from '@/usage/carousel.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 
 const meta = {
   title: 'Components / Carousel',
@@ -29,9 +29,7 @@ const meta = {
     },
     className: { table: { disable: true } },
   },
-  decorators: [
-    (Story) => <div className="w-80 px-16"><Story /></div>,
-  ],
+  decorators: [inColumn('w-80 px-16')],
 } satisfies Meta<typeof Carousel>
 
 export default meta
@@ -102,13 +100,12 @@ export const Vertical: Story = {
 
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
-  decorators: [(Story) => <div className="w-[640px]"><Story /></div>],
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName="w-80"
       usage={usage}
       id="always-pair-nav-controls"
       doExample={
-        <div className="px-10">
+        <div className="px-14">
           <Carousel className="w-full" aria-label="Do example carousel">
             <CarouselContent>
               {Array.from({ length: 2 }, (_, i) => (
@@ -127,7 +124,7 @@ export const DoDont: Story = {
         </div>
       }
       dontExample={
-        <div className="px-10">
+        <div className="px-14">
           <Carousel className="w-full" aria-label="Don't example carousel">
             <CarouselContent>
               {Array.from({ length: 2 }, (_, i) => (

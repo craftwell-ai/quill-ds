@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Skeleton } from '@/components/ui/skeleton'
 import { usage } from '@/usage/skeleton.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-72'
 
 const meta = {
   title: 'Components / Skeleton',
@@ -13,7 +16,7 @@ const meta = {
     docs: { description: { component: renderUsageDocs(usage) } },
   },
   argTypes: { className: { table: { disable: true } } },
-  decorators: [(Story) => <div className="w-72"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Skeleton>
 
 export default meta
@@ -79,9 +82,8 @@ export const AllVariants: Story = {
 
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
-  decorators: [(Story) => <div className="w-[640px]"><Story /></div>],
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="match-content-dimensions"
       doExample={

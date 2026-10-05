@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { usage } from '@/usage/aspect-ratio.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-72'
 
 const meta = {
   title: 'Components / AspectRatio',
@@ -18,13 +21,7 @@ const meta = {
       description: 'Width ÷ height (e.g. 16/9)',
     },
   },
-  decorators: [
-    (Story) => (
-      <div className="w-72">
-        <Story />
-      </div>
-    ),
-  ],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof AspectRatio>
 
 export default meta
@@ -83,7 +80,7 @@ export const DoDont: Story = {
   args: { ratio: 16 / 9 },
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="object-cover-for-images"
       doExample={

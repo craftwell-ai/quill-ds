@@ -1,11 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
+import * as React from 'react'
+import { createPortal } from 'react-dom'
+import { expect, fn, spyOn, userEvent, waitFor, within } from 'storybook/test'
 import { AiPanel, AiSidePanel } from '@registry/blocks/ai-side-panel'
 import { AiButton } from '@/components/ui/ai-button'
+import { Button } from '@/components/ui/button'
+import { ApprovalCard } from '@/components/ui/approval-card'
+import { AgentSteps } from '@/components/ui/agent-steps'
 import { usage } from '@/usage/ai-side-panel.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind, washedTop } from '../contrast'
-import { expectFocusRing } from '../focus-ring'
+import { expectFocusRing, tabTo } from '../focus-ring'
 
 // In the canvas the panel gives way to a window shorter than itself, keeping the wrapper's 24px margin (3rem both sides);
 // on the Docs page the window is the whole long page, so it keeps its full height. The story is tagged `framed` so the
@@ -57,6 +62,27 @@ const expectCentredWithMargin = async (element: HTMLElement) => {
   for (const margin of Object.values(margins)) await expect(margin).toBeGreaterThanOrEqual(16)
 }
 
+// The thread's scrolling element. Messages scrolled under the header fade out through a mask, which only exists
+// while something is scrolled above: 'none' at the very top, a gradient as soon as the thread has moved.
+const threadOf = (root: HTMLElement) => root.querySelector('[data-slot="thread"]') as HTMLElement
+const fadeOf = (thread: HTMLElement) => getComputedStyle(thread).maskImage
+
+// Every "Assistant" a sighted person can see. A name kept for screen readers only is a 1px clipped box.
+const visibleNames = (root: HTMLElement, name = 'Assistant') =>
+  within(root).queryAllByText(name).filter((element) => {
+    const box = (element.closest('[data-slot="reply-name"]') ?? element).getBoundingClientRect()
+    return box.width > 1 && box.height > 1
+  })
+// A reply's avatar and the first row beside it share one centre line, measured from the first line's own glyph box.
+const expectLevelWithAvatar = async (firstRow: Element) => {
+  const avatar = (firstRow.closest('article')?.querySelector('[data-slot="reply-avatar"]') as HTMLElement).getBoundingClientRect()
+  // The first text node, not the element: a range around a whole paragraph reports the paragraph's box.
+  const range = document.createRange()
+  range.selectNodeContents(document.createTreeWalker(firstRow, NodeFilter.SHOW_TEXT).nextNode() as Text)
+  const line = range.getClientRects()[0]
+  await expect(Math.abs((line.top + line.bottom) / 2 - (avatar.top + avatar.bottom) / 2)).toBeLessThanOrEqual(1)
+}
+
 const DESKTOP = { parameters: { viewport: { options: VIEWPORTS } }, globals: { viewport: { value: 'desktop', isRotated: false } } } as const
 
 // Read-only on purpose: this is the story the Figma frame is compared with.
@@ -79,6 +105,15 @@ export const Default: Story = {
       await expect(getComputedStyle(part).backgroundImage).toBe('none')
       await expect(getComputedStyle(part).backgroundColor).toBe('rgba(0, 0, 0, 0)')
     }
+    // The header says "Assistant" once; the reply does not repeat it, but still carries it for screen readers.
+    await expect(visibleNames(log)).toHaveLength(0)
+    await expect(visibleNames(panel)).toEqual([within(panel).getByText('Assistant', { selector: 'p[id]' })])
+    await expect(within(log).getByText('Assistant')).toBeInTheDocument()
+    await expectLevelWithAvatar(log.querySelector('[data-slot="reply-body"]') as HTMLElement)
+    // A short thread has nothing scrolled above it, so nothing fades: the first message is drawn in full.
+    const thread = threadOf(panel)
+    await expect(thread.scrollTop).toBe(0)
+    await expect(fadeOf(thread)).toBe('none')
   },
 }
 
@@ -119,8 +154,13 @@ export const AskAndStop: Story = {
     await expect(canvas.getByRole('log', { name: 'Messages' })).toHaveTextContent('Draft a fix for the pricing page')
     // Every reply carries a (usually empty) status region; the working one fills just after it mounts.
     await waitFor(() => expect(canvas.getAllByRole('status').some((region) => region.textContent?.includes('Reading the page'))).toBe(true))
+    // The working reply has no name row either: "Thinking" sits level with its avatar.
+    const log = canvas.getByRole('log', { name: 'Messages' })
+    await expectLevelWithAvatar(log.querySelector('.ai-shimmer') as HTMLElement)
     await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
+    await expectLevelWithAvatar(canvas.getByText('You stopped this answer.'))
+    await expect(visibleNames(log)).toHaveLength(0)
     // Stop unmounts with the working state; the cursor must land back in the box, not on the page.
     await expect(box).toHaveFocus()
   },
@@ -221,8 +261,8 @@ export const LongThreadScrolls: Story = {
       await userEvent.type(box, `Question number ${turn}{Enter}`)
       await userEvent.click(await canvas.findByRole('button', { name: 'Stop' }))
     }
-    const log = canvas.getByRole('log', { name: 'Messages' })
-    const scroller = log.parentElement?.parentElement as HTMLElement
+    const scroller = threadOf(panel)
+    await expect(scroller).toBe(canvas.getByRole('log', { name: 'Messages' }).parentElement?.parentElement)
     await expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight)
     const outer = panel.getBoundingClientRect()
     await expect(panel.getBoundingClientRect().height).toBeLessThanOrEqual(449)
@@ -234,6 +274,112 @@ export const LongThreadScrolls: Story = {
     await expect(history.bottom).toBeLessThanOrEqual(outer.bottom)
     // The newest turn is the one in view.
     await expect(scroller.scrollTop + scroller.clientHeight).toBeGreaterThanOrEqual(scroller.scrollHeight - 2)
+    // Messages are scrolled above, so they fade out under the header: a mask (no colour, so the wash shows through
+    // in every theme), from clear at the top edge to solid 28px down.
+    await waitFor(() => expect(fadeOf(scroller)).toContain('gradient'))
+    await expect(fadeOf(scroller)).toMatch(/28px\)$/)
+    // A mask is not an element: nothing sits over the thread to take a press meant for a message.
+    const edge = scroller.getBoundingClientRect()
+    await expect(scroller.contains(document.elementFromPoint(edge.left + edge.width / 2, edge.top + 10))).toBe(true)
+    // Back at the very top there is nothing above to fade, and the first thing in the thread is drawn in full.
+    scroller.scrollTop = 0
+    await waitFor(() => expect(fadeOf(scroller)).toBe('none'))
+    // A nudge that only moves the thread's own 4px of top padding fades nothing: no message is under the header yet.
+    scroller.scrollTop = 4
+    await new Promise((resolve) => window.setTimeout(resolve, 100))
+    await expect(scroller.scrollTop).toBe(4)
+    await expect(fadeOf(scroller)).toBe('none')
+    scroller.scrollTop = 5
+    await waitFor(() => expect(fadeOf(scroller)).toContain('gradient'))
+    scroller.scrollTop = scroller.scrollHeight
+    await waitFor(() => expect(fadeOf(scroller)).toMatch(/28px\)$/))
+    // A control reached by keyboard is scrolled clear of the fade, so its focus ring is never drawn half-faded.
+    // Walking back from the composer passes every control in the thread: the first reply's Copy and source chip
+    // (mid-thread), then the chip's remove button (the very top).
+    await userEvent.click(box)
+    let visited = 0
+    for (let press = 0; press < 6; press += 1) {
+      await userEvent.tab({ shift: true })
+      const focused = document.activeElement as HTMLElement
+      if (!scroller.contains(focused)) break
+      visited += 1
+      await waitFor(() => {
+        const fade = /([\d.]+)px\)$/.exec(fadeOf(scroller))
+        const fadeBottom = scroller.getBoundingClientRect().top + (fade ? Number(fade[1]) : 0)
+        // 3px: the focus ring is drawn outside the control.
+        expect(focused.getBoundingClientRect().top - 3).toBeGreaterThanOrEqual(fadeBottom)
+      })
+    }
+    await expect(visited).toBeGreaterThanOrEqual(3)
+    // Chromium centres a focused control; other browsers bring it just inside the nearest edge, which here is the
+    // faded one. The thread's scroll padding is what keeps it clear there, so that route is measured too.
+    const copy = canvas.getByRole('button', { name: 'Copy' })
+    scroller.scrollTop = scroller.scrollHeight
+    copy.scrollIntoView({ block: 'nearest' })
+    await waitFor(() => expect(fadeOf(scroller)).toMatch(/28px\)$/))
+    await expect(copy.getBoundingClientRect().top - 3).toBeGreaterThanOrEqual(scroller.getBoundingClientRect().top + 28)
+    // The names kept for screen readers scroll with their replies. Left behind at their unscrolled places they would
+    // hang below the panel and make the page itself scroll.
+    await expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
+    for (const name of Array.from(scroller.querySelectorAll('[data-slot="reply-name"]'))) {
+      const reply = (name.closest('article') as HTMLElement).getBoundingClientRect()
+      await expect(name.getBoundingClientRect().top).toBeGreaterThanOrEqual(reply.top - 1)
+      await expect(name.getBoundingClientRect().bottom).toBeLessThanOrEqual(reply.bottom + 1)
+    }
+    // Leave the example as people meet it: the cursor in the box, the newest turn in view, the older ones fading out
+    // under the header.
+    await userEvent.click(box)
+    scroller.scrollTop = scroller.scrollHeight
+    await waitFor(() => expect(scroller.scrollTop + scroller.clientHeight).toBeGreaterThanOrEqual(scroller.scrollHeight - 2))
+  },
+}
+
+// The block's thread is sample content an app replaces in its own copy, often with other kit pieces. Those carry
+// boxes kept for screen readers that are absolutely positioned; the thread is their positioned ancestor, so they
+// scroll with it. Left to the page, they would sit at their unscrolled places below the panel and make the page scroll.
+// The pieces are put into the real thread through a portal, the nearest a story can get to an edited copy.
+function KitPiecesInTheThread() {
+  const [log, setLog] = React.useState<Element | null>(null)
+  const anchor = React.useRef<HTMLSpanElement>(null)
+  React.useEffect(() => { setLog(anchor.current?.parentElement?.querySelector('[role="log"]') ?? null) }, [])
+  return (
+    <>
+      <span ref={anchor} hidden />
+      {log ? createPortal(
+        <>
+          {[1, 2, 3].map((draft) => (
+            <ApprovalCard key={draft} title={`The agent wants to publish draft ${draft}`} details={[{ label: 'Page', value: 'Pricing' }]}
+              defaultBody="Annual plans move back under monthly ones, as they were before 9 September." actionLabel="Publish" onApprove={() => {}} onDeny={() => {}} />
+          ))}
+          <AgentSteps title="Fixing the pricing page" steps={[{ label: 'Read the page', status: 'done' }, { label: 'Draft the change', status: 'running' }, { label: 'Check the links', status: 'waiting' }]} />
+        </>,
+        log,
+      ) : null}
+    </>
+  )
+}
+
+export const ThreadHoldsOtherKitPieces: Story = {
+  ...DESKTOP,
+  parameters: { ...DESKTOP.parameters, docs: { description: { story: 'Other kit pieces in the thread scroll with it, including the text they keep for screen readers.' } } },
+  render: (args, { viewMode }) => (
+    <>
+      <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory}
+        className={`${fitHeight(viewMode, 'h-[28rem]', 'h-[min(28rem,calc(100dvh-3rem))]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />
+      <KitPiecesInTheThread />
+    </>
+  ),
+  play: async ({ canvas }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const thread = threadOf(panel)
+    await waitFor(() => expect(within(thread).getAllByRole('button', { name: 'Publish' })).toHaveLength(3))
+    await expect(within(thread).getByText('Fixing the pricing page')).toBeInTheDocument()
+    // Far more than the window holds, so anything left at its unscrolled place would hang below the window.
+    await expect(thread.scrollHeight).toBeGreaterThan(window.innerHeight)
+    thread.scrollTop = thread.scrollHeight
+    await waitFor(() => expect(fadeOf(thread)).toContain('gradient'))
+    await expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
   },
 }
 
@@ -259,6 +405,10 @@ export const InASheet: Story = {
     // The Sheet fades in, and a faded-out element counts as hidden.
     await waitFor(() => expect(within(dialog).getByText('Looking at: Q3 report')).toBeVisible())
     await expect(within(dialog).getByRole('textbox', { name: 'Message' })).toBeVisible()
+    // On a desktop the panel is the stock Sheet's width (24rem), docked to the right edge, once it has slid in.
+    await expect(window.innerWidth).toBe(1024)
+    await waitFor(() => expect(dialog.getBoundingClientRect().right).toBe(1024))
+    await expect(dialog.getBoundingClientRect().width).toBe(384)
     // One Close: the panel's own. The Sheet's corner button is switched off.
     await expect(within(dialog).getAllByRole('button', { name: 'Close' })).toHaveLength(1)
     await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
@@ -275,17 +425,109 @@ export const InASheet: Story = {
   },
 }
 
+// People open the assistant to ask it something, so the cursor is in the message box, not on History (the first
+// button, where the Sheet would put it). Closing still hands focus back to whatever opened the panel.
+export const OpensWithTheCursorInTheMessageBox: Story = {
+  ...DESKTOP,
+  render: inSheet,
+  play: async ({ canvas }) => {
+    const page = within(document.body)
+    const trigger = canvas.getByRole('button', { name: 'Ask the assistant' })
+    await tabTo(trigger)
+    await userEvent.keyboard('{Enter}')
+    let dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole('textbox', { name: 'Message' })))
+    // Typing goes straight into the box.
+    await userEvent.keyboard('Why the dip?')
+    await expect(within(dialog).getByRole('textbox', { name: 'Message' })).toHaveValue('Why the dip?')
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
+    await waitFor(() => expect(trigger).toHaveFocus())
+    // Opened with the mouse, the same.
+    await userEvent.click(trigger)
+    dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole('textbox', { name: 'Message' })))
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
+    await waitFor(() => expect(trigger).toHaveFocus())
+  },
+}
+
+// The app opens the panel itself (the `open` prop, no trigger), so the Sheet never sees what was pressed and cannot
+// tell a finger from a mouse. The panel then goes by the device: on a touch screen (a coarse pointer) focus stays on
+// the panel, so the on-screen keyboard does not cover it; anywhere else the cursor goes into the message box.
+export const OpenedByTheApp: Story = {
+  ...DESKTOP,
+  render: function Render(args) {
+    const [open, setOpen] = React.useState(false)
+    return (
+      <>
+        <Button type="button" variant="outline" onClick={() => setOpen(true)}>Open from the app</Button>
+        <AiSidePanel {...args} open={open} onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }} />
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    const page = within(document.body)
+    const opener = canvas.getByRole('button', { name: 'Open from the app' })
+    const closed = () => waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
+    // The test browser has a mouse, not a touch screen.
+    await expect(window.matchMedia('(pointer: coarse)').matches).toBe(false)
+    await userEvent.click(opener)
+    let dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole('textbox', { name: 'Message' })))
+    await userEvent.keyboard('{Escape}')
+    await closed()
+    // The same press on a touch screen. The device is stood in for by answering the one media query the panel asks;
+    // every other query gets the browser's own answer.
+    const realMatchMedia = window.matchMedia.bind(window)
+    const media = spyOn(window, 'matchMedia').mockImplementation((query: string) => (
+      query === '(pointer: coarse)' ? { ...realMatchMedia(query), matches: true, media: query } as MediaQueryList : realMatchMedia(query)
+    ))
+    try {
+      await userEvent.click(opener)
+      dialog = await page.findByRole('dialog', { name: 'Assistant' })
+      await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true))
+      await waitFor(() => expect(within(dialog).getByRole('textbox', { name: 'Message' })).toBeVisible())
+      await expect(document.activeElement).toBe(dialog)
+      await expect(media).toHaveBeenCalledWith('(pointer: coarse)')
+      await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+      await closed()
+    } finally {
+      media.mockRestore()
+    }
+  },
+}
+
+// On a phone the stock Sheet leaves a quarter of the screen to the page behind it. The assistant takes the whole width:
+// a 280px column is too narrow for a conversation, and the strip beside it is too thin to be useful.
 export const Phone: Story = {
   parameters: { viewport: { options: VIEWPORTS } },
   globals: { viewport: { value: 'phone', isRotated: false } },
   render: inSheet,
   play: async ({ canvas }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Ask the assistant' }))
-    const dialog = await within(document.body).findByRole('dialog', { name: 'Assistant' })
-    await expect(window.innerWidth).toBeLessThanOrEqual(375)
-    await waitFor(() => expect(dialog.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1))
-    await expect(dialog.getBoundingClientRect().width).toBeLessThanOrEqual(window.innerWidth)
+    await waitFor(() => expect(window.innerWidth).toBe(375))
+    // A finger, not a mouse: this is how the panel is opened on a phone.
+    await userEvent.pointer({ keys: '[TouchA]', target: canvas.getByRole('button', { name: 'Ask the assistant' }) })
+    const page = within(document.body)
+    const dialog = await page.findByRole('dialog', { name: 'Assistant' })
+    // Opened by touch, focus goes to the panel itself, not into the message box: that would throw the on-screen
+    // keyboard over half the panel before anything has been read.
+    await waitFor(() => expect(document.activeElement).toBe(dialog))
+    // Edge to edge once it has slid in.
+    await waitFor(() => expect(dialog.getBoundingClientRect().right).toBe(375))
+    await expect(dialog.getBoundingClientRect().left).toBe(0)
+    await expect(dialog.getBoundingClientRect().width).toBe(375)
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
     await expect(within(dialog).getByRole('textbox', { name: 'Message' })).toBeVisible()
+    // With no page left to press beside the panel, Close has to be on screen and has to work.
+    const close = within(dialog).getByRole('button', { name: 'Close' })
+    await waitFor(() => expect(close).toBeVisible())
+    const closeBox = close.getBoundingClientRect()
+    await expect(closeBox.left).toBeGreaterThanOrEqual(0)
+    await expect(closeBox.right).toBeLessThanOrEqual(375)
+    await expect(close.contains(document.elementFromPoint(closeBox.left + closeBox.width / 2, closeBox.top + closeBox.height / 2))).toBe(true)
+    await userEvent.click(close)
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
   },
 }

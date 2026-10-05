@@ -6,9 +6,9 @@ import { Icon } from '@/components/ui/icon'
 import { usage } from '@/usage/approval-card.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { Button } from '@/components/ui/button'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 import { tabTo } from './focus-ring'
-import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
+import { compositeOver, contrastRatio, lineColour, surfaceBehind } from './contrast'
 
 const BODY = 'Hi team, September came in 12% under target, though the quarter still closed 4% ahead. The dip lines up with the pricing page change on the 9th. Chart attached.'
 const DETAILS = [
@@ -16,12 +16,15 @@ const DETAILS = [
   { label: 'Subject', value: 'September signups: 12% under target' },
 ]
 
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-[30rem] max-w-full'
+
 const meta = {
   title: 'Components / ApprovalCard',
   component: ApprovalCard,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="w-[30rem] max-w-full"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
   args: {
     title: 'The agent wants to send this email',
     details: DETAILS,
@@ -46,6 +49,9 @@ export const SendEmail: Story = {
     await expect(canvas.getByRole('button', { name: 'Send email' })).toBeVisible()
     await expect(canvas.queryByRole('button', { name: /approve/i })).toBeNull()
     await expect(canvas.getByText('growth@example.com')).toBeVisible()
+    // The app passes "To" and "Subject"; the card ends each label with a colon.
+    await expect(canvas.getByText('To:')).toBeVisible()
+    await expect(canvas.getByText('Subject:')).toBeVisible()
     await expect(canvas.getByText(BODY)).toBeVisible()
     await expect(canvas.getByText('Goes to 6 people. Nothing is sent until you choose.')).toBeVisible()
     await userEvent.click(canvas.getByRole('button', { name: "Don't send" }))
@@ -175,20 +181,59 @@ export const OutcomeIsAnnounced: Story = {
 export const RepeatedDetailLabels: Story = {
   args: { details: [{ label: 'Cc', value: 'ana@example.com' }, { label: 'Cc', value: 'lee@example.com' }] },
   play: async ({ canvas }) => {
-    await expect(canvas.getAllByText('Cc')).toHaveLength(2)
+    await expect(canvas.getAllByText('Cc:')).toHaveLength(2)
     await expect(canvas.getByText('lee@example.com')).toBeVisible()
   },
 }
 
-// The tile is a fill on a fill; without a line that can be seen it vanishes in the dark themes.
-export const ProposalReadsAsAShape: Story = {
+// The card adds the colon, so every app gets the same labels. Only a label that already ends in a colon or a
+// question mark (in any script) is left as it is: no "Subject::", no "Send a copy?:". An abbreviation's full stop is
+// not the end of a label, so "Qty." gets its colon like its neighbours. An empty label does not become a lone colon,
+// and a label that is not text (a plain-JS app can pass a node) is drawn as given.
+export const DetailLabelsEndWithOneColon: Story = {
+  args: {
+    details: [
+      { label: 'To', value: 'growth@example.com' },
+      { label: 'Subject:', value: 'September signups' },
+      { label: 'Amount: ', value: '$240.00' },
+      { label: 'Send a copy to you?', value: 'Yes' },
+      { label: 'Total：', value: '¥2,400' },
+      { label: 'Qty.', value: '3' },
+      { label: 'Acct. No.', value: '0042' },
+      { label: '送りますか？', value: 'はい' },
+      { label: 'هل ترسل؟', value: 'نعم' },
+      { label: '', value: 'A value with no label' },
+      { label: <em>Via</em> as unknown as string, value: 'Email' },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const labels = Array.from(canvasElement.querySelectorAll('dt')).map((term) => term.textContent)
+    await expect(labels).toEqual(['To:', 'Subject:', 'Amount:', 'Send a copy to you?', 'Total：', 'Qty.:', 'Acct. No.:', '送りますか？', 'هل ترسل؟', '', 'Via'])
+  },
+}
+
+// The proposal tile is read-only content, so it takes the soft divider line, not the control line that marks things
+// to press or type in. What tells it apart from the card is its FILL (the page colour inside the card colour) plus
+// that hairline, so this checks the fill is there and differs from the card, and that the line is the 1px divider.
+// No contrast floor is asserted: the soft line is not meant to reach 3:1, and the tile holds no control.
+// Measured 2026-10-05, fill vs card · hairline vs card:
+//   Dawn 1.08:1 · 1.25:1    Dusk 1.10:1 · 1.33:1    Classic Light 1.07:1 · 1.29:1
+//   Classic Dark 1.11:1 · 1.37:1    Intelligent 1.09:1 · 1.31:1
+// (Until 0.19.0 the tile wore the control line and this test held it to 3:1; that floor now belongs to controls only.)
+export const ProposalTakesTheDividerLine: Story = {
   play: async ({ canvasElement }) => {
     const tile = canvasElement.querySelector('[data-slot="proposal"]') as HTMLElement
     const surface = surfaceBehind(tile)
-    const outline = compositeOver(getComputedStyle(tile).borderTopColor, `rgb(${surface.join(' ')})`)
-    const ratio = contrastRatio(outline, surface)
-    console.log(`approval-card proposal outline ${ratio.toFixed(2)}:1`)
-    await expect(ratio).toBeGreaterThanOrEqual(3)
+    const backdrop = `rgb(${surface.join(' ')})`
+    const style = getComputedStyle(tile)
+    await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+    const fill = compositeOver(style.backgroundColor, backdrop)
+    await expect(fill).not.toEqual(surface)
+    await expect(style.borderTopWidth).toBe('1px')
+    await expect(style.borderTopStyle).toBe('solid')
+    await expect(style.borderTopColor).toBe(lineColour(tile, 'border-border'))
+    const hairline = compositeOver(style.borderTopColor, backdrop)
+    console.log(`approval-card proposal tile: fill vs card ${contrastRatio(fill, surface).toFixed(2)}:1 · hairline vs card ${contrastRatio(hairline, surface).toFixed(2)}:1`)
   },
 }
 
@@ -322,8 +367,9 @@ export const BlankBodyWithNoDetailsHasNoTile: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: (args) => (
-    <DoDontPair usage={usage} id="button-names-the-action"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="button-names-the-action"
       doExample={<ApprovalCard {...args} defaultBody={undefined} />}
       dontExample={<ApprovalCard {...args} defaultBody={undefined} actionLabel="Approve" actionIcon={undefined} />} />
   ),

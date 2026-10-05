@@ -65,6 +65,27 @@ export function AiPopover({
   }
   const popupRef = React.useRef<HTMLDivElement>(null)
   const ready = !working && isShown(suggestion)
+  // The middle of the popover scrolls when the suggestion is taller than the space left on screen. It holds nothing
+  // a keyboard can land on, so while it overflows (and only then) it is a Tab stop itself; some browsers do not make
+  // a scroller focusable on their own. The overflow is measured, and remembered against the element it was measured
+  // on, so a popover that opens again starts as "fits" instead of with the last one's answer.
+  const [scrollArea, setScrollArea] = React.useState<HTMLDivElement | null>(null)
+  const [overflowing, setOverflowing] = React.useState<HTMLDivElement | null>(null)
+  const scrolls = scrollArea !== null && overflowing === scrollArea
+  React.useEffect(() => {
+    if (!scrollArea || typeof ResizeObserver === 'undefined') return
+    // Fires once on observe, then whenever the area (the window changed) or what is in it (the suggestion changed) resizes.
+    const observer = new ResizeObserver(() => {
+      const overflows = scrollArea.scrollHeight > scrollArea.clientHeight
+      // The area is about to stop being focusable; keep a keyboard user inside the popover rather than on the page.
+      if (!overflows && document.activeElement === scrollArea) popupRef.current?.focus()
+      setOverflowing(overflows ? scrollArea : null)
+    })
+    observer.observe(scrollArea)
+    for (const child of Array.from(scrollArea.children)) observer.observe(child)
+    return () => observer.disconnect()
+    // working and ready swap the area's children, which have to be observed afresh.
+  }, [scrollArea, working, ready])
   // A Button or a <button> is a native button. Highlighted text (a <mark>, a <span>) is not, and the trigger has to
   // be told so it adds the button role, a Tab stop and Enter / Space.
   const nativeButton = typeof children.type !== 'string' || children.type === 'button'
@@ -81,8 +102,11 @@ export function AiPopover({
           <PopoverTitle render={<p />} className="min-w-0 flex-1 text-sm font-semibold text-foreground">{title}</PopoverTitle>
         </div>
         {/* The popup is capped to the space the positioner has left. The header and the buttons stay put; only this
-            middle part scrolls, so Replace is never pushed off a short screen. */}
-        <div className="grid min-h-0 grid-cols-[minmax(0,1fr)] gap-2.5 overflow-y-auto px-3.5 pt-1.5">
+            middle part scrolls, so Replace is never pushed off a short screen. While it overflows it is a named Tab
+            stop, so the arrow and Page keys scroll it. Its ring is an outline drawn just inside it: the popover clips
+            anything outside, and an outline is painted over the text scrolling past. */}
+        <div ref={setScrollArea} {...(scrolls ? { tabIndex: 0, role: 'group', 'aria-label': 'Suggested text' } : {})}
+          className="grid min-h-0 grid-cols-[minmax(0,1fr)] gap-2.5 overflow-y-auto px-3.5 pt-1.5 focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-ring/50">
           <WritingStatus working={working} label={workingLabel} />
           {working ? (
             <div className="grid gap-1.5">
@@ -90,8 +114,9 @@ export function AiPopover({
               <span aria-hidden className="ai-line" />
             </div>
           ) : ready ? (
-            // border-input, not the divider line: the tile has to read as a shape on the popover in the dark themes.
-            <div data-slot="suggestion" className="rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed [overflow-wrap:anywhere] text-foreground">{suggestion}</div>
+            // The divider line, not the control line: the tile is read-only content, told apart from the popover by
+            // its fill. The control line is kept for things people press or type in.
+            <div data-slot="suggestion" className="rounded-lg border border-border bg-background px-3 py-2 text-sm leading-relaxed [overflow-wrap:anywhere] text-foreground">{suggestion}</div>
           ) : null}
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-1.5 px-3.5 pt-2.5 pb-3.5">

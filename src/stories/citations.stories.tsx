@@ -4,7 +4,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Citation, Sources, type Source } from '../../registry/lib/citations'
 import { usage } from '@/usage/citations.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 import { expectFocusRing } from './focus-ring'
 
 const SOURCES: Source[] = [
@@ -13,12 +13,15 @@ const SOURCES: Source[] = [
   { title: 'New pricing page', label: 'changelog', detail: 'craftwell.ai/changelog', snippet: 'Shipped 9 September: annual plans shown first.', href: 'https://craftwell.ai/changelog', kind: 'web' },
 ]
 
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-[34rem] max-w-full'
+
 const meta = {
   title: 'Components / Citations',
   component: Sources,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="w-[34rem] max-w-full"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
   args: { sources: SOURCES },
 } satisfies Meta<typeof Sources>
 
@@ -284,9 +287,10 @@ export const NoSources: Story = {
   },
 }
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   args: { sources: SOURCES },
   render: () => (
-    <DoDontPair usage={usage} id="chip-after-claim"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="chip-after-claim"
       doExample={<Answer />}
       dontExample={<div className="grid gap-1 text-sm"><p>Signups beat target in July and August but fell 12% short in September. The dip matches the pricing page change.</p><p className="text-xs text-muted-foreground">Sources: Q3 board deck.pdf, signups-sept.csv, New pricing page</p></div>} />
   ),

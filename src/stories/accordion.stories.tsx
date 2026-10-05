@@ -7,7 +7,10 @@ import {
 } from '@/components/ui/accordion'
 import { usage } from '@/usage/accordion.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-80'
 
 const meta = {
   title: 'Components / Accordion',
@@ -25,13 +28,7 @@ const meta = {
     },
     className: { table: { disable: true } },
   },
-  decorators: [
-    (Story) => (
-      <div className="w-80">
-        <Story />
-      </div>
-    ),
-  ],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Accordion>
 
 export default meta
@@ -135,7 +132,7 @@ export const Dark: Story = {
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="trigger-stays-light-on-hover"
       doExample={

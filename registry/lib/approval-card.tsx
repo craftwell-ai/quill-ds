@@ -9,10 +9,20 @@ import { cn } from '@/lib/utils'
 
 export type ApprovalDetail = { label: string; value: React.ReactNode }
 
+// The card ends each label with a colon so every app's rows read the same ("To:", "Subject:"). A label that already
+// ends in a colon or a question mark, in any script, is left alone (no "Subject::", no "Send a copy?:"); a full stop
+// is not one of them, because it usually closes an abbreviation ("Qty."). An empty label stays empty, and a label
+// that is not text (a plain-JS app can pass a node) is drawn as given.
+const withColon = (label: React.ReactNode) => {
+  if (typeof label !== 'string') return label
+  const trimmed = label.trim()
+  return trimmed === '' || /[:：?？؟]$/.test(trimmed) ? trimmed : `${trimmed}:`
+}
+
 export type ApprovalCardProps = {
   /** Names the action: "The agent wants to send this email". */
   title: string
-  /** Key and value rows that say exactly what will happen: To, Subject, Amount. */
+  /** Key and value rows that say exactly what will happen: To, Subject, Amount. Pass the bare word; the card adds the colon. */
   details?: ApprovalDetail[]
   /** The content itself. Controlled when passed; leave it out and use defaultBody to let the card keep its own. */
   body?: string
@@ -94,14 +104,15 @@ export function ApprovalCard({
         <p id={titleId} className="min-w-0 flex-1 font-semibold break-words text-ink-soft">{title}</p>
       </div>
       {showTile ? (
-        // border-input, not the divider line: the tile has to read as a shape on the card in the dark themes.
-        <div data-slot="proposal" className="grid grid-cols-[minmax(0,1fr)] gap-1.5 rounded-lg border border-input bg-background px-3 py-2.5">
+        // The divider line, not the control line: the tile is read-only content, told apart from the card by its fill.
+        // The control line is kept for things people press or type in.
+        <div data-slot="proposal" className="grid grid-cols-[minmax(0,1fr)] gap-1.5 rounded-lg border border-border bg-background px-3 py-2.5">
           {rows.length ? (
             <dl className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-3 gap-y-1">
               {rows.map((row, index) => (
                 // Labels may repeat (two Cc rows); the list is never reordered, so position is a stable key.
                 <React.Fragment key={index}>
-                  <dt className="text-muted-foreground">{row.label}</dt>
+                  <dt className="text-muted-foreground">{withColon(row.label)}</dt>
                   <dd className="min-w-0 break-words text-foreground">{row.value}</dd>
                 </React.Fragment>
               ))}

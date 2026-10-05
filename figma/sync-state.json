@@ -1813,7 +1813,7 @@
       "variantOf": "1139:112",
       "variant": "State=default",
       "codeFile": "registry/lib/ai-message.tsx",
-      "lastSynced": "2026-10-04",
+      "lastSynced": "2026-10-05",
       "figma": {
         "strokeWeight": {
           "var": null,
@@ -2142,7 +2142,7 @@
         "effectStyle": "Elevation/sm",
         "texts": {
           "Title": "The agent wants to send this email",
-          "Label": "Subject",
+          "Label": "Subject:",
           "Value": "September signups: 12% under target",
           "Body": "Hi team, September came in 12% under target, though the quarter still closed 4% ahead. The dip lines up with the pricing page change on the 9th. Chart attached.",
           "Button": "Don't send",
@@ -2331,7 +2331,7 @@
       "page": "❖ AI side panel",
       "pageId": "1180:2",
       "frameId": "1180:208",
-      "codeHash": "3e3c2bd70b5d92fb",
+      "codeHash": "387cbaf36b3372b8",
       "syncedAt": "2026-10-05"
     },
     {

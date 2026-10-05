@@ -4,7 +4,10 @@ import { Icon } from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
 import { usage } from '@/usage/alert.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-96'
 
 const meta = {
   title: 'Components / Alert',
@@ -23,13 +26,7 @@ const meta = {
     },
     className: { table: { disable: true } },
   },
-  decorators: [
-    (Story) => (
-      <div className="w-96">
-        <Story />
-      </div>
-    ),
-  ],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Alert>
 
 export default meta
@@ -118,7 +115,7 @@ export const AllVariants: Story = {
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="severity-matches-variant"
       doExample={

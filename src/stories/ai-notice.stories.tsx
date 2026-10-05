@@ -35,6 +35,7 @@ export const LinkShowsFocusRing: Story = {
   },
 }
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair usage={usage} id="quiet-line-not-banner"
       doExample={<AiNotice />}

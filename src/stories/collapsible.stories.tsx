@@ -10,7 +10,10 @@ import { Icon } from '@/components/ui/icon'
 import { useState } from 'react'
 import { usage } from '@/usage/collapsible.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-72'
 
 const meta = {
   title: 'Components / Collapsible',
@@ -25,7 +28,7 @@ const meta = {
     defaultOpen: { control: 'boolean', description: 'Initial open state' },
     className: { table: { disable: true } },
   },
-  decorators: [(Story) => <div className="w-72"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Collapsible>
 
 export default meta
@@ -76,7 +79,7 @@ export const DefaultOpen: Story = {
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="pair-trigger-with-icon-rotation"
       doExample={

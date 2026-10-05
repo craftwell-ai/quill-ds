@@ -13,6 +13,28 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.19.0] — 2026-10-05
+
+Six design calls on the AI kit, chosen from a side-by-side review of each piece as it was and its alternative.
+
+### Added
+- **`AiMessage` can hide its name.** A new option, `hideName` (off by default), takes the reply's name out of view where something nearby already says who is answering. Screen readers still read it: the avatar is decoration, so the name is the reply's only speaker label. With the name hidden the first row beside the avatar (the answer, the "Thinking" row or "You stopped this answer.") starts level with the avatar and shares its centre line, with no empty row where the name was.
+- **A rule for outlines in the AI kit:** read-only content tiles use the divider line (`border-border`); things people press, remove or type in use the control line (`border-input`). Written into the approval card's and the popover's usage guidance and the Figma notes.
+
+### Changed
+- **AI side panel: scrolled messages fade out under the header** instead of being cut in a straight line. The fade is a mask, so it has no colour of its own and works on the wash in every theme. It only appears while something is scrolled above: at the top of the thread the first message is drawn in full. It takes no presses, and a control reached by keyboard is scrolled clear of it. The fade is 28px deep and switches on once the thread has moved more than 4px (its own top padding, so a small nudge fades nothing); it does not grow gradually.
+- **AI side panel: replies no longer repeat "Assistant".** The header already says it, so the block passes `hideName` on every reply. `ai-chat` is unchanged: on the full chat page replies keep their name.
+- **AI side panel: full width on a phone.** Below 640px the panel's Sheet covers the whole screen instead of three quarters of it. From 640px up it is the same 24rem as before. The stock Sheet is untouched.
+- **AI side panel: opens with the cursor in the message box,** not on the first button (History). Opened by a touch on its trigger, focus goes to the panel itself, as the stock Sheet does, so the on-screen keyboard does not cover the panel before anything has been read. When the app opens the panel itself (the `open` prop), the Sheet cannot tell what was pressed, so the device decides: where the main pointer is a finger (`pointer: coarse`) focus goes to the panel, anywhere else to the message box. Closing still returns focus to whatever opened the panel. `AiPanel` takes an optional `composerRef` for this.
+- **Read-only tiles have a softer outline.** The approval card's proposal tile and the popover's suggestion tile move from the control line to the divider line; their fill is unchanged, and the fill is now what tells them apart from the surface. The question card's option rows and the side panel's scope chip are controls and keep the control line. The two tests that held these outlines to 3:1 and 2:1 now check the fill and the 1px divider line instead, and record the measured contrast in all five themes (fill against the surface 1.07 to 1.41:1, line against the surface 1.25 to 1.45:1).
+- **Approval card: detail labels end with a colon.** "To" and "Subject" read "To:" and "Subject:". The card adds it, so apps keep passing the bare word; a label that already ends in a colon or a question mark is left as it is ("Qty." becomes "Qty.:").
+- **Figma:** the AiMessage twin gains a `Name` property (on by default) and the side panel frame turns it off; the two tiles bind the divider-line variable; the approval card's labels carry their colons. Not drawn: the fade (it only exists while scrolling), the phone width and where focus lands.
+
+### Fixed
+- **AI popover: a long suggestion can be scrolled from the keyboard.** When the suggestion is taller than the space left on screen, its scrolling area is now a Tab stop named "Suggested text" with the usual 3px focus ring, so the arrow and Page keys scroll it in every browser (Safari does not make a scrolling area focusable on its own). A suggestion that fits adds no Tab stop. This also settles an accessibility check that failed now and then on the tall-suggestion example.
+- **Text kept for screen readers scrolls with the thread.** A reply, and the side panel's thread itself, are now positioned boxes, so the hidden text inside a reply or inside another kit piece placed in the thread (agent steps, an approval card, a question card) moves with it. It was left at its unscrolled place, which could make the page itself scroll.
+- **Do/Don't examples in Storybook are no longer squeezed.** In 26 story files the Do and the Don't were squeezed side by side into half of a column meant for a single component (down to 120px each). The pair now takes the full width of the canvas (up to 75rem), centred, with each example at the width the component normally has, and stacks on a narrow screen. 13 AI-kit Do/Don't stories also now use the same padded canvas as the rest. A check in the test run fails any Do/Don't story whose pair is squeezed, off-centre or overflowing, so a new story file cannot bring the problem back. Storybook only; nothing shipped to apps changes.
+
 ## [0.18.3] — 2026-10-05
 
 ### Changed

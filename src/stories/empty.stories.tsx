@@ -11,7 +11,10 @@ import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { usage } from '@/usage/empty.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-80'
 
 const meta = {
   title: 'Components / Empty',
@@ -24,7 +27,7 @@ const meta = {
   argTypes: {
     className: { table: { disable: true } },
   },
-  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Empty>
 
 export default meta
@@ -64,9 +67,8 @@ export const IconVariant: Story = {
 
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
-  decorators: [(Story) => <div className="w-[640px]"><Story /></div>],
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="complete-empty-state"
       doExample={

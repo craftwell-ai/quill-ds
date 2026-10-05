@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { usage } from '@/usage/ai-popover.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
-import { compositeOver, contrastRatio, washedTop } from './contrast'
+import { compositeOver, contrastRatio, lineColour, washedTop } from './contrast'
 
 const ORIGINAL = 'Signups beat target in July and August but missed it in September by twelve percent, which we think is about the pricing page.'
 const SUGGESTION = 'Signups beat target in July and August but fell 12% short in September, likely because of the new pricing page.'
@@ -70,6 +70,16 @@ export const Suggestion: Story = {
     await expect(dialog.querySelectorAll('svg path').length).toBe(2)
     // The original stays on the page underneath.
     await expect(canvas.getByText(ORIGINAL)).toBeVisible()
+    // A suggestion that fits has nothing to scroll, so its area is not a stop of its own: no tabindex, no role, no
+    // name, and Tab goes from the popover straight to the first button.
+    const area = (dialog.querySelector('[data-slot="suggestion"]') as HTMLElement).parentElement as HTMLElement
+    await expect(area.scrollHeight).toBeLessThanOrEqual(area.clientHeight)
+    await expect(area).not.toHaveAttribute('tabindex')
+    await expect(area).not.toHaveAttribute('role')
+    await expect(area).not.toHaveAttribute('aria-label')
+    await waitFor(() => expect(dialog).toHaveFocus())
+    await userEvent.tab()
+    await expect(within(dialog).getByRole('button', { name: 'Discard' })).toHaveFocus()
   },
 }
 
@@ -208,19 +218,30 @@ export const EmptySuggestion: Story = {
   },
 }
 
-// The tile sits on the popover's wash, so the outline is measured against the washed colour, where the wash is strongest.
-// This outline groups content rather than marking a control, so the floor is "clearly reads as a shape" (the earlier
-// invisible pills were 1.1-1.3:1), not WCAG's 3:1 for controls.
-export const SuggestionReadsAsAShape: Story = {
+// The suggestion tile is read-only content, so it takes the soft divider line, not the control line that marks things
+// to press or type in. What tells it apart from the popover is its FILL (the page colour on the washed popover) plus
+// that hairline, so this checks the fill is there and differs from the washed surface, and that the line is the 1px
+// divider. Both are measured where the wash is strongest (its top), which is where the tile is hardest to see.
+// No contrast floor is asserted: the soft line is not meant to reach 3:1, and the tile holds no control.
+// Measured 2026-10-05, fill vs washed popover · hairline vs washed popover:
+//   Dawn 1.18:1 · 1.25:1    Dusk 1.41:1 · 1.34:1    Classic Light 1.19:1 · 1.28:1
+//   Classic Dark 1.36:1 · 1.45:1    Intelligent 1.33:1 · 1.34:1
+// (Until 0.19.0 the tile wore the control line and this test held it to 2:1 on the wash; that floor now belongs to controls only.)
+export const SuggestionTakesTheDividerLine: Story = {
   play: async ({ canvas }) => {
     const dialog = await openFrom(canvas)
     const tile = dialog.querySelector('[data-slot="suggestion"]') as HTMLElement
-    const surface = compositeOver(getComputedStyle(dialog).backgroundColor, 'rgb(255 255 255)')
-    const washed = washedTop(surface, tile)
-    const outline = compositeOver(getComputedStyle(tile).borderTopColor, `rgb(${washed.join(' ')})`)
-    const ratio = contrastRatio(outline, washed)
-    console.log(`ai-popover suggestion outline on the wash ${ratio.toFixed(2)}:1`)
-    await expect(ratio).toBeGreaterThanOrEqual(2)
+    const washed = washedTop(compositeOver(getComputedStyle(dialog).backgroundColor, 'rgb(255 255 255)'), tile)
+    const backdrop = `rgb(${washed.join(' ')})`
+    const style = getComputedStyle(tile)
+    await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+    const fill = compositeOver(style.backgroundColor, backdrop)
+    await expect(fill).not.toEqual(washed)
+    await expect(style.borderTopWidth).toBe('1px')
+    await expect(style.borderTopStyle).toBe('solid')
+    await expect(style.borderTopColor).toBe(lineColour(tile, 'border-border'))
+    const hairline = compositeOver(style.borderTopColor, backdrop)
+    console.log(`ai-popover suggestion tile: fill vs washed popover ${contrastRatio(fill, washed).toFixed(2)}:1 · hairline vs washed popover ${contrastRatio(hairline, washed).toFixed(2)}:1`)
   },
 }
 
@@ -357,8 +378,43 @@ export const TallSuggestionKeepsActionsReachable: Story = {
     await expect(box.top).toBeGreaterThanOrEqual(0)
     await expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
     await expect(within(dialog).getByText(TITLE).getBoundingClientRect().top).toBeGreaterThanOrEqual(0)
+    // The overflowing area holds nothing a keyboard can land on, so it is a stop itself: without one, a keyboard user
+    // in a browser that does not make scrollers focusable (Safari) could never read past the first lines.
+    await waitFor(() => expect(scroller).toHaveAttribute('tabindex', '0'))
+    await expect(within(dialog).getByRole('group', { name: 'Suggested text' })).toBe(scroller)
+    // Opening still lands on the popover; the area is the next stop, then the buttons.
+    await waitFor(() => expect(dialog).toHaveFocus())
+    await expect(getComputedStyle(scroller).outlineStyle).toBe('none')
+    await userEvent.tab()
+    await expect(scroller).toHaveFocus()
+    // Drawn as an outline just inside the area: the popover clips anything outside it, and an outline is painted
+    // over the text scrolling past, where an inset shadow would be covered by it.
+    const focused = getComputedStyle(scroller)
+    await expect(focused.outlineStyle).toBe('solid')
+    await expect(focused.outlineWidth).toBe('3px')
+    await expect(focused.outlineOffset).toBe('-3px')
+    // The ring colour at half strength, as on every plain focus target in the kit (ring-ring/50).
+    await expect(focused.outlineColor).toMatch(/[,/] ?0\.5\)$/)
+    // Arrow and Page keys scroll a focused scroller; that is the browser's own doing, which the test library's
+    // made-up key events cannot set off. What can be checked here is that nothing in the popover swallows those keys
+    // before the browser gets them. Real key presses were checked by hand-run script in a plain Storybook when this was built.
+    for (const key of ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ']) {
+      const press = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+      scroller.dispatchEvent(press)
+      await expect(press.defaultPrevented).toBe(false)
+    }
+    await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+    await userEvent.tab()
+    await expect(within(dialog).getByRole('button', { name: 'Discard' })).toHaveFocus()
+    await userEvent.tab({ shift: true })
+    await expect(scroller).toHaveFocus()
     await userEvent.click(replace)
     await expect(args.onReplace).toHaveBeenCalledTimes(1)
+    // Left open at the end, so the accessibility check that follows every story looks at the overflowing popover
+    // itself (its rule: a scrollable region must have keyboard access), not at a page it has already left.
+    await closed()
+    const reopened = await openFrom(canvas)
+    await waitFor(() => expect(within(reopened).getByRole('group', { name: 'Suggested text' })).toHaveAttribute('tabindex', '0'))
   },
 }
 
@@ -386,6 +442,7 @@ export const Controlled: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair usage={usage} id="replace-stays-plain"
       doExample={<div className="flex justify-end gap-1.5"><Button variant="ghost">Discard</Button><Button>Replace</Button></div>}

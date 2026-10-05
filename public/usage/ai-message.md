@@ -15,6 +15,7 @@ An AI's reply in a conversation — the AI mark on its avatar, the answer as pla
 
 ### Accessibility
 - Each reply is an article; while streaming it is marked aria-busy. To have replies announced as they arrive, render the thread inside a live region (the AI chat pattern uses role="log"). A reply still streaming in should not be re-read chunk by chunk: keep it aria-busy and, where your app streams text, announce the finished answer once instead of every update. Support varies between screen readers, so test with the ones your people use.
+- The avatar is decoration, so the name is the reply's only speaker label. hideName takes the name out of view where something nearby already says who is answering (the AI side panel's header); screen readers still read it, and the answer starts level with the avatar. With hideName, leave thinking out when there is none: a component passed there that renders nothing still counts as the first row.
 - Pass no children until there is text. An answer made of a custom component that renders nothing still counts as an answer, so it shows a caret and Copy.
 - "You stopped this answer." is announced: it appears inside a status region that is already on the page.
 - Action buttons have names ("Copy", "Try again", "Good answer", "Bad answer"); the thumbs use aria-pressed.

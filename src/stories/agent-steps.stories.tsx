@@ -4,7 +4,7 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { AgentSteps, type AgentStep } from '../../registry/lib/agent-steps'
 import { usage } from '@/usage/agent-steps.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
 import { expectFocusRing } from './focus-ring'
 
@@ -17,12 +17,15 @@ const STEPS: AgentStep[] = [
 ]
 const FAILED: AgentStep[] = [{ label: "Couldn't open Q2 board deck.pdf", status: 'failed' }]
 
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-[28rem] max-w-full'
+
 const meta = {
   title: 'Components / AgentSteps',
   component: AgentSteps,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="w-[28rem] max-w-full"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
   args: { title: 'Preparing the September report', steps: STEPS },
 } satisfies Meta<typeof AgentSteps>
 
@@ -224,8 +227,9 @@ export const DotsReadAsShapes: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: (args) => (
-    <DoDontPair usage={usage} id="progress-stays-moss"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="progress-stays-moss"
       doExample={<AgentSteps {...args} steps={STEPS.slice(0, 3)} />}
       dontExample={<div className="grid gap-2 rounded-xl border border-border bg-card px-4 py-3.5 text-sm"><p className="ai-text font-semibold">2 of 5 done</p><span className="ai-line" /></div>} />
   ),

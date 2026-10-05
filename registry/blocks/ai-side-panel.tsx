@@ -20,6 +20,10 @@ type Turn = { id: number; ask: string; reply: 'working' | 'stopped' }
 // its own shows a single close (the chip's). The Sheet's Close reuses this.
 const closeIcon = (size?: number) => <Icon name="close" size={size} />
 
+// The thread has to move this many px before the fade appears: its top padding. Less than that and nothing has gone
+// under the header yet, so a trackpad nudge would only fade the scope chip where it sits.
+const THREAD_FADE_AFTER = 4
+
 export type AiPanelProps = {
   title?: string
   /** What the assistant can see: "Q3 report". Pass a string or null to control it; leave it out and the panel keeps its own. */
@@ -30,12 +34,14 @@ export type AiPanelProps = {
   onHistory?: () => void
   /** A close control for the header. AiSidePanel passes the Sheet's own. */
   close?: React.ReactNode
+  /** The message box, for a wrapper that sends focus there. AiSidePanel passes its own, to open with the cursor in the box. */
+  composerRef?: React.RefObject<HTMLTextAreaElement | null>
   onSubmit?: (value: string) => void
   className?: string
 }
 
 /** The assistant panel on its own (header, scope chip, thread and composer on one AI wash), for a layout that gives it its own column. */
-export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, close, onSubmit = () => {}, className }: AiPanelProps) {
+export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, close, composerRef: givenComposerRef, onSubmit = () => {}, className }: AiPanelProps) {
   const titleId = React.useId()
   const [ownScope, setOwnScope] = React.useState<string | null>('Q3 report')
   const currentScope = scope === undefined ? ownScope : scope
@@ -43,9 +49,12 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
   const removable = scope === undefined || Boolean(onScopeRemove)
   const [value, setValue] = React.useState('')
   const [turns, setTurns] = React.useState<Turn[]>([])
-  const composerRef = React.useRef<HTMLTextAreaElement>(null)
+  const ownComposerRef = React.useRef<HTMLTextAreaElement>(null)
+  const composerRef = givenComposerRef ?? ownComposerRef
   const scrollerRef = React.useRef<HTMLDivElement>(null)
   const working = turns.at(-1)?.reply === 'working'
+  // Whether a message has been scrolled under the header: only then is there something to fade.
+  const [scrolled, setScrolled] = React.useState(false)
 
   // A new turn is added at the bottom of a thread that may already be scrolled; keep the newest in view.
   React.useEffect(() => {
@@ -72,7 +81,13 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
       </div>
       {/* The inner block is pushed to the bottom with an auto margin, which (unlike aligning the content to the end)
           keeps the top reachable when the thread grows past the panel and scrolls. */}
-      <div ref={scrollerRef} className="flex min-h-0 flex-col overflow-y-auto px-3.5 pt-1 pb-2.5">
+      {/* Messages scrolled under the header fade out through a mask: it has no colour of its own, so the wash shows
+          through in every theme, and it is not an element, so it takes no presses. The fade is as deep as a reply's
+          avatar. scroll-pt keeps a control reached by keyboard below it, where its focus ring is drawn in full.
+          relative: kit pieces placed in the thread keep absolutely positioned boxes for screen readers, which must
+          take their place from the thread to scroll with it instead of hanging below the panel. */}
+      <div ref={scrollerRef} data-slot="thread" onScroll={(event) => setScrolled(event.currentTarget.scrollTop > THREAD_FADE_AFTER)}
+        className={cn('relative flex min-h-0 scroll-pt-8 flex-col overflow-y-auto px-3.5 pt-1 pb-2.5', scrolled && '[mask-image:linear-gradient(to_bottom,transparent,black_1.75rem)]')}>
         <div className="mt-auto grid min-w-0 gap-3">
           {currentScope ? (
             // border-input, not the divider line: the chip has to read as a shape on the wash in the dark themes.
@@ -90,7 +105,8 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
           {/* A log is a polite live region, so each new turn is read out. */}
           <div role="log" aria-label="Messages" className="grid min-w-0 gap-3">
             <UserMessage>{"What's the one thing to fix?"}</UserMessage>
-            <AiMessage>
+            {/* hideName on every reply: the header already says who is answering. */}
+            <AiMessage hideName>
               <p>The September dip. It started the day the new pricing page shipped<Citation source={SOURCE} />.</p>
             </AiMessage>
             {turns.length === 0 ? (
@@ -102,8 +118,8 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
               <React.Fragment key={turn.id}>
                 <UserMessage>{turn.ask}</UserMessage>
                 {turn.reply === 'working'
-                  ? <AiMessage streaming thinking={<AiThinking status="working" activity="Reading the page" />} />
-                  : <AiMessage stopped />}
+                  ? <AiMessage hideName streaming thinking={<AiThinking status="working" activity="Reading the page" />} />
+                  : <AiMessage hideName stopped />}
               </React.Fragment>
             ))}
           </div>
@@ -129,7 +145,7 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
   )
 }
 
-export type AiSidePanelProps = Omit<AiPanelProps, 'close' | 'className'> & {
+export type AiSidePanelProps = Omit<AiPanelProps, 'close' | 'className' | 'composerRef'> & {
   /** Controlled when passed; leave it out to let the panel keep its own. */
   open?: boolean
   defaultOpen?: boolean
@@ -148,15 +164,29 @@ export function AiSidePanel({ open, defaultOpen = false, onOpenChange, trigger, 
     if (open === undefined) setOwnOpen(next)
     onOpenChange?.(next)
   }
+  const composerRef = React.useRef<HTMLTextAreaElement>(null)
+  const sheetRef = React.useRef<HTMLDivElement>(null)
   return (
     <Sheet open={isOpen} onOpenChange={(next) => setOpen(next)}>
       {trigger ? <SheetTrigger render={trigger} /> : null}
       {/* The panel's header holds the one Close, so the Sheet's corner button is off. gap-0 and p-0 hand the whole
-          sheet to the panel, so its wash runs edge to edge. */}
-      <SheetContent side={side} showCloseButton={false} aria-label={title} className={cn('gap-0 p-0', className)}>
+          sheet to the panel, so its wash runs edge to edge. w-full replaces the stock three-quarter width, so on a
+          phone the panel takes the whole screen; from sm up the stock max-w-sm still caps it at the same 24rem.
+          People open the assistant to ask it something, so focus starts in the message box, not on the header's first
+          button. On a touch screen focus goes to the panel itself, as the Sheet does on its own: focusing a text box
+          there would throw the on-screen keyboard over half the panel before anything has been read. The Sheet only
+          knows a touch from its own trigger; opened by the app (the open prop) it reports nothing, so the device's
+          pointer decides instead. */}
+      <SheetContent ref={sheetRef} side={side} showCloseButton={false} aria-label={title}
+        initialFocus={(openedBy) => {
+          const onTouch = openedBy ? openedBy === 'touch' : window.matchMedia('(pointer: coarse)').matches
+          return onTouch ? sheetRef.current : composerRef.current
+        }}
+        className={cn('gap-0 p-0 data-[side=left]:w-full data-[side=right]:w-full', className)}>
         <AiPanel
           {...panel}
           title={title}
+          composerRef={composerRef}
           className="min-h-0 flex-1"
           close={(
             <SheetClose render={<Button type="button" variant="ghost" size="icon-sm" />}>

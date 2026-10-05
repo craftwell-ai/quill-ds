@@ -2,6 +2,7 @@ import { afterEach, beforeAll } from 'vitest'
 import { setProjectAnnotations } from '@storybook/nextjs-vite'
 import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview'
 import * as projectAnnotations from '../../.storybook/preview'
+import * as doDontGuard from '../../.storybook/do-dont-guard'
 
 // Injected by vitest.config.ts next to this file (`define`), one theme per run.
 declare const __QUILL_THEME__: string
@@ -10,7 +11,7 @@ declare const __QUILL_THEME__: string
 // the plugin's `initialGlobals` option in vitest.config.ts — an `initialGlobals`
 // or `globalTypes.defaultValue` override passed here loses to it (measured on
 // Storybook 10.6).
-const project = setProjectAnnotations([a11yAddonAnnotations, projectAnnotations])
+const project = setProjectAnnotations([a11yAddonAnnotations, projectAnnotations, doDontGuard])
 
 beforeAll(project.beforeAll)
 
