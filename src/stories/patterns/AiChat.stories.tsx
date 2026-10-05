@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent } from 'storybook/test'
+import { expect, fn, userEvent, waitFor } from 'storybook/test'
 import { AiChat } from '@registry/blocks/ai-chat'
 import { usage } from '@/usage/ai-chat.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { expectFocusRing } from '../focus-ring'
 
 const meta = {
   title: 'Patterns / AI / AI Chat',
@@ -33,11 +34,34 @@ export const Default: Story = {
     await expect(box).toHaveValue('Compare with Q2')
     await userEvent.keyboard('{Enter}')
     await expect(args.onSubmit).toHaveBeenCalledWith('Compare with Q2')
-    await expect(canvas.getAllByRole('status').at(-1)).toHaveTextContent('Thinking')
+    // Every reply carries a (usually empty) status region; the working one fills just after it mounts.
+    await waitFor(() => expect(canvas.getAllByRole('status').some((region) => region.textContent?.includes('Reading signups-sept.csv'))).toBe(true))
     await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
     // Stop unmounts with the working state; the cursor must land back in the box, not on the page.
     await expect(box).toHaveFocus()
+  },
+}
+
+export const ThreadIsALog: Story = {
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  play: async ({ canvas }) => {
+    // The log sits inside the named region (which also holds the composer) so new turns are announced politely.
+    const region = canvas.getByRole('region', { name: 'Conversation' })
+    const log = canvas.getByRole('log', { name: 'Messages' })
+    await expect(region).toContainElement(log)
+    await expect(log).toHaveTextContent('4% ahead')
+    await expect(log).not.toContainElement(canvas.getByRole('textbox', { name: 'Message' }))
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Message' }), 'Compare with Q2{Enter}')
+    await expect(log).toHaveTextContent('Compare with Q2')
+  },
+}
+export const SidebarLinksShowFocusRing: Story = {
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  play: async ({ canvas }) => {
+    await expectFocusRing(canvas.getByRole('link', { name: 'Launch brief draft' }))
   },
 }
 

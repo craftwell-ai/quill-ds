@@ -332,7 +332,7 @@ Code twins in `registry/lib` (the `src/components/ui` files are re-export shims,
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
-| ai-home | ❖ AI home | 1073:2 | 1108:41 | 1024×512; `ai-glow` = two radial fills (centre stop bound to color/ai-from / ai-to, paint opacity 0.18, transparent end at 0.7) over semantic/background; greeting in color/ink with no AI mark (v0.16.1; the old AiMark 1073:5 is hidden): no text style matches `fraunces-text font-heading text-xl font-medium tracking-normal`, so the layer binds font/heading + text/xl and carries Fraunces wght 500 · SOFT 50 · WONK 0, 140 % line height, 0 tracking; PromptComposer lg idle instance with `Show tabs`, `Add button` and `Mic` on and Send hidden, and the block's placeholder (the page's own tab row 1073:10 is hidden — the composer now draws the tabs); four starter cards (semantic/card, border, radius/lg, space/3 · 2_5 · 0_5). **Visual baseline pending** — reports `unbaselined` until a CI run is accepted (`../README.md`, "Visual diff") |
+| ai-home | ❖ AI home | 1073:2 | 1108:41 | 1024×512; `ai-glow` = two radial fills (centre stop bound to color/ai-from / ai-to, paint opacity 0.18, transparent end at 0.7) over semantic/background; greeting in color/ink with no AI mark (v0.16.1; the old AiMark 1073:5 is hidden): no text style matches `fraunces-text font-heading text-xl font-medium tracking-normal`, so the layer binds font/heading + text/xl and carries Fraunces wght 500 · SOFT 50 · WONK 0, 140 % line height, 0 tracking; PromptComposer lg idle instance with `Show tabs`, `Add button` and `Mic` on and Send hidden, and the block's placeholder (the page's own tab row 1073:10 is hidden — the composer now draws the tabs); four starter cards (semantic/card, border, radius/lg, space/3 · 2_5 · 0_5). Visual baseline accepted 2026-10-04 at 0.72 % (`../README.md`, "Visual diff") |
 
 ### AI kit twins, Phase 2 (2026-10-04)
 
@@ -355,7 +355,7 @@ through the variant named below. Sample copy is the `ai-chat` block's, so an AiC
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
-| ai-chat | ❖ AI chat | 1132:2 | 1140:2 | 1024×640 component on semantic/background. Chats rail 240 wide (space/2, gap space/0_5, right rule semantic/border): ❖ Button outline sm "New chat" with the start icon, day labels text/xs semibold, links Text/sm with radius/md, the current one on semantic/muted. Conversation: a 768 column (max-w-3xl), px space/4, py space/6, gap space/5 — UserMessage right-aligned, AiMessage State=default, SuggestedPrompts Layout=chips indented 38px; docked below (pt space/2, pb space/3, gap space/1_5) the PromptComposer sm idle instance with `Show tabs` off, `Model picker` on and the block's placeholder, then AiNotice. It shows the block's first render: reasoning and sources closed, no second turn. **Visual baseline pending** (`../README.md`, "Visual diff") |
+| ai-chat | ❖ AI chat | 1132:2 | 1140:2 | 1024×640 component on semantic/background. Chats rail 240 wide (space/2, gap space/0_5, right rule semantic/border): ❖ Button outline sm "New chat" with the start icon, day labels text/xs semibold, links Text/sm with radius/md, the current one on semantic/muted. Conversation: a 768 column (max-w-3xl), px space/4, py space/6, gap space/5 — UserMessage right-aligned, AiMessage State=default, SuggestedPrompts Layout=chips indented 38px; docked below (pt space/2, pb space/3, gap space/1_5) the PromptComposer sm idle instance with `Show tabs` off, `Model picker` on and the block's placeholder, then AiNotice. It shows the block's first render: reasoning and sources closed, no second turn. Visual baseline accepted 2026-10-04 at 1.59 % (`../README.md`, "Visual diff") |
 
 - **PromptComposer gained a property.** `Model picker` (BOOLEAN, off) on set 1072:79 is the code's `trailing` slot: a hidden
   ModelPicker Trigger instance before Send / Stop in the six `Variant=default` variants. Nothing else on the set moved; its
@@ -580,13 +580,18 @@ a rule under the last item. Rules for the next sweep:
 - **A CSS border adds to the box; a Figma inside stroke does not.** Ruled items get the
   border width added to their padding (Accordion: paddingBottom 11 on `not-last` items).
 
-## Sync fixture (2026-08-12)
+## Sync fixture (2026-08-12, retired 2026-10-04)
 
-`❖ Test` (component node `371:7`) is the **bi-directional sync fixture** — its code twin
-is `src/components/ui/test-card.tsx` (story `Sandbox / Test`). Both directions proven:
-Figma edit pulled into code (~2 min), code edit pushed onto the node in place (~1 min).
-Keep the pair in sync when testing the workflow; procedure in `../README.md`
-("Component sync — pull & push"). Code is the ultimate source of truth.
+`❖ Test` (component node `371:7`) was the **bi-directional sync fixture** — its code twin
+was `src/components/ui/test-card.tsx` (story `Sandbox / Test`). Both directions were proven
+on it: Figma edit pulled into code (~2 min), code edit pushed onto the node in place (~1 min).
+
+Retired 2026-10-04 (CRA-267). It was never part of the design system, and the daily parity
+run checks every real twin, so the stand-in had no job left. Removed together: the component
+file, its story, its `sync-state.json` entry, and in Figma the component and its `❖ Test`
+page (the page held nothing else and the component had no instances anywhere in the file).
+To walk the workflow, use a real twin such as Button (`359:267`) or ToneBadge (`577:75`);
+procedure in `../README.md` ("Component sync — pull & push"). Code is the ultimate source of truth.
 
 ## State axis, tranche 1 — form controls (2026-09-22)
 

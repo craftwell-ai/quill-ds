@@ -15,6 +15,7 @@ Lets people choose which AI model answers — a quiet name-and-chevron trigger i
 
 ### Accessibility
 - The trigger is named with the current choice ("Model: Auto"); the menu is a radio group, so arrow keys move and the current model is announced as checked.
+- With no Auto option and no models there is nothing to choose, so nothing is drawn; there is never an empty button.
 
 ### Design tokens
 `--popover` · `--accent` · `--muted` · `--ink-soft` · `--muted-foreground`

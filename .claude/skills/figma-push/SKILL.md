@@ -21,13 +21,14 @@ File key: `Dcf8lEB7Ash71iNl7WN4Jq` (Quill Design System).
 2. **Load the `figma:figma-use` skill** (mandatory before any `use_figma` call).
 
 3. **Resolve the pair** — same lookup as `/figma-pull` (node-id table in
-   `figma/components/README.md`; fixture `❖ Test` = node `371:7` ↔
-   `src/components/ui/test-card.tsx`).
+   `figma/components/README.md`; `components` in `figma/sync-state.json` for
+   every twin under the daily check, e.g. ToneBadge: set `577:75`, tracked
+   variant `577:5` ↔ `registry/lib/tone-badge.tsx`).
 
 4. **Resolve variables/styles by NAME, live** — `getLocalVariablesAsync()` /
    `getLocalTextStylesAsync()` / `getLocalEffectStylesAsync()`, matched by name
-   (`radius/2xl`, `Elevation/lg`). Never trust remembered IDs beyond the
-   fixture's. Class → variable mapping is the `/figma-pull` table, reversed.
+   (`radius/2xl`, `Elevation/lg`). Never trust remembered IDs. Class → variable
+   mapping is the `/figma-pull` table, reversed.
 
 5. **Upsert the existing node in place — NEVER recreate it.** Recreating breaks
    node identity and orphans every instance. One `use_figma` script

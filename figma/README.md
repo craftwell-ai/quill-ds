@@ -59,18 +59,12 @@ differently), so refresh it from the artifact, never from a laptop: download
 residual is font rasterisation; the size drifts listed in the CHANGELOG are real content
 differences for a human to settle, not noise.
 
-**Pending (2026-10-02): ai-home has no visual baseline yet.** Until it does, every run lists it as
-`unbaselined`. That never fails the job, even with `--strict` (only regressions fail it), so nothing
-turns red; it just goes unwatched. To finish: run the **Figma parity** workflow by hand, read the
-ai-home strip in its `figma-visual-diff` artifact, then accept the numbers:
-`gh run download <run id> -n figma-visual-diff -D .visual/ci && node scripts/figma-visual-diff.mjs --baseline-from .visual/ci/summary.json`.
-A local macOS run gave 2.16 % at 1024×512 on both sides, for orientation only. Part of that is the story's
-play step typing into the box, where the Figma frame shows the placeholder.
-
-**Pending (2026-10-04): ai-chat has no visual baseline yet.** Same as ai-home above: it reports `unbaselined`, which
-never fails the job, until a CI run of the **Figma parity** workflow is read and accepted with the same two commands.
-The frame is 1024×640 and shows the block's first render; the story's play step adds a second turn (a question and a
-stopped reply) and types into the box, so expect that part of the strip to differ.
+**Baselined 2026-10-04: ai-home and ai-chat.** Both were accepted from CI run 37235315497 (52 pairs,
+0 regressions): ai-home at 0.72 % (1024×512), ai-chat at 1.59 % (1024×640). What is left is expected, not
+drift: the stories' play steps (text typed into the box; on ai-chat a second turn, where the Figma frame
+shows the first render) and one answer line that wraps a word earlier in Figma. A new pair starts the same
+way: it reports `unbaselined`, which never fails the job, even with `--strict`, until a CI run of the
+**Figma parity** workflow is read and accepted with the last command below.
 
 ```bash
 npm run build-storybook -- -o .visual/sb --quiet
@@ -206,13 +200,16 @@ The Plugin API / MCP cannot publish a team library. In Figma, open the file → 
 Beyond the foundation sync above, individual components round-trip between Figma and
 code. The philosophy: **bi-directional transport, one-way authority** — edits may
 originate on either side, but when they disagree, code wins. Proven end-to-end
-2026-08-12 on the Test fixture.
+2026-08-12 on a Test card, a fixture built only for that round trip. The fixture
+was retired on 2026-10-04 (CRA-267): it was never part of the design system, and
+the daily parity run now checks every twin in `sync-state.json` → `components`,
+so nothing needs a stand-in.
 
-**The fixture pair** (keep it — it's the sanity check for this workflow):
+**A worked pair** (every entry in `components` reads the same way):
 
-- Code: `src/components/ui/test-card.tsx`, story `Sandbox / Test`
-- Figma: `❖ Test` page, component node `371:7` (binding map lives in the
-  component's description)
+- Code: `src/components/ui/button.tsx`, story `Components / Button`
+- Figma: `❖ Button` page, component set `359:267`, tracked through its default
+  variant `76:4` (`Variant=default, Size=default`)
 
 ### Pull (a designer changed a component in Figma → land it in code) — ~2 min
 
@@ -254,8 +251,8 @@ expected, not a bug.
 
 ### Adopting existing twins into the daily check
 
-The parity baseline started with one entry — the fixture — so its daily green
-proved the pipeline, not the library. `figma/sync-state.json` now also lists
+The parity baseline started with one entry — the Test card fixture, retired on
+2026-10-04 — so its daily green proved the pipeline, not the library. `figma/sync-state.json` now also lists
 `candidates`: Figma twins built earlier that are not yet under the check — since
 2026-09-18 every Wave B / Wave C twin plus ToneBadge and Switch (29). `declined`
 lists the 13 primitives that get no twin, each with its reason, and

@@ -165,51 +165,6 @@
   "candidates": [],
   "components": [
     {
-      "name": "Test",
-      "nodeId": "371:7",
-      "codeFile": "src/components/ui/test-card.tsx",
-      "lastSynced": "2026-08-13",
-      "figma": {
-        "fill": {
-          "var": "semantic/card",
-          "raw": "#EFE4CE"
-        },
-        "stroke": {
-          "var": "semantic/border",
-          "raw": "#2A2622"
-        },
-        "strokeWeight": {
-          "var": "border-width/1",
-          "raw": 1
-        },
-        "cornerRadius": {
-          "var": "radius/2xl",
-          "raw": 24
-        },
-        "padding": {
-          "var": "space/8",
-          "raw": 32
-        },
-        "itemSpacing": {
-          "var": "space/3",
-          "raw": 12
-        },
-        "effectStyle": "Elevation/lg",
-        "texts": {
-          "Title": "Title",
-          "Body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit duis auctor ex ac molestie blandit."
-        },
-        "childSignature": [
-          "Title:TEXT",
-          "Body:TEXT",
-          "Frame 1:FRAME"
-        ]
-      },
-      "code": {
-        "classes": "flex w-72 flex-col gap-3 rounded-2xl border bg-card p-8 text-card-foreground shadow-lg"
-      }
-    },
-    {
       "name": "Separator",
       "nodeId": "82:3",
       "codeFile": "src/components/ui/separator.tsx",
@@ -2067,7 +2022,7 @@
           "Name": "Deep",
           "Description": "Thinks longer on hard problems",
           "Label text": "Choose",
-          "Badge text": "New"
+          "Label": "New"
         },
         "childSignature": [
           "Group:FRAME",
@@ -2096,7 +2051,7 @@
       "page": "❖ AI chat",
       "pageId": "1132:2",
       "frameId": "1140:2",
-      "codeHash": "d70cae8c9df61ca6",
+      "codeHash": "a514f74184944314",
       "syncedAt": "2026-10-04"
     },
     {

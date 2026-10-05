@@ -22,8 +22,8 @@ export const usage = {
     },
   ],
   a11y: [
-    'The working state is a polite live region (role="status"), so activity updates are announced as they change, without moving focus.',
-    'The finished row is a button with aria-expanded that controls the reasoning list.',
+    'A polite live region (role="status") is on the page from the first paint in both states. It starts empty and is filled a moment after the component mounts, then follows the label and activity as they change, without moving focus. The visible label is hidden from screen readers so it is not read twice; the region holds the one copy. When the work is done it empties and announces nothing, so a finished reply restored from history stays quiet.',
+    'The finished row is a button with aria-expanded that controls the reasoning list, with the same 3px focus ring as a Button.',
     'Under reduced motion the shimmer and sweeping line hold still; the label stays readable.',
   ],
   tokens: ['--ai-from', '--ai-via', '--ai-to', '--ai-text-via', '--muted-foreground', '--border'],

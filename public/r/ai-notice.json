@@ -6,7 +6,7 @@
   "files": [
     {
       "path": "registry/lib/ai-notice.tsx",
-      "content": "import * as React from 'react'\nimport { cn } from '@/lib/utils'\n\n/** One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies. */\nexport function AiNotice({\n  children = 'The assistant can make mistakes. Check important details.',\n  link,\n  className,\n}: {\n  children?: React.ReactNode\n  link?: { href: string; label: string }\n  className?: string\n}) {\n  return (\n    <p data-slot=\"ai-notice\" className={cn('px-2 text-center text-xs text-muted-foreground', className)}>\n      {children}\n      {link ? (\n        <>\n          {' '}\n          <a href={link.href} className=\"underline underline-offset-2 hover:text-foreground\">{link.label}</a>\n        </>\n      ) : null}\n    </p>\n  )\n}\n",
+      "content": "import * as React from 'react'\nimport { cn } from '@/lib/utils'\n\n/** One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies. */\nexport function AiNotice({\n  children = 'The assistant can make mistakes. Check important details.',\n  link,\n  className,\n}: {\n  children?: React.ReactNode\n  link?: { href: string; label: string }\n  className?: string\n}) {\n  return (\n    <p data-slot=\"ai-notice\" className={cn('px-2 text-center text-xs text-muted-foreground', className)}>\n      {children}\n      {link ? (\n        <>\n          {' '}\n          <a href={link.href} className=\"rounded-sm underline underline-offset-2 hover:text-foreground outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50\">{link.label}</a>\n        </>\n      ) : null}\n    </p>\n  )\n}\n",
       "type": "registry:ui",
       "target": "components/ui/ai-notice.tsx"
     }

@@ -41,13 +41,14 @@ export function AiChat({ onSubmit = () => {} }: { onSubmit?: (value: string) => 
             <p className="px-2.5 pt-2.5 pb-1 text-xs font-semibold text-muted-foreground">{day}</p>
             {titles.map((title, index) => (
               <a key={title} href="#" aria-current={day === 'Today' && index === 0 ? 'page' : undefined}
-                className="truncate rounded-md px-2.5 py-1.5 text-sm text-foreground no-underline hover:bg-muted aria-[current=page]:bg-muted">{title}</a>
+                className="truncate rounded-md px-2.5 py-1.5 text-sm text-foreground no-underline hover:bg-muted aria-[current=page]:bg-muted outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50">{title}</a>
             ))}
           </React.Fragment>
         ))}
       </nav>
       <section aria-label="Conversation" className="grid grid-rows-[minmax(0,1fr)_auto]">
-        <div className="mx-auto grid w-full max-w-3xl content-start gap-5 px-4 py-6">
+        {/* A log is a polite live region, so each new turn is read out. It sits inside the "Conversation" region, which also holds the composer, so the region stays the page landmark. */}
+        <div role="log" aria-label="Messages" className="mx-auto grid w-full max-w-3xl content-start gap-5 px-4 py-6">
           <UserMessage>How did signups do against target this quarter?</UserMessage>
           <AiMessage
             thinking={<AiThinking status="done" seconds={8} steps={['Loaded signups-sept.csv, 812 rows', 'Compared each month with the targets in Q3 board deck.pdf']} />}

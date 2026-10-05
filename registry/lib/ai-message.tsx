@@ -29,6 +29,27 @@ export type AiMessageProps = {
   className?: string
 }
 
+// Elements with no children that still show something.
+const SELF_CLOSING_CONTENT = new Set(['img', 'hr', 'br', 'svg', 'video', 'audio', 'canvas', 'iframe', 'input', 'object', 'embed', 'math'])
+
+// Whether the answer shows anything, judged by what it contains rather than how many children there are:
+// '', whitespace, an empty fragment and <p>{''}</p> are all "no answer yet".
+function hasVisibleContent(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === 'boolean') return false
+  if (typeof node === 'string') return node.trim().length > 0
+  if (typeof node === 'number') return true
+  if (Array.isArray(node)) return node.some(hasVisibleContent)
+  if (React.isValidElement<{ children?: React.ReactNode; dangerouslySetInnerHTML?: { __html?: string } }>(node)) {
+    // A component (a Citation chip, say) renders something we cannot see from here, so it counts.
+    if (typeof node.type !== 'string' && node.type !== React.Fragment) return true
+    if (typeof node.type === 'string' && SELF_CLOSING_CONTENT.has(node.type)) return true
+    // Apps often render markdown as raw HTML, which is an element with no children at all.
+    if (node.props.dangerouslySetInnerHTML?.__html?.trim()) return true
+    return hasVisibleContent(node.props.children)
+  }
+  return true
+}
+
 /** An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. */
 export function AiMessage({
   children, name = 'Assistant', thinking, sources, streaming = false, stopped = false,
@@ -36,12 +57,24 @@ export function AiMessage({
 }: AiMessageProps) {
   const bodyRef = React.useRef<HTMLDivElement>(null)
   const [copied, setCopied] = React.useState(false)
+  const copiedTimer = React.useRef<number | undefined>(undefined)
   const [ownFeedback, setOwnFeedback] = React.useState<AiFeedback>(null)
   const current = feedback === undefined ? ownFeedback : feedback
   // Without answer text there is nothing to put a caret beside or to copy.
-  const hasAnswer = React.Children.toArray(children).length > 0
+  const hasAnswer = hasVisibleContent(children)
   // A stopped reply with no answer has no actions; an empty group would still be announced.
   const hasActions = hasAnswer || Boolean(onRetry) || Boolean(onFeedback)
+
+  const mounted = React.useRef(false)
+  // The clipboard write is async, so the reply may be gone by the time it finishes: a timer started then would never be cleared.
+  // A pending "Copied" reset must also not cut a second copy's two seconds short.
+  React.useEffect(() => {
+    mounted.current = true
+    return () => {
+      mounted.current = false
+      window.clearTimeout(copiedTimer.current)
+    }
+  }, [])
 
   const vote = (value: 'up' | 'down') => {
     const next = current === value ? null : value
@@ -67,8 +100,10 @@ export function AiMessage({
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(copyText ?? answerText())
+      if (!mounted.current) return
       setCopied(true)
-      window.setTimeout(() => setCopied(false), 2000)
+      window.clearTimeout(copiedTimer.current)
+      copiedTimer.current = window.setTimeout(() => setCopied(false), 2000)
     } catch {
       // The browser refused (no permission, insecure page); the button simply stays "Copy".
     }
@@ -87,12 +122,16 @@ export function AiMessage({
         {thinking}
         {hasAnswer ? (
           // While streaming, the last paragraph runs inline so the caret sits at the end of its last line.
-          <div ref={bodyRef} className={cn('text-sm leading-relaxed text-foreground [&>*+*]:mt-2', streaming && '[&>p:last-of-type]:inline')}>
+          <div ref={bodyRef} data-slot="reply-body" className={cn('text-sm leading-relaxed text-foreground [&>*+*]:mt-2', streaming && '[&>p:last-of-type]:inline')}>
             {children}
             {streaming ? <span aria-hidden data-slot="caret" className="ml-0.5 inline-block h-[1.05em] w-[7px] animate-pulse bg-foreground align-[-0.15em] motion-reduce:animate-none" /> : null}
           </div>
         ) : null}
-        {stopped ? <p className="text-xs text-muted-foreground">You stopped this answer.</p> : null}
+        {/* Stays mounted so the text arrives into a live region instead of appearing with it. While empty it is
+            absolutely positioned, so it is a real box that takes no grid row (and no gap); with text it is in flow. */}
+        <div role="status" className="empty:absolute">
+          {stopped ? <p className="text-xs text-muted-foreground">You stopped this answer.</p> : null}
+        </div>
         {sources}
         {!streaming && hasActions ? (
           <div role="group" aria-label="Reply actions" className="-ml-1.5 flex gap-0.5 text-muted-foreground">

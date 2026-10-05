@@ -34,6 +34,8 @@ export function ModelPicker({
   className?: string
 }) {
   const all = auto ? [auto, ...models] : models
+  // Nothing to choose from: draw nothing rather than an empty trigger.
+  if (!all.length) return null
   // A value the list no longer has (a retired model) shows the first option, never an empty trigger.
   const current = all.find((m) => m.value === value) ?? all[0]
   const row = (m: ModelOption) => (

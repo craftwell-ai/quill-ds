@@ -99,9 +99,12 @@ test('boundVariables array form and hex conversion both normalize', () => {
 
 // ---- auto-repair ----
 
+// A sample baseline entry, self-contained on purpose: the repair functions take
+// the source as a string (SOURCE below), so `codeFile` only labels error
+// messages and no file on disk is read.
 const COMPONENT = () => ({
-  name: 'Test',
-  codeFile: 'src/components/ui/test-card.tsx',
+  name: 'Sample',
+  codeFile: 'sample-card.tsx',
   figma: structuredClone(snapshot),
   code: { classes: 'flex gap-3 rounded-2xl bg-card p-8 shadow-lg' },
 })

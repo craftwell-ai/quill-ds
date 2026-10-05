@@ -18,13 +18,14 @@ export type Source = {
   kind?: 'file' | 'web'
 }
 
+// The focus ring is the stock Button's, so these plain buttons and links match the controls around them.
 // Truncation keeps a long title from turning one chip into a line-wide bar; the full title stays in the accessible name.
-const CHIP = 'ml-0.5 inline-block h-5 max-w-40 truncate rounded-md bg-muted px-2 text-center align-middle text-2xs font-semibold leading-5 text-ink-soft no-underline hover:bg-foreground hover:text-background'
+const CHIP = 'ml-0.5 inline-block h-5 max-w-40 truncate rounded-md bg-muted px-2 text-center align-middle text-2xs font-semibold leading-5 text-ink-soft no-underline hover:bg-foreground hover:text-background outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50'
 const kindIcon = (s: Source) => (s.kind === 'web' ? 'language' : 'description')
 
 function where(s: Source) {
   if (s.detail) return s.detail
-  if (!s.href) return 'File'
+  if (!s.href) return s.kind === 'web' ? 'Web page' : 'File'
   try { return new URL(s.href).hostname } catch { return s.href }
 }
 
@@ -97,7 +98,7 @@ export function Sources({ sources, defaultOpen = false, className }: { sources: 
   return (
     <div data-slot="sources" className={cn('grid justify-items-start gap-2', className)}>
       <button type="button" aria-expanded={open} aria-controls={listId} onClick={() => setOpen((wasOpen) => !wasOpen)}
-        className="inline-flex h-7 items-center gap-2 rounded-full border border-border bg-background pr-2.5 pl-1.5 text-xs font-semibold text-ink-soft hover:bg-muted">
+        className="inline-flex h-7 items-center gap-2 rounded-full border border-border bg-background pr-2.5 pl-1.5 text-xs font-semibold text-ink-soft hover:bg-muted outline-hidden focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
         <span aria-hidden className="flex">
           {sources.slice(0, 3).map((source, index) => (
             <span key={index} className={cn('grid size-[18px] place-items-center rounded-full border-2 border-background bg-muted', index > 0 && '-ml-1.5')}>
@@ -123,7 +124,7 @@ export function Sources({ sources, defaultOpen = false, className }: { sources: 
           return (
             <li key={index}>
               {source.href
-                ? <a href={source.href} target="_blank" rel="noreferrer" className={cn(row, 'text-foreground no-underline hover:bg-card')}>{body}</a>
+                ? <a href={source.href} target="_blank" rel="noreferrer" className={cn(row, 'text-foreground no-underline hover:bg-card outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50')}>{body}</a>
                 : <div className={row}>{body}</div>}
             </li>
           )

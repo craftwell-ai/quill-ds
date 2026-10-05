@@ -1,9 +1,11 @@
+import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, userEvent } from 'storybook/test'
+import { expect, userEvent, waitFor } from 'storybook/test'
 import { AiThinking, formatThoughtFor } from '../../registry/lib/ai-thinking'
 import { usage } from '@/usage/ai-thinking.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
+import { expectFocusRing } from './focus-ring'
 
 const meta = {
   title: 'Components / AiThinking',
@@ -22,7 +24,7 @@ export const Working: Story = {
   args: { status: 'working', activity: 'Reading signups-sept.csv' },
   play: async ({ canvas }) => {
     const region = canvas.getByRole('status')
-    await expect(region).toHaveTextContent('Thinking')
+    await waitFor(() => expect(region).toHaveTextContent('Thinking'))
     await expect(region).toHaveTextContent('Reading signups-sept.csv')
   },
 }
@@ -35,6 +37,90 @@ export const Done: Story = {
     await userEvent.click(toggle)
     await expect(toggle).toHaveAttribute('aria-expanded', 'true')
     await expect(canvas.getByText(STEPS[0])).toBeVisible()
+  },
+}
+// A status region that mounts already filled is announced unreliably; one that stays mounted and changes text is announced.
+export const StatusRegionPersistsWhenDone: Story = {
+  render: function Render(args) {
+    const [done, setDone] = React.useState(false)
+    return (
+      <>
+        <AiThinking {...args} status={done ? 'done' : 'working'} />
+        <button type="button" onClick={() => setDone(true)}>Finish</button>
+      </>
+    )
+  },
+  args: { status: 'working', activity: 'Reading signups-sept.csv', seconds: 8, steps: STEPS },
+  play: async ({ canvas }) => {
+    const region = canvas.getByRole('status')
+    await waitFor(() => expect(region).toHaveTextContent('Thinking'))
+    await userEvent.click(canvas.getByRole('button', { name: 'Finish' }))
+    await expect(canvas.getByRole('status')).toBe(region)
+    await expect(region.isConnected).toBe(true)
+    await expect(region.textContent).toBe('')
+    await expect(canvas.getByRole('button', { name: 'Thought for 8 s' })).toBeVisible()
+  },
+}
+// The region must be on the page before its text, so mounting straight into "working" paints it empty and fills it after.
+export const StatusExistsBeforeItsText: Story = {
+  args: { status: 'working', activity: 'Reading signups-sept.csv' },
+  render: (args) => (
+    <div ref={(host) => {
+      // A ref runs at commit, before any timer, so this is the first paint's text.
+      const region = host?.querySelector('[role="status"]')
+      if (host && region && host.dataset.firstText === undefined) host.dataset.firstText = region.textContent ?? 'missing'
+    }}>
+      <AiThinking {...args} />
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const region = canvas.getByRole('status')
+    await expect(canvasElement.querySelector('[data-first-text]')?.getAttribute('data-first-text')).toBe('')
+    await waitFor(() => expect(region).toHaveTextContent('Thinking'))
+    await expect(region).toHaveTextContent('Reading signups-sept.csv')
+    // Sighted users see the label at once, and a screen reader hears it once: the visible copy is hidden from it.
+    await expect(canvas.getByText('Thinking')).toBeVisible()
+    await expect(canvas.getByText('Thinking')).toHaveAttribute('aria-hidden', 'true')
+    await expect(region).toBeInTheDocument()
+  },
+}
+export const ActivityUpdatesTheSameRegion: Story = {
+  args: { status: 'working' },
+  render: function Render(args) {
+    const [activity, setActivity] = React.useState('Reading signups-sept.csv')
+    return (
+      <>
+        <AiThinking {...args} activity={activity} />
+        <button type="button" onClick={() => setActivity('Comparing with targets')}>Next</button>
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    const region = canvas.getByRole('status')
+    await waitFor(() => expect(region).toHaveTextContent('Reading signups-sept.csv'))
+    await userEvent.click(canvas.getByRole('button', { name: 'Next' }))
+    await expect(canvas.getByRole('status')).toBe(region)
+    await waitFor(() => expect(region).toHaveTextContent('Comparing with targets'))
+    await expect(region).not.toHaveTextContent('Reading signups-sept.csv')
+  },
+}
+// A real box (Safari can drop display: contents from the accessibility tree) that adds nothing to the layout.
+export const StatusRegionTakesNoSpace: Story = {
+  args: { status: 'done', seconds: 8 },
+  play: async ({ canvas, canvasElement }) => {
+    const region = canvas.getByRole('status')
+    await expect(getComputedStyle(region).display).not.toBe('contents')
+    await expect(getComputedStyle(region).display).not.toBe('none')
+    const root = canvasElement.querySelector('[data-slot="ai-thinking"]') as HTMLElement
+    const before = root.getBoundingClientRect().height
+    region.remove()
+    await expect(root.getBoundingClientRect().height).toBe(before)
+  },
+}
+export const ToggleShowsFocusRing: Story = {
+  args: { status: 'done', seconds: 8, steps: STEPS },
+  play: async ({ canvas }) => {
+    await expectFocusRing(canvas.getByRole('button', { name: 'Thought for 8 s' }))
   },
 }
 export const DoneWithoutSteps: Story = {
@@ -51,6 +137,23 @@ export const FormatsDurations: Story = {
     await expect(formatThoughtFor(8)).toBe('8 s')
     await expect(formatThoughtFor(98)).toBe('1 min 38 s')
     await expect(formatThoughtFor(120)).toBe('2 min')
+    // Negative and non-finite values land on the 1 s floor, never "NaN s" or "Infinity min".
+    await expect(formatThoughtFor(-5)).toBe('1 s')
+    await expect(formatThoughtFor(Number.NaN)).toBe('1 s')
+    await expect(formatThoughtFor(Number.POSITIVE_INFINITY)).toBe('1 s')
+  },
+}
+export const UnusableSecondsFallBack: Story = {
+  args: { status: 'done' },
+  render: () => (
+    <div className="grid gap-1">
+      <AiThinking status="done" seconds={Number.NaN} />
+      <AiThinking status="done" seconds={Number.POSITIVE_INFINITY} />
+      <AiThinking status="done" seconds={-5} />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getAllByText('Thought it through')).toHaveLength(3)
   },
 }
 export const DoDont: Story = {

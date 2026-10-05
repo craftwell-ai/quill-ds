@@ -1,5 +1,6 @@
+import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent, waitFor } from 'storybook/test'
+import { expect, fn, spyOn, userEvent, waitFor } from 'storybook/test'
 import { AiMessage, UserMessage } from '../../registry/lib/ai-message'
 import { AiThinking } from '../../registry/lib/ai-thinking'
 import { Citation } from '../../registry/lib/citations'
@@ -78,6 +79,38 @@ export const Stopped: Story = {
     await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
   },
 }
+// The status region is already on the page before the text arrives, so the text is announced rather than just appearing.
+export const StoppedIsAnnounced: Story = {
+  render: function Render(args) {
+    const [stopped, setStopped] = React.useState(false)
+    return (
+      <>
+        <AiMessage {...args} stopped={stopped} />
+        <button type="button" onClick={() => setStopped(true)}>Stop</button>
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    const region = canvas.getByRole('status')
+    await expect(region.textContent).toBe('')
+    await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
+    await expect(canvas.getByRole('status')).toBe(region)
+    await expect(region).toHaveTextContent('You stopped this answer.')
+  },
+}
+// A real box (Safari can drop display: contents from the accessibility tree) that adds nothing while empty.
+export const StatusRegionTakesNoSpaceWhileEmpty: Story = {
+  play: async ({ canvas, canvasElement }) => {
+    const region = canvas.getByRole('status')
+    await expect(getComputedStyle(region).display).not.toBe('contents')
+    await expect(getComputedStyle(region).display).not.toBe('none')
+    await expect(region.getBoundingClientRect().height).toBe(0)
+    const article = canvasElement.querySelector('article') as HTMLElement
+    const before = article.getBoundingClientRect().height
+    region.remove()
+    await expect(article.getBoundingClientRect().height).toBe(before)
+  },
+}
 export const StoppedNoAnswer: Story = {
   args: { stopped: true, children: undefined },
   play: async ({ canvas }) => {
@@ -95,6 +128,120 @@ export const CopyWorks: Story = {
     await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
     await expect(writeText).toHaveBeenCalledWith(expect.stringContaining('4% ahead'))
     await expect(canvas.getByRole('button', { name: 'Copied' })).toBeVisible()
+  },
+}
+const COPIED_MS = 2000
+// Records the id of every 2 s timer the component starts, so a test can see which ones it cancelled.
+const watchCopiedTimers = () => {
+  const setSpy = spyOn(window, 'setTimeout')
+  const clearSpy = spyOn(window, 'clearTimeout')
+  const copiedTimerIds = () => setSpy.mock.calls
+    .map((call, index) => (call[1] === COPIED_MS ? setSpy.mock.results[index].value : undefined))
+    .filter((id) => id !== undefined)
+  const stop = () => { setSpy.mockRestore(); clearSpy.mockRestore() }
+  return { clearSpy, copiedTimerIds, stop }
+}
+export const CopyTimerRestartsOnReClick: Story = {
+  play: async ({ canvas }) => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: fn().mockResolvedValue(undefined) }, configurable: true })
+    const { clearSpy, copiedTimerIds, stop } = watchCopiedTimers()
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+      await userEvent.click(await canvas.findByRole('button', { name: 'Copied' }))
+      await waitFor(() => expect(copiedTimerIds()).toHaveLength(2))
+      // The first timer must be cancelled, or it flips the label back early.
+      await expect(clearSpy).toHaveBeenCalledWith(copiedTimerIds()[0])
+    } finally {
+      stop()
+    }
+  },
+}
+export const CopyTimerClearedOnUnmount: Story = {
+  render: function Render(args) {
+    const [shown, setShown] = React.useState(true)
+    return (
+      <>
+        {shown ? <AiMessage {...args} /> : null}
+        <button type="button" onClick={() => setShown(false)}>Remove</button>
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: fn().mockResolvedValue(undefined) }, configurable: true })
+    const { clearSpy, copiedTimerIds, stop } = watchCopiedTimers()
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+      await waitFor(() => expect(copiedTimerIds()).toHaveLength(1))
+      await userEvent.click(canvas.getByRole('button', { name: 'Remove' }))
+      await expect(clearSpy).toHaveBeenCalledWith(copiedTimerIds()[0])
+    } finally {
+      stop()
+    }
+  },
+}
+// Content decides whether there is an answer, not how many children were passed.
+export const EmptyAnswersCountAsNoAnswer: Story = {
+  args: { streaming: false },
+  render: () => (
+    <div className="grid gap-4">
+      <AiMessage name="Empty string">{''}</AiMessage>
+      <AiMessage name="Whitespace">{'  \n '}</AiMessage>
+      <AiMessage name="Empty fragment"><></></AiMessage>
+      <AiMessage name="Empty paragraph"><p>{''}</p></AiMessage>
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.queryByRole('button', { name: 'Copy' })).toBeNull()
+    await expect(canvasElement.querySelector('[data-slot="reply-body"]')).toBeNull()
+  },
+}
+// Apps usually show markdown as raw HTML, which is an element with no children.
+export const RawHtmlAnswerIsAnAnswer: Story = {
+  args: { children: <div dangerouslySetInnerHTML={{ __html: '<p>Hello from <strong>markdown</strong></p>' }} /> },
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.getByText('markdown')).toBeVisible()
+    await expect(canvasElement.querySelector('[data-slot="reply-body"]')).not.toBeNull()
+    await expect(canvas.getByRole('button', { name: 'Copy' })).toBeVisible()
+  },
+}
+export const CopyThatFinishesAfterUnmountSetsNoTimer: Story = {
+  render: function Render(args) {
+    const [shown, setShown] = React.useState(true)
+    return (
+      <>
+        {shown ? <AiMessage {...args} /> : null}
+        <button type="button" onClick={() => setShown(false)}>Remove</button>
+      </>
+    )
+  },
+  play: async ({ canvas }) => {
+    let finishCopy: () => void = () => {}
+    const writeText = fn().mockImplementation(() => new Promise<void>((resolve) => { finishCopy = resolve }))
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    const { copiedTimerIds, stop } = watchCopiedTimers()
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'Copy' }))
+      await userEvent.click(canvas.getByRole('button', { name: 'Remove' }))
+      finishCopy()
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      // The reply is gone; a timer started now would never be cleared.
+      await expect(copiedTimerIds()).toHaveLength(0)
+    } finally {
+      stop()
+    }
+  },
+}
+export const CaretWaitsForText: Story = {
+  render: () => (
+    <div className="grid gap-4">
+      <AiMessage streaming name="Waiting"><p>{''}</p></AiMessage>
+      <AiMessage streaming name="Writing"><p>September missed</p></AiMessage>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const [waiting, writing] = Array.from(canvasElement.querySelectorAll('article'))
+    await expect(waiting.querySelector('[data-slot="caret"]')).toBeNull()
+    await expect(writing.querySelector('[data-slot="caret"]')).not.toBeNull()
   },
 }
 export const CopyLeavesChipsOut: Story = {
