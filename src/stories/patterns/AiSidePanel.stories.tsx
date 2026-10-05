@@ -11,7 +11,10 @@ const meta = {
   title: 'Patterns / AI / AI Side Panel',
   component: AiSidePanel,
   tags: ['autodocs'],
-  parameters: { layout: 'fullscreen', docs: { description: { component: renderUsageDocs(usage) } } },
+  // Centred by the theme wrapper in .storybook/preview.tsx, not by Storybook's own `layout: 'centered'`: that is a
+  // class on the preview page, which the test runner's page does not have, so the guard tests below could not see it.
+  // The panel stays the wrapper's only element, which is what the Figma visual diff screenshots.
+  parameters: { layout: 'fullscreen', quillCentered: true, docs: { description: { component: renderUsageDocs(usage) } } },
   args: { onSubmit: fn(), onHistory: fn(), onScopeRemove: fn(), onOpenChange: fn() },
   // The panel drawn inline, as one root element: this is what the docs page, the Figma frame and the visual
   // diff show. The Sheet itself is the InASheet story.
@@ -29,13 +32,28 @@ const VIEWPORTS = {
   desktop: { name: 'Desktop 1024', styles: { width: '1024px', height: '800px' }, type: 'desktop' },
   phone: { name: 'Phone 375', styles: { width: '375px', height: '812px' }, type: 'mobile' },
 } as const
+// A story's example must be centred left-to-right in the window and sit wholly inside it and inside the story's own
+// root: a framing change that parks it at the top-left, or lets a fixed height hang past the bottom, fails here.
+const expectFramed = async (element: HTMLElement, canvasElement: HTMLElement) => {
+  const box = element.getBoundingClientRect()
+  const root = canvasElement.getBoundingClientRect()
+  const pageWidth = document.documentElement.clientWidth
+  await expect(box.left).toBeGreaterThanOrEqual(0)
+  await expect(box.right).toBeLessThanOrEqual(pageWidth)
+  await expect(box.top).toBeGreaterThanOrEqual(root.top)
+  await expect(box.bottom).toBeLessThanOrEqual(root.bottom)
+  await expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
+  await expect(Math.abs(box.left + box.width / 2 - pageWidth / 2)).toBeLessThanOrEqual(1)
+}
+
 const DESKTOP = { parameters: { viewport: { options: VIEWPORTS } }, globals: { viewport: { value: 'desktop', isRotated: false } } } as const
 
 // Read-only on purpose: this is the story the Figma frame is compared with.
 export const Default: Story = {
   ...DESKTOP,
-  play: async ({ canvas }) => {
+  play: async ({ canvas, canvasElement }) => {
     const panel = canvas.getByRole('region', { name: 'Assistant' })
+    await expectFramed(panel, canvasElement)
     await expect(within(panel).getByText('Looking at: Q3 report')).toBeVisible()
     const log = within(panel).getByRole('log', { name: 'Messages' })
     await expect(log).toHaveTextContent('The September dip.')
@@ -192,7 +210,8 @@ const inSheet = (args: Story['args']) => (
 export const InASheet: Story = {
   ...DESKTOP,
   render: inSheet,
-  play: async ({ canvas, args }) => {
+  play: async ({ canvas, canvasElement, args }) => {
+    await expectFramed(canvas.getByRole('button', { name: 'Ask the assistant' }), canvasElement)
     // The Sheet renders in a portal on the page body, outside the canvas.
     const page = within(document.body)
     const closed = () => waitFor(() => expect(page.queryByRole('dialog')).toBeNull())

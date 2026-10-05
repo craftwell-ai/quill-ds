@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [0.18.1] — 2026-10-05
+
+### Fixed
+- **The AI side panel's examples are centred and never clipped.** In Storybook the panel, the long-thread example and the "Ask the assistant" button used to sit in the top-left corner of the canvas and of each preview box on the Docs page; they are now centred in both, and on the Docs page each preview box fits its example instead of stretching to the window's height. In a window shorter than the panel the page scrolls with equal space above and below rather than hiding part of it. Two new checks fail if the panel (or its button) stops being centred and fully inside the window. Story framing only: the block itself is unchanged.
+
 ## [0.18.0] — 2026-10-05
 
 ### Added
