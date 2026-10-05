@@ -7,6 +7,11 @@ import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind, washedTop } from '../contrast'
 import { expectFocusRing } from '../focus-ring'
 
+// In the canvas the panel gives way to a window shorter than itself (the wrapper drops its padding there, see
+// preview-head.html); on the Docs page the window is the whole long page, so it keeps its full height. The visual diff's
+// window is exactly the panel's 560px, which `min()` leaves at 560.
+const fitHeight = (viewMode: string, docs: string, canvas: string) => (viewMode === 'docs' ? docs : canvas)
+
 const meta = {
   title: 'Patterns / AI / AI Side Panel',
   component: AiSidePanel,
@@ -18,9 +23,9 @@ const meta = {
   args: { onSubmit: fn(), onHistory: fn(), onScopeRemove: fn(), onOpenChange: fn() },
   // The panel drawn inline, as one root element: this is what the docs page, the Figma frame and the visual
   // diff show. The Sheet itself is the InASheet story.
-  render: (args) => (
+  render: (args, { viewMode }) => (
     <AiPanel title={args.title} scope={args.scope} onSubmit={args.onSubmit} onHistory={args.onHistory} onScopeRemove={args.onScopeRemove}
-      className="h-[35rem] w-full max-w-sm rounded-xl border border-border shadow-md" />
+      className={`${fitHeight(viewMode, 'h-[35rem]', 'h-[min(35rem,100dvh)]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />
   ),
 } satisfies Meta<typeof AiSidePanel>
 
@@ -30,6 +35,7 @@ type Story = StoryObj<typeof meta>
 // The test runner sizes its page from these (addon-vitest reads the viewport global).
 const VIEWPORTS = {
   desktop: { name: 'Desktop 1024', styles: { width: '1024px', height: '800px' }, type: 'desktop' },
+  short: { name: 'Short 900x480', styles: { width: '900px', height: '480px' }, type: 'desktop' },
   phone: { name: 'Phone 375', styles: { width: '375px', height: '812px' }, type: 'mobile' },
 } as const
 // A story's example must be centred left-to-right in the window and sit wholly inside it and inside the story's own
@@ -69,6 +75,24 @@ export const Default: Story = {
       await expect(getComputedStyle(part).backgroundImage).toBe('none')
       await expect(getComputedStyle(part).backgroundColor).toBe('rgba(0, 0, 0, 0)')
     }
+  },
+}
+
+// A window shorter than the panel (a laptop with Storybook's own chrome around the canvas): the panel shrinks to the window
+// and the thread scrolls inside it, so the header and the composer are both on screen and the page itself does not scroll.
+export const FitsAShortView: Story = {
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'short', isRotated: false } },
+  play: async ({ canvas }) => {
+    await waitFor(() => expect(window.innerHeight).toBe(480))
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const box = panel.getBoundingClientRect()
+    await expect(box.top).toBeGreaterThanOrEqual(0)
+    await expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
+    await expect(canvas.getByRole('textbox', { name: 'Message' })).toBeVisible()
+    const composer = canvas.getByRole('textbox', { name: 'Message' }).getBoundingClientRect()
+    await expect(composer.bottom).toBeLessThanOrEqual(window.innerHeight)
+    await expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
   },
 }
 
@@ -181,7 +205,7 @@ export const LongThreadScrolls: Story = {
   ...DESKTOP,
   parameters: { docs: { description: { story: 'A long conversation scrolling inside the panel: the header and the composer stay put while the thread moves.' } } },
   // The same frame as every other example (rounded, bordered, shadowed); only the height is shorter so the thread overflows.
-  render: (args) => <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory} className="h-[28rem] w-full max-w-sm rounded-xl border border-border shadow-md" />,
+  render: (args, { viewMode }) => <AiPanel onSubmit={args.onSubmit} onHistory={args.onHistory} className={`${fitHeight(viewMode, 'h-[28rem]', 'h-[min(28rem,100dvh)]')} w-full max-w-sm rounded-xl border border-border shadow-md`} />,
   play: async ({ canvas }) => {
     const panel = canvas.getByRole('region', { name: 'Assistant' })
     const box = canvas.getByRole('textbox', { name: 'Message' })

@@ -73,6 +73,8 @@ const WithTheme: Decorator = (Story, context) => {
         ref={wrapperRef}
         data-theme={theme}
         data-accent={accent}
+        // preview-head.html drops the padding of a centred canvas story in a window shorter than the example plus padding.
+        data-canvas-fit={isCentered && context.viewMode !== 'docs' ? '' : undefined}
         style={{
           background: THEME_BG[theme] ?? THEME_BG[DEFAULT_MODE.attr],
           padding: CANVAS_PADDING,
