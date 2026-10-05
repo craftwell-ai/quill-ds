@@ -15,7 +15,8 @@ An AI suggestion beside the text it is about — what the AI did, the suggested 
 - **Do:** Title the popover with the action and its flavour: "Rewrite: shorter". **Don't:** Title it "AI" or "Suggestion" — people should know what was asked without remembering it.
 
 ### Accessibility
-- The popover is a dialog named by its title. It opens on a press, moves focus into itself, and returns focus to its anchor when it closes.
+- The popover is a dialog named by its title. It opens on a press and focus lands on the popover itself (with a visible ring), not on a button, so a held Enter cannot press Discard. Try again keeps focus inside the popover while the suggestion is replaced, and closing it any way returns focus to its anchor, where the person was.
+- On a short screen the popover is capped to the space left; the suggestion scrolls while the header and the buttons stay in view.
 - It stays open while you press inside it; Escape, a press outside it, or a second press on its anchor closes it.
 - An anchor that is not a button (highlighted text) is given the button role and a place in the Tab order.
 - While the AI is writing, a polite live region (role="status") says the working label; when a suggestion follows it says "Suggestion ready". The region is in the popover from its first paint, empty, and the visible label is hidden from screen readers so it is not read twice. A popover that opens with a finished suggestion announces nothing extra.

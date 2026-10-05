@@ -74,13 +74,15 @@ export function AiPopover({
       <PopoverTrigger render={children} nativeButton={nativeButton} />
       {/* The wash is a background image over the popover's own fill, so the stock surface colour stays. Focus opens on
           the dialog itself, not on Discard: someone holding Enter to open it would otherwise discard on the key repeat. */}
-      <PopoverContent ref={popupRef} initialFocus={popupRef} side={side} align={align} className={cn('ai-wash w-96 max-w-[calc(100vw-2rem)] gap-0 overflow-hidden p-0', className)}>
-        <div className="flex items-center gap-2 px-3.5 pt-3 pb-1">
+      <PopoverContent ref={popupRef} initialFocus={popupRef} side={side} align={align} className={cn('ai-wash w-96 max-w-[calc(100vw-2rem)] max-h-(--available-height) gap-0 overflow-hidden p-0 focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
+        <div className="flex shrink-0 items-center gap-2 px-3.5 pt-3 pb-1">
           <AiMark size={18} />
           {/* A paragraph, not the default h2: headings take the serif display preset. */}
           <PopoverTitle render={<p />} className="min-w-0 flex-1 text-sm font-semibold text-foreground">{title}</PopoverTitle>
         </div>
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5 px-3.5 pt-1.5 pb-3.5">
+        {/* The popup is capped to the space the positioner has left. The header and the buttons stay put; only this
+            middle part scrolls, so Replace is never pushed off a short screen. */}
+        <div className="grid min-h-0 grid-cols-[minmax(0,1fr)] gap-2.5 overflow-y-auto px-3.5 pt-1.5">
           <WritingStatus working={working} label={workingLabel} />
           {working ? (
             <div className="grid gap-1.5">
@@ -91,16 +93,16 @@ export function AiPopover({
             // border-input, not the divider line: the tile has to read as a shape on the popover in the dark themes.
             <div data-slot="suggestion" className="rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed wrap-anywhere text-foreground">{suggestion}</div>
           ) : null}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Button type="button" variant="ghost" onClick={() => { onDiscard?.(); setOpen(false) }}>Discard</Button>
-            <span className="flex-1" />
-            {/* Pressing Try again disables it while the AI writes, and the suggestion is swapped for the shimmer; focus
-                moves to the dialog first so it never falls to the page. */}
-            {onRetry ? <Button type="button" variant="outline" disabled={working} onClick={() => { popupRef.current?.focus(); onRetry() }}>Try again</Button> : null}
-            {onInsertBelow ? <Button type="button" variant="outline" disabled={!ready} onClick={() => { onInsertBelow(); setOpen(false) }}>Insert below</Button> : null}
-            {/* Plain solid ink: accepting an AI suggestion is an ordinary decision. */}
-            <Button type="button" disabled={!ready} onClick={() => { onReplace(); setOpen(false) }}>{replaceLabel}</Button>
-          </div>
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center gap-1.5 px-3.5 pt-2.5 pb-3.5">
+          <Button type="button" variant="ghost" onClick={() => { onDiscard?.(); setOpen(false) }}>Discard</Button>
+          <span className="flex-1" />
+          {/* Pressing Try again disables it while the AI writes, and the suggestion is swapped for the shimmer; focus
+              moves to the dialog first so it never falls to the page. */}
+          {onRetry ? <Button type="button" variant="outline" disabled={working} onClick={() => { popupRef.current?.focus(); onRetry() }}>Try again</Button> : null}
+          {onInsertBelow ? <Button type="button" variant="outline" disabled={!ready} onClick={() => { onInsertBelow(); setOpen(false) }}>Insert below</Button> : null}
+          {/* Plain solid ink: accepting an AI suggestion is an ordinary decision. */}
+          <Button type="button" disabled={!ready} onClick={() => { onReplace(); setOpen(false) }}>{replaceLabel}</Button>
         </div>
       </PopoverContent>
     </Popover>
