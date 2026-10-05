@@ -1021,7 +1021,7 @@
           "type": "registry:ui"
         }
       ],
-      "docs": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. Do: Keep the answer in plain body text; the mark on the avatar already says it is AI. Don't: Colour the answer, its bubble or its headings with the AI gradient — answers have to be easy to read at length. Do: Pass streaming while the answer arrives; the actions wait until it is done. Don't: Show Copy and thumbs on a half-written answer — there is nothing finished to copy or judge yet. Use chat when two people are messaging each other; no AI is involved."
+      "docs": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. Do: Keep the answer in plain body text; the mark on the avatar already says it is AI. Don't: Colour the answer, its bubble or its headings with the AI gradient — answers have to be easy to read at length. Do: Pass streaming while the answer arrives; the actions wait until it is done. Don't: Show Copy and thumbs on a half-written answer — there is nothing finished to copy or judge yet. Use chat when two people are messaging each other; no AI is involved. Use ai-popover when the AI suggests an edit to selected text rather than answering in a thread."
     },
     {
       "name": "citations",
@@ -1137,6 +1137,25 @@
         }
       ],
       "docs": "An AI agent asks the person to choose — the question, options as full rows with the recommended one first, a free-text row for anything else, and Continue that waits for an answer. Do: Give every option a title and one line on what choosing it means. Don't: Offer a row of bare buttons — people cannot weigh options they have to guess at. Do: Pass the agent's pick as recommended so it comes first with the moss tag. Don't: Tag several options as recommended, or bury the recommendation in the middle of the list. Do: Keep the free-text row, and offer Skip when the agent can decide for itself. Don't: Force a choice between options when none of them may fit. Use radio-group when an ordinary form asks the question; no AI agent is waiting on it. Use approval-card when the agent already knows what it wants to do and needs a yes or a no."
+    },
+    {
+      "name": "ai-popover",
+      "type": "registry:ui",
+      "title": "AI popover",
+      "description": "An AI suggestion beside the text it is about — what the AI did, the suggested text on a soft AI wash, then Discard, Try again and Replace.",
+      "registryDependencies": [
+        "button",
+        "popover",
+        "https://www.quilldesignsystem.com/r/ai-mark.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/ai-popover.tsx",
+          "target": "components/ui/ai-popover.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "An AI suggestion beside the text it is about — what the AI did, the suggested text on a soft AI wash, then Discard, Try again and Replace. Do: Leave Replace as the plain solid button; the wash and the mark already say this came from AI. Don't: Put the AI gradient on Replace or on the suggested text — accepting has to feel like any other decision. Do: Wrap the selected text as the popover's anchor so it stays highlighted underneath for comparison. Don't: Cover or remove the original before the person has chosen. Do: Title the popover with the action and its flavour: \"Rewrite: shorter\". Don't: Title it \"AI\" or \"Suggestion\" — people should know what was asked without remembering it. Use popover when the overlay holds an ordinary form or filter, not an AI suggestion. Use ai-message when the AI answers in a conversation rather than suggesting an edit to text on the page."
     },
     {
       "name": "ai-mark",
@@ -1288,6 +1307,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/ai-notice.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/ai-notice.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/ai-popover.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/ai-popover.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/ai-thinking.md",

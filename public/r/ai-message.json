@@ -16,6 +16,6 @@
       "target": "components/ui/ai-message.tsx"
     }
   ],
-  "docs": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. Do: Keep the answer in plain body text; the mark on the avatar already says it is AI. Don't: Colour the answer, its bubble or its headings with the AI gradient — answers have to be easy to read at length. Do: Pass streaming while the answer arrives; the actions wait until it is done. Don't: Show Copy and thumbs on a half-written answer — there is nothing finished to copy or judge yet. Use chat when two people are messaging each other; no AI is involved.",
+  "docs": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. Do: Keep the answer in plain body text; the mark on the avatar already says it is AI. Don't: Colour the answer, its bubble or its headings with the AI gradient — answers have to be easy to read at length. Do: Pass streaming while the answer arrives; the actions wait until it is done. Don't: Show Copy and thumbs on a half-written answer — there is nothing finished to copy or judge yet. Use chat when two people are messaging each other; no AI is involved. Use ai-popover when the AI suggests an edit to selected text rather than answering in a thread.",
   "type": "registry:ui"
 }

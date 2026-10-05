@@ -33,3 +33,10 @@ export const surfaceBehind = (element: Element): [number, number, number] => {
   for (let node = element.parentElement; node; node = node.parentElement) layers.unshift(getComputedStyle(node).backgroundColor)
   return layers.reduce<[number, number, number]>((below, layer) => compositeOver(layer, `rgb(${below.join(' ')})`), [255, 255, 255])
 }
+
+// A wash such as `ai-wash` is a background image, which surfaceBehind cannot see. Its strongest point is the top:
+// --ai-from at 16% over the surface. A line measured against that is measured where it is hardest to see.
+export const washedTop = (surface: [number, number, number], host: Element): [number, number, number] => {
+  const from = getComputedStyle(host).getPropertyValue('--ai-from').trim()
+  return compositeOver(`color-mix(in oklab, ${from} 16%, transparent)`, `rgb(${surface.join(' ')})`)
+}

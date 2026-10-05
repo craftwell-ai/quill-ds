@@ -11,6 +11,7 @@ import { usage as aiButton } from './ai-button.usage.mjs'
 import { usage as aiMark } from './ai-mark.usage.mjs'
 import { usage as aiMessage } from './ai-message.usage.mjs'
 import { usage as aiNotice } from './ai-notice.usage.mjs'
+import { usage as aiPopover } from './ai-popover.usage.mjs'
 import { usage as aiThinking } from './ai-thinking.usage.mjs'
 import { usage as suggestedPrompts } from './suggested-prompts.usage.mjs'
 import { usage as modelPicker } from './model-picker.usage.mjs'
@@ -135,6 +136,7 @@ export const ALL_USAGE = [
   aiMark,
   aiMessage,
   aiNotice,
+  aiPopover,
   aiThinking,
   suggestedPrompts,
   modelPicker,
