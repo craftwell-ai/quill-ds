@@ -6,7 +6,7 @@ import { Icon } from '@/components/ui/icon'
 import { usage } from '@/usage/approval-card.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { Button } from '@/components/ui/button'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 import { tabTo } from './focus-ring'
 import { compositeOver, contrastRatio, lineColour, surfaceBehind } from './contrast'
 
@@ -16,12 +16,15 @@ const DETAILS = [
   { label: 'Subject', value: 'September signups: 12% under target' },
 ]
 
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-[30rem] max-w-full'
+
 const meta = {
   title: 'Components / ApprovalCard',
   component: ApprovalCard,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="w-[30rem] max-w-full"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
   args: {
     title: 'The agent wants to send this email',
     details: DETAILS,
@@ -364,8 +367,9 @@ export const BlankBodyWithNoDetailsHasNoTile: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: (args) => (
-    <DoDontPair usage={usage} id="button-names-the-action"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="button-names-the-action"
       doExample={<ApprovalCard {...args} defaultBody={undefined} />}
       dontExample={<ApprovalCard {...args} defaultBody={undefined} actionLabel="Approve" actionIcon={undefined} />} />
   ),

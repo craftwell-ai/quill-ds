@@ -5,7 +5,7 @@ import { OTHER_ANSWER, QuestionCard, type QuestionOption } from '../../registry/
 import { Button } from '@/components/ui/button'
 import { usage } from '@/usage/question-card.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
 import { tabTo } from './focus-ring'
 
@@ -18,12 +18,15 @@ const OPTIONS: QuestionOption[] = [
   { value: 'growth', label: 'The growth team', description: '6 people. They own signups and asked for it last month.' },
 ]
 
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-[30rem] max-w-full'
+
 const meta = {
   title: 'Components / QuestionCard',
   component: QuestionCard,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="w-[30rem] max-w-full"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
   args: {
     question: QUESTION,
     options: OPTIONS,
@@ -419,8 +422,9 @@ export const OptionRowsReadAsShapes: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: (args) => (
-    <DoDontPair usage={usage} id="explain-each-option"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="explain-each-option"
       doExample={<QuestionCard {...args} />}
       dontExample={(
         <div className="grid gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm">

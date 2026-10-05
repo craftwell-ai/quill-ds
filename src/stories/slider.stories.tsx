@@ -3,7 +3,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Slider } from '@/components/ui/slider'
 import { usage } from '@/usage/slider.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-72 px-2'
 
 const meta = {
   title: 'Components / Slider',
@@ -20,7 +23,7 @@ const meta = {
     step: { control: { type: 'number' }, description: 'Step increment', table: { defaultValue: { summary: '1' } } },
     className: { table: { disable: true } },
   },
-  decorators: [(Story) => <div className="w-72 px-2"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Slider>
 
 export default meta
@@ -80,9 +83,8 @@ export const AllVariants: Story = {
 
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
-  decorators: [(Story) => <div className="w-[640px]"><Story /></div>],
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="pair-with-visible-readout"
       doExample={

@@ -3,7 +3,7 @@ import { expect, fn, spyOn, userEvent } from 'storybook/test'
 import { SuggestedPrompts } from '../../registry/lib/suggested-prompts'
 import { usage } from '@/usage/suggested-prompts.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 import { expectFocusRing } from './focus-ring'
 
 const FOLLOW_UPS = [{ label: 'Break September down by week' }, { label: 'Compare with Q2' }, { label: 'Draft a note to the team' }]
@@ -14,12 +14,15 @@ const STARTERS = [
   { label: 'Find', detail: 'Tasks due soon', prompt: 'Find tasks due soon' },
 ]
 
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-[40rem] max-w-full'
+
 const meta = {
   title: 'Components / SuggestedPrompts',
   component: SuggestedPrompts,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="w-[40rem] max-w-full"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
   args: { onPick: fn(), suggestions: FOLLOW_UPS },
   argTypes: { layout: { control: 'select', options: ['chips', 'cards', 'list'] } },
 } satisfies Meta<typeof SuggestedPrompts>
@@ -79,8 +82,9 @@ export const ShowFocusRing: Story = {
   },
 }
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: (args) => (
-    <DoDontPair usage={usage} id="layout-by-place"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="layout-by-place"
       doExample={<SuggestedPrompts {...args} layout="chips" suggestions={FOLLOW_UPS} />}
       dontExample={<SuggestedPrompts {...args} layout="cards" suggestions={STARTERS} />} />
   ),

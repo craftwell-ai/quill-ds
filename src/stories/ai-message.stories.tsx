@@ -6,14 +6,17 @@ import { AiThinking } from '../../registry/lib/ai-thinking'
 import { Citation } from '../../registry/lib/citations'
 import { usage } from '@/usage/ai-message.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'grid w-[36rem] max-w-full gap-4'
 
 const meta = {
   title: 'Components / AiMessage',
   component: AiMessage,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="grid w-[36rem] max-w-full gap-4"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
   args: { children: <p>September missed target by 12%, but July and August each beat it, so the quarter still closed 4% ahead.</p> },
 } satisfies Meta<typeof AiMessage>
 
@@ -377,8 +380,9 @@ export const CopyRefused: Story = {
   },
 }
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
-    <DoDontPair usage={usage} id="answer-stays-plain"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="answer-stays-plain"
       doExample={<AiMessage><p>The quarter closed 4% ahead.</p></AiMessage>}
       dontExample={<AiMessage><p className="ai-text font-semibold">The quarter closed 4% ahead.</p></AiMessage>} />
   ),

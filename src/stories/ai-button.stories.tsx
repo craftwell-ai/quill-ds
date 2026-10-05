@@ -46,6 +46,7 @@ export const Sizes: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair usage={usage} id="gradient-on-mark-not-label"
       doExample={<AiButton variant="outline">Rewrite</AiButton>}

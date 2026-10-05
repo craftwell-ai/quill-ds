@@ -41,6 +41,7 @@ export const OutlineIsVisible: Story = {
 export const Suggested: Story = { args: { children: 'Suggested' } }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   args: { children: 'AI draft' },
   render: () => (
     <DoDontPair usage={usage} id="badge-says-ai-made"

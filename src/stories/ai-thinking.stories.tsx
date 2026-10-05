@@ -4,15 +4,18 @@ import { expect, userEvent, waitFor } from 'storybook/test'
 import { AiThinking, formatThoughtFor } from '../../registry/lib/ai-thinking'
 import { usage } from '@/usage/ai-thinking.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
 import { expectFocusRing } from './focus-ring'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-80'
 
 const meta = {
   title: 'Components / AiThinking',
   component: AiThinking,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: renderUsageDocs(usage) } } },
-  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof AiThinking>
 
 export default meta
@@ -157,9 +160,10 @@ export const UnusableSecondsFallBack: Story = {
   },
 }
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   args: { status: 'done' },
   render: () => (
-    <DoDontPair usage={usage} id="motion-only-while-working"
+    <DoDontPair exampleClassName={COLUMN} usage={usage} id="motion-only-while-working"
       doExample={<div className="grid gap-2"><AiThinking status="done" seconds={8} steps={STEPS} /><p className="text-sm">September missed target by 12%.</p></div>}
       dontExample={<div className="grid gap-2"><AiThinking status="working" /><p className="text-sm">September missed target by 12%.</p></div>} />
   ),

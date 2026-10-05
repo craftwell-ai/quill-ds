@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Separator } from '@/components/ui/separator'
 import { usage } from '@/usage/separator.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-64'
 
 const meta = {
   title: 'Components / Separator',
@@ -21,7 +24,7 @@ const meta = {
     },
     className: { table: { disable: true } },
   },
-  decorators: [(Story) => <div className="w-64"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Separator>
 
 export default meta
@@ -90,7 +93,7 @@ export const AllVariants: Story = {
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="vertical-needs-flex-ancestor"
       doExample={

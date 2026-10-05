@@ -48,6 +48,7 @@ export const Labelled: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <div className="grid gap-6">
       <DoDontPair usage={usage} id="mark-only-means-ai"

@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Input } from '@/components/ui/input'
 import { usage } from '@/usage/input.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-72'
 
 const meta = {
   title: 'Components / Input',
@@ -23,7 +26,7 @@ const meta = {
     disabled: { control: 'boolean', description: 'Disables the input', table: { defaultValue: { summary: 'false' } } },
     className: { table: { disable: true } },
   },
-  decorators: [(Story) => <div className="w-72"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Input>
 
 export default meta
@@ -63,7 +66,7 @@ export const AllVariants: Story = {
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="label-not-placeholder"
       doExample={

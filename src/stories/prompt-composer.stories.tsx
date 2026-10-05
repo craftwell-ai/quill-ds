@@ -4,7 +4,7 @@ import { expect, fn, userEvent, waitFor } from 'storybook/test'
 import { PromptComposer } from '../../registry/lib/prompt-composer'
 import { usage } from '@/usage/prompt-composer.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, unlessDoDont } from './DoDont'
 import { Icon } from '@/components/ui/icon'
 
 const meta = {
@@ -20,11 +20,12 @@ const meta = {
   // Every story frames the composer the same way: centred across and down the canvas at one width. On a story
   // page the frame fills the screen, less the preview's 24px padding; on the Docs page each example keeps its own
   // height. The / and @ menu has room to open upward from the centre.
-  decorators: [(Story, { parameters, viewMode }) => (
+  // The Do/Don't pair steps aside (unlessDoDont): it needs the whole canvas, not a max-w-xl column.
+  decorators: [unlessDoDont((Story, { viewMode }) => (
     <div className={viewMode === 'story' ? 'grid min-h-[calc(100vh-3rem)] place-items-center p-4' : 'grid place-items-center p-4'}>
       <div className="mx-auto w-full max-w-xl"><Story /></div>
     </div>
-  )],
+  ))],
 } satisfies Meta<typeof PromptComposer>
 
 export default meta
@@ -464,6 +465,7 @@ export const Notebook: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: (args) => (
     <div className="grid gap-6">
       <DoDontPair usage={usage} id="edge-not-ring"

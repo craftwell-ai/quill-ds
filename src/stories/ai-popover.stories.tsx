@@ -442,6 +442,7 @@ export const Controlled: Story = {
 }
 
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
     <DoDontPair usage={usage} id="replace-stays-plain"
       doExample={<div className="flex justify-end gap-1.5"><Button variant="ghost">Discard</Button><Button>Replace</Button></div>}

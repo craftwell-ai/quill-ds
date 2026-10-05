@@ -119,6 +119,7 @@ export const BadgeAndCheckAlignWithName: Story = {
   },
 }
 export const DoDont: Story = {
+  parameters: { layout: 'padded', controls: { disable: true } },
   args: { models: MODELS, value: 'auto', onValueChange: fn() },
   render: () => (
     <DoDontPair usage={usage} id="say-what-it-is-for"

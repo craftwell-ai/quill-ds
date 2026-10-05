@@ -6,7 +6,10 @@ import {
 } from '@/components/ui/progress'
 import { usage } from '@/usage/progress.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair } from './DoDont'
+import { DoDontPair, inColumn } from './DoDont'
+
+// One width for the component's own stories and for each example in its Do/Don't pair.
+const COLUMN = 'w-72'
 
 const meta = {
   title: 'Components / Progress',
@@ -20,7 +23,7 @@ const meta = {
     value: { control: { type: 'range', min: 0, max: 100, step: 1 }, description: 'Completion percentage', table: { defaultValue: { summary: '0' } } },
     className: { table: { disable: true } },
   },
-  decorators: [(Story) => <div className="w-72"><Story /></div>],
+  decorators: [inColumn(COLUMN)],
 } satisfies Meta<typeof Progress>
 
 export default meta
@@ -87,7 +90,7 @@ export const DoDont: Story = {
     a11y: { options: { rules: { 'aria-progressbar-name': { enabled: false } } } },
   },
   render: () => (
-    <DoDontPair
+    <DoDontPair exampleClassName={COLUMN}
       usage={usage}
       id="label-with-progresslabel"
       doExample={
