@@ -94,8 +94,9 @@ export function ApprovalCard({
         <p id={titleId} className="min-w-0 flex-1 font-semibold break-words text-ink-soft">{title}</p>
       </div>
       {showTile ? (
-        // border-input, not the divider line: the tile has to read as a shape on the card in the dark themes.
-        <div data-slot="proposal" className="grid grid-cols-[minmax(0,1fr)] gap-1.5 rounded-lg border border-input bg-background px-3 py-2.5">
+        // The divider line, not the control line: the tile is read-only content, told apart from the card by its fill.
+        // The control line is kept for things people press or type in.
+        <div data-slot="proposal" className="grid grid-cols-[minmax(0,1fr)] gap-1.5 rounded-lg border border-border bg-background px-3 py-2.5">
           {rows.length ? (
             <dl className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-3 gap-y-1">
               {rows.map((row, index) => (

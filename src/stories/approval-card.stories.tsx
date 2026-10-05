@@ -8,7 +8,7 @@ import { renderUsageDocs } from '@/usage/render.mjs'
 import { Button } from '@/components/ui/button'
 import { DoDontPair } from './DoDont'
 import { tabTo } from './focus-ring'
-import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
+import { compositeOver, contrastRatio, lineColour, surfaceBehind } from './contrast'
 
 const BODY = 'Hi team, September came in 12% under target, though the quarter still closed 4% ahead. The dip lines up with the pricing page change on the 9th. Chart attached.'
 const DETAILS = [
@@ -180,15 +180,28 @@ export const RepeatedDetailLabels: Story = {
   },
 }
 
-// The tile is a fill on a fill; without a line that can be seen it vanishes in the dark themes.
+// The proposal tile is read-only content, so it takes the soft divider line, not the control line that marks things
+// to press or type in. What tells it apart from the card is its FILL (the page colour inside the card colour) plus
+// that hairline, so this checks the fill is there and differs from the card, and that the line is the 1px divider.
+// No contrast floor is asserted: the soft line is not meant to reach 3:1, and the tile holds no control.
+// Measured 2026-10-05, fill vs card · hairline vs card:
+//   Dawn 1.08:1 · 1.25:1    Dusk 1.10:1 · 1.33:1    Classic Light 1.07:1 · 1.29:1
+//   Classic Dark 1.11:1 · 1.37:1    Intelligent 1.09:1 · 1.31:1
+// (Until 0.19.0 the tile wore the control line and this test held it to 3:1; that floor now belongs to controls only.)
 export const ProposalReadsAsAShape: Story = {
   play: async ({ canvasElement }) => {
     const tile = canvasElement.querySelector('[data-slot="proposal"]') as HTMLElement
     const surface = surfaceBehind(tile)
-    const outline = compositeOver(getComputedStyle(tile).borderTopColor, `rgb(${surface.join(' ')})`)
-    const ratio = contrastRatio(outline, surface)
-    console.log(`approval-card proposal outline ${ratio.toFixed(2)}:1`)
-    await expect(ratio).toBeGreaterThanOrEqual(3)
+    const backdrop = `rgb(${surface.join(' ')})`
+    const style = getComputedStyle(tile)
+    await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+    const fill = compositeOver(style.backgroundColor, backdrop)
+    await expect(fill).not.toEqual(surface)
+    await expect(style.borderTopWidth).toBe('1px')
+    await expect(style.borderTopStyle).toBe('solid')
+    await expect(style.borderTopColor).toBe(lineColour(tile, 'border-border'))
+    const hairline = compositeOver(style.borderTopColor, backdrop)
+    console.log(`approval-card proposal tile: fill vs card ${contrastRatio(fill, surface).toFixed(2)}:1 · hairline vs card ${contrastRatio(hairline, surface).toFixed(2)}:1`)
   },
 }
 

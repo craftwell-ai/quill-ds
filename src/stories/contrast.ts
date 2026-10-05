@@ -43,3 +43,14 @@ export const washedTop = (surface: [number, number, number], host: Element): [nu
   if (!firstStop) throw new Error(`washedTop: no top-to-bottom wash on the host (${image})`)
   return compositeOver(firstStop[1], `rgb(${surface.join(' ')})`)
 }
+
+// The colour a line utility (`border-border`, `border-input`) resolves to where `host` sits, read from a throwaway
+// element so a test can ask "is this the divider line?" without typing a colour per theme.
+export const lineColour = (host: Element, utility: 'border-border' | 'border-input') => {
+  const probe = document.createElement('span')
+  probe.className = `border ${utility}`
+  host.append(probe)
+  const colour = getComputedStyle(probe).borderTopColor
+  probe.remove()
+  return colour
+}

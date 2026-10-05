@@ -26,6 +26,12 @@ export const usage = {
       dont: 'Put the AI gradient on the action button — approving has to feel like any other decision.',
       visual: false,
     },
+    {
+      id: 'tile-takes-the-divider-line',
+      do: 'Leave the proposal tile on the soft divider line (border-border). It is read-only content, told apart from the card by its fill.',
+      dont: 'Outline it with the control line (border-input) — that line marks things people press or type in.',
+      visual: false,
+    },
   ],
   a11y: [
     'The card is a group named by its title; it sits in the conversation and never takes focus on its own.',
@@ -34,5 +40,5 @@ export const usage = {
     'The main button is named by the action itself. A body that was given and is now empty disables it.',
     'The outcome line appears inside a status region that is already on the page, so it is announced; while empty the region is a real box that takes no space. When the person presses the card\'s own main or decline button, the buttons go and focus moves to that line without scrolling the page, so keyboard users keep their place. An outcome that arrives on its own, with nothing in the card pressed, moves focus nowhere; nor is focus pulled back if the person has since moved to another control.',
   ],
-  tokens: ['--card', '--background', '--border', '--input', '--muted', '--muted-foreground', '--ink-soft', '--primary', '--destructive', '--ai-from', '--ai-via', '--ai-to'],
+  tokens: ['--card', '--background', '--border', '--muted', '--muted-foreground', '--ink-soft', '--primary', '--destructive', '--ai-from', '--ai-via', '--ai-to'],
 }

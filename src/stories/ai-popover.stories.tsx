@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { usage } from '@/usage/ai-popover.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { DoDontPair } from './DoDont'
-import { compositeOver, contrastRatio, washedTop } from './contrast'
+import { compositeOver, contrastRatio, lineColour, washedTop } from './contrast'
 
 const ORIGINAL = 'Signups beat target in July and August but missed it in September by twelve percent, which we think is about the pricing page.'
 const SUGGESTION = 'Signups beat target in July and August but fell 12% short in September, likely because of the new pricing page.'
@@ -208,19 +208,30 @@ export const EmptySuggestion: Story = {
   },
 }
 
-// The tile sits on the popover's wash, so the outline is measured against the washed colour, where the wash is strongest.
-// This outline groups content rather than marking a control, so the floor is "clearly reads as a shape" (the earlier
-// invisible pills were 1.1-1.3:1), not WCAG's 3:1 for controls.
+// The suggestion tile is read-only content, so it takes the soft divider line, not the control line that marks things
+// to press or type in. What tells it apart from the popover is its FILL (the page colour on the washed popover) plus
+// that hairline, so this checks the fill is there and differs from the washed surface, and that the line is the 1px
+// divider. Both are measured where the wash is strongest (its top), which is where the tile is hardest to see.
+// No contrast floor is asserted: the soft line is not meant to reach 3:1, and the tile holds no control.
+// Measured 2026-10-05, fill vs washed popover · hairline vs washed popover:
+//   Dawn 1.18:1 · 1.25:1    Dusk 1.41:1 · 1.34:1    Classic Light 1.19:1 · 1.28:1
+//   Classic Dark 1.36:1 · 1.45:1    Intelligent 1.33:1 · 1.34:1
+// (Until 0.19.0 the tile wore the control line and this test held it to 2:1 on the wash; that floor now belongs to controls only.)
 export const SuggestionReadsAsAShape: Story = {
   play: async ({ canvas }) => {
     const dialog = await openFrom(canvas)
     const tile = dialog.querySelector('[data-slot="suggestion"]') as HTMLElement
-    const surface = compositeOver(getComputedStyle(dialog).backgroundColor, 'rgb(255 255 255)')
-    const washed = washedTop(surface, tile)
-    const outline = compositeOver(getComputedStyle(tile).borderTopColor, `rgb(${washed.join(' ')})`)
-    const ratio = contrastRatio(outline, washed)
-    console.log(`ai-popover suggestion outline on the wash ${ratio.toFixed(2)}:1`)
-    await expect(ratio).toBeGreaterThanOrEqual(2)
+    const washed = washedTop(compositeOver(getComputedStyle(dialog).backgroundColor, 'rgb(255 255 255)'), tile)
+    const backdrop = `rgb(${washed.join(' ')})`
+    const style = getComputedStyle(tile)
+    await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+    const fill = compositeOver(style.backgroundColor, backdrop)
+    await expect(fill).not.toEqual(washed)
+    await expect(style.borderTopWidth).toBe('1px')
+    await expect(style.borderTopStyle).toBe('solid')
+    await expect(style.borderTopColor).toBe(lineColour(tile, 'border-border'))
+    const hairline = compositeOver(style.borderTopColor, backdrop)
+    console.log(`ai-popover suggestion tile: fill vs washed popover ${contrastRatio(fill, washed).toFixed(2)}:1 · hairline vs washed popover ${contrastRatio(hairline, washed).toFixed(2)}:1`)
   },
 }
 

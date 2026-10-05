@@ -13,6 +13,7 @@ An AI suggestion beside the text it is about — what the AI did, the suggested 
 - **Do:** Leave Replace as the plain solid button; the wash and the mark already say this came from AI. **Don't:** Put the AI gradient on Replace or on the suggested text — accepting has to feel like any other decision.
 - **Do:** Wrap the selected text as the popover's anchor so it stays highlighted underneath for comparison. **Don't:** Cover or remove the original before the person has chosen.
 - **Do:** Title the popover with the action and its flavour: "Rewrite: shorter". **Don't:** Title it "AI" or "Suggestion" — people should know what was asked without remembering it.
+- **Do:** Leave the suggestion tile on the soft divider line (border-border). It is read-only content, told apart from the popover by its fill. **Don't:** Outline it with the control line (border-input) — that line marks things people press or type in.
 
 ### Accessibility
 - The popover is a dialog named by its title. It opens on a press and focus lands on the popover itself (with a visible ring), not on a button, so a held Enter cannot press Discard. Try again keeps focus inside the popover while the suggestion is replaced, and closing it any way returns focus to its anchor, where the person was.
@@ -25,5 +26,5 @@ An AI suggestion beside the text it is about — what the AI did, the suggested 
 - Under reduced motion the shimmer and the line hold still; the label stays readable.
 
 ### Design tokens
-`--popover` · `--background` · `--input` · `--foreground` · `--muted-foreground` · `--primary` · `--ai-from` · `--ai-via` · `--ai-to` · `--ai-text-via`
+`--popover` · `--background` · `--border` · `--foreground` · `--muted-foreground` · `--primary` · `--ai-from` · `--ai-via` · `--ai-to` · `--ai-text-via`
 
