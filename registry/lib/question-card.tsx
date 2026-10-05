@@ -62,13 +62,19 @@ export function QuestionCard({
   // A controlled answer with nowhere to report changes would give rows that do nothing: lock them instead.
   const locked = decided || (answer !== undefined && !onAnswerChange)
 
-  // Pressing Continue or Skip removes the button that had focus. Keep the person's place inside the card, but
-  // only when focus was in the card (or just fell to the page body): never pull focus from elsewhere on the page.
+  // Set when the person presses this card's own Continue or Skip, or Enter in its field. An outcome can also arrive on
+  // its own (a timeout, a decision made on another screen), and focus resting on the page body looks the same in both cases.
+  const decidedHere = React.useRef(false)
+
+  // Pressing Continue or Skip removes the button that had focus. Keep the person's place inside the card, but only
+  // after a press in this card, and only if they have not moved on to something else since.
+  // preventScroll: the line is beside the button they just pressed, so the page has no reason to jump.
   React.useEffect(() => {
-    if (decided && !wasDecided.current) {
+    if (decided && !wasDecided.current && decidedHere.current) {
       const active = document.activeElement
-      if (!active || active === document.body || cardRef.current?.contains(active)) statusRef.current?.focus()
+      if (!active || active === document.body || cardRef.current?.contains(active)) statusRef.current?.focus({ preventScroll: true })
     }
+    if (decided) decidedHere.current = false
     wasDecided.current = decided
   }, [decided])
 
@@ -99,6 +105,7 @@ export function QuestionCard({
   }
   const submit = () => {
     if (!ready || !current) return
+    decidedHere.current = true
     onContinue(isOther ? { value: OTHER_ANSWER, text: text.trim() } : { value: current.value })
   }
 
@@ -168,7 +175,7 @@ export function QuestionCard({
         <div className="flex flex-wrap items-center gap-1.5">
           <Button type="button" disabled={!ready} onClick={submit}>{continueLabel}</Button>
           <span className="flex-1" />
-          {onSkip ? <Button type="button" variant="ghost" onClick={onSkip}>{skipLabel}</Button> : null}
+          {onSkip ? <Button type="button" variant="ghost" onClick={() => { decidedHere.current = true; onSkip() }}>{skipLabel}</Button> : null}
         </div>
       )}
       {/* On the page from the start so the outcome arrives into a live region. While empty it is absolutely

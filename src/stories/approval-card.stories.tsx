@@ -231,6 +231,41 @@ export const FocusStaysInTheCardAfterDeny: Story = {
   },
 }
 
+const OUTCOME_SIGNAL = 'quill-story-outcome'
+
+// Nothing in the card was pressed: the outcome arrives on its own (the agent timed out, someone decided on another
+// screen) while the person reads elsewhere. The card sits below the fold, so a focus move would also scroll the page.
+export const OutcomeArrivingOnItsOwnLeavesFocusAlone: Story = {
+  render: function Render(args) {
+    const [outcome, setOutcome] = React.useState<string>()
+    // The timer starts on a signal from the play function, so it cannot fire before the test has put focus on the page.
+    React.useEffect(() => {
+      let timer: number | undefined
+      const start = () => { timer = window.setTimeout(() => setOutcome('Decided somewhere else.'), 50) }
+      window.addEventListener(OUTCOME_SIGNAL, start)
+      return () => { window.removeEventListener(OUTCOME_SIGNAL, start); window.clearTimeout(timer) }
+    }, [])
+    return (
+      <div>
+        <div className="h-[150vh]" />
+        <ApprovalCard {...args} outcome={outcome} />
+      </div>
+    )
+  },
+  play: async ({ canvas }) => {
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+    window.scrollTo(0, 0)
+    await expect(document.activeElement).toBe(document.body)
+    await expect(document.documentElement.scrollHeight).toBeGreaterThan(window.innerHeight)
+    window.dispatchEvent(new Event(OUTCOME_SIGNAL))
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('Decided somewhere else.'))
+    // The text is on the page before React runs the card's effects; give a focus move the time to happen.
+    await new Promise((resolve) => window.setTimeout(resolve, 100))
+    await expect(document.activeElement).toBe(document.body)
+    await expect(window.scrollY).toBe(0)
+  },
+}
+
 export const FocusElsewhereIsNotStolen: Story = {
   render: function Render(args) {
     const [outcome, setOutcome] = React.useState<string>()

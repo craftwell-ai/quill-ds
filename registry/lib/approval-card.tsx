@@ -65,13 +65,19 @@ export function ApprovalCard({
   // "Opens in place" for a keyboard user means the cursor is in the field.
   React.useEffect(() => { if (showField) fieldRef.current?.focus() }, [showField])
 
+  // Set when the person presses this card's own main or decline button. An outcome can also arrive on its own (a
+  // timeout, a decision made on another screen), and focus resting on the page body looks the same in both cases.
+  const decidedHere = React.useRef(false)
+
   // Pressing the main or the decline button removes the button that had focus. Keep the person's place inside the
-  // card, but only when focus was in the card (or just fell to the page body): never pull focus from elsewhere.
+  // card, but only after a press in this card, and only if they have not moved on to something else since.
+  // preventScroll: the line is beside the button they just pressed, so the page has no reason to jump.
   React.useEffect(() => {
-    if (decided && !wasDecided.current) {
+    if (decided && !wasDecided.current && decidedHere.current) {
       const active = document.activeElement
-      if (!active || active === document.body || cardRef.current?.contains(active)) statusRef.current?.focus()
+      if (!active || active === document.body || cardRef.current?.contains(active)) statusRef.current?.focus({ preventScroll: true })
     }
+    if (decided) decidedHere.current = false
     wasDecided.current = decided
   }, [decided])
 
@@ -110,7 +116,7 @@ export function ApprovalCard({
       ) : null}
       {decided ? null : (
         <div className="flex flex-wrap items-center gap-1.5">
-          <Button type="button" variant={destructive ? 'destructive' : 'default'} disabled={blank} onClick={() => onApprove(hasBody ? text : undefined)}>
+          <Button type="button" variant={destructive ? 'destructive' : 'default'} disabled={blank} onClick={() => { decidedHere.current = true; onApprove(hasBody ? text : undefined) }}>
             {actionIcon}
             {actionLabel}
           </Button>
@@ -121,7 +127,7 @@ export function ApprovalCard({
             </Button>
           ) : null}
           <span className="flex-1" />
-          {onDeny ? <Button type="button" variant="ghost" onClick={onDeny}>{denyLabel}</Button> : null}
+          {onDeny ? <Button type="button" variant="ghost" onClick={() => { decidedHere.current = true; onDeny() }}>{denyLabel}</Button> : null}
         </div>
       )}
       {consequence && !decided ? (

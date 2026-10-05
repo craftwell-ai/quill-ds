@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { OTHER_ANSWER, QuestionCard, type QuestionOption } from '../../registry/lib/question-card'
 import { Button } from '@/components/ui/button'
 import { usage } from '@/usage/question-card.usage.mjs'
@@ -274,6 +274,56 @@ export const FocusStaysInTheCardOnDecision: Story = {
     await expect(canvas.queryByRole('button')).toBeNull()
     await expect(card.contains(document.activeElement)).toBe(true)
     await expect(document.activeElement).toBe(canvas.getByRole('status'))
+  },
+}
+
+// Enter in the free-text field is the same decision as pressing Continue. The field locks (and so drops focus) as the
+// outcome arrives; the person keeps their place on the outcome line.
+export const FocusStaysInTheCardAfterEnterInTheField: Story = {
+  render: function Render(args) {
+    const [outcome, setOutcome] = React.useState<string>()
+    return <QuestionCard {...args} outcome={outcome} onContinue={(answer) => { args.onContinue(answer); setOutcome('Sending it to Priya.') }} />
+  },
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByText('Someone else'))
+    await userEvent.type(canvas.getByRole('textbox', { name: FIELD_NAME }), 'Priya{Enter}')
+    await expect(canvas.getByRole('status')).toHaveTextContent('Sending it to Priya.')
+    await expect(document.activeElement).toBe(canvas.getByRole('status'))
+  },
+}
+
+const OUTCOME_SIGNAL = 'quill-story-outcome'
+
+// Nothing in the card was pressed: the outcome arrives on its own (the agent timed out, someone decided on another
+// screen) while the person reads elsewhere. The card sits below the fold, so a focus move would also scroll the page.
+export const OutcomeArrivingOnItsOwnLeavesFocusAlone: Story = {
+  render: function Render(args) {
+    const [outcome, setOutcome] = React.useState<string>()
+    // The timer starts on a signal from the play function, so it cannot fire before the test has put focus on the page.
+    React.useEffect(() => {
+      let timer: number | undefined
+      const start = () => { timer = window.setTimeout(() => setOutcome('Decided somewhere else.'), 50) }
+      window.addEventListener(OUTCOME_SIGNAL, start)
+      return () => { window.removeEventListener(OUTCOME_SIGNAL, start); window.clearTimeout(timer) }
+    }, [])
+    return (
+      <div>
+        <div className="h-[150vh]" />
+        <QuestionCard {...args} outcome={outcome} />
+      </div>
+    )
+  },
+  play: async ({ canvas }) => {
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+    window.scrollTo(0, 0)
+    await expect(document.activeElement).toBe(document.body)
+    await expect(document.documentElement.scrollHeight).toBeGreaterThan(window.innerHeight)
+    window.dispatchEvent(new Event(OUTCOME_SIGNAL))
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('Decided somewhere else.'))
+    // The text is on the page before React runs the card's effects; give a focus move the time to happen.
+    await new Promise((resolve) => window.setTimeout(resolve, 100))
+    await expect(document.activeElement).toBe(document.body)
+    await expect(window.scrollY).toBe(0)
   },
 }
 
