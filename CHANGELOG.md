@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.19.1] — 2026-10-06
+
+### Changed
+- chore(deps): Bump proxy-addr from 2.0.7 to 2.0.8
+
 ## [1.19.0] — 2026-10-06
 
 ### Changed
