@@ -27,7 +27,7 @@ Taste turned into a system that people and AI agents can ship: warm, editorial, 
 - Secondary CTA: install it — `npx shadcn add https://www.quilldesignsystem.com/r/quill.json`.
 - The line a visitor remembers: "A design system, made for people."
 - Belief ladder: this looks genuinely crafted → it's a real system (tokens, themes, foundations), not a skin → the components are comprehensive, tested, and accessible → I can have it in my project with one command.
-- Proof on hand: the site itself is built from Quill components; a live Storybook with tested, WCAG-checked components; 54 installable blocks; five switchable themes; version-stamped releases.
+- Proof on hand: the site itself is built from Quill components; a live Storybook with tested, WCAG-checked components; 55 installable blocks; five switchable themes; version-stamped releases.
 
 ## Brand Personality
 

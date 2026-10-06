@@ -13,6 +13,29 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.20.0] — 2026-10-06
+
+### Added
+- **The last AI pieces (AI kit Phase 4).**
+  - **`usage-meter`** — how much AI credit is left: the number, a bar, when it renews, what the rest will buy, and a breakdown. A card for settings, the bar on its own, and a compact ring for a composer footer. The gradient stays when the meter is low; "Running low" appears in words beside the amount on the bar and card, and the total ("of 5,000") always shows. The compact ring looks the same low or not (screen readers still hear "Running low"). In the light themes the track takes a little of the control line's colour so it can be seen on the card (the muted surface alone all but matched it); the fill stands apart by colour, and the amount is always in numbers above the bar. The compact ring always draws at least a sliver when anything is left.
+  - **`ai-feedback`** — asks what was wrong after a thumbs-down: one reason to choose from a dropdown, an optional note, and Send, which waits for one or the other. It opens under the answer, and after sending it becomes one line of thanks. After Send, keyboard focus moves to the thank-you line; inside a reply, closing the form returns focus to the thumbs-down.
+  - **`conversation-history`** — a block: past chats grouped by Pinned, Today, Yesterday, Previous 7 days and earlier months, with a menu on each row to rename, pin or delete. The list is `ConversationHistory`; `ConversationSidebar` docks the same list in the stock Sidebar.
+    - Rename happens in place: Enter saves, Escape cancels, and neither key closes a sheet around the list.
+    - Delete asks first, then leaves Undo (with an undo arrow) in the list for a few seconds.
+    - The open chat has a fill and a thin outline.
+    - `onDelete` is called at most once per confirmed delete: after the Undo time, or sooner when another delete is confirmed, the list is removed, or the page is closed (best effort on phones). Send your request with `keepalive` so one made as the page closes is not dropped.
+    - An optional `timeZone` (with `now`) makes a server and a browser put each chat in the same group.
+    - It takes an app's own chats; without them it shows a sample. With your own `conversations`, only the actions you wired are offered.
+- **`ai-meter`**, an eighth AI utility: the still, left-to-right gradient fill of a usage bar.
+- `AiMessage` takes `feedbackForm`, drawn under the reply's actions only while thumbs-down is pressed. Nothing changes for a reply that does not pass it.
+- Two new icons in the core set, `keep` and `undo` (98 names).
+- Figma twins for all three.
+
+### Changed
+- **The AI gradient rule has a seventh placement: the fill of an AI usage meter.**
+- The agent rules file counts Quill's shipped components in its first line instead of listing them; the names are still in its Primitives section.
+- `ai-side-panel`'s usage guide points to `conversation-history` for the History button.
+
 ## [1.19.1] — 2026-10-06
 
 ### Changed

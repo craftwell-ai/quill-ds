@@ -50,11 +50,19 @@ test('the rules file stays small enough to load into every session', () => {
   // 1.8 KB compact form; the full 12 KB table lives in llms.txt. Spend on nothing else.
   // Raised from 19.5 to 20 KB for the AI gradient exception (~650 B): an agent that
   // does not see the rule will either use the gradient on non-AI UI or avoid it for AI.
-  // Raised from 20 to 21 KB in Phase 3 of the AI kit: each new @quill/ component name is listed in
-  // the rules file three times (intro, primitives, skill index), ~45 B each, and Phase 3 adds five.
-  assert.ok(committed.length < 21_000, `rules file is ${committed.length} bytes — trim it, every session pays for it`)
+  // Raised from 20,000 to 21,000 characters in Phase 3 of the AI kit, when each new @quill/ component name was
+  // printed three times. Phase 4 took the names out of the intro (the count stays), so a new component now costs
+  // two mentions, both in the Primitives sentence. Do not raise the cap again: trim instead.
+  assert.ok(committed.length < 21_000, `rules file is ${committed.length} characters — trim it, every session pays for it`)
   const lines = committed.split('\n').length
   assert.ok(lines <= 200, `rules file is ${lines} lines — Claude Code's target is 200; move detail into the skill`)
+})
+
+test('the intro counts the shipped components and leaves their names to the Primitives sentence', () => {
+  const intro = committed.split('\n').find((line) => line.startsWith('This app is built on Quill'))
+  assert.ok(intro, 'intro sentence not found')
+  assert.match(intro, /shipped components and \d+ blocks/, 'the intro must still give the count')
+  assert.ok(!intro.includes('`ai-mark`'), 'the intro repeats the component names: they belong to the Primitives sentence only')
 })
 
 test('the rules file sends agents to the skill before they choose a component', () => {

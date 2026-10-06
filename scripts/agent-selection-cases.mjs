@@ -36,15 +36,18 @@ export const CASES = [
   { id: 'inline-rewrite', expect: 'ai-popover', accept: ['popover'], request: 'When someone selects a paragraph and asks AI to shorten it, show the new version next to the text with a way to swap it in.' },
   { id: 'ai-working-state', expect: 'ai-thinking', request: 'While the assistant is preparing its answer, show that it is working and what it is reading.' },
   { id: 'switch-ai-model', expect: 'model-picker', request: 'Let people switch between a fast model and a slower, more careful one from the assistant\'s input box.' },
+  { id: 'ai-credits-left', expect: 'usage-meter', accept: ['progress'], request: 'On the billing page, show how many AI credits the workspace has left this month, when they renew, and warn when they are nearly gone.' },
   { id: 'follow-up-questions', expect: 'suggested-prompts', request: 'After the assistant answers, offer two or three follow-up questions people can click to ask next.' },
   { id: 'answer-sources', expect: 'citations', request: 'The assistant\'s answers should show which document each statement came from, with the full list underneath.' },
   { id: 'assistant-reply', expect: 'ai-message', request: 'Show the assistant\'s answer in the conversation with buttons to copy it, retry, and rate it.' },
+  { id: 'why-was-it-bad', expect: 'ai-feedback', accept: ['ai-message'], request: 'When someone gives the assistant\'s answer a thumbs-down, ask them what was wrong with a few quick reasons and an optional note.' },
   { id: 'summarize-button', expect: 'ai-button', request: 'Add a Summarize button above a long document that asks AI to condense it.' },
   { id: 'ai-draft-label', expect: 'ai-badge', request: 'Reply drafts the assistant wrote should be labelled so agents know a person has not checked them yet.' },
   { id: 'ask-assistant-box', expect: 'prompt-composer', accept: ['ai-home'], request: 'Users type a question to our assistant; it should grow as they type and let them stop the answer halfway.' },
   { id: 'assistant-start-page', expect: 'ai-home', accept: ['prompt-composer'], request: 'The landing page of our assistant: a greeting, a big box to ask in, and a few example tasks to start from.' },
   { id: 'assistant-thread', expect: 'ai-chat', accept: ['ai-message'], request: 'A full page for chatting with our assistant: past conversations on the side, answers with sources, and an input at the bottom.' },
   { id: 'assistant-beside-page', expect: 'ai-side-panel', accept: ['sheet', 'ai-chat'], request: 'People should be able to open the assistant next to the report they are reading and ask about it without leaving the page.' },
+  { id: 'past-assistant-chats', expect: 'conversation-history', accept: ['ai-chat', 'sidebar-nav'], request: 'People need to find their earlier conversations with the assistant, grouped by when they happened, and rename, pin or delete them.' },
   { id: 'ai-icon', expect: 'ai-mark', accept: ['ai-badge'], request: 'Put a small icon next to the Summarize button so people can tell it uses AI.' },
 ]
 

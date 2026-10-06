@@ -31,6 +31,11 @@ declare module '@/usage/ai-button.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/ai-feedback.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/ai-mark.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
@@ -177,6 +182,11 @@ declare module '@/usage/ai-chat.usage.mjs' {
 }
 
 declare module '@/usage/ai-side-panel.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/conversation-history.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }
@@ -617,6 +627,11 @@ declare module '@/usage/tone-badge.usage.mjs' {
 }
 
 declare module '@/usage/tooltip.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
+declare module '@/usage/usage-meter.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage
 }

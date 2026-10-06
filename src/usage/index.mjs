@@ -8,6 +8,7 @@ import { usage as activityFeed } from './activity-feed.usage.mjs'
 import { usage as agentSteps } from './agent-steps.usage.mjs'
 import { usage as aiBadge } from './ai-badge.usage.mjs'
 import { usage as aiButton } from './ai-button.usage.mjs'
+import { usage as aiFeedback } from './ai-feedback.usage.mjs'
 import { usage as aiMark } from './ai-mark.usage.mjs'
 import { usage as aiMessage } from './ai-message.usage.mjs'
 import { usage as aiNotice } from './ai-notice.usage.mjs'
@@ -38,6 +39,7 @@ import { usage as chat } from './chat.usage.mjs'
 import { usage as aiHome } from './ai-home.usage.mjs'
 import { usage as aiChat } from './ai-chat.usage.mjs'
 import { usage as aiSidePanel } from './ai-side-panel.usage.mjs'
+import { usage as conversationHistory } from './conversation-history.usage.mjs'
 import { usage as checkbox } from './checkbox.usage.mjs'
 import { usage as checkout } from './checkout.usage.mjs'
 import { usage as citations } from './citations.usage.mjs'
@@ -126,6 +128,7 @@ import { usage as toggle } from './toggle.usage.mjs'
 import { usage as toggleGroup } from './toggle-group.usage.mjs'
 import { usage as toneBadge } from './tone-badge.usage.mjs'
 import { usage as tooltip } from './tooltip.usage.mjs'
+import { usage as usageMeter } from './usage-meter.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
 export const ALL_USAGE = [
@@ -134,6 +137,7 @@ export const ALL_USAGE = [
   agentSteps,
   aiBadge,
   aiButton,
+  aiFeedback,
   aiMark,
   aiMessage,
   aiNotice,
@@ -164,6 +168,7 @@ export const ALL_USAGE = [
   aiHome,
   aiChat,
   aiSidePanel,
+  conversationHistory,
   checkbox,
   checkout,
   citations,
@@ -252,5 +257,6 @@ export const ALL_USAGE = [
   toggleGroup,
   toneBadge,
   tooltip,
+  usageMeter,
   wizard,
 ]

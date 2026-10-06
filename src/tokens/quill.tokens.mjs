@@ -131,7 +131,7 @@ export const tokens = {
       control: { light: '#8A7F6E', dark: '#746B5D', classicLight: '#858585', classicDark: '#757575', intelligent: '#767663' },
     },
     // The AI gradient (Ember): gold → terracotta → indigo. It means one thing, AI,
-    // and appears only in the six placements in DESIGN.md. Dawn/Dusk are their
+    // and appears only in the seven placements in DESIGN.md. Dawn/Dusk are their
     // pigments at 1.5x OKLCH chroma (same lightness and hue); Classic already ships
     // its pigments at exactly that chroma and Intelligent richer still, so those use
     // their own pigments. Fixed across accents. Text stops are the deep cuts, all

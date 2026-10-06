@@ -4,6 +4,7 @@ import { transform } from 'lightningcss'
 import { readFileSync } from 'node:fs'
 import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES, renderAiUtilities, AI_UTILITIES, AI_RULES } from './build-tokens.mjs'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
+import { renderPrinciples } from '../src/usage/foundations.mjs'
 
 test('generated CSS survives strict minification (LightningCSS) with light primitives intact', () => {
   // The production build + downstream consumers minify with LightningCSS, which THROWS on
@@ -467,4 +468,24 @@ test('AI edge: every gradient stop is >= 3:1 against the paper, at rest, lit and
     }
   }
   assert.deepEqual(failures, [], `edge stops below 3:1:\n${failures.join('\n')}`)
+})
+
+test('ai-meter is a still, left-to-right fill built from the edge stops', () => {
+  const rule = AI_RULES['@utility ai-meter']
+  assert.ok(rule, 'no ai-meter utility')
+  assert.ok(AI_UTILITIES.includes('ai-meter'), 'ai-meter is not in AI_UTILITIES')
+  // The lit edge's stops (its gold end pulled toward the gold text cut), turned to run left to right.
+  assert.equal(rule['background-image'], 'linear-gradient(90deg, color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from)), var(--ai-via) 50%, var(--ai-to))')
+  assert.equal(rule.animation, undefined, 'a meter shows an amount: it must not move')
+  for (const file of ['registry/themes/quill.css', 'src/app/globals.css']) {
+    assert.ok(readFileSync(new URL(`../${file}`, import.meta.url), 'utf8').includes('@utility ai-meter'), `${file} does not carry ai-meter (run build:tokens)`)
+  }
+})
+
+test('the gradient rule names seven placements, the meter last', () => {
+  const text = renderPrinciples({ blockCount: 1 })
+  assert.match(text, /Seven placements:/)
+  assert.match(text, /the fill of an AI usage meter\./)
+  assert.match(text, /in its seven placements/)
+  assert.doesNotMatch(text, /[Ss]ix placements/)
 })

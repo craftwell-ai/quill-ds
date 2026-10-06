@@ -11,7 +11,7 @@ description: Choose the right Quill block or primitive for a UI request — when
 
 1. Name the job the UI does (show records, collect input, confirm an action, move between pages), not the widget you picture.
 2. Look for a block first. A block is a whole section already built on Quill tokens: install it with `npx shadcn@latest add @quill/<name>` and replace its sample content.
-3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts` and `tone-badge` with `@quill/<name>`). Never hand-roll one.
+3. If no block fits, use primitives: stock shadcn restyled by Quill, installed with `npx shadcn@latest add <name>` (`agent-steps`, `ai-badge`, `ai-button`, `ai-feedback`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts`, `tone-badge` and `usage-meter` with `@quill/<name>`). Never hand-roll one.
 4. Before you commit to a pick, read `reference/<name>.md` in this skill for it and for each candidate after "instead". Each guide says when to use it, when to reach for something else and why, its rules, and its accessibility notes. Pick the one whose "When to use" matches the job.
 5. If nothing fits, compose from primitives and semantic tokens within `.claude/rules/quill.md`, and tell the person which part Quill does not cover. Do not invent a new visual pattern.
 
@@ -102,6 +102,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `ai-home` — An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet. · instead: `prompt-composer`, `chat`
 - `ai-chat` — An app has a page for an ongoing conversation with its AI assistant. · instead: `ai-home`, `chat`
 - `ai-side-panel` — People are working on a page (a report, a record, a document) and should be able to ask the AI about it without leaving. · instead: `ai-chat`, `sheet`, `ai-popover`
+- `conversation-history` — People come back to earlier conversations with an AI and need to find one, reopen it, and tidy the list. · instead: `ai-chat`, `sidebar-nav`, `command-palette`
 
 ## Primitives
 
@@ -109,6 +110,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `agent-steps` (`@quill/`) — An AI agent does a task in several steps and people should see where it is, what is finished and what went wrong. · instead: `ai-thinking`, `progress`, `wizard`
 - `ai-badge` (`@quill/`) — A card, field, list row or message holds content the AI wrote or proposed, and people should know before they rely on it. · instead: `tone-badge`, `ai-mark`
 - `ai-button` (`@quill/`) — A button starts something an AI does: Summarize, Rewrite, Ask AI, Draft a reply. · instead: `button`, `prompt-composer`
+- `ai-feedback` (`@quill/`) — Someone has marked an AI answer as bad and you want to learn why, without taking them away from the answer. · instead: `ai-message`, `dialog`, `contact-form`
 - `ai-mark` (`@quill/`) — You need to show that something is AI: an AI button, an AI badge, the assistant avatar, an AI menu item, or the greeting on an AI page. · instead: `ai-badge`, `icon`
 - `ai-message` (`@quill/`) — A conversation shows answers from an AI, with or without the reasoning and sources behind them. · instead: `chat`, `ai-popover`
 - `ai-notice` (`@quill/`) — A composer sends to an AI and people should know its answers need checking. · instead: `alert`, `ai-badge`
@@ -175,3 +177,4 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `toggle-group` — You have several related two-state toggles that should behave, size, and style as one group rather than as standalone Toggles. · instead: `toggle`, `radio-group`, `button-group`
 - `tone-badge` (`@quill/`) — You need Quill's uppercase tag pill for a status, tier, or label — trusted/current, developing, red flag, dormant, building — and want the tone-to-pigment mapping guaranteed correct and AA-checked. · instead: `badge`
 - `tooltip` — You need a one-line supplementary hint on a control that already has its own visible label or accessible name. · instead: `popover`, `hover-card`
+- `usage-meter` (`@quill/`) — People spend a limited allowance on AI (credits, messages, tokens) and should see what is left before it runs out. · instead: `progress`, `stat-cards`, `ai-notice`

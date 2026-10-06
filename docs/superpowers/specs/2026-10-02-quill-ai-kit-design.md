@@ -20,7 +20,7 @@ Quill has one AI-adjacent block today (`chat`: a one-line input and a send butto
 
 ## The gradient: where it goes
 
-Six placements, and nowhere else:
+Six placements, and nowhere else (seven since 2026-10-05: see the note under Phase 4):
 
 1. **AI mark**: always at full strength.
 2. **AI composer edge**: muted at rest, full on focus, sweeping while working.
@@ -98,6 +98,8 @@ Each phase is its own PR with its own minor version. Kind: **ui** = a `registry:
 | `ai-feedback` | ui | After a thumbs-down: quick reasons plus a note. |
 | `conversation-history` | block | Past chats by day, rename and delete, on sidebar-nav. |
 | `usage-meter` | ui | "1.5k credits left", on Progress. |
+
+Note 2026-10-05: Ryan chose the AI gradient for the usage meter's bar (sketch option B), which adds a seventh placement, "the fill of an AI usage meter", and one utility, `ai-meter`.
 
 The AI feature name (placement 6) ships as the `ai-text` treatment in Phase 1, not as a component.
 
