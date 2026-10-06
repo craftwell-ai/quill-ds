@@ -186,6 +186,11 @@ declare module '@/usage/ai-side-panel.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/conversation-history.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/checkbox.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

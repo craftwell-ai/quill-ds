@@ -102,6 +102,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `ai-home` — An app has a page whose main job is talking to its AI assistant, and people land on it with nothing typed yet. · instead: `prompt-composer`, `chat`
 - `ai-chat` — An app has a page for an ongoing conversation with its AI assistant. · instead: `ai-home`, `chat`
 - `ai-side-panel` — People are working on a page (a report, a record, a document) and should be able to ask the AI about it without leaving. · instead: `ai-chat`, `sheet`, `ai-popover`
+- `conversation-history` — People come back to earlier conversations with an AI and need to find one, reopen it, and tidy the list. · instead: `ai-chat`, `sidebar-nav`, `command-palette`
 
 ## Primitives
 

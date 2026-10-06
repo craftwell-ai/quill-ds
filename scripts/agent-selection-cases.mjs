@@ -47,6 +47,7 @@ export const CASES = [
   { id: 'assistant-start-page', expect: 'ai-home', accept: ['prompt-composer'], request: 'The landing page of our assistant: a greeting, a big box to ask in, and a few example tasks to start from.' },
   { id: 'assistant-thread', expect: 'ai-chat', accept: ['ai-message'], request: 'A full page for chatting with our assistant: past conversations on the side, answers with sources, and an input at the bottom.' },
   { id: 'assistant-beside-page', expect: 'ai-side-panel', accept: ['sheet', 'ai-chat'], request: 'People should be able to open the assistant next to the report they are reading and ask about it without leaving the page.' },
+  { id: 'past-assistant-chats', expect: 'conversation-history', accept: ['ai-chat', 'sidebar-nav'], request: 'People need to find their earlier conversations with the assistant, grouped by when they happened, and rename, pin or delete them.' },
   { id: 'ai-icon', expect: 'ai-mark', accept: ['ai-badge'], request: 'Put a small icon next to the Summarize button so people can tell it uses AI.' },
 ]
 

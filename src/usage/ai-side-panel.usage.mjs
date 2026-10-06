@@ -23,7 +23,7 @@ export const usage = {
     },
     {
       id: 'history-is-yours-to-wire',
-      do: 'Wire History to your own list of past chats with onHistory. It only calls onHistory: Quill\'s past-chats view (conversation-history) comes in a later release. Leave onHistory out and the button is not drawn.',
+      do: 'Wire History to your own list of past chats with onHistory; the conversation-history block is that list. History only calls onHistory, and with it left out the button is not drawn.',
       dont: 'Ship a History button that does nothing.',
       visual: false,
     },
