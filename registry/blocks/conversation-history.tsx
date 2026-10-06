@@ -54,7 +54,8 @@ const calendar = (date: Date, zone?: Intl.DateTimeFormat) => {
 
 // Sample content, dated from "now" so the groups always read Pinned, Today, Yesterday, Previous 7 days.
 const sampleChats = (now: Date): Conversation[] => {
-  const ago = (days: number) => new Date(now.getTime() - days * DAY)
+  // By calendar day at noon, not in 24-hour steps, so a daylight-saving change cannot turn yesterday into today.
+  const ago = (days: number) => new Date(now.getFullYear(), now.getMonth(), now.getDate() - days, 12)
   return [
     { id: 'weekly', title: 'Weekly growth review prompt', updatedAt: ago(12), pinned: true },
     { id: 'q3', title: 'Q3 signups vs target', updatedAt: ago(0) },
@@ -64,9 +65,7 @@ const sampleChats = (now: Date): Conversation[] => {
   ]
 }
 
-// Named through a table on purpose: the Figma parity check counts every <Icon name="…"> literal in this file against
-// the frame, and the frame shows the list with its menus closed. The `icon:` key is what puts each name in the
-// core icon set apps receive (scripts/build-icons.mjs reads that form).
+// Naming the icons through the `icon:` key is what puts them in the core icon set apps receive.
 const MENU_ICON = {
   rename: { icon: 'edit' },
   pin: { icon: 'keep' },
@@ -136,7 +135,7 @@ export type ConversationHistoryProps = {
   /** With your own conversations, each of these three also decides whether its menu item is drawn. */
   onRename?: (id: string, title: string) => void
   onPin?: (id: string, pinned: boolean) => void
-  /** Called once the Undo time has passed, not when Delete is confirmed. The list keeps showing the chat until you remove it from `conversations`. */
+  /** Called at most once for each confirmed delete, not when Delete is confirmed: when the Undo time has passed (it starts once the pointer and keyboard focus have left the Undo line), or sooner if another delete is confirmed, the list is removed from the page, or the page is hidden or closed (best effort: a phone may not report a tab it closes in the background). Send your request with `keepalive` or `navigator.sendBeacon`, or the browser can drop one made as the page closes. The list keeps showing the chat until you remove it from `conversations`. */
   onDelete?: (id: string) => void
   /** How long Undo stays after a delete. The countdown waits while the pointer or keyboard focus is on that line. 0 deletes as soon as nothing holds the line. A negative number, NaN or Infinity is treated as the default, 6. */
   undoSeconds?: number
@@ -216,7 +215,10 @@ export function ConversationHistory({
   const finalFocus = () => {
     const next = handoff.current
     if (next === undefined) return true
-    return (next.target ? locate(next.target) : null) ?? false
+    const found = next.target ? locate(next.target) : null
+    // Cancel returns to the row's "more" button. If it cannot be found, leave it to the dialog's own return of focus.
+    if (!found && next.target?.part === 'more') return true
+    return found ?? false
   }
 
   // A row or line drawn afresh in another group loses the cursor to the page. If that happens to what is being

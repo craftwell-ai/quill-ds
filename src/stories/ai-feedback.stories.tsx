@@ -76,7 +76,7 @@ export const FocusAfterSend: Story = {
     // The form itself is gone: no chips, no field, no card around one line.
     await expect(canvas.queryByRole('group')).toBeNull()
     await expect(canvas.queryByRole('textbox')).toBeNull()
-    const root = canvasElement.querySelector('[data-slot="feedback-form"]') as HTMLElement
+    const root = canvasElement.querySelector('[data-slot="ai-feedback"]') as HTMLElement
     await expect(getComputedStyle(root).borderTopWidth).toBe('0px')
     // The focus ring hugs the words: the box is only as wide as its text, and the text keeps the form's left edge.
     await expect(status.getBoundingClientRect().width).toBeLessThan(root.getBoundingClientRect().width / 2)
@@ -138,7 +138,7 @@ export const ChipShowsFocusRing: Story = {
 // A chip is a control: its outline has to read at 3:1 on the card in every theme, picked or not.
 export const ChipsReadAsShapes: Story = {
   play: async ({ canvas, canvasElement }) => {
-    const card = canvasElement.querySelector('[data-slot="feedback-form"]') as HTMLElement
+    const card = canvasElement.querySelector('[data-slot="ai-feedback"]') as HTMLElement
     const surface = compositeOver(getComputedStyle(card).backgroundColor, `rgb(${surfaceBehind(card).join(' ')})`)
     const idle = canvas.getByRole('button', { name: 'Too long' })
     const picked = canvas.getByRole('button', { name: 'Wrong tone' })

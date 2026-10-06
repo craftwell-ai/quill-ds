@@ -23,10 +23,10 @@ footer reads `package.json` directly, so the displayed version updates with the 
     - Rename happens in place: Enter saves, Escape cancels, and neither key closes a sheet around the list.
     - Delete asks first, then leaves Undo in the list for a few seconds.
     - The open chat has a fill and a thin outline.
-    - `onDelete` is called exactly once per confirmed delete: after the Undo time, when the list is removed, or when the page is closed.
+    - `onDelete` is called at most once per confirmed delete: after the Undo time, or sooner when another delete is confirmed, the list is removed, or the page is closed (best effort on phones). Send your request with `keepalive` so one made as the page closes is not dropped.
     - An optional `timeZone` (with `now`) makes a server and a browser put each chat in the same group.
     - It takes an app's own chats; without them it shows a sample. With your own `conversations`, only the actions you wired are offered.
-- **`ai-meter`**, a seventh AI utility: the still, left-to-right gradient fill of a usage bar.
+- **`ai-meter`**, an eighth AI utility: the still, left-to-right gradient fill of a usage bar.
 - `AiMessage` takes `feedbackForm`, drawn under the reply's actions only while thumbs-down is pressed. Nothing changes for a reply that does not pass it.
 - One new icon in the core set, `keep` (97 names).
 - Figma twins for all three.

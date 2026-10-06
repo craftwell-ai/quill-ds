@@ -20,7 +20,7 @@ Quill has one AI-adjacent block today (`chat`: a one-line input and a send butto
 
 ## The gradient: where it goes
 
-Six placements, and nowhere else:
+Six placements, and nowhere else (seven since 2026-10-05: see the note under Phase 4):
 
 1. **AI mark**: always at full strength.
 2. **AI composer edge**: muted at rest, full on focus, sweeping while working.

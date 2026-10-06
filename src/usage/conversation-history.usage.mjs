@@ -17,8 +17,14 @@ export const usage = {
     },
     {
       id: 'delete-asks-then-offers-undo',
-      do: 'Leave both steps in: the confirmation before, and Undo in the list for a few seconds after. onDelete is called once the Undo time has passed.',
+      do: 'Leave both steps in: the confirmation before, and Undo in the list for a few seconds after. onDelete is called at most once for each confirmed delete: when the Undo time has passed, or sooner if another delete is confirmed, the list is removed, or the page is closed. Send your request from onDelete with keepalive (or sendBeacon) so one made as the page closes is not dropped.',
       dont: 'Delete on the first press, or delete on your side before onDelete is called — Undo could not bring the chat back.',
+      visual: false,
+    },
+    {
+      id: 'today-is-when-it-was-drawn',
+      do: 'Pass now again (for example when the window regains focus) if the list can stay open overnight; "Today" is worked out when the list is first drawn.',
+      dont: 'Expect the groups to roll over at midnight by themselves.',
       visual: false,
     },
     {

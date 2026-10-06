@@ -83,7 +83,7 @@ export function AiFeedbackForm({
   }
 
   return (
-    <div ref={rootRef} data-slot="feedback-form" onBlur={(event) => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) sentHere.current = false }} role={isSent ? undefined : 'group'} aria-labelledby={isSent ? undefined : titleId}
+    <div ref={rootRef} data-slot="ai-feedback" onBlur={(event) => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) sentHere.current = false }} role={isSent ? undefined : 'group'} aria-labelledby={isSent ? undefined : titleId}
       className={cn('text-sm', !isSent && 'grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 shadow-sm', className)}>
       {isSent ? null : (
         <>
