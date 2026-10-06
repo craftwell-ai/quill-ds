@@ -145,6 +145,27 @@ export const OpenChatReadsInEveryTheme: Story = {
   },
 }
 
+// Ryan's note on the sketch: the dots are bigger and darker than the stock 12px muted glyph, in the same 24px button.
+export const MoreDotsMatchTheSketch: Story = {
+  render: (args) => <Owned {...args} />,
+  play: async ({ canvas, canvasElement }) => {
+    const more = canvas.getByRole('button', { name: 'More for Launch brief draft' })
+    const dots = more.querySelector('svg') as SVGElement
+    await expect(more.getBoundingClientRect().width).toBe(24)
+    await expect(more.getBoundingClientRect().height).toBe(24)
+    await expect(dots.getBoundingClientRect().width).toBe(16)
+    await expect(dots.getBoundingClientRect().height).toBe(16)
+    // Ink-soft, read from a throwaway element so no colour is typed here.
+    const probe = document.createElement('span')
+    probe.className = 'text-ink-soft'
+    more.parentElement!.append(probe)
+    await expect(getComputedStyle(more).color).toBe(getComputedStyle(probe).color)
+    probe.remove()
+    // The bigger glyph costs no height.
+    await expect(rowOf(canvasElement, 'Launch brief draft').getBoundingClientRect().height).toBe(32)
+  },
+}
+
 // Faint until wanted, but never out of reach: hover, keyboard focus, the open chat, and an open menu all show it.
 export const MoreButtonShows: Story = {
   render: (args) => <Owned {...args} />,
@@ -173,8 +194,8 @@ export const MenuSitsTwoPixelsBelowTheRow: Story = {
     const row = rowOf(canvasElement, 'Q3 signups vs target')
     // The menu eases in; measure once it has settled.
     await waitFor(() => expect(Math.abs(menu.getBoundingClientRect().top - row.getBoundingClientRect().bottom - 2)).toBeLessThanOrEqual(0.5))
-    // And it hangs from the row's right edge, as drawn.
-    await expect(Math.abs(menu.getBoundingClientRect().right - row.getBoundingClientRect().right)).toBeLessThanOrEqual(6)
+    // And its right edge is the row's right edge (border included), not the "more" button's, a few pixels inside.
+    await expect(Math.abs(menu.getBoundingClientRect().right - row.getBoundingClientRect().right)).toBeLessThanOrEqual(0.5)
     const items = within(menu).getAllByRole('menuitem').map((item) => item.textContent)
     await expect(items).toEqual(['Rename', 'Pin', 'Delete'])
     await expect(within(menu).getByRole('separator')).toBeVisible()
@@ -231,6 +252,22 @@ const confirmDelete = async (canvas: ReturnType<typeof within>, title: string) =
   const dialog = await page().findByRole('alertdialog', { name: 'Delete this chat?' })
   await expect(dialog).toHaveTextContent(title)
   await userEvent.click(within(dialog).getByRole('button', { name: 'Delete' }))
+}
+
+// The Undo button leads with an undo arrow, a decorative one: the button is still named "Undo".
+export const UndoHasAnIcon: Story = {
+  render: (args) => <Owned {...args} />,
+  play: async ({ canvas }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    const undo = await canvas.findByRole('button', { name: 'Undo' })
+    const arrow = undo.querySelector('svg') as SVGElement
+    await expect(arrow).not.toBeNull()
+    await expect(arrow).toHaveAttribute('aria-hidden', 'true')
+    // Before the word, not after it.
+    await expect(undo.firstElementChild).toBe(arrow)
+    await expect(arrow.getBoundingClientRect().right).toBeLessThanOrEqual(undo.getBoundingClientRect().right)
+    await expect(undo.textContent?.trim()).toBe('Undo')
+  },
 }
 
 export const DeleteThenUndo: Story = {

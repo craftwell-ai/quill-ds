@@ -21,14 +21,14 @@ footer reads `package.json` directly, so the displayed version updates with the 
   - **`ai-feedback`** — asks what was wrong after a thumbs-down: one reason to choose from a dropdown, an optional note, and Send, which waits for one or the other. It opens under the answer, and after sending it becomes one line of thanks. After Send, keyboard focus moves to the thank-you line; inside a reply, closing the form returns focus to the thumbs-down.
   - **`conversation-history`** — a block: past chats grouped by Pinned, Today, Yesterday, Previous 7 days and earlier months, with a menu on each row to rename, pin or delete. The list is `ConversationHistory`; `ConversationSidebar` docks the same list in the stock Sidebar.
     - Rename happens in place: Enter saves, Escape cancels, and neither key closes a sheet around the list.
-    - Delete asks first, then leaves Undo in the list for a few seconds.
+    - Delete asks first, then leaves Undo (with an undo arrow) in the list for a few seconds.
     - The open chat has a fill and a thin outline.
     - `onDelete` is called at most once per confirmed delete: after the Undo time, or sooner when another delete is confirmed, the list is removed, or the page is closed (best effort on phones). Send your request with `keepalive` so one made as the page closes is not dropped.
     - An optional `timeZone` (with `now`) makes a server and a browser put each chat in the same group.
     - It takes an app's own chats; without them it shows a sample. With your own `conversations`, only the actions you wired are offered.
 - **`ai-meter`**, an eighth AI utility: the still, left-to-right gradient fill of a usage bar.
 - `AiMessage` takes `feedbackForm`, drawn under the reply's actions only while thumbs-down is pressed. Nothing changes for a reply that does not pass it.
-- One new icon in the core set, `keep` (97 names).
+- Two new icons in the core set, `keep` and `undo` (98 names).
 - Figma twins for all three.
 
 ### Changed

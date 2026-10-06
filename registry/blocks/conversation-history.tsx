@@ -70,18 +70,21 @@ const MENU_ICON = {
   rename: { icon: 'edit' },
   pin: { icon: 'keep' },
   remove: { icon: 'delete' },
+  undo: { icon: 'undo' },
 } as const
 
 // The "more" button is 24px in a 32px row (border included), so it sits 4px inside the row's outer edge.
 // 4 + 2 puts the menu 2px below the row (Ryan's note on the sketch, 2026-10-04).
 const MENU_GAP = 6
+// The same 4px, sideways: the menu hangs from the button's right edge, and a negative alignOffset of this carries it out to the row's outer edge (the border included).
+const MENU_INSET = 4
 
 // Every row has a 1px border (clear unless the chat is open), so the padding here is 1px under px-2.5 / py-1.5:
 // the title still starts 10px in, under its group heading, and the row is still 32px tall.
 const OPEN = 'min-w-0 flex-1 truncate rounded-lg px-[9px] py-[5px] text-left text-sm text-foreground no-underline outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 aria-[current]:font-medium'
 // Hidden until wanted, never out of reach: hover, keyboard focus anywhere in the row, the open chat, an open menu, and any touch screen show it.
 // mr-[3px] plus the row's 1px border keeps the button 4px inside the row's outer edge.
-const MORE = 'mr-[3px] shrink-0 text-muted-foreground opacity-0 group-hover/row:opacity-100 group-focus-within/row:opacity-100 group-has-[[aria-current]]/row:opacity-100 aria-expanded:opacity-100 pointer-coarse:opacity-100'
+const MORE = 'mr-[3px] shrink-0 text-ink-soft opacity-0 group-hover/row:opacity-100 group-focus-within/row:opacity-100 group-has-[[aria-current]]/row:opacity-100 aria-expanded:opacity-100 pointer-coarse:opacity-100'
 
 /** Pinned first, then Today, Yesterday, Previous 7 days, then one group per month, newest first. With `timeZone`, days and months are that zone's. */
 export function groupConversations(conversations: Conversation[], now: Date, locale = 'en-US', timeZone?: string): ConversationGroup[] {
@@ -415,7 +418,7 @@ export function ConversationHistory({
                     onPointerEnter={() => setHovering(group.key)} onPointerLeave={() => setHovering(null)}
                     onFocus={() => setFocused(group.key)} onBlur={() => setFocused(null)}>
                     <span className="min-w-0 flex-1 truncate">Deleted “{chat.title}”</span>
-                    <Button type="button" variant="ghost" size="xs" className="shrink-0 text-foreground" onClick={undo}>Undo</Button>
+                    <Button type="button" variant="ghost" size="xs" className="shrink-0 text-foreground" onClick={undo}><Icon name={MENU_ICON.undo.icon} />Undo</Button>
                   </li>
                 )
               }
@@ -458,9 +461,9 @@ export function ConversationHistory({
                   {hasMenu ? (
                     <DropdownMenu onOpenChange={(open) => { if (open) handoff.current = undefined }}>
                       <DropdownMenuTrigger render={<Button type="button" variant="ghost" size="icon-xs" aria-label={`More for ${chat.title}`} className={MORE} />}>
-                        <Icon name="more_horiz" />
+                        <Icon name="more_horiz" className="size-4" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" sideOffset={MENU_GAP} className="w-44" finalFocus={finalFocus}>
+                      <DropdownMenuContent align="end" sideOffset={MENU_GAP} alignOffset={-MENU_INSET} className="w-44" finalFocus={finalFocus}>
                         {canRename ? <DropdownMenuItem onClick={() => startRename(chat)}><Icon name={MENU_ICON.rename.icon} />Rename</DropdownMenuItem> : null}
                         {canPin ? <DropdownMenuItem onClick={() => togglePin(chat)}><Icon name={MENU_ICON.pin.icon} />{chat.pinned ? 'Unpin' : 'Pin'}</DropdownMenuItem> : null}
                         {canDelete && (canRename || canPin) ? <DropdownMenuSeparator /> : null}
