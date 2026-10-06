@@ -25,6 +25,7 @@ export type UsageMeterProps = {
   action?: React.ReactNode
   /** The share of the total at or under which the meter reads low. 0.1 is a tenth. */
   lowAt?: number
+  /** The words a low meter shows and speaks. */
   lowLabel?: string
   /** card: everything, for a settings page. bar: the numbers and the bar. compact: a ring and one line, for a composer footer. */
   variant?: 'card' | 'bar' | 'compact'
@@ -76,10 +77,10 @@ export function UsageMeter({
             </linearGradient>
           </defs>
           <circle data-slot="usage-ring-track" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" className="stroke-muted/60 dark:stroke-muted" />
-          {/* No arc at zero: a zero-length stroke with round caps still paints a dot. */}
+          {/* No arc at zero: a zero-length stroke with round caps still paints a dot. For the same reason any share above zero draws at least 1 of 100: under half a percent would round to a dash of 0. */}
           {share > 0 ? (
             <circle data-slot="usage-arc" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" strokeLinecap="round" pathLength={100}
-              strokeDasharray={`${Math.round(share * 100)} 100`} stroke={low ? undefined : `url(#${gradientId})`} className={low ? 'stroke-terracotta-deep' : undefined} />
+              strokeDasharray={`${Math.max(1, Math.round(share * 100))} 100`} stroke={low ? undefined : `url(#${gradientId})`} className={low ? 'stroke-terracotta-deep' : undefined} />
           ) : null}
         </svg>
         <span>

@@ -29,6 +29,7 @@ export const usage = {
     'Action buttons have names ("Copy", "Try again", "Good answer", "Bad answer"); the thumbs use aria-pressed.',
     'Copy says "Copied" for two seconds after a successful copy, and stays "Copy" if the browser refuses.',
     'A feedback form passed as feedbackForm is drawn under the actions only while thumbs-down is pressed, after the thumbs in reading order; when it closes itself, focus returns to the thumbs-down button.',
+    'The form is not drawn while the reply is streaming; if the answer is retried while it is open, what was picked or typed in it is lost.',
   ],
   tokens: ['--foreground', '--muted-foreground', '--border', '--card', '--background', '--ai-from', '--ai-via', '--ai-to'],
 }

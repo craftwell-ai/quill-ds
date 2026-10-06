@@ -94,7 +94,8 @@ export function AiMessage({
     onFeedback?.(next)
   }
 
-  const showForm = current === 'down' && feedbackForm !== undefined && feedbackForm !== null && feedbackForm !== false
+  // Truthiness, so 0 and '' do not draw an empty wrapper; any real node still counts.
+  const showForm = current === 'down' && Boolean(feedbackForm)
   const hadForm = React.useRef(showForm)
   // Whether keyboard focus was last seen inside the form. A control that is removed while focused sends no blur.
   const focusInForm = React.useRef(false)
@@ -107,6 +108,17 @@ export function AiMessage({
     }
     if (!showForm) focusInForm.current = false
     hadForm.current = showForm
+  }, [showForm])
+  // Clicking blank page blurs with no relatedTarget, which the form's onBlur cannot tell from "the control was removed".
+  // A press outside the form while it is shown says the person has moved on, so a later removal must not pull focus back.
+  React.useEffect(() => {
+    if (!showForm) return
+    const onPointerDown = (event: PointerEvent) => {
+      const wrapper = articleRef.current?.querySelector('[data-slot="reply-feedback"]')
+      if (!wrapper || !(event.target instanceof Node) || !wrapper.contains(event.target)) focusInForm.current = false
+    }
+    document.addEventListener('pointerdown', onPointerDown, true)
+    return () => document.removeEventListener('pointerdown', onPointerDown, true)
   }, [showForm])
   // Citation chips and the caret are inline, so reading the body directly would glue their labels onto the sentence.
   // innerText only inserts line breaks for laid-out nodes, so the stripped copy is attached invisibly just long enough to read.

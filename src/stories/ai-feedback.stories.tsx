@@ -203,6 +203,57 @@ export const CloseReturnsToThumb: Story = {
   },
 }
 
+// The app takes the form away on its own, from a timer or a server event, after the person clicked blank page. Focus is on the page, not in the form.
+export const AppRemovesTheFormQuietly: Story = {
+  render: (args) => {
+    const Harness = () => {
+      const [open, setOpen] = React.useState(true)
+      React.useEffect(() => { (window as unknown as { removeFormQuietly?: () => void }).removeFormQuietly = () => setOpen(false) }, [])
+      return (
+        <AiMessage feedback="down" onFeedback={() => {}} feedbackForm={open ? <AiFeedbackForm onSubmit={args.onSubmit} onClose={() => setOpen(false)} /> : undefined}>
+          <p>September missed target by 12%, but the quarter closed 4% ahead.</p>
+        </AiMessage>
+      )
+    }
+    return <Harness />
+  },
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Bad answer' }))
+    await userEvent.tab()
+    await expect(canvas.getByRole('group', { name: 'What was wrong?' })).toContainElement(document.activeElement as HTMLElement)
+    // Blank page: the focused control blurs with nowhere to go.
+    await userEvent.click(document.body)
+    await expect(document.body).toHaveFocus()
+    ;(window as unknown as { removeFormQuietly: () => void }).removeFormQuietly()
+    await waitFor(() => expect(canvas.queryByRole('group', { name: 'What was wrong?' })).toBeNull())
+    // Give the effect its turn, then check the cursor was not pulled to the thumb.
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    await expect(canvas.getByRole('button', { name: 'Bad answer' })).not.toHaveFocus()
+  },
+}
+
+// "Sent" arrives from the app after the person already clicked elsewhere: the cursor is theirs, not the thank-you line's.
+export const LateSentDoesNotGrabFocus: Story = {
+  render: (args) => {
+    const Harness = () => {
+      const [sent, setSent] = React.useState(false)
+      React.useEffect(() => { (window as unknown as { flipSent?: () => void }).flipSent = () => setSent(true) }, [])
+      return <AiFeedbackForm onSubmit={args.onSubmit} sent={sent} />
+    }
+    return <Harness />
+  },
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Other' }))
+    await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
+    await userEvent.click(document.body)
+    await expect(document.body).toHaveFocus()
+    ;(window as unknown as { flipSent: () => void }).flipSent()
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('Thanks, that helps.'))
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    await expect(canvas.getByRole('status')).not.toHaveFocus()
+  },
+}
+
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: (args) => (

@@ -39,7 +39,7 @@ export const usage = {
     'Low credit is said in visible words in every variant, never by colour alone.',
     'The card is a group named by its label. The breakdown is a table with row headers and a caption for screen readers.',
     'The compact ring is decoration (aria-hidden); the text beside it carries the amount, and screen readers also hear the total.',
-    'Nothing moves: the gradient fill is still.',
+    'The gradient itself does not animate; the fill only eases to its new width when the amount changes, as the stock Progress does.',
   ],
   tokens: ['--card', '--border', '--muted', '--muted-foreground', '--foreground', '--destructive', '--terracotta-deep', '--ai-from', '--ai-text-from', '--ai-via', '--ai-to'],
 }

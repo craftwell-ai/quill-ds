@@ -110,6 +110,7 @@ export const OddNumbers: Story = {
       <UsageMeter variant="bar" label="Not a number" remaining={Number.NaN} total={5000} />
       <UsageMeter variant="bar" label="No allowance" remaining={10} total={0} />
       <UsageMeter variant="compact" label="Empty ring" remaining={0} total={5000} />
+      <UsageMeter variant="compact" label="Sliver ring" remaining={1} total={5000} />
       <UsageMeter label="No extras" remaining={2500} total={5000} breakdown={[]} />
     </div>
   ),
@@ -125,8 +126,10 @@ export const OddNumbers: Story = {
       await expect(fill.getBoundingClientRect().right).toBeLessThanOrEqual(track.getBoundingClientRect().right + 0.5)
     }
     // An empty ring draws no arc at all (a zero-length round cap would still paint a dot).
-    const emptyRing = [...canvasElement.querySelectorAll('[data-variant="compact"]')].at(-1) as HTMLElement
+    const [emptyRing, sliverRing] = [...canvasElement.querySelectorAll('[data-variant="compact"]')] as HTMLElement[]
     await expect(emptyRing.querySelector('[data-slot="usage-arc"]')).toBeNull()
+    // A share under half a percent still draws one unit of the 100, so the round caps show a short stroke and not a bare dot.
+    await expect(sliverRing.querySelector('[data-slot="usage-arc"]')?.getAttribute('stroke-dasharray')).toBe('1 100')
     // No breakdown, no table; no action, no empty row.
     await expect(canvas.queryByRole('table')).toBeNull()
   },
@@ -142,6 +145,21 @@ export const FillReadsOnItsTrack: Story = {
     // Log every stop first so one failure does not hide the others.
     const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
     stops.forEach((stop, index) => console.log(`usage-meter stop ${stop} on track ${ratios[index].toFixed(2)}:1`))
+    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
+  },
+}
+
+// The compact ring's three gradient stops have to read against the ring's track, which nothing else measures.
+export const RingReadsOnItsTrack: Story = {
+  args: { variant: 'compact', remaining: 5000 },
+  decorators: [(Story) => <div className="grid place-items-center"><Story /></div>],
+  play: async ({ canvasElement }) => {
+    const ringTrack = canvasElement.querySelector('[data-slot="usage-ring-track"]') as SVGCircleElement
+    const track = compositeOver(getComputedStyle(ringTrack).stroke, `rgb(${surfaceBehind(ringTrack).join(' ')})`)
+    const stops = [...canvasElement.querySelectorAll('linearGradient stop')] as SVGStopElement[]
+    await expect(stops).toHaveLength(3)
+    const ratios = stops.map((stop) => contrastRatio(compositeOver(getComputedStyle(stop).stopColor, `rgb(${track.join(' ')})`), track))
+    ratios.forEach((ratio, index) => console.log(`usage-meter ring stop ${index} on track ${ratio.toFixed(2)}:1`))
     for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
   },
 }
@@ -172,7 +190,7 @@ export const DoDont: Story = {
               <span className="text-ink-soft"><span className="text-base font-semibold text-foreground">120</span> left</span>
               <span className="text-muted-foreground">of 5,000</span>
             </p>
-            <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-muted/60">
+            <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-muted/60 dark:bg-muted">
               <div className="h-full w-[2.4%] rounded-full bg-terracotta-deep" />
             </div>
           </div>

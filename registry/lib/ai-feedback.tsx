@@ -61,6 +61,15 @@ export function AiFeedbackForm({
     wasSent.current = isSent
   }, [isSent])
 
+  // A press or focus move outside the form after Send means the person has moved on, so a late "sent" from the app must not take the cursor.
+  React.useEffect(() => {
+    const away = (event: Event) => {
+      if (!(event.target instanceof Node) || !rootRef.current?.contains(event.target)) sentHere.current = false
+    }
+    document.addEventListener('pointerdown', away, true)
+    return () => document.removeEventListener('pointerdown', away, true)
+  }, [])
+
   const toggle = (index: number) => setPicked((current) => {
     const next = new Set(current)
     if (!next.delete(index)) next.add(index)
@@ -74,7 +83,7 @@ export function AiFeedbackForm({
   }
 
   return (
-    <div ref={rootRef} data-slot="feedback-form" role={isSent ? undefined : 'group'} aria-labelledby={isSent ? undefined : titleId}
+    <div ref={rootRef} data-slot="feedback-form" onBlur={(event) => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) sentHere.current = false }} role={isSent ? undefined : 'group'} aria-labelledby={isSent ? undefined : titleId}
       className={cn('text-sm', !isSent && 'grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 shadow-sm', className)}>
       {isSent ? null : (
         <>
