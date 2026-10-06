@@ -461,17 +461,13 @@ describes them as they are now.
   ai-edge/from, color/ai-via and color/ai-to: the three variables the composer's lit edge (`AI/Edge`) uses, and the same
   mix code writes (`color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from))` is ai-edge/from). Each stop carries the
   variable's Light colour. No paint style: `AI/Edge` is cut at 115° for a stroke, the meter runs at 90°.
-- **The track is semantic/muted at full strength; code is `bg-muted/80` in the light themes and full `bg-muted` in the dark ones.**
-  No `tint/muted/80` exists (the only alpha variable on muted is tint/muted/50) and Phase 4 adds no variable, so the four
-  bar tracks and the two ring tracks bind whichever existing variable lands closer to code in Light. Worked out from the
-  token values (muted #E8DCC0 over card #EFE4CE; not measured): code's 80 % is about 233 / 222 / 195, full strength is
-  232 / 220 / 192 (at most 3 steps of 255 away), tint/muted/50 is about 236 / 224 / 199 (at most 4 away, and on the
-  lighter side, which is the direction the review moved away from). A paint opacity of 0.8 on semantic/muted was not
-  used: it does not survive an instance nested in another component (`../README.md`, "What this manages"). **Light:**
-  the twin's track is a shade darker than the browser's, so the gradient's middle stop reads about 2.93:1 against it
-  where code holds 3.04:1 (the figures in `usage-meter.tsx`'s comment); the contrast rule is code's to keep, not the
-  twin's. **Dark and Classic Dark:** the twin now matches code exactly (both full strength); the fainter dark track
-  recorded on 2026-10-05 is gone.
+- **The track is semantic/muted at full strength; in the light themes code mixes a little of the control line into it.**
+  Code (2026-10-06, after Ryan's second review: the track could not be seen on the card) is
+  `color-mix(in oklab, var(--input) 15%, var(--muted))` in the light themes and full `bg-muted` in the dark ones. No
+  variable holds that mix and Phase 4 adds none, so the four bar tracks and the two ring tracks stay bound to
+  semantic/muted. **Light:** the twin's track is a shade LIGHTER than the browser's (the twin about 1.08:1 on the card,
+  code about 1.2:1). A paint opacity or a second fill was not used: neither survives an instance nested in another
+  component (`../README.md`, "What this manages"). **Dark and Classic Dark:** the twin matches code exactly.
 - **The bar is the ❖ Progress twin (81:8), detached in place.** An instance takes the height (space/1_5) and the two fills,
   but its fill layer is a fixed 120px that an instance cannot resize (the resize is ignored), so 30 % and 2.4 % cannot be
   drawn on a live instance. Each bar started as a Progress instance, got its overrides, and was detached with its

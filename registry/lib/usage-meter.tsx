@@ -38,9 +38,11 @@ export type UsageMeterProps = {
 const finite = (value: number) => (Number.isFinite(value) ? value : 0)
 
 // The stock Progress draws its own track and fill; these reach them by the data-slot it gives each.
-// The track sits between the card and the fill, and the fill must read 3:1 against it in every theme. The light themes need it a touch
-// lighter than full strength for that (80%: darker than the first cut, 60%, and the mid stop still reads 3.04:1 in Dawn); the dark themes pass at full strength, and a lighter track there all but vanishes against the card.
-const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-muted/80 dark:[&_[data-slot=progress-track]]:bg-muted'
+// The track has to be seen against the card, whose colour the muted surface nearly matches (1.06:1 at 80%, 1.08:1 at full
+// strength, measured on the card in Dawn). So in the light themes it takes a little of the control line's colour. That
+// brings the fill's brightness closer to the track than 3:1; it still stands apart by colour, and the amount is always
+// written in numbers above the bar (Ryan's call, 2026-10-06). The dark themes keep the full muted surface.
+const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-[color-mix(in_oklab,var(--input)_15%,var(--muted))] dark:[&_[data-slot=progress-track]]:bg-muted'
 // The one place the AI gradient sits here. A low meter keeps it: "running low" is said in words, the bar never changes colour.
 const FILL = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:ai-meter'
 
@@ -75,7 +77,7 @@ export function UsageMeter({
               <stop offset="1" stopColor="var(--ai-to)" />
             </linearGradient>
           </defs>
-          <circle data-slot="usage-ring-track" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" className="stroke-muted/80 dark:stroke-muted" />
+          <circle data-slot="usage-ring-track" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" className="stroke-[color-mix(in_oklab,var(--input)_15%,var(--muted))] dark:stroke-muted" />
           {/* No arc at zero: a zero-length stroke with round caps still paints a dot. For the same reason any share above zero draws at least 1 of 100: under half a percent would round to a dash of 0. */}
           {share > 0 ? (
             <circle data-slot="usage-arc" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" strokeLinecap="round" pathLength={100}

@@ -9,6 +9,11 @@ import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
 
 const BREAKDOWN = [{ label: 'Chat answers', value: 2400 }, { label: 'Agent tasks', value: 900 }, { label: 'Rewrites', value: 200 }]
 
+// Ryan chose a track that can be seen on the card over a fill at 3:1 against it (2026-10-06): the amount is always
+// written in numbers above the bar, so the bar is not the only carrier. This floor keeps the fill from sinking into
+// the track; it is set just under the lowest measured stop (2.53:1, the mid stop in Dawn), not a WCAG number.
+const FILL_ON_TRACK_FLOOR = 2.4
+
 const meta = {
   title: 'Components / UsageMeter',
   component: UsageMeter,
@@ -74,7 +79,7 @@ export const RunningLow: Story = {
     await expect(stops.length).toBeGreaterThanOrEqual(3)
     const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
     console.log(`usage-meter low fill stops on track ${ratios.map((ratio) => ratio.toFixed(2)).join(' / ')}`)
-    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
+    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(FILL_ON_TRACK_FLOOR)
   },
 }
 
@@ -201,7 +206,7 @@ export const FillReadsOnItsTrack: Story = {
     // Log every stop first so one failure does not hide the others.
     const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
     stops.forEach((stop, index) => console.log(`usage-meter stop ${stop} on track ${ratios[index].toFixed(2)}:1`))
-    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
+    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(FILL_ON_TRACK_FLOOR)
   },
 }
 
@@ -216,14 +221,13 @@ export const RingReadsOnItsTrack: Story = {
     await expect(stops).toHaveLength(3)
     const ratios = stops.map((stop) => contrastRatio(compositeOver(getComputedStyle(stop).stopColor, `rgb(${track.join(' ')})`), track))
     ratios.forEach((ratio, index) => console.log(`usage-meter ring stop ${index} on track ${ratio.toFixed(2)}:1`))
-    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
+    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(FILL_ON_TRACK_FLOOR)
   },
 }
 
-// A "has not vanished" guard, not a WCAG number: the floor (1.08:1) is chosen from the measured values. With the light track at
-// bg-muted/80 the track on its surface measures 1.13 in Dawn and 1.12 in Classic Light (it was 1.10 and 1.09 at /60); the dark
-// themes, at full bg-muted, 1.17 to 1.25. The fill, not the track, is what must reach 3:1 (FillReadsOnItsTrack): at /80 its
-// weakest stop (the mid one) reads 3.04 on Dawn and 3.56 on Classic Light.
+// A "can be seen" guard, not a WCAG number, set just under the lowest measured value. In the light themes the track
+// takes a little of the control line's colour, because the muted surface alone all but matched the card; the track on
+// its surface then measures 1.17:1 at its weakest (Intelligent) and up to 1.35:1 (Classic Light).
 export const TrackReadsAsATrack: Story = {
   args: { variant: 'bar', remaining: 1500 },
   play: async ({ canvasElement }) => {
@@ -231,7 +235,7 @@ export const TrackReadsAsATrack: Story = {
     const track = compositeOver(getComputedStyle(trackOf(canvasElement)).backgroundColor, `rgb(${surface.join(' ')})`)
     const ratio = contrastRatio(track, surface)
     console.log(`usage-meter track on surface ${ratio.toFixed(2)}:1`)
-    await expect(ratio).toBeGreaterThanOrEqual(1.08)
+    await expect(ratio).toBeGreaterThanOrEqual(1.15)
   },
 }
 
@@ -248,7 +252,7 @@ export const DoDont: Story = {
               <span className="text-ink-soft"><span className="text-base font-semibold text-foreground">120</span> left</span>
               <span className="text-muted-foreground">of 5,000</span>
             </p>
-            <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-muted/80 dark:bg-muted">
+            <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-[color-mix(in_oklab,var(--input)_15%,var(--muted))] dark:bg-muted">
               <div className="ai-meter h-full w-[2.4%] rounded-full" />
             </div>
           </div>
