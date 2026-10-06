@@ -98,7 +98,8 @@ export function UsageMeter({
       <p className="flex items-baseline justify-between gap-x-3 text-sm tabular-nums">
         <span className="min-w-0 text-ink-soft">
           <span className="text-base font-semibold text-foreground">{whole.format(left)}</span> left
-          {low ? <>{' · '}<span className="font-semibold text-destructive">{lowLabel}</span></> : null}
+          {/* The dot travels with the words, so a narrow bar wraps to "· Running low" and never leaves the dot hanging. */}
+          {low ? <>{' '}<span className="inline-block">{'· '}<span className="font-semibold text-destructive">{lowLabel}</span></span></> : null}
         </span>
         <span className="shrink-0 whitespace-nowrap text-muted-foreground">of {whole.format(max)}</span>
       </p>
