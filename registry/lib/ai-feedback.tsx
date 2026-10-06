@@ -2,11 +2,12 @@
 
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Icon } from '@/components/ui/icon'
 import { cn } from '@/lib/utils'
 
-export type AiFeedbackValue = { reasons: string[]; note: string }
+export type AiFeedbackValue = { reason: string | null; note: string }
 
 /** The reasons offered when the app does not bring its own. About six is the most people will read. */
 export const FEEDBACK_REASONS = ['Wrong or made up', "Didn't answer my question", 'Missed something', 'Too long', 'Wrong tone', 'Other']
@@ -14,9 +15,9 @@ export const FEEDBACK_REASONS = ['Wrong or made up', "Didn't answer my question"
 export type AiFeedbackFormProps = {
   /** The question at the top. It also names the form for screen readers. */
   title?: string
-  /** Short reasons people can pick several of. Pass your own to replace the defaults; an empty list leaves only the note. */
+  /** Short reasons to choose one from. Pass your own to replace the defaults; an empty list leaves only the note. A label that repeats is offered once. */
   reasons?: string[]
-  /** Receives the chosen reasons, in the list's order, and the note with its ends trimmed. */
+  /** Receives the chosen reason (null when only a note was written) and the note with its ends trimmed. */
   onSubmit: (value: AiFeedbackValue) => void
   /** Shows Close in the corner. */
   onClose?: () => void
@@ -31,14 +32,15 @@ export type AiFeedbackFormProps = {
   className?: string
 }
 
-/** Asks what was wrong after a thumbs-down on an AI answer — a few reasons to pick from, an optional note, and Send — opening under the answer so what is being judged stays in view. */
+/** Asks what was wrong after a thumbs-down on an AI answer — one reason to choose from a short list, an optional note, and Send — opening under the answer so what is being judged stays in view. */
 export function AiFeedbackForm({
   title = 'What was wrong?', reasons = FEEDBACK_REASONS, onSubmit, onClose, noteLabel = 'Tell us more (optional)',
   disclosure = 'Sends this answer with your note.', submitLabel = 'Send feedback', sent, sentMessage = 'Thanks, that helps.', className,
 }: AiFeedbackFormProps) {
   const titleId = React.useId()
-  // Picked reasons are tracked by position: labels may repeat, positions cannot.
-  const [picked, setPicked] = React.useState<Set<number>>(() => new Set())
+  // A select tells options apart by value, so a label that repeats is offered once, the first staying.
+  const options = React.useMemo(() => [...new Set(reasons)], [reasons])
+  const [reason, setReason] = React.useState<string | null>(null)
   const [note, setNote] = React.useState('')
   const [ownSent, setOwnSent] = React.useState(false)
   const isSent = sent === undefined ? ownSent : sent
@@ -48,7 +50,7 @@ export function AiFeedbackForm({
   // Set when the person presses this form's own Send. "Sent" can also arrive from the app, and then the cursor is theirs.
   const sentHere = React.useRef(false)
   // Text is never required, and spaces are not text.
-  const ready = picked.size > 0 || note.trim().length > 0
+  const ready = reason !== null || note.trim().length > 0
 
   // Send removes the button that had focus. Keep the person's place on the line that replaced it, but only after a
   // press in this form, and only if they have not moved on since. preventScroll: the line is where the button was.
@@ -70,16 +72,11 @@ export function AiFeedbackForm({
     return () => document.removeEventListener('pointerdown', away, true)
   }, [])
 
-  const toggle = (index: number) => setPicked((current) => {
-    const next = new Set(current)
-    if (!next.delete(index)) next.add(index)
-    return next
-  })
   const send = () => {
     if (!ready) return
     sentHere.current = true
     if (sent === undefined) setOwnSent(true)
-    onSubmit({ reasons: reasons.filter((_, index) => picked.has(index)), note: note.trim() })
+    onSubmit({ reason, note: note.trim() })
   }
 
   return (
@@ -93,16 +90,17 @@ export function AiFeedbackForm({
               <Button type="button" variant="ghost" size="icon-sm" className="-my-1 -mr-1.5 text-muted-foreground" aria-label="Close" onClick={onClose}><Icon name="close" /></Button>
             ) : null}
           </div>
-          {reasons.length ? (
-            <div role="group" aria-label="Reasons" className="flex flex-wrap gap-1.5">
-              {reasons.map((reason, index) => (
-                // The control line, not the divider line: a chip is something people press. Picked, it fills with ink.
-                <button key={index} type="button" aria-pressed={picked.has(index)} onClick={() => toggle(index)}
-                  className="inline-flex min-h-8 items-center rounded-full border border-input bg-background px-3 py-1 text-left text-sm text-ink-soft hover:bg-muted hover:text-foreground aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background outline-hidden focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
-                  {reason}
-                </button>
-              ))}
-            </div>
+          {options.length ? (
+            // Named by the question, so a screen reader hears "What was wrong?" on the field. alignItemWithTrigger off:
+            // the list opens under the field and never covers it or the question above.
+            <Select value={reason} onValueChange={(next) => setReason(next)}>
+              <SelectTrigger aria-labelledby={titleId} className="w-full bg-background">
+                <SelectValue placeholder="Choose a reason" />
+              </SelectTrigger>
+              <SelectContent alignItemWithTrigger={false}>
+                {options.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+              </SelectContent>
+            </Select>
           ) : null}
           <Textarea aria-label={noteLabel} placeholder={noteLabel} value={note} onChange={(event) => setNote(event.target.value)} className="min-h-16 bg-background" />
           <div className="flex flex-wrap items-center gap-2">

@@ -1162,9 +1162,10 @@
       "name": "ai-feedback",
       "type": "registry:ui",
       "title": "AI feedback",
-      "description": "Asks what was wrong after a thumbs-down on an AI answer — a few reasons to pick from, an optional note, and Send — opening under the answer so what is being judged stays in view.",
+      "description": "Asks what was wrong after a thumbs-down on an AI answer — one reason to choose from a short list, an optional note, and Send — opening under the answer so what is being judged stays in view.",
       "registryDependencies": [
         "button",
+        "select",
         "textarea",
         "https://www.quilldesignsystem.com/r/icon.json"
       ],
@@ -1175,7 +1176,7 @@
           "type": "registry:ui"
         }
       ],
-      "docs": "Asks what was wrong after a thumbs-down on an AI answer — a few reasons to pick from, an optional note, and Send — opening under the answer so what is being judged stays in view. Do: Offer about six short reasons, your own or the defaults, and let people pick several. Don't: List every reason you can think of — past about six the chips become a wall nobody reads. Do: Let Send work with a reason alone, or a note alone. Don't: Force people to type before they can send — most will leave instead. Do: Open the form under the answer it is about (pass it to AiMessage as feedbackForm). Don't: Cover the answer with a dialog — people need to see what they are judging. Do: Keep the line that says what is sent with the feedback, in your own words if the defaults are not true for your app. Don't: Send the conversation along without saying so. Use ai-message when the thumbs alone are all you collect; they are already on the reply. Use dialog when the feedback is a longer survey that needs the person's whole attention. Use contact-form when people are writing to your team, not rating one answer."
+      "docs": "Asks what was wrong after a thumbs-down on an AI answer — one reason to choose from a short list, an optional note, and Send — opening under the answer so what is being judged stays in view. Do: Offer about six short reasons, your own or the defaults. Don't: List every reason you can think of — a long dropdown is as unread as a wall of chips. Do: Let Send work with a reason alone, or a note alone. Don't: Force people to type before they can send — most will leave instead. Do: Open the form under the answer it is about (pass it to AiMessage as feedbackForm). Don't: Cover the answer with a dialog — people need to see what they are judging. Do: Keep the line that says what is sent with the feedback, in your own words if the defaults are not true for your app. Don't: Send the conversation along without saying so. Use ai-message when the thumbs alone are all you collect; they are already on the reply. Use dialog when the feedback is a longer survey that needs the person's whole attention. Use contact-form when people are writing to your team, not rating one answer."
     },
     {
       "name": "ai-popover",

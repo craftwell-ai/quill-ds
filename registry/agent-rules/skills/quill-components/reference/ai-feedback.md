@@ -1,6 +1,6 @@
 # ai-feedback (component)
 
-Asks what was wrong after a thumbs-down on an AI answer — a few reasons to pick from, an optional note, and Send — opening under the answer so what is being judged stays in view.
+Asks what was wrong after a thumbs-down on an AI answer — one reason to choose from a short list, an optional note, and Send — opening under the answer so what is being judged stays in view.
 
 ### When to use
 - Someone has marked an AI answer as bad and you want to learn why, without taking them away from the answer.
@@ -11,18 +11,18 @@ Asks what was wrong after a thumbs-down on an AI answer — a few reasons to pic
 - **contact-form** — when people are writing to your team, not rating one answer.
 
 ### Rules
-- **Do:** Offer about six short reasons, your own or the defaults, and let people pick several. **Don't:** List every reason you can think of — past about six the chips become a wall nobody reads.
+- **Do:** Offer about six short reasons, your own or the defaults. **Don't:** List every reason you can think of — a long dropdown is as unread as a wall of chips.
 - **Do:** Let Send work with a reason alone, or a note alone. **Don't:** Force people to type before they can send — most will leave instead.
 - **Do:** Open the form under the answer it is about (pass it to AiMessage as feedbackForm). **Don't:** Cover the answer with a dialog — people need to see what they are judging.
 - **Do:** Keep the line that says what is sent with the feedback, in your own words if the defaults are not true for your app. **Don't:** Send the conversation along without saying so.
 
 ### Accessibility
-- The form is a group named by its question. The reasons are toggle buttons (aria-pressed) in a group named "Reasons", each with the same 3px focus ring as a Button; a chosen reason is filled in ink, so the choice does not rest on a hue.
-- The note is a text area named by its label. Send is off until a reason is chosen or something is typed; spaces do not count.
+- The form is a group named by its question. The reason is one stock Select, a combobox named by that same question ("What was wrong?"), showing "Choose a reason" until one is chosen; its list opens under it and is read as a listbox of options, with the 3px focus ring of the stock field.
+- The note is a text area named by its label. Send is off until a reason is chosen or something is typed; spaces do not count. When only a note is written, the reason is null.
 - A polite live region (role="status") is on the page from the start, empty. After Send the form is replaced by one line there ("Thanks, that helps."), and keyboard focus moves to that line, because the Send button it was on is gone.
 - Close is an icon button named "Close", drawn only when onClose is given. Inside an AiMessage, closing the form returns focus to the thumbs-down button.
 - Inside an AiMessage the form follows the thumbs in reading order, so the next Tab after pressing thumbs-down lands in it. Focus is not moved into it on its own.
 
 ### Design tokens
-`--card` · `--border` · `--input` · `--background` · `--foreground` · `--muted` · `--muted-foreground` · `--ink-soft` · `--ring`
+`--card` · `--border` · `--input` · `--background` · `--foreground` · `--muted` · `--muted-foreground` · `--ink-soft` · `--ring` · `--popover` · `--popover-foreground` · `--accent`
 

@@ -1,13 +1,19 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
+import { expect, fn, screen, userEvent, waitFor, within } from 'storybook/test'
 import { AiFeedbackForm, FEEDBACK_REASONS } from '../../registry/lib/ai-feedback'
 import { AiMessage, type AiFeedback } from '../../registry/lib/ai-message'
 import { usage } from '@/usage/ai-feedback.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
-import { DoDontPair, unlessDoDont } from './DoDont'
-import { compositeOver, contrastRatio, surfaceBehind } from './contrast'
-import { expectFocusRing } from './focus-ring'
+import { unlessDoDont } from './DoDont'
+
+// The reason list is a stock Select: its options live in a popup on the page body, so they are found on `screen`, not in the canvas.
+const reasonField = (canvas: ReturnType<typeof within>) => canvas.getByRole('combobox', { name: 'What was wrong?' })
+const choose = async (canvas: ReturnType<typeof within>, name: string) => {
+  await userEvent.click(reasonField(canvas))
+  await userEvent.click(await screen.findByRole('option', { name }))
+  await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull())
+}
 
 const meta = {
   title: 'Components / AiFeedback',
@@ -24,13 +30,36 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   play: async ({ canvas }) => {
     const form = canvas.getByRole('group', { name: 'What was wrong?' })
-    const reasons = within(form).getByRole('group', { name: 'Reasons' })
-    await expect(within(reasons).getAllByRole('button')).toHaveLength(6)
-    for (const chip of within(reasons).getAllByRole('button')) await expect(chip).toHaveAttribute('aria-pressed', 'false')
+    // One dropdown named by the question, asking for a reason; no chips.
+    const field = reasonField(canvas)
+    await expect(field).toHaveTextContent('Choose a reason')
+    await expect(within(form).queryByRole('group', { name: 'Reasons' })).toBeNull()
+    await expect(within(form).queryAllByRole('button', { pressed: false })).toHaveLength(0)
+    await userEvent.click(field)
+    const options = await screen.findAllByRole('option')
+    await expect(options.map((option) => option.textContent)).toEqual(FEEDBACK_REASONS)
+    // The list opens under its field, as wide as the field, not over it.
+    const list = screen.getByRole('listbox').closest('[data-slot="select-content"]') as HTMLElement
+    const fieldBox = field.getBoundingClientRect()
+    const listBox = list.getBoundingClientRect()
+    await expect(listBox.top).toBeGreaterThanOrEqual(fieldBox.bottom)
+    await expect(Math.abs(listBox.left - fieldBox.left)).toBeLessThanOrEqual(0.5)
+    await expect(Math.abs(listBox.width - fieldBox.width)).toBeLessThanOrEqual(0.5)
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull())
     await expect(within(form).getByRole('textbox', { name: 'Tell us more (optional)' })).toBeVisible()
     await expect(within(form).getByText('Sends this answer with your note.')).toBeVisible()
     await expect(within(form).getByRole('button', { name: 'Send feedback' })).toBeDisabled()
     await expect(within(form).getByRole('button', { name: 'Close' })).toBeVisible()
+    // Top to bottom: the question, the dropdown (full width), the note, then the line with Send.
+    const top = (element: Element) => element.getBoundingClientRect().top
+    const title = within(form).getByText('What was wrong?', { selector: 'p' })
+    const note = within(form).getByRole('textbox')
+    const send = within(form).getByRole('button', { name: 'Send feedback' })
+    await expect(top(title)).toBeLessThan(top(field))
+    await expect(top(field)).toBeLessThan(top(note))
+    await expect(top(note)).toBeLessThan(top(send))
+    await expect(Math.abs(field.getBoundingClientRect().width - note.getBoundingClientRect().width)).toBeLessThanOrEqual(0.5)
   },
 }
 
@@ -45,20 +74,33 @@ export const SendWaits: Story = {
     await expect(send).toBeEnabled()
     await userEvent.clear(note)
     await expect(send).toBeDisabled()
-    const tooLong = canvas.getByRole('button', { name: 'Too long' })
-    await userEvent.click(tooLong)
-    await expect(tooLong).toHaveAttribute('aria-pressed', 'true')
+    await choose(canvas, 'Too long')
+    await expect(reasonField(canvas)).toHaveTextContent('Too long')
     await expect(send).toBeEnabled()
-    // A second press un-picks it.
-    await userEvent.click(tooLong)
-    await expect(send).toBeDisabled()
-    await userEvent.click(canvas.getByRole('button', { name: 'Wrong tone' }))
-    await userEvent.click(canvas.getByRole('button', { name: 'Wrong or made up' }))
+    // One reason at most: choosing another replaces it.
+    await choose(canvas, 'Wrong tone')
+    await expect(reasonField(canvas)).toHaveTextContent('Wrong tone')
     await userEvent.type(note, '  The August number is wrong.  ')
     await userEvent.click(send)
-    // Reasons come back in the list's order, not the order they were pressed; the note is trimmed.
+    // The reason is the one chosen last; the note is trimmed.
     await expect(args.onSubmit).toHaveBeenCalledTimes(1)
-    await expect(args.onSubmit).toHaveBeenCalledWith({ reasons: ['Wrong or made up', 'Wrong tone'], note: 'The August number is wrong.' })
+    await expect(args.onSubmit).toHaveBeenCalledWith({ reason: 'Wrong tone', note: 'The August number is wrong.' })
+  },
+}
+
+export const ReasonAlone: Story = {
+  play: async ({ canvas, args }) => {
+    await choose(canvas, 'Too long')
+    await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
+    await expect(args.onSubmit).toHaveBeenCalledWith({ reason: 'Too long', note: '' })
+  },
+}
+
+export const NoteAlone: Story = {
+  play: async ({ canvas, args }) => {
+    await userEvent.type(canvas.getByRole('textbox'), 'Missing the source.')
+    await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
+    await expect(args.onSubmit).toHaveBeenCalledWith({ reason: null, note: 'Missing the source.' })
   },
 }
 
@@ -67,13 +109,13 @@ export const FocusAfterSend: Story = {
     // The live region is there, empty and taking no room, before anything is sent.
     const status = canvas.getByRole('status')
     await expect(status).toBeEmptyDOMElement()
-    await userEvent.click(canvas.getByRole('button', { name: 'Other' }))
+    await choose(canvas, 'Other')
     await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
     await expect(status).toHaveTextContent('Thanks, that helps.')
     // Same node: the text arrived into a region that was already on the page.
     await expect(canvas.getByRole('status')).toBe(status)
     await waitFor(() => expect(status).toHaveFocus())
-    // The form itself is gone: no chips, no field, no card around one line.
+    // The form itself is gone: no dropdown, no field, no card around one line.
     await expect(canvas.queryByRole('group')).toBeNull()
     await expect(canvas.queryByRole('textbox')).toBeNull()
     const root = canvasElement.querySelector('[data-slot="ai-feedback"]') as HTMLElement
@@ -88,7 +130,7 @@ export const FocusAfterSend: Story = {
 export const ControlledSent: Story = {
   args: { sent: false },
   play: async ({ canvas, args }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Other' }))
+    await choose(canvas, 'Other')
     await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
     await expect(args.onSubmit).toHaveBeenCalledTimes(1)
     // The app said "not sent" and has not changed its mind: the form stays.
@@ -108,55 +150,30 @@ export const AlreadySent: Story = {
 export const RepeatedReasons: Story = {
   args: { reasons: ['Too long', 'Too long', 'Other'], onClose: undefined, disclosure: '' },
   play: async ({ canvas, args }) => {
-    const [first, second] = canvas.getAllByRole('button', { name: 'Too long' })
-    await userEvent.click(second)
-    await expect(first).toHaveAttribute('aria-pressed', 'false')
-    await expect(second).toHaveAttribute('aria-pressed', 'true')
+    // A select tells options apart by value, so a label that repeats is offered once (the first stays).
+    await userEvent.click(reasonField(canvas))
+    await expect((await screen.findAllByRole('option')).map((option) => option.textContent)).toEqual(['Too long', 'Other'])
+    await userEvent.click(screen.getByRole('option', { name: 'Too long' }))
     // No callback, no dead Close button; an empty disclosure draws no line.
     await expect(canvas.queryByRole('button', { name: 'Close' })).toBeNull()
     await expect(canvas.queryByText('Sends this answer with your note.')).toBeNull()
     await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
-    await expect(args.onSubmit).toHaveBeenCalledWith({ reasons: ['Too long'], note: '' })
+    await expect(args.onSubmit).toHaveBeenCalledWith({ reason: 'Too long', note: '' })
   },
 }
 
 export const NoReasons: Story = {
   args: { reasons: [] },
   play: async ({ canvas }) => {
-    await expect(canvas.queryByRole('group', { name: 'Reasons' })).toBeNull()
+    // An empty list draws no dropdown, only the note.
+    await expect(canvas.queryByRole('combobox')).toBeNull()
     await userEvent.type(canvas.getByRole('textbox'), 'Missing the source.')
     await expect(canvas.getByRole('button', { name: 'Send feedback' })).toBeEnabled()
   },
 }
 
-export const ChipShowsFocusRing: Story = {
-  play: async ({ canvas }) => {
-    await expectFocusRing(canvas.getByRole('button', { name: 'Wrong or made up' }))
-  },
-}
-
-// A chip is a control: its outline has to read at 3:1 on the card in every theme, picked or not.
-export const ChipsReadAsShapes: Story = {
-  play: async ({ canvas, canvasElement }) => {
-    const card = canvasElement.querySelector('[data-slot="ai-feedback"]') as HTMLElement
-    const surface = compositeOver(getComputedStyle(card).backgroundColor, `rgb(${surfaceBehind(card).join(' ')})`)
-    const idle = canvas.getByRole('button', { name: 'Too long' })
-    const picked = canvas.getByRole('button', { name: 'Wrong tone' })
-    await userEvent.click(picked)
-    for (const [name, chip] of [['idle', idle], ['picked', picked]] as const) {
-      const line = compositeOver(getComputedStyle(chip).borderTopColor, `rgb(${surface.join(' ')})`)
-      console.log(`ai-feedback ${name} chip outline ${contrastRatio(line, surface).toFixed(2)}:1`)
-      await expect(contrastRatio(line, surface)).toBeGreaterThanOrEqual(3)
-    }
-    // The picked chip's words still read on its ink fill.
-    const fill = compositeOver(getComputedStyle(picked).backgroundColor, `rgb(${surface.join(' ')})`)
-    const words = compositeOver(getComputedStyle(picked).color, `rgb(${fill.join(' ')})`)
-    await expect(contrastRatio(words, fill)).toBeGreaterThanOrEqual(4.5)
-  },
-}
-
 // The form in its real place: under the answer, opened by the thumbs-down.
-function UnderAnAnswer({ onSubmit }: { onSubmit: (value: { reasons: string[]; note: string }) => void }) {
+function UnderAnAnswer({ onSubmit }: { onSubmit: (value: { reason: string | null; note: string }) => void }) {
   const [feedback, setFeedback] = React.useState<AiFeedback>(null)
   const [open, setOpen] = React.useState(true)
   return (
@@ -243,7 +260,7 @@ export const LateSentDoesNotGrabFocus: Story = {
     return <Harness />
   },
   play: async ({ canvas }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Other' }))
+    await choose(canvas, 'Other')
     await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
     await userEvent.click(document.body)
     await expect(document.body).toHaveFocus()
@@ -252,14 +269,4 @@ export const LateSentDoesNotGrabFocus: Story = {
     await new Promise((resolve) => setTimeout(resolve, 50))
     await expect(canvas.getByRole('status')).not.toHaveFocus()
   },
-}
-
-export const DoDont: Story = {
-  parameters: { layout: 'padded', controls: { disable: true } },
-  render: (args) => (
-    <DoDontPair usage={usage} id="six-reasons-at-most"
-      doExample={<div className="w-[26rem] max-w-full"><AiFeedbackForm onSubmit={args.onSubmit} /></div>}
-      dontExample={<div className="w-[26rem] max-w-full"><AiFeedbackForm onSubmit={args.onSubmit}
-        reasons={[...FEEDBACK_REASONS, 'Too short', 'Out of date', 'Repeats itself', 'Bad formatting', 'Wrong language', 'Too formal', 'Too casual', 'Slow', 'Ignored my file']} /></div>} />
-  ),
 }
