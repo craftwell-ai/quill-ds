@@ -24,7 +24,33 @@ export type Conversation = {
 export type ConversationGroup = { key: string; label: string; chats: Conversation[] }
 
 const DAY = 86_400_000
-const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+const isDate = (date: Date) => !Number.isNaN(date.getTime())
+
+// Reads the calendar day a moment falls on in one time zone. An unknown zone name is not an error: the runtime's
+// own zone is used, as it is when no zone is given.
+const zoneReader = (timeZone?: string) => {
+  if (!timeZone) return undefined
+  try {
+    return new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' })
+  } catch {
+    return undefined
+  }
+}
+// The calendar day as a whole number of days, and the month as a whole number of months, so two moments compare by
+// the date on the calendar and not by the hours between them (a day is not always 24 hours long).
+const calendar = (date: Date, zone?: Intl.DateTimeFormat) => {
+  let year = date.getFullYear()
+  let month = date.getMonth()
+  let day = date.getDate()
+  if (zone) {
+    const parts = zone.formatToParts(date)
+    const read = (type: string) => Number(parts.find((part) => part.type === type)?.value)
+    year = read('year')
+    month = read('month') - 1
+    day = read('day')
+  }
+  return { day: Date.UTC(year, month, day) / DAY, month: year * 12 + month }
+}
 
 // Sample content, dated from "now" so the groups always read Pinned, Today, Yesterday, Previous 7 days.
 const sampleChats = (now: Date): Conversation[] => {
@@ -54,13 +80,15 @@ const MENU_GAP = 6
 // Every row has a 1px border (clear unless the chat is open), so the padding here is 1px under px-2.5 / py-1.5:
 // the title still starts 10px in, under its group heading, and the row is still 32px tall.
 const OPEN = 'min-w-0 flex-1 truncate rounded-lg px-[9px] py-[5px] text-left text-sm text-foreground no-underline outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 aria-[current]:font-medium'
-// Faint until wanted, never out of reach: hover, keyboard focus anywhere in the row, the open chat, an open menu, and any touch screen show it.
+// Hidden until wanted, never out of reach: hover, keyboard focus anywhere in the row, the open chat, an open menu, and any touch screen show it.
+// mr-[3px] plus the row's 1px border keeps the button 4px inside the row's outer edge.
 const MORE = 'mr-[3px] shrink-0 text-muted-foreground opacity-0 group-hover/row:opacity-100 group-focus-within/row:opacity-100 group-has-[[aria-current]]/row:opacity-100 aria-expanded:opacity-100 pointer-coarse:opacity-100'
 
-/** Pinned first, then Today, Yesterday, Previous 7 days, then one group per month, newest first. */
-export function groupConversations(conversations: Conversation[], now: Date, locale = 'en-US'): ConversationGroup[] {
-  const today = startOfDay(now)
-  const monthName = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' })
+/** Pinned first, then Today, Yesterday, Previous 7 days, then one group per month, newest first. With `timeZone`, days and months are that zone's. */
+export function groupConversations(conversations: Conversation[], now: Date, locale = 'en-US', timeZone?: string): ConversationGroup[] {
+  const zone = zoneReader(timeZone)
+  const today = calendar(isDate(now) ? now : new Date(), zone)
+  const monthName = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: zone ? timeZone : undefined })
   const groups = new Map<string, { label: string; order: number; rows: { chat: Conversation; time: number }[] }>()
   const put = (key: string, label: string, order: number, chat: Conversation, time: number) => {
     const group = groups.get(key) ?? { label, order, rows: [] }
@@ -69,18 +97,19 @@ export function groupConversations(conversations: Conversation[], now: Date, loc
   }
   for (const chat of conversations) {
     const date = new Date(chat.updatedAt)
-    const readable = !Number.isNaN(date.getTime())
+    const readable = isDate(date)
     const time = readable ? date.getTime() : 0
     if (chat.pinned) { put('pinned', 'Pinned', 0, chat, time); continue }
     // A date that cannot be read is not thrown away; it goes last.
     if (!readable) { put('earlier', 'Earlier', Number.MAX_SAFE_INTEGER, chat, time); continue }
     // Whole calendar days, so 23:59 yesterday is Yesterday and a clock set ahead still reads as Today.
-    const days = Math.round((today - startOfDay(date)) / DAY)
+    const then = calendar(date, zone)
+    const days = today.day - then.day
     if (days <= 0) put('today', 'Today', 1, chat, time)
     else if (days === 1) put('yesterday', 'Yesterday', 2, chat, time)
     else if (days <= 7) put('week', 'Previous 7 days', 3, chat, time)
     else {
-      const monthsAgo = Math.max(0, (now.getFullYear() - date.getFullYear()) * 12 + now.getMonth() - date.getMonth())
+      const monthsAgo = Math.max(0, today.month - then.month)
       put(`month-${monthsAgo}`, monthName.format(date), 4 + monthsAgo, chat, time)
     }
   }
@@ -89,13 +118,18 @@ export function groupConversations(conversations: Conversation[], now: Date, loc
     .map(([key, group]) => ({ key, label: group.label, chats: group.rows.sort((first, second) => second.time - first.time).map((row) => row.chat) }))
 }
 
+// Something in the list the cursor can be sent to.
+type FocusTarget = { part: 'row' | 'more'; id: string } | { part: 'rename' } | { part: 'undo' }
+
 export type ConversationHistoryProps = {
   /** Your chats. Leave it out and the list shows five sample chats and keeps them itself. */
   conversations?: Conversation[]
   /** The open chat. Pass an id or null to control it; leave it out and the list keeps its own. */
   currentId?: string | null
-  /** "Today", for grouping. Defaults to the moment the list first renders. */
+  /** "Today", for grouping. Defaults to the moment the list first renders (and so does a date that cannot be read). */
   now?: Date
+  /** Pass the person's time zone (an IANA name such as "America/Los_Angeles") when the list is rendered on a server, so the server and the browser draw the same groups. Left out, or not a zone, the runtime's own zone is used. */
+  timeZone?: string
   onSelect?: (id: string) => void
   /** Shows New chat. (The sample list shows it either way.) */
   onNew?: () => void
@@ -104,7 +138,7 @@ export type ConversationHistoryProps = {
   onPin?: (id: string, pinned: boolean) => void
   /** Called once the Undo time has passed, not when Delete is confirmed. */
   onDelete?: (id: string) => void
-  /** How long Undo stays after a delete. The countdown waits while the pointer or keyboard focus is on that line. */
+  /** How long Undo stays after a delete. The countdown waits while the pointer or keyboard focus is on that line. 0 deletes as soon as nothing holds the line. A negative number, NaN or Infinity is treated as the default, 6. */
   undoSeconds?: number
   /** Names the list for screen readers. */
   label?: string
@@ -115,12 +149,12 @@ export type ConversationHistoryProps = {
 
 /** Past AI chats grouped by when they happened — pinned first, then today, yesterday, the last week and earlier months — with the open chat filled and a menu on each row to rename, pin or delete it. */
 export function ConversationHistory({
-  conversations, currentId, now, onSelect, onNew, onRename, onPin, onDelete,
+  conversations, currentId, now, timeZone, onSelect, onNew, onRename, onPin, onDelete,
   undoSeconds = 6, label = 'Past chats', locale = 'en-US', className,
 }: ConversationHistoryProps) {
   const baseId = React.useId()
   const [mountedAt] = React.useState(() => new Date())
-  const today = now ?? mountedAt
+  const today = now && isDate(now) ? now : mountedAt
   const controlled = conversations !== undefined
   const [ownChats, setOwnChats] = React.useState<Conversation[]>(() => sampleChats(today))
   const chats = conversations ?? ownChats
@@ -138,10 +172,15 @@ export function ConversationHistory({
   const navRef = React.useRef<HTMLElement>(null)
   const renameSettled = React.useRef(true)
   // Where the cursor should land after the update a handler just asked for.
-  const [focusRequest, setFocusRequest] = React.useState<{ selector: string } | null>(null)
+  const [focusRequest, setFocusRequest] = React.useState<{ target: FocusTarget } | null>(null)
   // What a closing menu or dialog does with focus: unset, it hands focus back to what opened it (the stock
-  // behaviour); a selector sends it there instead; null leaves focus where it is.
-  const handoff = React.useRef<{ selector: string | null } | undefined>(undefined)
+  // behaviour); a target sends it there instead; null leaves focus where it is.
+  const handoff = React.useRef<{ target: FocusTarget | null } | undefined>(undefined)
+  // A chat whose row is about to be drawn somewhere else (a pin the app may apply later), and should keep the cursor.
+  const following = React.useRef<string | null>(null)
+  // The confirmed delete the app has not been told about yet. Read and cleared by everything that can settle it
+  // (the countdown, a second delete, the list going away, the tab closing), so each sees at once what another did.
+  const owed = React.useRef<string | null>(null)
 
   // With the app's own list, an action it did not wire is not offered. The sample offers all three.
   const canRename = !controlled || Boolean(onRename)
@@ -150,52 +189,116 @@ export function ConversationHistory({
   const hasMenu = canRename || canPin || canDelete
   const showNew = !controlled || Boolean(onNew)
 
+  // Rows are found by comparing ids, not by building a selector from one: an id can hold any character.
+  const locate = React.useCallback((target: FocusTarget): HTMLElement | null => {
+    const nav = navRef.current
+    if (!nav) return null
+    if (target.part === 'rename') return nav.querySelector<HTMLElement>('[data-slot="chat-rename"]')
+    if (target.part === 'undo') return nav.querySelector<HTMLElement>('[data-slot="chat-undo"] button')
+    const row = [...nav.querySelectorAll<HTMLElement>('[data-chat-id]')].find((each) => each.dataset.chatId === target.id)
+    return row?.querySelector<HTMLElement>(target.part === 'row' ? '[data-slot="chat-open"]' : '[data-slot="dropdown-menu-trigger"]') ?? null
+  }, [])
+
   // Menus and the dialog hand focus back to what opened them as they close. When the cursor belongs somewhere else
   // (the rename field, a row that moved, Undo) two things carry it there, and neither is a timer: the closing menu
   // or dialog is told where to put focus (Base UI's finalFocus), and an effect moves it once the row, field or
   // button named is on the page. Whichever runs last, focus ends in the same place.
-  const focusIn = (selector: string) => {
-    handoff.current = { selector }
-    setFocusRequest({ selector })
+  const focusIn = (target: FocusTarget) => {
+    handoff.current = { target }
+    setFocusRequest({ target })
   }
   React.useEffect(() => {
-    if (focusRequest) navRef.current?.querySelector<HTMLElement>(focusRequest.selector)?.focus()
-  }, [focusRequest])
+    if (focusRequest) locate(focusRequest.target)?.focus()
+  }, [focusRequest, locate])
   const finalFocus = () => {
     const next = handoff.current
     if (next === undefined) return true
-    return (next.selector ? navRef.current?.querySelector<HTMLElement>(next.selector) : null) ?? false
+    return (next.target ? locate(next.target) : null) ?? false
   }
-  const rowSelector = (id: string) => `[data-chat-id="${CSS.escape(id)}"] [data-slot="chat-open"]`
-  const moreSelector = (id: string) => `[data-chat-id="${CSS.escape(id)}"] [data-slot="dropdown-menu-trigger"]`
+
+  // A row drawn afresh in another group loses the cursor to the page. If that happens to the chat being followed,
+  // give it back. Only then: focus that is anywhere else was put there by the person, and stays.
+  React.useEffect(() => {
+    const id = following.current
+    if (id === null) return
+    const active = document.activeElement
+    if (active && active !== document.body) return
+    const row = locate({ part: 'row', id })
+    if (!row) return
+    following.current = null
+    row.focus()
+  }, [chats, locate])
+  // The person moving on (a press, a key, focus landing on something else) ends the following.
+  React.useEffect(() => {
+    const forget = () => { following.current = null }
+    const moved = (event: FocusEvent) => {
+      const id = following.current
+      if (id !== null && event.target !== locate({ part: 'row', id })) following.current = null
+    }
+    document.addEventListener('pointerdown', forget, true)
+    document.addEventListener('keydown', forget, true)
+    document.addEventListener('focusin', moved, true)
+    return () => {
+      document.removeEventListener('pointerdown', forget, true)
+      document.removeEventListener('keydown', forget, true)
+      document.removeEventListener('focusin', moved, true)
+    }
+  }, [locate])
 
   const commitDelete = (id: string) => {
     if (!controlled) setOwnChats((all) => all.filter((chat) => chat.id !== id))
     if (currentId === undefined) setOwnCurrent((was) => (was === id ? null : was))
     onDelete?.(id)
   }
-
-  // What the timer and the unmount need, as they stand now: both run long after the render that set them up.
-  const latest = React.useRef({ commitDelete, pending })
-  React.useEffect(() => { latest.current = { commitDelete, pending } })
-
-  React.useEffect(() => {
-    return () => {
-      // Confirmed and not undone: leaving the page must not quietly cancel the delete.
-      if (latest.current.pending) latest.current.commitDelete(latest.current.pending.id)
-    }
+  // The commit as it stands now: the countdown, the unmount and the closing tab all run long after the render that
+  // set them up.
+  const latest = React.useRef(commitDelete)
+  React.useEffect(() => { latest.current = commitDelete })
+  // Every way a confirmed delete becomes final goes through here, so the app hears of each delete exactly once:
+  // what is owed is struck off before the app is told, and an id that is not owed is ignored.
+  const settle = React.useCallback((id: string) => {
+    if (owed.current !== id) return
+    owed.current = null
+    latest.current(id)
   }, [])
 
-  // The Undo window. It waits while the pointer or keyboard focus is on the line, and starts over when they leave.
+  // Confirmed and not undone: the list going away must not quietly cancel the delete.
+  React.useEffect(() => () => { if (owed.current !== null) settle(owed.current) }, [settle])
+
+  // Nor must closing the tab, which runs no cleanup at all (and with the cursor on Undo the countdown is waiting).
   React.useEffect(() => {
-    if (!pending || hovering || focused) return
+    if (!pending) return
+    const leaving = () => settle(pending.id)
+    window.addEventListener('pagehide', leaving)
+    return () => window.removeEventListener('pagehide', leaving)
+  }, [pending, settle])
+
+  // The Undo line stands in for a row. If the app takes that chat away meanwhile (deleted in another tab), there is
+  // no row to stand in for: the delete was confirmed here, so the app is told, once, and the line is cleared.
+  const pendingRow = pending !== null && chats.some((chat) => chat.id === pending.id)
+  React.useEffect(() => {
+    if (!pending || pendingRow) return
+    settle(pending.id)
+    // Clearing what was shown for a row that no longer exists; nothing here can loop.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPending(null)
+    setHovering(false)
+    setFocused(false)
+    setSaid('')
+  }, [pending, pendingRow, settle])
+
+  // The Undo window. It waits while the pointer or keyboard focus is on the line, and starts over when they leave.
+  // A negative or non-finite number is not a length of time; the default stands in for it.
+  const undoFor = Number.isFinite(undoSeconds) && undoSeconds >= 0 ? undoSeconds : 6
+  React.useEffect(() => {
+    if (!pending || !pendingRow || hovering || focused) return
     const timer = window.setTimeout(() => {
-      latest.current.commitDelete(pending.id)
+      settle(pending.id)
       setPending(null)
       setSaid('')
-    }, Math.max(0, Number.isFinite(undoSeconds) ? undoSeconds : 6) * 1000)
+    }, undoFor * 1000)
     return () => window.clearTimeout(timer)
-  }, [pending, hovering, focused, undoSeconds])
+  }, [pending, pendingRow, hovering, focused, undoFor, settle])
 
   const select = (id: string) => {
     if (currentId === undefined) setOwnCurrent(id)
@@ -204,7 +307,7 @@ export function ConversationHistory({
   const startRename = (chat: Conversation) => {
     renameSettled.current = false
     setRenaming({ id: chat.id, draft: chat.title })
-    focusIn('[data-slot="chat-rename"]')
+    focusIn({ part: 'rename' })
   }
   // Enter and a click elsewhere both end a rename, and removing the field can send one more blur: settle once.
   const finishRename = (save: boolean, refocus: boolean) => {
@@ -219,47 +322,53 @@ export function ConversationHistory({
       onRename?.(id, next)
     }
     // After a key press the field that had focus is gone. After a click elsewhere, focus is where the person put it.
-    if (refocus) focusIn(rowSelector(id))
+    if (refocus) focusIn({ part: 'row', id })
   }
   const togglePin = (chat: Conversation) => {
     const pinned = !chat.pinned
     if (!controlled) setOwnChats((all) => all.map((each) => (each.id === chat.id ? { ...each, pinned } : each)))
     onPin?.(chat.id, pinned)
-    // The row moves to another group and is drawn afresh there; take the cursor along.
-    focusIn(rowSelector(chat.id))
+    // The row moves to another group and is drawn afresh there; take the cursor along, now or whenever the app
+    // applies the pin.
+    following.current = chat.id
+    focusIn({ part: 'row', id: chat.id })
   }
   const askDelete = (chat: Conversation) => {
     // The dialog takes the cursor itself; the closing menu must not pull it back to the row.
-    handoff.current = { selector: null }
+    handoff.current = { target: null }
     setAsking({ id: chat.id, title: chat.title })
     setAskOpen(true)
   }
   // Cancel and Escape (a confirmed delete closes the dialog itself and sends the cursor to Undo).
   const closeAsk = (open: boolean) => {
-    if (!open && asking) handoff.current = { selector: moreSelector(asking.id) }
+    if (!open && asking) handoff.current = { target: { part: 'more', id: asking.id } }
     setAskOpen(open)
   }
   const confirmDelete = () => {
     if (!asking) return
     setAskOpen(false)
+    // The app took the chat away while the dialog was asking: there is nothing left to delete or to undo.
+    if (!chats.some((chat) => chat.id === asking.id)) return
     // A second delete settles the first at once: one Undo at a time.
-    if (pending) commitDelete(pending.id)
+    if (pending) settle(pending.id)
+    owed.current = asking.id
     setPending(asking)
     setHovering(false)
     setFocused(false)
     setSaid(`Deleted ${asking.title}. Undo is available.`)
-    focusIn('[data-slot="chat-undo"] button')
+    focusIn({ part: 'undo' })
   }
   const undo = () => {
     if (!pending) return
+    owed.current = null
     setSaid(`Restored ${pending.title}.`)
-    focusIn(rowSelector(pending.id))
+    focusIn({ part: 'row', id: pending.id })
     setPending(null)
     setHovering(false)
     setFocused(false)
   }
 
-  const groups = groupConversations(chats, today, locale)
+  const groups = groupConversations(chats, today, locale, timeZone)
 
   return (
     <nav ref={navRef} aria-label={label} data-slot="conversation-history" className={cn('grid grid-cols-[minmax(0,1fr)] content-start gap-0.5 text-sm', className)}>
@@ -292,10 +401,14 @@ export function ConversationHistory({
                       onFocus={(event) => event.currentTarget.select()}
                       onBlur={() => finishRename(true, false)}
                       onKeyDown={(event) => {
-                        // The Enter that confirms a word in Japanese or Chinese input is not the Enter that saves.
-                        if (event.nativeEvent.isComposing) return
+                        // Enter that only confirms a word in an input method (Japanese, Chinese, Korean) is not "save".
+                        // Chrome marks it isComposing; Safari sends it just after, as keyCode 229.
+                        if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return
                         if (event.key !== 'Enter' && event.key !== 'Escape') return
                         event.preventDefault()
+                        // These two keys belong to the field. Let out, Escape would also close a sheet or dialog
+                        // the list sits in.
+                        event.stopPropagation()
                         finishRename(event.key === 'Enter', true)
                         // Let go of the field now, while it is still on the page: removed with focus in it, it would
                         // send its blur from the middle of React's own update.
@@ -310,7 +423,9 @@ export function ConversationHistory({
                   // The open chat gets a hairline as well as the fill: on the dark themes the fill alone is too faint to find.
                   className="group/row flex min-h-8 items-center rounded-lg border border-transparent hover:bg-muted has-[[aria-current]]:border-border has-[[aria-current]]:bg-muted">
                   {chat.href ? (
-                    <a href={chat.href} data-slot="chat-open" aria-current={isCurrent ? 'page' : undefined} onClick={() => select(chat.id)} className={OPEN}>{chat.title}</a>
+                    <a href={chat.href} data-slot="chat-open" aria-current={isCurrent ? 'page' : undefined} className={OPEN}
+                      // A press with Cmd, Ctrl, Shift or Alt opens the chat in a new tab or window: this page's open chat has not changed.
+                      onClick={(event) => { if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) select(chat.id) }}>{chat.title}</a>
                   ) : (
                     <button type="button" data-slot="chat-open" aria-current={isCurrent ? 'true' : undefined} onClick={() => select(chat.id)} className={OPEN}>{chat.title}</button>
                   )}

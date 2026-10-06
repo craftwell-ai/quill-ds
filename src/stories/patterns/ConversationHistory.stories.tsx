@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import * as React from 'react'
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test'
 import { ConversationHistory, ConversationSidebar, groupConversations, type Conversation } from '@registry/blocks/conversation-history'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { usage } from '@/usage/conversation-history.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind } from '../contrast'
@@ -394,5 +396,303 @@ export const Docked: Story = {
     await expect(trigger).toBeVisible()
     // On a desktop window the list is docked and in view.
     if (window.innerWidth >= 768) await expect(canvas.getByRole('navigation', { name: 'Past chats' })).toBeVisible()
+  },
+}
+
+const pause = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds))
+
+// An app that does more than keep the list: it can close the list as it deletes, apply a pin late, or drop a chat
+// behind the list's back (another tab, a sync).
+function Staged({ closeOnDelete, pinAfter, hideable, ...args }: Args & { closeOnDelete?: boolean; pinAfter?: number; hideable?: boolean }) {
+  const [chats, setChats] = React.useState(CHATS)
+  const [here, setHere] = React.useState(true)
+  const [shown, setShown] = React.useState(true)
+  const list = (
+    <ConversationHistory {...args} now={NOW} conversations={chats} currentId="b"
+      onPin={(id, pinned) => {
+        const apply = () => setChats((all) => all.map((chat) => (chat.id === id ? { ...chat, pinned } : chat)))
+        if (pinAfter) window.setTimeout(apply, pinAfter)
+        else apply()
+        args.onPin?.(id, pinned)
+      }}
+      onDelete={(id) => {
+        setChats((all) => all.filter((chat) => chat.id !== id))
+        if (closeOnDelete) setHere(false)
+        args.onDelete?.(id)
+      }} />
+  )
+  return (
+    <div className="grid gap-3">
+      <div className="flex gap-3">
+        <button type="button" onClick={() => setHere(false)}>Leave</button>
+        <button type="button" onClick={() => setShown((was) => !was)}>{shown ? 'Hide' : 'Show'}</button>
+        <button type="button" onClick={() => setChats((all) => all.filter((chat) => chat.id !== 'c'))}>Remove elsewhere</button>
+      </div>
+      {here ? (hideable ? <React.Activity mode={shown ? 'visible' : 'hidden'}>{list}</React.Activity> : list) : <p>Gone</p>}
+    </div>
+  )
+}
+
+// One confirmed delete is reported once, however the list goes away afterwards.
+// The app closes the list in the same update that removes the chat: the list is unmounted without drawing again.
+export const DeleteThatClosesTheList: Story = {
+  args: { undoSeconds: 0.2 },
+  render: (args) => <Staged {...args} closeOnDelete />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    const undo = await canvas.findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(undo).toHaveFocus())
+    canvas.getByRole('button', { name: 'New chat' }).focus()
+    await expect(await canvas.findByText('Gone')).toBeVisible()
+    await pause(300)
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c']])
+  },
+}
+
+// A second delete settles the first; if that closes the list, the second is still owed, and the first is not sent twice.
+export const SecondDeleteThatClosesTheList: Story = {
+  render: (args) => <Staged {...args} closeOnDelete />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    await canvas.findByRole('button', { name: 'Undo' })
+    await confirmDelete(canvas, 'Pricing page copy ideas')
+    await expect(await canvas.findByText('Gone')).toBeVisible()
+    await pause(100)
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c'], ['d']])
+  },
+}
+
+// Hidden by React's <Activity> (a tab the app keeps alive): hiding settles the delete, showing again must not repeat it.
+export const HiddenThenShownAgain: Story = {
+  args: { undoSeconds: 0.2 },
+  render: (args) => <Staged {...args} hideable />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    await canvas.findByRole('button', { name: 'Undo' })
+    await userEvent.click(canvas.getByRole('button', { name: 'Hide' }))
+    await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1))
+    await userEvent.click(canvas.getByRole('button', { name: 'Show' }))
+    await expect(await canvas.findByRole('navigation', { name: 'Past chats' })).toBeVisible()
+    await pause(500)
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c']])
+    await expect(canvas.queryByRole('button', { name: 'Undo' })).toBeNull()
+  },
+}
+
+// Closing the tab runs no React cleanup, and with the cursor on Undo the countdown has not even started.
+export const ClosingTheTabCommits: Story = {
+  render: (args) => <Staged {...args} />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    const undo = await canvas.findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(undo).toHaveFocus())
+    await expect(args.onDelete).not.toHaveBeenCalled()
+    window.dispatchEvent(new Event('pagehide'))
+    await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1))
+    // A page restored from the back-forward cache, or the list going away later, does not send it again.
+    window.dispatchEvent(new Event('pagehide'))
+    await userEvent.click(canvas.getByRole('button', { name: 'Leave' }))
+    await expect(await canvas.findByText('Gone')).toBeVisible()
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c']])
+  },
+}
+
+// The app drops the chat while its Undo line is showing (deleted in another tab). The delete was confirmed here, so
+// the app is still told, once, and the Undo line does not linger with a countdown nothing can restart.
+export const AppRemovesThePendingChat: Story = {
+  render: (args) => <Staged {...args} />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    const undo = await canvas.findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(undo).toHaveFocus())
+    // Not a press: the cursor stays on Undo, so the countdown is held when the row goes.
+    canvas.getByRole('button', { name: 'Remove elsewhere' }).click()
+    await waitFor(() => expect(canvas.queryByRole('button', { name: 'Undo' })).toBeNull())
+    await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1))
+    await expect(canvas.getByRole('status')).toBeEmptyDOMElement()
+    await userEvent.click(canvas.getByRole('button', { name: 'Leave' }))
+    await expect(await canvas.findByText('Gone')).toBeVisible()
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c']])
+  },
+}
+
+// The app drops the chat while the dialog is still asking: confirming has nothing left to delete.
+export const ConfirmAfterTheChatIsGone: Story = {
+  render: (args) => <Staged {...args} />,
+  play: async ({ canvas, args }) => {
+    await userEvent.click(await within(await openMenu(canvas, 'Launch brief draft')).findByRole('menuitem', { name: 'Delete' }))
+    const dialog = await page().findByRole('alertdialog', { name: 'Delete this chat?' })
+    // The page behind a modal dialog is hidden from assistive technology, so the button is asked for as hidden.
+    canvas.getByRole('button', { name: 'Remove elsewhere', hidden: true }).click()
+    await waitFor(() => expect(canvas.queryByRole('button', { name: 'Launch brief draft', hidden: true })).toBeNull())
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Delete' }))
+    await waitFor(() => expect(page().queryByRole('alertdialog')).toBeNull())
+    await expect(canvas.queryByRole('button', { name: 'Undo' })).toBeNull()
+    await expect(canvas.getByRole('status')).toBeEmptyDOMElement()
+    await userEvent.click(canvas.getByRole('button', { name: 'Leave' }))
+    await expect(await canvas.findByText('Gone')).toBeVisible()
+    await expect(args.onDelete).not.toHaveBeenCalled()
+  },
+}
+
+// The app saves the pin first and moves the row a moment later: the cursor is still carried to the moved row.
+export const PinAppliedLater: Story = {
+  render: (args) => <Staged {...args} pinAfter={300} />,
+  play: async ({ canvas }) => {
+    await userEvent.click(await within(await openMenu(canvas, 'Launch brief draft')).findByRole('menuitem', { name: 'Pin' }))
+    await waitFor(() => expect(within(canvas.getByRole('list', { name: 'Pinned' })).getByText('Launch brief draft')).toBeVisible(), { timeout: 3000 })
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toHaveFocus())
+  },
+}
+
+// Never pulled away from where the person went in the meantime.
+export const PinAppliedLaterLeavesFocusAlone: Story = {
+  render: (args) => <Staged {...args} pinAfter={300} />,
+  play: async ({ canvas }) => {
+    await userEvent.click(await within(await openMenu(canvas, 'Launch brief draft')).findByRole('menuitem', { name: 'Pin' }))
+    const newChat = canvas.getByRole('button', { name: 'New chat' })
+    await userEvent.click(newChat)
+    await waitFor(() => expect(within(canvas.getByRole('list', { name: 'Pinned' })).getByText('Launch brief draft')).toBeVisible(), { timeout: 3000 })
+    await pause(100)
+    await expect(newChat).toHaveFocus()
+  },
+}
+
+// The usage guide says to open this list in the app's own sheet. Escape and Enter in the rename field belong to the
+// field: they must not also close the sheet around it.
+export const RenameInsideASheet: Story = {
+  render: (args) => (
+    <Sheet>
+      <SheetTrigger render={<Button variant="outline" />}>Past chats</SheetTrigger>
+      <SheetContent side="left">
+        <SheetHeader>
+          <SheetTitle>Chats</SheetTitle>
+          <SheetDescription>Pick up an earlier conversation.</SheetDescription>
+        </SheetHeader>
+        <div className="px-2"><Owned {...args} className={undefined} /></div>
+      </SheetContent>
+    </Sheet>
+  ),
+  play: async ({ canvas, args }) => {
+    // Opened by a press, so the Docs page shows the button and not a sheet over the whole page.
+    await userEvent.click(canvas.getByRole('button', { name: 'Past chats' }))
+    const sheet = await page().findByRole('dialog', { name: 'Chats' })
+    const inSheet = within(sheet)
+    await waitFor(() => expect(inSheet.getByRole('button', { name: 'Launch brief draft' })).toBeVisible())
+    await userEvent.click(await within(await openMenu(inSheet, 'Launch brief draft')).findByRole('menuitem', { name: 'Rename' }))
+    const field = await inSheet.findByRole('textbox', { name: 'Rename Launch brief draft' })
+    await waitFor(() => expect(field).toHaveFocus())
+    await userEvent.keyboard(' changed{Escape}')
+    // Cancelled, the sheet still open, the cursor back on the row.
+    const row = await inSheet.findByRole('button', { name: 'Launch brief draft' })
+    await waitFor(() => expect(row).toHaveFocus())
+    await pause(350)
+    await expect(page().getByRole('dialog', { name: 'Chats' })).toBeVisible()
+    await expect(args.onRename).not.toHaveBeenCalled()
+    // Enter saves, and the sheet stays.
+    await userEvent.click(await within(await openMenu(inSheet, 'Launch brief draft')).findByRole('menuitem', { name: 'Rename' }))
+    await waitFor(() => expect(inSheet.getByRole('textbox', { name: 'Rename Launch brief draft' })).toHaveFocus())
+    await userEvent.keyboard('Launch brief v3{Enter}')
+    await waitFor(() => expect(inSheet.getByRole('button', { name: 'Launch brief v3' })).toHaveFocus())
+    await expect(args.onRename).toHaveBeenCalledWith('c', 'Launch brief v3')
+    await expect(page().getByRole('dialog', { name: 'Chats' })).toBeVisible()
+    // Close it, so the a11y scan that follows reads the page and not a modal's focus guards.
+    await userEvent.click(inSheet.getByRole('button', { name: 'Close' }))
+    await waitFor(() => expect(page().queryByRole('dialog')).toBeNull())
+  },
+}
+
+// Safari confirms an input-method word with Enter, isComposing false and keyCode 229: that is not "save".
+export const RenameIgnoresEnterKeyCode229: Story = {
+  render: (args) => <Owned {...args} />,
+  play: async ({ canvas, args }) => {
+    await userEvent.click(await within(await openMenu(canvas, 'Launch brief draft')).findByRole('menuitem', { name: 'Rename' }))
+    const field = await canvas.findByRole('textbox', { name: 'Rename Launch brief draft' })
+    await waitFor(() => expect(field).toHaveFocus())
+    await userEvent.keyboard('ni')
+    const evt = new KeyboardEvent('keydown', { key: 'Enter', keyCode: 229, bubbles: true })
+    if (evt.keyCode !== 229) Object.defineProperty(evt, 'keyCode', { get: () => 229 })
+    field.dispatchEvent(evt)
+    await pause(50)
+    await expect(args.onRename).not.toHaveBeenCalled()
+    await expect(canvas.getByRole('textbox', { name: 'Rename Launch brief draft' })).toHaveFocus()
+    // A real Enter still saves.
+    await userEvent.keyboard('{Enter}')
+    await waitFor(() => expect(args.onRename).toHaveBeenCalledWith('c', 'ni'))
+  },
+}
+
+// The server and the browser must put each chat in the same group, whatever zone each of them runs in.
+export const SameGroupsInAnyTimeZone: Story = {
+  args: { now: new Date('not a date') },
+  play: async ({ canvasElement }) => {
+    const now = new Date('2026-10-05T02:00:00Z')
+    const evening: Conversation[] = [{ id: 'x', title: 'This evening', updatedAt: '2026-10-04T20:00:00Z' }]
+    const labels = (chats: Conversation[], zone?: string) => groupConversations(chats, now, 'en-US', zone).map((group) => group.label)
+    await expect(labels(evening, 'America/Los_Angeles')).toEqual(['Today'])
+    await expect(labels(evening, 'UTC')).toEqual(['Yesterday'])
+    const monthEdge: Conversation[] = [{ id: 'y', title: 'Month edge', updatedAt: '2026-09-01T03:00:00Z' }]
+    await expect(labels(monthEdge, 'America/Los_Angeles')).toEqual(['August 2026'])
+    await expect(labels(monthEdge, 'UTC')).toEqual(['September 2026'])
+    // A zone name that is not one falls back to the runtime's own zone instead of throwing.
+    await expect(labels(evening, 'Mars/Olympus_Mons')).toEqual(labels(evening))
+    // A `now` that is not a date falls back to the moment the list was first drawn: the sample still reads by day.
+    await expect(groupLabels(canvasElement)).toEqual(['Pinned', 'Today', 'Yesterday', 'Previous 7 days'])
+  },
+}
+
+// The prop reaches the list: the same chat is under Today for a person in Los Angeles and Yesterday for one in UTC.
+export const TimeZoneProp: Story = {
+  render: (args) => (
+    <div className="grid gap-4">
+      {['America/Los_Angeles', 'UTC'].map((zone) => (
+        <ConversationHistory key={zone} className={args.className} label={zone} timeZone={zone} now={new Date('2026-10-05T02:00:00Z')}
+          conversations={[{ id: 'x', title: 'This evening', updatedAt: '2026-10-04T20:00:00Z' }]} />
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expect(within(canvas.getByRole('navigation', { name: 'America/Los_Angeles' })).getByRole('list', { name: 'Today' })).toBeVisible()
+    await expect(within(canvas.getByRole('navigation', { name: 'UTC' })).getByRole('list', { name: 'Yesterday' })).toBeVisible()
+  },
+}
+
+// Zero commits as soon as nothing holds the line. A negative number, or one that is not a number, is not a time at
+// all: it is treated as the default six seconds instead of deleting at once.
+export const UndoSecondsEdges: Story = {
+  render: (args) => (
+    <div className="grid gap-4">
+      <ConversationHistory className={args.className} label="Zero" now={NOW} undoSeconds={0} conversations={[CHATS[1]]} onDelete={args.onDelete} />
+      <ConversationHistory className={args.className} label="Negative" now={NOW} undoSeconds={-3} conversations={[CHATS[2]]} onDelete={args.onDelete} />
+      <ConversationHistory className={args.className} label="Not a number" now={NOW} undoSeconds={Number.NaN} conversations={[CHATS[3]]} onDelete={args.onDelete} />
+    </div>
+  ),
+  play: async ({ canvas, args }) => {
+    for (const [list, title] of [['Zero', 'Q3 signups vs target'], ['Negative', 'Launch brief draft'], ['Not a number', 'Pricing page copy ideas']]) {
+      await confirmDelete(canvas, title)
+      const undo = await within(canvas.getByRole('navigation', { name: list })).findByRole('button', { name: 'Undo' })
+      await waitFor(() => expect(undo).toHaveFocus())
+      // Held while the cursor is on the line, whatever the number.
+      await pause(150)
+      undo.blur()
+      if (list === 'Zero') await waitFor(() => expect(args.onDelete).toHaveBeenCalledWith('b'))
+      else await pause(500)
+      await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['b']])
+      await waitFor(() => expect(page().queryByRole('alertdialog')).toBeNull())
+    }
+  },
+}
+
+// Cmd, Ctrl, Shift or Alt with a press on a link row opens the chat in a new tab or window; this page's open chat
+// has not changed, so the app is not told it did.
+export const ModifierClickOnALink: Story = {
+  args: LongAndLinked.args,
+  play: async ({ canvas, args }) => {
+    const link = canvas.getByRole('link', { name: 'Opens as a link' })
+    link.addEventListener('click', (event) => event.preventDefault())
+    for (const modifier of ['metaKey', 'ctrlKey', 'shiftKey', 'altKey']) await fireEvent.click(link, { [modifier]: true })
+    await expect(args.onSelect).not.toHaveBeenCalled()
+    await fireEvent.click(link)
+    await expect(args.onSelect).toHaveBeenCalledWith('link')
   },
 }
