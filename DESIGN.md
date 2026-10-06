@@ -18,8 +18,8 @@ the text between the markers; the same renderer feeds llms.txt.
 - `registry/themes/quill.css` — the shipped token layer an app installs (it lands
   as `app/quill-theme.css`); `src/app/globals.css` is the site's cut of the same
   source.
-- `registry/blocks` and `registry/lib` — the 54 blocks and the sixteen shipped
-  components (`agent-steps`, `ai-badge`, `ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts`, `tone-badge`).
+- `registry/blocks` and `registry/lib` — the 55 blocks and the eighteen shipped
+  components (`agent-steps`, `ai-badge`, `ai-button`, `ai-feedback`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`, `approval-card`, `citations`, `icon`, `model-picker`, `prompt-composer`, `question-card`, `suggested-prompts`, `tone-badge`, `usage-meter`).
 - `src/components/ui` — the stock shadcn primitives the token layer restyles
   (apps install these from shadcn, not from Quill).
 - `public/usage` — one usage page per component and block, generated from
@@ -367,12 +367,12 @@ border for `ring`.
 Primitives are **stock shadcn** (Base UI + Tailwind) restyled by the token layer —
 Quill does not re-ship its own Button, Card or Input. Apps install them with
 `npx shadcn@latest add button …`; the site's copies live in `src/components/ui`
-and are what the entries below describe. Quill ships sixteen components of its own
+and are what the entries below describe. Quill ships eighteen components of its own
 through the registry — `icon` (`registry/lib/icon.tsx`), `tone-badge`
 (`registry/lib/tone-badge.tsx`), and the AI kit (`agent-steps`, `ai-badge`,
-`ai-button`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`,
+`ai-button`, `ai-feedback`, `ai-mark`, `ai-message`, `ai-notice`, `ai-popover`, `ai-thinking`,
 `approval-card`, `citations`, `model-picker`, `prompt-composer`, `question-card`,
-`suggested-prompts`) — plus 54 blocks under `registry/blocks`. The
+`suggested-prompts`, `usage-meter`) — plus 55 blocks under `registry/blocks`. The
 per-component rules live in `public/usage` (one page per name), written once in
 `src/usage`.
 

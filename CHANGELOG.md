@@ -13,6 +13,29 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.20.0] — 2026-10-05
+
+### Added
+- **The last AI pieces (AI kit Phase 4).**
+  - **`usage-meter`** — how much AI credit is left: the number, a bar, when it renews, what the rest will buy, and a breakdown. A card for settings, the bar on its own, and a compact ring for a composer footer. A low meter turns terracotta and says "Running low" in words. The track is lighter in the light themes so the gradient reads 3:1 against it, and the compact ring always draws at least a sliver when anything is left.
+  - **`ai-feedback`** — asks what was wrong after a thumbs-down: a few reasons to pick from, an optional note, and Send, which waits for one or the other. It opens under the answer, and after sending it becomes one line of thanks. After Send, keyboard focus moves to the thank-you line; inside a reply, closing the form returns focus to the thumbs-down.
+  - **`conversation-history`** — a block: past chats grouped by Pinned, Today, Yesterday, Previous 7 days and earlier months, with a menu on each row to rename, pin or delete. The list is `ConversationHistory`; `ConversationSidebar` docks the same list in the stock Sidebar.
+    - Rename happens in place: Enter saves, Escape cancels, and neither key closes a sheet around the list.
+    - Delete asks first, then leaves Undo in the list for a few seconds.
+    - The open chat has a fill and a thin outline.
+    - `onDelete` is called exactly once per confirmed delete: after the Undo time, when the list is removed, or when the page is closed.
+    - An optional `timeZone` (with `now`) makes a server and a browser put each chat in the same group.
+    - It takes an app's own chats; without them it shows a sample. With your own `conversations`, only the actions you wired are offered.
+- **`ai-meter`**, a seventh AI utility: the still, left-to-right gradient fill of a usage bar.
+- `AiMessage` takes `feedbackForm`, drawn under the reply's actions only while thumbs-down is pressed. Nothing changes for a reply that does not pass it.
+- One new icon in the core set, `keep` (97 names).
+- Figma twins for all three.
+
+### Changed
+- **The AI gradient rule has a seventh placement: the fill of an AI usage meter.** A low or empty meter is never the gradient.
+- The agent rules file counts Quill's shipped components in its first line instead of listing them; the names are still in its Primitives section.
+- `ai-side-panel`'s usage guide points to `conversation-history` for the History button.
+
 ## [1.19.1] — 2026-10-06
 
 ### Changed
