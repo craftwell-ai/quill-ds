@@ -1142,6 +1142,23 @@
       "docs": "An AI agent asks the person to choose — the question, options as full rows with the recommended one first, a free-text row for anything else, and Continue that waits for an answer. Do: Give every option a title and one line on what choosing it means. Don't: Offer a row of bare buttons — people cannot weigh options they have to guess at. Do: Pass the agent's pick as recommended so it comes first with the moss tag. Don't: Tag several options as recommended, or bury the recommendation in the middle of the list. Do: Keep the free-text row, and offer Skip when the agent can decide for itself. Don't: Force a choice between options when none of them may fit. Use radio-group when an ordinary form asks the question; no AI agent is waiting on it. Use approval-card when the agent already knows what it wants to do and needs a yes or a no."
     },
     {
+      "name": "usage-meter",
+      "type": "registry:ui",
+      "title": "Usage meter",
+      "description": "Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer.",
+      "registryDependencies": [
+        "progress"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/usage-meter.tsx",
+          "target": "components/ui/usage-meter.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer. Do: Let a low meter say \"Running low\" in words; the bar and the ring turn terracotta as well. Don't: Signal low credit with colour alone — people who cannot tell the colours apart see a normal meter. Do: Keep the AI gradient on the fill of the bar and the ring. Everything else on the card is plain. Don't: Put the gradient on the number, the card or the \"Get more\" button, or keep it on a low meter. Do: Add a plain-language line (\"About 150 more long answers\") so the number means something. Don't: Show a bare count of credits or tokens and leave people to work out what it buys. Do: Use the compact ring where space is tight: a composer footer, a sidebar. Don't: Redraw the compact meter as a filled pie wedge, or drop its text and leave the ring alone. Use progress when the bar shows how far a task has got, not how much of an allowance is left. Use stat-cards when the number is a business metric on a dashboard, not an allowance being spent. Use ai-notice when you only need one line of small print under the composer, with no amount."
+    },
+    {
       "name": "ai-popover",
       "type": "registry:ui",
       "title": "AI popover",
@@ -1885,6 +1902,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/tooltip.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/tooltip.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/usage-meter.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/usage-meter.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/wizard.md",

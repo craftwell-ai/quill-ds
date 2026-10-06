@@ -621,6 +621,11 @@ declare module '@/usage/tooltip.usage.mjs' {
   export const usage: Usage
 }
 
+declare module '@/usage/usage-meter.usage.mjs' {
+  import type { Usage } from '@/usage/types'
+  export const usage: Usage
+}
+
 declare module '@/usage/wizard.usage.mjs' {
   import type { Usage } from '@/usage/types'
   export const usage: Usage

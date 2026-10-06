@@ -126,6 +126,7 @@ import { usage as toggle } from './toggle.usage.mjs'
 import { usage as toggleGroup } from './toggle-group.usage.mjs'
 import { usage as toneBadge } from './tone-badge.usage.mjs'
 import { usage as tooltip } from './tooltip.usage.mjs'
+import { usage as usageMeter } from './usage-meter.usage.mjs'
 import { usage as wizard } from './wizard.usage.mjs'
 
 export const ALL_USAGE = [
@@ -252,5 +253,6 @@ export const ALL_USAGE = [
   toggleGroup,
   toneBadge,
   tooltip,
+  usageMeter,
   wizard,
 ]
