@@ -22,6 +22,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const fillOf = (root: Element) => root.querySelector('[data-slot="progress-indicator"]') as HTMLElement
+const STOP = /(?:rgba?|oklab|oklch|color)\([^()]*(?:\([^()]*\)[^()]*)*\)/g
 const trackOf = (root: Element) => root.querySelector('[data-slot="progress-track"]') as HTMLElement
 
 export const Card: Story = {
@@ -60,15 +61,53 @@ export const Bar: Story = {
 export const RunningLow: Story = {
   args: { variant: 'bar', remaining: 120 },
   play: async ({ canvas, canvasElement }) => {
-    // Said in words, in view and in the value a screen reader hears.
+    // Said in words beside the amount, in view and in the value a screen reader hears; the total never goes away.
     await expect(canvas.getByText('Running low')).toBeVisible()
+    await expect(canvas.getByText('of 5,000')).toBeVisible()
+    await expect(canvasElement.querySelector('[data-slot="usage-bar"] p span')).toHaveTextContent('120 left · Running low')
     await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuetext', '120 of 5,000 credits left. Running low')
-    // A low meter is terracotta, never the gradient.
-    await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toBe('none')
+    await expect(canvasElement.querySelector('[data-slot="usage-meter"]')).toHaveAttribute('data-low', 'true')
+    // A low meter keeps the gradient: the bar does not change colour.
+    await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toContain('linear-gradient')
     const track = compositeOver(getComputedStyle(trackOf(canvasElement)).backgroundColor, `rgb(${surfaceBehind(trackOf(canvasElement)).join(' ')})`)
-    const fill = compositeOver(getComputedStyle(fillOf(canvasElement)).backgroundColor, `rgb(${track.join(' ')})`)
-    console.log(`usage-meter low fill on track ${contrastRatio(fill, track).toFixed(2)}:1`)
-    await expect(contrastRatio(fill, track)).toBeGreaterThanOrEqual(3)
+    const stops = getComputedStyle(fillOf(canvasElement)).backgroundImage.match(STOP) ?? []
+    const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
+    console.log(`usage-meter low fill stops on track ${ratios.map((ratio) => ratio.toFixed(2)).join(' / ')}`)
+    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
+  },
+}
+
+export const RunningLowCard: Story = {
+  args: { remaining: 120 },
+  play: async ({ canvas, canvasElement }) => {
+    const card = canvas.getByRole('group', { name: 'AI credits' })
+    await expect(within(card).getByText('Running low')).toBeVisible()
+    await expect(within(card).getByText('of 5,000')).toBeVisible()
+    await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toContain('linear-gradient')
+  },
+}
+
+// The total must stay on the bar's line, inside its box, when the bar is narrow and the left group has more to say.
+export const RunningLowNarrow: Story = {
+  args: { variant: 'bar', remaining: 120 },
+  decorators: [(Story) => <div className="w-[15rem]"><Story /></div>],
+  play: async ({ canvas, canvasElement }) => {
+    const root = canvasElement.querySelector('[data-slot="usage-meter"]') as HTMLElement
+    const total = canvas.getByText('of 5,000').getBoundingClientRect()
+    const box = root.getBoundingClientRect()
+    await expect(box.width).toBeCloseTo(240, 0)
+    await expect(total.right).toBeLessThanOrEqual(box.right + 0.5)
+    await expect(total.left).toBeGreaterThanOrEqual(box.left - 0.5)
+    // The total is one line, not broken across two.
+    await expect(total.height).toBeLessThan(24)
+    await expect(root.scrollWidth).toBeLessThanOrEqual(Math.ceil(box.width))
+    await expect(canvas.getByText('Running low')).toBeVisible()
+    // Squeezed well past the brief, the left group still wraps rather than push the total out.
+    root.parentElement!.style.width = '10rem'
+    const squeezed = canvas.getByText('of 5,000').getBoundingClientRect()
+    await expect(squeezed.right).toBeLessThanOrEqual(root.getBoundingClientRect().right + 0.5)
+    await expect(squeezed.height).toBeLessThan(24)
+    await expect(root.scrollWidth).toBeLessThanOrEqual(Math.ceil(root.getBoundingClientRect().width))
   },
 }
 
@@ -95,9 +134,22 @@ export const CompactLow: Story = {
   decorators: [(Story) => <div className="grid place-items-center"><Story /></div>],
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector('[data-slot="usage-meter"]') as HTMLElement
-    await expect(root).toHaveTextContent('Running low · 120 left')
+    // The ring looks the same low or not: what a sighted person reads is exactly the ordinary line.
+    const seen = root.cloneNode(true) as HTMLElement
+    seen.querySelectorAll('.sr-only').forEach((node) => node.remove())
+    await expect(seen.textContent?.trim()).toBe('120 credits left')
+    await expect(root).toHaveAttribute('data-low', 'true')
+    // Low is for screen readers only.
+    await expect(root.querySelector('.sr-only')).toHaveTextContent('Running low:')
+    await expect(root).toHaveTextContent('Running low: 120 credits left of 5,000')
+    await expect(getComputedStyle(root).fontWeight).not.toBe('600')
+    const probe = document.createElement('span')
+    probe.className = 'text-muted-foreground'
+    root.parentElement!.append(probe)
+    await expect(getComputedStyle(root).color).toBe(getComputedStyle(probe).color)
+    probe.remove()
     const arc = root.querySelector('[data-slot="usage-arc"]') as SVGCircleElement
-    await expect(arc.getAttribute('stroke')).toBeNull()
+    await expect(arc.getAttribute('stroke')).toMatch(/^url\(#/)
   },
 }
 
@@ -140,7 +192,7 @@ export const FillReadsOnItsTrack: Story = {
   args: { variant: 'bar', remaining: 5000 },
   play: async ({ canvasElement }) => {
     const track = compositeOver(getComputedStyle(trackOf(canvasElement)).backgroundColor, `rgb(${surfaceBehind(trackOf(canvasElement)).join(' ')})`)
-    const stops = getComputedStyle(fillOf(canvasElement)).backgroundImage.match(/(?:rgba?|oklab|oklch|color)\([^()]*(?:\([^()]*\)[^()]*)*\)/g) ?? []
+    const stops = getComputedStyle(fillOf(canvasElement)).backgroundImage.match(STOP) ?? []
     await expect(stops.length).toBeGreaterThanOrEqual(3)
     // Log every stop first so one failure does not hide the others.
     const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
@@ -164,8 +216,10 @@ export const RingReadsOnItsTrack: Story = {
   },
 }
 
-// A "has not vanished" guard, not a WCAG number: the floor (1.08:1) is chosen from the measured values (light themes about 1.10,
-// dark about 1.2). The fill, not the track, is what must reach 3:1 (FillReadsOnItsTrack).
+// A "has not vanished" guard, not a WCAG number: the floor (1.08:1) is chosen from the measured values. With the light track at
+// bg-muted/80 the track on its surface measures 1.13 in Dawn and 1.12 in Classic Light (it was 1.10 and 1.09 at /60); the dark
+// themes, at full bg-muted, 1.17 to 1.25. The fill, not the track, is what must reach 3:1 (FillReadsOnItsTrack): at /80 its
+// weakest stop (the mid one) reads 3.04 on Dawn and 3.56 on Classic Light.
 export const TrackReadsAsATrack: Story = {
   args: { variant: 'bar', remaining: 1500 },
   play: async ({ canvasElement }) => {
@@ -183,7 +237,7 @@ export const DoDont: Story = {
     <DoDontPair usage={usage} id="low-says-so-in-words"
       doExample={<div className="w-80 max-w-full"><UsageMeter variant="bar" remaining={120} total={5000} /></div>}
       dontExample={(
-        // Hand-built on purpose: a low meter that only changed colour, with the ordinary "of 5,000" and no words.
+        // Hand-built on purpose: a low meter with a short fill and no words, so the shortness is all that says it.
         <div className="w-80 max-w-full text-sm">
           <div className="grid gap-1.5">
             <p className="flex items-baseline justify-between gap-3 text-sm tabular-nums">
@@ -191,7 +245,7 @@ export const DoDont: Story = {
               <span className="text-muted-foreground">of 5,000</span>
             </p>
             <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-muted/60 dark:bg-muted">
-              <div className="h-full w-[2.4%] rounded-full bg-terracotta-deep" />
+              <div className="ai-meter h-full w-[2.4%] rounded-full" />
             </div>
           </div>
         </div>

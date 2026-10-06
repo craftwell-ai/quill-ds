@@ -38,12 +38,11 @@ export type UsageMeterProps = {
 const finite = (value: number) => (Number.isFinite(value) ? value : 0)
 
 // The stock Progress draws its own track and fill; these reach them by the data-slot it gives each.
-// The track sits between the card and the fill, and the fill must read 3:1 against it in every theme. The light themes need it
-// lighter for that; the dark themes pass at full strength, and a lighter track there all but vanishes against the card.
-const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-muted/60 dark:[&_[data-slot=progress-track]]:bg-muted'
-// The one place the AI gradient sits here. A low meter is terracotta instead: the gradient means AI, not "nearly out".
+// The track sits between the card and the fill, and the fill must read 3:1 against it in every theme. The light themes need it a touch
+// lighter than full strength for that (80%: darker than the first cut, 60%, and the mid stop still reads 3.04:1 in Dawn); the dark themes pass at full strength, and a lighter track there all but vanishes against the card.
+const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-muted/80 dark:[&_[data-slot=progress-track]]:bg-muted'
+// The one place the AI gradient sits here. A low meter keeps it: "running low" is said in words, the bar never changes colour.
 const FILL = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:ai-meter'
-const FILL_LOW = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:bg-terracotta-deep'
 
 /** Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer. */
 export function UsageMeter({
@@ -66,7 +65,7 @@ export function UsageMeter({
   if (variant === 'compact') {
     return (
       <span data-slot="usage-meter" data-variant="compact" data-low={low || undefined}
-        className={cn('inline-flex items-center gap-2 text-xs tabular-nums', low ? 'font-semibold text-destructive' : 'text-muted-foreground', className)}>
+        className={cn('inline-flex items-center gap-2 text-xs tabular-nums text-muted-foreground', className)}>
         {/* Turned a quarter so the arc starts at the top. A ring that fills around its edge, never a pie wedge. */}
         <svg aria-hidden width="18" height="18" viewBox="0 0 18 18" className="shrink-0 -rotate-90">
           <defs>
@@ -76,16 +75,18 @@ export function UsageMeter({
               <stop offset="1" stopColor="var(--ai-to)" />
             </linearGradient>
           </defs>
-          <circle data-slot="usage-ring-track" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" className="stroke-muted/60 dark:stroke-muted" />
+          <circle data-slot="usage-ring-track" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" className="stroke-muted/80 dark:stroke-muted" />
           {/* No arc at zero: a zero-length stroke with round caps still paints a dot. For the same reason any share above zero draws at least 1 of 100: under half a percent would round to a dash of 0. */}
           {share > 0 ? (
             <circle data-slot="usage-arc" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" strokeLinecap="round" pathLength={100}
-              strokeDasharray={`${Math.max(1, Math.round(share * 100))} 100`} stroke={low ? undefined : `url(#${gradientId})`} className={low ? 'stroke-terracotta-deep' : undefined} />
+              strokeDasharray={`${Math.max(1, Math.round(share * 100))} 100`} stroke={`url(#${gradientId})`} />
           ) : null}
         </svg>
+        {/* The visible line is the same low or not; low is for screen readers only, said before the amount. */}
         <span>
-          {low ? `${lowLabel} · ${short.format(left)} left` : `${short.format(left)} ${unit} left`}
-          <span className="sr-only"> of {whole.format(max)}{low ? ` ${unit}` : ''}</span>
+          {low ? <span className="sr-only">{lowLabel}: </span> : null}
+          {short.format(left)} {unit} left
+          <span className="sr-only"> of {whole.format(max)}</span>
         </span>
       </span>
     )
@@ -93,14 +94,16 @@ export function UsageMeter({
 
   const meter = (
     <div data-slot="usage-bar" className="grid gap-1.5">
-      <p className="flex items-baseline justify-between gap-3 text-sm tabular-nums">
-        <span className="text-ink-soft"><span className="text-base font-semibold text-foreground">{whole.format(left)}</span> left</span>
-        {low
-          ? <span className="font-semibold text-destructive">{lowLabel}</span>
-          : <span className="text-muted-foreground">of {whole.format(max)}</span>}
+      {/* The total always shows and never shrinks; on a narrow bar the left group wraps under itself instead. */}
+      <p className="flex items-baseline justify-between gap-x-3 text-sm tabular-nums">
+        <span className="min-w-0 text-ink-soft">
+          <span className="text-base font-semibold text-foreground">{whole.format(left)}</span> left
+          {low ? <>{' · '}<span className="font-semibold text-destructive">{lowLabel}</span></> : null}
+        </span>
+        <span className="shrink-0 whitespace-nowrap text-muted-foreground">of {whole.format(max)}</span>
       </p>
       {/* max must be above zero for the primitive; with no allowance the bar is simply empty. */}
-      <Progress aria-label={`${label} left`} value={left} max={max > 0 ? max : 1} getAriaValueText={() => spoken} className={cn(TRACK, low ? FILL_LOW : FILL)} />
+      <Progress aria-label={`${label} left`} value={left} max={max > 0 ? max : 1} getAriaValueText={() => spoken} className={cn(TRACK, FILL)} />
     </div>
   )
 

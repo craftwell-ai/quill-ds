@@ -11,14 +11,14 @@ export const usage = {
   rules: [
     {
       id: 'low-says-so-in-words',
-      do: 'Let a low meter say "Running low" in words; the bar and the ring turn terracotta as well.',
-      dont: 'Signal low credit with colour alone — people who cannot tell the colours apart see a normal meter.',
+      do: 'Let a low bar or card say "Running low" in words beside the amount; the bar itself does not change colour.',
+      dont: 'Rely on the short fill alone to say credit is low.',
       visual: true,
     },
     {
       id: 'gradient-is-the-fill-only',
       do: 'Keep the AI gradient on the fill of the bar and the ring. Everything else on the card is plain.',
-      dont: 'Put the gradient on the number, the card or the "Get more" button, or keep it on a low meter.',
+      dont: 'Put the gradient on the number, the card or the "Get more" button.',
       visual: false,
     },
     {
@@ -29,17 +29,18 @@ export const usage = {
     },
     {
       id: 'ring-not-pie',
-      do: 'Use the compact ring where space is tight: a composer footer, a sidebar.',
+      do: 'Use the compact ring where space is tight: a composer footer, a sidebar. It looks the same whether or not credit is low.',
       dont: 'Redraw the compact meter as a filled pie wedge, or drop its text and leave the ring alone.',
       visual: false,
     },
   ],
   a11y: [
     'The bar is the stock Progress: a progressbar named by the label plus "left" ("AI credits left"), whose value text is the whole sentence ("1,500 of 5,000 credits left"), with ". Running low" added when it is low.',
-    'Low credit is said in visible words in every variant, never by colour alone.',
+    'On the bar and the card, low credit is said in visible words ("Running low", beside the amount), never by the fill alone; the total ("of 5,000") stays on the line.',
+    'On the compact ring the visible line does not change when credit is low, so low is said to screen readers only: "Running low: " is read before the amount.',
     'The card is a group named by its label. The breakdown is a table with row headers and a caption for screen readers.',
-    'The compact ring is decoration (aria-hidden); the text beside it carries the amount, and screen readers also hear the total.',
+    'The compact ring is decoration (aria-hidden); the text beside it carries the amount, and screen readers also hear the total, and "Running low: " first when it is low.',
     'The gradient itself does not animate; the fill only eases to its new width when the amount changes, as the stock Progress does.',
   ],
-  tokens: ['--card', '--border', '--muted', '--muted-foreground', '--foreground', '--destructive', '--terracotta-deep', '--ai-from', '--ai-text-from', '--ai-via', '--ai-to'],
+  tokens: ['--card', '--border', '--muted', '--muted-foreground', '--foreground', '--destructive', '--ai-from', '--ai-text-from', '--ai-via', '--ai-to'],
 }
