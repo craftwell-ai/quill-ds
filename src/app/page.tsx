@@ -28,7 +28,7 @@ import { Switch } from "@/components/ui/switch";
 // Footer version stamp reads the real version so it can never drift.
 import packageJson from "../../package.json";
 
-// The masthead shows major.minor only ("0.18"); the footer carries the full version with its patch number.
+// The masthead shows major.minor only ("1.19"); the footer carries the full version with its patch number.
 const displayVersion = packageJson.version.split(".").slice(0, 2).join(".");
 
 const STORYBOOK_URL = "/storybook/";
