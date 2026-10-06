@@ -440,17 +440,18 @@ stamps in `sync-state.json` read 2026-10-05: the scripts write the UTC date.
 ### AI kit twins, Phase 4 (2026-10-05)
 
 Code twins in `registry/lib` (the `src/components/ui` files are re-export shims, declined in `sync-state.json`) and, for the
-chat row, in `registry/blocks/conversation-history.tsx`. Four entries are in `components`, entered from a REST read of each
+chat row, in `registry/blocks/conversation-history.tsx`. Three entries are in `components` (`UsageMeter`, `AiFeedbackForm`, `ChatRow`), entered from a REST read of each
 node (`extractComponent`), and `node scripts/figma-drift.mjs` reports every one in sync. A set is tracked through the variant
 named below. Sample copy is each piece's first story. The stamps in `sync-state.json` read 2026-10-06: the scripts write
-the UTC date. Phase 4 adds no variable and no style.
+the UTC date. Phase 4 adds no variable and no style. The twins were redrawn on 2026-10-06 after the review of the
+preview (the gradient stays when low, one reason from a dropdown, a bigger More icon, an Undo icon); this section
+describes them as they are now.
 
 | Twin | Page (id) | Node | Structure | Key bindings |
 |---|---|---|---|---|
-| UsageMeter | ❖ Usage meter (1210:5) | set **1212:94** | Variant=card, Low=false (1212:2, tracked) · card, Low=true (1212:32) · bar, false (1212:62) · bar, true (1212:72) · compact, false (1212:82) · compact, true (1212:88); card 380 wide, bar 320 wide, compact hugs | card: semantic/card, semantic/border @ border-width/1, radius/xl, padding space/4, gap space/3, Elevation/sm. Header (baseline-aligned, space between): "AI credits" text/sm semibold in semantic/foreground, "Renews 1 November" Text/xs in semantic/muted-foreground. Usage bar (gap space/1_5): "1,500" text/base semibold in semantic/foreground + "left" Text/sm in color/ink-soft (gap space/1), "of 5,000" Text/sm in semantic/muted-foreground; track height space/1_5, radius/4xl, tint/muted/50; fill 30 % wide, radius/4xl, the `ai-meter` gradient. Estimate Text/xs in semantic/muted-foreground. Breakdown: three rows, py space/1_5, a top rule in semantic/border @ border-width/1, label Text/xs in semantic/foreground, value in semantic/muted-foreground. ❖ Button outline "Get more credits", right-aligned. Low=true: "120", a 2.4 % fill in color/terracotta-deep, and "Running low" (text/sm semibold, semantic/destructive) in place of "of 5,000". bar: the Usage bar alone. compact: gap space/2, an 18px ring and Text/xs "1.5K credits left" in semantic/muted-foreground; Low=true: "Running low · 120 left" text/xs semibold in semantic/destructive |
-| AiFeedbackForm | ❖ AI feedback (1210:6) | set **1213:74** | State=empty (1213:7, tracked) · ready (1213:40) · sent (1213:72); 480 wide | the Phase 3 card: semantic/card, semantic/border @ border-width/1, radius/xl, px space/4, py 14, gap space/2_5, Elevation/sm. Header (gap space/2): "What was wrong?" text/sm semibold in semantic/foreground, Close. Reasons: a wrapping row, gap space/1_5 both ways, six Reason instances with the default labels (ready: "Too long" is `Selected=true`). A ❖ Textarea instance, height space/16 (the code's `min-h-16`), fill semantic/background, the code's placeholder. Footer (gap space/2): "Sends this answer with your note." Text/xs in semantic/muted-foreground and the ❖ Button default "Send feedback" (empty: its `State=Disabled` variant). sent: no card, only "Thanks, that helps." Text/xs in semantic/muted-foreground under py space/0_5 |
-| Reason | ❖ AI feedback (1210:6) | set **1213:6** | Selected=false (1213:2, tracked) · Selected=true (1213:4); TEXT `Label` | min height space/8, radius/4xl, px space/3, py space/1, a 1px outline @ border-width/1. false: semantic/background, semantic/input outline (the control line: a chip is pressed), Text/sm in color/ink-soft. true: fill and outline semantic/foreground, label semantic/background |
-| ChatRow | ❖ Conversation history (1210:7) | set **1214:21** | State=default (1214:2, tracked) · current (1214:9) · undo (1214:15); 282 wide; TEXT `Title` (default and current) | height space/8, radius/lg. default: no fill, pl space/2_5, pr space/1, title Text/sm in semantic/foreground on one line, the More button at 0 % opacity. current: semantic/muted fill and a 1px semantic/border hairline @ border-width/1 (counted in the layout, so the row stays 32px), title Label/Default (medium), More shown. undo: pl space/2_5, gap space/2, "Deleted “Launch brief draft”" Text/sm in semantic/muted-foreground and a ❖ Button ghost xs "Undo" |
+| UsageMeter | ❖ Usage meter (1210:5) | set **1212:94** | Variant=card, Low=false (1212:2, tracked) · card, Low=true (1212:32) · bar, false (1212:62) · bar, true (1212:72) · compact, false (1212:82) · compact, true (1212:88); card 380 wide, bar 320 wide, compact hugs | card: semantic/card, semantic/border @ border-width/1, radius/xl, padding space/4, gap space/3, Elevation/sm. Header (baseline-aligned, space between): "AI credits" text/sm semibold in semantic/foreground, "Renews 1 November" Text/xs in semantic/muted-foreground. Usage bar (gap space/1_5): "1,500" text/base semibold in semantic/foreground + "left" Text/sm in color/ink-soft (gap space/1), "of 5,000" Text/sm in semantic/muted-foreground; track height space/1_5, radius/4xl, semantic/muted; fill 30 % wide, radius/4xl, the `ai-meter` gradient. Estimate Text/xs in semantic/muted-foreground. Breakdown: three rows, py space/1_5, a top rule in semantic/border @ border-width/1, label Text/xs in semantic/foreground, value in semantic/muted-foreground. ❖ Button outline "Get more credits", right-aligned. Low=true: "120", a 2.4 % fill in the same gradient (a low meter never changes colour), and on the left, after "left", a "·" (Text/sm in color/ink-soft, as "left" is) and "Running low" (text/sm semibold, semantic/destructive), all in the one baseline row at gap space/1; "of 5,000" stays on the right. bar: the Usage bar alone. compact: gap space/2, an 18px ring and Text/xs "1.5K credits left" in semantic/muted-foreground; Low=true is the same meter with a small arc and "120 credits left": no warning words, no red, no bold (code keeps "Running low" for screen readers only there) |
+| AiFeedbackForm | ❖ AI feedback (1210:6) | set **1213:74** | State=empty (1213:7, tracked) · ready (1213:40) · sent (1213:72); 480 wide | the Phase 3 card: semantic/card, semantic/border @ border-width/1, radius/xl, px space/4, py 14, gap space/2_5, Elevation/sm. Header (gap space/2): "What was wrong?" text/sm semibold in semantic/foreground, Close. One live ❖ Select instance (`State=Default`, 96:12), full width, fill semantic/background (the code's `bg-background`): empty shows the placeholder "Choose a reason" in semantic/muted-foreground, ready shows "Too long" in color/ink-soft. A ❖ Textarea instance, height space/16 (the code's `min-h-16`), fill semantic/background, the code's placeholder. Footer (gap space/2): "Sends this answer with your note." Text/xs in semantic/muted-foreground and the ❖ Button default "Send feedback" (empty: its `State=Disabled` variant; ready: the plain default). Both cards are 208 tall. sent: no card, only "Thanks, that helps." Text/xs in semantic/muted-foreground under py space/0_5 |
+| ChatRow | ❖ Conversation history (1210:7) | set **1214:21** | State=default (1214:2, tracked) · current (1214:9) · undo (1214:15); 282 wide; TEXT `Title` (default and current) | height space/8, radius/lg. default: no fill, pl space/2_5, pr space/1, title Text/sm in semantic/foreground on one line, the More button (24px, a 16px icon/more_horiz in color/ink-soft) at 0 % opacity. current: semantic/muted fill and a 1px semantic/border hairline @ border-width/1 (counted in the layout, so the row stays 32px), title Label/Default (medium), More shown. undo: pl space/2_5, gap space/2, "Deleted “Launch brief draft”" Text/sm in semantic/muted-foreground and a ❖ Button ghost xs "Undo" with its start icon on (icon/undo, 12px, semantic/foreground) |
 
 | Block | Page | Page id | Frame id | Notes |
 |---|---|---|---|---|
@@ -460,46 +461,65 @@ the UTC date. Phase 4 adds no variable and no style.
   ai-edge/from, color/ai-via and color/ai-to: the three variables the composer's lit edge (`AI/Edge`) uses, and the same
   mix code writes (`color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from))` is ai-edge/from). Each stop carries the
   variable's Light colour. No paint style: `AI/Edge` is cut at 115° for a stroke, the meter runs at 90°.
-- **The track is tint/muted/50; code is `bg-muted/60`, and full-strength `bg-muted` on the dark themes.** No `tint/muted/60`
-  exists and Phase 4 adds no variable, so the track and the ring's track bind the closest one there is. In Light, over the card, it is
-  within two steps of 255 per channel of code's 60 % (worked out from the token values, not measured). A paint opacity of 0.6 on semantic/muted was not used: it does
-  not survive an instance nested in another component (`../README.md`, "What this manages"). **Known difference:** Figma
-  has no per-mode opacity, so in Dark and Classic Dark the twin's track is 50 % where code draws it at 100 %; it reads
-  fainter in Figma than in the browser (looked at in Dark, 2026-10-05).
+- **The track is semantic/muted at full strength; code is `bg-muted/80` in the light themes and full `bg-muted` in the dark ones.**
+  No `tint/muted/80` exists (the only alpha variable on muted is tint/muted/50) and Phase 4 adds no variable, so the four
+  bar tracks and the two ring tracks bind whichever existing variable lands closer to code in Light. Worked out from the
+  token values (muted #E8DCC0 over card #EFE4CE; not measured): code's 80 % is about 233 / 222 / 195, full strength is
+  232 / 220 / 192 (at most 3 steps of 255 away), tint/muted/50 is about 236 / 224 / 199 (at most 4 away, and on the
+  lighter side, which is the direction the review moved away from). A paint opacity of 0.8 on semantic/muted was not
+  used: it does not survive an instance nested in another component (`../README.md`, "What this manages"). **Light:**
+  the twin's track is a shade darker than the browser's, so the gradient's middle stop reads about 2.93:1 against it
+  where code holds 3.04:1 (the figures in `usage-meter.tsx`'s comment); the contrast rule is code's to keep, not the
+  twin's. **Dark and Classic Dark:** the twin now matches code exactly (both full strength); the fainter dark track
+  recorded on 2026-10-05 is gone.
 - **The bar is the ❖ Progress twin (81:8), detached in place.** An instance takes the height (space/1_5) and the two fills,
   but its fill layer is a fixed 120px that an instance cannot resize (the resize is ignored), so 30 % and 2.4 % cannot be
   drawn on a live instance. Each bar started as a Progress instance, got its overrides, and was detached with its
   bindings kept (height, radius/4xl), the route AiButton took. A change to the Progress twin does not reach UsageMeter.
 - **The ring** is an 18px frame holding two layers that scale with it. `Ring track`: a 14px ellipse, no fill, a 2.5px
-  centred stroke in tint/muted/50 (code's `r="7"`, `strokeWidth="2.5"`). `Arc`: a vector arc on the same circle with
+  centred stroke in semantic/muted (code's `r="7"`, `strokeWidth="2.5"`). `Arc`: a vector arc on the same circle with
   round caps, starting at the top and running clockwise: 108° for the sample's 30 of 100, 7.2° for the low sample's 2 of
   100 (code rounds a share to whole hundredths and never draws less than 1). Its stroke is a linear gradient with stops
   bound to color/ai-text-from, color/ai-via and color/ai-to (the ring's own gradient in code starts at `--ai-text-from`,
   not the bar's mix), running from the ring's bottom left to its top right, as the browser draws it once the svg is
-  turned a quarter. Low=true: the arc is flat color/terracotta-deep. An ellipse with a sweep was not used: its stroke
+  turned a quarter. Low=true: the same gradient on the short arc, its matrix worked out for that arc's own box so the
+  colour at the top of the ring is the one the browser shows there (three quarters of the way along). **The ring does
+  not change when low**: `Variant=compact, Low=true` differs from `Low=false` only in its amount and arc length. It is kept
+  because a variant set must stay a full grid (three variants by two Low values). An ellipse with a sweep was not used: its stroke
   would outline the wedge. To show another share, redraw the arc; a property cannot.
-- **Detached Buttons: one.** Close (AiFeedbackForm) is the ghost `icon-sm` variant detached in place (space/7, radius/md
+- **Detached Buttons: Close (AiFeedbackForm).** It is the ghost `icon-sm` variant detached in place (space/7, radius/md
   kept) with icon/close at 16px in semantic/muted-foreground: code draws a 16px icon there and the twin's `icon-sm`
   holds a 14px one an instance cannot resize, the route Phase 2's reply actions took. It sits in a 22×20 slot and
   overhangs it by 4px above and below and 6px to the right, the code's `-my-1 -mr-1.5`.
-- **The More button is a live ❖ Button instance** (ghost, `icon-xs`), not a detached one: code's icon is 12px there, which
-  is what the variant holds, so nothing forces a detach. Its icon is swapped to icon/more_horiz and bound to
-  semantic/muted-foreground. In `State=default` the instance is at 0 % opacity, so the icon is in the row (and in the
-  frame's icon count) but not seen: code hides it the same way until hover, keyboard focus or a touch screen. Undo,
-  New chat, Send feedback and Get more credits are live instances too.
+- **Detached Buttons: More (ChatRow), in `State=default` and `State=current`.** Code draws a 16px icon in a ghost
+  `icon-xs` button (24px); the twin's `icon-xs` variant holds a 12px icon that an instance cannot resize. It is that
+  variant detached in place (space/6, radius/md kept) with icon/more_horiz at 16px in color/ink-soft, the route Close
+  and Phase 2's reply actions took. Until 2026-10-06 code's icon was 12px and this was a live instance. In
+  `State=default` the button is at 0 % opacity, so the icon is in the row (and in the frame's icon count) but not seen:
+  code hides it the same way until hover, keyboard focus or a touch screen. The five rows of the ConversationHistory
+  component are ChatRow instances, so they follow. A change to the Button twin does not reach More. Undo, New chat,
+  Send feedback and Get more credits are live instances.
+- **The reasons are one live ❖ Select instance; the Reason chip set is retired.** Code replaced the six chips with the
+  stock Select (one reason at most). The `Reason` set (1213:6) had twelve instances, all inside AiFeedbackForm; once
+  they were replaced it had none anywhere in the file and was deleted, and its `FeedbackReason` entry was removed from
+  `sync-state.json` (entries have no retired list: an entry whose node is gone is simply removed). Overrides on the
+  instance, each a full variable binding: the fill (semantic/background) and the text colour, since the Select twin
+  draws its text in semantic/foreground while code draws a placeholder in the muted colour and a chosen value in the
+  inherited color/ink-soft. The open list and the focus ring the story shows (it focuses the field) are not drawn.
+- **`icon/undo` was missing.** Added by the icon sync (1220:4); the Icons page now holds 98, as code does.
 - **A row's border is laid out, not always drawn.** Code gives every row a 1px border, clear unless the chat is open.
   `State=current` draws it and counts it in the layout with typed paddings (9px left, 3px right). `State=default` has no
   stroke; its paddings are those plus the 1px (space/2_5 and space/1), so the two variants lay out identically: title
-  10px in, More 4px from the right edge (checked by geometry against the story: same x, y and size for every row).
+  10px in, More 4px from the right edge (checked by geometry against the story: same x, y and size for every row). Detaching More moved nothing: it is still 24px at x 254.
 - **`icon/keep` was missing.** Added by the icon sync (1210:4); the Icons page now holds 97, as code does. It is the Pin
   item's icon, in the menu, which is not drawn, so no twin uses it yet.
 - **No variable for these values**, left as typed numbers: 14px (`py-3.5` on the feedback card); the fill widths (103.8
   and 8.3 of the card's 346px track, 96 and 7.68 of the bar's 320); the ring's 18 / 14 / 2.5px and its arc; the Close
-  slot's 22×20 and −4 offset and the 16px icon; 9px (the row button's `px-[9px]`: the current row's left padding and the
+  slot's 22×20 and −4 offset and the 16px icon; the 16px More icon; 9px (the row button's `px-[9px]`: the current row's left padding and the
   gap before More in both rows) and 3px (`mr-[3px]`); the 380, 320, 480, 300 and 282px widths.
 - **Each variant keeps its own sample numbers** (as in Phase 3): UsageMeter carries no TEXT property, so type on the
   instance. `tabular-nums` is not drawn.
-- **Not drawn:** hover and focus states; the open menu (Rename, Pin / Unpin, Delete) and its 6px offset; the rename field
+- **Not drawn:** hover and focus states; the open menu (Rename, Pin / Unpin, Delete), its 6px offset and its right edge on the row's; the open Select list; a narrow low bar, where the left group wraps under itself; the rename field
   (a ❖ Input in the row's place); the delete dialog (a stock AlertDialog); the Undo line's countdown and what it waits
   for (`State=undo` is in the set, not in the frame); the empty list ("No chats yet."); month groups and "Earlier";
   time zones; a row that is a link; where focus goes after rename, pin, delete and undo; the docked `ConversationSidebar`;

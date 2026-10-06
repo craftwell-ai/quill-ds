@@ -40,7 +40,8 @@ colour, scalar and semantic steps, then the rest — each step upserts by name, 
    unchanged in code, so nothing else needed refreshing. 2026-10-04: `thumb_up` (1131:4) and `thumb_down` (1131:7)
    created the same way for the AI reply actions (95 icons). 2026-10-04: `history` (1171:4) created the same way for the
    AI side panel's History button (96 icons). 2026-10-05: `keep` (1210:4) created the same way for the conversation
-   history's Pin item (97 icons).
+   history's Pin item (97 icons). 2026-10-06: `undo` (1220:4) created the same way for the conversation history's Undo
+   button (98 icons).
 
 ## Visual diff (nightly, CRA-224)
 

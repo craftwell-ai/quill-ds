@@ -2387,59 +2387,20 @@
         "effectStyle": "Elevation/sm",
         "texts": {
           "Title": "What was wrong?",
-          "Label": "Other",
+          "Select an option": "Choose a reason",
           "Placeholder": "Tell us more (optional)",
           "Disclosure": "Sends this answer with your note.",
           "Button": "Send feedback"
         },
         "childSignature": [
           "Header:FRAME",
-          "Reasons:FRAME",
+          "Select:INSTANCE",
           "Textarea:INSTANCE",
           "Footer:FRAME"
         ]
       },
       "code": {
         "classes": "grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 shadow-sm"
-      }
-    },
-    {
-      "name": "FeedbackReason",
-      "nodeId": "1213:2",
-      "variantOf": "1213:6",
-      "variant": "Selected=false",
-      "codeFile": "registry/lib/ai-feedback.tsx",
-      "lastSynced": "2026-10-06",
-      "figma": {
-        "fill": {
-          "var": "semantic/background",
-          "raw": "#F5EDDD"
-        },
-        "stroke": {
-          "var": "semantic/input",
-          "raw": "#8A7F6E"
-        },
-        "strokeWeight": {
-          "var": null,
-          "raw": 1
-        },
-        "cornerRadius": {
-          "var": null,
-          "raw": 40
-        },
-        "padding": {
-          "var": "space/3",
-          "raw": 12
-        },
-        "texts": {
-          "Label": "Wrong or made up"
-        },
-        "childSignature": [
-          "Label:TEXT"
-        ]
-      },
-      "code": {
-        "classes": "inline-flex min-h-8 items-center rounded-full border border-input bg-background px-3 py-1 text-left text-sm text-ink-soft hover:bg-muted hover:text-foreground aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background outline-hidden focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
       }
     },
     {
@@ -2471,7 +2432,7 @@
         },
         "childSignature": [
           "Title:TEXT",
-          "More:INSTANCE"
+          "More:FRAME"
         ]
       },
       "code": {
@@ -2600,7 +2561,7 @@
       "page": "❖ Conversation history",
       "pageId": "1210:7",
       "frameId": "1214:22",
-      "codeHash": "ca4289baa263a892",
+      "codeHash": "c4101502eea8358b",
       "syncedAt": "2026-10-06"
     },
     {
@@ -3072,7 +3033,7 @@
     {
       "name": "ai-feedback",
       "codeFile": "src/components/ui/ai-feedback.tsx",
-      "reason": "site shim that re-exports registry/lib/ai-feedback.tsx; the twin (❖ AI feedback, sets 1213:74 and 1213:6) is tracked through the AiFeedbackForm and FeedbackReason entries"
+      "reason": "site shim that re-exports registry/lib/ai-feedback.tsx; the twin (❖ AI feedback, set 1213:74) is tracked through the AiFeedbackForm entry"
     },
     {
       "name": "aspect-ratio",
