@@ -136,7 +136,7 @@ export type ConversationHistoryProps = {
   /** With your own conversations, each of these three also decides whether its menu item is drawn. */
   onRename?: (id: string, title: string) => void
   onPin?: (id: string, pinned: boolean) => void
-  /** Called once the Undo time has passed, not when Delete is confirmed. */
+  /** Called once the Undo time has passed, not when Delete is confirmed. The list keeps showing the chat until you remove it from `conversations`. */
   onDelete?: (id: string) => void
   /** How long Undo stays after a delete. The countdown waits while the pointer or keyboard focus is on that line. 0 deletes as soon as nothing holds the line. A negative number, NaN or Infinity is treated as the default, 6. */
   undoSeconds?: number
@@ -166,8 +166,10 @@ export function ConversationHistory({
   const [askOpen, setAskOpen] = React.useState(false)
   // Confirmed, not yet final: shown as a line with Undo in the row's place.
   const [pending, setPending] = React.useState<{ id: string; title: string } | null>(null)
-  const [hovering, setHovering] = React.useState(false)
-  const [focused, setFocused] = React.useState(false)
+  // What holds the countdown: the pointer or keyboard focus on the Undo line. Each remembers the group the line
+  // was in, because a line the app moves to another group is drawn afresh and the old one sends no "left".
+  const [hovering, setHovering] = React.useState<string | null>(null)
+  const [focused, setFocused] = React.useState<string | null>(null)
   const [said, setSaid] = React.useState('')
   const navRef = React.useRef<HTMLElement>(null)
   const renameSettled = React.useRef(true)
@@ -176,8 +178,9 @@ export function ConversationHistory({
   // What a closing menu or dialog does with focus: unset, it hands focus back to what opened it (the stock
   // behaviour); a target sends it there instead; null leaves focus where it is.
   const handoff = React.useRef<{ target: FocusTarget | null } | undefined>(undefined)
-  // A chat whose row is about to be drawn somewhere else (a pin the app may apply later), and should keep the cursor.
-  const following = React.useRef<string | null>(null)
+  // Something about to be drawn somewhere else that should keep the cursor: the row of a chat being pinned (the
+  // app may apply the pin later), or the Undo line if the app moves its chat to another group.
+  const following = React.useRef<FocusTarget | null>(null)
   // The confirmed delete the app has not been told about yet. Read and cleared by everything that can settle it
   // (the countdown, a second delete, the list going away, the tab closing), so each sees at once what another did.
   const owed = React.useRef<string | null>(null)
@@ -216,24 +219,25 @@ export function ConversationHistory({
     return (next.target ? locate(next.target) : null) ?? false
   }
 
-  // A row drawn afresh in another group loses the cursor to the page. If that happens to the chat being followed,
-  // give it back. Only then: focus that is anywhere else was put there by the person, and stays.
+  // A row or line drawn afresh in another group loses the cursor to the page. If that happens to what is being
+  // followed, give it back. Only then: focus that is anywhere else was put there by the person, and stays.
   React.useEffect(() => {
-    const id = following.current
-    if (id === null) return
+    const target = following.current
+    if (target === null) return
     const active = document.activeElement
     if (active && active !== document.body) return
-    const row = locate({ part: 'row', id })
-    if (!row) return
-    following.current = null
-    row.focus()
+    const element = locate(target)
+    if (!element) return
+    // A pinned row has arrived. The Undo line is followed for as long as it is shown: it may be moved again.
+    if (target.part !== 'undo') following.current = null
+    element.focus()
   }, [chats, locate])
   // The person moving on (a press, a key, focus landing on something else) ends the following.
   React.useEffect(() => {
     const forget = () => { following.current = null }
     const moved = (event: FocusEvent) => {
-      const id = following.current
-      if (id !== null && event.target !== locate({ part: 'row', id })) following.current = null
+      const target = following.current
+      if (target !== null && event.target !== locate(target)) following.current = null
     }
     document.addEventListener('pointerdown', forget, true)
     document.addEventListener('keydown', forget, true)
@@ -262,16 +266,35 @@ export function ConversationHistory({
     latest.current(id)
   }, [])
 
-  // Confirmed and not undone: the list going away must not quietly cancel the delete.
-  React.useEffect(() => () => { if (owed.current !== null) settle(owed.current) }, [settle])
+  // Once the app has been told, Undo could not bring the chat back, so the line and its announcement go wherever
+  // a delete is settled. The chat is then an ordinary row again until the app takes it out of its list.
+  const clearPending = React.useCallback(() => {
+    if (following.current?.part === 'undo') following.current = null
+    setPending(null)
+    setHovering(null)
+    setFocused(null)
+    setSaid('')
+  }, [])
+
+  // Confirmed and not undone: the list going away must not quietly cancel the delete. (Hidden by <Activity>, the
+  // list keeps its state and comes back, so what it was showing is cleared too.)
+  React.useEffect(() => () => {
+    if (owed.current === null) return
+    settle(owed.current)
+    clearPending()
+  }, [settle, clearPending])
 
   // Nor must closing the tab, which runs no cleanup at all (and with the cursor on Undo the countdown is waiting).
+  // The page may come back from the back-forward cache, with the delete already sent.
   React.useEffect(() => {
     if (!pending) return
-    const leaving = () => settle(pending.id)
+    const leaving = () => {
+      settle(pending.id)
+      clearPending()
+    }
     window.addEventListener('pagehide', leaving)
     return () => window.removeEventListener('pagehide', leaving)
-  }, [pending, settle])
+  }, [pending, settle, clearPending])
 
   // The Undo line stands in for a row. If the app takes that chat away meanwhile (deleted in another tab), there is
   // no row to stand in for: the delete was confirmed here, so the app is told, once, and the line is cleared.
@@ -281,24 +304,25 @@ export function ConversationHistory({
     settle(pending.id)
     // Clearing what was shown for a row that no longer exists; nothing here can loop.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPending(null)
-    setHovering(false)
-    setFocused(false)
-    setSaid('')
-  }, [pending, pendingRow, settle])
+    clearPending()
+  }, [pending, pendingRow, settle, clearPending])
+
+  const groups = groupConversations(chats, today, locale, timeZone)
 
   // The Undo window. It waits while the pointer or keyboard focus is on the line, and starts over when they leave.
+  // A hold counts only in the group the line is in now.
+  const pendingGroup = pending ? groups.find((group) => group.chats.some((chat) => chat.id === pending.id))?.key : undefined
+  const held = pendingGroup !== undefined && (hovering === pendingGroup || focused === pendingGroup)
   // A negative or non-finite number is not a length of time; the default stands in for it.
   const undoFor = Number.isFinite(undoSeconds) && undoSeconds >= 0 ? undoSeconds : 6
   React.useEffect(() => {
-    if (!pending || !pendingRow || hovering || focused) return
+    if (!pending || !pendingRow || held) return
     const timer = window.setTimeout(() => {
       settle(pending.id)
-      setPending(null)
-      setSaid('')
+      clearPending()
     }, undoFor * 1000)
     return () => window.clearTimeout(timer)
-  }, [pending, pendingRow, hovering, focused, undoFor, settle])
+  }, [pending, pendingRow, held, undoFor, settle, clearPending])
 
   const select = (id: string) => {
     if (currentId === undefined) setOwnCurrent(id)
@@ -330,7 +354,7 @@ export function ConversationHistory({
     onPin?.(chat.id, pinned)
     // The row moves to another group and is drawn afresh there; take the cursor along, now or whenever the app
     // applies the pin.
-    following.current = chat.id
+    following.current = { part: 'row', id: chat.id }
     focusIn({ part: 'row', id: chat.id })
   }
   const askDelete = (chat: Conversation) => {
@@ -353,22 +377,22 @@ export function ConversationHistory({
     if (pending) settle(pending.id)
     owed.current = asking.id
     setPending(asking)
-    setHovering(false)
-    setFocused(false)
+    setHovering(null)
+    setFocused(null)
     setSaid(`Deleted ${asking.title}. Undo is available.`)
+    following.current = { part: 'undo' }
     focusIn({ part: 'undo' })
   }
   const undo = () => {
     if (!pending) return
+    // Already sent to the app: there is nothing to restore, and saying so would be untrue.
+    if (owed.current !== pending.id) { clearPending(); return }
     owed.current = null
-    setSaid(`Restored ${pending.title}.`)
-    focusIn({ part: 'row', id: pending.id })
-    setPending(null)
-    setHovering(false)
-    setFocused(false)
+    const { id, title } = pending
+    clearPending()
+    setSaid(`Restored ${title}.`)
+    focusIn({ part: 'row', id })
   }
-
-  const groups = groupConversations(chats, today, locale, timeZone)
 
   return (
     <nav ref={navRef} aria-label={label} data-slot="conversation-history" className={cn('grid grid-cols-[minmax(0,1fr)] content-start gap-0.5 text-sm', className)}>
@@ -386,8 +410,8 @@ export function ConversationHistory({
               if (pending?.id === chat.id) {
                 return (
                   <li key={chat.id} data-slot="chat-undo" className="flex min-h-8 items-center gap-2 rounded-lg pl-2.5 text-muted-foreground"
-                    onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}
-                    onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
+                    onPointerEnter={() => setHovering(group.key)} onPointerLeave={() => setHovering(null)}
+                    onFocus={() => setFocused(group.key)} onBlur={() => setFocused(null)}>
                     <span className="min-w-0 flex-1 truncate">Deleted “{chat.title}”</span>
                     <Button type="button" variant="ghost" size="xs" className="shrink-0 text-foreground" onClick={undo}>Undo</Button>
                   </li>

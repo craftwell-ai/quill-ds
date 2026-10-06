@@ -403,7 +403,7 @@ const pause = (milliseconds: number) => new Promise((resolve) => setTimeout(reso
 
 // An app that does more than keep the list: it can close the list as it deletes, apply a pin late, or drop a chat
 // behind the list's back (another tab, a sync).
-function Staged({ closeOnDelete, pinAfter, hideable, ...args }: Args & { closeOnDelete?: boolean; pinAfter?: number; hideable?: boolean }) {
+function Staged({ closeOnDelete, pinAfter, hideable, slowDelete, ...args }: Args & { closeOnDelete?: boolean; pinAfter?: number; hideable?: boolean; slowDelete?: boolean }) {
   const [chats, setChats] = React.useState(CHATS)
   const [here, setHere] = React.useState(true)
   const [shown, setShown] = React.useState(true)
@@ -416,7 +416,8 @@ function Staged({ closeOnDelete, pinAfter, hideable, ...args }: Args & { closeOn
         args.onPin?.(id, pinned)
       }}
       onDelete={(id) => {
-        setChats((all) => all.filter((chat) => chat.id !== id))
+        // A slow app asks its server first and drops the chat when the answer comes; here, never.
+        if (!slowDelete) setChats((all) => all.filter((chat) => chat.id !== id))
         if (closeOnDelete) setHere(false)
         args.onDelete?.(id)
       }} />
@@ -427,6 +428,7 @@ function Staged({ closeOnDelete, pinAfter, hideable, ...args }: Args & { closeOn
         <button type="button" onClick={() => setHere(false)}>Leave</button>
         <button type="button" onClick={() => setShown((was) => !was)}>{shown ? 'Hide' : 'Show'}</button>
         <button type="button" onClick={() => setChats((all) => all.filter((chat) => chat.id !== 'c'))}>Remove elsewhere</button>
+        <button type="button" onClick={() => setChats((all) => all.map((chat) => (chat.id === 'd' ? { ...chat, updatedAt: NOW } : chat)))}>Bump elsewhere</button>
       </div>
       {here ? (hideable ? <React.Activity mode={shown ? 'visible' : 'hidden'}>{list}</React.Activity> : list) : <p>Gone</p>}
     </div>
@@ -694,5 +696,85 @@ export const ModifierClickOnALink: Story = {
     await expect(args.onSelect).not.toHaveBeenCalled()
     await fireEvent.click(link)
     await expect(args.onSelect).toHaveBeenCalledWith('link')
+  },
+}
+
+// Once the app has been told, Undo would be a lie: it could not bring the chat back. For an app that drops the chat
+// only when its server answers, the chat is an ordinary row again until then.
+export const UndoAfterThePageWasHidden: Story = {
+  render: (args) => <Staged {...args} slowDelete />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    const undo = await canvas.findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(undo).toHaveFocus())
+    // The tab is hidden (and later comes back from the back-forward cache).
+    window.dispatchEvent(new Event('pagehide'))
+    await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(canvas.queryByRole('button', { name: 'Undo' })).toBeNull())
+    await expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toBeVisible()
+    await expect(canvas.getByRole('status')).toBeEmptyDOMElement()
+    await userEvent.click(canvas.getByRole('button', { name: 'Leave' }))
+    await expect(await canvas.findByText('Gone')).toBeVisible()
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c']])
+  },
+}
+
+export const UndoAfterTheListWasHidden: Story = {
+  render: (args) => <Staged {...args} slowDelete hideable />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    await canvas.findByRole('button', { name: 'Undo' })
+    await userEvent.click(canvas.getByRole('button', { name: 'Hide' }))
+    await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1))
+    await userEvent.click(canvas.getByRole('button', { name: 'Show' }))
+    await expect(await canvas.findByRole('navigation', { name: 'Past chats' })).toBeVisible()
+    await expect(canvas.queryByRole('button', { name: 'Undo' })).toBeNull()
+    await expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toBeVisible()
+    await expect(canvas.getByRole('status')).toBeEmptyDOMElement()
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c']])
+  },
+}
+
+// The app moves the chat to another group while its Undo line is showing (a sync bumps its date). The line is drawn
+// afresh there: it keeps the cursor it had, and once nothing holds it the countdown still runs out.
+export const PendingChatRegrouped: Story = {
+  args: { undoSeconds: 0.3 },
+  render: (args) => <Staged {...args} />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Pricing page copy ideas')
+    const first = await within(canvas.getByRole('list', { name: 'Yesterday' })).findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(first).toHaveFocus())
+    // Not a press: the cursor stays on Undo while the row moves under it.
+    canvas.getByRole('button', { name: 'Bump elsewhere' }).click()
+    const today = canvas.getByRole('list', { name: 'Today' })
+    await waitFor(() => expect(within(today).getByText(/Deleted .Pricing page copy ideas./)).toBeVisible())
+    const moved = within(today).getByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(moved).toHaveFocus())
+    // Still held by the cursor, in its new place.
+    await pause(600)
+    await expect(args.onDelete).not.toHaveBeenCalled()
+    canvas.getByRole('button', { name: 'New chat' }).focus()
+    await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1), { timeout: 3000 })
+    await pause(400)
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['d']])
+  },
+}
+
+// The same move with nothing on the line but a pointer that was resting there: the row that moved away sends no
+// "pointer left", and the countdown must not wait for one.
+export const PendingChatRegroupedUnderThePointer: Story = {
+  args: { undoSeconds: 0.3 },
+  render: (args) => <Staged {...args} />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Pricing page copy ideas')
+    const undo = await canvas.findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(undo).toHaveFocus())
+    await userEvent.hover(undo)
+    canvas.getByRole('button', { name: 'New chat' }).focus()
+    await pause(600)
+    await expect(args.onDelete).not.toHaveBeenCalled()
+    canvas.getByRole('button', { name: 'Bump elsewhere' }).click()
+    await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1), { timeout: 3000 })
+    await expect(args.onDelete).toHaveBeenCalledWith('d')
   },
 }
