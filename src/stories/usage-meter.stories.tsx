@@ -146,6 +146,19 @@ export const FillReadsOnItsTrack: Story = {
   },
 }
 
+// A "has not vanished" guard, not a WCAG number: the floor (1.08:1) is chosen from the measured values (light themes about 1.10,
+// dark about 1.2). The fill, not the track, is what must reach 3:1 (FillReadsOnItsTrack).
+export const TrackReadsAsATrack: Story = {
+  args: { variant: 'bar', remaining: 1500 },
+  play: async ({ canvasElement }) => {
+    const surface = surfaceBehind(trackOf(canvasElement))
+    const track = compositeOver(getComputedStyle(trackOf(canvasElement)).backgroundColor, `rgb(${surface.join(' ')})`)
+    const ratio = contrastRatio(track, surface)
+    console.log(`usage-meter track on surface ${ratio.toFixed(2)}:1`)
+    await expect(ratio).toBeGreaterThanOrEqual(1.08)
+  },
+}
+
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (
