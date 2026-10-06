@@ -4,6 +4,7 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { ConversationHistory, ConversationSidebar, groupConversations, type Conversation } from '@registry/blocks/conversation-history'
 import { usage } from '@/usage/conversation-history.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
+import { compositeOver, contrastRatio, surfaceBehind } from '../contrast'
 import { expectFocusRing } from '../focus-ring'
 
 const NOW = new Date(2026, 9, 6, 12, 0)
@@ -113,6 +114,32 @@ export const SelectAChat: Story = {
     await expect(args.onSelect).toHaveBeenCalledWith('c')
     await expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toHaveAttribute('aria-current', 'true')
     await expect(canvas.getByRole('button', { name: 'Q3 signups vs target' })).not.toHaveAttribute('aria-current')
+  },
+}
+
+// The open chat's fill alone nearly vanishes on the dark themes, so its row also carries a hairline. This is a
+// "can be told apart" guard, not a WCAG number: the open chat is also marked by aria-current and medium weight.
+// Run under each theme by the theme gate (QUILL_THEME).
+export const OpenChatReadsInEveryTheme: Story = {
+  render: (args) => <Owned {...args} />,
+  play: async ({ canvasElement }) => {
+    const row = rowOf(canvasElement, 'Q3 signups vs target')
+    const style = getComputedStyle(row)
+    await expect(style.borderTopWidth).toBe('1px')
+    // The hairline costs no height: the row is still 32px, and so is one that is not open.
+    await expect(row.getBoundingClientRect().height).toBe(32)
+    await expect(rowOf(canvasElement, 'Launch brief draft').getBoundingClientRect().height).toBe(32)
+    const card = surfaceBehind(row)
+    const line = compositeOver(style.borderTopColor, `rgb(${card.join(' ')})`)
+    const ratio = contrastRatio(line, card)
+    console.log(`conversation-history open row hairline on card ${ratio.toFixed(2)}:1`)
+    await expect(ratio).toBeGreaterThanOrEqual(1.2)
+    // A row that is not open shows no line.
+    const idle = getComputedStyle(rowOf(canvasElement, 'Launch brief draft'))
+    await expect(contrastRatio(compositeOver(idle.borderTopColor, `rgb(${card.join(' ')})`), card)).toBe(1)
+    // Titles stay in one column: the open row's text starts where its neighbour's does.
+    const left = (title: string) => canvasElement.querySelector(`[data-slot="chat-row"] [data-slot="chat-open"]${title === 'open' ? '[aria-current]' : ':not([aria-current])'}`)!.getBoundingClientRect().left
+    await expect(left('open')).toBe(left('idle'))
   },
 }
 
