@@ -39,7 +39,8 @@ colour, scalar and semantic steps, then the rest — each step upserts by name, 
    `mic` (1071:7) created for the prompt composer — the run passed just those two names; the other 91 were
    unchanged in code, so nothing else needed refreshing. 2026-10-04: `thumb_up` (1131:4) and `thumb_down` (1131:7)
    created the same way for the AI reply actions (95 icons). 2026-10-04: `history` (1171:4) created the same way for the
-   AI side panel's History button (96 icons).
+   AI side panel's History button (96 icons). 2026-10-05: `keep` (1210:4) created the same way for the conversation
+   history's Pin item (97 icons).
 
 ## Visual diff (nightly, CRA-224)
 
@@ -66,7 +67,8 @@ drift: the stories' play steps (text typed into the box; on ai-chat a second tur
 shows the first render) and one answer line that wraps a word earlier in Figma. A new pair starts the same
 way: it reports `unbaselined`, which never fails the job, even with `--strict`, until a CI run of the
 **Figma parity** workflow is read and accepted with the last command below. `ai-side-panel` (added 2026-10-04) has no
-visual baseline yet; it reports `unbaselined` until such a run is read and accepted.
+visual baseline yet; it reports `unbaselined` until such a run is read and accepted. `conversation-history` (added
+2026-10-05) has no visual baseline yet; it reports `unbaselined` until such a run is read and accepted.
 
 ```bash
 npm run build-storybook -- -o .visual/sb --quiet

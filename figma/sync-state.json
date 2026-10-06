@@ -2295,6 +2295,188 @@
       "code": {
         "classes": "ai-wash w-96 max-w-[calc(100vw-2rem)] max-h-(--available-height) gap-0 overflow-hidden p-0 focus-visible:ring-3 focus-visible:ring-ring/50"
       }
+    },
+    {
+      "name": "UsageMeter",
+      "nodeId": "1212:2",
+      "variantOf": "1212:94",
+      "variant": "Variant=card, Low=false",
+      "codeFile": "registry/lib/usage-meter.tsx",
+      "lastSynced": "2026-10-06",
+      "figma": {
+        "fill": {
+          "var": "semantic/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "semantic/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "padding": {
+          "var": "space/4",
+          "raw": 16
+        },
+        "itemSpacing": {
+          "var": "space/3",
+          "raw": 12
+        },
+        "effectStyle": "Elevation/sm",
+        "texts": {
+          "Label": "AI credits",
+          "Renews": "Renews 1 November",
+          "Remaining": "1,500",
+          "Left word": "left",
+          "Total": "of 5,000",
+          "Estimate": "About 150 more long answers.",
+          "Row label": "Rewrites",
+          "Row value": "200",
+          "Button": "Get more credits"
+        },
+        "childSignature": [
+          "Header:FRAME",
+          "Usage bar:FRAME",
+          "Estimate:TEXT",
+          "Breakdown:FRAME",
+          "Action:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid grid-cols-[minmax(0,1fr)] gap-3 rounded-xl border border-border bg-card p-4 text-sm shadow-sm"
+      }
+    },
+    {
+      "name": "AiFeedbackForm",
+      "nodeId": "1213:7",
+      "variantOf": "1213:74",
+      "variant": "State=empty",
+      "codeFile": "registry/lib/ai-feedback.tsx",
+      "lastSynced": "2026-10-06",
+      "figma": {
+        "fill": {
+          "var": "semantic/card",
+          "raw": "#EFE4CE"
+        },
+        "stroke": {
+          "var": "semantic/border",
+          "raw": "#2A2622"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 16
+        },
+        "padding": {
+          "var": "space/4",
+          "raw": 16
+        },
+        "itemSpacing": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "effectStyle": "Elevation/sm",
+        "texts": {
+          "Title": "What was wrong?",
+          "Label": "Other",
+          "Placeholder": "Tell us more (optional)",
+          "Disclosure": "Sends this answer with your note.",
+          "Button": "Send feedback"
+        },
+        "childSignature": [
+          "Header:FRAME",
+          "Reasons:FRAME",
+          "Textarea:INSTANCE",
+          "Footer:FRAME"
+        ]
+      },
+      "code": {
+        "classes": "grid grid-cols-[minmax(0,1fr)] gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 shadow-sm"
+      }
+    },
+    {
+      "name": "FeedbackReason",
+      "nodeId": "1213:2",
+      "variantOf": "1213:6",
+      "variant": "Selected=false",
+      "codeFile": "registry/lib/ai-feedback.tsx",
+      "lastSynced": "2026-10-06",
+      "figma": {
+        "fill": {
+          "var": "semantic/background",
+          "raw": "#F5EDDD"
+        },
+        "stroke": {
+          "var": "semantic/input",
+          "raw": "#8A7F6E"
+        },
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 40
+        },
+        "padding": {
+          "var": "space/3",
+          "raw": 12
+        },
+        "texts": {
+          "Label": "Wrong or made up"
+        },
+        "childSignature": [
+          "Label:TEXT"
+        ]
+      },
+      "code": {
+        "classes": "inline-flex min-h-8 items-center rounded-full border border-input bg-background px-3 py-1 text-left text-sm text-ink-soft hover:bg-muted hover:text-foreground aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background outline-hidden focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+      }
+    },
+    {
+      "name": "ChatRow",
+      "nodeId": "1214:2",
+      "variantOf": "1214:21",
+      "variant": "State=default",
+      "codeFile": "registry/blocks/conversation-history.tsx",
+      "lastSynced": "2026-10-06",
+      "figma": {
+        "strokeWeight": {
+          "var": null,
+          "raw": 1
+        },
+        "cornerRadius": {
+          "var": null,
+          "raw": 8
+        },
+        "padding": {
+          "var": "space/2_5",
+          "raw": 10
+        },
+        "itemSpacing": {
+          "var": null,
+          "raw": 9
+        },
+        "texts": {
+          "Title": "Launch brief draft"
+        },
+        "childSignature": [
+          "Title:TEXT",
+          "More:INSTANCE"
+        ]
+      },
+      "code": {
+        "classes": "group/row flex min-h-8 items-center rounded-lg border border-transparent hover:bg-muted has-[[aria-current]]:border-border has-[[aria-current]]:bg-muted"
+      }
     }
   ],
   "patterns": [
@@ -2411,6 +2593,15 @@
       "frameId": "696:9",
       "codeHash": "10a7573b90f9c6fa",
       "syncedAt": "2026-09-18"
+    },
+    {
+      "block": "conversation-history",
+      "status": "mirrored",
+      "page": "❖ Conversation history",
+      "pageId": "1210:7",
+      "frameId": "1214:22",
+      "codeHash": "58cc0c09b224890c",
+      "syncedAt": "2026-10-06"
     },
     {
       "block": "cookie-consent",
@@ -2872,6 +3063,16 @@
       "name": "ai-popover",
       "codeFile": "src/components/ui/ai-popover.tsx",
       "reason": "site shim that re-exports registry/lib/ai-popover.tsx; the twin (❖ AI popover, set 1176:60) is tracked through the AiPopover entry"
+    },
+    {
+      "name": "usage-meter",
+      "codeFile": "src/components/ui/usage-meter.tsx",
+      "reason": "site shim that re-exports registry/lib/usage-meter.tsx; the twin (❖ Usage meter, set 1212:94) is tracked through the UsageMeter entry"
+    },
+    {
+      "name": "ai-feedback",
+      "codeFile": "src/components/ui/ai-feedback.tsx",
+      "reason": "site shim that re-exports registry/lib/ai-feedback.tsx; the twin (❖ AI feedback, sets 1213:74 and 1213:6) is tracked through the AiFeedbackForm and FeedbackReason entries"
     },
     {
       "name": "aspect-ratio",

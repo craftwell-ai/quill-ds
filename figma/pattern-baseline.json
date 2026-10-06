@@ -726,6 +726,37 @@
         "text/base"
       ]
     },
+    "conversation-history": {
+      "frameId": "1214:22",
+      "texts": [
+        "New chat",
+        "Pinned",
+        "Weekly growth review prompt",
+        "Today",
+        "Q3 signups vs target",
+        "Launch brief draft",
+        "Yesterday",
+        "Pricing page copy ideas",
+        "Previous 7 days",
+        "Plan my week around the offsite"
+      ],
+      "icons": [
+        "add",
+        "more_horiz",
+        "more_horiz",
+        "more_horiz",
+        "more_horiz",
+        "more_horiz"
+      ],
+      "instances": [
+        "Button",
+        "ChatRow",
+        "ChatRow",
+        "ChatRow",
+        "ChatRow",
+        "ChatRow"
+      ]
+    },
     "faq": {
       "frameId": "696:19",
       "texts": [
