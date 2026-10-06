@@ -37,7 +37,8 @@ export type UsageMeterProps = {
 const finite = (value: number) => (Number.isFinite(value) ? value : 0)
 
 // The stock Progress draws its own track and fill; these reach them by the data-slot it gives each.
-const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-muted'
+// The track sits between the card and the fill, and the fill must read 3:1 against it in every theme, so it is a lighter muted.
+const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-muted/60'
 // The one place the AI gradient sits here. A low meter is terracotta instead: the gradient means AI, not "nearly out".
 const FILL = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:ai-meter'
 const FILL_LOW = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:bg-terracotta-deep'
@@ -73,7 +74,7 @@ export function UsageMeter({
               <stop offset="1" stopColor="var(--ai-to)" />
             </linearGradient>
           </defs>
-          <circle data-slot="usage-ring-track" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" className="stroke-muted" />
+          <circle data-slot="usage-ring-track" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" className="stroke-muted/60" />
           {/* No arc at zero: a zero-length stroke with round caps still paints a dot. */}
           {share > 0 ? (
             <circle data-slot="usage-arc" cx="9" cy="9" r="7" fill="none" strokeWidth="2.5" strokeLinecap="round" pathLength={100}

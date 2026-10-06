@@ -139,11 +139,10 @@ export const FillReadsOnItsTrack: Story = {
     const track = compositeOver(getComputedStyle(trackOf(canvasElement)).backgroundColor, `rgb(${surfaceBehind(trackOf(canvasElement)).join(' ')})`)
     const stops = getComputedStyle(fillOf(canvasElement)).backgroundImage.match(/(?:rgba?|oklab|oklch|color)\([^()]*(?:\([^()]*\)[^()]*)*\)/g) ?? []
     await expect(stops.length).toBeGreaterThanOrEqual(3)
-    for (const stop of stops) {
-      const colour = compositeOver(stop, `rgb(${track.join(' ')})`)
-      console.log(`usage-meter stop ${stop} on track ${contrastRatio(colour, track).toFixed(2)}:1`)
-      await expect(contrastRatio(colour, track)).toBeGreaterThanOrEqual(3)
-    }
+    // Log every stop first so one failure does not hide the others.
+    const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
+    stops.forEach((stop, index) => console.log(`usage-meter stop ${stop} on track ${ratios[index].toFixed(2)}:1`))
+    for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
   },
 }
 
@@ -152,6 +151,19 @@ export const DoDont: Story = {
   render: () => (
     <DoDontPair usage={usage} id="low-says-so-in-words"
       doExample={<div className="w-80 max-w-full"><UsageMeter variant="bar" remaining={120} total={5000} /></div>}
-      dontExample={<div className="w-80 max-w-full"><UsageMeter variant="bar" remaining={120} total={5000} lowLabel="of 5,000" /></div>} />
+      dontExample={(
+        // Hand-built on purpose: a low meter that only changed colour, with the ordinary "of 5,000" and no words.
+        <div className="w-80 max-w-full text-sm">
+          <div className="grid gap-1.5">
+            <p className="flex items-baseline justify-between gap-3 text-sm tabular-nums">
+              <span className="text-ink-soft"><span className="text-base font-semibold text-foreground">120</span> left</span>
+              <span className="text-muted-foreground">of 5,000</span>
+            </p>
+            <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-muted/60">
+              <div className="h-full w-[2.4%] rounded-full bg-terracotta-deep" />
+            </div>
+          </div>
+        </div>
+      )} />
   ),
 }
