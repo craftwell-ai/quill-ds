@@ -387,3 +387,16 @@ export const DoDont: Story = {
       dontExample={<AiMessage><p className="ai-text font-semibold">The quarter closed 4% ahead.</p></AiMessage>} />
   ),
 }
+
+// feedbackForm is ignored until thumbs-down is pressed, and a reply without it renders exactly as before.
+export const FeedbackFormWaitsForThumbsDown: Story = {
+  args: { onFeedback: fn(), feedbackForm: <p>What was wrong?</p> },
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.queryByText('What was wrong?')).toBeNull()
+    await expect(canvasElement.querySelector('[data-slot="reply-feedback"]')).toBeNull()
+    await userEvent.click(canvas.getByRole('button', { name: 'Bad answer' }))
+    await expect(canvas.getByText('What was wrong?')).toBeVisible()
+    await userEvent.click(canvas.getByRole('button', { name: 'Bad answer' }))
+    await expect(canvas.queryByText('What was wrong?')).toBeNull()
+  },
+}

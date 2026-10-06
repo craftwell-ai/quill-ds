@@ -1159,6 +1159,25 @@
       "docs": "Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer. Do: Let a low meter say \"Running low\" in words; the bar and the ring turn terracotta as well. Don't: Signal low credit with colour alone — people who cannot tell the colours apart see a normal meter. Do: Keep the AI gradient on the fill of the bar and the ring. Everything else on the card is plain. Don't: Put the gradient on the number, the card or the \"Get more\" button, or keep it on a low meter. Do: Add a plain-language line (\"About 150 more long answers\") so the number means something. Don't: Show a bare count of credits or tokens and leave people to work out what it buys. Do: Use the compact ring where space is tight: a composer footer, a sidebar. Don't: Redraw the compact meter as a filled pie wedge, or drop its text and leave the ring alone. Use progress when the bar shows how far a task has got, not how much of an allowance is left. Use stat-cards when the number is a business metric on a dashboard, not an allowance being spent. Use ai-notice when you only need one line of small print under the composer, with no amount."
     },
     {
+      "name": "ai-feedback",
+      "type": "registry:ui",
+      "title": "AI feedback",
+      "description": "Asks what was wrong after a thumbs-down on an AI answer — a few reasons to pick from, an optional note, and Send — opening under the answer so what is being judged stays in view.",
+      "registryDependencies": [
+        "button",
+        "textarea",
+        "https://www.quilldesignsystem.com/r/icon.json"
+      ],
+      "files": [
+        {
+          "path": "registry/lib/ai-feedback.tsx",
+          "target": "components/ui/ai-feedback.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Asks what was wrong after a thumbs-down on an AI answer — a few reasons to pick from, an optional note, and Send — opening under the answer so what is being judged stays in view. Do: Offer about six short reasons, your own or the defaults, and let people pick several. Don't: List every reason you can think of — past about six the chips become a wall nobody reads. Do: Let Send work with a reason alone, or a note alone. Don't: Force people to type before they can send — most will leave instead. Do: Open the form under the answer it is about (pass it to AiMessage as feedbackForm). Don't: Cover the answer with a dialog — people need to see what they are judging. Do: Keep the line that says what is sent with the feedback, in your own words if the defaults are not true for your app. Don't: Send the conversation along without saying so. Use ai-message when the thumbs alone are all you collect; they are already on the reply. Use dialog when the feedback is a longer survey that needs the person's whole attention. Use contact-form when people are writing to your team, not rating one answer."
+    },
+    {
       "name": "ai-popover",
       "type": "registry:ui",
       "title": "AI popover",
@@ -1312,6 +1331,11 @@
           "path": "registry/agent-rules/skills/quill-components/reference/ai-button.md",
           "type": "registry:file",
           "target": "~/.claude/skills/quill-components/reference/ai-button.md"
+        },
+        {
+          "path": "registry/agent-rules/skills/quill-components/reference/ai-feedback.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/quill-components/reference/ai-feedback.md"
         },
         {
           "path": "registry/agent-rules/skills/quill-components/reference/ai-mark.md",

@@ -28,6 +28,8 @@ export type AiMessageProps = {
   /** Controlled thumbs; omit to let the message keep its own. */
   feedback?: AiFeedback
   onFeedback?: (value: AiFeedback) => void
+  /** Drawn under the actions only while thumbs-down is pressed: an AiFeedbackForm asking what was wrong. */
+  feedbackForm?: React.ReactNode
   className?: string
 }
 
@@ -59,9 +61,10 @@ const LEVEL_WITH_AVATAR = 'pt-[calc((1.75rem-1lh)/2)]'
 /** An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side. */
 export function AiMessage({
   children, name = 'Assistant', hideName = false, thinking, sources, streaming = false, stopped = false,
-  copyText, onRetry, feedback, onFeedback, className,
+  copyText, onRetry, feedback, onFeedback, feedbackForm, className,
 }: AiMessageProps) {
   const bodyRef = React.useRef<HTMLDivElement>(null)
+  const articleRef = React.useRef<HTMLElement>(null)
   const [copied, setCopied] = React.useState(false)
   const copiedTimer = React.useRef<number | undefined>(undefined)
   const [ownFeedback, setOwnFeedback] = React.useState<AiFeedback>(null)
@@ -90,6 +93,21 @@ export function AiMessage({
     if (feedback === undefined) setOwnFeedback(next)
     onFeedback?.(next)
   }
+
+  const showForm = current === 'down' && feedbackForm !== undefined && feedbackForm !== null && feedbackForm !== false
+  const hadForm = React.useRef(showForm)
+  // Whether keyboard focus was last seen inside the form. A control that is removed while focused sends no blur.
+  const focusInForm = React.useRef(false)
+  // The form's own Close takes the focused button with it; send the cursor back to the thumb that opened the form.
+  // Only when focus was in the form and has fallen to the page: a form the app removes for its own reasons moves nothing.
+  React.useEffect(() => {
+    if (hadForm.current && !showForm && focusInForm.current) {
+      const active = document.activeElement
+      if (!active || active === document.body) articleRef.current?.querySelector<HTMLElement>('[aria-label="Bad answer"]')?.focus({ preventScroll: true })
+    }
+    if (!showForm) focusInForm.current = false
+    hadForm.current = showForm
+  }, [showForm])
   // Citation chips and the caret are inline, so reading the body directly would glue their labels onto the sentence.
   // innerText only inserts line breaks for laid-out nodes, so the stripped copy is attached invisibly just long enough to read.
   const answerText = () => {
@@ -121,7 +139,7 @@ export function AiMessage({
   return (
     // relative: the boxes kept for screen readers only (the hidden name, AiThinking's status) are absolutely
     // positioned, and must take their place from this reply so they scroll with it inside a scrolling thread.
-    <article data-slot="ai-message" aria-busy={streaming || undefined} className={cn('relative grid grid-cols-[1.75rem_minmax(0,1fr)] gap-2.5', className)}>
+    <article ref={articleRef} data-slot="ai-message" aria-busy={streaming || undefined} className={cn('relative grid grid-cols-[1.75rem_minmax(0,1fr)] gap-2.5', className)}>
       <span aria-hidden data-slot="reply-avatar" className="grid size-7 place-items-center rounded-full border border-border bg-background">
         <AiMark size={15} />
       </span>
@@ -162,6 +180,13 @@ export function AiMessage({
                 <Button type="button" variant="ghost" size="icon-sm" className="aria-pressed:bg-muted aria-pressed:text-foreground" aria-label="Bad answer" aria-pressed={current === 'down'} onClick={() => vote('down')}><Icon name="thumb_down" /></Button>
               </>
             ) : null}
+          </div>
+        ) : null}
+        {showForm && !streaming ? (
+          <div data-slot="reply-feedback"
+            onFocus={() => { focusInForm.current = true }}
+            onBlur={(event) => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) focusInForm.current = false }}>
+            {feedbackForm}
           </div>
         ) : null}
       </div>

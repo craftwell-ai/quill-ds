@@ -40,6 +40,7 @@ export const CASES = [
   { id: 'follow-up-questions', expect: 'suggested-prompts', request: 'After the assistant answers, offer two or three follow-up questions people can click to ask next.' },
   { id: 'answer-sources', expect: 'citations', request: 'The assistant\'s answers should show which document each statement came from, with the full list underneath.' },
   { id: 'assistant-reply', expect: 'ai-message', request: 'Show the assistant\'s answer in the conversation with buttons to copy it, retry, and rate it.' },
+  { id: 'why-was-it-bad', expect: 'ai-feedback', accept: ['ai-message'], request: 'When someone gives the assistant\'s answer a thumbs-down, ask them what was wrong with a few quick reasons and an optional note.' },
   { id: 'summarize-button', expect: 'ai-button', request: 'Add a Summarize button above a long document that asks AI to condense it.' },
   { id: 'ai-draft-label', expect: 'ai-badge', request: 'Reply drafts the assistant wrote should be labelled so agents know a person has not checked them yet.' },
   { id: 'ask-assistant-box', expect: 'prompt-composer', accept: ['ai-home'], request: 'Users type a question to our assistant; it should grow as they type and let them stop the answer halfway.' },

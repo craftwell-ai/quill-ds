@@ -28,6 +28,7 @@ export const usage = {
     '"You stopped this answer." is announced: it appears inside a status region that is already on the page.',
     'Action buttons have names ("Copy", "Try again", "Good answer", "Bad answer"); the thumbs use aria-pressed.',
     'Copy says "Copied" for two seconds after a successful copy, and stays "Copy" if the browser refuses.',
+    'A feedback form passed as feedbackForm is drawn under the actions only while thumbs-down is pressed, after the thumbs in reading order; when it closes itself, focus returns to the thumbs-down button.',
   ],
   tokens: ['--foreground', '--muted-foreground', '--border', '--card', '--background', '--ai-from', '--ai-via', '--ai-to'],
 }
