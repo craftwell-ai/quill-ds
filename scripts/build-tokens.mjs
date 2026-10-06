@@ -201,12 +201,12 @@ export function darkVariant(modes = MODES, { stockClass = false } = {}) {
   return `@custom-variant dark (&:is(${selector}));`
 }
 
-// The six AI gradient treatments (DESIGN.md "The AI gradient"), as Tailwind
+// The AI gradient treatments (DESIGN.md "The AI gradient"), as Tailwind
 // utilities so they ship through BOTH channels: inside the theme file (the
 // file channel honours @utility once imported into the Tailwind stylesheet)
 // and in the CLI `css` payload (the CLI writes `@utility` and `@keyframes`
 // keys verbatim). Plain classes would be dropped by the CLI channel.
-export const AI_UTILITIES = ['ai-text', 'ai-edge', 'ai-edge-working', 'ai-wash', 'ai-glow', 'ai-line', 'ai-shimmer']
+export const AI_UTILITIES = ['ai-text', 'ai-edge', 'ai-edge-working', 'ai-wash', 'ai-glow', 'ai-line', 'ai-meter', 'ai-shimmer']
 
 const AI_SWEEP = 'var(--ai-from), var(--ai-via), var(--ai-to), var(--ai-via), var(--ai-from)'
 // The composer's edge is a control boundary, so every stop must reach WCAG 1.4.11's
@@ -251,6 +251,11 @@ export const AI_RULES = {
     'background-size': '300% 100%',
     animation: 'ai-line 1.6s linear infinite',
     '@media (prefers-reduced-motion: reduce)': { animation: 'none', 'background-size': '100% 100%' },
+  },
+  // The fill of a usage bar. The edge's stops, because a 6px bar in raw gold is as faint on paper as a 1.5px edge was.
+  // Still on purpose: a meter shows an amount, and motion means "AI is working".
+  '@utility ai-meter': {
+    'background-image': `linear-gradient(90deg, ${EDGE_STOPS})`,
   },
   '@utility ai-shimmer': {
     'background-image': 'linear-gradient(90deg, var(--muted-foreground), var(--ai-text-via), var(--muted-foreground))',

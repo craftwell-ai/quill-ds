@@ -99,6 +99,8 @@ Each phase is its own PR with its own minor version. Kind: **ui** = a `registry:
 | `conversation-history` | block | Past chats by day, rename and delete, on sidebar-nav. |
 | `usage-meter` | ui | "1.5k credits left", on Progress. |
 
+Note 2026-10-05: Ryan chose the AI gradient for the usage meter's bar (sketch option B), which adds a seventh placement, "the fill of an AI usage meter", and one utility, `ai-meter`.
+
 The AI feature name (placement 6) ships as the `ai-text` treatment in Phase 1, not as a component.
 
 ## Definition of done, for every piece

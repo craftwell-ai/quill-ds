@@ -881,6 +881,10 @@
   }
 }
 
+@utility ai-meter {
+  background-image: linear-gradient(90deg, color-mix(in oklab, var(--ai-from) 55%, var(--ai-text-from)), var(--ai-via) 50%, var(--ai-to));
+}
+
 @utility ai-shimmer {
   background-image: linear-gradient(90deg, var(--muted-foreground), var(--ai-text-via), var(--muted-foreground));
   background-size: 200% 100%;
