@@ -25,7 +25,7 @@ export type UsageMeterProps = {
   action?: React.ReactNode
   /** The share of the total at or under which the meter reads low. 0.1 is a tenth. */
   lowAt?: number
-  /** The words a low meter shows and speaks. */
+  /** The words a low bar or card shows; every variant speaks them to screen readers. */
   lowLabel?: string
   /** card: everything, for a settings page. bar: the numbers and the bar. compact: a ring and one line, for a composer footer. */
   variant?: 'card' | 'bar' | 'compact'

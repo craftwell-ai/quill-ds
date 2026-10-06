@@ -71,6 +71,7 @@ export const RunningLow: Story = {
     await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toContain('linear-gradient')
     const track = compositeOver(getComputedStyle(trackOf(canvasElement)).backgroundColor, `rgb(${surfaceBehind(trackOf(canvasElement)).join(' ')})`)
     const stops = getComputedStyle(fillOf(canvasElement)).backgroundImage.match(STOP) ?? []
+    await expect(stops.length).toBeGreaterThanOrEqual(3)
     const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
     console.log(`usage-meter low fill stops on track ${ratios.map((ratio) => ratio.toFixed(2)).join(' / ')}`)
     for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(3)
@@ -108,6 +109,9 @@ export const RunningLowNarrow: Story = {
     await expect(squeezed.right).toBeLessThanOrEqual(root.getBoundingClientRect().right + 0.5)
     await expect(squeezed.height).toBeLessThan(24)
     await expect(root.scrollWidth).toBeLessThanOrEqual(Math.ceil(root.getBoundingClientRect().width))
+    // Leave the story at the 240px the design names.
+    root.parentElement!.style.width = ''
+    await expect(root.getBoundingClientRect().width).toBeCloseTo(240, 0)
   },
 }
 
@@ -244,7 +248,7 @@ export const DoDont: Story = {
               <span className="text-ink-soft"><span className="text-base font-semibold text-foreground">120</span> left</span>
               <span className="text-muted-foreground">of 5,000</span>
             </p>
-            <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-muted/60 dark:bg-muted">
+            <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-muted/80 dark:bg-muted">
               <div className="ai-meter h-full w-[2.4%] rounded-full" />
             </div>
           </div>

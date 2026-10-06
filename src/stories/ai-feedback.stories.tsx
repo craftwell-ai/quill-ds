@@ -39,12 +39,15 @@ export const Default: Story = {
     const options = await screen.findAllByRole('option')
     await expect(options.map((option) => option.textContent)).toEqual(FEEDBACK_REASONS)
     // The list opens under its field, as wide as the field, not over it.
+    // Positioning is applied after the options appear, so read the geometry until it settles.
     const list = screen.getByRole('listbox').closest('[data-slot="select-content"]') as HTMLElement
-    const fieldBox = field.getBoundingClientRect()
-    const listBox = list.getBoundingClientRect()
-    await expect(listBox.top).toBeGreaterThanOrEqual(fieldBox.bottom)
-    await expect(Math.abs(listBox.left - fieldBox.left)).toBeLessThanOrEqual(0.5)
-    await expect(Math.abs(listBox.width - fieldBox.width)).toBeLessThanOrEqual(0.5)
+    await waitFor(() => {
+      const fieldBox = field.getBoundingClientRect()
+      const listBox = list.getBoundingClientRect()
+      expect(listBox.top).toBeGreaterThanOrEqual(fieldBox.bottom)
+      expect(Math.abs(listBox.left - fieldBox.left)).toBeLessThanOrEqual(0.5)
+      expect(Math.abs(listBox.width - fieldBox.width)).toBeLessThanOrEqual(0.5)
+    })
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull())
     await expect(within(form).getByRole('textbox', { name: 'Tell us more (optional)' })).toBeVisible()
@@ -153,7 +156,9 @@ export const RepeatedReasons: Story = {
     // A select tells options apart by value, so a label that repeats is offered once (the first stays).
     await userEvent.click(reasonField(canvas))
     await expect((await screen.findAllByRole('option')).map((option) => option.textContent)).toEqual(['Too long', 'Other'])
-    await userEvent.click(screen.getByRole('option', { name: 'Too long' }))
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull())
+    await choose(canvas, 'Too long')
     // No callback, no dead Close button; an empty disclosure draws no line.
     await expect(canvas.queryByRole('button', { name: 'Close' })).toBeNull()
     await expect(canvas.queryByText('Sends this answer with your note.')).toBeNull()
@@ -212,11 +217,28 @@ export const CloseReturnsToThumb: Story = {
     const down = canvas.getByRole('button', { name: 'Bad answer' })
     await userEvent.click(down)
     await userEvent.tab()
+    // Focus goes into the portalled list and back before Close is pressed.
+    await choose(canvas, 'Too long')
     await userEvent.click(canvas.getByRole('button', { name: 'Close' }))
     await expect(canvas.queryByRole('group', { name: 'What was wrong?' })).toBeNull()
     // Close is gone with the form; the cursor goes back to what opened it, still pressed.
     await waitFor(() => expect(down).toHaveFocus())
     await expect(down).toHaveAttribute('aria-pressed', 'true')
+  },
+}
+
+// The whole path under the answer: thumbs-down, a reason from the dropdown, Send; the thank-you line takes the cursor.
+export const SendUnderTheAnswer: Story = {
+  render: (args) => <UnderAnAnswer onSubmit={args.onSubmit} />,
+  play: async ({ canvas, args }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Bad answer' }))
+    await choose(canvas, 'Too long')
+    await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
+    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSubmit).toHaveBeenCalledWith({ reason: 'Too long', note: '' })
+    // The message has a status region of its own, so find the thank-you line's by its words.
+    const status = (await canvas.findByText('Thanks, that helps.')).closest('[role="status"]') as HTMLElement
+    await waitFor(() => expect(status).toHaveFocus())
   },
 }
 
