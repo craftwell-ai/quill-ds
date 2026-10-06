@@ -104,7 +104,7 @@ export function AiFeedbackForm({
       )}
       {/* On the page from the start so the thank-you arrives into a live region. While empty it is absolutely
           positioned: a real box that takes no grid row and no gap. */}
-      <div ref={statusRef} role="status" tabIndex={-1} className="rounded-md outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 empty:absolute">
+      <div ref={statusRef} role="status" tabIndex={-1} className="rounded-md outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 empty:absolute not-empty:w-fit not-empty:-mx-1.5 not-empty:px-1.5 not-empty:py-0.5">
         {isSent ? <p className="text-xs text-muted-foreground">{sentMessage}</p> : null}
       </div>
     </div>

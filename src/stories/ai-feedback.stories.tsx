@@ -78,6 +78,10 @@ export const FocusAfterSend: Story = {
     await expect(canvas.queryByRole('textbox')).toBeNull()
     const root = canvasElement.querySelector('[data-slot="feedback-form"]') as HTMLElement
     await expect(getComputedStyle(root).borderTopWidth).toBe('0px')
+    // The focus ring hugs the words: the box is only as wide as its text, and the text keeps the form's left edge.
+    await expect(status.getBoundingClientRect().width).toBeLessThan(root.getBoundingClientRect().width / 2)
+    const words = status.querySelector('p') as HTMLElement
+    await expect(Math.abs(words.getBoundingClientRect().left - root.getBoundingClientRect().left)).toBeLessThanOrEqual(0.5)
   },
 }
 
