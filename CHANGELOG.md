@@ -1,7 +1,7 @@
 # Changelog
 
 All notable changes to the Quill Design System. Follows [semver](https://semver.org):
-breaking token/API changes bump major (minor while pre-1.0), new features bump minor,
+breaking token/API changes bump major, new features bump minor,
 fixes bump patch.
 
 **Release routine (every feature/fix PR):** bump `version` in `package.json`, add an
@@ -12,6 +12,12 @@ publish a release by hand.** After the PR merges, the release bot
 within a minute, and that release is what triggers `library-sync` into the apps; a
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
+
+## [1.19.0] — 2026-10-06
+
+### Changed
+- **Quill is version 1.** The design system has been live since launch, so the version now says so: 0.19.0 becomes 1.19.0. The 19 carries over on purpose, counting the rounds of features added since the first release. Nothing in the components, tokens or blocks changes with this release.
+- **What the first number means from here on.** A change that breaks an app using Quill (a renamed token, a removed prop, a component that needs different wiring) bumps the first number. New features bump the second, fixes the third. Before this release such changes only moved the second number.
 
 ## [0.19.0] — 2026-10-05
 
