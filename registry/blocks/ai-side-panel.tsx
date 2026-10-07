@@ -24,6 +24,9 @@ const closeIcon = (size?: number) => <Icon name="close" size={size} />
 // under the header yet, so a trackpad nudge would only fade the scope chip where it sits.
 const THREAD_FADE_AFTER = 4
 
+// A device whose main pointer is a finger. Why that decides where focus goes is told once, at the Sheet below.
+const onTouchScreen = () => window.matchMedia('(pointer: coarse)').matches
+
 export type AiPanelProps = {
   title?: string
   /** What the assistant can see: "Q3 report". Pass a string or null to control it; leave it out and the panel keeps its own. */
@@ -37,7 +40,7 @@ export type AiPanelProps = {
   /** The message box, for a wrapper that sends focus there. AiSidePanel passes its own, to open with the cursor in the box. */
   composerRef?: React.RefObject<HTMLTextAreaElement | null>
   onSubmit?: (value: string) => void
-  /** Your own conversation: UserMessage, AiMessage and cards, each turn a direct child. Passing anything but undefined replaces the sample conversation: no sample messages, no sample follow-up, and sending adds nothing by itself (add the turn in onSubmit). null or an empty list is an empty thread. Replies in a panel should pass hideName: the header already says who is answering. */
+  /** Your own conversation: UserMessage, AiMessage and cards, each turn a direct child. Passing anything but undefined replaces the sample conversation: no sample messages, no sample follow-up, and sending adds nothing by itself (add the turn in onSubmit). Unlike body, null, false and an empty list count as passed here: they are your thread with nothing in it yet, so only undefined shows the sample. Replies in a panel should pass hideName: the header already says who is answering. */
   children?: React.ReactNode
   /** With your own conversation: 'working' while a reply is being written, which shows Stop. Not read while the sample is shown. */
   status?: 'idle' | 'working'
@@ -46,7 +49,7 @@ export type AiPanelProps = {
   /** The message box's text. Pass a string to control it (and clear it yourself after onSubmit); leave it out and the panel keeps its own. */
   value?: string
   onValueChange?: (value: string) => void
-  /** Shown in place of the thread (the scope chip and the messages) for as long as it is passed: your list of past chats while History is open, for example. The header and the composer stay, and the thread is back where it was once this is undefined again. */
+  /** Shown in place of the thread (the scope chip and the messages) for as long as it is passed: your list of past chats while History is open, for example. The header and the composer stay. undefined, null and false all mean "no body", so `open ? <List /> : null` and `open && <List />` both work, and the thread is back where it was. */
   body?: React.ReactNode
   className?: string
 }
@@ -71,7 +74,8 @@ export function AiPanel({
   // The app's own conversation, or (left out) the sample one, which this panel keeps going with pretend replies.
   const ownsThread = children !== undefined
   const turnCount = ownsThread ? React.Children.count(children) : turns.length
-  const hasBody = body !== undefined
+  // null and false are "no body", so `open ? <List /> : null` and `open && <List />` both show the thread while closed.
+  const hasBody = body !== undefined && body !== null && body !== false
   const ownComposerRef = React.useRef<HTMLTextAreaElement>(null)
   const composerRef = givenComposerRef ?? ownComposerRef
   const scrollerRef = React.useRef<HTMLDivElement>(null)
@@ -98,14 +102,20 @@ export function AiPanel({
     if (writing) toNewest()
   }, [writing, toNewest])
   // `body` takes the thread's place in the same scrolling area: it starts at its own top, and the thread returns to
-  // where it was. If the cursor was on something in the body, that is gone now; it lands in the message box.
+  // where it was. If the cursor was on something in the body, that is gone now; it lands in the message box, or on a
+  // touch screen on the panel itself (the Sheet's dialog; drawn inline, this section, made focusable for the moment).
+  const panelRef = React.useRef<HTMLElement>(null)
   React.useLayoutEffect(() => {
     const scroller = scrollerRef.current
     if (!scroller || showsBody.current === hasBody) return
     showsBody.current = hasBody
     scroller.scrollTop = hasBody ? 0 : threadTop.current
     const active = document.activeElement
-    if (!hasBody && (active === null || active === document.body)) composerRef.current?.focus()
+    if (hasBody || (active !== null && active !== document.body)) return
+    if (!onTouchScreen()) return composerRef.current?.focus()
+    const panel = panelRef.current?.closest<HTMLElement>('[role="dialog"]') ?? panelRef.current
+    if (panel && !panel.hasAttribute('tabindex')) panel.tabIndex = -1
+    panel?.focus()
   }, [hasBody, composerRef])
 
   const removeScope = () => {
@@ -117,7 +127,7 @@ export function AiPanel({
 
   return (
     // One wash on the panel itself, top to bottom, behind all three parts: a band on the header alone reads as a hard edge.
-    <section aria-labelledby={titleId} className={cn('ai-wash grid min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] bg-popover text-sm text-popover-foreground', className)}>
+    <section ref={panelRef} aria-labelledby={titleId} className={cn('ai-wash grid min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] bg-popover text-sm text-popover-foreground', className)}>
       <div className="flex items-center gap-2 py-2.5 pr-2.5 pl-3.5">
         <AiMark size={18} />
         {/* A paragraph, not a heading: headings take the serif display preset. */}
@@ -241,7 +251,7 @@ export function AiSidePanel({ open, defaultOpen = false, onOpenChange, trigger, 
           pointer decides instead. */}
       <SheetContent ref={sheetRef} side={side} showCloseButton={false} aria-label={title}
         initialFocus={(openedBy) => {
-          const onTouch = openedBy ? openedBy === 'touch' : window.matchMedia('(pointer: coarse)').matches
+          const onTouch = openedBy ? openedBy === 'touch' : onTouchScreen()
           return onTouch ? sheetRef.current : composerRef.current
         }}
         className={cn('gap-0 p-0 data-[side=left]:w-full data-[side=right]:w-full', className)}>

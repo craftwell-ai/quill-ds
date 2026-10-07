@@ -241,6 +241,22 @@ export const NoSidebar: Story = {
   },
 }
 
+// `sidebar={cond && <List />}` with cond false: no column, the same as null. And false in the trailing slot is none.
+export const SidebarFalseIsNoColumn: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { sidebar: false, composerTrailing: false },
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.queryByRole('navigation')).toBeNull()
+    await expect(canvasElement.querySelector('[data-slot="chat-sidebar"]')).toBeNull()
+    const region = canvas.getByRole('region', { name: 'Conversation' })
+    const page = region.parentElement as HTMLElement
+    await expect(page.children).toHaveLength(1)
+    await expect(region.getBoundingClientRect().width).toBe(page.getBoundingClientRect().width)
+    await expect(canvas.queryByRole('button', { name: /^Model:/ })).toBeNull()
+  },
+}
+
 // The app owns the composer's text: here it starts with a draft, and clears it once it has been sent.
 function ControlledComposerPage({ args }: { args: Story['args'] }) {
   const [draft, setDraft] = React.useState('Summarise this for the board')

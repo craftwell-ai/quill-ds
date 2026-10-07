@@ -810,3 +810,55 @@ export const HistoryInThePanel: Story = {
     await waitFor(() => expect(box).toHaveFocus())
   },
 }
+
+// `body` written the two usual ways, `open ? <List /> : null` and `open && <List />`, is "no body" while closed:
+// the thread shows. Only a real node takes the thread's place.
+const expectThreadNotBody = async (canvasElement: HTMLElement) => {
+  const panel = within(canvasElement).getByRole('region', { name: 'Assistant' })
+  await expect(within(panel).getByRole('log', { name: 'Messages' })).toBeVisible()
+  await expect(within(panel).getByRole('log', { name: 'Messages' })).toHaveTextContent('The September dip.')
+  await expect(within(panel).getByText('Looking at: Q3 report')).toBeVisible()
+  await expect(panel.querySelector('[data-slot="panel-body"]')).toBeNull()
+  await expect(panel.querySelector('[hidden]')).toBeNull()
+}
+export const BodyNullShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: null },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+export const BodyFalseShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: false },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+
+// On a touch screen, putting the cursor in the message box would throw the on-screen keyboard over the chat that was
+// just chosen. The panel itself takes focus there, as it does when the Sheet opens.
+export const ChoosingAChatOnATouchScreen: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  render: (args, { viewMode }) => <PanelWithHistory args={args} className={framed(viewMode, '28rem')} />,
+  play: async ({ canvas }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    const realMatchMedia = window.matchMedia.bind(window)
+    const media = spyOn(window, 'matchMedia').mockImplementation((query: string) => (
+      query === '(pointer: coarse)' ? { ...realMatchMedia(query), matches: true, media: query } as MediaQueryList : realMatchMedia(query)
+    ))
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'History' }))
+      await userEvent.click(await within(panel).findByRole('button', { name: 'Launch brief draft' }))
+      await expect(within(panel).getByRole('log', { name: 'Messages' })).toHaveTextContent('Start a brief for the annual-plans launch.')
+      // Not lost to the page, and not in the box.
+      await waitFor(() => expect(document.activeElement).toBe(panel))
+      await expect(box).not.toHaveFocus()
+      await expect(media).toHaveBeenCalledWith('(pointer: coarse)')
+    } finally {
+      media.mockRestore()
+    }
+  },
+}

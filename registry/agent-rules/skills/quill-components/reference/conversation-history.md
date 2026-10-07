@@ -6,7 +6,7 @@ Past AI chats grouped by when they happened — pinned first, then today, yester
 - People come back to earlier conversations with an AI and need to find one, reopen it, and tidy the list.
 
 ### Reach for instead
-- **ai-chat** — when you want the whole chat page; it carries a short list of its own.
+- **ai-chat** — when you want the whole chat page; it carries a short sample list of its own, and takes this block as its sidebar.
 - **sidebar-nav** — when the side column moves between sections of the app, not between past chats.
 - **command-palette** — when people look a chat up by typing its name instead of browsing by date.
 

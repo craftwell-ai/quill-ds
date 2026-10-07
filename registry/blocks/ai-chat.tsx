@@ -26,7 +26,7 @@ type Turn = { id: number; ask: string; reply: 'working' | 'stopped' }
 
 export type AiChatProps = {
   onSubmit?: (value: string) => void
-  /** Your own conversation: UserMessage, AiMessage and cards. Passing anything but undefined replaces the sample turns and follow-ups: sending adds nothing by itself (add the turn in onSubmit). null or an empty list is an empty thread. */
+  /** Your own conversation: UserMessage, AiMessage and cards. Passing anything but undefined replaces the sample turns and follow-ups: sending adds nothing by itself (add the turn in onSubmit). null, false and an empty list count as passed: they are your thread with nothing in it yet, so only undefined shows the sample. The page does not scroll to a new turn: the page itself scrolls, so that is yours to do. */
   children?: React.ReactNode
   /** With your own conversation: 'working' while a reply is being written, which shows Stop. Not read while the sample is shown. */
   status?: 'idle' | 'working'
@@ -35,9 +35,9 @@ export type AiChatProps = {
   /** The message box's text. Pass a string to control it (and clear it yourself after onSubmit); leave it out and the page keeps its own. */
   value?: string
   onValueChange?: (value: string) => void
-  /** Your list of past chats for the left column, in place of the sample one: the conversation-history block, for example. null removes the column. */
+  /** Your list of past chats for the left column, in place of the sample one: the conversation-history block, for example. undefined is the sample list; null and false are no column at all, so `cond && <List />` gives no column while cond is false. */
   sidebar?: React.ReactNode
-  /** What sits in the composer's trailing slot, in place of the sample model picker. null shows nothing there. */
+  /** What sits in the composer's trailing slot, in place of the sample model picker. undefined is the sample picker; null and false show nothing there. */
   composerTrailing?: React.ReactNode
 }
 
@@ -55,9 +55,11 @@ export function AiChat({ onSubmit = () => {}, children, status = 'idle', onStop,
   // The app's own conversation, or (left out) the sample one, which this page keeps going with pretend replies.
   const ownsThread = children !== undefined
   const working = ownsThread ? status === 'working' : turns.at(-1)?.reply === 'working'
+  const noSidebar = sidebar === null || sidebar === false
+  const noTrailing = composerTrailing === null || composerTrailing === false
 
   return (
-    <div className={sidebar === null ? 'grid min-h-[40rem] bg-background' : 'grid min-h-[40rem] bg-background md:grid-cols-[15rem_minmax(0,1fr)]'}>
+    <div className={noSidebar ? 'grid min-h-[40rem] bg-background' : 'grid min-h-[40rem] bg-background md:grid-cols-[15rem_minmax(0,1fr)]'}>
       {sidebar === undefined ? (
         <nav aria-label="Chats" className="hidden content-start gap-0.5 border-r border-border p-2 md:grid">
           <Button type="button" variant="outline" size="sm" className="mb-2 justify-start"><Icon name="add" />New chat</Button>
@@ -71,7 +73,7 @@ export function AiChat({ onSubmit = () => {}, children, status = 'idle', onStop,
             </React.Fragment>
           ))}
         </nav>
-      ) : sidebar === null ? null : (
+      ) : noSidebar ? null : (
         // The same column, divider and padding as the sample list; what is in it names itself (the conversation-history block is a navigation landmark).
         <div data-slot="chat-sidebar" className="hidden min-w-0 border-r border-border p-2 md:block">{sidebar}</div>
       )}
@@ -124,7 +126,7 @@ export function AiChat({ onSubmit = () => {}, children, status = 'idle', onStop,
               // A value the app controls is the app's to clear.
               if (givenValue === undefined) setOwnValue('')
             }}
-            trailing={composerTrailing === undefined ? <ModelPicker models={MODELS} value={model} onValueChange={setModel} /> : composerTrailing}
+            trailing={composerTrailing === undefined ? <ModelPicker models={MODELS} value={model} onValueChange={setModel} /> : noTrailing ? undefined : composerTrailing}
             placeholder="Ask a follow-up"
           />
           <AiNotice />

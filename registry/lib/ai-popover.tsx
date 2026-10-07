@@ -68,22 +68,48 @@ const firstOnPage = (...candidates: Array<HTMLElement | null | undefined>) =>
 function AnchorSpot({ id, anchor, open, onFocus }: { id: string; anchor: AiPopoverAnchor; open: boolean; onFocus: () => void }) {
   // Typed as the stock trigger types it; the element is the <span> below.
   const ref = React.useRef<HTMLButtonElement>(null)
-  const shift = React.useRef({ x: 0, y: 0 })
+  // What was last written to the stand-in, in its own CSS pixels, and how many screen pixels one of those is.
+  const written = React.useRef({ x: 0, y: 0, width: 0, height: 0, scaleX: 1, scaleY: 1 })
+  // The last box the anchor gave that was a real one.
+  const lastGood = React.useRef<DOMRect | null>(null)
   const place = React.useCallback(() => {
     const spot = ref.current
     if (!spot) return
-    const want = anchor.getBoundingClientRect()
-    const landed = spot.getBoundingClientRect()
-    // Already there (the usual answer): nothing is written, so nothing is laid out again.
-    const off = [want.left - landed.left, want.top - landed.top, want.width - landed.width, want.height - landed.height]
-    if (off.every((miss) => Math.abs(miss) < 0.05)) return
-    spot.style.width = `${want.width}px`
-    spot.style.height = `${want.height}px`
-    // A fixed box is measured from the window, unless an ancestor is transformed: then from that ancestor. Whichever
-    // it is, where the box really landed was read back above, and the miss is taken out.
-    shift.current = { x: shift.current.x + off[0], y: shift.current.y + off[1] }
-    spot.style.left = `${shift.current.x}px`
-    spot.style.top = `${shift.current.y}px`
+    // An app's own getBoundingClientRect can throw, and a Range whose text was redrawn reports an empty box at the
+    // window's corner. Neither is a place to go to: the last real box is kept.
+    let want = lastGood.current
+    try {
+      const box = anchor.getBoundingClientRect()
+      if (box.width !== 0 || box.height !== 0 || box.left !== 0 || box.top !== 0) want = lastGood.current = box
+    } catch {
+      // Kept where it was.
+    }
+    if (!want) return
+    const css = written.current
+    // Twice at most: the first pass may only learn the scale (nothing had a size yet to measure it by).
+    for (let pass = 0; pass < 2; pass += 1) {
+      const landed = spot.getBoundingClientRect()
+      // A fixed box is measured from the window, unless an ancestor is transformed: then from that ancestor, and in
+      // its pixels. Under scale(2) one CSS pixel is two on screen, so the miss (read in screen pixels) is divided by
+      // the scale before it is taken out, and so is the size. The scale is what the box measures over what was
+      // written. A rotated or skewed ancestor is not handled.
+      if (css.width > 0 && landed.width > 0) css.scaleX = landed.width / css.width
+      if (css.height > 0 && landed.height > 0) css.scaleY = landed.height / css.height
+      // One axis with nothing to measure (a caret has no width) goes by the other.
+      const scaleX = css.width > 0 ? css.scaleX : css.scaleY
+      const scaleY = css.height > 0 ? css.scaleY : css.scaleX
+      const off = [want.left - landed.left, want.top - landed.top, want.width - landed.width, want.height - landed.height]
+      // Already there (the usual answer): nothing is written, so nothing is laid out again.
+      if (off.every((miss) => Math.abs(miss) < 0.05)) return
+      css.x += off[0] / scaleX
+      css.y += off[1] / scaleY
+      css.width = want.width / scaleX
+      css.height = want.height / scaleY
+      spot.style.left = `${css.x}px`
+      spot.style.top = `${css.y}px`
+      spot.style.width = `${css.width}px`
+      spot.style.height = `${css.height}px`
+    }
   }, [anchor])
   // After every render while open (the anchor may be a new one), and before the popover works out its own place.
   React.useLayoutEffect(() => {
@@ -146,6 +172,7 @@ export function AiPopover({
   // Anchor mode: the stand-in is the trigger the popover is placed by, and must never end up holding the cursor.
   // Closing sends the cursor to returnFocus, else to the trigger (children), else to what had it on opening.
   const spotId = React.useId()
+  const popupId = React.useId()
   const triggerRef = React.useRef<HTMLButtonElement>(null)
   const opener = React.useRef<HTMLElement | null>(null)
 
@@ -159,22 +186,38 @@ export function AiPopover({
         if (anchored && next && isOpen && details.reason === 'trigger-press') return setOpen(false)
         setOpen(next)
       }}>
-      {/* The stand-in is the trigger the popover belongs to, so the real one is told whether it is open here. */}
-      {children ? <PopoverTrigger render={children} nativeButton={nativeButton} {...(anchored ? { ref: triggerRef, 'aria-expanded': isOpen } : undefined)} /> : null}
-      {/* Shift+Tab out of the popover's start goes to its trigger. Here that is the stand-in, so it passes the cursor on. */}
-      {anchored ? (
-        <AnchorSpot id={spotId} anchor={anchor} open={isOpen}
-          onFocus={() => (firstOnPage(returnFocus?.current, triggerRef.current, opener.current) ?? popupRef.current)?.focus()} />
+      {/* The stand-in is the trigger the popover belongs to, so the real one is told here what a trigger is told:
+          whether the popover is open and which it is. Tab from it, while open, goes in to the popover's first stop,
+          as it does from a trigger the popover is placed by. */}
+      {children ? (
+        <PopoverTrigger render={children} nativeButton={nativeButton} {...(anchored ? {
+          ref: triggerRef,
+          'aria-expanded': isOpen,
+          'aria-controls': isOpen ? popupId : undefined,
+          onKeyDown: (event: React.KeyboardEvent) => {
+            if (!isOpen || event.key !== 'Tab' || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return
+            const first = popupRef.current?.querySelector<HTMLElement>('[tabindex="0"], button:not(:disabled)')
+            if (!first) return
+            event.preventDefault()
+            first.focus()
+          },
+        } : undefined)} />
       ) : null}
+      {/* Shift+Tab out of the popover's start goes to its trigger. Here that is the stand-in, so it passes the cursor
+          on: to the real trigger when there is one, as a wrapped anchor would have it; with no trigger there is
+          nothing to step back to, and the cursor stays in the popover, on the dialog. */}
+      {anchored ? <AnchorSpot id={spotId} anchor={anchor} open={isOpen} onFocus={() => (firstOnPage(triggerRef.current) ?? popupRef.current)?.focus()} /> : null}
       {/* The wash is a background image over the popover's own fill, so the stock surface colour stays. Focus opens on
           the dialog itself, not on Discard: someone holding Enter to open it would otherwise discard on the key repeat. */}
       <PopoverContent ref={popupRef} side={side} align={align}
         // With an anchor, what has the cursor as the popover opens is remembered, to hand it back on closing.
+        // Asked a second time with the cursor already inside (a double render), the first answer stands.
         initialFocus={anchored ? () => {
           const active = document.activeElement
-          opener.current = active instanceof HTMLElement && !popupRef.current?.contains(active) ? active : null
+          if (!popupRef.current?.contains(active)) opener.current = active instanceof HTMLElement ? active : null
           return popupRef.current
         } : popupRef}
+        {...(anchored ? { id: popupId } : undefined)}
         finalFocus={anchored ? () => firstOnPage(returnFocus?.current, triggerRef.current, opener.current) ?? false : undefined}
         className={cn('ai-wash w-96 max-w-[calc(100vw-2rem)] max-h-(--available-height) gap-0 overflow-hidden p-0 focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
         <div className="flex shrink-0 items-center gap-2 px-3.5 pt-3 pb-1">

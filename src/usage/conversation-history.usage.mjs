@@ -4,7 +4,7 @@ export const usage = {
   summary: 'Past AI chats grouped by when they happened — pinned first, then today, yesterday, the last week and earlier months — with the open chat filled and a menu on each row to rename, pin or delete it.',
   useWhen: ['People come back to earlier conversations with an AI and need to find one, reopen it, and tidy the list.'],
   alternatives: [
-    { name: 'ai-chat', when: 'you want the whole chat page; it carries a short list of its own.' },
+    { name: 'ai-chat', when: 'you want the whole chat page; it carries a short sample list of its own, and takes this block as its sidebar.' },
     { name: 'sidebar-nav', when: 'the side column moves between sections of the app, not between past chats.' },
     { name: 'command-palette', when: 'people look a chat up by typing its name instead of browsing by date.' },
   ],

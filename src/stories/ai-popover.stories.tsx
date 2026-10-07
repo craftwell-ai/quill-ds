@@ -473,7 +473,7 @@ const expectBeside = (dialog: HTMLElement, anchorBox: () => DOMRect) => waitFor(
 type AnchorArgs = Omit<React.ComponentProps<typeof AiPopover>, 'anchor' | 'open' | 'returnFocus'>
 
 // An editor in miniature: selecting text in it opens the suggestion beside the selection; Replace swaps the text.
-function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, trigger }: { args: AnchorArgs; text?: string; className?: string; trigger?: React.ReactElement }) {
+function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, trigger, scale }: { args: AnchorArgs; text?: string; className?: string; trigger?: React.ReactElement; scale?: number }) {
   const editor = React.useRef<HTMLDivElement>(null)
   const [text, setText] = React.useState(initial)
   const [range, setRange] = React.useState<Range | null>(null)
@@ -497,7 +497,7 @@ function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, tri
     </AiPopover>
   )
   return (
-    <div className="grid w-[26rem] max-w-full gap-3">
+    <div className="grid w-[26rem] max-w-full gap-3" style={scale ? { transform: `scale(${scale})`, transformOrigin: 'top left' } : undefined}>
       {/* A button to ask from sits above the text, as a toolbar does, clear of the popover that opens below the selection. */}
       {trigger ? popover : null}
       {/* key: the text is the editor's own once typed in, so a replaced passage is drawn afresh. */}
@@ -551,19 +551,18 @@ export const OnATextSelection: Story = {
       await userEvent.tab({ shift: true })
       await expect(within(dialog).getByRole('button', { name })).toHaveFocus()
     }
-    // Back out of the popover's start: a wrapped anchor would take the cursor there; here the editor does, and the
-    // popover stays open as it would.
+    // Back out of the popover's start: with nothing wrapped there is no control to step back to, so the cursor stays
+    // in the popover, on the dialog itself, and the popover stays open. Tab goes on to its first button again.
     await userEvent.tab({ shift: true })
-    await waitFor(() => expect(editor).toHaveFocus())
-    await expect(document.activeElement).not.toBe(standIn)
+    await waitFor(() => expect(dialog).toHaveFocus())
+    await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+    await userEvent.tab()
+    await expect(within(dialog).getByRole('button', { name: 'Discard' })).toHaveFocus()
     await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
     // From here on every way of closing sends the cursor straight to the editor, never by way of the stand-in.
     let passedThrough = 0
     standIn.addEventListener('focus', () => { passedThrough += 1 })
     // Escape closes it and says so; the cursor goes back to the editor.
-    if (!page().queryByRole('dialog')) range = select()
-    dialog = await page().findByRole('dialog', { name: TITLE })
-    dialog.focus()
     await userEvent.keyboard('{Escape}')
     await closed()
     await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
@@ -641,8 +640,8 @@ export const AButtonOpensItBesideASelection: Story = {
     const button = canvas.getByRole('button', { name: 'Shorten' })
     editor.focus()
     const range = selectText(editor.firstChild as Text, BEFORE.length, BEFORE.length + PASSAGE.length)
-    // Selecting alone opens nothing here.
-    await new Promise((resolve) => setTimeout(resolve, 150))
+    // Selecting alone opens nothing here. (The stand-in arriving is the sign the selection has been heard.)
+    await waitFor(() => expect(spot()).not.toBeNull())
     await expect(page().queryByRole('dialog')).toBeNull()
     await expect(button).toHaveAttribute('aria-expanded', 'false')
     // Being given an anchor did not swap the app's button for another one.
@@ -651,17 +650,30 @@ export const AButtonOpensItBesideASelection: Story = {
     let dialog = await page().findByRole('dialog', { name: TITLE })
     await expect(args.onOpenChange).toHaveBeenLastCalledWith(true)
     await expect(button).toHaveAttribute('aria-expanded', 'true')
+    await expect(button.getAttribute('aria-controls')).toBe(dialog.id)
+    await expect(dialog.id).not.toBe('')
     // Beside the selection, not beside the button that opened it, and not over that button.
     await expectBeside(dialog, () => range.getBoundingClientRect())
     await expect(dialog.getBoundingClientRect().top - button.getBoundingClientRect().bottom).toBeGreaterThan(6)
     // The one button on the page is the app's; the stand-in is not one.
     await expect(canvas.getAllByRole('button')).toEqual([button])
-    // Escape closes it; the cursor goes back to the button.
+    // The keyboard, as with a wrapped anchor: Shift+Tab from the first button steps back to the button that opened
+    // it, the popover stays open, and Tab goes back in to its first button.
     await waitFor(() => expect(dialog).toHaveFocus())
+    await userEvent.tab()
+    await expect(within(dialog).getByRole('button', { name: 'Discard' })).toHaveFocus()
+    await userEvent.tab({ shift: true })
+    await waitFor(() => expect(button).toHaveFocus())
+    await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+    await userEvent.tab()
+    await expect(within(dialog).getByRole('button', { name: 'Discard' })).toHaveFocus()
+    await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+    // Escape closes it; the cursor goes back to the button.
     await userEvent.keyboard('{Escape}')
     await closed()
     await waitFor(() => expect(button).toHaveFocus())
     await expect(button).toHaveAttribute('aria-expanded', 'false')
+    await expect(button).not.toHaveAttribute('aria-controls')
     // A second press on the button closes it, as it does without an anchor.
     await userEvent.click(button)
     dialog = await page().findByRole('dialog', { name: TITLE })
@@ -670,6 +682,197 @@ export const AButtonOpensItBesideASelection: Story = {
     await closed()
     await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
     await waitFor(() => expect(button).toHaveFocus())
+  },
+}
+
+// A few frames of the page being drawn, counted, not timed.
+const frames = async (count: number) => { for (let frame = 0; frame < count; frame += 1) await new Promise((resolve) => requestAnimationFrame(resolve)) }
+// In a centred Storybook canvas the page itself moves for a moment after an overlay opens. Anything that measures
+// "has it moved?" first waits for the fonts (a late one re-flows the text, and the selection with it), then for the
+// thing it is anchored to to have kept one box for twenty frames running.
+const pageAtRest = async (anchorBox: () => DOMRect) => {
+  await document.fonts.ready
+  let last = anchorBox()
+  for (let same = 0, frame = 0; same < 20 && frame < 300; frame += 1) {
+    await frames(1)
+    const now = anchorBox()
+    same = (['left', 'top', 'right', 'bottom'] as const).every((edge) => Math.abs(now[edge] - last[edge]) < 0.01) ? same + 1 : 0
+    last = now
+  }
+}
+// Beside the selection, and still exactly there ten frames on: a stand-in that keeps missing would be moving.
+const expectBesideAndStill = async (dialog: HTMLElement, range: Range) => {
+  await expectBeside(dialog, () => range.getBoundingClientRect())
+  await pageAtRest(() => range.getBoundingClientRect())
+  await expectBeside(dialog, () => range.getBoundingClientRect())
+  const first = dialog.getBoundingClientRect()
+  const standIn = (spot() as HTMLElement).getBoundingClientRect()
+  for (let frame = 0; frame < 10; frame += 1) {
+    await frames(1)
+    const now = dialog.getBoundingClientRect()
+    await expect(Math.abs(now.left - first.left)).toBeLessThanOrEqual(1)
+    await expect(Math.abs(now.top - first.top)).toBeLessThanOrEqual(1)
+    const box = (spot() as HTMLElement).getBoundingClientRect()
+    for (const edge of ['left', 'top', 'right', 'bottom'] as const) await expect(Math.abs(box[edge] - standIn[edge])).toBeLessThanOrEqual(1)
+  }
+  const selected = range.getBoundingClientRect()
+  const box = (spot() as HTMLElement).getBoundingClientRect()
+  for (const edge of ['left', 'top', 'right', 'bottom'] as const) await expect(Math.abs(box[edge] - selected[edge])).toBeLessThanOrEqual(1)
+}
+const SCALED = { parameters: { viewport: { options: VIEWPORTS } }, globals: { viewport: { value: 'desktop', isRotated: false } } } as const
+const selectInScaledEditor = (canvas: Canvas, length = PASSAGE.length) => {
+  const editor = canvas.getByRole('textbox', { name: 'Report' })
+  editor.focus()
+  return selectText(editor.firstChild as Text, BEFORE.length, BEFORE.length + length)
+}
+
+// The editor sits in something scaled (a zoomed canvas, a preview at half size). There a CSS pixel is not a screen
+// pixel, so the stand-in has to be told its place and size in the ancestor's pixels.
+export const InsideAnAncestorScaledUp: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <Editor args={withoutTrigger(args)} scale={2} />,
+  play: async ({ canvas }) => {
+    const range = selectInScaledEditor(canvas)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expect(range.getBoundingClientRect().height).toBeGreaterThan(60)
+    await expectBesideAndStill(dialog, range)
+  },
+}
+
+export const InsideAnAncestorScaledDown: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <Editor args={withoutTrigger(args)} scale={0.5} />,
+  play: async ({ canvas }) => {
+    const range = selectInScaledEditor(canvas)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expect(range.getBoundingClientRect().height).toBeLessThan(30)
+    await expectBesideAndStill(dialog, range)
+  },
+}
+
+// The stand-in's size matters as much as its place: with align="end" the popover lines up with its right edge.
+export const AlignEndInsideAScaledAncestor: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  args: { align: 'end' },
+  render: (args) => <Editor args={withoutTrigger(args)} text={'Q3. ' + AFTER + ' ' + BEFORE + PASSAGE} scale={1.5} />,
+  play: async ({ canvas }) => {
+    const editor = canvas.getByRole('textbox', { name: 'Report' })
+    editor.focus()
+    // One line's worth near the right-hand side, so its right edge is the thing to line up with.
+    const text = editor.firstChild as Text
+    const range = selectText(text, 34, 56)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    // Far enough from the window's left edge for the popover to hang leftwards from it without being pushed back in.
+    await expect(range.getBoundingClientRect().right).toBeGreaterThan(430)
+    await expect(range.getClientRects()).toHaveLength(1)
+    await waitFor(() => {
+      expect(dialog.getAnimations().filter((animation) => animation.playState === 'running')).toHaveLength(0)
+      const box = dialog.getBoundingClientRect()
+      const selected = range.getBoundingClientRect()
+      expect(Math.abs(box.right - selected.right)).toBeLessThanOrEqual(1)
+      expect(box.top - selected.bottom).toBeGreaterThanOrEqual(0)
+      expect(box.top - selected.bottom).toBeLessThanOrEqual(6)
+    })
+    await pageAtRest(() => range.getBoundingClientRect())
+    for (let frame = 0; frame < 10; frame += 1) {
+      await frames(1)
+      await expect(Math.abs(dialog.getBoundingClientRect().right - range.getBoundingClientRect().right)).toBeLessThanOrEqual(1)
+    }
+  },
+}
+
+// An editor that redraws its text leaves the old selection pointing at nothing: it then reports an empty box at the
+// window's corner. The popover holds where it was instead of jumping there.
+export const HoldsWhenTheSelectionIsLost: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <Editor args={withoutTrigger(args)} />,
+  play: async ({ canvas }) => {
+    const editor = canvas.getByRole('textbox', { name: 'Report' })
+    const range = selectInScaledEditor(canvas)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+    await pageAtRest(() => range.getBoundingClientRect())
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+    const before = dialog.getBoundingClientRect()
+    const kept = (spot() as HTMLElement).getBoundingClientRect()
+    // Well clear of the window's corner, where a lost selection would send it.
+    await expect(before.top).toBeGreaterThan(40)
+    // The editor swaps its text node for a new one with the same words.
+    const old = editor.firstChild as Text
+    const held = document.createRange()
+    held.setStart(old, BEFORE.length)
+    held.setEnd(old, BEFORE.length + PASSAGE.length)
+    old.replaceWith(document.createTextNode(old.data))
+    await frames(6)
+    await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+    const after = dialog.getBoundingClientRect()
+    await expect(Math.abs(after.left - before.left)).toBeLessThanOrEqual(1)
+    await expect(Math.abs(after.top - before.top)).toBeLessThanOrEqual(1)
+    const standIn = (spot() as HTMLElement).getBoundingClientRect()
+    await expect(Math.abs(standIn.left - kept.left)).toBeLessThanOrEqual(1)
+    await expect(Math.abs(standIn.top - kept.top)).toBeLessThanOrEqual(1)
+    await expect(Math.abs(standIn.width - kept.width)).toBeLessThanOrEqual(1)
+  },
+}
+
+// An app's own getBoundingClientRect can fail (its text box was removed, say). The popover stays where it last was,
+// nothing on the page breaks, and it follows again once the app can answer.
+const FLAKY = { fail: false, top: 0 }
+function FlakyAnchor({ args }: { args: AnchorArgs }) {
+  const text = React.useRef<HTMLParagraphElement>(null)
+  const [open, setOpen] = React.useState(false)
+  const anchor = React.useMemo(() => ({
+    getBoundingClientRect: () => {
+      if (FLAKY.fail) throw new Error('the app could not measure its selection')
+      const box = (text.current as HTMLElement).getBoundingClientRect()
+      return new DOMRect(box.left, box.top + FLAKY.top, box.width, box.height)
+    },
+  }), [])
+  return (
+    <div className="grid w-[26rem] max-w-full justify-items-start gap-3 text-sm leading-relaxed text-ink-soft">
+      <p ref={text}>{BEFORE + PASSAGE}</p>
+      <Button variant="outline" onClick={() => setOpen(true)}>Shorten the paragraph</Button>
+      <AiPopover {...args} anchor={anchor} open={open} onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }} />
+    </div>
+  )
+}
+
+export const AnAnchorThatCannotBeMeasured: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <FlakyAnchor args={withoutTrigger(args)} />,
+  play: async ({ canvas }) => {
+    FLAKY.fail = false
+    FLAKY.top = 0
+    const paragraph = canvas.getByText(BEFORE + PASSAGE)
+    await userEvent.click(canvas.getByRole('button', { name: 'Shorten the paragraph' }))
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expectBeside(dialog, () => paragraph.getBoundingClientRect())
+    await pageAtRest(() => paragraph.getBoundingClientRect())
+    await expectBeside(dialog, () => paragraph.getBoundingClientRect())
+    const before = dialog.getBoundingClientRect()
+    try {
+      FLAKY.fail = true
+      await frames(6)
+      // Still there, still where it was; the page was not torn down by the error.
+      await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+      await expect(paragraph).toBeVisible()
+      await expect(Math.abs(dialog.getBoundingClientRect().top - before.top)).toBeLessThanOrEqual(1)
+      // A redraw of the popover while the anchor cannot be measured does not break it either.
+      await userEvent.click(within(dialog).getByRole('button', { name: 'Try again' }))
+      await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+    } finally {
+      FLAKY.fail = false
+    }
+    // The app can answer again, and its selection has moved 24px down: the popover is still following.
+    FLAKY.top = 24
+    await waitFor(() => expect(Math.abs(dialog.getBoundingClientRect().top - (before.top + 24))).toBeLessThanOrEqual(1))
+    FLAKY.top = 0
+    await waitFor(() => expect(Math.abs(dialog.getBoundingClientRect().top - before.top)).toBeLessThanOrEqual(1))
   },
 }
 

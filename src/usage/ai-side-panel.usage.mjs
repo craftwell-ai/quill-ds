@@ -23,7 +23,7 @@ export const usage = {
     },
     {
       id: 'history-is-yours-to-wire',
-      do: 'Wire History to your own list of past chats with onHistory; the conversation-history block is that list, and passing it as body shows it in the panel itself, in place of the thread, until you pass undefined again. History only calls onHistory, and with it left out the button is not drawn.',
+      do: 'Wire History to your own list of past chats with onHistory; the conversation-history block is that list, and passing it as body shows it in the panel itself, in place of the thread, until you stop passing it (undefined, null and false all show the thread, so open ? list : null and open && list both work). History only calls onHistory, and with it left out the button is not drawn.',
       dont: 'Ship a History button that does nothing, or put the list among the messages — it is not a turn of the conversation.',
       visual: false,
     },
@@ -35,7 +35,7 @@ export const usage = {
     },
     {
       id: 'pass-your-own-thread',
-      do: 'Pass your conversation as children and drive the composer with status, onStop and onSubmit. The conversation shown without children is sample content.',
+      do: 'Pass your conversation as children and drive the composer with status, onStop and onSubmit. The conversation shown without children is sample content. For a conversation with nothing in it yet pass null, false or an empty list: unlike body, those count as passed here, and only undefined shows the sample.',
       dont: 'Ship the sample conversation, or edit the block to hard-code yours — the block is overwritten on update.',
       visual: false,
     },
@@ -53,7 +53,7 @@ export const usage = {
     'The thread is a log named "Messages", a polite live region, so each new turn is read out as it is added. The thread scrolls inside the panel; the header and the composer stay in view. Messages scrolled under the header fade out; at the top of the thread nothing fades, and a control reached by keyboard is scrolled clear of the fade.',
     'The sample replies do not show their name, because the header already says it; the name is still read to screen readers. Pass hideName on the replies in your own conversation for the same.',
     'With your own conversation the panel opens on the newest turn, and brings the newest into view when a turn is added or a reply starts being written (status "working"). Each turn has to be a direct child for an added one to be noticed. Stop moves the cursor back to the message box.',
-    'While body is passed, the thread is hidden, the scope chip and the log with it, so nothing in it is read or reached by Tab; the header and the composer stay. What you pass names itself (the conversation-history block is a navigation landmark). When body goes away the thread is back where it was scrolled to, and if the cursor was on something in the body it lands in the message box.',
+    'While body is passed, the thread is hidden, the scope chip and the log with it, so nothing in it is read or reached by Tab; the header and the composer stay. What you pass names itself (the conversation-history block is a navigation landmark). When body goes away the thread is back where it was scrolled to, and if the cursor was on something in the body it lands in the message box; on a device whose main pointer is a finger (pointer: coarse) it lands on the panel itself instead, so the on-screen keyboard stays down.',
     'The chip\'s remove button is named "Stop looking at" followed by the scope and shows the same 3px focus ring as a Button; removing the chip moves the cursor to the composer. A scope your app controls, with no onScopeRemove, shows no remove button.',
     'History and Close are icon buttons with names. History is drawn only when onHistory is given.',
   ],

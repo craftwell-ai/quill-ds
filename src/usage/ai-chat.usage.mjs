@@ -16,13 +16,13 @@ export const usage = {
     },
     {
       id: 'pass-your-own-thread',
-      do: 'Pass your conversation as children and drive the composer with status, onStop and onSubmit. The conversation shown without children is sample content.',
+      do: 'Pass your conversation as children and drive the composer with status, onStop and onSubmit. The conversation shown without children is sample content. For a conversation with nothing in it yet pass null, false or an empty list: those count as passed, and only undefined shows the sample. Scroll to a new turn yourself: the page is what scrolls, so the block does not (the side panel, which scrolls inside itself, does).',
       dont: 'Ship the sample conversation, or edit the block to hard-code yours — the block is overwritten on update.',
       visual: false,
     },
     {
       id: 'chat-list-is-a-sample',
-      do: 'Pass the conversation-history block as sidebar: the built-in list of chats is a sample. Pass null for a page with no left column, and composerTrailing for your own control in place of the sample model picker (null for none).',
+      do: 'Pass the conversation-history block as sidebar: the built-in list of chats is a sample. Pass null or false for a page with no left column (so cond && list gives no column while cond is false; only undefined shows the sample list), and composerTrailing for your own control in place of the sample model picker (null or false for none).',
       dont: 'Ship the sample list of chats or the sample model picker.',
       visual: false,
     },
