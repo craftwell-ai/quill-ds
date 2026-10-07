@@ -13,6 +13,29 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.22.1] — 2026-10-07
+
+### Changed
+- test(paper): neutral sample name in the converter test
+- docs(paper): name the rehearsal-only notification switch
+- fix(paper): drop a story whose end state differs between builds; clearer folder refusal
+- docs(paper): record, baseline and README after the review round
+- fix(paper): daily job fails loudly, proves its folder, and reads status safely
+- fix(paper): only touch pages and artboards the sync owns; reconcile the record offline
+- fix(paper): draw a story's end state, panel shells, and four layout rules
+- feat(paper): accepted picture baseline for 124 pieces
+- docs(paper): README for the Paper mirror and a Paper section in AGENTS.md
+- feat(paper): record of all 130 pieces and the CI coverage check
+- fix(paper): converter fixes found by looking at the full sync
+- feat(paper): daily job and its launchd schedule (not installed)
+- feat(paper): paper:sync, paper:check and paper:status for every piece
+- feat(paper): converter handles overlays, images, charts, fields and placed layers
+- feat(paper): read Paper back and compare it with Storybook
+- feat(paper): one page per piece, plus a Foundations page drawn from tokens
+- feat(paper): convert a rendered story to Paper-safe HTML
+- feat(paper): push Quill's tokens into Paper, idempotently
+- feat(paper): MCP-over-HTTP client for the Paper desktop app
+
 ## [1.22.0] — 2026-10-07
 
 ### Added
