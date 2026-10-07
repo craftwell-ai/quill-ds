@@ -26,9 +26,15 @@ const CANVAS_PADDING = 24 // .storybook/preview.tsx CANVAS_PADDING, each side
 const SCALE = 2
 
 // ------------------------------------------------------------------ pairs
-/** The story that stands for a block: `…--<name>`, else `…--default`, else the first non-docs, non-Do/Don't story. */
+/**
+ * The story that stands for a block: `…--<name>`, else `…--default`, else the first non-docs, non-Do/Don't story.
+ * A block can be imported by another block's stories (the chat page shows conversation-history as its sidebar), so
+ * stories from the block's own file, whose title ends in its name, are looked at first.
+ */
 export function canonicalStory(name, storyIds) {
-  const real = storyIds.filter((id) => !/--docs$/.test(id) && !/--do-?dont$/.test(id))
+  const shown = storyIds.filter((id) => !/--docs$/.test(id) && !/--do-?dont$/.test(id))
+  const own = shown.filter((id) => id.split('--')[0].endsWith(name))
+  const real = own.length ? own : shown
   return real.find((id) => id.endsWith(`--${name}`)) ?? real.find((id) => id.endsWith('--default')) ?? real[0] ?? null
 }
 
