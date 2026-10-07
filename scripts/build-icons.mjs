@@ -25,7 +25,7 @@ import {
   existsSync,
 } from 'node:fs'
 import { execSync } from 'node:child_process'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 import { MANIFEST } from './icons.manifest.mjs'
 
@@ -200,7 +200,9 @@ export function build() {
   return { core, lazy: full, tail, coreMjs, tailMjs, dts }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// compared as URLs: a folder with a space in its name is `%20` in import.meta.url, and a plain string
+// comparison then fails silently, so the script would exit having written nothing
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const { core, lazy, tail } = build()
   console.log(
     `icons.core.mjs: ${core.length} core | icons/: ${lazy.length} per-icon modules | icons.tail.mjs: ${tail.length} tail icons`
