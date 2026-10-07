@@ -138,7 +138,7 @@ export type ConversationHistoryProps = {
   /** With your own conversations, each of these three also decides whether its menu item is drawn. */
   onRename?: (id: string, title: string) => void
   onPin?: (id: string, pinned: boolean) => void
-  /** Called at most once for each confirmed delete, not when Delete is confirmed: when the Undo time has passed (it starts once the pointer and keyboard focus have left the Undo line), or sooner if another delete is confirmed, the list is removed from the page, or the page is hidden or closed (best effort: a phone may not report a tab it closes in the background). Send your request with `keepalive` or `navigator.sendBeacon`, or the browser can drop one made as the page closes. The list keeps showing the chat until you remove it from `conversations`. */
+  /** Called at most once for each confirmed delete, not when Delete is confirmed: when the Undo time has passed (it starts once the pointer and keyboard focus have left the Undo line), or sooner if another delete is confirmed, the list is removed from the page, or the page is hidden or closed (switching to another tab or app counts as hidden). Send your request with `keepalive` or `navigator.sendBeacon`, or the browser can drop one made as the page closes. The list keeps showing the chat until you remove it from `conversations`. */
   onDelete?: (id: string) => void
   /** How long Undo stays after a delete. The countdown waits while the pointer or keyboard focus is on that line. 0 deletes as soon as nothing holds the line. A negative number, NaN or Infinity is treated as the default, 6. */
   undoSeconds?: number
@@ -184,7 +184,7 @@ export function ConversationHistory({
   // app may apply the pin later), or the Undo line if the app moves its chat to another group.
   const following = React.useRef<FocusTarget | null>(null)
   // The confirmed delete the app has not been told about yet. Read and cleared by everything that can settle it
-  // (the countdown, a second delete, the list going away, the tab closing), so each sees at once what another did.
+  // (the countdown, a second delete, the list going away, the tab being hidden or closing), so each sees at once what another did.
   const owed = React.useRef<string | null>(null)
 
   // With the app's own list, an action it did not wire is not offered. The sample offers all three.
@@ -240,16 +240,20 @@ export function ConversationHistory({
   // The person moving on (a press, a key, focus landing on something else) ends the following.
   React.useEffect(() => {
     const forget = () => { following.current = null }
+    // A modifier pressed on its own is not moving on: it starts a shortcut, or does nothing at all.
+    const pressed = (event: KeyboardEvent) => {
+      if (event.key !== 'Shift' && event.key !== 'Control' && event.key !== 'Alt' && event.key !== 'Meta') forget()
+    }
     const moved = (event: FocusEvent) => {
       const target = following.current
       if (target !== null && event.target !== locate(target)) following.current = null
     }
     document.addEventListener('pointerdown', forget, true)
-    document.addEventListener('keydown', forget, true)
+    document.addEventListener('keydown', pressed, true)
     document.addEventListener('focusin', moved, true)
     return () => {
       document.removeEventListener('pointerdown', forget, true)
-      document.removeEventListener('keydown', forget, true)
+      document.removeEventListener('keydown', pressed, true)
       document.removeEventListener('focusin', moved, true)
     }
   }, [locate])
@@ -290,15 +294,22 @@ export function ConversationHistory({
   }, [settle, clearPending])
 
   // Nor must closing the tab, which runs no cleanup at all (and with the cursor on Undo the countdown is waiting).
-  // The page may come back from the back-forward cache, with the delete already sent.
+  // The page may come back from the back-forward cache, with the delete already sent. A phone that kills a tab in
+  // the background may never report `pagehide`, so the page being hidden counts as leaving too: it is the last
+  // moment a browser promises to report.
   React.useEffect(() => {
     if (!pending) return
     const leaving = () => {
       settle(pending.id)
       clearPending()
     }
+    const hidden = () => { if (document.visibilityState === 'hidden') leaving() }
     window.addEventListener('pagehide', leaving)
-    return () => window.removeEventListener('pagehide', leaving)
+    document.addEventListener('visibilitychange', hidden)
+    return () => {
+      window.removeEventListener('pagehide', leaving)
+      document.removeEventListener('visibilitychange', hidden)
+    }
   }, [pending, settle, clearPending])
 
   // The Undo line stands in for a row. If the app takes that chat away meanwhile (deleted in another tab), there is
