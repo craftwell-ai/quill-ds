@@ -6,14 +6,11 @@
  *
  * Nothing on the page is typed by hand: every swatch is `var(--token)` and every caption is
  * read from the token list, so a re-run after a token change redraws it correctly.
- *
- *   node scripts/paper/sync-foundations.mjs
+ * One step of `npm run paper:sync`.
  */
-import { pathToFileURL } from 'node:url'
-import { connect } from './client.mjs'
 import { formatColor } from './color.mjs'
 import { serialize } from './convert.mjs'
-import { digest, ensureArtboard, ensurePages, FOUNDATIONS, openQuillFile, readState, today, writeState, writeTree } from './file.mjs'
+import { digest, ensureArtboard, FOUNDATIONS, today, writeTree } from './file.mjs'
 import { artboardStyles, frame, header, section, text } from './page.mjs'
 import { quillPaperTokens, resolveTokens } from './tokens.mjs'
 
@@ -82,13 +79,12 @@ export function foundationsPage(tokens = quillPaperTokens().tokens) {
   ]
 }
 
-export async function syncFoundations({ log = console.log } = {}) {
-  const paper = await connect()
-  const state = readState()
-  const file = await openQuillFile(paper, { state })
-  const { pages } = await ensurePages(file, [FOUNDATIONS])
+export const foundationsHash = (nodes = foundationsPage()) => digest(nodes.map((node) => serialize(node)).join(''))
+
+/** Returns the record that goes under `foundations` in the sync state. */
+export async function syncFoundations(file, pageId, { knownId = null, log = console.log } = {}) {
   const nodes = foundationsPage()
-  const artboard = await ensureArtboard(file, { pageId: pages[FOUNDATIONS], name: FOUNDATIONS, styles: artboardStyles(), knownId: state.foundations?.artboardId })
+  const artboard = await ensureArtboard(file, { pageId, name: FOUNDATIONS, styles: artboardStyles(), knownId })
   let calls = 0
   const placeholders = []
   try {
@@ -97,16 +93,6 @@ export async function syncFoundations({ log = console.log } = {}) {
   } finally {
     await file.call('finish_working_on_nodes', { nodeIds: [artboard.id] })
   }
-  writeState({ ...readState(), foundations: { page: FOUNDATIONS, pageId: pages[FOUNDATIONS], artboardId: artboard.id, sections: nodes.length - 1, htmlHash: digest(nodes.map((node) => serialize(node)).join('')), syncedAt: today() } })
   log(`${FOUNDATIONS}: ${nodes.length - 1} sections · ${calls} writes${artboard.created ? ' · new artboard' : ''}`)
-  return { artboardId: artboard.id }
-}
-
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  try {
-    await syncFoundations()
-  } catch (error) {
-    console.error(error.message)
-    process.exit(1)
-  }
+  return { page: FOUNDATIONS, pageId, artboardId: artboard.id, sections: nodes.length - 1, htmlHash: foundationsHash(nodes), syncedAt: today() }
 }

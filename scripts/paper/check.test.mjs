@@ -1,10 +1,13 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { compareValues, keyNodes, parseTreeSummary, renderTable, resolveColor, resolveLength } from './check.mjs'
+import { REGRESSION_PCT, REGRESSION_PX } from '../figma-visual-diff.mjs'
+import { acceptInto, compareValues, isOurExport, keyNodes, measured, parseTreeSummary, renderSummary, resolveColor, resolveLength, verdictOf } from './check.mjs'
 import { serialize } from './convert.mjs'
-import { upsertPiece } from './file.mjs'
+import { orderState, planPages, upsertPiece } from './file.mjs'
 import { ARTBOARD, artboardStyles, header, section } from './page.mjs'
-import { pageName, pageOrder, pieceLayerName, PIECES, sourceHash, stalePieces, storyTitle } from './pieces.mjs'
+import { inventory, pageName, parseStoryFile, pieceLayerName, selectStories, sourceHash, statusOf, storyId, storyTitle, titleCase } from './pieces.mjs'
+import { renderStatus } from './status.mjs'
+import { parseArgs, piecesToSync, stubRecord } from './sync.mjs'
 import { foundationsPage } from './sync-foundations.mjs'
 import { resolveTokens } from './tokens.mjs'
 
@@ -75,53 +78,178 @@ test('key nodes: the first text\'s owner, the first button, the first filled sur
   assert.equal(keys.surface, card)
 })
 
-test('the report table has a row per story and marks a text mismatch', () => {
-  const rows = [
-    { piece: 'button', title: 'All Variants', text: { ok: true, story: 6, paper: 6 }, values: [{ ok: true }, { ok: false }], valuesOk: 1, picture: { diffPct: 6.1, paper: [462, 32], storybook: [459, 32] } },
-    { piece: 'button', title: 'Disabled', text: { ok: false, story: 1, paper: 2 }, values: [], valuesOk: 0, picture: { diffPct: 0, paper: [78, 32], storybook: [78, 32] } },
-    { piece: 'tone-badge', title: 'Solid', error: 'export produced no file' },
-  ]
-  const table = renderTable(rows, [{ slug: 'button', status: 'stale' }])
-  assert.match(table, /\| button \| All Variants \| 6\/6 ✓ \| 1\/2 \| 6\.10% \| 462×32 → 459×32 \| stale \|/)
-  assert.match(table, /\| button \| Disabled \| 2\/1 ✗ \|/)
-  assert.match(table, /\| tone-badge \| Solid \| — \| — \| — \| error: export produced no file \| — \|/)
+test('a story regresses against its own baseline: picture, size, text or values', () => {
+  const row = { piece: 'button', story: 'components-button--default', title: 'Default', text: { ok: true, story: 1, paper: 1 }, values: [{ ok: true }, { ok: true }], valuesOk: 2, picture: { diffPct: 6.1, paper: [110, 32], storybook: [110, 32] } }
+  const accepted = measured(row)
+  assert.deepEqual(accepted, { diffPct: 6.1, paper: [110, 32], storybook: [110, 32], text: true, values: '2/2' })
+  assert.deepEqual(verdictOf(row, null), { verdict: 'unbaselined', reasons: [] })
+  assert.equal(verdictOf(row, accepted).verdict, 'ok')
+  assert.equal(verdictOf({ ...row, picture: { ...row.picture, diffPct: 6.1 + REGRESSION_PCT } }, accepted).verdict, 'ok', 'exactly at the tolerance is not worse')
+  assert.match(verdictOf({ ...row, picture: { ...row.picture, diffPct: 7.2 } }, accepted).reasons[0], /picture 7\.20% \(accepted 6\.10%\)/)
+  assert.match(verdictOf({ ...row, picture: { ...row.picture, paper: [110, 32 + REGRESSION_PX + 1] } }, accepted).reasons[0], /Paper size 110×41/)
+  assert.match(verdictOf({ ...row, text: { ok: false, story: 1, paper: 2 } }, accepted).reasons[0], /text no longer matches/)
+  assert.match(verdictOf({ ...row, valuesOk: 1 }, accepted).reasons[0], /values 1\/2 \(accepted 2\/2\)/)
+  assert.equal(verdictOf({ ...row, error: 'export produced no file' }, accepted).verdict, 'error')
+})
+
+test('accepting writes sorted, dated entries and leaves stories it did not check alone', () => {
+  const row = (story, diffPct) => ({ piece: 'x', story, text: { ok: true }, values: [], valuesOk: 0, picture: { diffPct, paper: [1, 1], storybook: [1, 1] } })
+  const baseline = acceptInto({ stories: { 'z--kept': { diffPct: 1 } } }, [row('b--two', 2), row('a--one', 3), { piece: 'x', story: 'c--broken', error: 'nope' }], '2026-10-07')
+  assert.deepEqual(Object.keys(baseline.stories), ['a--one', 'b--two', 'z--kept'])
+  assert.deepEqual(baseline.stories['a--one'], { diffPct: 3, paper: [1, 1], storybook: [1, 1], text: true, values: '0/0', piece: 'x', at: '2026-10-07' })
+})
+
+test('the summary leads with the counts and lists what is not ok', () => {
+  const ok = { piece: 'button', story: 'a', title: 'Default', verdict: 'ok', reasons: [], text: { ok: true, story: 1, paper: 1 }, values: [{ ok: true }], valuesOk: 1, picture: { diffPct: 6.1, paper: [110, 32], storybook: [110, 32] } }
+  const rows = [ok, { ...ok, story: 'b', title: 'Disabled', verdict: 'regression', reasons: ['picture 12.00% (accepted 6.10%)'], picture: { ...ok.picture, diffPct: 12 } }, { piece: 'tone-badge', story: 'c', title: 'Solid', verdict: 'error', error: 'export produced no file' }]
+  const summary = renderSummary(rows)
+  assert.match(summary, /^## Paper ↔ Storybook check: 3 stories in 2 pieces · 1 regression · 1 error · 0 without a baseline/)
+  assert.match(summary, /\| button \| Disabled \| 1\/1 \| 1\/1 \| 12\.00% \| 110×32 → 110×32 \| regression: picture 12\.00% \(accepted 6\.10%\) \|/)
+  assert.match(summary, /\| tone-badge \| Solid \| — \| — \| — \| — \| error: export produced no file \|/)
+  assert.match(summary, /1 stories match their accepted baseline/)
+  assert.equal(summary.includes('| button | Default |'), false, 'a story that is fine is counted, not listed')
+})
+
+test('only a file this run exported is ever deleted from Downloads', () => {
+  const since = 1_000_000
+  const fresh = () => ({ mtimeMs: since + 500 })
+  const ours = { layerName: 'usage-meter / card', since, downloads: '/Users/x/Downloads', stat: fresh }
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png', ours), true)
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card (2)@2x.png', ours), true, 'Paper numbers a name that is taken')
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card-final@2x.png', ours), false, 'someone else\'s similar name')
+  assert.equal(isOurExport('/Users/x/Downloads/holiday.png', ours), false)
+  assert.equal(isOurExport('/Users/x/Documents/usage-meter _ card@2x.png', ours), false, 'not the folder Paper writes to')
+  assert.equal(isOurExport('/Users/x/Downloads/sub/usage-meter _ card@2x.png', ours), false)
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png', { ...ours, stat: () => ({ mtimeMs: since - 60_000 }) }), false, 'older than this call: it was there before')
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png', { ...ours, stat: () => { throw new Error('gone') } }), false)
+  assert.equal(isOurExport(undefined, ours), false)
 })
 
 // ------------------------------------------------------------------ pieces, pages, state
 
-test('pages are named and ordered as the library is: components A–Z, then blocks, with their marks', () => {
-  assert.deepEqual(pageOrder(), ['❖ Approval Card', '❖ Button', '❖ Tone Badge', '❖ Usage Meter', '◆ Conversation History'])
-  assert.equal(pageName({ kind: 'template', name: 'Pricing Page' }), '▣ Pricing Page')
+const entry = (id, tags = ['dev', 'test', 'autodocs'], importPath = './src/stories/widget.stories.tsx') => [id, { id, type: 'story', name: id.split('--')[1], importPath, tags }]
+const widget = (config = {}) => ({ slug: 'widget', kind: 'component', storyFiles: ['src/stories/widget.stories.tsx'], config })
+
+test('the stories a page shows: canonical first, then every story without a play function; never docs, Do/Don\'t, Dark or test-only', () => {
+  const entries = Object.fromEntries([
+    entry('components-widget--docs', ['dev', 'autodocs']).map((value, index) => (index ? { ...value, type: 'docs' } : value)),
+    entry('components-widget--sizes'),
+    entry('components-widget--default', ['dev', 'test', 'autodocs', 'play-fn']),
+    entry('components-widget--opens-on-enter', ['dev', 'test', 'autodocs', 'play-fn']),
+    entry('components-widget--focus-ring', ['dev', 'test', 'play-fn']),
+    entry('components-widget--plain-but-hidden', ['dev', 'test']),
+    entry('components-widget--do-dont'),
+    entry('components-widget--minimal-do-dont'),
+    entry('components-widget--dark'),
+    entry('components-other--default', ['dev', 'test', 'autodocs'], './src/stories/other.stories.tsx'),
+  ])
+  const chosen = selectStories(widget(), entries)
+  assert.deepEqual(chosen.stories, ['components-widget--default', 'components-widget--sizes'], 'the canonical story is kept even though it has a play function')
+  assert.equal(chosen.canonical, 'components-widget--default')
+  // overrides: a state only a play function reaches, and a story not worth a section
+  assert.deepEqual(selectStories(widget({ include: ['components-widget--opens-on-enter'], exclude: ['components-widget--sizes'] }), entries).stories, ['components-widget--default', 'components-widget--opens-on-enter'])
+  assert.deepEqual(selectStories(widget({ exclude: ['components-widget--default'] }), entries).stories[0], 'components-widget--default', 'the canonical story cannot be excluded')
+  assert.deepEqual(selectStories(widget({ include: ['components-widget--gone'] }), entries).missing, ['components-widget--gone'])
+})
+
+test('a page shows at most eight stories unless the piece says otherwise; includes survive the cap', () => {
+  const many = Object.fromEntries([entry('components-widget--default'), ...Array.from({ length: 12 }, (_, index) => entry(`components-widget--variant-${String(index).padStart(2, '0')}`))])
+  const capped = selectStories(widget(), many)
+  assert.equal(capped.stories.length, 8)
+  assert.equal(capped.stories[0], 'components-widget--default')
+  assert.equal(capped.trimmed, 5)
+  assert.equal(selectStories(widget({ max: 3 }), many).stories.length, 3)
+  assert.ok(selectStories(widget({ include: ['components-widget--variant-11'] }), many).stories.includes('components-widget--variant-11'))
+})
+
+test('story ids are derived from a story file the way Storybook derives them', () => {
+  const file = parseStoryFile('src/stories/citations.stories.tsx', `const sources = [{ title: 'Q3 board deck.pdf' }]\nconst meta = {\n  title: 'Components / Citations',\n} satisfies Meta<typeof Citations>\nexport default meta\ntype Story = StoryObj<typeof meta>\nexport const InAnAnswer: Story = {}\nexport const KeyCode229 = { play: async () => {} }\nexport const AIHome: Story = {}\nexport const DoDont: Story = {}\nconst helper = 1\nimport { Citations } from '../../registry/lib/citations'\n`)
+  assert.equal(file.title, 'Components / Citations', 'the meta\'s title, not the sample data\'s')
+  assert.deepEqual(file.ids, ['components-citations--in-an-answer', 'components-citations--key-code-229', 'components-citations--ai-home', 'components-citations--do-dont'])
+  assert.deepEqual(file.imports, ['../../registry/lib/citations'])
+  assert.equal(storyId('Patterns / AI / Conversation History', 'RenameIgnoresEnterKeyCode229'), 'patterns-ai-conversation-history--rename-ignores-enter-key-code-229')
+})
+
+test('the inventory is every component, block and template, in page order, each with a story file', () => {
+  const pieces = inventory()
+  const kinds = pieces.map((piece) => piece.kind)
+  assert.deepEqual([...new Set(kinds)], ['component', 'block', 'template'], 'components, then blocks, then templates')
+  for (const kind of ['component', 'block', 'template']) { const names = pieces.filter((piece) => piece.kind === kind).map((piece) => piece.name); assert.deepEqual(names, [...names].sort((a, b) => a.localeCompare(b)), `${kind}s are alphabetical`) }
+  assert.equal(new Set(pieces.map((piece) => piece.slug)).size, pieces.length)
+  const none = pieces.filter((piece) => !piece.storyFiles.length && !piece.config.declined).map((piece) => piece.slug)
+  assert.deepEqual(none, [], 'a piece with no story has nothing to draw from: give it a story, or decline it with a reason')
+  // a Quill component's code is the registry cut, not the site's one-line re-export
+  assert.equal(pieces.find((piece) => piece.slug === 'usage-meter').code, 'registry/lib/usage-meter.tsx')
+  assert.equal(pieces.find((piece) => piece.slug === 'button').code, 'src/components/ui/button.tsx')
+  assert.deepEqual(pieces.find((piece) => piece.slug === 'conversation-history').storyFiles, ['src/stories/patterns/ConversationHistory.stories.tsx'])
+  for (const piece of pieces) assert.match(sourceHash(piece), /^[0-9a-f]{16}$/, piece.slug)
+})
+
+test('page and layer names', () => {
+  assert.equal(pageName({ kind: 'component', name: 'AI Badge' }), '❖ AI Badge')
+  assert.equal(pageName({ kind: 'block', name: 'FAQ' }), '◆ FAQ')
+  assert.equal(pageName({ kind: 'template', name: 'App Page' }), '▣ App Page')
+  assert.deepEqual(['ai-badge', 'input-otp', 'login-oauth', 'faq', 'error-404', 'example-app-page'].map(titleCase), ['AI Badge', 'Input OTP', 'Login OAuth', 'FAQ', 'Error 404', 'App Page'])
   assert.equal(pieceLayerName({ slug: 'usage-meter' }, 'components-usagemeter--running-low-card'), 'usage-meter / running-low-card')
+  assert.equal(pieceLayerName({ slug: 'dialog' }, 'components-dialog--default', 'panel-1'), 'dialog / default · panel-1')
   assert.equal(storyTitle('components-button--all-variants'), 'All variants')
 })
 
-test('every piece names files that exist and stories of its own', () => {
-  for (const piece of PIECES) {
-    assert.match(sourceHash(piece), /^[0-9a-f]{16}$/, piece.slug)
-    assert.ok(piece.stories.length >= 1)
-    assert.equal(new Set(piece.stories).size, piece.stories.length)
-  }
+test('status from files alone: declined, pending, error, stale, in step', () => {
+  const pieces = [
+    { slug: 'a', kind: 'component', name: 'A', sources: ['a.tsx'], config: {} },
+    { slug: 'b', kind: 'component', name: 'B', sources: ['a.tsx'], config: {} },
+    { slug: 'c', kind: 'component', name: 'C', sources: ['a.tsx'], config: { declined: 'nothing to draw' } },
+    { slug: 'd', kind: 'block', name: 'D', sources: ['a.tsx'], config: {} },
+    { slug: 'e', kind: 'block', name: 'E', sources: ['a.tsx'], config: {} },
+  ]
+  // sourceHash reads real files; use one that exists so the hashes are real
+  for (const piece of pieces) piece.sources = ['scripts/paper/page.mjs']
+  const now = sourceHash(pieces[0])
+  const state = { pieces: [{ slug: 'a', status: 'synced', sourceHash: now, syncedAt: '2026-10-07' }, { slug: 'b', status: 'synced', sourceHash: 'moved', syncedAt: '2026-10-01' }, { slug: 'd', status: 'error', error: 'the story rendered nothing visible' }] }
+  assert.deepEqual(statusOf(state, pieces).map((row) => [row.slug, row.status]), [['a', 'in step'], ['b', 'stale'], ['c', 'declined'], ['d', 'error'], ['e', 'pending']])
+  const text = renderStatus({ rows: statusOf(state, pieces), tokens: 'in step', counts: { 'in step': 1, stale: 1, pending: 1, error: 1, declined: 1 } })
+  assert.match(text, /^Paper file: 5 pieces · 1 in step · 1 stale · 1 pending · 1 error · 1 declined · tokens in step/)
+  assert.match(text, /❖ B\s+code changed since 2026-10-01/)
+  assert.match(text, /❖ C\s+nothing to draw/)
+  assert.match(text, /open Paper, then {2}npm run paper:sync/)
 })
 
-test('staleness needs only files: a changed source reads stale, a comment-only change does not', () => {
-  const piece = { slug: 'x', sources: ['a.tsx'] }
-  const read = (source) => (path) => (path === 'a.tsx' ? source : 'export const usage = {}')
-  const recorded = sourceHash(piece, read('export function X() { return <b>one</b> }'))
-  assert.equal(sourceHash(piece, read('// a note\nexport function X() {\n  return <b>one</b>\n}')), recorded)
-  assert.notEqual(sourceHash(piece, read('export function X() { return <b>two</b> }')), recorded)
-  const state = { pieces: [{ slug: 'button', sourceHash: 'not-the-hash', syncedAt: '2026-10-07' }] }
-  const status = Object.fromEntries(stalePieces(state).map((entry) => [entry.slug, entry.status]))
-  assert.equal(status.button, 'stale')
-  assert.equal(status['tone-badge'], 'never synced')
-  const current = { pieces: PIECES.map((entry) => ({ slug: entry.slug, sourceHash: sourceHash(entry) })) }
-  assert.ok(stalePieces(current).every((entry) => entry.status === 'in step'))
+test('a sync writes what is not in step; --only and --all override', () => {
+  const pieces = ['a', 'b', 'c', 'd'].map((slug) => ({ slug, config: slug === 'd' ? { declined: 'no' } : {} }))
+  const statuses = [{ slug: 'a', status: 'in step' }, { slug: 'b', status: 'stale' }, { slug: 'c', status: 'pending' }, { slug: 'd', status: 'declined' }]
+  const slugs = (options) => piecesToSync(pieces, statuses, options).map((piece) => piece.slug)
+  assert.deepEqual(slugs({}), ['b', 'c'])
+  assert.deepEqual(slugs({ all: true }), ['a', 'b', 'c'], 'a declined piece is never drawn')
+  assert.deepEqual(slugs({ only: ['a', 'd'] }), ['a'])
+  assert.deepEqual(stubRecord({ slug: 'd', name: 'D', kind: 'block', config: { declined: 'no' } }), { slug: 'd', name: 'D', kind: 'block', status: 'declined', reason: 'no' })
+  assert.deepEqual(stubRecord({ slug: 'c', name: 'C', kind: 'block', config: {} }), { slug: 'c', name: 'C', kind: 'block', status: 'pending', page: '◆ C' })
+  assert.deepEqual(parseArgs(['--only', 'button, faq', '--accept']), { all: false, only: ['button', 'faq'], dryRun: false, prune: false, createFile: false, accept: true, base: process.env.PAPER_STORYBOOK_URL })
 })
 
-test('a re-synced piece replaces its record in place', () => {
-  const state = { pieces: [{ name: 'a', slug: 'a', n: 1 }, { name: 'b', slug: 'b', n: 1 }] }
-  assert.deepEqual(upsertPiece(state, { name: 'a', slug: 'a', n: 2 }).pieces, [{ name: 'a', slug: 'a', n: 2 }, { name: 'b', slug: 'b', n: 1 }])
-  assert.deepEqual(upsertPiece(state, { name: 'c', slug: 'c' }).pieces.map((piece) => piece.name), ['a', 'b', 'c'])
+test('pages are put in order by position: rename each slot, move an artboard that is on the wrong page', () => {
+  const current = [{ id: 'p-1', name: 'Foundations' }, { id: 'p-9', name: '❖ Button' }, { id: 'p-2', name: 'Page 3' }]
+  const wanted = ['Foundations', '❖ Accordion', '❖ Button', '◆ FAQ']
+  const plan = planPages(current, wanted, { 'Foundations': ['f-0'], '❖ Button': ['b-0'] })
+  assert.equal(plan.create, 1)
+  assert.deepEqual(plan.renames.map((rename) => [rename.slot, rename.from, rename.to]), [[1, '❖ Button', '❖ Accordion'], [2, 'Page 3', '❖ Button'], [3, null, '◆ FAQ']])
+  assert.deepEqual(plan.moves, [{ artboardId: 'b-0', name: '❖ Button', from: 'p-9', toSlot: 2 }], 'Button\'s artboard follows its name to the third page; Foundations stays')
+  assert.equal(plan.inOrder, false)
+  assert.deepEqual(planPages(wanted.map((name, index) => ({ id: `p-${index}`, name })), wanted, {}), { create: 0, renames: [], moves: [], inOrder: true })
+  // a piece was deleted: its page cannot be, so it is parked under a name that says so
+  const extra = planPages([...wanted, '❖ Gone'].map((name, index) => ({ id: `p-${index}`, name })), wanted, {})
+  assert.deepEqual(extra.renames.map((rename) => rename.to), ['(unused 1)'])
+  assert.deepEqual(planPages([...wanted, '(unused 1)'].map((name, index) => ({ id: `p-${index}`, name })), wanted, {}).renames, [])
+})
+
+test('the record is written in a fixed order and a re-synced piece replaces its entry', () => {
+  const state = { pieces: [{ slug: 'faq', kind: 'block', name: 'FAQ', status: 'pending' }, { status: 'synced', stories: [], name: 'Button', kind: 'component', slug: 'button', zeta: 1, artboardId: 'b-0' }], tokens: { count: 1 }, file: { id: 'x' } }
+  const ordered = orderState(state)
+  assert.deepEqual(Object.keys(ordered), ['$comment', 'file', 'tokens', 'pieces'])
+  assert.deepEqual(ordered.pieces.map((piece) => piece.slug), ['button', 'faq'], 'components before blocks')
+  assert.deepEqual(Object.keys(ordered.pieces[0]), ['slug', 'name', 'kind', 'status', 'artboardId', 'stories', 'zeta'])
+  assert.deepEqual(orderState(ordered), ordered, 'ordering is stable')
+  assert.deepEqual(upsertPiece(state, { slug: 'faq', kind: 'block', name: 'FAQ', status: 'synced' }).pieces.map((piece) => `${piece.slug}:${piece.status}`), ['button:synced', 'faq:synced'])
 })
 
 test('the page anatomy: a 1440 artboard, a three-line header, sections titled in tokens', () => {

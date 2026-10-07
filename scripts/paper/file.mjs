@@ -16,27 +16,37 @@ export const FILE_NAME = 'Quill Design System'
 export const STATE_PATH = join(root, 'paper/sync-state.json')
 export const FOUNDATIONS = 'Foundations'
 
-const COMMENT = 'What scripts/paper/* has written into the Paper file "Quill Design System", and from which code. `tokens` is the last token push (payloadHash = the values sent, sourceHash = src/tokens/quill.tokens.mjs at that moment). `pieces` has one entry per artboard: the story it was converted from, where it lives in Paper, sourceHash (the code behind it, comments and whitespace ignored: scripts/paper/check.mjs --stale reports a piece whose code has moved since) and htmlHash (the HTML written). Paper has no components, so every piece is plain frames: nothing here is an instance of anything.'
+const COMMENT = 'The record of what scripts/paper/* has written into the Paper file "Quill Design System", and from which code. Written by `npm run paper:sync`; never edit by hand. The shape is documented in paper/README.md.'
 
 export const today = () => new Date().toISOString().slice(0, 10)
 export const digest = (text) => createHash('sha256').update(text).digest('hex').slice(0, 16)
 
 export function readState(path = STATE_PATH) {
-  if (!existsSync(path)) return { $comment: COMMENT, file: null, pages: {}, tokens: null, pieces: [] }
-  return JSON.parse(readFileSync(path, 'utf8'))
+  if (!existsSync(path)) return { $comment: COMMENT, file: null, pages: {}, tokens: null, foundations: null, pieces: [] }
+  const state = JSON.parse(readFileSync(path, 'utf8'))
+  // entries written before `status` existed were all drawn pages
+  return { ...state, pieces: (state.pieces ?? []).map((piece) => ({ ...piece, status: piece.status ?? (piece.artboardId ? 'synced' : 'pending') })) }
+}
+
+const KIND_RANK = ['component', 'block', 'template']
+const TOP_KEYS = ['$comment', 'file', 'tokens', 'foundations', 'pages', 'pieces']
+export const PIECE_KEYS = ['slug', 'name', 'kind', 'status', 'reason', 'error', 'page', 'pageId', 'artboardId', 'sources', 'sourceHash', 'syncedAt', 'counts', 'notes', 'lost', 'stories']
+
+/** Keys in a fixed order, pieces in page order: the same content always writes the same bytes, so a diff shows only what changed. */
+export function orderState(state) {
+  const pick = (object, keys) => Object.fromEntries([...keys.filter((key) => object[key] !== undefined && object[key] !== null).map((key) => [key, object[key]]), ...Object.keys(object).filter((key) => !keys.includes(key)).sort().map((key) => [key, object[key]])])
+  const pieces = [...(state.pieces ?? [])].sort((a, b) => KIND_RANK.indexOf(a.kind) - KIND_RANK.indexOf(b.kind) || a.name.localeCompare(b.name)).map((piece) => pick(piece, PIECE_KEYS))
+  return pick({ ...state, $comment: COMMENT, pieces }, TOP_KEYS)
 }
 
 export function writeState(state, path = STATE_PATH) {
   mkdirSync(dirname(path), { recursive: true })
-  writeFileSync(path, JSON.stringify({ ...state, $comment: COMMENT }, null, 2) + '\n')
+  writeFileSync(path, JSON.stringify(orderState(state), null, 2) + '\n')
 }
 
-/** Replace the entry with the same name, or append: a re-run updates a piece in place. */
+/** Replace the entry with the same slug, or add it: a re-run updates a piece in place. */
 export function upsertPiece(state, entry) {
-  const pieces = state.pieces.filter((piece) => piece.name !== entry.name)
-  const at = state.pieces.findIndex((piece) => piece.name === entry.name)
-  pieces.splice(at < 0 ? pieces.length : at, 0, entry)
-  return { ...state, pieces }
+  return { ...state, pieces: [...state.pieces.filter((piece) => piece.slug !== entry.slug), entry] }
 }
 
 /**
@@ -65,27 +75,61 @@ export async function openQuillFile(paper, { create = false, state = readState()
   return { fileId, name: FILE_NAME, url: `https://app.paper.design/file/${fileId}`, call, data: async (tool, args) => (await call(tool, args)).data }
 }
 
+export const UNUSED = /^\(unused( \d+)?\)$/
+
 /**
- * Make sure the named pages exist; returns `{ pages: { name: id }, order: [names as Paper lists them] }`.
- *
- * Paper has no "move page" tool and puts a new page directly after the page being viewed
- * in that file (verified; normally the first page, Foundations). So missing pages are
- * created last-to-first, which leaves them in the wanted order. The file's untouched first
- * page (`Page 1`) becomes Foundations rather than being left behind: nothing can delete it.
+ * Work out how to get the file's pages into the wanted order. Paper cannot move or delete
+ * a page, so the order is fixed by position: the page in slot i is renamed to the i-th
+ * wanted name, and an artboard that lives on another page is moved to the page that now
+ * carries its name. Pure: `current` is Paper's page list in order, `owners` maps a page
+ * name to the artboard ids that belong under it.
  */
-export async function ensurePages(file, wanted) {
+export function planPages(current, wanted, owners = {}) {
+  const create = Math.max(0, wanted.length - current.length)
+  const slots = [...current.map((page) => ({ ...page })), ...Array.from({ length: create }, (_, index) => ({ id: null, name: null, fresh: index }))]
+  const renames = []
+  const assigned = {}
+  slots.forEach((slot, index) => {
+    const name = index < wanted.length ? wanted[index] : slot.name && UNUSED.test(slot.name) ? slot.name : `(unused ${index - wanted.length + 1})`
+    assigned[name] = slot
+    if (slot.name !== name) renames.push({ slot: index, pageId: slot.id, from: slot.name, to: name })
+  })
+  const byName = new Map(current.map((page) => [page.name, page.id]))
+  const moves = []
+  for (const [name, artboards] of Object.entries(owners)) {
+    const from = byName.get(name)
+    const to = assigned[name]
+    if (!to || !from || to.id === from) continue
+    for (const artboardId of artboards) moves.push({ artboardId, name, from, toSlot: slots.indexOf(to) })
+  }
+  return { create, renames, moves, inOrder: !create && !renames.length }
+}
+
+/**
+ * Put the file's pages in the wanted order; returns `{ pages: { name: id }, order, changed }`.
+ * Works wherever Paper happened to insert new pages (it puts one after whichever page the
+ * owner is looking at), and reads the list back at the end rather than trusting itself.
+ */
+export async function arrangePages(file, wanted, owners = {}, log = () => {}) {
   let info = await file.data('get_basic_info')
-  const names = () => new Map(info.pages.map((page) => [page.name, page.id]))
-  const blank = info.pages.find((page) => /^Page \d+$/.test(page.name))
-  if (wanted.includes(FOUNDATIONS) && !names().has(FOUNDATIONS) && blank) {
-    await file.call('rename_pages', { updates: [{ pageId: blank.id, name: FOUNDATIONS }] })
+  const plan = planPages(info.pages, wanted, owners)
+  if (!plan.inOrder) {
+    for (let index = 0; index < plan.create; index++) await file.call('create_page', { name: `(new ${index + 1})` })
+    if (plan.create) info = await file.data('get_basic_info')
+    const slotId = (slot) => info.pages[slot].id
+    if (plan.moves.length) {
+      // an artboard moved to another page keeps its id, so the record stays true
+      await file.call('move_nodes', { moves: plan.moves.map((move) => ({ nodeId: move.artboardId, parentId: `root_node_${slotId(move.toSlot)}` })) })
+      await file.call('update_styles', { updates: [{ nodeIds: plan.moves.map((move) => move.artboardId), styles: { left: '0px', top: '0px' } }] })
+    }
+    const updates = plan.renames.map((rename) => ({ pageId: slotId(rename.slot), name: rename.to }))
+    for (let start = 0; start < updates.length; start += 50) await file.call('rename_pages', { updates: updates.slice(start, start + 50) })
+    log(`pages: ${plan.create} created · ${plan.renames.length} renamed · ${plan.moves.length} artboards moved to their page`)
     info = await file.data('get_basic_info')
   }
-  const missing = wanted.filter((name) => !names().has(name))
-  for (const name of [...missing].reverse()) await file.call('create_page', { name })
-  if (missing.length) info = await file.data('get_basic_info')
-  const pages = names()
-  return { pages: Object.fromEntries(wanted.map((name) => [name, pages.get(name)])), order: info.pages.map((page) => page.name), created: missing }
+  const order = info.pages.map((page) => page.name)
+  const pages = Object.fromEntries(info.pages.filter((page) => wanted.includes(page.name)).map((page) => [page.name, page.id]))
+  return { pages, order, inOrder: wanted.every((name, index) => order[index] === name), changed: !plan.inOrder, unused: order.filter((name) => UNUSED.test(name)) }
 }
 
 /**
@@ -112,21 +156,29 @@ const PLACEHOLDER = '<span layer-name="…">…</span>'
  * follow one call each. A frame cannot go in empty (Paper turns a childless div into a
  * Rectangle, which refuses children), so it is written holding a one-character placeholder;
  * the ids of those are collected in `placeholders` for the caller to delete in one batch.
- * `split` forces the child-at-a-time form at the top. Returns the new top node's id and the
- * number of calls made.
+ * `split` forces the child-at-a-time form at the top (`splitChildren` one level further).
+ * Returns the new top node's id (null when Paper drew nothing for it), its children's ids when it
+ * was split, and the number of calls.
  */
-export async function writeTree(file, serialize, node, parentId, { split = false, placeholders = [] } = {}) {
+export async function writeTree(file, serialize, node, parentId, { split = false, splitChildren = false, placeholders = [] } = {}) {
   const html = serialize(node)
   const whole = !node.children?.length || node.raw || (!split && html.length <= WHOLE)
   const shell = whole ? html : serialize(node, { children: false }).replace(/<\/(\w+)>$/, `${PLACEHOLDER}</$1>`)
   const written = await file.data('write_html', { targetNodeId: parentId, mode: 'insert-children', html: shell })
   const id = written.createdNodes?.[0]?.id
-  if (!id) throw new PaperError(`write_html created nothing for ${html.slice(0, 80)}…`)
+  // Paper makes no layer for a box that draws nothing (an empty, transparent hit area): nothing to write, nothing
+  // lost. The caller decides whether a missing layer matters (it does for a whole story).
+  if (!id) return { id: null, calls: 1, childIds: [] }
   let calls = 1
+  const childIds = []
   if (!whole) {
     placeholders.push(written.createdNodes[1].id)
-    // a wrapper with a single child would otherwise hand the whole piece on in one call
-    for (const child of node.children) calls += (await writeTree(file, serialize, child, id, { split: node.children.length === 1, placeholders })).calls
+    for (const child of node.children) {
+      // a wrapper with a single child would otherwise hand the whole piece on in one call
+      const result = await writeTree(file, serialize, child, id, { split: node.children.length === 1 || splitChildren, placeholders })
+      calls += result.calls
+      childIds.push(result.id)
+    }
   }
-  return { id, calls }
+  return { id, calls, childIds }
 }

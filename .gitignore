@@ -71,3 +71,7 @@ public/storybook
 
 # scratch for scripts/figma-visual-diff.mjs (static Storybook + pair images)
 .visual/
+
+# scratch for scripts/paper/check.mjs (strips) and its report, rewritten on every run
+.paper/
+paper/check-report.json

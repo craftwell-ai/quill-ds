@@ -1,33 +1,44 @@
 /**
- * Read the Paper file back and compare it with the code it was written from.
+ * `npm run paper:check`: read the Paper file back and compare it with the code.
  *
- * For every story recorded in paper/sync-state.json:
+ * For every story of every synced piece:
  *   text     the text layers Paper holds, in order, equal the story's visible text
  *   values   a few key layers (first text, first button, first filled surface) carry the
  *            colours, sizes and type the browser computed, with Paper's tokens resolved
  *   picture  Paper's 2x export of the layer against a 2x screenshot of the story, with
  *            the pixel method the Figma visual diff uses; a strip (Paper | Storybook | diff)
  *            is saved per story
- *   stale    the piece's code has changed since it was written into Paper
  *
- *   node scripts/paper/check.mjs [slug …] [--out <dir>] [--base http://localhost:6150]
- *   node scripts/paper/check.mjs --stale        # reads files only: no Paper, no Storybook; exit 1 when stale
+ * A story REGRESSES when it is worse than its own accepted baseline
+ * (paper/visual-baseline.json): the picture differs by more than 1.0 point over the
+ * accepted number, a size moved more than 8px, or text or a value that matched no longer
+ * does. Same rule and numbers as the Figma visual diff.
  *
- * The full check needs the Paper desktop app open and a Storybook to read.
+ *   npm run paper:check                          # every synced piece; exit 1 on a regression
+ *   npm run paper:check -- --only button,faq
+ *   npm run paper:check -- --accept [--only …]   # write what this run measured as the baseline
+ *
+ * Needs the Paper desktop app open on this Mac; starts its own Storybook. Writes
+ * paper/check-report.json (not committed) and prints a markdown summary.
  */
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { basename, dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { PNG } from 'pngjs'
-import { comparePngs, flatten, padTo, strip } from '../figma-visual-diff.mjs'
+import { comparePngs, flatten, padTo, REGRESSION_PCT, REGRESSION_PX, strip } from '../figma-visual-diff.mjs'
 import { connect } from './client.mjs'
 import { parseColor, sameColor } from './color.mjs'
-import { captureStory, launch, normalizeText, STORYBOOK, visibleTexts } from './convert.mjs'
+import { captureStory, launch, normalizeText, visibleTexts } from './convert.mjs'
 import { openQuillFile, readState, root } from './file.mjs'
-import { PIECES, stalePieces } from './pieces.mjs'
+import { inventory, statusOf } from './pieces.mjs'
+import { ensureStorybook } from './storybook.mjs'
+import { parseArgs } from './sync.mjs'
 import { firstFamily, resolveTokens } from './tokens.mjs'
 
-export const DEFAULT_OUT = '.superpowers/sdd/2026-10-07-paper'
+export const DEFAULT_OUT = '.paper'
+export const BASELINE_PATH = join(root, 'paper/visual-baseline.json')
+export const REPORT_PATH = join(root, 'paper/check-report.json')
 const SCALE = 2
 const SIZE_TOLERANCE = 0.5 // CSS px
 
@@ -125,7 +136,7 @@ export function compareValues(kind, paperStyles, used, table) {
     if (radius > 0 || paperStyles.borderRadius) {
       const paperRadius = resolveLength(String(paperStyles.borderRadius ?? '0px').split(/\s+/)[0], table)
       // a pill is a pill at any radius past half the box
-      rows.push({ property: 'border-radius', paper: String(paperStyles.borderRadius), browser: used.borderTopLeftRadius, ok: Math.abs(paperRadius - radius) <= SIZE_TOLERANCE || (paperRadius >= 9999 && radius >= 9999) })
+      rows.push({ property: 'border-radius', paper: String(paperStyles.borderRadius), browser: used.borderTopLeftRadius, ok: Math.abs(paperRadius - radius) <= SIZE_TOLERANCE || paperRadius >= 9999 })
     }
     // Paper reports padding however it stored it: `padding`, the logical pair, or single sides
     const padding = fourSides(paperStyles.padding, table)
@@ -154,129 +165,215 @@ export function keyNodes(tree) {
       if (!found.text && normalizeText(node.text, parent.used.whiteSpace).trim()) found.text = parent
       return
     }
+    if (node.ghost || (node !== tree && parseFloat(node.used.opacity) === 0)) return
+    // a field's value is the first text Paper holds, but it is styled by the field, not by a text element: no fair pair
+    if (!found.text && ['input', 'textarea', 'select'].includes(node.tag) && !node.textless && (node.value || node.placeholder)) found.text = false
     if (!found.button && node.slot === 'button') found.button = node
-    if (!found.surface && (parseColor(node.used.backgroundColor)?.a ?? 0) > 0) found.surface = node
+    if (!found.surface && (parseColor(node.used.backgroundColor)?.a ?? 0) > 0 && !['input', 'textarea', 'select', 'img'].includes(node.tag)) found.surface = node
     for (const child of node.children ?? []) walk(child, node)
   }
   walk(tree, tree)
+  if (found.text === false) delete found.text
   return found
+}
+
+// ------------------------------------------------------------------ exports (Paper chooses the folder)
+
+/**
+ * Is this file the export we just asked for? Paper writes exports into the user's Downloads
+ * folder, which also holds their own files, so before reading and deleting one the path,
+ * the name and the time must all say it is ours.
+ */
+export function isOurExport(filePath, { layerName, since, downloads = join(homedir(), 'Downloads'), stat = statSync } = {}) {
+  if (!filePath || dirname(resolve(filePath)) !== resolve(downloads)) return false
+  // Paper names the file after the layer, with `/` turned into `_`, an optional " (2)" and the scale
+  const expected = layerName.replace(/\//g, '_')
+  const name = basename(filePath)
+  if (!(name.startsWith(expected) && /^( \(\d+\))?@2x\.png$/.test(name.slice(expected.length)))) return false
+  try { return stat(filePath).mtimeMs >= since - 2000 } catch { return false }
+}
+
+// ------------------------------------------------------------------ baseline and verdicts (pure)
+
+/** What a story measured, in the shape the baseline keeps. */
+export const measured = (row) => ({ diffPct: row.picture.diffPct, paper: row.picture.paper, storybook: row.picture.storybook, text: row.text.ok, values: `${row.valuesOk}/${row.values.length}` })
+
+/** `ok`, `regression` (with reasons) or `unbaselined`, against the story's own accepted numbers. */
+export function verdictOf(row, accepted) {
+  if (row.error) return { verdict: 'error', reasons: [row.error] }
+  if (!accepted) return { verdict: 'unbaselined', reasons: [] }
+  const reasons = []
+  if (row.picture.diffPct - accepted.diffPct > REGRESSION_PCT) reasons.push(`picture ${row.picture.diffPct.toFixed(2)}% (accepted ${accepted.diffPct.toFixed(2)}%)`)
+  for (const side of ['paper', 'storybook']) {
+    const moved = [0, 1].map((axis) => Math.abs(row.picture[side][axis] - accepted[side][axis]))
+    if (moved.some((delta) => delta > REGRESSION_PX)) reasons.push(`${side === 'paper' ? 'Paper' : 'Storybook'} size ${row.picture[side].join('×')} (accepted ${accepted[side].join('×')})`)
+  }
+  if (accepted.text && !row.text.ok) reasons.push(`text no longer matches (${row.text.paper} of ${row.text.story} layers)`)
+  const [okBefore] = String(accepted.values ?? '').split('/').map(Number)
+  if (Number.isFinite(okBefore) && row.valuesOk < okBefore) reasons.push(`values ${row.valuesOk}/${row.values.length} (accepted ${accepted.values})`)
+  return { verdict: reasons.length ? 'regression' : 'ok', reasons }
+}
+
+export const readBaseline = (path = BASELINE_PATH) => (existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : { stories: {} })
+
+/** Merge this run's numbers into the baseline, keys sorted so the file diffs cleanly. */
+export function acceptInto(baseline, rows, date) {
+  const stories = { ...baseline.stories }
+  for (const row of rows) if (!row.error) stories[row.story] = { ...measured(row), piece: row.piece, at: date }
+  return { $comment: 'Accepted picture difference and sizes per story, Paper against Storybook. Written by `npm run paper:check -- --accept`; a later check fails a story that is more than 1.0 point worse or drifts more than 8px.', platform: process.platform, stories: Object.fromEntries(Object.entries(stories).sort(([a], [b]) => a.localeCompare(b))) }
 }
 
 // ------------------------------------------------------------------ one story
 
-async function checkSection(file, page, piece, entry, { table, out, base }) {
-  const row = { piece: piece.slug, story: entry.story, title: entry.title }
-  const { tree, png } = await captureStory(page, entry.story, { base, screenshot: true })
-  const nodes = await paperTree(file, entry.nodeId)
+async function checkStory(file, page, piece, story, { table, out, base, open }) {
+  const row = { piece: piece.slug, story: story.id, title: story.title }
+  const captured = await captureStory(page, story.id, { base, screenshot: true, open })
+  const parts = story.parts.map((recorded) => ({ recorded, live: captured.roots.find((candidate) => candidate.part === recorded.part) }))
+  const missing = parts.filter((part) => !part.live).map((part) => part.recorded.part)
+  if (missing.length) throw new Error(`Storybook no longer shows ${missing.join(', ')} (the story opened differently than when it was drawn)`)
 
-  // text: every Text layer's full content (the summary truncates long strings)
+  const storyTexts = []
   const paperTexts = []
-  for (const node of nodes.filter((candidate) => candidate.type === 'Text')) {
-    const info = await file.data('get_node_info', { nodeId: node.id })
-    paperTexts.push({ id: node.id, text: String(info.textContent ?? '').replace(/\s+/g, ' ').trim() })
-  }
-  const storyTexts = visibleTexts(tree)
-  const mismatch = storyTexts.findIndex((text, index) => text.replace(/\s+/g, ' ') !== paperTexts[index]?.text)
-  row.text = {
-    ok: mismatch < 0 && storyTexts.length === paperTexts.length,
-    story: storyTexts.length,
-    paper: paperTexts.length,
-    ...(mismatch >= 0 ? { firstDifference: { at: mismatch, story: storyTexts[mismatch], paper: paperTexts[mismatch]?.text ?? null } } : {}),
-  }
-
-  // values: pair each key element with the Paper layer in the same position
-  const keys = keyNodes(tree)
-  const paperIds = {
-    text: paperTexts[0]?.id,
-    // when the story IS a button, the layer carries the story's name, not `button`
-    button: keys.button === tree ? entry.nodeId : nodes.find((node) => node.type === 'Frame' && node.name === 'button')?.id,
-  }
-  const frames = nodes.filter((node) => node.type === 'Frame').map((node) => node.id)
-  const styles = frames.length || paperIds.text ? (await file.data('get_computed_styles', { nodeIds: [...new Set([...frames, paperIds.text].filter(Boolean))] })).styles : {}
-  paperIds.surface = frames.find((id) => styles[id]?.backgroundColor)
   row.values = []
-  for (const kind of ['text', 'button', 'surface']) {
-    if (!keys[kind]) continue
-    if (!paperIds[kind]) { row.values.push({ node: kind, property: '(layer)', paper: 'missing', browser: 'present', ok: false }); continue }
-    for (const result of compareValues(kind === 'text' ? 'text' : 'frame', styles[paperIds[kind]] ?? {}, keys[kind].used, table)) row.values.push({ node: kind, ...result })
-  }
-  row.valuesOk = row.values.filter((value) => value.ok).length
+  let differing = 0
+  let area = 0
+  const sizes = { paper: [0, 0], storybook: [0, 0] }
+  const strips = []
+  for (const { recorded, live } of parts) {
+    const nodes = await paperTree(file, recorded.nodeId)
+    // text: every Text layer's full content (the summary truncates long strings)
+    const texts = []
+    for (const node of nodes.filter((candidate) => candidate.type === 'Text')) {
+      const info = await file.data('get_node_info', { nodeId: node.id })
+      texts.push({ id: node.id, text: String(info.textContent ?? '').replace(/\s+/g, ' ').trim() })
+    }
+    paperTexts.push(...texts)
+    storyTexts.push(...visibleTexts(live.tree))
 
-  // picture: Paper writes the export into the user's Downloads folder and answers with the path
-  const exported = await file.data('export', { pageId: piece.pageId, nodes: { [entry.nodeId]: [{ format: 'png', scale: `${SCALE}x` }] } })
-  const exportPath = exported.exports?.[0]?.filePath
-  if (!exportPath || !existsSync(exportPath)) throw new Error(`export of ${entry.story} produced no file (${JSON.stringify(exported)})`)
-  const paperPng = flatten(PNG.sync.read(readFileSync(exportPath)))
-  rmSync(exportPath) // ours: the layer is named after the story, so the file name is unique to this check
-  const storybookPng = PNG.sync.read(png)
-  const result = comparePngs(paperPng, storybookPng)
-  const name = entry.story.replace(/^.*?-(?=[^-]+--)/, '').replace(/[^a-z0-9-]/g, '-')
-  const stripPath = join(out, 'strips', `${piece.slug}--${name.split('--')[1]}.png`)
-  mkdirSync(join(out, 'strips'), { recursive: true })
-  writeFileSync(stripPath, PNG.sync.write(strip(padTo(paperPng, result.diff.width, result.diff.height), padTo(storybookPng, result.diff.width, result.diff.height), result.diff)))
-  row.picture = { diffPct: result.diffPct, paper: [paperPng.width / SCALE, paperPng.height / SCALE], storybook: [storybookPng.width / SCALE, storybookPng.height / SCALE], sizeDelta: result.sizeDelta, strip: stripPath.replace(`${root}/`, '') }
+    // values: pair each key element with the Paper layer in the same position (the piece itself only)
+    if (recorded.part === 'main') {
+      const keys = keyNodes(live.tree)
+      const frames = nodes.filter((node) => node.type === 'Frame').map((node) => node.id)
+      // when the story IS a button, the layer carries the story's name, not `button`
+      const paperIds = { text: texts[0]?.id, button: keys.button === live.tree ? recorded.nodeId : nodes.find((node) => node.type === 'Frame' && node.name === 'button')?.id }
+      const wanted = [...new Set([...frames, paperIds.text].filter(Boolean))]
+      const styles = wanted.length ? (await file.data('get_computed_styles', { nodeIds: wanted })).styles : {}
+      paperIds.surface = frames.find((id) => styles[id]?.backgroundColor)
+      for (const kind of ['text', 'button', 'surface']) {
+        if (!keys[kind]) continue
+        if (!paperIds[kind]) { row.values.push({ node: kind, property: '(layer)', paper: 'missing', browser: 'present', ok: false }); continue }
+        for (const result of compareValues(kind === 'text' ? 'text' : 'frame', styles[paperIds[kind]] ?? {}, keys[kind].used, table)) row.values.push({ node: kind, ...result })
+      }
+    }
+
+    // picture: Paper writes the export into the Downloads folder and answers with the path
+    const layerName = `${piece.slug} / ${story.id.split('--')[1]}${recorded.part === 'main' ? '' : ` · ${recorded.part}`}`
+    const since = Date.now()
+    const exported = await file.data('export', { pageId: piece.pageId, nodes: { [recorded.nodeId]: [{ format: 'png', scale: `${SCALE}x` }] } })
+    const exportPath = exported.exports?.[0]?.filePath
+    if (!exportPath || !existsSync(exportPath)) throw new Error(`export produced no file (${JSON.stringify(exported).slice(0, 120)})`)
+    const paperPng = flatten(PNG.sync.read(readFileSync(exportPath)))
+    // only ever delete the file this call made
+    if (isOurExport(exportPath, { layerName, since })) rmSync(exportPath)
+    else row.leftover = [...(row.leftover ?? []), exportPath]
+    const storybookPng = PNG.sync.read(live.png)
+    const result = comparePngs(paperPng, storybookPng)
+    differing += result.differing
+    area += result.diff.width * result.diff.height
+    strips.push(strip(padTo(paperPng, result.diff.width, result.diff.height), padTo(storybookPng, result.diff.width, result.diff.height), result.diff))
+    for (const [side, png] of [['paper', paperPng], ['storybook', storybookPng]]) { sizes[side][0] += png.width / SCALE; sizes[side][1] = Math.max(sizes[side][1], png.height / SCALE) }
+  }
+
+  const mismatch = storyTexts.findIndex((text, index) => text !== paperTexts[index]?.text)
+  row.text = { ok: mismatch < 0 && storyTexts.length === paperTexts.length, story: storyTexts.length, paper: paperTexts.length, ...(mismatch >= 0 ? { firstDifference: { at: mismatch, story: storyTexts[mismatch], paper: paperTexts[mismatch]?.text ?? null } } : {}) }
+  row.valuesOk = row.values.filter((value) => value.ok).length
+  // several parts (a trigger and its open panel) are stacked into one strip and one number
+  const stripPath = join(out, 'strips', `${piece.slug}--${story.id.split('--')[1]}.png`)
+  mkdirSync(dirname(stripPath), { recursive: true })
+  const width = Math.max(...strips.map((png) => png.width))
+  const stacked = padTo(new PNG({ width: 1, height: 1 }), width, strips.reduce((height, png) => height + png.height + 16, -16))
+  let y = 0
+  for (const png of strips) { PNG.bitblt(png, stacked, 0, 0, png.width, png.height, 0, y); y += png.height + 16 }
+  writeFileSync(stripPath, PNG.sync.write(stacked))
+  row.picture = { diffPct: Math.round((differing / Math.max(1, area)) * 10000) / 100, paper: sizes.paper, storybook: sizes.storybook, strip: stripPath.replace(`${root}/`, '') }
   return row
 }
 
 // ------------------------------------------------------------------ report
 
-export function renderTable(rows, stale) {
-  const lines = ['| piece | story | text | values | picture diff | size Paper → Storybook (CSS px) | code |', '|---|---|---|---|---:|---|---|']
-  for (const row of rows) {
-    const status = stale.find((entry) => entry.slug === row.piece)?.status ?? '—'
-    if (row.error) { lines.push(`| ${row.piece} | ${row.title} | — | — | — | error: ${row.error} | ${status} |`); continue }
-    const text = row.text.ok ? `${row.text.paper}/${row.text.story} ✓` : `${row.text.paper}/${row.text.story} ✗`
-    lines.push(`| ${row.piece} | ${row.title} | ${text} | ${row.valuesOk}/${row.values.length} | ${row.picture.diffPct.toFixed(2)}% | ${row.picture.paper.join('×')} → ${row.picture.storybook.join('×')} | ${status} |`)
+export function renderSummary(rows, { accepted = false } = {}) {
+  const count = (verdict) => rows.filter((row) => row.verdict === verdict).length
+  const pieces = new Set(rows.map((row) => row.piece)).size
+  const lines = [`## Paper ↔ Storybook check: ${rows.length} stories in ${pieces} pieces · ${count('regression')} regression${count('regression') === 1 ? '' : 's'} · ${count('error')} error${count('error') === 1 ? '' : 's'} · ${count('unbaselined')} without a baseline${accepted ? ' · baseline written' : ''}`, '']
+  const worst = (row) => (row.verdict === 'regression' ? 0 : row.verdict === 'error' ? 1 : row.verdict === 'unbaselined' ? 2 : 3)
+  const shown = rows.filter((row) => row.verdict !== 'ok' || !row.text?.ok || row.valuesOk < row.values?.length).sort((a, b) => worst(a) - worst(b))
+  if (shown.length) {
+    lines.push('| piece | story | text | values | picture | size Paper → Storybook (px) | verdict |', '|---|---|---|---|---:|---|---|')
+    for (const row of shown) {
+      if (row.error) { lines.push(`| ${row.piece} | ${row.title} | — | — | — | — | error: ${row.error} |`); continue }
+      const text = `${row.text.paper}/${row.text.story}${row.text.ok ? '' : ' ✗'}`
+      lines.push(`| ${row.piece} | ${row.title} | ${text} | ${row.valuesOk}/${row.values.length} | ${row.picture.diffPct.toFixed(2)}% | ${row.picture.paper.join('×')} → ${row.picture.storybook.join('×')} | ${row.verdict}${row.reasons?.length ? `: ${row.reasons.join('; ')}` : ''} |`)
+    }
+    lines.push('')
   }
+  const ok = rows.filter((row) => row.verdict === 'ok')
+  if (ok.length) lines.push(`${ok.length} stories match their accepted baseline (median picture difference ${median(ok.map((row) => row.picture.diffPct)).toFixed(2)}%).`)
   return lines.join('\n')
 }
 
-export async function check({ slugs = [], out = DEFAULT_OUT, base = STORYBOOK, log = console.log } = {}) {
+const median = (values) => { const sorted = [...values].sort((a, b) => a - b); return sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0 }
+
+export async function check({ only = [], out = DEFAULT_OUT, base = process.env.PAPER_STORYBOOK_URL, accept = false, log = console.log, progress = () => {} } = {}) {
   const state = readState()
-  const stale = stalePieces(state)
+  const pieces = inventory()
   const outDir = resolve(root, out)
+  const synced = state.pieces.filter((entry) => entry.status === 'synced' && (!only.length || only.includes(entry.slug)))
+  const unknown = only.filter((slug) => !state.pieces.some((entry) => entry.slug === slug && entry.status === 'synced'))
+  if (unknown.length) throw new Error(`not synced, so nothing to check: ${unknown.join(', ')} (run  npm run paper:sync -- --only ${unknown.join(',')})`)
   const paper = await connect()
   const file = await openQuillFile(paper, { state })
   const table = resolveTokens((await file.data('get_tokens')).tokens)
+  const storybook = await ensureStorybook({ base, log: progress })
   const { browser, page } = await launch()
+  const baseline = readBaseline()
   const rows = []
   try {
-    for (const piece of state.pieces.filter((entry) => !slugs.length || slugs.includes(entry.slug))) {
-      for (const entry of piece.sections) {
+    for (const piece of synced) {
+      const open = pieces.find((candidate) => candidate.slug === piece.slug)?.config.open ?? null
+      for (const story of piece.stories) {
+        let row
         try {
-          rows.push(await checkSection(file, page, piece, entry, { table, out: outDir, base }))
+          row = await checkStory(file, page, piece, story, { table, out: outDir, base: storybook.base, open })
         } catch (error) {
-          rows.push({ piece: piece.slug, story: entry.story, title: entry.title, error: error.message })
+          if (error.code === 'not-open') throw error
+          row = { piece: piece.slug, story: story.id, title: story.title, error: String(error.message).slice(0, 200) }
         }
+        Object.assign(row, verdictOf(row, baseline.stories[story.id]))
+        rows.push(row)
+        progress(`${piece.slug.padEnd(22)} ${story.title.padEnd(28).slice(0, 28)} ${row.error ? `error: ${row.error}` : `${String(row.picture.diffPct.toFixed(2)).padStart(6)}%  text ${row.text.ok ? '✓' : '✗'}  values ${row.valuesOk}/${row.values.length}  ${row.verdict}`}`)
       }
     }
   } finally {
     await browser.close()
+    await storybook.stop()
   }
+  if (accept) writeFileSync(BASELINE_PATH, JSON.stringify(acceptInto(baseline, rows, new Date().toISOString().slice(0, 10)), null, 1) + '\n')
+  const stale = statusOf(state, pieces).filter((entry) => entry.status === 'stale').map((entry) => entry.slug)
   const report = { at: new Date().toISOString(), file: state.file, platform: process.platform, stale, rows }
-  writeFileSync(join(root, 'paper/check-report.json'), JSON.stringify(report, null, 1) + '\n')
-  log(renderTable(rows, stale))
-  for (const row of rows) for (const value of row.values?.filter((entry) => !entry.ok) ?? []) log(`  ✗ ${row.piece} / ${row.title} · ${value.node} ${value.property}: Paper ${value.paper} · browser ${value.browser}`)
-  for (const row of rows) if (row.text && !row.text.ok) log(`  ✗ ${row.piece} / ${row.title} · text ${JSON.stringify(row.text.firstDifference ?? { story: row.text.story, paper: row.text.paper })}`)
-  return report
-}
-
-export function reportStale(log = console.log) {
-  const stale = stalePieces(readState())
-  for (const entry of stale) log(`${entry.status.padEnd(12)} ${entry.slug}${entry.status === 'stale' ? `  (code ${entry.now}, Paper has ${entry.recorded} from ${entry.syncedAt}): node scripts/paper/sync-pieces.mjs ${entry.slug}` : ''}`)
-  return stale
+  writeFileSync(REPORT_PATH, JSON.stringify(report, null, 1) + '\n')
+  const summary = renderSummary(rows, { accepted: accept })
+  log(summary)
+  if (stale.length) log(`\n${stale.length} piece${stale.length === 1 ? ' was' : 's were'} checked against code that has changed since Paper was written: ${stale.join(', ')} (run  npm run paper:sync)`)
+  const leftover = rows.flatMap((row) => row.leftover ?? [])
+  if (leftover.length) log(`\nleft in place (could not be proven to be this run's exports): ${leftover.join(', ')}`)
+  return { report, summary, regressions: rows.filter((row) => row.verdict === 'regression'), errors: rows.filter((row) => row.verdict === 'error') }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const args = process.argv.slice(2)
-  const option = (flag, fallback) => (args.includes(flag) ? args[args.indexOf(flag) + 1] : fallback)
-  if (args.includes('--stale')) process.exit(reportStale().some((entry) => entry.status !== 'in step') ? 1 : 0)
-  const [out, base] = [option('--out', DEFAULT_OUT), option('--base', STORYBOOK)]
-  const slugs = args.filter((arg) => !arg.startsWith('--') && arg !== out && arg !== base)
-  const unknown = slugs.filter((slug) => !PIECES.some((piece) => piece.slug === slug))
-  if (unknown.length) { console.error(`not in scripts/paper/pieces.mjs: ${unknown.join(', ')}`); process.exit(1) }
+  const args = parseArgs(process.argv.slice(2))
   try {
-    await check({ slugs, out, base })
+    const result = await check({ only: args.only, base: args.base, accept: args.accept, progress: (line) => console.error(line) })
+    process.exit(result.regressions.length || result.errors.length ? 1 : 0)
   } catch (error) {
     console.error(error.message)
     process.exit(1)
