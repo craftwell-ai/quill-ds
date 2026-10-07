@@ -108,7 +108,8 @@ export function dropDefaults(style, defaults = DEFAULTS) {
  * a margin on the outer edge of the first or last child becomes parent padding (exact);
  * a margin between two siblings becomes a spacer, shortened by the parent's gap because a
  * spacer is one more flex item and so adds one more gap (exact when margin ≥ gap); an
- * `auto` margin becomes a spacer that grows. Negative and cross-axis margins cannot be
+ * `auto` margin is reported as a growing spacer naming the child it belongs to (`of`, `edge`); the caller grows a
+ * wrapper around that child instead of adding a layer, because one more flex item would add one more gap. Negative and cross-axis margins cannot be
  * carried and are reported.
  *
  * `children` is `[{ margin: { top, right, bottom, left } }]` with px numbers or 'auto'.
@@ -134,11 +135,11 @@ export function translateMargins({ axis, gap = 0, collapse = false }, children) 
     const before = margin[start]
     const previous = index > 0 ? children[index - 1].margin[end] : null
     if (index === 0) {
-      if (before === 'auto') spacers.push({ before: 0, grow: true })
+      if (before === 'auto') spacers.push({ before: 0, grow: true, of: 0, edge: start })
       else if (before > 0) padding[start] += before
     } else {
       if (before === 'auto' || previous === 'auto') {
-        spacers.push({ before: index, grow: true })
+        spacers.push(before === 'auto' ? { before: index, grow: true, of: index, edge: start } : { before: index, grow: true, of: index - 1, edge: end })
         return
       }
       const [a, b] = [Math.max(0, size(previous)), Math.max(0, before)]
@@ -154,7 +155,7 @@ export function translateMargins({ axis, gap = 0, collapse = false }, children) 
     }
   })
   const last = children.at(-1)?.margin[end]
-  if (last === 'auto') spacers.push({ before: children.length, grow: true })
+  if (last === 'auto') spacers.push({ before: children.length, grow: true, of: children.length - 1, edge: end })
   else if (last > 0) padding[end] += last
   return { padding, spacers, lost, align, wraps, negative: children.some((child) => Object.values(child.margin).some((value) => value < 0)) }
 }
@@ -458,7 +459,8 @@ function boxStyles(node, context, extraPadding = { top: 0, right: 0, bottom: 0, 
 }
 
 /** Width, height, min/max and position, from the values the stylesheet asked for (not the px they resolved to). */
-function sizeStyles(node, context, { parentIsFlex, isRoot = false, cellWidth = null } = {}) {
+function sizeStyles(node, context, { parentIsFlex, isRoot = false, cellWidth = null, parentColumnAuto = false } = {}) {
+  context = { ...context, parentColumnAuto }
   const { spec, used, rect } = node
   const style = {}
   const fromSpec = (value, measured, what) => {
@@ -477,6 +479,9 @@ function sizeStyles(node, context, { parentIsFlex, isRoot = false, cellWidth = n
   if (isRoot && (style.width?.endsWith('%') || ((!style.width || style.width === 'auto') && node.fillsCanvas))) style.width = px(rect.w)
   // a percentage height on a root is a share of Storybook's window, which Paper does not have
   if (isRoot && style.height?.endsWith('%')) style.height = px(rect.h)
+  // `height: 100%` of a parent whose own height is automatic: the browser works it out from the layout
+  // (a stretched flex child is as tall as its row); Paper collapses it to nothing. Keep what was measured.
+  if (!isRoot && style.height?.endsWith('%') && context.parentAutoHeight && used.position !== 'absolute' && used.position !== 'fixed') style.height = px(rect.h)
   // A root sized by something outside itself keeps the size it measured: stretched by Storybook's own flex box
   // (a 560px-tall page grown to fill the window), or pinned to the window's edges (a side drawer, top to bottom).
   if (isRoot) {
@@ -492,7 +497,9 @@ function sizeStyles(node, context, { parentIsFlex, isRoot = false, cellWidth = n
   if (parentIsFlex) {
     style['flex-grow'] = used.flexGrow
     style['flex-shrink'] = used.flexShrink
-    style['flex-basis'] = fromSpec(spec.flexBasis, rect.w, 'flex-basis')
+    // In a column with no height of its own, a percentage basis has nothing to be a percentage of and the
+    // browser falls back to the content's height. Paper takes it literally, so it is left out there.
+    style['flex-basis'] = context.parentColumnAuto && /%$/.test(spec.flexBasis ?? '') ? 'auto' : fromSpec(spec.flexBasis, rect.w, 'flex-basis')
     style['align-self'] = used.alignSelf
   }
   if (cellWidth !== null) style['flex-shrink'] = '0'
@@ -638,7 +645,7 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
     const data = node.tag === 'img' ? images[node.src] : null
     if (data) {
       const css = Object.entries(dropDefaults({ ...box, 'object-fit': node.used.objectFit === 'fill' ? undefined : node.used.objectFit })).map(([property, value]) => `${property}:${value}`).join(';')
-      return emit({ tag: 'img', raw: `<img layer-name="${escapeAttr(node.alt || 'image')}" src="${data}" style="${escapeAttr(css)}">`, style: {}, children: [] })
+      return emit({ tag: 'img', raw: `<img layer-name="${escapeAttr(node.alt || 'image')}" src="${escapeAttr(data)}" style="${escapeAttr(css)}">`, style: {}, children: [] })
     }
     note('lost', node, node.tag === 'img' ? `image not carried (${String(node.src).slice(0, 60)}): drawn as a placeholder` : `<${node.tag}> cannot be drawn: placeholder`)
     return emit({ tag: 'div', name: `${node.tag} (placeholder)`, style: dropDefaults({ display: 'flex', 'background-color': 'var(--color-muted)', ...box }), children: [] })
@@ -664,7 +671,7 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
     const floating = node.children.filter(outOfFlow)
     const elements = flowing.filter((child) => !isText(child))
     const runs = flowing.filter(isText).map((child) => normalizeText(child.text, node.used.whiteSpace)).filter((text) => text.trim())
-    const childContext = { textClasses, windowShift: inherited.windowShift, reach: inherited.reach, parentRect: node.rect, parentBorder: { left: num(node.used.borderLeftWidth), top: num(node.used.borderTopWidth) } }
+    const childContext = { textClasses, parentAutoHeight: !/px$/.test(node.spec.height ?? ''), windowShift: inherited.windowShift, reach: inherited.reach, parentRect: node.rect, parentBorder: { left: num(node.used.borderLeftWidth), top: num(node.used.borderTopWidth) } }
 
     // A form field shows its value (or its placeholder) as text; the caret and selection are not design.
     if (FIELDS.has(node.tag)) {
@@ -714,16 +721,24 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
       }
       // text directly inside a flex box is an anonymous flex item: it becomes a run of its own
       marginItems = flowing.filter((child) => !isText(child) || normalizeText(child.text, node.used.whiteSpace).trim())
-      children = marginItems.map((child) => (isText(child) ? textNode(normalizeText(child.text, node.used.whiteSpace).trim(), node, textClasses, context) : convertChild(child, { parentIsFlex: true })))
+      const columnAuto = axis === 'column' && (!node.spec.height || node.spec.height === 'auto') && !isRoot
+      children = marginItems.map((child) => (isText(child) ? textNode(normalizeText(child.text, node.used.whiteSpace).trim(), node, textClasses, context) : convertChild(child, { parentIsFlex: true, parentColumnAuto: columnAuto })))
     } else if (layout.kind === 'grid') {
       const columns = node.used.gridTemplateColumns.split(/\s+/).map(num).filter((value) => value > 0)
       const gaps = gapOf(node.used)
       const inner = { x: node.rect.x + num(node.used.borderLeftWidth) + num(node.used.paddingLeft), y: node.rect.y + num(node.used.borderTopWidth) + num(node.used.paddingTop) }
       const plan = planGrid({ columns, columnGap: gaps.column, rowGap: gaps.row, children: elements.map((child) => ({ x: child.rect.x - (child.shift?.[0] ?? 0) - inner.x, y: child.rect.y - (child.shift?.[1] ?? 0) - inner.y, width: child.rect.w })) })
-      if (runs.length) note('lost', node, 'text directly inside a grid dropped')
       axis = 'column'
       frame['flex-direction'] = 'column'
-      if (plan.kind === 'column') {
+      if (!elements.length && runs.length) {
+        // a grid used only to centre a label (`grid place-items-center`): one text layer, placed the same way
+        const place = (value) => (['center', 'end', 'flex-end', 'start', 'flex-start'].includes(value) ? value.replace(/^(start|end)$/, 'flex-$1') : undefined)
+        frame['align-items'] = place(node.used.justifyItems)
+        frame['justify-content'] = place(node.used.alignItems)
+        marginItems = []
+        children = [textNode(runs.join(' ').trim(), node, textClasses, context)]
+      } else if (plan.kind === 'column') {
+        if (runs.length) note('lost', node, 'text directly inside a grid, beside other content, dropped')
         gap = plan.gap
         frame.gap = binder.length('spacing', plan.gap)
         // in a column, `justify-items` is the cross axis and `align-content` the main one
@@ -802,13 +817,17 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
           // inline things between blocks shares a line (a label above the button it describes).
           const lineStyle = { display: 'flex', 'flex-wrap': frame['flex-wrap'], 'align-items': 'baseline', 'justify-content': frame['justify-content'] }
           const lines = []
+          const sources = []
           items.forEach((child, position) => {
             const blockLevel = !isText(child) && !isInlineLevel(child.used.display)
             const last = lines.at(-1)
-            if (blockLevel) lines.push(children[position])
+            if (blockLevel) { lines.push(children[position]); sources.push(child) }
             else if (last?.line) last.children.push(children[position])
-            else lines.push(emit({ tag: 'div', name: 'line', line: true, style: dropDefaults(lineStyle), children: [children[position]] }))
+            else { lines.push(emit({ tag: 'div', name: 'line', line: true, style: dropDefaults(lineStyle), children: [children[position]] })); sources.push({ text: '' }) }
           })
+          // a block's own margins (the 8px under a label) still space the lines
+          marginItems = sources
+          collapse = true
           // a line holding one thing is just that thing
           children = lines.map((line) => (line.line && line.children.length === 1 ? Object.assign(line.children[0], { style: { ...line.children[0].style, 'align-self': line.children[0].style['align-self'] ?? 'flex-start' } }) : line))
           axis = 'column'
@@ -847,8 +866,19 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
           wrapper.style[`padding-${wrap.side}`] = px(wrap.size)
           inner.wrapper = wrapper
         }
+
+        // `mt-auto` pushes a card's footer to the bottom: the footer sits at the far end of a wrapper that takes the free space
+        for (const entry of moved.spacers.filter((candidate) => candidate.grow)) {
+          const inner = children[entry.of]
+          const leading = entry.edge === 'top' || entry.edge === 'left'
+          const wrapper = inner.wrapper ?? emit({ tag: 'div', name: 'push', wrapper: true, style: { display: 'flex', 'flex-direction': axis === 'column' ? 'column' : 'row', 'flex-grow': '1' }, children: [inner] })
+          // pushed from both sides is centred
+          wrapper.style['justify-content'] = wrapper.style['justify-content'] && wrapper.style['justify-content'] !== (leading ? 'flex-end' : 'flex-start') ? 'center' : leading ? 'flex-end' : 'flex-start'
+          wrapper.style['flex-grow'] = '1'
+          inner.wrapper = wrapper
+        }
         children = children.map((child) => child.wrapper ?? child)
-        for (const entry of [...moved.spacers].sort((a, b) => b.before - a.before)) children.splice(entry.before, 0, emit(spacer(axis, entry)))
+        for (const entry of moved.spacers.filter((candidate) => !candidate.grow).sort((a, b) => b.before - a.before)) children.splice(entry.before, 0, emit(spacer(axis, entry)))
       }
     }
 
@@ -956,12 +986,25 @@ export const PANELS = '[role="dialog"], [role="alertdialog"], [role="menu"], [ro
 const MAX_IMAGE_BYTES = 1_500_000
 
 /* Runs inside the page. Self-contained: it cannot see anything in this module but its arguments. */
-async function captureInPage({ usedProperties, specProperties, panelSelector, breakMark, maxImageBytes }) {
+async function captureInPage({ usedProperties, specProperties, panelSelector, breakMark, maxImageBytes, unwrap }) {
   const wrapper = document.querySelector('#storybook-root > div')
   // the same element the Figma visual diff shoots: the theme wrapper's one real child, without the canvas padding
   const kids = [...(wrapper?.children ?? [])].filter((element) => !element.matches('section[aria-label], ol[data-sonner-toaster]'))
-  const target = kids.length === 1 ? kids[0] : wrapper
+  let target = kids.length === 1 ? kids[0] : wrapper
   if (!target) return { roots: [], images: {}, unread: [] }
+  // A story may stand its piece in a tall, empty box to leave room for a menu that opens above it (the prompt
+  // composer sits in an 850px one). The box is the story's staging, not the piece. Only for pieces whose config
+  // says `staged`: elsewhere a tall bare wrapper is the layout itself (an app shell filling the window).
+  let staged = false
+  while (unwrap) {
+    const only = [...target.children].filter((element) => element.getBoundingClientRect().height > 0)
+    const style = getComputedStyle(target)
+    const bare = style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.backgroundImage === 'none' && style.boxShadow === 'none' && parseFloat(style.borderTopWidth) === 0
+    const ownText = [...target.childNodes].some((node) => node.nodeType === Node.TEXT_NODE && node.data.trim())
+    if (only.length !== 1 || !bare || ownText || target.getBoundingClientRect().height - only[0].getBoundingClientRect().height < 160) break
+    target = only[0]
+    staged = true
+  }
   const trim = (value) => Math.round(value * 100) / 100
   const urls = new Set()
   let rootOrigin = { x: 0, y: 0 }
@@ -1129,11 +1172,26 @@ async function captureInPage({ usedProperties, specProperties, panelSelector, br
     const canvas = getComputedStyle(wrapper)
     // "fills" means: the canvas spans the window and the piece spans the canvas. A centred layout shrinks the canvas to the piece instead.
     const spansWindow = wrapper.getBoundingClientRect().width >= (wrapper.parentElement?.clientWidth ?? document.documentElement.clientWidth) - 1
-    main.fillsCanvas = spansWindow && target.getBoundingClientRect().width >= wrapper.clientWidth - parseFloat(canvas.paddingLeft) - parseFloat(canvas.paddingRight) - 1
+    main.fillsCanvas = staged || spansWindow && target.getBoundingClientRect().width >= wrapper.clientWidth - parseFloat(canvas.paddingLeft) - parseFloat(canvas.paddingRight) - 1
     roots.push({ part: 'main', tree: main })
   }
   // open overlays: panels portalled outside the story. The outermost match is the panel; its insides come with it.
-  const panels = [...document.querySelectorAll(panelSelector)].filter((element) => !target.contains(element) && !element.parentElement?.closest(panelSelector))
+  // The matched element can be the panel's contents with the painted shell around it (a navigation menu's
+  // card is an unnamed <nav> two levels up). Climb while the parent is the same box: the outermost is the panel.
+  const painted = (element) => { const style = getComputedStyle(element); return style.backgroundColor !== 'rgba(0, 0, 0, 0)' || style.backgroundImage !== 'none' || style.boxShadow !== 'none' || parseFloat(style.borderTopWidth) > 0 }
+  const shellOf = (element) => {
+    let shell = element
+    // a match that paints itself (a tooltip, a dialog) IS the panel: only bare contents look outward for their shell
+    if (painted(shell)) return shell
+    for (let parent = shell.parentElement; parent && parent !== document.body && !parent.contains(target); parent = parent.parentElement) {
+      const [inner, outer] = [shell.getBoundingClientRect(), parent.getBoundingClientRect()]
+      if (Math.abs(outer.width - inner.width) > 1 || Math.abs(outer.height - inner.height) > 1) break
+      shell = parent
+      if (painted(shell)) break
+    }
+    return shell
+  }
+  const panels = [...new Set([...document.querySelectorAll(panelSelector)].filter((element) => !target.contains(element) && !element.parentElement?.closest(panelSelector)).map(shellOf))]
   panels.forEach((panel, index) => {
     const tree = capture(panel, `panel-${index + 1}`)
     if (!tree || tree.rect.w * tree.rect.h === 0) return
@@ -1162,15 +1220,39 @@ async function captureInPage({ usedProperties, specProperties, panelSelector, br
   return { roots, images, unread }
 }
 
-/** Open a story the way the Figma visual diff does (Dawn, motion frozen, fonts loaded) and leave the page on it. */
+/** How a story's render ended, read from Storybook's own preview: `completed`, `errored`, … or null when it cannot be read. */
+const renderPhase = () => window.__STORYBOOK_PREVIEW__?.currentRender?.phase ?? null
+const ENDED = ['completed', 'finished', 'errored', 'aborted']
+
+/**
+ * Open a story the way the Figma visual diff does (Dawn, motion frozen, fonts loaded) and leave the page on
+ * its END state: a story with a play function (one that types, clicks or opens something) is read only after
+ * the play has finished. A story that ends in an error (a failed render, a play function that threw) is a
+ * failure: it throws rather than have its error screen drawn into Paper.
+ */
 export async function openStory(page, storyId, base = STORYBOOK) {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto(`${base}/iframe.html?viewMode=story&id=${storyId}&globals=theme:light`, { waitUntil: 'domcontentloaded' })
-  await page.waitForFunction(() => document.querySelector('#storybook-root')?.children.length > 0, null, { timeout: 60000 })
+  // either the story drew something or Storybook put up its error screen
+  await page.waitForFunction(() => document.querySelector('#storybook-root')?.children.length > 0 || document.body.classList.contains('sb-show-errordisplay') || document.body.classList.contains('sb-show-nopreview'), null, { timeout: 60000 })
+  // the play function runs after the first render; a long one (a dozen keystrokes and waits) takes a few seconds
+  const phase = await page.waitForFunction((ended) => { const now = window.__STORYBOOK_PREVIEW__?.currentRender?.phase; return now === undefined || now === null ? 'unknown' : ended.includes(now) ? now : false }, ENDED, { timeout: 30000 }).then((handle) => handle.jsonValue()).catch(() => 'timeout')
+  const failure = await storyFailure(page)
+  if (failure || phase === 'errored') throw new Error(`${storyId}: the story ended in an error${failure ? ` (${failure})` : ' (its play function threw)'}`)
+  if (phase === 'timeout') throw new Error(`${storyId}: the story's play function had not finished after 30s (stuck at "${await page.evaluate(renderPhase)}")`)
   await page.evaluate(() => document.fonts.ready)
   await page.addStyleTag({ content: '*, *::before, *::after { animation: none !important; transition: none !important; }' })
-  // play functions (a story that focuses its primary button) need a beat to finish
-  await page.waitForTimeout(1500)
+  // one more beat for whatever the last interaction set moving (a menu mounting, a toast sliding in)
+  await page.waitForTimeout(phase === 'unknown' ? 1500 : 600)
+}
+
+/** Storybook's error screen, as a one-line message; null when the story is showing. */
+export async function storyFailure(page) {
+  return page.evaluate(() => {
+    if (!document.body.classList.contains('sb-show-errordisplay') && !document.body.classList.contains('sb-show-nopreview')) return null
+    const text = (document.querySelector('#error-message')?.textContent ?? document.querySelector('.sb-nopreview')?.textContent ?? 'the story threw').replace(/\s+/g, ' ').trim()
+    return text.slice(0, 160) || 'the story threw'
+  })
 }
 
 /* In the page: the open panels outside the story's own element (the same test `captureInPage` applies). */
@@ -1210,18 +1292,17 @@ export async function openOverlay(page, hint, storyId = null) {
 }
 
 /** The story's trees (the piece itself, then any open panels), plus a 2x PNG of each for the picture check. */
-export async function captureStory(page, storyId, { base = STORYBOOK, screenshot = false, open = null } = {}) {
+export async function captureStory(page, storyId, { base = STORYBOOK, screenshot = false, open = null, staged = false } = {}) {
   await openStory(page, storyId, base)
   let opened = await openOverlay(page, open, storyId)
-  let crash = null
   // Opening can take a story down (a menu part used outside its group throws on first render). The page is
   // then Storybook's error screen: read the message, load the story again and draw it closed.
-  if (await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay'))) {
-    crash = (await page.evaluate(() => document.querySelector('#error-message')?.textContent ?? '')).replace(/\s+/g, ' ').trim().slice(0, 160) || 'the story threw'
+  const crash = await storyFailure(page)
+  if (crash) {
     await openStory(page, storyId, base)
     opened = 'crashed'
   }
-  const { roots, images, unread } = await page.evaluate(captureInPage, { usedProperties: USED, specProperties: SPEC, panelSelector: PANELS, breakMark: BREAK, maxImageBytes: MAX_IMAGE_BYTES })
+  const { roots, images, unread } = await page.evaluate(captureInPage, { usedProperties: USED, specProperties: SPEC, panelSelector: PANELS, breakMark: BREAK, maxImageBytes: MAX_IMAGE_BYTES, unwrap: staged })
   if (!roots.length) throw new Error(`${storyId}: the story rendered nothing visible`)
   for (const [position, url] of unread.entries()) {
     try { images[url] = `data:image/png;base64,${(await page.locator(`[data-paper-image="${position}"]`).screenshot({ type: 'png' })).toString('base64')}` } catch { /* stays a placeholder, and is reported */ }
@@ -1252,8 +1333,8 @@ const sum = (list, key) => list.reduce((total, entry) => total + entry[key], 0)
  * A story → `{ parts: [{ part, root, html, texts, size }], stats, opened }`. `parts[0]` is the
  * piece as the story draws it; any others are open panels (a menu, a dialog) drawn beside it.
  */
-export async function convertStory(page, storyId, { base = STORYBOOK, tokenTable = quillTokenTable(), screenshot = false, open = null } = {}) {
-  const { roots, images, opened, crash } = await captureStory(page, storyId, { base, screenshot, open })
+export async function convertStory(page, storyId, { base = STORYBOOK, tokenTable = quillTokenTable(), screenshot = false, open = null, staged = false } = {}) {
+  const { roots, images, opened, crash } = await captureStory(page, storyId, { base, screenshot, open, staged })
   const parts = roots.map(({ part, tree, png }) => {
     const { root, stats } = convertTree(tree, tokenTable, { images })
     return { part, tree, root, html: serialize(root), stats, texts: visibleTexts(tree), size: { width: tree.rect.w, height: tree.rect.h }, png }

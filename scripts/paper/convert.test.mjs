@@ -88,10 +88,15 @@ test('flex margins add up; block margins collapse to the larger', () => {
   assert.deepEqual(translateMargins({ axis: 'column', collapse: true }, pair).spacers, [{ before: 1, size: 12 }])
 })
 
-test('an auto margin becomes a spacer that grows', () => {
-  assert.deepEqual(translateMargins({ axis: 'row', gap: 8 }, [child({}), child({ left: 'auto' })]).spacers, [{ before: 1, grow: true }])
-  assert.deepEqual(translateMargins({ axis: 'row' }, [child({ left: 'auto' })]).spacers, [{ before: 0, grow: true }])
-  assert.deepEqual(translateMargins({ axis: 'row' }, [child({ right: 'auto' }), child({})]).spacers, [{ before: 1, grow: true }])
+test('an auto margin names the child it pushes, so the caller can grow a wrapper instead of adding a gap', () => {
+  assert.deepEqual(translateMargins({ axis: 'row', gap: 8 }, [child({}), child({ left: 'auto' })]).spacers, [{ before: 1, grow: true, of: 1, edge: 'left' }])
+  assert.deepEqual(translateMargins({ axis: 'row' }, [child({ left: 'auto' })]).spacers, [{ before: 0, grow: true, of: 0, edge: 'left' }])
+  assert.deepEqual(translateMargins({ axis: 'row' }, [child({ right: 'auto' }), child({})]).spacers, [{ before: 1, grow: true, of: 0, edge: 'right' }])
+  // a card footer with mt-auto in a column whose gap is 16px: no extra layer between content and footer
+  const part = (name, spec = {}) => el('div', { slot: name, used: { display: 'flex' }, spec, children: [el('p', { children: [{ text: name }] })] })
+  const { root } = convertTree(el('div', { used: { display: 'flex', flexDirection: 'column', rowGap: '16px', columnGap: '16px' }, children: [part('card-content'), part('card-footer', { marginTop: 'auto' })] }), TABLE)
+  assert.deepEqual(root.children.map((node) => node.name), ['card-content', 'push'])
+  assert.deepEqual([root.children[1].style['flex-grow'], root.children[1].style['justify-content'], root.children[1].children[0].name], ['1', 'flex-end', 'card-footer'])
 })
 
 test('a transform is read as the rotation Paper can hold, plus whether anything else was in it', () => {
@@ -128,6 +133,14 @@ test('blocks and inline content in one container: blocks stack, inline runs shar
   assert.equal(root.style['flex-direction'], 'column')
   assert.deepEqual(root.children.map((node) => node.name ?? node.text), ['Disabled', 'line'])
   assert.deepEqual(root.children[1].children.map((node) => node.name ?? node.text), ['button', ' and ', 'more'])
+})
+
+test('a block\'s margin still spaces the lines when blocks and inline content are mixed', () => {
+  const label = el('p', { spec: { marginBottom: '8px' }, children: [{ text: 'Disabled' }] })
+  const toggle = el('button', { used: { display: 'inline-flex' }, spec: { width: '32px', height: '32px' }, children: [{ text: 'B' }] })
+  const { root } = convertTree(el('div', { children: [label, toggle] }), TABLE)
+  assert.deepEqual(root.children.map((node) => node.name ?? node.text), ['Disabled', 'spacer', 'button'])
+  assert.equal(root.children[1].style.height, '8px')
 })
 
 // ------------------------------------------------------------------ grid
@@ -390,4 +403,20 @@ test('a fully transparent element holds its place in flow and is left out when i
   const { root } = convertTree(row, TABLE)
   assert.deepEqual(root.children.map((node) => node.name ?? node.text), ['Launch brief draft', 'dropdown-menu-trigger (hidden)'])
   assert.deepEqual([root.children[1].style.width, root.children[1].style.height, root.children[1].children.length], ['24px', '24px', 0])
+})
+
+test('a percentage flex-basis in a column without a height is left out (the browser treats it as content height)', () => {
+  const part = (basis) => el('div', { used: { display: 'flex', flexGrow: basis === '0%' ? '1' : '0' }, spec: { flexBasis: basis }, children: [el('p', { children: [{ text: 'x' }] })] })
+  const column = convertTree(el('div', { used: { display: 'flex' }, children: [el('div', { slot: 'item', used: { display: 'flex', flexDirection: 'column' }, children: [part('100%'), part('0%')] })] }), TABLE).root.children[0]
+  assert.deepEqual(column.children.map((node) => node.style['flex-basis']), [undefined, undefined])
+  assert.equal(column.children[1].style['flex-grow'], '1')
+  const row = convertTree(el('div', { used: { display: 'flex' }, children: [el('div', { used: { display: 'flex' }, children: [part('0%')] })] }), TABLE).root.children[0]
+  assert.equal(row.children[0].style['flex-basis'], '0%', 'in a row the basis is a share of a real width')
+})
+
+test('a grid that only centres a label becomes one centred text layer, not a lost label', () => {
+  const thumb = el('span', { classes: ['grid', 'place-items-center', 'bg-muted'], used: { display: 'grid', gridTemplateColumns: '32px', alignItems: 'center', justifyItems: 'center', backgroundColor: 'rgb(239, 228, 206)' }, spec: { width: '32px', height: '32px' }, children: [{ text: 'PDF' }] })
+  const { root, stats } = convertTree(el('div', { used: { display: 'flex' }, children: [thumb] }), TABLE)
+  assert.deepEqual([root.children[0].style['align-items'], root.children[0].style['justify-content'], root.children[0].children[0].text], ['center', 'center', 'PDF'])
+  assert.deepEqual(stats.lost, [])
 })
