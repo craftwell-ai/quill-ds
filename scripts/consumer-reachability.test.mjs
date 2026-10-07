@@ -222,6 +222,42 @@ test('the known-gap list has no stale entries — remove what has been fixed', (
   )
 })
 
+// The first word of every variable the shipped theme defines (`--ai`, `--color`, `--font`, `--space`, …). A name
+// that starts with one of them is the theme's to define; the three named here are owned even if the item stops
+// carrying one.
+export function themePrefixes(tokens) {
+  return new Set(['--ai', '--color', '--font', ...[...tokens].map((name) => /^--[a-z0-9]+/.exec(name)?.[0]).filter(Boolean)])
+}
+
+// Does this source set the variable itself, inline, on an element it draws? Only a key inside a `style={{ … }}`
+// object counts (the same name as a key in any other object proves nothing), and never a name under a prefix the
+// theme owns: an inline `--ai-*` would hide exactly the missing theme variable this guard exists to find.
+export function setsInline(source, name, owned) {
+  if (owned.has(/^--[a-z0-9]+/.exec(name)?.[0])) return false
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return new RegExp(`style=\\{\\{[^}]*'${escaped}'\\s*:`).test(source)
+}
+
+test('only a variable set in a style object, outside the theme\'s own names, counts as set inline', () => {
+  const owned = themePrefixes(new Set(['--ai-from', '--space-4']))
+  assert.ok(setsInline(`<div style={{ '--foo': 1 }} className="w-[var(--foo)]" />`, '--foo', owned))
+  assert.ok(setsInline(`<div style={{ width: 4, '--foo' : share } as React.CSSProperties} />`, '--foo', owned))
+  // A plain object with the same key is not an element's style.
+  assert.ok(!setsInline(`const map = { '--foo': 1 }; <div className="w-[var(--foo)]" />`, '--foo', owned))
+  // Another element's style object does not carry over to a later, unrelated key.
+  assert.ok(!setsInline(`<div style={{ width: 4 }} /> ; const map = { '--foo': 1 }`, '--foo', owned))
+  // Not for a name the theme owns, however it is set.
+  assert.ok(!setsInline(`<div style={{ '--ai-foo': 1 }} />`, '--ai-foo', owned))
+  assert.ok(!setsInline(`<div style={{ '--color-foo': 1 }} />`, '--color-foo', owned))
+  assert.ok(!setsInline(`<div style={{ '--font-foo': 1 }} />`, '--font-foo', owned))
+  assert.ok(!setsInline(`<div style={{ '--space-foo': 1 }} />`, '--space-foo', owned))
+  // And the real case this was written for.
+  const meter = readFileSync(join(root, 'registry/lib/usage-meter.tsx'), 'utf8')
+  const real = themePrefixes(quillTokens(JSON.parse(readFileSync(join(root, 'public/r/quill.json'), 'utf8'))))
+  assert.ok(setsInline(meter, '--usage-share', real))
+  assert.ok(!real.has('--usage'))
+})
+
 test('shipped code reads no CSS variable an app never receives', () => {
   // Seven blocks set their display type with
   // `font-[family-name:var(--font-fraunces,Georgia,serif)]`. `--font-fraunces` is set
@@ -231,6 +267,7 @@ test('shipped code reads no CSS variable an app never receives', () => {
   // fallback always "resolves". Found by the Figma type audit (0.10.3).
   const item = JSON.parse(readFileSync(join(root, 'public/r/quill.json'), 'utf8'))
   const received = new Set([...Object.keys(item.cssVars.light).map((k) => `--${k}`), ...Object.keys(item.css[':root'])])
+  const owned = themePrefixes(quillTokens(item))
   const offenders = []
   let files = 0
   for (const dir of ['registry/blocks', 'registry/lib', 'registry/examples']) {
@@ -242,6 +279,9 @@ test('shipped code reads no CSS variable an app never receives', () => {
         if (received.has(name)) continue
         // ChartContainer defines --color-<series key> at runtime from the chart config.
         if (name.startsWith('--color-') && src.includes('ChartContainer')) continue
+        // A variable the same file sets inline on its own element (`style={{ '--usage-share': … }}`) is always
+        // there to be read: it does not come from the theme at all.
+        if (setsInline(src, name, owned)) continue
         offenders.push(`${dir}/${f}: ${name}`)
       }
     }

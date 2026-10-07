@@ -13,6 +13,20 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.20.1] — 2026-10-07
+
+### Fixed
+- **`usage-meter`: the gradient is laid across the whole bar and the fill reveals it, so a nearly empty bar is plain gold.** Before, the fill carried all three colours however short it was, so at 120 of 5,000 it was a multi-coloured dot. A fill at 30% now runs from gold into terracotta; a full bar looks exactly as it did. When the amount changes only the fill's width eases, so the colours are right for the whole move. The compact ring already worked this way and is unchanged.
+- **`conversation-history`: a confirmed delete is also sent when the page is hidden.** A phone that closes a tab in the background may never tell the page it is closing, so switching to another tab or app now counts too. `onDelete` is called at most once for each confirmed delete: when the Undo time has passed, or sooner if another delete is confirmed, the list is removed, or the page is hidden or closed. Undo goes away at the same moment, as it does on every other path.
+- **`conversation-history`: pressing Shift, Control, Alt or Meta on its own no longer drops keyboard focus** when the app then moves the row being pinned, or the Undo line, to another group. Any other key still counts as moving on.
+- **`approval-card` and `question-card`: the focus ring on the outcome line hugs its words.** After a decision, keyboard focus moves to the line that replaces the buttons ("Sent to 6 people."); its ring ran the full width of the card with the text flush against it. The ring is now as wide as the words, with a little room inside. The words and the card's height do not move. A long outcome with nowhere to break (a link) still wraps inside the card.
+- **`ai-feedback`: a long thank-you line stays inside the form.** Its line has hugged its words since 1.20.0, so a `sentMessage` holding a long link could run past the form's edge. It now stops at the edge and wraps.
+
+### Changed
+- **README says what Quill is built on:** the Base UI flavour of the stock shadcn components (the `base-*` styles), `@base-ui/react` 1.8 or newer, and the Quill theme for the AI pieces' colours.
+- **Figma: the UsageMeter twin's fills follow.** Each bar fill shows the left part of a gradient that spans its track; `figma/components/README.md` says how it is laid out.
+- **Housekeeping:** `figma/pattern-baseline.json` no longer carries the `vars` lists, which nothing read and the snapshot script never wrote.
+
 ## [1.20.0] — 2026-10-06
 
 ### Added

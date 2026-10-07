@@ -536,6 +536,46 @@ export const ClosingTheTabCommits: Story = {
   },
 }
 
+// What the browser reports for a tab sent to the background. A phone that later kills that tab may never send
+// `pagehide`, so this is the last moment the list is sure to hear about.
+const reportVisibility = (state: 'hidden' | 'visible') => {
+  Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => state })
+  document.dispatchEvent(new Event('visibilitychange'))
+}
+// Removing the stand-in uncovers the browser's own reading again.
+const restoreVisibility = () => { delete (document as unknown as { visibilityState?: string }).visibilityState }
+
+// The page being hidden sends a confirmed delete, as closing it does: once, and Undo goes with it.
+export const HidingThePageCommits: Story = {
+  render: (args) => <Staged {...args} slowDelete />,
+  play: async ({ canvas, args }) => {
+    await confirmDelete(canvas, 'Launch brief draft')
+    const undo = await canvas.findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(undo).toHaveFocus())
+    try {
+      // The event alone is not "hidden": a tab that comes back to the front sends it too.
+      reportVisibility('visible')
+      await pause(50)
+      await expect(args.onDelete).not.toHaveBeenCalled()
+      await expect(canvas.getByRole('button', { name: 'Undo' })).toBeVisible()
+      reportVisibility('hidden')
+      await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1))
+      await waitFor(() => expect(canvas.queryByRole('button', { name: 'Undo' })).toBeNull())
+      await expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toBeVisible()
+      await expect(canvas.getByRole('status')).toBeEmptyDOMElement()
+      // Hidden again, shown again, then closed: nothing more is sent.
+      reportVisibility('hidden')
+      reportVisibility('visible')
+      window.dispatchEvent(new Event('pagehide'))
+    } finally {
+      restoreVisibility()
+    }
+    await userEvent.click(canvas.getByRole('button', { name: 'Leave' }))
+    await expect(await canvas.findByText('Gone')).toBeVisible()
+    await expect((args.onDelete as ReturnType<typeof fn>).mock.calls).toEqual([['c']])
+  },
+}
+
 // The app drops the chat while its Undo line is showing (deleted in another tab). The delete was confirmed here, so
 // the app is still told, once, and the Undo line does not linger with a countdown nothing can restart.
 export const AppRemovesThePendingChat: Story = {
@@ -813,5 +853,51 @@ export const PendingChatRegroupedUnderThePointer: Story = {
     canvas.getByRole('button', { name: 'Bump elsewhere' }).click()
     await waitFor(() => expect(args.onDelete).toHaveBeenCalledTimes(1), { timeout: 3000 })
     await expect(args.onDelete).toHaveBeenCalledWith('d')
+  },
+}
+
+// Shift, Control, Alt or Meta pressed alone is not "moving on": it starts a shortcut or does nothing. The Undo line
+// the app then moves to another group still keeps the cursor.
+export const BareModifierKeepsFollowingUndo: Story = {
+  render: (args) => <Staged {...args} />,
+  play: async ({ canvas }) => {
+    await confirmDelete(canvas, 'Pricing page copy ideas')
+    const first = await within(canvas.getByRole('list', { name: 'Yesterday' })).findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(first).toHaveFocus())
+    await userEvent.keyboard('{Shift}{Control}{Alt}{Meta}')
+    await expect(first).toHaveFocus()
+    // Not a press: the cursor stays on Undo while the row moves under it.
+    canvas.getByRole('button', { name: 'Bump elsewhere' }).click()
+    const today = canvas.getByRole('list', { name: 'Today' })
+    await waitFor(() => expect(within(today).getByText(/Deleted .Pricing page copy ideas./)).toBeVisible())
+    await waitFor(() => expect(within(today).getByRole('button', { name: 'Undo' })).toHaveFocus())
+  },
+}
+
+// The same for a row being pinned by an app that applies the pin late.
+export const BareModifierKeepsFollowingAPinnedRow: Story = {
+  render: (args) => <Staged {...args} pinAfter={600} />,
+  play: async ({ canvas }) => {
+    await userEvent.click(await within(await openMenu(canvas, 'Launch brief draft')).findByRole('menuitem', { name: 'Pin' }))
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toHaveFocus())
+    await userEvent.keyboard('{Shift}')
+    await waitFor(() => expect(within(canvas.getByRole('list', { name: 'Pinned' })).getByText('Launch brief draft')).toBeVisible(), { timeout: 3000 })
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toHaveFocus())
+  },
+}
+
+// Any other key is the person moving on, and still ends the following.
+export const AnotherKeyEndsFollowing: Story = {
+  render: (args) => <Staged {...args} />,
+  play: async ({ canvas }) => {
+    await confirmDelete(canvas, 'Pricing page copy ideas')
+    const first = await within(canvas.getByRole('list', { name: 'Yesterday' })).findByRole('button', { name: 'Undo' })
+    await waitFor(() => expect(first).toHaveFocus())
+    await userEvent.keyboard('a')
+    canvas.getByRole('button', { name: 'Bump elsewhere' }).click()
+    const today = canvas.getByRole('list', { name: 'Today' })
+    await waitFor(() => expect(within(today).getByText(/Deleted .Pricing page copy ideas./)).toBeVisible())
+    await pause(100)
+    await expect(within(today).getByRole('button', { name: 'Undo' })).not.toHaveFocus()
   },
 }

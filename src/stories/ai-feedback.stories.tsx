@@ -141,6 +141,23 @@ export const ControlledSent: Story = {
   },
 }
 
+// The thank-you line is the app's own words and can hold a link that has no place to break.
+export const LongSentMessageStaysInside: Story = {
+  args: { sent: true, sentMessage: `Thanks. Track it at https://example.com/a/very/long/path/${'x'.repeat(120)}` },
+  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  play: async ({ canvas, canvasElement }) => {
+    const root = canvasElement.querySelector('[data-slot="ai-feedback"]') as HTMLElement
+    const status = canvas.getByRole('status')
+    const words = status.querySelector('p') as HTMLElement
+    // The line is as wide as its words only while they fit: past that it stops at the card's edge and the words wrap.
+    // The box keeps the ring's 6px of room past the words on the right, as it has on the left.
+    await expect(status.getBoundingClientRect().right).toBeLessThanOrEqual(root.getBoundingClientRect().right + 6.5)
+    await expect(words.getBoundingClientRect().right).toBeLessThanOrEqual(root.getBoundingClientRect().right + 0.5)
+    await expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth + 6)
+    await expect(words.getBoundingClientRect().height).toBeGreaterThan(parseFloat(getComputedStyle(words).lineHeight) * 1.5)
+  },
+}
+
 export const AlreadySent: Story = {
   args: { sent: true, sentMessage: 'Thanks. We read every note.' },
   play: async ({ canvas }) => {

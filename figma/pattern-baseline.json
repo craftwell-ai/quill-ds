@@ -41,23 +41,6 @@
         "Avatar",
         "Avatar",
         "Avatar"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "space/0_5",
-        "space/1",
-        "space/2",
-        "space/3",
-        "space/4",
-        "space/5",
-        "text/base"
       ]
     },
     "ai-chat": {
@@ -104,45 +87,6 @@
         "SuggestedPrompts",
         "PromptComposer",
         "AiNotice"
-      ],
-      "vars": [
-        "ai-edge/rest-from",
-        "ai-edge/rest-to",
-        "ai-edge/rest-via",
-        "border-width/1",
-        "border-width/2",
-        "color/ai-from",
-        "color/ai-to",
-        "color/ai-via",
-        "color/ink-soft",
-        "radius/4xl",
-        "radius/md",
-        "radius/sm",
-        "radius/xl",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "shadow/base/1",
-        "shadow/base/2",
-        "space/0_5",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/6",
-        "space/7",
-        "space/8",
-        "text/2xs",
-        "text/sm",
-        "text/xs"
       ]
     },
     "ai-home": {
@@ -168,29 +112,6 @@
       ],
       "instances": [
         "PromptComposer"
-      ],
-      "vars": [
-        "border-width/1",
-        "color/ai-from",
-        "color/ai-to",
-        "color/ink",
-        "color/ink-soft",
-        "font/heading",
-        "radius/lg",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/muted-foreground",
-        "space/0_5",
-        "space/16",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/5",
-        "text/sm",
-        "text/xl"
       ]
     },
     "ai-side-panel": {
@@ -219,44 +140,6 @@
         "AiMessage",
         "SuggestedPrompts",
         "PromptComposer"
-      ],
-      "vars": [
-        "ai-edge/rest-from",
-        "ai-edge/rest-to",
-        "ai-edge/rest-via",
-        "border-width/1",
-        "color/ai-from",
-        "color/ai-to",
-        "color/ai-via",
-        "color/ink-soft",
-        "radius/4xl",
-        "radius/md",
-        "radius/sm",
-        "radius/xl",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/popover",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "shadow/base/1",
-        "shadow/base/2",
-        "space/0_5",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/5",
-        "space/7",
-        "space/8",
-        "text/2xs",
-        "text/sm",
-        "text/xs"
       ]
     },
     "analytics-charts": {
@@ -293,28 +176,6 @@
       "icons": [],
       "instances": [
         "Badge"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/card",
-        "semantic/chart-1",
-        "semantic/chart-2",
-        "semantic/chart-3",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "semantic/secondary",
-        "semantic/secondary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/6",
-        "text/base",
-        "text/xs"
       ]
     },
     "announcement-banner": {
@@ -338,26 +199,6 @@
         "Button",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/lg",
-        "radius/md",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "semantic/secondary",
-        "semantic/secondary-foreground",
-        "space/1",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/7"
       ]
     },
     "calendar-page": {
@@ -430,31 +271,6 @@
         "Badge",
         "Badge",
         "Badge"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/lg",
-        "radius/md",
-        "radius/xl",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/0_5",
-        "space/1",
-        "space/2",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/6",
-        "space/7",
-        "text/base",
-        "text/sm",
-        "text/xs"
       ]
     },
     "calendar-range": {
@@ -570,33 +386,6 @@
         "Button",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/lg",
-        "radius/md",
-        "radius/xl",
-        "semantic/accent",
-        "semantic/accent-foreground",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "semantic/secondary",
-        "semantic/secondary-foreground",
-        "space/1",
-        "space/2",
-        "space/2_5",
-        "space/4",
-        "space/5",
-        "space/7",
-        "text/base",
-        "text/sm"
       ]
     },
     "checkout": {
@@ -643,31 +432,6 @@
         "Input",
         "Button",
         "Separator"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "semantic/ring",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/6",
-        "space/8",
-        "text/base",
-        "text/sm"
       ]
     },
     "contact-form": {
@@ -703,27 +467,6 @@
         "Textarea",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/8",
-        "text/base"
       ]
     },
     "conversation-history": {
@@ -779,26 +522,6 @@
       ],
       "instances": [
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "color/ink-muted",
-        "radius/lg",
-        "radius/md",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/6",
-        "space/7",
-        "text/2xl",
-        "text/xs"
       ]
     },
     "file-upload": {
@@ -834,32 +557,6 @@
         "Button",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/lg",
-        "radius/md",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/10",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/6",
-        "space/7",
-        "space/8",
-        "text/base"
       ]
     },
     "forgot-password": {
@@ -880,26 +577,6 @@
         "Input",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/4",
-        "space/8",
-        "text/base"
       ]
     },
     "invoice": {
@@ -942,22 +619,6 @@
         "Tone badge",
         "Separator",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "space/0_5",
-        "space/10",
-        "space/2",
-        "space/3",
-        "space/4",
-        "text/xs"
       ]
     },
     "login": {
@@ -983,27 +644,6 @@
         "Label",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/sm",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/4",
-        "space/8",
-        "text/base"
       ]
     },
     "login-minimal": {
@@ -1023,23 +663,6 @@
         "Label",
         "Input",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/md",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/5",
-        "space/8",
-        "text/lg",
-        "text/sm"
       ]
     },
     "login-split-panel": {
@@ -1072,28 +695,6 @@
         "Separator",
         "Separator",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/md",
-        "semantic/background",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/5",
-        "space/6",
-        "space/8",
-        "text/lg",
-        "text/xl"
       ]
     },
     "mail-shell": {
@@ -1147,35 +748,6 @@
         "Separator",
         "Input",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/lg",
-        "radius/md",
-        "semantic/background",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "semantic/secondary",
-        "semantic/secondary-foreground",
-        "space/0_5",
-        "space/1",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/6",
-        "space/7",
-        "space/8",
-        "text/base",
-        "text/lg",
-        "text/sm"
       ]
     },
     "newsletter": {
@@ -1193,26 +765,6 @@
       "instances": [
         "Input",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/xl",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/10",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/4",
-        "space/8",
-        "text/xl"
       ]
     },
     "otp-verification": {
@@ -1233,27 +785,6 @@
         "InputOTP",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/8",
-        "text/base"
       ]
     },
     "sidebar-nav": {
@@ -1298,34 +829,6 @@
         "Separator",
         "Avatar",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/md",
-        "radius/xl",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "semantic/sidebar",
-        "semantic/sidebar-accent",
-        "semantic/sidebar-accent-foreground",
-        "semantic/sidebar-border",
-        "semantic/sidebar-foreground",
-        "space/1",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/6",
-        "space/7",
-        "text/sm",
-        "text/xs"
       ]
     },
     "signup-social": {
@@ -1354,28 +857,6 @@
         "Label",
         "Input",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/xl",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/8",
-        "text/base"
       ]
     },
     "stat-cards": {
@@ -1404,24 +885,6 @@
         "Badge",
         "Badge",
         "Badge"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/card",
-        "semantic/destructive",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "semantic/secondary",
-        "semantic/secondary-foreground",
-        "space/1",
-        "space/2",
-        "space/4",
-        "space/5",
-        "text/2xl"
       ]
     },
     "stats-band": {
@@ -1439,25 +902,7 @@
         "WCAG 2.1 target"
       ],
       "icons": [],
-      "instances": [],
-      "vars": [
-        "border-width/1",
-        "color/ink-muted",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "semantic/text-accent-color",
-        "space/1",
-        "space/10",
-        "space/2",
-        "space/6",
-        "space/8",
-        "text/2xl",
-        "text/3xl",
-        "text/xs"
-      ]
+      "instances": []
     },
     "team-section": {
       "frameId": "696:64",
@@ -1501,29 +946,6 @@
         "Avatar",
         "Badge",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "color/ink-muted",
-        "radius/4xl",
-        "radius/md",
-        "radius/xl",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/secondary",
-        "semantic/secondary-foreground",
-        "space/1",
-        "space/10",
-        "space/2",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/7",
-        "space/8",
-        "text/2xl",
-        "text/xs"
       ]
     },
     "theme-selector": {
@@ -1537,17 +959,6 @@
       ],
       "instances": [
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/md",
-        "semantic/background",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/2_5",
-        "space/7"
       ]
     },
     "hero": {
@@ -1567,14 +978,6 @@
         "Badge",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "semantic/background",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/20",
-        "space/3",
-        "space/6"
       ]
     },
     "navbar": {
@@ -1594,19 +997,6 @@
       "instances": [
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "semantic/background",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/3",
-        "space/6"
       ]
     },
     "footer": {
@@ -1636,19 +1026,6 @@
       "icons": [],
       "instances": [
         "Separator"
-      ],
-      "vars": [
-        "font/heading",
-        "semantic/background",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/10",
-        "space/12",
-        "space/2",
-        "space/4",
-        "space/6",
-        "space/8",
-        "text/xl"
       ]
     },
     "feature-section": {
@@ -1669,21 +1046,7 @@
         "dashboard",
         "palette"
       ],
-      "instances": [],
-      "vars": [
-        "font/sans",
-        "radius/lg",
-        "semantic/background",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "space/10",
-        "space/12",
-        "space/2",
-        "space/8",
-        "text/lg"
-      ]
+      "instances": []
     },
     "testimonial": {
       "frameId": "696:65",
@@ -1694,20 +1057,7 @@
         "Head of Design, Northwind"
       ],
       "icons": [],
-      "instances": [],
-      "vars": [
-        "border-width/1",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "space/3",
-        "space/6",
-        "space/8"
-      ]
+      "instances": []
     },
     "pricing": {
       "frameId": "696:51",
@@ -1757,24 +1107,6 @@
         "Badge",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "border-width/2",
-        "font/sans",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/ring",
-        "space/0_5",
-        "space/1_5",
-        "space/2",
-        "space/6",
-        "text/3xl",
-        "text/base"
       ]
     },
     "page-header": {
@@ -1796,16 +1128,6 @@
         "Breadcrumb",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "font/sans",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/2",
-        "space/3",
-        "space/4",
-        "text/2xl"
       ]
     },
     "error-404": {
@@ -1823,17 +1145,6 @@
       "instances": [
         "Button",
         "Button"
-      ],
-      "vars": [
-        "font/sans",
-        "semantic/background",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/2",
-        "space/4",
-        "space/6",
-        "text/2xl"
       ]
     },
     "empty-state": {
@@ -1849,21 +1160,6 @@
       ],
       "instances": [
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/10",
-        "space/4",
-        "text/lg"
       ]
     },
     "cookie-consent": {
@@ -1881,19 +1177,6 @@
         "Button",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "shadow/base/1",
-        "space/2",
-        "space/3",
-        "space/4"
       ]
     },
     "dashboard": {
@@ -1936,31 +1219,6 @@
         "Badge",
         "Badge",
         "Badge"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/4xl",
-        "radius/lg",
-        "radius/xl",
-        "semantic/accent",
-        "semantic/accent-foreground",
-        "semantic/background",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/sidebar",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/4",
-        "space/5",
-        "space/6",
-        "text/2xl"
       ]
     },
     "data-table": {
@@ -2009,15 +1267,6 @@
         "Button",
         "Tone badge",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/2",
-        "space/3"
       ]
     },
     "list-detail": {
@@ -2053,22 +1302,6 @@
         "Button",
         "Button",
         "Separator"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "semantic/accent",
-        "semantic/background",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/0_5",
-        "space/2",
-        "space/3",
-        "space/4",
-        "space/6",
-        "text/base",
-        "text/lg"
       ]
     },
     "settings": {
@@ -2100,21 +1333,6 @@
         "Switch",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/1_5",
-        "space/2",
-        "space/4",
-        "space/5",
-        "space/6",
-        "text/base"
       ]
     },
     "tabs-page": {
@@ -2137,20 +1355,6 @@
         "Input",
         "Label",
         "Input"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "space/1_5",
-        "space/2",
-        "space/4",
-        "space/6",
-        "text/base"
       ]
     },
     "profile-card": {
@@ -2178,25 +1382,6 @@
         "Separator",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/2",
-        "space/3",
-        "space/6",
-        "space/8",
-        "text/base",
-        "text/lg",
-        "text/xl"
       ]
     },
     "notifications": {
@@ -2223,22 +1408,6 @@
         "Button",
         "Separator",
         "Separator"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "space/2",
-        "space/3",
-        "space/6",
-        "text/base"
       ]
     },
     "search-results": {
@@ -2274,16 +1443,6 @@
         "Badge",
         "Separator",
         "Badge"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/lg",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "space/3",
-        "space/4"
       ]
     },
     "kanban": {
@@ -2332,24 +1491,6 @@
         "Badge",
         "Badge",
         "Badge"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/4xl",
-        "radius/lg",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/3",
-        "space/4",
-        "text/2xs"
       ]
     },
     "chat": {
@@ -2370,22 +1511,6 @@
       "instances": [
         "Input",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "radius/2xl",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/2",
-        "space/3",
-        "space/4"
       ]
     },
     "signup": {
@@ -2412,22 +1537,6 @@
         "Label",
         "Input",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/4",
-        "space/6",
-        "text/base"
       ]
     },
     "login-oauth": {
@@ -2452,22 +1561,6 @@
         "Label",
         "Input",
         "Button"
-      ],
-      "vars": [
-        "radius/lg",
-        "radius/md",
-        "semantic/background",
-        "semantic/border",
-        "semantic/foreground",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1_5",
-        "space/2",
-        "space/2_5",
-        "space/3",
-        "space/5",
-        "space/8"
       ]
     },
     "wizard": {
@@ -2498,24 +1591,6 @@
         "Input",
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/4xl",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1_5",
-        "space/2",
-        "space/4",
-        "space/6",
-        "text/base"
       ]
     },
     "onboarding": {
@@ -2537,28 +1612,6 @@
       "instances": [
         "Button",
         "Button"
-      ],
-      "vars": [
-        "border-width/1",
-        "font/sans",
-        "radius/4xl",
-        "radius/lg",
-        "radius/xl",
-        "semantic/border",
-        "semantic/card",
-        "semantic/foreground",
-        "semantic/input",
-        "semantic/muted",
-        "semantic/muted-foreground",
-        "semantic/primary",
-        "semantic/primary-foreground",
-        "space/1",
-        "space/1_5",
-        "space/2",
-        "space/3",
-        "space/5",
-        "space/6",
-        "text/base"
       ]
     },
     "example-marketing-page": {

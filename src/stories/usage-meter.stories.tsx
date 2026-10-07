@@ -29,6 +29,20 @@ type Story = StoryObj<typeof meta>
 const fillOf = (root: Element) => root.querySelector('[data-slot="progress-indicator"]') as HTMLElement
 const STOP = /(?:rgba?|oklab|oklch|color)\([^()]*(?:\([^()]*\)[^()]*)*\)/g
 const trackOf = (root: Element) => root.querySelector('[data-slot="progress-track"]') as HTMLElement
+// How wide the fill's gradient is painted, in px. The browser reports the size as a share of the fill ("333.333%"), so
+// it is multiplied out here; "auto" (a gradient squeezed into the fill) comes back as NaN and fails the comparison.
+const gradientWidthOf = (root: Element) => {
+  const [first] = getComputedStyle(fillOf(root)).backgroundSize.split(' ')
+  const amount = parseFloat(first)
+  return first.endsWith('%') ? (amount / 100) * fillOf(root).getBoundingClientRect().width : amount
+}
+// The gradient is laid across the whole track and the fill shows its left part: one image, never tiled.
+const expectGradientSpansTrack = async (root: Element) => {
+  const trackWidth = trackOf(root).getBoundingClientRect().width
+  await expect(Math.abs(gradientWidthOf(root) - trackWidth), `the gradient is ${gradientWidthOf(root)}px wide on a ${trackWidth}px track`).toBeLessThan(1)
+  await expect(getComputedStyle(fillOf(root)).backgroundRepeat).toBe('no-repeat')
+  await expect(getComputedStyle(fillOf(root)).backgroundPositionX).toBe('0%')
+}
 
 export const Card: Story = {
   play: async ({ canvas, canvasElement }) => {
@@ -45,6 +59,12 @@ export const Card: Story = {
     // The fill is the AI gradient, and it does not move.
     await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toContain('linear-gradient')
     await expect(getComputedStyle(fillOf(canvasElement)).animationName).toBe('none')
+    // Only the width eases when the amount changes. If the gradient's size eased too, the fill would show the wrong
+    // colours for the length of the move.
+    await expect(getComputedStyle(fillOf(canvasElement)).transitionProperty).toBe('width')
+    await expect(parseFloat(getComputedStyle(fillOf(canvasElement)).transitionDuration)).toBeGreaterThan(0)
+    // At 30% the fill shows the first 30% of a gradient as wide as the track.
+    await expectGradientSpansTrack(canvasElement)
     // The breakdown is a real table: three rows, each with a row header.
     const table = within(card).getByRole('table', { name: 'Used so far' })
     await expect(within(table).getAllByRole('rowheader')).toHaveLength(3)
@@ -74,6 +94,8 @@ export const RunningLow: Story = {
     await expect(canvasElement.querySelector('[data-slot="usage-meter"]')).toHaveAttribute('data-low', 'true')
     // A low meter keeps the gradient: the bar does not change colour.
     await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toContain('linear-gradient')
+    // A nearly empty bar shows only the gradient's first few pixels: plain gold, not all three colours in a dot.
+    await expectGradientSpansTrack(canvasElement)
     const track = compositeOver(getComputedStyle(trackOf(canvasElement)).backgroundColor, `rgb(${surfaceBehind(trackOf(canvasElement)).join(' ')})`)
     const stops = getComputedStyle(fillOf(canvasElement)).backgroundImage.match(STOP) ?? []
     await expect(stops.length).toBeGreaterThanOrEqual(3)
@@ -90,6 +112,7 @@ export const RunningLowCard: Story = {
     await expect(within(card).getByText('Running low')).toBeVisible()
     await expect(within(card).getByText('of 5,000')).toBeVisible()
     await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toContain('linear-gradient')
+    await expectGradientSpansTrack(canvasElement)
   },
 }
 
@@ -207,6 +230,8 @@ export const FillReadsOnItsTrack: Story = {
     const ratios = stops.map((stop) => contrastRatio(compositeOver(stop, `rgb(${track.join(' ')})`), track))
     stops.forEach((stop, index) => console.log(`usage-meter stop ${stop} on track ${ratios[index].toFixed(2)}:1`))
     for (const ratio of ratios) await expect(ratio).toBeGreaterThanOrEqual(FILL_ON_TRACK_FLOOR)
+    // A full bar shows the whole gradient, exactly as wide as the track.
+    await expectGradientSpansTrack(canvasElement)
   },
 }
 
@@ -253,7 +278,7 @@ export const DoDont: Story = {
               <span className="text-muted-foreground">of 5,000</span>
             </p>
             <div className="relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full bg-[color-mix(in_oklab,var(--input)_15%,var(--muted))] dark:bg-muted">
-              <div className="ai-meter h-full w-[2.4%] rounded-full" />
+              <div className="ai-meter h-full w-[2.4%] rounded-full bg-no-repeat [background-size:calc(100%/0.024)_100%]" />
             </div>
           </div>
         </div>
