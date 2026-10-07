@@ -1,0 +1,424 @@
+{
+  "$comment": "What scripts/paper/* has written into the Paper file \"Quill Design System\", and from which code. `tokens` is the last token push (payloadHash = the values sent, sourceHash = src/tokens/quill.tokens.mjs at that moment). `pieces` has one entry per artboard: the story it was converted from, where it lives in Paper, sourceHash (the code behind it, comments and whitespace ignored: scripts/paper/check.mjs --stale reports a piece whose code has moved since) and htmlHash (the HTML written). Paper has no components, so every piece is plain frames: nothing here is an instance of anything.",
+  "file": {
+    "id": "01M4AC4WS8H77MJGWHJYZCR909",
+    "name": "Quill Design System",
+    "url": "https://app.paper.design/file/01M4AC4WS8H77MJGWHJYZCR909"
+  },
+  "pages": {
+    "Foundations": "p-1-0",
+    "❖ Approval Card": "p-6-0",
+    "❖ Button": "p-5-0",
+    "❖ Tone Badge": "p-4-0",
+    "❖ Usage Meter": "p-3-0",
+    "◆ Conversation History": "p-2-0"
+  },
+  "tokens": {
+    "count": 144,
+    "byType": {
+      "color": 83,
+      "fontFamily": 6,
+      "fontSize": 10,
+      "fontWeight": 3,
+      "lineHeight": 13,
+      "letterSpacing": 3,
+      "spacing": 17,
+      "radius": 9
+    },
+    "payloadHash": "aca158e47906f799",
+    "sourceHash": "5e888beb6bbbd5e9",
+    "theme": "light",
+    "notRepresentable": 33,
+    "syncedAt": "2026-10-07"
+  },
+  "pieces": [
+    {
+      "slug": "usage-meter",
+      "name": "Usage Meter",
+      "kind": "component",
+      "page": "❖ Usage Meter",
+      "pageId": "p-3-0",
+      "artboardId": "1A-0",
+      "sources": [
+        "registry/lib/usage-meter.tsx",
+        "src/stories/usage-meter.stories.tsx"
+      ],
+      "sourceHash": "3ce9e6081bfa14e4",
+      "syncedAt": "2026-10-07",
+      "sections": [
+        {
+          "story": "components-usagemeter--card",
+          "title": "Card",
+          "nodeId": "4Y4-0",
+          "size": [
+            380,
+            271.2
+          ],
+          "htmlHash": "bb3fc58dac4f01c6",
+          "nodes": 36,
+          "approximated": 5,
+          "bound": 97,
+          "bindable": 99,
+          "bindingRate": 0.98
+        },
+        {
+          "story": "components-usagemeter--bar",
+          "title": "Bar",
+          "nodeId": "4ZG-0",
+          "size": [
+            380,
+            34.8
+          ],
+          "htmlHash": "397dd1ef67405c28",
+          "nodes": 12,
+          "approximated": 2,
+          "bound": 19,
+          "bindable": 21,
+          "bindingRate": 0.905
+        },
+        {
+          "story": "components-usagemeter--running-low-card",
+          "title": "Running Low Card",
+          "nodeId": "503-0",
+          "size": [
+            380,
+            271.2
+          ],
+          "htmlHash": "3cdda4d22c788f2f",
+          "nodes": 39,
+          "approximated": 6,
+          "bound": 106,
+          "bindable": 108,
+          "bindingRate": 0.981
+        },
+        {
+          "story": "components-usagemeter--compact",
+          "title": "Compact",
+          "nodeId": "51I-0",
+          "size": [
+            380,
+            18
+          ],
+          "htmlHash": "44b5747945483fc8",
+          "nodes": 5,
+          "approximated": 0,
+          "bound": 6,
+          "bindable": 7,
+          "bindingRate": 0.857
+        },
+        {
+          "story": "components-usagemeter--compact-low",
+          "title": "Compact Low",
+          "nodeId": "520-0",
+          "size": [
+            380,
+            18
+          ],
+          "htmlHash": "41d63f258dacc806",
+          "nodes": 5,
+          "approximated": 0,
+          "bound": 6,
+          "bindable": 7,
+          "bindingRate": 0.857
+        }
+      ]
+    },
+    {
+      "slug": "approval-card",
+      "name": "Approval Card",
+      "kind": "component",
+      "page": "❖ Approval Card",
+      "pageId": "p-6-0",
+      "artboardId": "54-0",
+      "sources": [
+        "registry/lib/approval-card.tsx",
+        "src/stories/approval-card.stories.tsx"
+      ],
+      "sourceHash": "8c9d521f0e3d7695",
+      "syncedAt": "2026-10-07",
+      "sections": [
+        {
+          "story": "components-approvalcard--send-email",
+          "title": "Send Email",
+          "nodeId": "4QT-0",
+          "size": [
+            480,
+            256.44
+          ],
+          "htmlHash": "f9b5082bde76ea69",
+          "nodes": 27,
+          "approximated": 1,
+          "bound": 99,
+          "bindable": 101,
+          "bindingRate": 0.98
+        },
+        {
+          "story": "components-approvalcard--destructive",
+          "title": "Destructive",
+          "nodeId": "4RZ-0",
+          "size": [
+            480,
+            117.41
+          ],
+          "htmlHash": "35a7ea8051767b82",
+          "nodes": 15,
+          "approximated": 0,
+          "bound": 50,
+          "bindable": 52,
+          "bindingRate": 0.962
+        },
+        {
+          "story": "components-approvalcard--not-editable",
+          "title": "Not Editable",
+          "nodeId": "4SR-0",
+          "size": [
+            480,
+            256.44
+          ],
+          "htmlHash": "c4d33dff9a4060f2",
+          "nodes": 24,
+          "approximated": 1,
+          "bound": 83,
+          "bindable": 85,
+          "bindingRate": 0.976
+        }
+      ]
+    },
+    {
+      "slug": "button",
+      "name": "Button",
+      "kind": "component",
+      "page": "❖ Button",
+      "pageId": "p-5-0",
+      "artboardId": "7Q-0",
+      "sources": [
+        "src/components/ui/button.tsx",
+        "src/stories/button.stories.tsx"
+      ],
+      "sourceHash": "2857523c5976c05e",
+      "syncedAt": "2026-10-07",
+      "sections": [
+        {
+          "story": "components-button--all-variants",
+          "title": "All Variants",
+          "nodeId": "4TY-0",
+          "size": [
+            458.67,
+            32
+          ],
+          "htmlHash": "1bea452fa05d1811",
+          "nodes": 13,
+          "approximated": 1,
+          "bound": 78,
+          "bindable": 78,
+          "bindingRate": 1
+        },
+        {
+          "story": "components-button--all-sizes",
+          "title": "All Sizes",
+          "nodeId": "4UM-0",
+          "size": [
+            308.72,
+            88
+          ],
+          "htmlHash": "d8bd4cd74f610dd7",
+          "nodes": 19,
+          "approximated": 2,
+          "bound": 78,
+          "bindable": 79,
+          "bindingRate": 0.987
+        },
+        {
+          "story": "components-button--with-icon",
+          "title": "With Icon",
+          "nodeId": "4VG-0",
+          "size": [
+            112.94,
+            32
+          ],
+          "htmlHash": "e8cfa9a6da59cd1a",
+          "nodes": 3,
+          "approximated": 0,
+          "bound": 14,
+          "bindable": 14,
+          "bindingRate": 1
+        },
+        {
+          "story": "components-button--icon-only",
+          "title": "Icon Only",
+          "nodeId": "4VR-0",
+          "size": [
+            32,
+            32
+          ],
+          "htmlHash": "cd5af8f4cbb6f19a",
+          "nodes": 2,
+          "approximated": 0,
+          "bound": 6,
+          "bindable": 6,
+          "bindingRate": 1
+        },
+        {
+          "story": "components-button--disabled",
+          "title": "Disabled",
+          "nodeId": "4W0-0",
+          "size": [
+            78,
+            32
+          ],
+          "htmlHash": "e2fe2a2ee88c9fbf",
+          "nodes": 2,
+          "approximated": 0,
+          "bound": 13,
+          "bindable": 13,
+          "bindingRate": 1
+        }
+      ]
+    },
+    {
+      "slug": "tone-badge",
+      "name": "Tone Badge",
+      "kind": "component",
+      "page": "❖ Tone Badge",
+      "pageId": "p-4-0",
+      "artboardId": "9W-0",
+      "sources": [
+        "registry/lib/tone-badge.tsx",
+        "src/stories/tone-badge.stories.tsx"
+      ],
+      "sourceHash": "2011697b18721d33",
+      "syncedAt": "2026-10-07",
+      "sections": [
+        {
+          "story": "components-tonebadge--all-tones",
+          "title": "All Tones",
+          "nodeId": "4WD-0",
+          "size": [
+            454.02,
+            48
+          ],
+          "htmlHash": "aab9cf3546399be9",
+          "nodes": 27,
+          "approximated": 2,
+          "bound": 195,
+          "bindable": 195,
+          "bindingRate": 1
+        },
+        {
+          "story": "components-tonebadge--tinted",
+          "title": "Tinted",
+          "nodeId": "4XB-0",
+          "size": [
+            77.03,
+            20
+          ],
+          "htmlHash": "358825e92238dfae",
+          "nodes": 2,
+          "approximated": 0,
+          "bound": 16,
+          "bindable": 16,
+          "bindingRate": 1
+        },
+        {
+          "story": "components-tonebadge--solid",
+          "title": "Solid",
+          "nodeId": "4XJ-0",
+          "size": [
+            78.94,
+            20
+          ],
+          "htmlHash": "d754e8ca16e7c676",
+          "nodes": 2,
+          "approximated": 0,
+          "bound": 16,
+          "bindable": 16,
+          "bindingRate": 1
+        },
+        {
+          "story": "components-tonebadge--small",
+          "title": "Small",
+          "nodeId": "4XR-0",
+          "size": [
+            74.94,
+            16
+          ],
+          "htmlHash": "47768e4e30d08448",
+          "nodes": 2,
+          "approximated": 0,
+          "bound": 16,
+          "bindable": 16,
+          "bindingRate": 1
+        }
+      ]
+    },
+    {
+      "slug": "conversation-history",
+      "name": "Conversation History",
+      "kind": "block",
+      "page": "◆ Conversation History",
+      "pageId": "p-2-0",
+      "artboardId": "EV-0",
+      "sources": [
+        "registry/blocks/conversation-history.tsx",
+        "src/stories/patterns/ConversationHistory.stories.tsx"
+      ],
+      "sourceHash": "81b5d8500f34ab6e",
+      "syncedAt": "2026-10-07",
+      "sections": [
+        {
+          "story": "patterns-ai-conversation-history--default",
+          "title": "Default",
+          "nodeId": "52N-0",
+          "size": [
+            300,
+            350
+          ],
+          "htmlHash": "5a26dc7e3bacb6aa",
+          "nodes": 42,
+          "approximated": 0,
+          "bound": 152,
+          "bindable": 179,
+          "bindingRate": 0.849
+        },
+        {
+          "story": "patterns-ai-conversation-history--groups-by-date",
+          "title": "Groups By Date",
+          "nodeId": "54E-0",
+          "size": [
+            300,
+            582
+          ],
+          "htmlHash": "3f70560ba58d6b19",
+          "nodes": 71,
+          "approximated": 0,
+          "bound": 250,
+          "bindable": 297,
+          "bindingRate": 0.842
+        },
+        {
+          "story": "patterns-ai-conversation-history--empty",
+          "title": "Empty",
+          "nodeId": "57C-0",
+          "size": [
+            300,
+            89.41
+          ],
+          "htmlHash": "eab82ec02d6b4bd2",
+          "nodes": 7,
+          "approximated": 0,
+          "bound": 32,
+          "bindable": 34,
+          "bindingRate": 0.941
+        }
+      ]
+    }
+  ],
+  "foundations": {
+    "page": "Foundations",
+    "pageId": "p-1-0",
+    "artboardId": "21M-0",
+    "sections": 8,
+    "htmlHash": "74f3157a717123f0",
+    "syncedAt": "2026-10-07"
+  }
+}
