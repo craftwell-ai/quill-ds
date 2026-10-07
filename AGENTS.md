@@ -80,6 +80,24 @@ npx tsc --noEmit
 - Eleven workflows run automation (`drift-audit`, `self-heal`, `library-sync`, `figma-parity`, `pattern-scan`, `release`, `dependabot-*`, `claude-repair`). They all open PRs; nothing writes to `main` directly. See `scripts/DRIFT-AUDIT.md`.
 - Releases are pushed downstream into consumer apps by `library-sync`. A change to the shipped theme reaches real apps — treat `registry/themes/quill.css` and `registry.json` as public API.
 
+## Paper
+
+The Paper file "Quill Design System" is a second mirror of the code, beside Figma: one page per component (`❖`), block (`◆`) and template (`▣`), drawn from Storybook by script. Read `paper/README.md` first.
+
+| Path | Role |
+|---|---|
+| `scripts/paper/` | the sync, the check and the daily job (`sync.mjs`, `check.mjs`, `status.mjs`, `daily.mjs`) |
+| `scripts/paper/pieces.config.mjs` | per-piece exceptions: `include` / `exclude` a story, how to `open` an overlay, a `declined` reason |
+| `paper/sync-state.json` | the record of what is drawn, written by `npm run paper:sync` |
+| `paper/visual-baseline.json` | accepted picture difference per story, written by `npm run paper:check -- --accept` |
+| `scripts/paper-coverage.test.mjs` | the CI check on the record (part of `test:tokens`) |
+
+- **A pull request that fails `paper-coverage.test.mjs` is fixed without Paper:** `npm run paper:status -- --record-pending`, then commit `paper/sync-state.json` (new piece, renamed or deleted story, deleted piece, changed `declined`).
+- **Never hand-edit the generated frames in Paper.** They are redrawn from code; a manual change is lost on the next sync. Change the code, then `npm run paper:sync` (needs the Paper desktop app open on this Mac).
+- **Every component, block and template needs an entry in `paper/sync-state.json`**: `synced`, `pending`, or `declined` with a reason. `paper-coverage.test.mjs` fails on a missing one and prints the command to run. Adding a file under `src/components/ui`, `registry/lib`, `registry/blocks` or `registry/examples` means running `npm run paper:sync`, or `npm run paper:status -- --record-pending` when Paper is not at hand.
+- **Stale is not a failure.** CI cannot reach Paper, so a piece whose code moved is reported by `npm run paper:status`, not by the build.
+- Paper has no components, themes or shared libraries: the file is Dawn only and every piece is plain frames.
+
 ## Skills and commands
 
 - `/figma-pull` — bring a component's Figma edits into its code twin
