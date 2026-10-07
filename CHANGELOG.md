@@ -13,6 +13,20 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.21.0] — 2026-10-07
+
+### Added
+- **`ai-side-panel` takes your app's own conversation.** Pass your turns (`UserMessage`, `AiMessage`, cards) as `children` of `AiSidePanel` or `AiPanel` and they replace the sample conversation: no sample messages, no sample follow-up, and sending adds nothing by itself. `status` (`'idle'` or `'working'`) and `onStop` drive the composer, and `onSubmit` is where you add the turn. `null` or an empty list is an empty thread. The panel opens on the newest turn and brings it into view when a turn is added or a reply starts. With no `children` the panel is exactly what it was.
+- **`ai-side-panel`: the composer's text can be yours.** `value` and `onValueChange` control it; a value you control is yours to clear after `onSubmit`. Left out, the panel keeps its own, as before.
+- **`ai-side-panel`: History can show its list in the panel.** `body` is shown in place of the thread (the scope chip and the messages) for as long as it is passed, with the header and the composer staying put: pass `<ConversationHistory … />` while History is open and `undefined` once a chat is chosen. The thread stays on the page, hidden, and comes back scrolled where it was; if the cursor was on a row of the list it lands in the message box.
+- **`ai-chat` takes your app's own conversation, sidebar and composer control.** `children`, `status`, `onStop`, `value` and `onValueChange` work as they do in the side panel. `sidebar` replaces the sample list of chats in the left column (pass `<ConversationHistory … />`; `null` removes the column), and `composerTrailing` replaces the sample model picker (`null` shows none). With nothing passed the page is exactly what it was.
+- **`ai-popover` can sit beside a text selection.** In a text box or an editor the selection is a range, with no element to wrap. Pass `anchor` (the selection's `Range`, an element, or any object with `getBoundingClientRect`, which is how a `<textarea>` selection is done), drive `open` yourself, and pass `returnFocus` (the editor) to say where the cursor goes when the popover closes; left out, it goes back to whatever had it. The popover follows the anchor as the text scrolls or the page moves. `children` is optional once `anchor` is passed; with both, `children` still opens the popover and `anchor` only says where it sits. Nothing is wrapped around the text, so it is not turned into a button.
+- **Stories for each:** a side panel with an app's thread, an empty one, a controlled composer and History in the panel; a chat page with an app's conversation, its own sidebar, no sidebar, a controlled composer, and the agent pieces (steps, an approval, a question, feedback) as turns of one thread; a popover on a selection in an editor, on one that scrolls, in a `<textarea>`, and opened by a button beside a selection.
+
+### Changed
+- **Usage guides say how to pass your own.** `ai-side-panel` and `ai-chat` replace "the conversation is sample content, edit your copy" with "pass your conversation as children" (an edited copy is overwritten on update); `ai-chat` adds that the built-in list of chats is a sample; `conversation-history` says the list can be shown in the side panel through `body`; `ai-popover` replaces "cannot anchor to a selection" with how to.
+- **Figma:** the records for ❖ AI side panel and ❖ AI chat are re-stamped. Their frames show the default render, which did not change, so nothing was redrawn.
+
 ## [1.20.1] — 2026-10-07
 
 ### Fixed
