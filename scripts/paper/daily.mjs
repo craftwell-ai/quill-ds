@@ -366,7 +366,11 @@ export async function daily({ dryRun = false, noPush = false, env = process.env 
     }
 
     // a static Storybook, built in the job's copy and served from this process for both steps
+    // `icons.tail.mjs` is generated and not committed, so a fresh clone has none and Storybook cannot build
+    // without it (`npm run storybook` gets it from its `prestorybook` hook; `build-storybook` has no such hook)
     log('building Storybook')
+    if ((await step(tools.npm, ['run', 'build:icons'])) !== 0) throw new Error('generating the icons failed in the job\'s copy')
+    alive()
     if ((await step(tools.npm, ['run', 'build-storybook', '--', '-o', '.paper/sb', '--quiet'])) !== 0) throw new Error('the Storybook build failed in the job\'s copy')
     alive()
     const { serveStatic } = await import(pathToFileURL(join(where.repo, 'scripts/paper/storybook.mjs')).href)
