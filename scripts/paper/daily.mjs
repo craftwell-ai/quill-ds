@@ -26,6 +26,7 @@
  *   QUILL_PAPER_REF          stand on something other than origin/main. Any other value turns --no-push on:
  *                            the job refuses to push or open a pull request from anything but main.
  *   QUILL_PAPER_TEST_BREAK   `sync` or `check`: make that step fail on purpose, to rehearse a FAILED run.
+ *   QUILL_PAPER_NO_NOTIFY    any value: write notifications to the log only (a rehearsal should not pop up on screen).
  */
 import { execFile, spawn } from 'node:child_process'
 import { createHash } from 'node:crypto'
