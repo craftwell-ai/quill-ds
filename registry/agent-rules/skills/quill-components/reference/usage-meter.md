@@ -12,7 +12,7 @@ Shows how much AI credit is left — the number, a bar in the AI gradient, when 
 
 ### Rules
 - **Do:** Let a low bar or card say "Running low" in words beside the amount; the bar itself does not change colour. **Don't:** Rely on the short fill alone to say credit is low.
-- **Do:** Keep the AI gradient on the fill of the bar and the ring. Everything else on the card is plain. **Don't:** Put the gradient on the number, the card or the "Get more" button.
+- **Do:** Keep the AI gradient on the fill of the bar and the ring. The gradient is laid across the whole bar and the fill reveals it, so a nearly empty bar is plain gold. Everything else on the card is plain. **Don't:** Put the gradient on the number, the card or the "Get more" button.
 - **Do:** Add a plain-language line ("About 150 more long answers") so the number means something. **Don't:** Show a bare count of credits or tokens and leave people to work out what it buys.
 - **Do:** Use the compact ring where space is tight: a composer footer, a sidebar. It looks the same whether or not credit is low. **Don't:** Redraw the compact meter as a filled pie wedge, or drop its text and leave the ring alone.
 

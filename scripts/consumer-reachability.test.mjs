@@ -242,6 +242,9 @@ test('shipped code reads no CSS variable an app never receives', () => {
         if (received.has(name)) continue
         // ChartContainer defines --color-<series key> at runtime from the chart config.
         if (name.startsWith('--color-') && src.includes('ChartContainer')) continue
+        // A variable the same file sets inline on its own element (`style={{ '--usage-share': … }}`) is always
+        // there to be read: it does not come from the theme at all.
+        if (src.includes(`'${name}':`)) continue
         offenders.push(`${dir}/${f}: ${name}`)
       }
     }
