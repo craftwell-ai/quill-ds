@@ -16,7 +16,10 @@
  *
  *   npm run paper:check                          # every synced piece; exit 1 on a regression
  *   npm run paper:check -- --only button,faq
- *   npm run paper:check -- --accept [--only …]   # write what this run measured as the baseline
+ *   npm run paper:check -- --accept --only button   # accept what this run measured for these pieces
+ *   npm run paper:check -- --accept --all           # … or for everything (say so on purpose)
+ *                                                   # a story whose text does not match is not accepted without --force
+ *   npm run paper:check -- --summary out.json       # also write the result as JSON (the daily job reads it)
  *
  * Needs the Paper desktop app open on this Mac; starts its own Storybook. Writes
  * paper/check-report.json (not committed) and prints a markdown summary.
@@ -30,7 +33,7 @@ import { comparePngs, flatten, padTo, REGRESSION_PCT, REGRESSION_PX, strip } fro
 import { connect } from './client.mjs'
 import { parseColor, sameColor } from './color.mjs'
 import { captureStory, launch, normalizeText, visibleTexts } from './convert.mjs'
-import { openQuillFile, readState, root } from './file.mjs'
+import { openQuillFile, publicText, readState, root } from './file.mjs'
 import { inventory, statusOf } from './pieces.mjs'
 import { ensureStorybook } from './storybook.mjs'
 import { parseArgs } from './sync.mjs'
@@ -60,11 +63,15 @@ export function parseTreeSummary(summary) {
   return { nodes, cut: cut.filter(Boolean) }
 }
 
-async function paperTree(file, nodeId) {
+async function paperTree(file, nodeId, asked = new Set()) {
+  // Paper cuts a long child list short ("... 3 children"); those nodes are asked for again. If Paper cuts the
+  // very node being asked for, asking again would never end: each id is asked for once.
+  asked.add(nodeId)
   const { nodes, cut } = parseTreeSummary((await file.data('get_tree_summary', { nodeId, depth: 10 })).summary)
   for (const id of cut) {
+    if (asked.has(id)) continue
     const at = nodes.findIndex((node) => node.id === id)
-    const deeper = (await paperTree(file, id)).slice(1).map((node) => ({ ...node, depth: node.depth + nodes[at].depth }))
+    const deeper = (await paperTree(file, id, asked)).slice(1).map((node) => ({ ...node, depth: node.depth + nodes[at].depth }))
     nodes.splice(at + 1, 0, ...deeper)
   }
   return nodes
@@ -190,7 +197,8 @@ export function isOurExport(filePath, { layerName, since, downloads = join(homed
   const expected = layerName.replace(/\//g, '_')
   const name = basename(filePath)
   if (!(name.startsWith(expected) && /^( \(\d+\))?@2x\.png$/.test(name.slice(expected.length)))) return false
-  try { return stat(filePath).mtimeMs >= since - 2000 } catch { return false }
+  // made by this call: created (not merely touched) after the export was asked for
+  try { const info = stat(filePath); return info.mtimeMs >= since - 2000 && (info.birthtimeMs ?? info.mtimeMs) >= since - 2000 } catch { return false }
 }
 
 // ------------------------------------------------------------------ baseline and verdicts (pure)
@@ -216,18 +224,30 @@ export function verdictOf(row, accepted) {
 
 export const readBaseline = (path = BASELINE_PATH) => (existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : { stories: {} })
 
-/** Merge this run's numbers into the baseline, keys sorted so the file diffs cleanly. */
-export function acceptInto(baseline, rows, date) {
+/**
+ * Merge this run's numbers into the baseline, keys sorted so the file diffs cleanly. A story that errored is
+ * never accepted, and one whose text does not match Storybook is accepted only with `force`: a wrong word is
+ * a defect, not a rendering difference. `accepted` and `refused` list what happened, for the caller to print.
+ */
+export function acceptInto(baseline, rows, date, { force = false } = {}) {
   const stories = { ...baseline.stories }
-  for (const row of rows) if (!row.error) stories[row.story] = { ...measured(row), piece: row.piece, at: date }
-  return { $comment: 'Accepted picture difference and sizes per story, Paper against Storybook. Written by `npm run paper:check -- --accept`; a later check fails a story that is more than 1.0 point worse or drifts more than 8px.', platform: process.platform, stories: Object.fromEntries(Object.entries(stories).sort(([a], [b]) => a.localeCompare(b))) }
+  const accepted = []
+  const refused = []
+  for (const row of rows) {
+    if (row.error) { refused.push(`${row.story}: errored`); continue }
+    if (!row.text.ok && !force) { refused.push(`${row.story}: text does not match (use --force to accept anyway)`); continue }
+    stories[row.story] = { ...measured(row), piece: row.piece, at: date }
+    accepted.push(row.story)
+  }
+  const baselineNext = { $comment: 'Accepted picture difference and sizes per story, Paper against Storybook. Written by `npm run paper:check -- --accept`; a later check fails a story that is more than 1.0 point worse or drifts more than 8px.', platform: process.platform, stories: Object.fromEntries(Object.entries(stories).sort(([a], [b]) => a.localeCompare(b))) }
+  return { baseline: baselineNext, result: { accepted, refused } }
 }
 
 // ------------------------------------------------------------------ one story
 
-async function checkStory(file, page, piece, story, { table, out, base, open }) {
+async function checkStory(file, page, piece, story, { table, out, base, open, staged }) {
   const row = { piece: piece.slug, story: story.id, title: story.title }
-  const captured = await captureStory(page, story.id, { base, screenshot: true, open })
+  const captured = await captureStory(page, story.id, { base, screenshot: true, open, staged })
   const parts = story.parts.map((recorded) => ({ recorded, live: captured.roots.find((candidate) => candidate.part === recorded.part) }))
   const missing = parts.filter((part) => !part.live).map((part) => part.recorded.part)
   if (missing.length) throw new Error(`Storybook no longer shows ${missing.join(', ')} (the story opened differently than when it was drawn)`)
@@ -324,7 +344,9 @@ export function renderSummary(rows, { accepted = false } = {}) {
 
 const median = (values) => { const sorted = [...values].sort((a, b) => a - b); return sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0 }
 
-export async function check({ only = [], out = DEFAULT_OUT, base = process.env.PAPER_STORYBOOK_URL, accept = false, log = console.log, progress = () => {} } = {}) {
+export async function check({ only = [], all = false, out = DEFAULT_OUT, base = process.env.PAPER_STORYBOOK_URL, accept = false, force = false, summary: summaryPath = null, log = console.log, progress = () => {} } = {}) {
+  // accepting is a decision about named pieces; "whatever this run happened to measure" is not one
+  if (accept && !only.length && !all) throw new Error('--accept needs a scope: --only <piece,…> for the pieces you have looked at, or --all to accept everything on purpose')
   const state = readState()
   const pieces = inventory()
   const outDir = resolve(root, out)
@@ -340,14 +362,15 @@ export async function check({ only = [], out = DEFAULT_OUT, base = process.env.P
   const rows = []
   try {
     for (const piece of synced) {
-      const open = pieces.find((candidate) => candidate.slug === piece.slug)?.config.open ?? null
+      const config = pieces.find((candidate) => candidate.slug === piece.slug)?.config ?? {}
+      const open = config.open ?? null
       for (const story of piece.stories) {
         let row
         try {
-          row = await checkStory(file, page, piece, story, { table, out: outDir, base: storybook.base, open })
+          row = await checkStory(file, page, piece, story, { table, out: outDir, base: storybook.base, open, staged: config.staged })
         } catch (error) {
           if (error.code === 'not-open') throw error
-          row = { piece: piece.slug, story: story.id, title: story.title, error: String(error.message).slice(0, 200) }
+          row = { piece: piece.slug, story: story.id, title: story.title, error: publicText(error.message, { limit: 200 }) }
         }
         Object.assign(row, verdictOf(row, baseline.stories[story.id]))
         rows.push(row)
@@ -358,22 +381,34 @@ export async function check({ only = [], out = DEFAULT_OUT, base = process.env.P
     await browser.close()
     await storybook.stop()
   }
-  if (accept) writeFileSync(BASELINE_PATH, JSON.stringify(acceptInto(baseline, rows, new Date().toISOString().slice(0, 10)), null, 1) + '\n')
+  let acceptance = null
+  if (accept) {
+    const next = acceptInto(baseline, rows, new Date().toISOString().slice(0, 10), { force })
+    acceptance = next.result
+    writeFileSync(BASELINE_PATH, JSON.stringify(next.baseline, null, 1) + '\n')
+  }
   const stale = statusOf(state, pieces).filter((entry) => entry.status === 'stale').map((entry) => entry.slug)
   const report = { at: new Date().toISOString(), file: state.file, platform: process.platform, stale, rows }
   writeFileSync(REPORT_PATH, JSON.stringify(report, null, 1) + '\n')
   const summary = renderSummary(rows, { accepted: accept })
   log(summary)
+  if (acceptance) {
+    log(`\naccepted ${acceptance.accepted.length} stor${acceptance.accepted.length === 1 ? 'y' : 'ies'} in ${new Set(rows.filter((row) => acceptance.accepted.includes(row.story)).map((row) => row.piece)).size} pieces: ${[...new Set(rows.filter((row) => acceptance.accepted.includes(row.story)).map((row) => row.piece))].join(', ')}`)
+    for (const line of acceptance.refused) log(`NOT accepted: ${line}`)
+  }
+  // for a caller that must not parse prose: counts, and the markdown already rendered
+  const result = { regressions: rows.filter((row) => row.verdict === 'regression'), errors: rows.filter((row) => row.verdict === 'error') }
+  if (summaryPath) writeFileSync(summaryPath, JSON.stringify({ ok: true, at: report.at, stories: rows.length, pieces: new Set(rows.map((row) => row.piece)).size, regressions: result.regressions.map((row) => ({ piece: row.piece, story: row.title, reasons: row.reasons })), errors: result.errors.map((row) => ({ piece: row.piece, story: row.title, error: row.error })), unbaselined: rows.filter((row) => row.verdict === 'unbaselined').length, stale, markdown: summary }, null, 1) + '\n')
   if (stale.length) log(`\n${stale.length} piece${stale.length === 1 ? ' was' : 's were'} checked against code that has changed since Paper was written: ${stale.join(', ')} (run  npm run paper:sync)`)
   const leftover = rows.flatMap((row) => row.leftover ?? [])
   if (leftover.length) log(`\nleft in place (could not be proven to be this run's exports): ${leftover.join(', ')}`)
-  return { report, summary, regressions: rows.filter((row) => row.verdict === 'regression'), errors: rows.filter((row) => row.verdict === 'error') }
+  return { report, summary, ...result }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = parseArgs(process.argv.slice(2))
   try {
-    const result = await check({ only: args.only, base: args.base, accept: args.accept, progress: (line) => console.error(line) })
+    const result = await check({ only: args.only, all: args.all, base: args.base, accept: args.accept, force: args.force, summary: args.summary, progress: (line) => console.error(line) })
     process.exit(result.regressions.length || result.errors.length ? 1 : 0)
   } catch (error) {
     console.error(error.message)

@@ -8,14 +8,14 @@
  *   error      the last sync failed for it               → read the message, fix, sync again
  *   declined   has no page, with the reason
  *
- *   npm run paper:status -- --record-pending   # add a `pending` entry for each new piece (no Paper needed)
+ *   npm run paper:status -- --record-pending   # bring the record in line with the code (no Paper needed)
  *
  * Always exits 0: a stale piece is a to-do for whoever has Paper open, not a failure.
  */
 import { pathToFileURL } from 'node:url'
 import { tokensHash } from '../figma-stamp.mjs'
-import { readState, writeState } from './file.mjs'
-import { inventory, pageName, statusOf } from './pieces.mjs'
+import { readState, today, writeState } from './file.mjs'
+import { inventory, pageName, statusOf, storyFiles } from './pieces.mjs'
 
 export function status(state = readState(), pieces = inventory()) {
   const rows = statusOf(state, pieces)
@@ -37,21 +37,53 @@ export function renderStatus({ rows, tokens, counts }) {
 }
 
 /**
- * `-- --record-pending`: give every piece that has no entry a `pending` one (and drop entries whose code is
- * gone), without Paper. For when a piece is added on a machine that cannot draw it; the CI check asks for this.
+ * `-- --record-pending`: bring the record in line with the code WITHOUT Paper, for a machine that cannot draw
+ * (a laptop without the app, a pull request that renames a story). Nothing here touches the Paper file; what
+ * it queues is carried out by the next `paper:sync`.
+ *   a new piece                      → a `pending` entry (or `declined`, if the config says so)
+ *   a recorded story that is gone    → dropped; the piece becomes `pending` (its page and artboard are kept,
+ *                                      so the next sync redraws in place)
+ *   a piece whose code is gone       → dropped; its artboard is queued for removal
+ *   declined in config, not in record (or the reverse) → the record follows the config
  */
-export function recordPending(state = readState(), pieces = inventory()) {
-  const known = new Set(state.pieces.map((entry) => entry.slug))
-  const added = pieces.filter((piece) => !known.has(piece.slug))
-  const kept = state.pieces.filter((entry) => pieces.some((piece) => piece.slug === entry.slug))
-  return { state: { ...state, pieces: [...kept, ...added.map((piece) => (piece.config.declined ? { slug: piece.slug, name: piece.name, kind: piece.kind, status: 'declined', reason: piece.config.declined } : { slug: piece.slug, name: piece.name, kind: piece.kind, status: 'pending', page: pageName(piece) }))] }, added: added.map((piece) => piece.slug), removed: state.pieces.length - kept.length }
+export function reconcile(state = readState(), pieces = inventory(), storyIds = new Set(storyFiles().flatMap((file) => file.ids)), date = today()) {
+  const changes = []
+  const queued = []
+  const kept = []
+  for (const entry of state.pieces) {
+    const piece = pieces.find((candidate) => candidate.slug === entry.slug)
+    if (!piece || (piece.config.declined && entry.status !== 'declined')) {
+      if (entry.artboardId) queued.push({ slug: entry.slug, page: entry.page ?? null, artboard: 'pending', artboardId: entry.artboardId, name: entry.name, at: date })
+      changes.push(piece ? `${entry.slug}: now declined in the config` : `${entry.slug}: its code is gone; removed from the record${entry.artboardId ? ', its artboard queued for removal' : ''}`)
+      if (piece) kept.push({ slug: piece.slug, name: piece.name, kind: piece.kind, status: 'declined', reason: piece.config.declined })
+      continue
+    }
+    if (entry.status === 'declined' && !piece.config.declined) {
+      changes.push(`${entry.slug}: no longer declined; waiting to be drawn`)
+      kept.push({ slug: piece.slug, name: piece.name, kind: piece.kind, status: 'pending', page: pageName(piece) })
+      continue
+    }
+    const vanished = (entry.stories ?? []).filter((story) => !storyIds.has(story.id))
+    if (vanished.length) {
+      changes.push(`${entry.slug}: ${vanished.length} recorded stor${vanished.length === 1 ? 'y no longer exists' : 'ies no longer exist'} (${vanished.map((story) => story.id.split('--')[1]).join(', ')}); waiting to be redrawn`)
+      kept.push({ ...entry, status: 'pending', stories: entry.stories.filter((story) => storyIds.has(story.id)) })
+      continue
+    }
+    kept.push(entry)
+  }
+  const known = new Set(kept.map((entry) => entry.slug))
+  for (const piece of pieces.filter((candidate) => !known.has(candidate.slug))) {
+    kept.push(piece.config.declined ? { slug: piece.slug, name: piece.name, kind: piece.kind, status: 'declined', reason: piece.config.declined } : { slug: piece.slug, name: piece.name, kind: piece.kind, status: 'pending', page: pageName(piece) })
+    changes.push(`${piece.slug}: new; ${piece.config.declined ? 'declined' : 'waiting to be drawn'}`)
+  }
+  return { state: { ...state, pieces: kept, removed: [...(state.removed ?? []), ...queued].slice(-50) }, changes }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   if (process.argv.includes('--record-pending')) {
-    const result = recordPending()
+    const result = reconcile()
     writeState(result.state)
-    console.log(`recorded as pending: ${result.added.join(', ') || 'nothing new'}${result.removed ? ` · removed ${result.removed} entr${result.removed === 1 ? 'y' : 'ies'} whose code is gone` : ''}\n`)
+    console.log(result.changes.length ? `record brought in line with the code (no Paper needed):\n${result.changes.map((line) => `  ${line}`).join('\n')}\n` : 'the record already matches the code\n')
   }
   console.log(renderStatus(status()))
 }

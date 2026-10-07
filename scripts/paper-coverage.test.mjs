@@ -18,19 +18,19 @@ const state = readState()
 const pieces = inventory()
 const entries = new Map(state.pieces.map((entry) => [entry.slug, entry]))
 const STATUSES = ['synced', 'pending', 'declined', 'error']
+// the same way out of every failure a code change can cause: it needs no Paper, so any pull request can run it
+const FIX = 'Run  npm run paper:status -- --record-pending  (no Paper needed) and commit paper/sync-state.json. Later, on the Mac with Paper open,  npm run paper:sync  draws what is waiting.'
 
 test('every component, block and template has an entry in paper/sync-state.json', () => {
   const missing = pieces.filter((piece) => !entries.has(piece.slug))
-  assert.deepEqual(missing.map((piece) => piece.slug), [], `no Paper status for: ${missing.map((piece) => `${piece.kind} ${piece.slug}`).join(', ')}.\n`
-    + `With Paper open, draw ${missing.length === 1 ? 'it' : 'them'}:  npm run paper:sync -- --only ${missing.map((piece) => piece.slug).join(',')}\n`
-    + 'Without Paper, record them as waiting:  npm run paper:status -- --record-pending\n'
-    + 'A piece with nothing to draw is declined instead: add  \'<name>\': { declined: \'<reason>\' }  to scripts/paper/pieces.config.mjs and run paper:sync.')
+  assert.deepEqual(missing.map((piece) => piece.slug), [], `no Paper status for: ${missing.map((piece) => `${piece.kind} ${piece.slug}`).join(', ')}.\n${FIX}\n`
+    + 'A piece with nothing to draw is declined instead: add  \'<name>\': { declined: \'<reason>\' }  to scripts/paper/pieces.config.mjs, then run the same command.')
 })
 
 test('the record holds no piece whose code is gone', () => {
   const known = new Set(pieces.map((piece) => piece.slug))
   const orphans = state.pieces.filter((entry) => !known.has(entry.slug)).map((entry) => entry.slug)
-  assert.deepEqual(orphans, [], `paper/sync-state.json lists pieces with no file behind them: ${orphans.join(', ')}. Remove the entries (npm run paper:sync does it), and delete their pages in Paper by hand.`)
+  assert.deepEqual(orphans, [], `paper/sync-state.json lists pieces with no file behind them: ${orphans.join(', ')}.\n${FIX}`)
 })
 
 test('every entry has a known status; a declined piece says why, a failed one says what failed', () => {
@@ -45,7 +45,7 @@ test('declined in the config and declined in the record agree', () => {
   for (const piece of pieces) {
     const entry = entries.get(piece.slug)
     if (!entry) continue
-    assert.equal(entry.status === 'declined', Boolean(piece.config.declined), `${piece.slug}: scripts/paper/pieces.config.mjs and paper/sync-state.json disagree on whether it is declined (run npm run paper:sync)`)
+    assert.equal(entry.status === 'declined', Boolean(piece.config.declined), `${piece.slug}: scripts/paper/pieces.config.mjs and paper/sync-state.json disagree on whether it is declined.\n${FIX}`)
   }
 })
 
@@ -80,7 +80,7 @@ test('every recorded story still exists in the story files', () => {
   // parsed from src/stories, never run: this test must not need Storybook
   const known = new Set(storyFiles().flatMap((file) => file.ids))
   const gone = state.pieces.flatMap((entry) => (entry.stories ?? []).filter((story) => !known.has(story.id)).map((story) => `${entry.slug}: ${story.id}`))
-  assert.deepEqual(gone, [], `Paper shows stories that no longer exist (renamed or deleted). Re-draw the piece with Paper open:  npm run paper:sync -- --only ${[...new Set(gone.map((line) => line.split(':')[0]))].join(',')}`)
+  assert.deepEqual(gone, [], `the record names stories that no longer exist (renamed or deleted): ${gone.join(', ')}.\n${FIX}`)
 })
 
 test('the record is written in its fixed order, so a diff shows only what changed', () => {

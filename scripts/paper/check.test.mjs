@@ -1,12 +1,12 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { REGRESSION_PCT, REGRESSION_PX } from '../figma-visual-diff.mjs'
-import { acceptInto, compareValues, isOurExport, keyNodes, measured, parseTreeSummary, renderSummary, resolveColor, resolveLength, verdictOf } from './check.mjs'
+import { acceptInto, check, compareValues, isOurExport, keyNodes, measured, parseTreeSummary, renderSummary, resolveColor, resolveLength, verdictOf } from './check.mjs'
 import { serialize } from './convert.mjs'
 import { orderState, planPages, upsertPiece } from './file.mjs'
 import { ARTBOARD, artboardStyles, header, section } from './page.mjs'
 import { inventory, pageName, parseStoryFile, pieceLayerName, selectStories, sourceHash, statusOf, storyId, storyTitle, titleCase } from './pieces.mjs'
-import { recordPending, renderStatus } from './status.mjs'
+import { reconcile, renderStatus } from './status.mjs'
 import { parseArgs, piecesToSync, stubRecord } from './sync.mjs'
 import { foundationsPage } from './sync-foundations.mjs'
 import { resolveTokens } from './tokens.mjs'
@@ -92,11 +92,20 @@ test('a story regresses against its own baseline: picture, size, text or values'
   assert.equal(verdictOf({ ...row, error: 'export produced no file' }, accepted).verdict, 'error')
 })
 
-test('accepting writes sorted, dated entries and leaves stories it did not check alone', () => {
-  const row = (story, diffPct) => ({ piece: 'x', story, text: { ok: true }, values: [], valuesOk: 0, picture: { diffPct, paper: [1, 1], storybook: [1, 1] } })
-  const baseline = acceptInto({ stories: { 'z--kept': { diffPct: 1 } } }, [row('b--two', 2), row('a--one', 3), { piece: 'x', story: 'c--broken', error: 'nope' }], '2026-10-07')
+test('accepting writes sorted, dated entries, leaves unchecked stories alone, and refuses a text mismatch', () => {
+  const row = (story, diffPct, textOk = true) => ({ piece: 'x', story, text: { ok: textOk }, values: [], valuesOk: 0, picture: { diffPct, paper: [1, 1], storybook: [1, 1] } })
+  const rows = [row('b--two', 2), row('a--one', 3), { piece: 'x', story: 'c--broken', error: 'nope' }, row('d--wrong-words', 1, false)]
+  const { baseline, result } = acceptInto({ stories: { 'z--kept': { diffPct: 1 } } }, rows, '2026-10-07')
   assert.deepEqual(Object.keys(baseline.stories), ['a--one', 'b--two', 'z--kept'])
   assert.deepEqual(baseline.stories['a--one'], { diffPct: 3, paper: [1, 1], storybook: [1, 1], text: true, values: '0/0', piece: 'x', at: '2026-10-07' })
+  assert.deepEqual(result.accepted, ['b--two', 'a--one'])
+  assert.deepEqual(result.refused, ['c--broken: errored', 'd--wrong-words: text does not match (use --force to accept anyway)'])
+  assert.ok('d--wrong-words' in acceptInto({ stories: {} }, rows, '2026-10-07', { force: true }).baseline.stories)
+  assert.equal('c--broken' in acceptInto({ stories: {} }, rows, '2026-10-07', { force: true }).baseline.stories, false, 'an errored story is never accepted')
+})
+
+test('accepting needs a named scope', async () => {
+  await assert.rejects(check({ accept: true }), /--accept needs a scope/)
 })
 
 test('the summary leads with the counts and lists what is not ok', () => {
@@ -121,6 +130,10 @@ test('only a file this run exported is ever deleted from Downloads', () => {
   assert.equal(isOurExport('/Users/x/Documents/usage-meter _ card@2x.png', ours), false, 'not the folder Paper writes to')
   assert.equal(isOurExport('/Users/x/Downloads/sub/usage-meter _ card@2x.png', ours), false)
   assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png', { ...ours, stat: () => ({ mtimeMs: since - 60_000 }) }), false, 'older than this call: it was there before')
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png', { ...ours, stat: () => ({ mtimeMs: since + 500, birthtimeMs: since - 60_000 }) }), false, 'an older file Paper wrote over: created before this call, so not ours to delete')
+  assert.equal(isOurExport('/Users/x/Downloads/../Documents/usage-meter _ card@2x.png', ours), false, 'a path that climbs out of the folder')
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png.bak', ours), false)
+  assert.equal(isOurExport('/Users/x/Downloads/*@2x.png', ours), false, 'never a pattern')
   assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png', { ...ours, stat: () => { throw new Error('gone') } }), false)
   assert.equal(isOurExport(undefined, ours), false)
 })
@@ -224,22 +237,48 @@ test('a sync writes what is not in step; --only and --all override', () => {
   assert.deepEqual(slugs({ only: ['a', 'd'] }), ['a'])
   assert.deepEqual(stubRecord({ slug: 'd', name: 'D', kind: 'block', config: { declined: 'no' } }), { slug: 'd', name: 'D', kind: 'block', status: 'declined', reason: 'no' })
   assert.deepEqual(stubRecord({ slug: 'c', name: 'C', kind: 'block', config: {} }), { slug: 'c', name: 'C', kind: 'block', status: 'pending', page: '◆ C' })
-  assert.deepEqual(parseArgs(['--only', 'button, faq', '--accept']), { all: false, only: ['button', 'faq'], dryRun: false, prune: false, createFile: false, accept: true, base: process.env.PAPER_STORYBOOK_URL })
+  assert.deepEqual(parseArgs(['--only', 'button, faq', '--accept']), { summary: null, force: false, all: false, only: ['button', 'faq'], dryRun: false, prune: false, createFile: false, accept: true, base: process.env.PAPER_STORYBOOK_URL })
 })
 
-test('pages are put in order by position: rename each slot, move an artboard that is on the wrong page', () => {
+test('the script\'s pages are put in order by position: rename each slot, move an artboard that is on the wrong page', () => {
   const current = [{ id: 'p-1', name: 'Foundations' }, { id: 'p-9', name: '❖ Button' }, { id: 'p-2', name: 'Page 3' }]
   const wanted = ['Foundations', '❖ Accordion', '❖ Button', '◆ FAQ']
-  const plan = planPages(current, wanted, { 'Foundations': ['f-0'], '❖ Button': ['b-0'] })
+  const plan = planPages(current, wanted, { 'Foundations': ['f-0'], '❖ Button': ['b-0'] }, ['p-1', 'p-9', 'p-2'])
   assert.equal(plan.create, 1)
   assert.deepEqual(plan.renames.map((rename) => [rename.slot, rename.from, rename.to]), [[1, '❖ Button', '❖ Accordion'], [2, 'Page 3', '❖ Button'], [3, null, '◆ FAQ']])
   assert.deepEqual(plan.moves, [{ artboardId: 'b-0', name: '❖ Button', from: 'p-9', toSlot: 2 }], 'Button\'s artboard follows its name to the third page; Foundations stays')
-  assert.equal(plan.inOrder, false)
-  assert.deepEqual(planPages(wanted.map((name, index) => ({ id: `p-${index}`, name })), wanted, {}), { create: 0, renames: [], moves: [], inOrder: true })
-  // a piece was deleted: its page cannot be, so it is parked under a name that says so
-  const extra = planPages([...wanted, '❖ Gone'].map((name, index) => ({ id: `p-${index}`, name })), wanted, {})
-  assert.deepEqual(extra.renames.map((rename) => rename.to), ['(unused 1)'])
-  assert.deepEqual(planPages([...wanted, '(unused 1)'].map((name, index) => ({ id: `p-${index}`, name })), wanted, {}).renames, [])
+  assert.deepEqual(plan.foreign, [])
+  const ids = wanted.map((_, index) => `p-${index}`)
+  assert.deepEqual(planPages(wanted.map((name, index) => ({ id: `p-${index}`, name })), wanted, {}, ids), { create: 0, renames: [], moves: [], foreign: [], inOrder: true })
+  // a piece was removed: its page cannot be deleted, so it is parked under a name that says so, and reused later
+  const extra = planPages([...wanted, '❖ Gone'].map((name, index) => ({ id: `p-${index}`, name })), wanted, {}, [...ids, 'p-4'])
+  assert.deepEqual(extra.renames.map((rename) => [rename.from, rename.to]), [['❖ Gone', '(unused 1)']])
+  assert.deepEqual(planPages([...wanted, '(unused 1)'].map((name, index) => ({ id: `p-${index}`, name })), wanted, {}, [...ids, 'p-4']).renames, [])
+})
+
+test('a page the script did not create is a person\'s: never renamed, never moved onto, only reported', () => {
+  const wanted = ['Foundations', '❖ Accordion', '❖ Button']
+  const ours = [{ id: 'p-1', name: 'Foundations' }, { id: 'p-2', name: '❖ Accordion' }, { id: 'p-3', name: '❖ Button' }]
+  const owned = ['p-1', 'p-2', 'p-3']
+  const mine = { id: 'x-1', name: 'My sketches' }
+  const untouched = (plan) => { assert.deepEqual(plan.foreign, [mine.name]); assert.equal(plan.renames.some((rename) => rename.pageId === mine.id), false); assert.deepEqual(plan.moves, []) }
+  // in the middle: the generated pages around it keep their names; nothing shifts onto it
+  const middle = planPages([ours[0], ours[1], mine, ours[2]], wanted, { '❖ Button': ['b-0'] }, owned)
+  untouched(middle)
+  assert.deepEqual([middle.create, middle.renames, middle.inOrder], [0, [], true])
+  // at the end: not turned into "(unused 1)"
+  untouched(planPages([...ours, mine], wanted, {}, owned))
+  // at the start: Foundations is still the script's first page
+  untouched(planPages([mine, ...ours], wanted, {}, owned))
+  // a name that looks generated is not proof: only a recorded id is
+  const lookalike = planPages([...ours, { id: 'x-2', name: '❖ Buttons v2' }], wanted, {}, owned)
+  assert.deepEqual([lookalike.foreign, lookalike.renames, lookalike.create], [['❖ Buttons v2'], [], 0])
+  // a new piece: one page is created for it; the person's page is not used as the slot
+  const grown = planPages([ours[0], ours[1], mine, ours[2]], [...wanted, '◆ FAQ'], {}, owned)
+  assert.deepEqual([grown.create, grown.renames.map((rename) => [rename.pageId, rename.to]), grown.foreign], [1, [[null, '◆ FAQ']], [mine.name]])
+  // with nothing recorded as owned, nothing in the file is touched at all
+  const none = planPages([mine, ...ours], wanted, {}, [])
+  assert.deepEqual([none.foreign.length, none.create, none.renames.every((rename) => rename.pageId === null)], [4, 3, true])
 })
 
 test('the record is written in a fixed order and a re-synced piece replaces its entry', () => {
@@ -275,10 +314,31 @@ test('the Foundations page is drawn from the tokens: every swatch is a var, ever
   assert.equal(/style="[^"]*(?:margin|display:grid|display:inline)[^"]*"/.test(html), false, 'only what Paper accepts')
 })
 
-test('a new piece can be recorded as pending without Paper; a deleted one is dropped', () => {
-  const pieces = [{ slug: 'a', name: 'A', kind: 'component', config: {} }, { slug: 'new', name: 'New', kind: 'block', config: {} }, { slug: 'no', name: 'No', kind: 'block', config: { declined: 'nothing to draw' } }]
-  const result = recordPending({ pieces: [{ slug: 'a', status: 'synced' }, { slug: 'gone', status: 'synced' }] }, pieces)
-  assert.deepEqual(result.added, ['new', 'no'])
-  assert.equal(result.removed, 1)
-  assert.deepEqual(result.state.pieces, [{ slug: 'a', status: 'synced' }, { slug: 'new', name: 'New', kind: 'block', status: 'pending', page: '◆ New' }, { slug: 'no', name: 'No', kind: 'block', status: 'declined', reason: 'nothing to draw' }])
+test('the record can be brought in line with the code without Paper', () => {
+  const piece = (slug, kind, config = {}) => ({ slug, name: slug.toUpperCase(), kind, config })
+  const pieces = [piece('a', 'component'), piece('renamed', 'component'), piece('new', 'block'), piece('no', 'block', { declined: 'nothing to draw' }), piece('back', 'block'), piece('nowno', 'block', { declined: 'retired' })]
+  const state = { removed: [], pieces: [
+    { slug: 'a', status: 'synced', stories: [{ id: 'c-a--default' }] },
+    { slug: 'renamed', status: 'synced', page: '❖ RENAMED', pageId: 'p-1', artboardId: 'r-0', stories: [{ id: 'c-r--default' }, { id: 'c-r--old-name' }] },
+    { slug: 'gone', name: 'Gone', status: 'synced', page: '❖ Gone', artboardId: 'g-0', stories: [] },
+    { slug: 'back', status: 'declined', reason: 'was nothing to draw' },
+    { slug: 'nowno', name: 'NOWNO', status: 'synced', page: '◆ NOWNO', artboardId: 'n-0', stories: [] },
+  ] }
+  const { state: next, changes } = reconcile(state, pieces, new Set(['c-a--default', 'c-r--default']), '2026-10-08')
+  const by = Object.fromEntries(next.pieces.map((entry) => [entry.slug, entry]))
+  assert.deepEqual(by.a, state.pieces[0], 'an entry that is fine is not touched')
+  // a renamed story: dropped, piece waits; its page and artboard stay so the next sync redraws in place
+  assert.deepEqual([by.renamed.status, by.renamed.stories.map((story) => story.id), by.renamed.artboardId], ['pending', ['c-r--default'], 'r-0'])
+  assert.equal('gone' in by, false)
+  assert.deepEqual(by.new, { slug: 'new', name: 'NEW', kind: 'block', status: 'pending', page: '◆ NEW' })
+  assert.deepEqual(by.no, { slug: 'no', name: 'NO', kind: 'block', status: 'declined', reason: 'nothing to draw' })
+  assert.deepEqual(by.back, { slug: 'back', name: 'BACK', kind: 'block', status: 'pending', page: '◆ BACK' })
+  assert.deepEqual(by.nowno, { slug: 'nowno', name: 'NOWNO', kind: 'block', status: 'declined', reason: 'retired' })
+  // nothing is deleted here: the drawings of the removed and the newly declined piece are queued for the next sync
+  assert.deepEqual(next.removed, [
+    { slug: 'gone', page: '❖ Gone', artboard: 'pending', artboardId: 'g-0', name: 'Gone', at: '2026-10-08' },
+    { slug: 'nowno', page: '◆ NOWNO', artboard: 'pending', artboardId: 'n-0', name: 'NOWNO', at: '2026-10-08' },
+  ])
+  assert.equal(changes.length, 6)
+  assert.deepEqual(reconcile(next, pieces, new Set(['c-a--default', 'c-r--default'])).changes, [], 'running it again changes nothing')
 })

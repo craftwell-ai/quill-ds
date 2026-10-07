@@ -44,7 +44,10 @@ export async function serveStatic(dir) {
   const { createReadStream, existsSync, statSync } = await import('node:fs')
   const { extname, join, normalize } = await import('node:path')
   const server = createHttp((request, response) => {
-    const path = join(dir, normalize(decodeURIComponent(request.url.split('?')[0])).replace(/^(\.\.[/\\])+/, ''))
+    let wanted
+    // a malformed address (a stray %) must be a 400, not a crash that takes the sync down with it
+    try { wanted = decodeURIComponent(request.url.split('?')[0]) } catch { response.statusCode = 400; response.end(); return }
+    const path = join(dir, normalize(wanted).replace(/^(\.\.[/\\])+/, ''))
     if (!path.startsWith(dir) || !existsSync(path) || statSync(path).isDirectory()) { response.statusCode = 404; response.end(); return }
     response.setHeader('content-type', MIME[extname(path)] || 'application/octet-stream')
     createReadStream(path).pipe(response)
