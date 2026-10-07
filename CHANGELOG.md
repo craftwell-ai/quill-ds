@@ -13,6 +13,12 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.21.1] — 2026-10-07
+
+### Changed
+- chore(figma): visual baselines for ai-side-panel and conversation-history, from a CI run
+- fix(visual-diff): judge a block by its own stories when other blocks' stories import it
+
 ## [1.21.0] — 2026-10-07
 
 ### Added
