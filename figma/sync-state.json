@@ -2456,8 +2456,8 @@
       "page": "❖ AI chat",
       "pageId": "1132:2",
       "frameId": "1140:2",
-      "codeHash": "a514f74184944314",
-      "syncedAt": "2026-10-04"
+      "codeHash": "422d2b82fc7372ec",
+      "syncedAt": "2026-10-07"
     },
     {
       "block": "ai-home",
@@ -2474,8 +2474,8 @@
       "page": "❖ AI side panel",
       "pageId": "1180:2",
       "frameId": "1180:208",
-      "codeHash": "387cbaf36b3372b8",
-      "syncedAt": "2026-10-05"
+      "codeHash": "4e5513c2783ea00b",
+      "syncedAt": "2026-10-07"
     },
     {
       "block": "alerts",

@@ -6,7 +6,7 @@ Past AI chats grouped by when they happened — pinned first, then today, yester
 - People come back to earlier conversations with an AI and need to find one, reopen it, and tidy the list.
 
 ### Reach for instead
-- **ai-chat** — when you want the whole chat page; it carries a short list of its own.
+- **ai-chat** — when you want the whole chat page; it carries a short sample list of its own, and takes this block as its sidebar.
 - **sidebar-nav** — when the side column moves between sections of the app, not between past chats.
 - **command-palette** — when people look a chat up by typing its name instead of browsing by date.
 
@@ -15,7 +15,7 @@ Past AI chats grouped by when they happened — pinned first, then today, yester
 - **Do:** Leave both steps in: the confirmation before, and Undo in the list for a few seconds after. onDelete is called at most once for each confirmed delete: when the Undo time has passed, or sooner if another delete is confirmed, the list is removed, or the page is hidden or closed. Send your request from onDelete with keepalive (or sendBeacon) so one made as the page closes is not dropped. **Don't:** Delete on the first press, or delete on your side before onDelete is called — Undo could not bring the chat back.
 - **Do:** Pass now again (for example when the window regains focus) if the list can stay open overnight; "Today" is worked out when the list is first drawn. **Don't:** Expect the groups to roll over at midnight by themselves.
 - **Do:** Leave out a callback you do not support; its menu item is not drawn. **Don't:** Pass a callback that does nothing so the menu looks complete.
-- **Do:** Open this list from the AI side panel's History button (onHistory), in your own sheet or column. **Don't:** Expect the side panel to show it by itself — the panel does not hold a history view.
+- **Do:** Open this list from the AI side panel's History button (onHistory). Pass it as the panel's body to show it in the panel itself, in place of the thread, and pass undefined again once a chat is chosen; or show it in your own sheet or column. **Don't:** Expect the side panel to show it by itself — History only calls onHistory, and the list appears when you pass it.
 - **Do:** Pass timeZone (the person's zone) and now when the list is rendered on a server, so the server and the browser put each chat in the same group. **Don't:** Leave the zone to the server's clock — a chat from this evening reads as Yesterday on the server and Today in the browser.
 
 ### Accessibility
