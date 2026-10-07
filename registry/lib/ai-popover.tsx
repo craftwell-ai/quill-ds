@@ -291,7 +291,7 @@ export function AiPopover({
             middle part scrolls, so Replace is never pushed off a short screen. While it overflows it is a named Tab
             stop, so the arrow and Page keys scroll it. Its ring is an outline drawn just inside it: the popover clips
             anything outside, and an outline is painted over the text scrolling past. */}
-        <div ref={setScrollArea} {...(scrolls ? { tabIndex: 0, role: 'group', 'aria-label': 'Suggested text' } : {})}
+        <div ref={setScrollArea} data-focus-inset="" {...(scrolls ? { tabIndex: 0, role: 'group', 'aria-label': 'Suggested text' } : {})}
           className="grid min-h-0 grid-cols-[minmax(0,1fr)] gap-2.5 overflow-y-auto px-3.5 pt-1.5 focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-ring/50">
           <WritingStatus working={working} label={workingLabel} />
           {working ? (

@@ -344,6 +344,9 @@ Read from the shipped primitives (`src/components/ui/button.tsx`,
   (`focus-visible:ring-3 focus-visible:ring-ring/50`), the same on buttons and
   inputs. `--ring` follows `data-accent`, so it is moss by default and terracotta
   only when terracotta is the chosen accent. Never hand-set a focus colour.
+  In Windows High Contrast (`forced-colors: active`) the browser removes the
+  ring, so the theme gives every focused element a 2px outline in the system
+  highlight colour instead, in that mode only.
 - **Invalid:** `aria-invalid` sets a destructive (terracotta) border and a 3px
   destructive ring at 20%.
 - **Disabled:** 50% opacity with pointer events off (buttons) or `cursor:

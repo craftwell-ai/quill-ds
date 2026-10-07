@@ -55,3 +55,64 @@ test('order matters: a stock @custom-variant dark line BELOW the import wins, so
   const below = await buildWith('@import "tailwindcss";\n@import "./registry/themes/quill.css";\n@custom-variant dark (&:is(.dark *));\n', ['dark:bg-card'])
   assert.doesNotMatch(below.match(/\.dark\\:bg-card[^{]*/)[0], /data-theme/, 'stock line below the import: Quill loses — the case the self-check reports')
 })
+
+// Keyboard focus in Windows High Contrast (CRA-294). The theme's forced-colours rule has to beat the
+// `outline-none` on an app's stock fields and buttons, and it does that by position in the cascade, not by
+// `!important`: Tailwind puts `outline-none` in its `utilities` layer, and CSS outside every layer beats
+// every layer. So the thing to keep true is where the rule LANDS in an app's compiled stylesheet, through
+// each of the two channels. (The computed outline is measured in a browser by the Forced colours story.)
+const STOCK_FOCUS = ['outline-none', 'outline-hidden', 'focus-visible:ring-3', 'focus-visible:border-ring']
+
+// The at-rules a piece of the stylesheet sits inside, outermost first.
+function enclosingAtRules(css, index) {
+  const stack = []
+  let prelude = ''
+  for (const ch of css.slice(0, index)) {
+    if (ch === '{') { stack.push(prelude.trim()); prelude = '' }
+    else if (ch === '}') { stack.pop(); prelude = '' }
+    else if (ch === ';') prelude = ''
+    else prelude += ch
+  }
+  return stack
+}
+
+function assertFocusRuleWins(css, channel) {
+  const rules = [...css.matchAll(/:focus-visible\s*\{\s*outline:\s*2px solid Highlight;\s*outline-offset:\s*2px;?\s*\}/g)]
+  assert.equal(rules.length, 1, `${channel}: the compiled stylesheet must carry the forced-colours focus rule once`)
+  const around = enclosingAtRules(css, rules[0].index)
+  assert.deepEqual(around, ['@media (forced-colors: active)'], `${channel}: the rule must sit inside the forced-colours query and inside no @layer`)
+  // The opt-in for an outline drawn inside the element: same query, no layer, and AFTER the general rule.
+  const inset = [...css.matchAll(/\[data-focus-inset\]:focus-visible\s*\{\s*outline-offset:\s*-2px;?\s*\}/g)]
+  assert.equal(inset.length, 1, `${channel}: the compiled stylesheet must carry the data-focus-inset rule once`)
+  assert.deepEqual(enclosingAtRules(css, inset[0].index), ['@media (forced-colors: active)'], `${channel}: the inset rule must sit in the same query, inside no @layer`)
+  assert.ok(inset[0].index > rules[0].index, `${channel}: the inset rule must come after the general one`)
+  // The class it has to beat is layered, which is why an unlayered rule wins without !important.
+  const stock = css.search(/\.outline-none\s*\{/)
+  assert.ok(stock > 0, `${channel}: expected the stock outline-none utility in the build`)
+  assert.equal(enclosingAtRules(css, stock)[0], '@layer utilities', `${channel}: outline-none is expected in Tailwind's utilities layer`)
+}
+
+test('file channel: the forced-colours focus rule reaches an app outside every layer, so it beats a stock outline-none', async () => {
+  const css = await buildWith(`@import "tailwindcss";\n@import "./registry/themes/quill.css";\n`, STOCK_FOCUS)
+  assertFocusRuleWins(css, 'file channel')
+})
+
+test('CLI channel: the shadcn CLI writes the rule from the css payload outside every layer too', async () => {
+  // shadcn's own merger, the code `npx shadcn add` runs on an app's stylesheet. It is the CLI's internal
+  // module: if this import breaks after a shadcn upgrade, re-prove the CLI channel rather than skip it.
+  // (`@shadcn/registry` comes in with `shadcn`; it is not a dependency of its own.)
+  const merger = '@shadcn/registry/internal/utils/updaters/update-css'
+  const { transformCss } = await import(merger).catch((error) => {
+    throw new Error(`shadcn moved its CSS merger: update the import in scripts/file-channel.test.mjs (tried '${merger}': ${error.message})`)
+  })
+  assert.equal(typeof transformCss, 'function', `shadcn moved its CSS merger: update the import in scripts/file-channel.test.mjs ('${merger}' no longer exports transformCss)`)
+  const item = JSON.parse(readFileSync(join(root, 'public/r/quill.json'), 'utf8'))
+  // The shape of a fresh shadcn app's stylesheet: it has its own base layer, which the rule must not be folded
+  // into. (Only the `css` field is merged here; the colour roles ride in `cssVars`, which this test does not need.)
+  const stockApp = '@import "tailwindcss";\n\n@custom-variant dark (&:is(.dark *));\n\n@layer base {\n  * {\n    outline-color: currentColor;\n  }\n}\n'
+  // Merged twice, as an app that updates the theme does: the rule must not pile up.
+  const merged = await transformCss(await transformCss(stockApp, item.css), item.css)
+  assert.equal(merged.split('@media (forced-colors: active)').length - 1, 1, 'installing twice must not write the rule twice')
+  const css = await buildWith(merged, STOCK_FOCUS)
+  assertFocusRuleWins(css, 'CLI channel')
+})

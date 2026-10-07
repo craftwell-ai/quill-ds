@@ -280,6 +280,41 @@ export function renderAiUtilities(rules = AI_RULES) {
   return Object.entries(rules).map(([sel, decl]) => `${sel} {\n${body(decl, '  ')}\n}`).join('\n\n')
 }
 
+// Keyboard focus in Windows High Contrast (`forced-colors: active`), WCAG 2.4.7. The browser
+// drops every box-shadow in that mode. A stock shadcn field, dropdown or button draws its focus
+// ring as a box-shadow (`focus-visible:ring-3`) and removes its outline (`outline-none`), so a
+// focused control looked the same as an unfocused one (measured in Chromium: outline-style none).
+// Those components are the app's own files, so the fix rides in the theme: in that mode, and only
+// in that mode, every focused element gets an outline.
+//
+// Why this form. `outline-none` sits in Tailwind's `utilities` cascade layer, which beats
+// `@layer base` whatever the specificity, so a rule there would lose. CSS outside every layer
+// beats all layers, so the rule is emitted at the top level of the theme file and as a top-level
+// key of the CLI `css` payload (the CLI writes a top-level `@media` key verbatim, outside any
+// layer). That wins without `!important`, and an app can still override it with its own
+// unlayered rule. file-channel.test.mjs compiles both channels and checks the rule stays
+// unlayered; the Forced colours story checks the computed outline in a browser.
+//
+// `:focus-visible` on its own, not a list of controls: a list goes stale with the next component.
+// `Highlight` is the system colour browsers use for their own focus ring in this mode, and the
+// user's theme guarantees it is visible on `Canvas`. Quill's hand-written pieces (`outline-hidden`,
+// a transparent 2px outline the mode already paints) get the same single 2px outline, recoloured.
+export const FORCED_COLORS_RULES = {
+  '@media (forced-colors: active)': {
+    ':focus-visible': { outline: '2px solid Highlight', 'outline-offset': '2px' },
+    // The one opt-in, and it must stay AFTER the rule above. An outline 2px outside an element is cut off
+    // when the element fills a parent that clips: the suggestion scroll area in `ai-popover` (its popup is
+    // `overflow-hidden`), a full-width row in a scrolling list (`mail-shell`). Those draw their ring inside
+    // themselves with a layered `-outline-offset-*` class, which the unlayered rule above overrides. An
+    // element marked `data-focus-inset` gets the same outline drawn inside it instead.
+    '[data-focus-inset]:focus-visible': { 'outline-offset': '-2px' },
+  },
+}
+
+export function renderForcedColors(rules = FORCED_COLORS_RULES) {
+  return renderAiUtilities(rules)
+}
+
 // The shipped theme file. Until 0.12.0 it carried only variables, because an @theme
 // block is inert when the file is imported from a layout — and that was the only
 // wiring the docs described. Imported from inside the Tailwind stylesheet
@@ -288,7 +323,7 @@ export function renderAiUtilities(rules = AI_RULES) {
 // import line. The stock `.dark *` stays in the variant for apps that toggle the class.
 // scripts/file-channel.test.mjs proves both wirings on the built file.
 export function registryBlock(css) {
-  return `${darkVariant(MODES, { stockClass: true })}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}\n\n${renderAiUtilities()}`
+  return `${darkVariant(MODES, { stockClass: true })}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}\n\n${renderAiUtilities()}\n\n${renderForcedColors()}`
 }
 
 // --- shadcn registry payload (the channel that actually reaches an app) ---
@@ -344,6 +379,7 @@ export function registryPayload(css, t = tokens) {
       ...css.modes.map((m) => [`[data-theme="${m.attr}"]`, decls(m.body, literal)]),
       ...css.accents.map((a) => [`[data-accent="${a.name}"]`, decls(a.body, literal)]),
       ...Object.entries(AI_RULES),
+      ...Object.entries(FORCED_COLORS_RULES),
     ]),
   }
 }
@@ -486,7 +522,7 @@ export function renderDtcg(t) {
 
 // --- main (not exercised by unit tests) ---
 function globalsBlock(css) {
-  return `${darkVariant()}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}\n\n${renderAiUtilities()}`
+  return `${darkVariant()}\n\n@theme inline {\n${css.theme}\n}\n\n:root {\n${css.root}\n}\n\n${modeBlocks(css)}\n\n${renderAiUtilities()}\n\n${renderForcedColors()}`
 }
 
 export function main() {

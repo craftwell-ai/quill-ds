@@ -364,7 +364,9 @@ export const TallSuggestionKeepsActionsReachable: Story = {
     <div className="fixed inset-x-0 top-2/3 text-sm text-ink-soft"><AiPopover {...args} /></div>
   ),
   // Its anchor is fixed to the window, which an inline Docs preview box would cut to 128px; an iframe gives it a window of its own.
-  parameters: { viewport: { options: VIEWPORTS }, docs: { story: { inline: false, iframeHeight: 420 } } },
+  parameters: { viewport: { options: VIEWPORTS }, docs: { story: { inline: false, iframeHeight: 420 } },
+    // Test run only (.storybook/forced-colors-guard.ts): in Windows High Contrast the scroll area's focus outline must stay inside it, where the popover does not cut it off.
+    forcedColorsFocus: { selector: '[role="group"][aria-label="Suggested text"]', inset: true } },
   globals: { viewport: { value: 'short', isRotated: false } },
   play: async ({ canvas, args }) => {
     await waitFor(() => expect(window.innerHeight).toBe(360))

@@ -20,6 +20,8 @@ type Story = StoryObj<typeof meta>
 
 export const MailShell: Story = {
   render: () => <MailShellBlock />,
+  // Test run only (.storybook/forced-colors-guard.ts): each row fills the scrolling list, so in Windows High Contrast its focus outline must be drawn inside the row.
+  parameters: { forcedColorsFocus: { selector: '[aria-label="Messages"] button', inset: true } },
 }
 
 // Both examples fixed at a phone-narrow width so the difference is the pane

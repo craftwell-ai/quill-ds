@@ -13,6 +13,13 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.22.2] — 2026-10-07
+
+### Fixed
+- **Keyboard focus is visible in Windows High Contrast.** In that mode the browser removes every box-shadow, and the stock fields, dropdowns, buttons, checkboxes and switches draw their focus ring as one while their own `outline-none` removes the outline. A focused control looked the same as an unfocused one, apart from a 1px border changing shade. The theme now carries one rule that applies only in that mode (`@media (forced-colors: active)`): every element with keyboard focus gets a 2px outline in the system's highlight colour, 2px off the control. Nothing changes outside that mode: the 3px accent ring is what it was. The rule is written outside Tailwind's layers, which is what lets it win over `outline-none` without `!important`. An app's own plain CSS rule outside any layer overrides it; a Tailwind utility (including a `forced-colors:` variant) does not, because utilities sit in a lower layer. Apps get it by updating the theme: `npx shadcn@latest add @quill/quill --overwrite`. Installing through the CLI replaces an app's own identical `:focus-visible` rule in that media query with Quill's, as the CLI does for any rule it merges.
+- **An outline that would be cut off is drawn inside instead.** An element that fills a parent which clips (the suggestion scroll area in `ai-popover`, a message row in `mail-shell`) now carries `data-focus-inset`, and in the same mode the theme draws its outline 2px inside it. Put the attribute on a focusable element of your own that sits flush inside an `overflow-hidden` or scrolling parent. Re-add `ai-popover` as well as the theme (`npx shadcn@latest add @quill/ai-popover --overwrite`) to keep its scroll area's inset ring in this mode; with the new theme and the old component, that ring is cut off.
+- **A story measures it.** Foundations / Forced Colours puts the stock controls in a form; the test run turns the mode on in the browser, tabs to each one and fails if any has no outline, and checks that nothing changes with the mode off.
+
 ## [1.22.1] — 2026-10-07
 
 ### Changed

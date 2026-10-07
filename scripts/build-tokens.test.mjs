@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { transform } from 'lightningcss'
 import { readFileSync } from 'node:fs'
-import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES, renderAiUtilities, AI_UTILITIES, AI_RULES } from './build-tokens.mjs'
+import { renderCss, injectMarkers, cssVarName, registryBlock, registryPayload, renderManager, renderDtcg, darkVariant, MODES, renderAiUtilities, AI_UTILITIES, AI_RULES, FORCED_COLORS_RULES, renderForcedColors } from './build-tokens.mjs'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 import { renderPrinciples } from '../src/usage/foundations.mjs'
 
@@ -358,7 +358,7 @@ test('registry payload: cssVars keys are bare, css block keys carry the -- prefi
     for (const k of Object.keys(vars)) assert.ok(!k.startsWith('--'), `cssVars.${bucket} key '${k}' must be bare`)
   }
   const selectors = Object.keys(payload.css)
-  assert.equal(selectors.length, 2 + css.modes.length + css.accents.length + Object.keys(AI_RULES).length) // the dark variant + ':root' + themes + accents + AI utilities/keyframes
+  assert.equal(selectors.length, 2 + css.modes.length + css.accents.length + Object.keys(AI_RULES).length + Object.keys(FORCED_COLORS_RULES).length) // the dark variant + ':root' + themes + accents + AI utilities/keyframes + the forced-colours focus rule
   for (const [selector, block] of Object.entries(payload.css)) {
     if (selector.startsWith('@')) continue // an at-rule carries no declarations
     const keys = Object.keys(block)
@@ -387,6 +387,65 @@ test('AI utilities ride in the CLI payload as well as the theme file', () => {
   const payload = registryPayload(renderCss(tokens))
   for (const name of AI_UTILITIES) assert.ok(payload.css[`@utility ${name}`], `CLI payload lacks @utility ${name}`)
   for (const k of ['ai-sweep', 'ai-line', 'ai-shimmer']) assert.ok(payload.css[`@keyframes ${k}`], `CLI payload lacks @keyframes ${k}`)
+})
+
+// WCAG 2.4.7 in Windows High Contrast (`forced-colors: active`). The browser drops every box-shadow
+// there, and a stock shadcn field, dropdown or button draws its focus ring as one while its `outline-none`
+// removes the outline: keyboard focus vanished (CRA-294). Those components are the app's own files, so the
+// theme carries one rule that gives every focused element an outline in that mode, and only in that mode.
+const FORCED = '@media (forced-colors: active)'
+
+test('forced colours: one rule gives every focused element a 2px system-colour outline', () => {
+  assert.deepEqual(Object.keys(FORCED_COLORS_RULES), [FORCED], 'everything in it sits inside the forced-colours query')
+  const inside = FORCED_COLORS_RULES[FORCED]
+  // Every focusable element, not a list of selectors to keep up to date.
+  // Then the one opt-in, AFTER the general rule: an element that fills a parent which clips (a scroll area in a
+  // popover, a full-width row in a scrolling list) would have an outside outline cut off, so it asks for the
+  // outline inside itself with `data-focus-inset`. Only the offset changes; the outline is the general one.
+  assert.deepEqual(Object.keys(inside), [':focus-visible', '[data-focus-inset]:focus-visible'])
+  assert.deepEqual(inside[':focus-visible'], { outline: '2px solid Highlight', 'outline-offset': '2px' })
+  assert.deepEqual(inside['[data-focus-inset]:focus-visible'], { 'outline-offset': '-2px' })
+  assert.equal(
+    renderForcedColors(),
+    '@media (forced-colors: active) {\n  :focus-visible {\n    outline: 2px solid Highlight;\n    outline-offset: 2px;\n  }\n  [data-focus-inset]:focus-visible {\n    outline-offset: -2px;\n  }\n}',
+  )
+})
+
+test('forced colours: the rule wins by being unlayered, not by !important', () => {
+  // An app's `outline-none` lives in Tailwind's `utilities` layer, and CSS outside every layer beats
+  // all of them whatever the specificity. So the rule must stay at the top level of the theme (never
+  // inside `@layer base`, which utilities beat), and then it needs no `!important`.
+  assert.doesNotMatch(renderForcedColors(), /!important/)
+  assert.doesNotMatch(renderForcedColors(), /@layer/)
+  const block = registryBlock(renderCss(tokens))
+  const at = block.indexOf(renderForcedColors())
+  assert.ok(at > 0, 'the theme file must carry the rule')
+  const before = block.slice(0, at)
+  assert.equal(before.split('{').length, before.split('}').length, 'the rule must open at the top level of the theme file, inside no other block')
+})
+
+test('forced colours: the rule is in the theme file, the site stylesheet and the CLI payload, and nowhere outside its query', () => {
+  const rendered = renderForcedColors()
+  const count = (text, needle) => text.split(needle).length - 1
+  for (const file of ['registry/themes/quill.css', 'src/app/globals.css']) {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8')
+    assert.equal(count(text, rendered), 1, `${file} must carry the rule exactly once`)
+    // Nothing of it leaks out of the query: the system colour and a bare `:focus-visible` rule appear only there.
+    assert.equal(count(text, 'Highlight'), count(rendered, 'Highlight'), `${file}: Highlight is used outside the forced-colours rule`)
+    assert.equal(count(text, 'forced-colors'), 1, `${file}: one forced-colours query, the generated one`)
+    assert.equal([...text.matchAll(/^\s*:focus-visible\s*\{/gm)].length, 1, `${file}: a bare :focus-visible rule exists outside the forced-colours query`)
+    assert.equal(count(text, '[data-focus-inset]'), 1, `${file}: data-focus-inset is styled outside the forced-colours rule`)
+  }
+  // Built by `shadcn build` from registry.json, which build-tokens writes: the file an app's CLI reads.
+  const item = JSON.parse(readFileSync(new URL('../public/r/quill.json', import.meta.url), 'utf8'))
+  assert.deepEqual(item.css[FORCED], FORCED_COLORS_RULES[FORCED], 'public/r/quill.json must carry the rule in its css field')
+  for (const [key, value] of Object.entries(item.css)) {
+    if (key === FORCED) continue
+    assert.doesNotMatch(key, /focus-visible|forced-colors/, `css key '${key}' styles focus outside the forced-colours query`)
+    assert.doesNotMatch(JSON.stringify(value), /Highlight|:focus-visible|forced-colors/, `css['${key}'] styles focus outside the forced-colours query`)
+  }
+  // The same payload from the generator, top level: the CLI writes a top-level key outside every layer.
+  assert.deepEqual(registryPayload(renderCss(tokens)).css[FORCED], FORCED_COLORS_RULES[FORCED])
 })
 
 // WCAG 1.4.11: the composer's edge is the box's only boundary, so every stop of
