@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { convertTree, createBinder, dropDefaults, normalizeText, planGrid, serialize, shorthand, translateMargins, visibleShadows, visibleTexts } from './convert.mjs'
+import { BREAK, convertTree, createBinder, dropDefaults, normalizeText, planGrid, rotationOf, serialize, shorthand, translateMargins, visibleShadows, visibleTexts } from './convert.mjs'
 import { resolveTokens } from './tokens.mjs'
 
 // A small token table in the shape the real one has (names as Paper holds them).
@@ -94,9 +94,17 @@ test('an auto margin becomes a spacer that grows', () => {
   assert.deepEqual(translateMargins({ axis: 'row' }, [child({ right: 'auto' }), child({})]).spacers, [{ before: 1, grow: true }])
 })
 
+test('a transform is read as the rotation Paper can hold, plus whether anything else was in it', () => {
+  assert.deepEqual(rotationOf('none'), { degrees: 0, other: false })
+  assert.deepEqual(rotationOf('matrix(0, 1, -1, 0, 0, 0)'), { degrees: 90, other: false })
+  assert.deepEqual(rotationOf('matrix(1, 0, 0, 1, 0, -4)'), { degrees: 0, other: true })
+  assert.equal(rotationOf('matrix(0.5, 0, 0, 0.5, 0, 0)').other, true)
+})
+
 test('what cannot be carried is reported, not guessed', () => {
   const moved = translateMargins({ axis: 'row', gap: 8 }, [child({ right: 4, top: 6 }), child({ left: -6 })])
   assert.deepEqual(moved.spacers, [])
+  assert.equal(moved.negative, true)
   assert.equal(moved.lost.length, 3)
   assert.match(moved.lost.join('|'), /6px top margin across the row dropped/)
   assert.match(moved.lost.join('|'), /negative left margin \(-6px\) dropped/)
@@ -277,12 +285,55 @@ test('margins move to the parent: outer edge to padding, between siblings to a s
   assert.equal(root.children[2].style.padding, '0px 3px 0px 0px')
 })
 
-test('what Paper cannot draw is listed as lost', () => {
-  const tree = el('div', { used: { display: 'flex', transform: 'matrix(1, 0, 0, 1, 0, -4)', maskImage: 'linear-gradient(black, transparent)' }, children: [el('p', { children: [{ text: 'x' }] })] })
-  const { stats } = convertTree(tree, TABLE)
-  assert.equal(stats.lost.length, 2)
+test('what Paper cannot draw is listed as lost; a rotation and a blur are kept', () => {
+  const scaled = el('div', { used: { display: 'flex', transform: 'matrix(0.5, 0, 0, 0.5, 0, -4)', maskImage: 'linear-gradient(black, transparent)' }, children: [el('p', { children: [{ text: 'x' }] })] })
+  const turned = el('div', { used: { display: 'flex', transform: 'matrix(-1, 0, 0, -1, 0, 0)', filter: 'blur(2px)' }, spec: { width: '16px', height: '16px' }, children: [] })
+  const arrow = el('div', { used: { display: 'flex', rotate: '45deg' }, spec: { width: '10px', height: '10px' }, children: [] })
+  const { root, stats } = convertTree(el('div', { used: { display: 'flex', transform: 'matrix(1, 0, 0, 1, -50, -50)' }, children: [scaled, turned, arrow] }), TABLE)
+  assert.equal(stats.lost.length, 2, 'the root\'s own translate only places it on the page')
   assert.match(stats.lost.join('|'), /transform not carried/)
   assert.match(stats.lost.join('|'), /mask not carried/)
+  assert.deepEqual([root.children[1].style.rotate, root.children[1].style.filter, root.children[2].style.rotate], ['180deg', 'blur(2px)', '45deg'])
+})
+
+test('an out-of-flow child is placed where the browser measured it, inside its parent; z-index becomes layer order', () => {
+  const badge = el('span', { used: { position: 'absolute', display: 'block', zIndex: '2', backgroundColor: 'rgb(42, 38, 34)' }, spec: { right: '-2px', bottom: '-2px' }, rect: { x: 31, y: 31, w: 10, h: 10 } })
+  const under = el('span', { used: { position: 'absolute', display: 'block', zIndex: '-1', backgroundColor: 'rgb(239, 228, 206)' }, rect: { x: 0, y: 0, w: 40, h: 40 } })
+  const photo = el('p', { rect: { x: 1, y: 1, w: 38, h: 38 }, children: [{ text: 'RP' }] })
+  const { root } = convertTree(el('div', { used: { display: 'flex', ...border('rgb(0, 0, 0)') }, rect: { x: 0, y: 0, w: 40, h: 40 }, children: [badge, photo, under] }), TABLE)
+  assert.equal(root.style.position, 'relative')
+  assert.deepEqual(root.children.map((node) => node.style.position ?? 'flow'), ['absolute', 'flow', 'absolute'], 'a negative z-index goes underneath, the rest on top')
+  assert.deepEqual([root.children[2].style.left, root.children[2].style.top, root.children[2].style.width], ['30px', '30px', '10px'], 'measured from inside the parent\'s border')
+})
+
+test('overlapping children (negative margins) are traced by position; mx-auto becomes align-self', () => {
+  const avatar = (x, margin) => el('span', { used: { display: 'flex' }, spec: { width: '32px', height: '32px', marginLeft: margin }, rect: { x, y: 0, w: 32, h: 32 } })
+  const group = el('div', { used: { display: 'flex' }, rect: { x: 0, y: 0, w: 80, h: 32 }, children: [avatar(0, '0px'), avatar(24, '-8px'), avatar(48, '-8px')] })
+  const { root, stats } = convertTree(group, TABLE)
+  assert.deepEqual(root.children.map((node) => [node.style.position, node.style.left]), [['absolute', '0px'], ['absolute', '24px'], ['absolute', '48px']])
+  assert.deepEqual([root.style.position, root.style.width, root.style.height], ['relative', '80px', '32px'])
+  assert.match(stats.approximations[0].reasons[0], /children overlap/)
+  const centred = el('div', { used: { display: 'flex', flexDirection: 'column' }, children: [el('div', { used: { display: 'flex' }, spec: { width: '200px', marginLeft: 'auto', marginRight: 'auto' }, children: [el('p', { children: [{ text: 'x' }] })] })] })
+  assert.equal(convertTree(centred, TABLE).root.children[0].style['align-self'], 'center')
+})
+
+test('form fields, line breaks, pictures and media', () => {
+  const input = { ...el('input', { used: { display: 'block', ...border('rgb(138, 127, 110)'), ...radius('8px'), paddingLeft: '10px', paddingRight: '10px' }, rect: { x: 0, y: 0, w: 240, h: 32 } }), value: '', placeholder: 'you@example.com', placeholderColor: 'rgb(103, 95, 88)' }
+  const checkbox = { ...el('input', { used: { display: 'block' }, rect: { x: 0, y: 0, w: 16, h: 16 } }), value: 'on', textless: true }
+  const lines = el('p', { children: [{ text: `Line one${BREAK}  line two` }] })
+  const photo = { ...el('img', { used: { display: 'block', objectFit: 'cover', ...radius('3.35544e+07px') }, rect: { x: 0, y: 0, w: 40, h: 40 } }), src: 'https://example.com/a.png', alt: 'Ryan' }
+  const broken = { ...el('img', { used: { display: 'block' }, rect: { x: 0, y: 0, w: 40, h: 40 } }), src: 'https://example.com/missing.png', alt: '' }
+  const video = el('video', { rect: { x: 0, y: 0, w: 320, h: 180 } })
+  const tree = el('div', { used: { display: 'flex', flexDirection: 'column' }, children: [input, checkbox, lines, photo, broken, video] })
+  const { root, stats } = convertTree(tree, TABLE, { images: { 'https://example.com/a.png': 'data:image/png;base64,AAAA' } })
+  const [field, box, paragraph, picture, placeholder, media] = root.children
+  assert.deepEqual([field.name, field.style.width, field.style.height, field.children[0].text, field.children[0].style.color], ['input', '240px', '32px', 'you@example.com', 'var(--color-muted-foreground)'])
+  assert.equal(box.children.length, 0, 'a checkbox has no text of its own')
+  assert.equal(paragraph.text, 'Line one\nline two')
+  assert.match(picture.raw, /^<img layer-name="Ryan" src="data:image\/png;base64,AAAA" style="border-radius:9999px;width:40px;height:40px;flex-shrink:0;object-fit:cover">$/)
+  assert.deepEqual([placeholder.name, media.name], ['img (placeholder)', 'video (placeholder)'])
+  assert.equal(stats.lost.length, 2)
+  assert.deepEqual(visibleTexts(tree), ['you@example.com', 'Line one line two'])
 })
 
 test('text and attributes are escaped', () => {
@@ -301,4 +352,13 @@ test('a gradient wider than its box becomes a clipped child layer (Paper drops b
   assert.deepEqual(indicator.children.map((child) => [child.name, child.style.position, child.style.width, child.style.height]), [['gradient', 'absolute', '333.33%', '100%']])
   assert.equal(indicator.children[0].style['background-image'], 'linear-gradient(90deg, var(--color-destructive), #010203)')
   assert.match(stats.approximations[0].reasons[0], /background-size is not kept by Paper/)
+})
+
+test('a fully transparent element holds its place in flow and is left out when it floats', () => {
+  const more = el('button', { slot: 'dropdown-menu-trigger', used: { display: 'inline-flex', opacity: '0', flexShrink: '0' }, spec: { width: '24px', height: '24px' }, rect: { x: 270, y: 4, w: 24, h: 24 }, children: [{ text: 'More' }] })
+  const ghost = el('div', { used: { position: 'absolute', opacity: '0', display: 'block' }, rect: { x: 0, y: 0, w: 31, h: 32 }, children: [{ text: 'Platform' }] })
+  const row = el('li', { used: { display: 'flex', alignItems: 'center' }, children: [el('p', { used: { flexGrow: '1' }, children: [{ text: 'Launch brief draft' }] }), more, ghost] })
+  const { root } = convertTree(row, TABLE)
+  assert.deepEqual(root.children.map((node) => node.name ?? node.text), ['Launch brief draft', 'dropdown-menu-trigger (hidden)'])
+  assert.deepEqual([root.children[1].style.width, root.children[1].style.height, root.children[1].children.length], ['24px', '24px', 0])
 })
