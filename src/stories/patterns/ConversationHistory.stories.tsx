@@ -247,11 +247,19 @@ export const PinMovesIt: Story = {
   },
 }
 
+// A menu or dialog that is still animating in ignores the pointer (Base UI sets `pointer-events: none`
+// until the transition ends), and a click sent then throws. The value inherits, so the target answers
+// for its ancestors.
+const clickWhenReady = async (target: HTMLElement) => {
+  await waitFor(() => expect(getComputedStyle(target).pointerEvents).not.toBe('none'))
+  await userEvent.click(target)
+}
+
 const confirmDelete = async (canvas: ReturnType<typeof within>, title: string) => {
-  await userEvent.click(await within(await openMenu(canvas, title)).findByRole('menuitem', { name: 'Delete' }))
+  await clickWhenReady(await within(await openMenu(canvas, title)).findByRole('menuitem', { name: 'Delete' }))
   const dialog = await page().findByRole('alertdialog', { name: 'Delete this chat?' })
   await expect(dialog).toHaveTextContent(title)
-  await userEvent.click(within(dialog).getByRole('button', { name: 'Delete' }))
+  await clickWhenReady(within(dialog).getByRole('button', { name: 'Delete' }))
 }
 
 // The Undo button leads with an undo arrow, a decorative one: the button is still named "Undo".
