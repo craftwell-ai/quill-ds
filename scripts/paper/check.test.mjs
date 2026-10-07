@@ -6,7 +6,7 @@ import { serialize } from './convert.mjs'
 import { orderState, planPages, upsertPiece } from './file.mjs'
 import { ARTBOARD, artboardStyles, header, section } from './page.mjs'
 import { inventory, pageName, parseStoryFile, pieceLayerName, selectStories, sourceHash, statusOf, storyId, storyTitle, titleCase } from './pieces.mjs'
-import { renderStatus } from './status.mjs'
+import { recordPending, renderStatus } from './status.mjs'
 import { parseArgs, piecesToSync, stubRecord } from './sync.mjs'
 import { foundationsPage } from './sync-foundations.mjs'
 import { resolveTokens } from './tokens.mjs'
@@ -273,4 +273,12 @@ test('the Foundations page is drawn from the tokens: every swatch is a var, ever
   assert.match(html, /linear-gradient\(90deg, var\(--color-ai-from\), var\(--color-ai-via\) 50%, var\(--color-ai-to\)\)/)
   assert.match(html, /text-sm · Raleway 13\.6px \/ 19\.4px/)
   assert.equal(/style="[^"]*(?:margin|display:grid|display:inline)[^"]*"/.test(html), false, 'only what Paper accepts')
+})
+
+test('a new piece can be recorded as pending without Paper; a deleted one is dropped', () => {
+  const pieces = [{ slug: 'a', name: 'A', kind: 'component', config: {} }, { slug: 'new', name: 'New', kind: 'block', config: {} }, { slug: 'no', name: 'No', kind: 'block', config: { declined: 'nothing to draw' } }]
+  const result = recordPending({ pieces: [{ slug: 'a', status: 'synced' }, { slug: 'gone', status: 'synced' }] }, pieces)
+  assert.deepEqual(result.added, ['new', 'no'])
+  assert.equal(result.removed, 1)
+  assert.deepEqual(result.state.pieces, [{ slug: 'a', status: 'synced' }, { slug: 'new', name: 'New', kind: 'block', status: 'pending', page: '◆ New' }, { slug: 'no', name: 'No', kind: 'block', status: 'declined', reason: 'nothing to draw' }])
 })

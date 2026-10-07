@@ -105,10 +105,29 @@ test('what cannot be carried is reported, not guessed', () => {
   const moved = translateMargins({ axis: 'row', gap: 8 }, [child({ right: 4, top: 6 }), child({ left: -6 })])
   assert.deepEqual(moved.spacers, [])
   assert.equal(moved.negative, true)
-  assert.equal(moved.lost.length, 3)
+  assert.equal(moved.lost.length, 2)
   assert.match(moved.lost.join('|'), /6px top margin across the row dropped/)
   assert.match(moved.lost.join('|'), /negative left margin \(-6px\) dropped/)
-  assert.match(moved.lost.join('|'), /4px margin smaller than the 8px gap dropped/)
+})
+
+test('a margin smaller than the gap wraps each child in its own padding instead of a spacer', () => {
+  // a separator with my-2 (8px) in a column whose gap is 16px
+  const moved = translateMargins({ axis: 'column', gap: 16 }, [child({}), child({ top: 8, bottom: 8 }), child({})])
+  assert.deepEqual(moved.spacers, [])
+  assert.deepEqual(moved.wraps, [{ index: 1, side: 'top', size: 8 }, { index: 1, side: 'bottom', size: 8 }])
+  const row = (margin) => el('div', { used: { display: 'flex' }, spec: margin, children: [el('p', { children: [{ text: 'x' }] })] })
+  const { root } = convertTree(el('div', { used: { display: 'flex', flexDirection: 'column', rowGap: '16px', columnGap: '16px' }, children: [row({}), row({ marginTop: '8px', marginBottom: '8px' }), row({})] }), TABLE)
+  assert.deepEqual(root.children.map((node) => node.name ?? 'row'), ['row', 'margin', 'row'])
+  assert.deepEqual([root.children[1].style['padding-top'], root.children[1].style['padding-bottom']], ['8px', '8px'])
+})
+
+test('blocks and inline content in one container: blocks stack, inline runs share a line', () => {
+  const label = el('p', { children: [{ text: 'Disabled' }] })
+  const button = el('button', { used: { display: 'inline-flex' }, spec: { width: '32px', height: '32px' }, children: [{ text: 'B' }] })
+  const { root } = convertTree(el('div', { children: [label, button, { text: ' and ' }, el('span', { used: { display: 'inline' }, children: [{ text: 'more' }] })] }), TABLE)
+  assert.equal(root.style['flex-direction'], 'column')
+  assert.deepEqual(root.children.map((node) => node.name ?? node.text), ['Disabled', 'line'])
+  assert.deepEqual(root.children[1].children.map((node) => node.name ?? node.text), ['button', ' and ', 'more'])
 })
 
 // ------------------------------------------------------------------ grid
@@ -123,6 +142,16 @@ test('a wider grid becomes rows of measured cells, grouped by the top edge the b
   assert.equal(plan.kind, 'rows')
   assert.deepEqual([plan.rowGap, plan.columnGap], [4, 12])
   assert.deepEqual(plan.rows, [[{ index: 0, width: 58.5, offset: 0 }, { index: 1, width: 373.5, offset: 0 }], [{ index: 2, width: 58.5, offset: 0 }, { index: 3, width: 373.5, offset: 0 }]])
+})
+
+test('rows are read from the tracks, not the top edges: centred cells and a nudged icon stay in their row', () => {
+  // an alert: icon | title, then the description under the title (the icon's track left empty)
+  const plan = planGrid({ columns: [16, 338], columnGap: 8, rowGap: 2, children: [{ x: 0, y: 2, width: 16 }, { x: 24, y: 0, width: 338 }, { x: 24, y: 21.4, width: 338 }] })
+  assert.deepEqual(plan.rows.map((row) => row.map((cell) => cell.index)), [[0, 1], [2]])
+  assert.equal(plan.rows[1][0].offset, 24)
+  // a row whose cells are centred on each other has three different tops
+  const centred = planGrid({ columns: [100, 100, 100], columnGap: 0, children: [{ x: 0, y: 10, width: 100 }, { x: 100, y: 0, width: 100 }, { x: 200, y: 14, width: 100 }, { x: 0, y: 60, width: 100 }] })
+  assert.deepEqual(centred.rows.map((row) => row.length), [3, 1])
 })
 
 test('a cell that skips a track is offset by the track it skipped', () => {
@@ -253,7 +282,7 @@ test('rich text is split into one-style runs on a baseline, keeps its space, and
   const { root, stats } = convertTree(tree, TABLE)
   assert.equal(root.style['align-items'], 'baseline')
   assert.deepEqual(root.children.map((node) => node.text), ['1,500', ' left'])
-  assert.equal(root.children[1].style['white-space'], 'pre')
+  assert.equal(root.children[1].style['white-space'], 'pre-wrap')
   assert.equal(stats.approximated, 1)
   assert.match(stats.approximations[0].reasons[0], /rich text split into 2 one-style runs/)
 })

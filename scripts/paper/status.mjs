@@ -8,12 +8,14 @@
  *   error      the last sync failed for it               → read the message, fix, sync again
  *   declined   has no page, with the reason
  *
+ *   npm run paper:status -- --record-pending   # add a `pending` entry for each new piece (no Paper needed)
+ *
  * Always exits 0: a stale piece is a to-do for whoever has Paper open, not a failure.
  */
 import { pathToFileURL } from 'node:url'
 import { tokensHash } from '../figma-stamp.mjs'
-import { readState } from './file.mjs'
-import { inventory, statusOf } from './pieces.mjs'
+import { readState, writeState } from './file.mjs'
+import { inventory, pageName, statusOf } from './pieces.mjs'
 
 export function status(state = readState(), pieces = inventory()) {
   const rows = statusOf(state, pieces)
@@ -34,4 +36,22 @@ export function renderStatus({ rows, tokens, counts }) {
   return lines.join('\n')
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) console.log(renderStatus(status()))
+/**
+ * `-- --record-pending`: give every piece that has no entry a `pending` one (and drop entries whose code is
+ * gone), without Paper. For when a piece is added on a machine that cannot draw it; the CI check asks for this.
+ */
+export function recordPending(state = readState(), pieces = inventory()) {
+  const known = new Set(state.pieces.map((entry) => entry.slug))
+  const added = pieces.filter((piece) => !known.has(piece.slug))
+  const kept = state.pieces.filter((entry) => pieces.some((piece) => piece.slug === entry.slug))
+  return { state: { ...state, pieces: [...kept, ...added.map((piece) => (piece.config.declined ? { slug: piece.slug, name: piece.name, kind: piece.kind, status: 'declined', reason: piece.config.declined } : { slug: piece.slug, name: piece.name, kind: piece.kind, status: 'pending', page: pageName(piece) }))] }, added: added.map((piece) => piece.slug), removed: state.pieces.length - kept.length }
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  if (process.argv.includes('--record-pending')) {
+    const result = recordPending()
+    writeState(result.state)
+    console.log(`recorded as pending: ${result.added.join(', ') || 'nothing new'}${result.removed ? ` · removed ${result.removed} entr${result.removed === 1 ? 'y' : 'ies'} whose code is gone` : ''}\n`)
+  }
+  console.log(renderStatus(status()))
+}

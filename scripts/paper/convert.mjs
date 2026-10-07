@@ -122,6 +122,7 @@ export function translateMargins({ axis, gap = 0, collapse = false }, children) 
   const spacers = []
   const lost = []
   const align = []
+  const wraps = []
   const size = (value) => (value === 'auto' ? 0 : value)
   children.forEach((child, index) => {
     const margin = child.margin
@@ -145,20 +146,24 @@ export function translateMargins({ axis, gap = 0, collapse = false }, children) 
       const between = collapse ? Math.max(a, b) : a + b
       if (between <= 0) return
       if (between >= gap) spacers.push({ before: index, size: between - gap })
-      else lost.push(`${between}px margin smaller than the ${gap}px gap dropped`)
+      else {
+        // too small for a spacer (which would add a whole extra gap): each child is wrapped in a frame padded by its own margin
+        if (a > 0) wraps.push({ index: index - 1, side: end, size: a })
+        if (b > 0) wraps.push({ index, side: start, size: b })
+      }
     }
   })
   const last = children.at(-1)?.margin[end]
   if (last === 'auto') spacers.push({ before: children.length, grow: true })
   else if (last > 0) padding[end] += last
-  return { padding, spacers, lost, align, negative: children.some((child) => Object.values(child.margin).some((value) => value < 0)) }
+  return { padding, spacers, lost, align, wraps, negative: children.some((child) => Object.values(child.margin).some((value) => value < 0)) }
 }
 
 // ------------------------------------------------------------------ grid
 
 /**
  * Paper has no grid. A one-column grid is a flex column with the row gap. Anything wider
- * becomes flex rows: children are grouped by the top edge the browser gave them, and each
+ * becomes flex rows: children are grouped into rows by the track each one starts in, and each
  * cell keeps its measured width (a fraction or `max-content` track has no flex spelling
  * that survives different content, so the width is traced, not translated).
  *
@@ -167,11 +172,19 @@ export function translateMargins({ axis, gap = 0, collapse = false }, children) 
  */
 export function planGrid({ columns, columnGap = 0, rowGap = 0, children }) {
   if (columns.length <= 1) return { kind: 'column', gap: rowGap }
+  // Which track a cell starts in, from where the browser put it. Cells are read in document order, as the
+  // grid placed them: a cell that starts in the same or an earlier track than the one before it begins a new
+  // row. (Top edges cannot decide this: centred cells in one row have different tops, and an icon nudged
+  // down 2px is still beside its title.)
+  const starts = columns.reduce((list, width, index) => [...list, index === 0 ? 0 : list[index - 1] + columns[index - 1] + columnGap], [])
+  const trackOf = (x) => starts.reduce((best, start, index) => (Math.abs(start - x) < Math.abs(starts[best] - x) ? index : best), 0)
   const rows = []
+  let lastTrack = Infinity
   children.forEach((child, index) => {
-    const row = rows.at(-1)
-    if (row && Math.abs(row.y - child.y) <= 1) row.cells.push({ index, ...child })
-    else rows.push({ y: child.y, cells: [{ index, ...child }] })
+    const track = trackOf(child.x)
+    if (track <= lastTrack) rows.push({ y: child.y, cells: [] })
+    rows.at(-1).cells.push({ index, ...child })
+    lastTrack = track
   })
   return {
     kind: 'rows',
@@ -706,7 +719,7 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
       const columns = node.used.gridTemplateColumns.split(/\s+/).map(num).filter((value) => value > 0)
       const gaps = gapOf(node.used)
       const inner = { x: node.rect.x + num(node.used.borderLeftWidth) + num(node.used.paddingLeft), y: node.rect.y + num(node.used.borderTopWidth) + num(node.used.paddingTop) }
-      const plan = planGrid({ columns, columnGap: gaps.column, rowGap: gaps.row, children: elements.map((child) => ({ x: child.rect.x - inner.x, y: child.rect.y - inner.y, width: child.rect.w })) })
+      const plan = planGrid({ columns, columnGap: gaps.column, rowGap: gaps.row, children: elements.map((child) => ({ x: child.rect.x - (child.shift?.[0] ?? 0) - inner.x, y: child.rect.y - (child.shift?.[1] ?? 0) - inner.y, width: child.rect.w })) })
       if (runs.length) note('lost', node, 'text directly inside a grid dropped')
       axis = 'column'
       frame['flex-direction'] = 'column'
@@ -721,11 +734,18 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
         note('approximated', node, `${columns.length}-column grid drawn as flex rows with measured cell widths`)
         frame.gap = binder.length('spacing', plan.rowGap)
         marginItems = []
-        children = plan.rows.map((row) => emit({
+        const rowHeight = (row, position) => {
+          // a cell that spans rows (an alert's icon beside its title and text) says nothing about one row's height
+          const next = plan.rows[position + 1]
+          const limit = next ? elements[next[0].index].rect.y : Infinity
+          const own = row.map((cell) => elements[cell.index].rect).filter((box) => box.y + box.h <= limit + 1)
+          return own.length ? px(Math.max(...own.map((box) => box.h))) : undefined
+        }
+        children = plan.rows.map((row, position) => emit({
           tag: 'div',
           name: 'row',
           // a row is as tall as the grid made it (a one-row grid filling a tall page), not just as tall as its content
-          style: dropDefaults({ display: 'flex', gap: binder.length('spacing', plan.columnGap), 'align-items': ['normal', 'stretch'].includes(node.used.alignItems) ? 'stretch' : node.used.alignItems, 'min-height': px(Math.max(...row.map((cell) => elements[cell.index].rect.h))), 'flex-shrink': '0' }),
+          style: dropDefaults({ display: 'flex', gap: binder.length('spacing', plan.columnGap), 'align-items': ['normal', 'stretch'].includes(node.used.alignItems) ? 'stretch' : node.used.alignItems, 'min-height': rowHeight(row, position), 'flex-shrink': '0' }),
           children: row.flatMap((cell) => [
             ...(cell.offset > 0.5 ? [emit(spacer('row', { size: cell.offset - plan.columnGap }))] : []),
             convertChild(elements[cell.index], { cellWidth: cell.width }),
@@ -764,8 +784,8 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
         frame['flex-wrap'] = node.used.whiteSpace === 'nowrap' ? 'nowrap' : 'wrap'
         frame['align-items'] = 'baseline'
         frame['justify-content'] = { center: 'center', right: 'flex-end', end: 'flex-end' }[node.used.textAlign]
-        if (inline.length !== elements.length) note('approximated', node, 'block and inline children mixed on one line')
         const items = flowing.filter((child) => !isText(child) || normalizeText(child.text, node.used.whiteSpace).trim())
+        const mixed = inline.length !== elements.length
         if (items.filter(isText).length && items.length > 1) note('approximated', node, `rich text split into ${items.length} one-style runs (it can no longer rewrap as a sentence)`)
         marginItems = []
         children = items.map((child, index) => {
@@ -774,8 +794,29 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
           if (index === 0) text = text.trimStart()
           if (index === items.length - 1) text = text.trimEnd()
           // the space between two runs lives at the edge of one of them; `pre` stops it collapsing
-          return textNode(text, node, textClasses, context, /^\s|\s$/.test(text) ? { 'white-space': 'pre' } : {})
+          // `pre-wrap` keeps the space and still lets a long run break; the cap keeps it inside its line
+          return textNode(text, node, textClasses, context, { 'max-width': '100%', ...(/^\s|\s$/.test(text) && node.used.whiteSpace !== 'nowrap' ? { 'white-space': 'pre-wrap' } : /^\s|\s$/.test(text) ? { 'white-space': 'pre' } : {}) })
         })
+        if (mixed) {
+          // Blocks and inline content in one container: each block is a line of its own, and each run of
+          // inline things between blocks shares a line (a label above the button it describes).
+          const lineStyle = { display: 'flex', 'flex-wrap': frame['flex-wrap'], 'align-items': 'baseline', 'justify-content': frame['justify-content'] }
+          const lines = []
+          items.forEach((child, position) => {
+            const blockLevel = !isText(child) && !isInlineLevel(child.used.display)
+            const last = lines.at(-1)
+            if (blockLevel) lines.push(children[position])
+            else if (last?.line) last.children.push(children[position])
+            else lines.push(emit({ tag: 'div', name: 'line', line: true, style: dropDefaults(lineStyle), children: [children[position]] }))
+          })
+          // a line holding one thing is just that thing
+          children = lines.map((line) => (line.line && line.children.length === 1 ? Object.assign(line.children[0], { style: { ...line.children[0].style, 'align-self': line.children[0].style['align-self'] ?? 'flex-start' } }) : line))
+          axis = 'column'
+          frame['flex-direction'] = 'column'
+          delete frame['flex-wrap']
+          delete frame['align-items']
+          delete frame['justify-content']
+        }
       }
     }
 
@@ -800,12 +841,21 @@ export function convertTree(tree, tokenTable, { images = {} } = {}) {
       } else {
         extraPadding = moved.padding
         for (const reason of moved.lost) note('approximated', node, reason)
+        for (const wrap of moved.wraps) {
+          const inner = children[wrap.index]
+          const wrapper = inner.wrapper ?? emit({ tag: 'div', name: 'margin', wrapper: true, style: { display: 'flex', 'flex-direction': axis === 'column' ? 'column' : 'row' }, children: [inner] })
+          wrapper.style[`padding-${wrap.side}`] = px(wrap.size)
+          inner.wrapper = wrapper
+        }
+        children = children.map((child) => child.wrapper ?? child)
         for (const entry of [...moved.spacers].sort((a, b) => b.before - a.before)) children.splice(entry.before, 0, emit(spacer(axis, entry)))
       }
     }
 
     for (const pseudo of node.pseudo ?? []) {
       const pseudoNode = convert({ ...pseudo, tag: 'div', classes: [], children: pseudo.content ? [{ text: pseudo.content }] : [], slot: `::${pseudo.which}` }, childContext)
+      // an underline that only shows on the active tab is fully transparent on the others: nothing to draw
+      if (!pseudoNode) continue
       if (pseudo.which === 'before') children.unshift(pseudoNode)
       else children.push(pseudoNode)
       note('approximated', node, `::${pseudo.which} drawn as a real layer`)
@@ -1078,7 +1128,7 @@ async function captureInPage({ usedProperties, specProperties, panelSelector, br
   if (main) {
     const canvas = getComputedStyle(wrapper)
     // "fills" means: the canvas spans the window and the piece spans the canvas. A centred layout shrinks the canvas to the piece instead.
-    const spansWindow = wrapper.getBoundingClientRect().width >= document.documentElement.clientWidth - 1
+    const spansWindow = wrapper.getBoundingClientRect().width >= (wrapper.parentElement?.clientWidth ?? document.documentElement.clientWidth) - 1
     main.fillsCanvas = spansWindow && target.getBoundingClientRect().width >= wrapper.clientWidth - parseFloat(canvas.paddingLeft) - parseFloat(canvas.paddingRight) - 1
     roots.push({ part: 'main', tree: main })
   }
