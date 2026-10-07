@@ -1,0 +1,35 @@
+{
+  "name": "ai-badge",
+  "kind": "component",
+  "summary": "A small outline pill with the AI sparkle that marks content an AI made or suggested — \"AI draft\", \"Suggested\".",
+  "useWhen": [
+    "A card, field, list row or message holds content the AI wrote or proposed, and people should know before they rely on it."
+  ],
+  "alternatives": [
+    {
+      "name": "tone-badge",
+      "when": "the label is a status, tier or category rather than \"made by AI\"."
+    },
+    {
+      "name": "ai-mark",
+      "when": "there is no room for words and the mark alone is enough."
+    }
+  ],
+  "rules": [
+    {
+      "id": "badge-says-ai-made",
+      "do": "Use the AI badge to say who made the content: \"AI draft\", \"Suggested\", \"Generated\".",
+      "dont": "Use it as a status (\"Active\", \"New\") — status belongs to ToneBadge.",
+      "visual": true
+    }
+  ],
+  "a11y": [
+    "Renders through Badge as a non-interactive span; the words carry the meaning and the mark is decorative."
+  ],
+  "tokens": [
+    "--ai-from",
+    "--ai-via",
+    "--ai-to",
+    "--ink-soft"
+  ]
+}

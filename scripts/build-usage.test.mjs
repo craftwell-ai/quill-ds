@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
-import { renderUsagePage, renderModulesDts, usageDocsField, USAGE_DIR, REGISTRY_PATH, MODULES_DTS_PATH } from './build-usage.mjs'
+import { renderUsagePage, renderUsageJson, renderUsageIndex, renderModulesDts, usageDocsField, USAGE_DIR, REGISTRY_PATH, MODULES_DTS_PATH } from './build-usage.mjs'
 import { renderThemeDocs, accentNames, LLMS_URL } from '../src/usage/theme-docs.mjs'
 import { ALL_MODES, DEFAULT_MODE, DEFAULT_ACCENT } from '../src/tokens/themes.mjs'
 
@@ -18,6 +18,18 @@ test('every usage entry has a committed, current public usage page (run `npm run
     assert.ok(existsSync(path), `public/usage/${u.name}.md is missing — run \`npm run build:usage\``)
     assert.equal(readFileSync(path, 'utf8'), renderUsagePage(u), `public/usage/${u.name}.md is stale — run \`npm run build:usage\``)
   }
+})
+
+test('every usage entry is also published as data, with an index (run `npm run build:usage`)', () => {
+  for (const u of ALL_USAGE) {
+    const path = join(USAGE_DIR, `${u.name}.json`)
+    assert.ok(existsSync(path), `public/usage/${u.name}.json is missing — run \`npm run build:usage\``)
+    assert.equal(readFileSync(path, 'utf8'), renderUsageJson(u), `public/usage/${u.name}.json is stale — run \`npm run build:usage\``)
+  }
+  const index = join(USAGE_DIR, 'index.json')
+  assert.ok(existsSync(index), 'public/usage/index.json is missing — run `npm run build:usage`')
+  assert.equal(readFileSync(index, 'utf8'), renderUsageIndex(), 'public/usage/index.json is stale — run `npm run build:usage`')
+  assert.ok(!ALL_USAGE.some((u) => u.name === 'index'), 'a usage entry named "index" would overwrite public/usage/index.json')
 })
 
 test('registry.json carries the derived docs field, description, and use_when for documented items', () => {

@@ -1,0 +1,640 @@
+{
+  "schemaVersion": 1,
+  "guides": [
+    {
+      "name": "accordion",
+      "kind": "component",
+      "summary": "A vertically stacked set of expand/collapse sections — one open at a time by default, with an option to allow several."
+    },
+    {
+      "name": "activity-feed",
+      "kind": "pattern",
+      "summary": "A card timeline of recent events — avatar, action text, and a relative timestamp per entry."
+    },
+    {
+      "name": "agent-steps",
+      "kind": "component",
+      "summary": "Shows the steps an AI agent is working through — done, running, waiting or failed — with a count in the header and rows that open to show what happened."
+    },
+    {
+      "name": "ai-badge",
+      "kind": "component",
+      "summary": "A small outline pill with the AI sparkle that marks content an AI made or suggested — \"AI draft\", \"Suggested\"."
+    },
+    {
+      "name": "ai-button",
+      "kind": "component",
+      "summary": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink."
+    },
+    {
+      "name": "ai-feedback",
+      "kind": "component",
+      "summary": "Asks what was wrong after a thumbs-down on an AI answer — one reason to choose from a short list, an optional note, and Send — opening under the answer so what is being judged stays in view."
+    },
+    {
+      "name": "ai-mark",
+      "kind": "component",
+      "summary": "Quill's AI sparkle — the one icon that means AI, drawn in the AI gradient with a one-star cut for 16px and under."
+    },
+    {
+      "name": "ai-message",
+      "kind": "component",
+      "summary": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side."
+    },
+    {
+      "name": "ai-notice",
+      "kind": "component",
+      "summary": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies."
+    },
+    {
+      "name": "ai-popover",
+      "kind": "component",
+      "summary": "An AI suggestion beside the text it is about — what the AI did, the suggested text on a soft AI wash, then Discard, Try again and Replace."
+    },
+    {
+      "name": "ai-thinking",
+      "kind": "component",
+      "summary": "Shows an AI working before its answer — a shimmering \"Thinking\" with what it is doing — then folds into one quiet \"Thought for 8 s\" row that opens the reasoning."
+    },
+    {
+      "name": "suggested-prompts",
+      "kind": "component",
+      "summary": "Ready-made things to ask an AI — chips for follow-ups under an answer, cards for starters on an empty page, a list in a narrow panel. Picking one fills the composer; it never sends."
+    },
+    {
+      "name": "model-picker",
+      "kind": "component",
+      "summary": "Lets people choose which AI model answers — a quiet name-and-chevron trigger in the composer that opens a list with Auto first, a line on what each model is good for, and a check on the current one."
+    },
+    {
+      "name": "alert",
+      "kind": "component",
+      "summary": "A single inline status box for a message tied to a specific area of the page. `alerts` is this primitive already assembled into a vertical stack of several."
+    },
+    {
+      "name": "alert-dialog",
+      "kind": "component",
+      "summary": "A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside."
+    },
+    {
+      "name": "alerts",
+      "kind": "pattern",
+      "summary": "A vertical stack of informational, success, and destructive alerts with icons."
+    },
+    {
+      "name": "analytics-charts",
+      "kind": "pattern",
+      "summary": "A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card."
+    },
+    {
+      "name": "announcement-banner",
+      "kind": "pattern",
+      "summary": "Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant."
+    },
+    {
+      "name": "approval-card",
+      "kind": "component",
+      "summary": "Asks before an AI agent acts — an inline card that names the action, shows exactly what will happen, lets people edit it in place, and has a main button that says what it does."
+    },
+    {
+      "name": "aspect-ratio",
+      "kind": "component",
+      "summary": "Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails."
+    },
+    {
+      "name": "avatar",
+      "kind": "component",
+      "summary": "A round image, initials, or icon representing a person or entity — reserves its shape immediately and swaps in the real photo once it loads."
+    },
+    {
+      "name": "badge",
+      "kind": "component",
+      "summary": "A small, non-interactive label for status, category, or count — not a button or a link on its own."
+    },
+    {
+      "name": "badge-on-card",
+      "kind": "pattern",
+      "summary": "Default, secondary, and destructive badges shown together on a card surface."
+    },
+    {
+      "name": "breadcrumb",
+      "kind": "component",
+      "summary": "A trail of links showing the current page's position in a hierarchy — the last crumb is always the current, non-link page."
+    },
+    {
+      "name": "button",
+      "kind": "component",
+      "summary": "Buttons trigger actions. The default (primary) variant is the single most important action on a surface."
+    },
+    {
+      "name": "button-group",
+      "kind": "component",
+      "summary": "A structural wrapper that merges adjacent Buttons into one visually connected control — shared borders, no owned selection state."
+    },
+    {
+      "name": "calendar",
+      "kind": "component",
+      "summary": "The date-picker primitive built on react-day-picker — supports single, multiple, and range selection modes. `calendar-page` and `calendar-range` are this primitive already composed into full scheduling and booking patterns."
+    },
+    {
+      "name": "calendar-page",
+      "kind": "pattern",
+      "summary": "A single-date calendar paired with the selected day's session list, in one studio-schedule card."
+    },
+    {
+      "name": "calendar-range",
+      "kind": "pattern",
+      "summary": "A stateful two-month range calendar for booking a span of days, with clear and reserve actions."
+    },
+    {
+      "name": "card",
+      "kind": "component",
+      "summary": "A bounded content container with header, body, and footer slots — paper-warm surface with a soft ring instead of a box-shadow border."
+    },
+    {
+      "name": "carousel",
+      "kind": "component",
+      "summary": "A horizontally or vertically scrolling item viewport built on Embla Carousel, with Previous/Next controls and keyboard arrow-key support."
+    },
+    {
+      "name": "chart",
+      "kind": "component",
+      "summary": "A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend."
+    },
+    {
+      "name": "chat",
+      "kind": "pattern",
+      "summary": "A one-on-one messaging panel — contact header, message bubbles, and a composer input."
+    },
+    {
+      "name": "ai-home",
+      "kind": "pattern",
+      "summary": "An AI assistant's start page — a soft AI glow, a greeting, the large composer with Ask/Agent modes, and starter cards."
+    },
+    {
+      "name": "ai-chat",
+      "kind": "pattern",
+      "summary": "A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom."
+    },
+    {
+      "name": "ai-side-panel",
+      "kind": "pattern",
+      "summary": "An AI assistant docked beside the page — a header with History and Close, a removable chip saying what it is looking at, a short thread, and the small composer, on one soft top-to-bottom AI wash."
+    },
+    {
+      "name": "conversation-history",
+      "kind": "pattern",
+      "summary": "Past AI chats grouped by when they happened — pinned first, then today, yesterday, the last week and earlier months — with the open chat filled and a menu on each row to rename, pin or delete it."
+    },
+    {
+      "name": "checkbox",
+      "kind": "component",
+      "summary": "A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox."
+    },
+    {
+      "name": "checkout",
+      "kind": "pattern",
+      "summary": "A two-column checkout — payment method picker and card form beside an order summary sidebar."
+    },
+    {
+      "name": "citations",
+      "kind": "component",
+      "summary": "Shows where an AI answer came from — a small chip after each claim, named for its source, that previews it, and an \"N sources\" list under the answer."
+    },
+    {
+      "name": "collapsible",
+      "kind": "component",
+      "summary": "A single open/closed disclosure toggle — the lower-level primitive behind Accordion, with no item/trigger/content grouping or built-in styling."
+    },
+    {
+      "name": "combobox",
+      "kind": "component",
+      "summary": "A searchable dropdown — type to filter a list, or multi-select with removable chips."
+    },
+    {
+      "name": "command",
+      "kind": "component",
+      "summary": "A keyboard-first search palette — embed inline for settings search, or wrap in CommandDialog for a ⌘K-style command palette."
+    },
+    {
+      "name": "command-palette",
+      "kind": "pattern",
+      "summary": "A searchable ⌘K command palette with grouped actions, recent items, and keyboard shortcuts."
+    },
+    {
+      "name": "contact-form",
+      "kind": "pattern",
+      "summary": "A get-in-touch card — name, email, a topic select, and a message field."
+    },
+    {
+      "name": "context-menu",
+      "kind": "component",
+      "summary": "A menu that appears at the pointer on right-click or long-press — a secondary, discoverable-only-by-trying affordance, not a replacement for a visible trigger."
+    },
+    {
+      "name": "cookie-consent",
+      "kind": "pattern",
+      "summary": "A cookie consent banner offering accept, reject, and preferences actions."
+    },
+    {
+      "name": "dashboard",
+      "kind": "pattern",
+      "summary": "An app shell with sidebar navigation, a search header, and KPI stat cards."
+    },
+    {
+      "name": "data-table",
+      "kind": "pattern",
+      "summary": "A filterable members table with a toolbar, ToneBadge status pills, and a per-row actions menu."
+    },
+    {
+      "name": "dialog",
+      "kind": "component",
+      "summary": "A modal window over the page for focused, non-destructive tasks — forms, details, reversible confirmations."
+    },
+    {
+      "name": "drawer",
+      "kind": "component",
+      "summary": "A bottom- or edge-anchored panel built on Vaul, with drag-to-dismiss — a mobile-first alternative to Dialog's centered modal."
+    },
+    {
+      "name": "dropdown-menu",
+      "kind": "component",
+      "summary": "A click-triggered list of actions anchored to a visible button, with full keyboard navigation and typeahead."
+    },
+    {
+      "name": "empty",
+      "kind": "component",
+      "summary": "An empty-state block for zero-data surfaces — icon, title, description, and a primary action, centered in the available space."
+    },
+    {
+      "name": "empty-state",
+      "kind": "pattern",
+      "summary": "A dashed-border empty state with an icon, explanatory text, and a primary action."
+    },
+    {
+      "name": "error-404",
+      "kind": "pattern",
+      "summary": "A full-page 404 error state with go-back and home recovery actions."
+    },
+    {
+      "name": "faq",
+      "kind": "pattern",
+      "summary": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer."
+    },
+    {
+      "name": "feature-section",
+      "kind": "pattern",
+      "summary": "A marketing section with an editorial heading and a three-column feature grid."
+    },
+    {
+      "name": "field",
+      "kind": "component",
+      "summary": "A form field wrapper that connects a Label, FieldDescription, and FieldError to a control."
+    },
+    {
+      "name": "file-upload",
+      "kind": "pattern",
+      "summary": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue."
+    },
+    {
+      "name": "footer",
+      "kind": "pattern",
+      "summary": "A marketing footer with brand blurb, link columns, and legal links."
+    },
+    {
+      "name": "forgot-password",
+      "kind": "pattern",
+      "summary": "A password-reset request card — an email field, a send-link action, and a way back to sign in."
+    },
+    {
+      "name": "hero",
+      "kind": "pattern",
+      "summary": "A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action."
+    },
+    {
+      "name": "hover-card",
+      "kind": "component",
+      "summary": "A glanceable preview that opens after a brief hover-intent delay on a link — a visual enhancement for sighted mouse and keyboard users, informational only."
+    },
+    {
+      "name": "icon",
+      "kind": "component",
+      "summary": "The Quill icon component — Material Symbols Outlined at weight 400, shipped as a self-contained core set of 98 names covering every icon the Quill blocks use."
+    },
+    {
+      "name": "input",
+      "kind": "component",
+      "summary": "A styled native text input for free-form single-line entry — email, name, search, URL."
+    },
+    {
+      "name": "input-group",
+      "kind": "component",
+      "summary": "Merges an input (or textarea) with prefix/suffix addons — icons, buttons, plain text — inside one bordered control."
+    },
+    {
+      "name": "input-otp",
+      "kind": "component",
+      "summary": "Digit-by-digit secure code entry — email verification, 2FA, PIN."
+    },
+    {
+      "name": "invoice",
+      "kind": "pattern",
+      "summary": "A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action."
+    },
+    {
+      "name": "item",
+      "kind": "component",
+      "summary": "A general-purpose list row — compose ItemMedia (icon or avatar), ItemContent (title + description), and ItemActions (trailing button) into a consistent row for lists, search results, and settings."
+    },
+    {
+      "name": "kanban",
+      "kind": "pattern",
+      "summary": "A three-column kanban board with card counts, tagged task cards, and an add-card affordance per column."
+    },
+    {
+      "name": "kbd",
+      "kind": "component",
+      "summary": "A keyboard key badge — a single label rendered as Kbd, or a compound shortcut via KbdGroup — for hotkeys in tooltips, menus, and shortcut references."
+    },
+    {
+      "name": "label",
+      "kind": "component",
+      "summary": "The accessible name for a form control — always associate it via htmlFor/id or co-location."
+    },
+    {
+      "name": "list-detail",
+      "kind": "pattern",
+      "summary": "An inbox-style split view — a selectable message list beside a detail pane with archive and delete actions."
+    },
+    {
+      "name": "login",
+      "kind": "pattern",
+      "summary": "The standard email-and-password sign-in card, with remember-me and a forgot-password escape hatch."
+    },
+    {
+      "name": "login-minimal",
+      "kind": "pattern",
+      "summary": "The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code."
+    },
+    {
+      "name": "login-oauth",
+      "kind": "pattern",
+      "summary": "Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback."
+    },
+    {
+      "name": "login-split-panel",
+      "kind": "pattern",
+      "summary": "A full-page, branded sign-in — a testimonial panel beside an email/password form with a magic-link option."
+    },
+    {
+      "name": "mail-shell",
+      "kind": "pattern",
+      "summary": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply."
+    },
+    {
+      "name": "menubar",
+      "kind": "component",
+      "summary": "A desktop application-style menu strip — a row of always-visible top-level menus, each opening its own dropdown on click."
+    },
+    {
+      "name": "native-select",
+      "kind": "component",
+      "summary": "The browser's own `<select>`, restyled to match the theme — the OS-native picker, not a custom-rendered popover."
+    },
+    {
+      "name": "navbar",
+      "kind": "pattern",
+      "summary": "A top navigation bar with brand wordmark, a responsive link list, and sign-in / get-started actions."
+    },
+    {
+      "name": "navigation-menu",
+      "kind": "component",
+      "summary": "Top-level site navigation with mega-dropdown panels — for public/marketing navigation, not desktop application chrome."
+    },
+    {
+      "name": "newsletter",
+      "kind": "pattern",
+      "summary": "A centered newsletter-signup section — an email field, subscribe action, and social proof."
+    },
+    {
+      "name": "notifications",
+      "kind": "pattern",
+      "summary": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action."
+    },
+    {
+      "name": "onboarding",
+      "kind": "pattern",
+      "summary": "A setup checklist card with a progress bar, completed and pending tasks, and start links for remaining steps."
+    },
+    {
+      "name": "order-summary",
+      "kind": "pattern",
+      "summary": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button."
+    },
+    {
+      "name": "otp-verification",
+      "kind": "pattern",
+      "summary": "A six-digit one-time-passcode entry card for verifying an email, with expiry messaging and a resend action."
+    },
+    {
+      "name": "page-header",
+      "kind": "pattern",
+      "summary": "A page header with a breadcrumb trail, title and description, and duplicate/new action buttons."
+    },
+    {
+      "name": "pagination",
+      "kind": "component",
+      "summary": "Page navigation for splitting a long list of records into discrete numbered pages, with Previous/Next controls and an ellipsis for skipped ranges."
+    },
+    {
+      "name": "popover",
+      "kind": "component",
+      "summary": "A small, click-triggered overlay anchored to its trigger — for inline forms, filters, and contextual editing, not a blocking task."
+    },
+    {
+      "name": "pricing",
+      "kind": "pattern",
+      "summary": "A three-tier pricing grid with a highlighted popular plan, feature checklists, and per-plan calls to action."
+    },
+    {
+      "name": "profile-card",
+      "kind": "pattern",
+      "summary": "A compact, centered profile card — avatar initials, role, follower stats, and follow/message actions."
+    },
+    {
+      "name": "progress",
+      "kind": "component",
+      "summary": "A determinate progress bar for a real, measurable completion value — pass a numeric `value` and pair it with ProgressLabel/ProgressValue for a labeled, live-updating readout."
+    },
+    {
+      "name": "prompt-composer",
+      "kind": "component",
+      "summary": "The box people type to an AI in — grows with the text, sends on Enter, turns Send into Stop while the AI works, with slots for tools, files and a model picker."
+    },
+    {
+      "name": "question-card",
+      "kind": "component",
+      "summary": "An AI agent asks the person to choose — the question, options as full rows with the recommended one first, a free-text row for anything else, and Continue that waits for an answer."
+    },
+    {
+      "name": "radio-group",
+      "kind": "component",
+      "summary": "A set of mutually exclusive options rendered as visible radio buttons — pick exactly one from a short, always-visible list."
+    },
+    {
+      "name": "resizable",
+      "kind": "component",
+      "summary": "Drag-resizable split panels — the user controls how space is divided between two or more regions by dragging a handle between them."
+    },
+    {
+      "name": "scroll-area",
+      "kind": "component",
+      "summary": "A styled custom scrollbar over a fixed-size scrollable region — replaces the browser's native scrollbar chrome without changing scroll behavior."
+    },
+    {
+      "name": "search-results",
+      "kind": "pattern",
+      "summary": "A docs search panel — query input, result count, and a linked result list with breadcrumbs and type badges."
+    },
+    {
+      "name": "select",
+      "kind": "component",
+      "summary": "A custom-rendered dropdown for choosing one option from a short list — the same look on every platform, unlike the OS-native picker."
+    },
+    {
+      "name": "separator",
+      "kind": "component",
+      "summary": "A thin decorative divider line between stacked or inline content — horizontal by default, vertical for toolbars and inline groups."
+    },
+    {
+      "name": "settings",
+      "kind": "pattern",
+      "summary": "A profile settings card — name fields, a bio textarea, and an email-notification toggle."
+    },
+    {
+      "name": "sheet",
+      "kind": "component",
+      "summary": "A panel that slides in from a screen edge while the page stays visible behind it — the same Base UI dialog underneath Dialog, styled as an edge panel instead of a centered card."
+    },
+    {
+      "name": "sidebar",
+      "kind": "component",
+      "summary": "The persistent side-rail navigation primitive — expands, collapses to icons, or slides in as an off-canvas sheet on mobile. `sidebar-nav` is this primitive already assembled into a full app shell with grouped menus and a breadcrumb header."
+    },
+    {
+      "name": "sidebar-nav",
+      "kind": "pattern",
+      "summary": "A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in."
+    },
+    {
+      "name": "signup",
+      "kind": "pattern",
+      "summary": "Standard account-creation card — name, email, password, and a link back to sign-in."
+    },
+    {
+      "name": "signup-social",
+      "kind": "pattern",
+      "summary": "Signup that leads with GitHub and Google provider buttons, falling back to an email/password form."
+    },
+    {
+      "name": "skeleton",
+      "kind": "component",
+      "summary": "An animate-pulse loading placeholder that reserves space and previews the shape of content while it loads."
+    },
+    {
+      "name": "slider",
+      "kind": "component",
+      "summary": "A draggable control for picking a numeric value, or range, within a bounded min/max — position matters as much as the exact figure."
+    },
+    {
+      "name": "sonner",
+      "kind": "component",
+      "summary": "A toast-notification stack for transient feedback about an action just taken — mount one Toaster at the app root, then trigger toasts imperatively with the `toast()` function from `sonner`."
+    },
+    {
+      "name": "spinner",
+      "kind": "component",
+      "summary": "An indeterminate loading indicator — a spinning icon that inherits its color from `currentColor`, for waits with no known duration or percentage."
+    },
+    {
+      "name": "stat-cards",
+      "kind": "pattern",
+      "summary": "A responsive grid of KPI cards, each showing a value with a delta badge versus last month."
+    },
+    {
+      "name": "stats-band",
+      "kind": "pattern",
+      "summary": "A marketing band of headline statistics separated by vertical dividers on a card background."
+    },
+    {
+      "name": "switch",
+      "kind": "component",
+      "summary": "An on/off control for a setting that takes effect immediately — no separate Save step."
+    },
+    {
+      "name": "table",
+      "kind": "component",
+      "summary": "A data table for rows of tabular content — headers, cells, an optional footer for totals, and a caption for the accessible description."
+    },
+    {
+      "name": "tabs",
+      "kind": "component",
+      "summary": "A set of triggers that swap which panel is visible in place — content panels share the same position, only one shown at a time."
+    },
+    {
+      "name": "tabs-page",
+      "kind": "pattern",
+      "summary": "A tabbed settings page with account, notifications, and security panels."
+    },
+    {
+      "name": "team-section",
+      "kind": "pattern",
+      "summary": "A marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action."
+    },
+    {
+      "name": "testimonial",
+      "kind": "pattern",
+      "summary": "A customer-quote card with a serif pull-quote, avatar initials, and attribution."
+    },
+    {
+      "name": "textarea",
+      "kind": "component",
+      "summary": "A styled native `<textarea>` for multi-line free text — descriptions, bios, comments."
+    },
+    {
+      "name": "theme-selector",
+      "kind": "pattern",
+      "summary": "A dropdown picker for the five Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage."
+    },
+    {
+      "name": "toggle",
+      "kind": "component",
+      "summary": "A two-state icon or icon-plus-text button whose pressed state persists after the click — a formatting toggle inside a toolbar."
+    },
+    {
+      "name": "toggle-group",
+      "kind": "component",
+      "summary": "A row, or column, of Toggle buttons sharing selection, sizing, and spacing — single-select for exclusive choices, multi-select for independent ones."
+    },
+    {
+      "name": "tone-badge",
+      "kind": "component",
+      "summary": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site."
+    },
+    {
+      "name": "tooltip",
+      "kind": "component",
+      "summary": "A short hint that appears on hover or focus — a supplementary visual label for sighted mouse and keyboard users, not a reliable way to deliver essential information."
+    },
+    {
+      "name": "usage-meter",
+      "kind": "component",
+      "summary": "Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer."
+    },
+    {
+      "name": "wizard",
+      "kind": "pattern",
+      "summary": "A multi-step setup card — a progress stepper, workspace fields, and back/continue navigation."
+    }
+  ]
+}
