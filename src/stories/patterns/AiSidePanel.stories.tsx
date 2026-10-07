@@ -857,6 +857,55 @@ export const ChoosingAChatOnATouchScreen: Story = {
       await waitFor(() => expect(document.activeElement).toBe(panel))
       await expect(box).not.toHaveFocus()
       await expect(media).toHaveBeenCalledWith('(pointer: coarse)')
+      // The panel was made focusable for that moment only: once focus moves on, it is as it was.
+      await expect(panel).toHaveAttribute('tabindex', '-1')
+      await userEvent.click(box)
+      await expect(box).toHaveFocus()
+      await expect(panel).not.toHaveAttribute('tabindex')
+    } finally {
+      media.mockRestore()
+    }
+  },
+}
+
+// Anything React draws nothing for is "no body": `text && <List />` with an empty string, or a stray `true`.
+export const BodyEmptyStringShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: '' },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+export const BodyTrueShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: true },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+
+// An app's own dialog around an inline panel is the app's: on a touch screen the panel's own section takes focus,
+// and the dialog is not given a tabindex it did not have.
+export const InsideAnAppsOwnDialogOnATouchScreen: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  render: (args, { viewMode }) => (
+    <div role="dialog" aria-label="The app's own dialog" className="contents">
+      <PanelWithHistory args={args} className={framed(viewMode, '28rem')} />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const own = canvas.getByRole('dialog', { name: "The app's own dialog" })
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const realMatchMedia = window.matchMedia.bind(window)
+    const media = spyOn(window, 'matchMedia').mockImplementation((query: string) => (
+      query === '(pointer: coarse)' ? { ...realMatchMedia(query), matches: true, media: query } as MediaQueryList : realMatchMedia(query)
+    ))
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'History' }))
+      await userEvent.click(await within(panel).findByRole('button', { name: 'Launch brief draft' }))
+      await waitFor(() => expect(document.activeElement).toBe(panel))
+      await expect(own).not.toHaveAttribute('tabindex')
     } finally {
       media.mockRestore()
     }

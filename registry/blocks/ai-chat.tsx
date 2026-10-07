@@ -22,6 +22,9 @@ const MODELS: ModelOption[] = [
 ]
 const CHATS = { Today: ['Q3 signups vs target', 'Launch brief draft'], Yesterday: ['Pricing page copy ideas'] }
 
+// React draws nothing for these, so a slot holding one is empty: `text && <List />` with an empty string.
+const drawsNothing = (node: React.ReactNode) => node === undefined || node === null || typeof node === 'boolean' || node === ''
+
 type Turn = { id: number; ask: string; reply: 'working' | 'stopped' }
 
 export type AiChatProps = {
@@ -35,9 +38,9 @@ export type AiChatProps = {
   /** The message box's text. Pass a string to control it (and clear it yourself after onSubmit); leave it out and the page keeps its own. */
   value?: string
   onValueChange?: (value: string) => void
-  /** Your list of past chats for the left column, in place of the sample one: the conversation-history block, for example. undefined is the sample list; null and false are no column at all, so `cond && <List />` gives no column while cond is false. */
+  /** Your list of past chats for the left column, in place of the sample one: the conversation-history block, for example. undefined is the sample list; anything else React draws nothing for (null, true, false, an empty string) is no column at all, so `cond && <List />` gives no column while cond is false. */
   sidebar?: React.ReactNode
-  /** What sits in the composer's trailing slot, in place of the sample model picker. undefined is the sample picker; null and false show nothing there. */
+  /** What sits in the composer's trailing slot, in place of the sample model picker. undefined is the sample picker; anything else React draws nothing for (null, true, false, an empty string) shows nothing there. */
   composerTrailing?: React.ReactNode
 }
 
@@ -55,8 +58,8 @@ export function AiChat({ onSubmit = () => {}, children, status = 'idle', onStop,
   // The app's own conversation, or (left out) the sample one, which this page keeps going with pretend replies.
   const ownsThread = children !== undefined
   const working = ownsThread ? status === 'working' : turns.at(-1)?.reply === 'working'
-  const noSidebar = sidebar === null || sidebar === false
-  const noTrailing = composerTrailing === null || composerTrailing === false
+  const noSidebar = sidebar !== undefined && drawsNothing(sidebar)
+  const noTrailing = composerTrailing !== undefined && drawsNothing(composerTrailing)
 
   return (
     <div className={noSidebar ? 'grid min-h-[40rem] bg-background' : 'grid min-h-[40rem] bg-background md:grid-cols-[15rem_minmax(0,1fr)]'}>

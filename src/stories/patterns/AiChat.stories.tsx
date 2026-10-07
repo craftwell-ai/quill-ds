@@ -257,6 +257,22 @@ export const SidebarFalseIsNoColumn: Story = {
   },
 }
 
+// An empty string draws nothing, so it is no column and no trailing control, not an empty bordered column.
+export const SidebarEmptyStringIsNoColumn: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { sidebar: '', composerTrailing: true },
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.queryByRole('navigation')).toBeNull()
+    await expect(canvasElement.querySelector('[data-slot="chat-sidebar"]')).toBeNull()
+    const region = canvas.getByRole('region', { name: 'Conversation' })
+    const page = region.parentElement as HTMLElement
+    await expect(page.children).toHaveLength(1)
+    await expect(region.getBoundingClientRect().width).toBe(page.getBoundingClientRect().width)
+    await expect(canvas.queryByRole('button', { name: /^Model:/ })).toBeNull()
+  },
+}
+
 // The app owns the composer's text: here it starts with a draft, and clears it once it has been sent.
 function ControlledComposerPage({ args }: { args: Story['args'] }) {
   const [draft, setDraft] = React.useState('Summarise this for the board')

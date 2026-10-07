@@ -22,7 +22,7 @@ export const usage = {
     },
     {
       id: 'chat-list-is-a-sample',
-      do: 'Pass the conversation-history block as sidebar: the built-in list of chats is a sample. Pass null or false for a page with no left column (so cond && list gives no column while cond is false; only undefined shows the sample list), and composerTrailing for your own control in place of the sample model picker (null or false for none).',
+      do: 'Pass the conversation-history block as sidebar: the built-in list of chats is a sample. Pass null for a page with no left column: anything React draws nothing for (null, true, false, an empty string) is no column, so cond && list gives none while cond is false, and only undefined shows the sample list. Pass composerTrailing for your own control in place of the sample model picker (the same values for none).',
       dont: 'Ship the sample list of chats or the sample model picker.',
       visual: false,
     },

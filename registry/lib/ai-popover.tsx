@@ -12,7 +12,7 @@ export type AiPopoverAnchor = { getBoundingClientRect: () => DOMRect }
 export type AiPopoverProps = {
   /** The text or control the suggestion is about: a <mark> around the selected text, or a Button. The popover opens from it and sits beside it. Optional once `anchor` is passed. */
   children?: React.ReactElement
-  /** What the popover sits beside when there is no element to wrap: the selection in an editor (a Range), or for a <textarea> an object whose getBoundingClientRect returns the box you worked out. Nothing is pressed to open it, so drive `open` yourself. With `children` as well, children still opens it and `anchor` only says where it sits. Its box is asked for on every frame while the popover is open, to follow the text as it moves: keep getBoundingClientRect cheap. */
+  /** What the popover sits beside when there is no element to wrap: the selection in an editor (a Range), or for a <textarea> an object whose getBoundingClientRect returns the box you worked out. Nothing is pressed to open it, so drive `open` yourself. With `children` as well, children still opens it and `anchor` only says where it sits. Its box is asked for on every frame while the popover is open, to follow the text as it moves: keep getBoundingClientRect cheap. Render the popover just after the editor: Tab past its last button closes it and goes to the next Tab stop after where it is rendered. An anchor inside a scaled ancestor is followed at its size on screen. Not supported: a rotated, skewed or mirrored ancestor (the popover then sits near the anchor, not on it), and an anchor with no size inside a scaled ancestor (it is placed approximately). */
   anchor?: AiPopoverAnchor | null
   /** With `anchor`: where the cursor goes when the popover closes (the editor). Left out, it goes back to `children`, or to whatever had it when the popover opened. */
   returnFocus?: React.RefObject<HTMLElement | null>
@@ -62,6 +62,24 @@ function WritingStatus({ working, label }: { working: boolean; label: string }) 
 const firstOnPage = (...candidates: Array<HTMLElement | null | undefined>) =>
   candidates.find((element) => element && element.isConnected && element !== document.body) ?? null
 
+type Box = { left: number; top: number; width: number; height: number }
+const sameBox = (one: Box, other: Box) =>
+  Math.abs(one.left - other.left) < 0.05 && Math.abs(one.top - other.top) < 0.05 && Math.abs(one.width - other.width) < 0.05 && Math.abs(one.height - other.height) < 0.05
+
+const write = (spot: HTMLElement, css: { x: number; y: number; width: number; height: number }) => {
+  spot.style.left = `${css.x}px`
+  spot.style.top = `${css.y}px`
+  spot.style.width = `${css.width}px`
+  spot.style.height = `${css.height}px`
+}
+
+// A stand-in that is still off its anchor after this many writes is not going to get there (two is the most a
+// supported case takes).
+const MAX_WRITES = 6
+
+// What Tab can land on: links, enabled form controls and buttons, and anything given a place in the Tab order.
+const TAB_STOPS = 'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+
 // Anchor mode. The stock PopoverContent places the popover beside its trigger and takes no other anchor, so the
 // selection gets a stand-in: an empty box kept exactly over it, which is the popover's trigger in name only. It takes
 // no presses (they reach the text underneath), is not a Tab stop and is hidden from screen readers.
@@ -70,45 +88,89 @@ function AnchorSpot({ id, anchor, open, onFocus }: { id: string; anchor: AiPopov
   const ref = React.useRef<HTMLButtonElement>(null)
   // What was last written to the stand-in, in its own CSS pixels, and how many screen pixels one of those is.
   const written = React.useRef({ x: 0, y: 0, width: 0, height: 0, scaleX: 1, scaleY: 1 })
-  // The last box the anchor gave that was a real one.
-  const lastGood = React.useRef<DOMRect | null>(null)
+  // The last box the anchor gave that was a real one: its numbers (an app may hand out one rect and write over it),
+  // and the anchor they came from (a new anchor that cannot be measured is not put at the old one's place: the
+  // stand-in simply stays where it last was).
+  const lastGood = React.useRef<{ from: AiPopoverAnchor; box: Box } | null>(null)
+  // The box last aimed at: how far off the stand-in was then, the scale that write went by, and how many writes it
+  // has had. And the box given up on. Correcting only goes on while it helps; where it cannot (see below) the
+  // stand-in is left alone until the anchor moves.
+  const aim = React.useRef<{ box: Box; miss: number; scaleX: number; scaleY: number; writes: number; best: { miss: number; x: number; y: number; width: number; height: number } } | null>(null)
+  const gaveUpOn = React.useRef<Box | null>(null)
+  const reported = React.useRef(false)
   const place = React.useCallback(() => {
     const spot = ref.current
     if (!spot) return
     // An app's own getBoundingClientRect can throw, and a Range whose text was redrawn reports an empty box at the
     // window's corner. Neither is a place to go to: the last real box is kept.
-    let want = lastGood.current
+    if (lastGood.current?.from !== anchor) lastGood.current = null
     try {
       const box = anchor.getBoundingClientRect()
-      if (box.width !== 0 || box.height !== 0 || box.left !== 0 || box.top !== 0) want = lastGood.current = box
-    } catch {
-      // Kept where it was.
+      if (box.width !== 0 || box.height !== 0 || box.left !== 0 || box.top !== 0) {
+        lastGood.current = { from: anchor, box: { left: box.left, top: box.top, width: box.width, height: box.height } }
+      }
+    } catch (error) {
+      // Dev-only, once for each popover: in production the popover staying put is the right failure for an app's
+      // users, and saying nothing is the wrong one for its developers.
+      if (process.env.NODE_ENV !== 'production' && !reported.current) {
+        reported.current = true
+        console.error(
+          '[quill] <AiPopover anchor> threw from getBoundingClientRect, so the popover stays where it last was. ' +
+            'Return a box, or pass anchor={null} while there is nothing to sit beside.',
+          error
+        )
+      }
     }
+    const want = lastGood.current?.box
     if (!want) return
+    if (gaveUpOn.current && sameBox(gaveUpOn.current, want)) return
+    gaveUpOn.current = null
     const css = written.current
     // Twice at most: the first pass may only learn the scale (nothing had a size yet to measure it by).
     for (let pass = 0; pass < 2; pass += 1) {
       const landed = spot.getBoundingClientRect()
+      const off = [want.left - landed.left, want.top - landed.top, want.width - landed.width, want.height - landed.height]
+      const miss = Math.max(...off.map(Math.abs))
+      // Already there (the usual answer): nothing is written, so nothing is laid out again.
+      if (miss < 0.05) {
+        aim.current = null
+        return
+      }
       // A fixed box is measured from the window, unless an ancestor is transformed: then from that ancestor, and in
       // its pixels. Under scale(2) one CSS pixel is two on screen, so the miss (read in screen pixels) is divided by
       // the scale before it is taken out, and so is the size. The scale is what the box measures over what was
-      // written. A rotated or skewed ancestor is not handled.
+      // written.
       if (css.width > 0 && landed.width > 0) css.scaleX = landed.width / css.width
       if (css.height > 0 && landed.height > 0) css.scaleY = landed.height / css.height
       // One axis with nothing to measure (a caret has no width) goes by the other.
       const scaleX = css.width > 0 ? css.scaleX : css.scaleY
       const scaleY = css.height > 0 ? css.scaleY : css.scaleX
-      const off = [want.left - landed.left, want.top - landed.top, want.width - landed.width, want.height - landed.height]
-      // Already there (the usual answer): nothing is written, so nothing is laid out again.
-      if (off.every((miss) => Math.abs(miss) < 0.05)) return
-      css.x += off[0] / scaleX
-      css.y += off[1] / scaleY
-      css.width = want.width / scaleX
-      css.height = want.height / scaleY
-      spot.style.left = `${css.x}px`
-      spot.style.top = `${css.y}px`
-      spot.style.width = `${css.width}px`
-      spot.style.height = `${css.height}px`
+      // Aimed at this same box before. If the last write brought it no nearer and there is nothing new to go by (the
+      // same scale as then), or it has been written MAX_WRITES times and is still off, correcting is not working,
+      // and more of it would only keep the stand-in moving (or send it off the screen). It stays where it is. This
+      // is what happens inside a rotated, skewed or mirrored ancestor, where an upright box cannot be laid over the
+      // anchor, and for an anchor with no size inside a scaled one, where there is nothing to tell the scale by.
+      const before = aim.current && sameBox(aim.current.box, want) ? aim.current : null
+      const nothingNew = before !== null && Math.abs(before.scaleX - scaleX) < 0.001 && Math.abs(before.scaleY - scaleY) < 0.001
+      if (before && ((nothingNew && miss >= before.miss - 0.01) || before.writes >= MAX_WRITES)) {
+        // Left at the nearest it got, which may be where it started: a mirrored ancestor sends each correction the
+        // wrong way, and the last one written would be the farthest off.
+        if (before.best.miss < miss - 0.01) write(spot, Object.assign(css, { x: before.best.x, y: before.best.y, width: before.best.width, height: before.best.height }))
+        gaveUpOn.current = want
+        aim.current = null
+        return
+      }
+      const best = before && before.best.miss <= miss ? before.best : { miss, x: css.x, y: css.y, width: css.width, height: css.height }
+      const next = { x: css.x + off[0] / scaleX, y: css.y + off[1] / scaleY, width: want.width / scaleX, height: want.height / scaleY }
+      // Never a value that is not a number: what was written is forgotten, and the stand-in stays as it is.
+      if (!Object.values(next).every(Number.isFinite)) {
+        written.current = { x: 0, y: 0, width: 0, height: 0, scaleX: 1, scaleY: 1 }
+        gaveUpOn.current = want
+        aim.current = null
+        return
+      }
+      aim.current = { box: want, miss, scaleX, scaleY, writes: (before?.writes ?? 0) + 1, best }
+      write(spot, Object.assign(css, next))
     }
   }, [anchor])
   // After every render while open (the anchor may be a new one), and before the popover works out its own place.
@@ -196,7 +258,7 @@ export function AiPopover({
           'aria-controls': isOpen ? popupId : undefined,
           onKeyDown: (event: React.KeyboardEvent) => {
             if (!isOpen || event.key !== 'Tab' || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return
-            const first = popupRef.current?.querySelector<HTMLElement>('[tabindex="0"], button:not(:disabled)')
+            const first = popupRef.current?.querySelector<HTMLElement>(TAB_STOPS)
             if (!first) return
             event.preventDefault()
             first.focus()

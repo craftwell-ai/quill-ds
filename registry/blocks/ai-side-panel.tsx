@@ -24,6 +24,12 @@ const closeIcon = (size?: number) => <Icon name="close" size={size} />
 // under the header yet, so a trackpad nudge would only fade the scope chip where it sits.
 const THREAD_FADE_AFTER = 4
 
+// React draws nothing for these, so a prop holding one is "nothing passed": `text && <List />` with an empty string.
+const drawsNothing = (node: React.ReactNode) => node === undefined || node === null || typeof node === 'boolean' || node === ''
+
+// The Sheet's own element, for the panel inside AiSidePanel: the one thing outside itself the panel may send focus to.
+const SheetElement = React.createContext<React.RefObject<HTMLElement | null> | null>(null)
+
 // A device whose main pointer is a finger. Why that decides where focus goes is told once, at the Sheet below.
 const onTouchScreen = () => window.matchMedia('(pointer: coarse)').matches
 
@@ -49,7 +55,7 @@ export type AiPanelProps = {
   /** The message box's text. Pass a string to control it (and clear it yourself after onSubmit); leave it out and the panel keeps its own. */
   value?: string
   onValueChange?: (value: string) => void
-  /** Shown in place of the thread (the scope chip and the messages) for as long as it is passed: your list of past chats while History is open, for example. The header and the composer stay. undefined, null and false all mean "no body", so `open ? <List /> : null` and `open && <List />` both work, and the thread is back where it was. */
+  /** Shown in place of the thread (the scope chip and the messages) for as long as it is passed: your list of past chats while History is open, for example. The header and the composer stay. Anything React draws nothing for (undefined, null, true, false, an empty string) means "no body", so `open ? <List /> : null` and `open && <List />` both work, and the thread is back where it was. */
   body?: React.ReactNode
   className?: string
 }
@@ -74,8 +80,8 @@ export function AiPanel({
   // The app's own conversation, or (left out) the sample one, which this panel keeps going with pretend replies.
   const ownsThread = children !== undefined
   const turnCount = ownsThread ? React.Children.count(children) : turns.length
-  // null and false are "no body", so `open ? <List /> : null` and `open && <List />` both show the thread while closed.
-  const hasBody = body !== undefined && body !== null && body !== false
+  // Anything React draws nothing for is "no body", so `open ? <List /> : null` and `open && <List />` both show the thread while closed.
+  const hasBody = !drawsNothing(body)
   const ownComposerRef = React.useRef<HTMLTextAreaElement>(null)
   const composerRef = givenComposerRef ?? ownComposerRef
   const scrollerRef = React.useRef<HTMLDivElement>(null)
@@ -103,8 +109,10 @@ export function AiPanel({
   }, [writing, toNewest])
   // `body` takes the thread's place in the same scrolling area: it starts at its own top, and the thread returns to
   // where it was. If the cursor was on something in the body, that is gone now; it lands in the message box, or on a
-  // touch screen on the panel itself (the Sheet's dialog; drawn inline, this section, made focusable for the moment).
+  // touch screen on the panel itself: the Sheet's own element, or drawn inline this section, which is made focusable
+  // until focus leaves it again. Never an element of the app's.
   const panelRef = React.useRef<HTMLElement>(null)
+  const sheet = React.useContext(SheetElement)
   React.useLayoutEffect(() => {
     const scroller = scrollerRef.current
     if (!scroller || showsBody.current === hasBody) return
@@ -113,10 +121,15 @@ export function AiPanel({
     const active = document.activeElement
     if (hasBody || (active !== null && active !== document.body)) return
     if (!onTouchScreen()) return composerRef.current?.focus()
-    const panel = panelRef.current?.closest<HTMLElement>('[role="dialog"]') ?? panelRef.current
-    if (panel && !panel.hasAttribute('tabindex')) panel.tabIndex = -1
-    panel?.focus()
-  }, [hasBody, composerRef])
+    if (sheet?.current) return sheet.current.focus()
+    const section = panelRef.current
+    if (!section) return
+    if (!section.hasAttribute('tabindex')) {
+      section.tabIndex = -1
+      section.addEventListener('blur', () => section.removeAttribute('tabindex'), { once: true })
+    }
+    section.focus()
+  }, [hasBody, composerRef, sheet])
 
   const removeScope = () => {
     if (scope === undefined) setOwnScope(null)
@@ -255,6 +268,7 @@ export function AiSidePanel({ open, defaultOpen = false, onOpenChange, trigger, 
           return onTouch ? sheetRef.current : composerRef.current
         }}
         className={cn('gap-0 p-0 data-[side=left]:w-full data-[side=right]:w-full', className)}>
+        <SheetElement.Provider value={sheetRef}>
         <AiPanel
           {...panel}
           title={title}
@@ -267,6 +281,7 @@ export function AiSidePanel({ open, defaultOpen = false, onOpenChange, trigger, 
             </SheetClose>
           )}
         />
+        </SheetElement.Provider>
       </SheetContent>
     </Sheet>
   )

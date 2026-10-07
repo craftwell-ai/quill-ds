@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
+import { expect, fn, spyOn, userEvent, waitFor, within } from 'storybook/test'
 import { AiPopover } from '../../registry/lib/ai-popover'
 import { Button } from '@/components/ui/button'
 import { usage } from '@/usage/ai-popover.usage.mjs'
@@ -473,7 +473,7 @@ const expectBeside = (dialog: HTMLElement, anchorBox: () => DOMRect) => waitFor(
 type AnchorArgs = Omit<React.ComponentProps<typeof AiPopover>, 'anchor' | 'open' | 'returnFocus'>
 
 // An editor in miniature: selecting text in it opens the suggestion beside the selection; Replace swaps the text.
-function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, trigger, scale }: { args: AnchorArgs; text?: string; className?: string; trigger?: React.ReactElement; scale?: number }) {
+function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, trigger, transform, after }: { args: AnchorArgs; text?: string; className?: string; trigger?: React.ReactElement; transform?: string; after?: React.ReactNode }) {
   const editor = React.useRef<HTMLDivElement>(null)
   const [text, setText] = React.useState(initial)
   const [range, setRange] = React.useState<Range | null>(null)
@@ -497,7 +497,7 @@ function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, tri
     </AiPopover>
   )
   return (
-    <div className="grid w-[26rem] max-w-full gap-3" style={scale ? { transform: `scale(${scale})`, transformOrigin: 'top left' } : undefined}>
+    <div className="grid w-[26rem] max-w-full gap-3" style={transform ? { transform, transformOrigin: 'top left' } : undefined}>
       {/* A button to ask from sits above the text, as a toolbar does, clear of the popover that opens below the selection. */}
       {trigger ? popover : null}
       {/* key: the text is the editor's own once typed in, so a replaced passage is drawn afresh. */}
@@ -506,6 +506,7 @@ function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, tri
         {text}
       </div>
       {trigger ? null : popover}
+      {after}
     </div>
   )
 }
@@ -591,29 +592,32 @@ export const OnATextSelection: Story = {
   },
 }
 
+// A component of its own, not written inline in the story: Storybook's source view reads the story's elements, and a
+// ref among them sets off a React warning of Storybook's own making.
+function ParagraphAnchor({ args }: { args: AnchorArgs }) {
+  const [open, setOpen] = React.useState(false)
+  const [range, setRange] = React.useState<Range | null>(null)
+  const text = React.useRef<HTMLParagraphElement>(null)
+  return (
+    <div className="grid w-[26rem] max-w-full justify-items-start gap-3 text-sm leading-relaxed text-ink-soft">
+      <p ref={text}>{BEFORE + PASSAGE}</p>
+      <Button variant="outline" onClick={() => {
+        const range = document.createRange()
+        range.selectNodeContents(text.current as HTMLElement)
+        setRange(range)
+        setOpen(true)
+      }}>Shorten the paragraph</Button>
+      <AiPopover {...args} anchor={range} open={open} onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }} />
+    </div>
+  )
+}
+
 // With no returnFocus, the cursor goes back to whatever had it when the popover opened.
 export const AnchorWithoutReturnFocus: Story = {
   tags: ['!autodocs'],
   parameters: { viewport: { options: VIEWPORTS } },
   globals: { viewport: { value: 'desktop', isRotated: false } },
-  render: function Render(given) {
-    const args = withoutTrigger(given)
-    const [open, setOpen] = React.useState(false)
-    const [range, setRange] = React.useState<Range | null>(null)
-    const text = React.useRef<HTMLParagraphElement>(null)
-    return (
-      <div className="grid w-[26rem] max-w-full justify-items-start gap-3 text-sm leading-relaxed text-ink-soft">
-        <p ref={text}>{BEFORE + PASSAGE}</p>
-        <Button variant="outline" onClick={() => {
-          const range = document.createRange()
-          range.selectNodeContents(text.current as HTMLElement)
-          setRange(range)
-          setOpen(true)
-        }}>Shorten the paragraph</Button>
-        <AiPopover {...args} anchor={range} open={open} onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }} />
-      </div>
-    )
-  },
+  render: (args) => <ParagraphAnchor args={withoutTrigger(args)} />,
   play: async ({ canvas }) => {
     const opener = canvas.getByRole('button', { name: 'Shorten the paragraph' })
     for (const close of ['Escape', 'Replace'] as const) {
@@ -731,7 +735,7 @@ const selectInScaledEditor = (canvas: Canvas, length = PASSAGE.length) => {
 export const InsideAnAncestorScaledUp: Story = {
   ...SCALED,
   tags: ['!autodocs'],
-  render: (args) => <Editor args={withoutTrigger(args)} scale={2} />,
+  render: (args) => <Editor args={withoutTrigger(args)} transform="scale(2)" />,
   play: async ({ canvas }) => {
     const range = selectInScaledEditor(canvas)
     const dialog = await page().findByRole('dialog', { name: TITLE })
@@ -743,7 +747,7 @@ export const InsideAnAncestorScaledUp: Story = {
 export const InsideAnAncestorScaledDown: Story = {
   ...SCALED,
   tags: ['!autodocs'],
-  render: (args) => <Editor args={withoutTrigger(args)} scale={0.5} />,
+  render: (args) => <Editor args={withoutTrigger(args)} transform="scale(0.5)" />,
   play: async ({ canvas }) => {
     const range = selectInScaledEditor(canvas)
     const dialog = await page().findByRole('dialog', { name: TITLE })
@@ -757,17 +761,22 @@ export const AlignEndInsideAScaledAncestor: Story = {
   ...SCALED,
   tags: ['!autodocs'],
   args: { align: 'end' },
-  render: (args) => <Editor args={withoutTrigger(args)} text={'Q3. ' + AFTER + ' ' + BEFORE + PASSAGE} scale={1.5} />,
+  render: (args) => <Editor args={withoutTrigger(args)} text={'Q3. ' + AFTER + ' ' + BEFORE + PASSAGE} transform="scale(1.5)" />,
   play: async ({ canvas }) => {
     const editor = canvas.getByRole('textbox', { name: 'Report' })
     editor.focus()
-    // One line's worth near the right-hand side, so its right edge is the thing to line up with.
+    // The last twenty characters of the first line, found by measuring (where a line ends depends on the font): its
+    // right edge is the thing to line up with.
     const text = editor.firstChild as Text
-    const range = selectText(text, 34, 56)
+    const probe = document.createRange()
+    const lineOf = (index: number) => { probe.setStart(text, index); probe.setEnd(text, index + 1); return probe.getBoundingClientRect().top }
+    let end = 1
+    while (end < text.length - 1 && Math.abs(lineOf(end) - lineOf(0)) < 2) end += 1
+    const range = selectText(text, end - 21, end - 1)
     const dialog = await page().findByRole('dialog', { name: TITLE })
-    // Far enough from the window's left edge for the popover to hang leftwards from it without being pushed back in.
-    await expect(range.getBoundingClientRect().right).toBeGreaterThan(430)
     await expect(range.getClientRects()).toHaveLength(1)
+    // Room for the popover to hang leftwards from that edge without being pushed back in from the window's edge.
+    await expect(range.getBoundingClientRect().right - dialog.getBoundingClientRect().width).toBeGreaterThanOrEqual(8)
     await waitFor(() => {
       expect(dialog.getAnimations().filter((animation) => animation.playState === 'running')).toHaveLength(0)
       const box = dialog.getBoundingClientRect()
@@ -781,6 +790,142 @@ export const AlignEndInsideAScaledAncestor: Story = {
       await frames(1)
       await expect(Math.abs(dialog.getBoundingClientRect().right - range.getBoundingClientRect().right)).toBeLessThanOrEqual(1)
     }
+  },
+}
+
+// Not supported, and must fail safe: inside a rotated, skewed or mirrored ancestor the stand-in cannot be laid over
+// the selection by moving and sizing an upright box. The popover then sits near the selection, not on it, and what
+// matters is that it sits still: the same finite place on every frame.
+const expectFiniteAndStill = async (dialog: HTMLElement, anchorBox: () => DOMRect) => {
+  await pageAtRest(anchorBox)
+  await frames(4)
+  const first = dialog.getBoundingClientRect()
+  const standIn = (spot() as HTMLElement).getBoundingClientRect()
+  for (const box of [first, standIn]) for (const edge of ['left', 'top', 'right', 'bottom'] as const) await expect(Number.isFinite(box[edge])).toBe(true)
+  for (const written of ['left', 'top', 'width', 'height'] as const) await expect(Number.isFinite(parseFloat((spot() as HTMLElement).style[written]))).toBe(true)
+  // Nothing is being rewritten either: a stand-in that is corrected and corrected back each frame only looks still.
+  const style = (spot() as HTMLElement).getAttribute('style')
+  let writes = 0
+  const watcher = new MutationObserver((records) => { writes += records.length })
+  watcher.observe(spot() as HTMLElement, { attributes: true, attributeFilter: ['style'] })
+  for (let frame = 0; frame < 10; frame += 1) {
+    await frames(1)
+    const now = dialog.getBoundingClientRect()
+    const box = (spot() as HTMLElement).getBoundingClientRect()
+    await expect((spot() as HTMLElement).getAttribute('style')).toBe(style)
+    await expect(Math.abs(now.left - first.left)).toBeLessThanOrEqual(0.5)
+    await expect(Math.abs(now.top - first.top)).toBeLessThanOrEqual(0.5)
+    for (const edge of ['left', 'top', 'right', 'bottom'] as const) await expect(Math.abs(box[edge] - standIn[edge])).toBeLessThanOrEqual(0.5)
+  }
+  watcher.disconnect()
+  await expect(writes).toBe(0)
+  // On screen, not flung off it.
+  await expect(first.left).toBeGreaterThanOrEqual(0)
+  await expect(first.right).toBeLessThanOrEqual(window.innerWidth)
+}
+
+export const InsideARotatedAncestorHoldsStill: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <div className="pt-24 pl-40"><Editor args={withoutTrigger(args)} transform="rotate(30deg)" /></div>,
+  play: async ({ canvas }) => {
+    const range = selectInScaledEditor(canvas)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expectFiniteAndStill(dialog, () => range.getBoundingClientRect())
+  },
+}
+
+export const InsideAMirroredAncestorHoldsStill: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <div className="pl-[28rem]"><Editor args={withoutTrigger(args)} transform="scaleX(-1)" /></div>,
+  play: async ({ canvas }) => {
+    const range = selectInScaledEditor(canvas)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expectFiniteAndStill(dialog, () => range.getBoundingClientRect())
+  },
+}
+
+// An anchor with no size (a caret the app measured as a point) gives nothing to tell the scale by.
+function PointAnchor({ args }: { args: AnchorArgs }) {
+  const text = React.useRef<HTMLParagraphElement>(null)
+  const [open, setOpen] = React.useState(false)
+  const anchor = React.useMemo(() => ({
+    getBoundingClientRect: () => {
+      const box = (text.current as HTMLElement).getBoundingClientRect()
+      return new DOMRect(box.left + 40, box.bottom, 0, 0)
+    },
+  }), [])
+  return (
+    <div className="grid w-[26rem] max-w-full justify-items-start gap-3 text-sm leading-relaxed text-ink-soft" style={{ transform: 'scale(2)', transformOrigin: 'top left' }}>
+      <p ref={text}>{BEFORE + PASSAGE}</p>
+      <Button variant="outline" onClick={() => setOpen(true)}>Shorten the paragraph</Button>
+      <AiPopover {...args} anchor={anchor} open={open} onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }} />
+    </div>
+  )
+}
+
+export const APointAnchorInsideAScaledAncestorHoldsStill: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <PointAnchor args={withoutTrigger(args)} />,
+  play: async ({ canvas }) => {
+    const paragraph = canvas.getByText(BEFORE + PASSAGE)
+    await userEvent.click(canvas.getByRole('button', { name: 'Shorten the paragraph' }))
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expectFiniteAndStill(dialog, () => paragraph.getBoundingClientRect())
+  },
+}
+
+// Tab past the popover's last button closes it and moves on down the page, as Tab does past any popover.
+export const TabPastTheLastButton: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  render: (args) => <Editor args={withoutTrigger(args)} after={<Button variant="outline" className="justify-self-start">Next field</Button>} />,
+  play: async ({ canvas, args }) => {
+    const editor = canvas.getByRole('textbox', { name: 'Report' })
+    selectInScaledEditor(canvas)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await waitFor(() => expect(dialog).toHaveFocus())
+    for (const name of ['Discard', 'Try again', 'Replace']) {
+      await userEvent.tab()
+      await expect(within(dialog).getByRole('button', { name })).toHaveFocus()
+    }
+    await userEvent.tab()
+    await closed()
+    await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
+    await waitFor(() => expect(document.activeElement).not.toBe(document.body))
+    // Not back to the editor (returnFocus): Tab carries on, to the next stop after where the popover is rendered.
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Next field' })).toHaveFocus())
+    await expect(editor).not.toHaveFocus()
+  },
+}
+
+// With a button and an anchor, Tab from the button goes to the popover's first stop whatever that is: here a link
+// in the suggestion, which comes before Discard.
+export const TabFromTheButtonReachesALinkInTheSuggestion: Story = {
+  ...SCALED,
+  tags: ['!autodocs'],
+  args: { suggestion: <>Signups fell 12% short in September; see <a href="#changelog" className="underline">the changelog</a>.</> },
+  render: (args) => <Editor args={withoutTrigger(args)} trigger={<Button variant="outline" className="justify-self-start">Shorten</Button>} />,
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole('button', { name: 'Shorten' })
+    selectInScaledEditor(canvas)
+    await waitFor(() => expect(spot()).not.toBeNull())
+    await userEvent.click(button)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await waitFor(() => expect(dialog).toHaveFocus())
+    const link = within(dialog).getByRole('link', { name: 'the changelog' })
+    // From inside, the link is the first stop.
+    await userEvent.tab()
+    await expect(link).toHaveFocus()
+    // Back to the button, and in again: the same first stop, not the first button after it.
+    await userEvent.tab({ shift: true })
+    await waitFor(() => expect(button).toHaveFocus())
+    await userEvent.tab()
+    await expect(link).toHaveFocus()
+    await userEvent.tab()
+    await expect(within(dialog).getByRole('button', { name: 'Discard' })).toHaveFocus()
   },
 }
 
@@ -803,9 +948,6 @@ export const HoldsWhenTheSelectionIsLost: Story = {
     await expect(before.top).toBeGreaterThan(40)
     // The editor swaps its text node for a new one with the same words.
     const old = editor.firstChild as Text
-    const held = document.createRange()
-    held.setStart(old, BEFORE.length)
-    held.setEnd(old, BEFORE.length + PASSAGE.length)
     old.replaceWith(document.createTextNode(old.data))
     await frames(6)
     await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
@@ -821,17 +963,30 @@ export const HoldsWhenTheSelectionIsLost: Story = {
 
 // An app's own getBoundingClientRect can fail (its text box was removed, say). The popover stays where it last was,
 // nothing on the page breaks, and it follows again once the app can answer.
-const FLAKY = { fail: false, top: 0 }
+const FLAKY = { fail: false, top: 0, reused: new DOMRect() }
 function FlakyAnchor({ args }: { args: AnchorArgs }) {
   const text = React.useRef<HTMLParagraphElement>(null)
   const [open, setOpen] = React.useState(false)
+  // `which` changes when the story asks for "another anchor": a new object, as a new selection would be.
+  const [which, setWhich] = React.useState(0)
+  React.useEffect(() => {
+    const next = () => setWhich((was) => was + 1)
+    window.addEventListener('quill-story-new-anchor', next)
+    return () => window.removeEventListener('quill-story-new-anchor', next)
+  }, [])
   const anchor = React.useMemo(() => ({
+    which,
     getBoundingClientRect: () => {
       if (FLAKY.fail) throw new Error('the app could not measure its selection')
       const box = (text.current as HTMLElement).getBoundingClientRect()
-      return new DOMRect(box.left, box.top + FLAKY.top, box.width, box.height)
+      // One rect object, written over each time, as an app sparing itself allocations would.
+      FLAKY.reused.x = box.left
+      FLAKY.reused.y = box.top + FLAKY.top
+      FLAKY.reused.width = box.width
+      FLAKY.reused.height = box.height
+      return FLAKY.reused
     },
-  }), [])
+  }), [which])
   return (
     <div className="grid w-[26rem] max-w-full justify-items-start gap-3 text-sm leading-relaxed text-ink-soft">
       <p ref={text}>{BEFORE + PASSAGE}</p>
@@ -855,9 +1010,20 @@ export const AnAnchorThatCannotBeMeasured: Story = {
     await pageAtRest(() => paragraph.getBoundingClientRect())
     await expectBeside(dialog, () => paragraph.getBoundingClientRect())
     const before = dialog.getBoundingClientRect()
+    // In development the first failure is reported, once, so the app's bug is not silent.
+    const reported = spyOn(console, 'error').mockImplementation(() => {})
     try {
       FLAKY.fail = true
       await frames(6)
+      await expect(reported.mock.calls.filter(([message]) => String(message).startsWith('[quill] <AiPopover anchor>'))).toHaveLength(1)
+      // The app goes on writing over the rect it handed out. What the popover kept was the numbers, not the object.
+      FLAKY.reused.y += 200
+      await frames(4)
+      await expect(Math.abs(dialog.getBoundingClientRect().top - before.top)).toBeLessThanOrEqual(1)
+      // A new anchor that cannot be measured either: the popover stays where it is.
+      window.dispatchEvent(new Event('quill-story-new-anchor'))
+      await frames(4)
+      await expect(Math.abs(dialog.getBoundingClientRect().top - before.top)).toBeLessThanOrEqual(1)
       // Still there, still where it was; the page was not torn down by the error.
       await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
       await expect(paragraph).toBeVisible()
@@ -865,8 +1031,10 @@ export const AnAnchorThatCannotBeMeasured: Story = {
       // A redraw of the popover while the anchor cannot be measured does not break it either.
       await userEvent.click(within(dialog).getByRole('button', { name: 'Try again' }))
       await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+      await expect(reported.mock.calls.filter(([message]) => String(message).startsWith('[quill] <AiPopover anchor>'))).toHaveLength(1)
     } finally {
       FLAKY.fail = false
+      reported.mockRestore()
     }
     // The app can answer again, and its selection has moved 24px down: the popover is still following.
     FLAKY.top = 24
