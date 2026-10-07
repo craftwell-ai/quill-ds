@@ -13,6 +13,12 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.22.1] — 2026-10-07
+
+### Fixed
+- **Keyboard focus is visible in Windows High Contrast.** In that mode the browser removes every box-shadow, and the stock fields, dropdowns, buttons, checkboxes and switches draw their focus ring as one while their own `outline-none` removes the outline. A focused control looked the same as an unfocused one, apart from a 1px border changing shade. The theme now carries one rule that applies only in that mode (`@media (forced-colors: active)`): every element with keyboard focus gets a 2px outline in the system's highlight colour, 2px off the control. Nothing changes outside that mode: the 3px accent ring is what it was. The rule is written outside Tailwind's layers, which is what lets it win over `outline-none` without `!important`, so a rule of your own for the same mode still overrides it. Apps get it by updating the theme: `npx shadcn@latest add @quill/quill --overwrite`.
+- **A story measures it.** Foundations / Forced Colours puts the stock controls in a form; the test run turns the mode on in the browser, tabs to each one and fails if any has no outline, and checks that nothing changes with the mode off.
+
 ## [1.22.0] — 2026-10-07
 
 ### Added

@@ -913,6 +913,13 @@
     background-position: -200% 0;
   }
 }
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
 /* @quill-tokens:end */
 
 @layer base {
