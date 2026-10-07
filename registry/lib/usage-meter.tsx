@@ -44,7 +44,10 @@ const finite = (value: number) => (Number.isFinite(value) ? value : 0)
 // written in numbers above the bar (Ryan's call, 2026-10-06). The dark themes keep the full muted surface.
 const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-[color-mix(in_oklab,var(--input)_15%,var(--muted))] dark:[&_[data-slot=progress-track]]:bg-muted'
 // The one place the AI gradient sits here. A low meter keeps it: "running low" is said in words, the bar never changes colour.
-const FILL = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:ai-meter'
+// The gradient is laid across the whole track and the fill reveals it from the left, so a nearly empty bar is plain gold
+// and not all three colours squeezed into a dot. The fill is `share` of the track wide, so a background 1/share of the
+// fill's own width is exactly the track's width: no measuring.
+const FILL = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:ai-meter [&_[data-slot=progress-indicator]]:bg-no-repeat [&_[data-slot=progress-indicator]]:[background-size:calc(100%/var(--usage-share,1))_100%]'
 
 /** Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer. */
 export function UsageMeter({
@@ -106,7 +109,9 @@ export function UsageMeter({
         <span className="shrink-0 whitespace-nowrap text-muted-foreground">of {whole.format(max)}</span>
       </p>
       {/* max must be above zero for the primitive; with no allowance the bar is simply empty. */}
-      <Progress aria-label={`${label} left`} value={left} max={max > 0 ? max : 1} getAriaValueText={() => spoken} className={cn(TRACK, FILL)} />
+      {/* An empty bar draws no fill; the tiny floor only keeps the gradient's size from dividing by zero. */}
+      <Progress aria-label={`${label} left`} value={left} max={max > 0 ? max : 1} getAriaValueText={() => spoken} className={cn(TRACK, FILL)}
+        style={{ '--usage-share': Math.max(share, 0.0001) } as React.CSSProperties} />
     </div>
   )
 

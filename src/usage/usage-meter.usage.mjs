@@ -17,7 +17,7 @@ export const usage = {
     },
     {
       id: 'gradient-is-the-fill-only',
-      do: 'Keep the AI gradient on the fill of the bar and the ring. Everything else on the card is plain.',
+      do: 'Keep the AI gradient on the fill of the bar and the ring. The gradient is laid across the whole bar and the fill reveals it, so a nearly empty bar is plain gold. Everything else on the card is plain.',
       dont: 'Put the gradient on the number, the card or the "Get more" button.',
       visual: false,
     },
