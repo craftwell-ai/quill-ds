@@ -399,11 +399,15 @@ test('forced colours: one rule gives every focused element a 2px system-colour o
   assert.deepEqual(Object.keys(FORCED_COLORS_RULES), [FORCED], 'everything in it sits inside the forced-colours query')
   const inside = FORCED_COLORS_RULES[FORCED]
   // Every focusable element, not a list of selectors to keep up to date.
-  assert.deepEqual(Object.keys(inside), [':focus-visible'])
+  // Then the one opt-in, AFTER the general rule: an element that fills a parent which clips (a scroll area in a
+  // popover, a full-width row in a scrolling list) would have an outside outline cut off, so it asks for the
+  // outline inside itself with `data-focus-inset`. Only the offset changes; the outline is the general one.
+  assert.deepEqual(Object.keys(inside), [':focus-visible', '[data-focus-inset]:focus-visible'])
   assert.deepEqual(inside[':focus-visible'], { outline: '2px solid Highlight', 'outline-offset': '2px' })
+  assert.deepEqual(inside['[data-focus-inset]:focus-visible'], { 'outline-offset': '-2px' })
   assert.equal(
     renderForcedColors(),
-    '@media (forced-colors: active) {\n  :focus-visible {\n    outline: 2px solid Highlight;\n    outline-offset: 2px;\n  }\n}',
+    '@media (forced-colors: active) {\n  :focus-visible {\n    outline: 2px solid Highlight;\n    outline-offset: 2px;\n  }\n  [data-focus-inset]:focus-visible {\n    outline-offset: -2px;\n  }\n}',
   )
 })
 
@@ -430,6 +434,7 @@ test('forced colours: the rule is in the theme file, the site stylesheet and the
     assert.equal(count(text, 'Highlight'), count(rendered, 'Highlight'), `${file}: Highlight is used outside the forced-colours rule`)
     assert.equal(count(text, 'forced-colors'), 1, `${file}: one forced-colours query, the generated one`)
     assert.equal([...text.matchAll(/^\s*:focus-visible\s*\{/gm)].length, 1, `${file}: a bare :focus-visible rule exists outside the forced-colours query`)
+    assert.equal(count(text, '[data-focus-inset]'), 1, `${file}: data-focus-inset is styled outside the forced-colours rule`)
   }
   // Built by `shadcn build` from registry.json, which build-tokens writes: the file an app's CLI reads.
   const item = JSON.parse(readFileSync(new URL('../public/r/quill.json', import.meta.url), 'utf8'))

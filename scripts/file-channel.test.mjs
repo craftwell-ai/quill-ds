@@ -81,6 +81,11 @@ function assertFocusRuleWins(css, channel) {
   assert.equal(rules.length, 1, `${channel}: the compiled stylesheet must carry the forced-colours focus rule once`)
   const around = enclosingAtRules(css, rules[0].index)
   assert.deepEqual(around, ['@media (forced-colors: active)'], `${channel}: the rule must sit inside the forced-colours query and inside no @layer`)
+  // The opt-in for an outline drawn inside the element: same query, no layer, and AFTER the general rule.
+  const inset = [...css.matchAll(/\[data-focus-inset\]:focus-visible\s*\{\s*outline-offset:\s*-2px;?\s*\}/g)]
+  assert.equal(inset.length, 1, `${channel}: the compiled stylesheet must carry the data-focus-inset rule once`)
+  assert.deepEqual(enclosingAtRules(css, inset[0].index), ['@media (forced-colors: active)'], `${channel}: the inset rule must sit in the same query, inside no @layer`)
+  assert.ok(inset[0].index > rules[0].index, `${channel}: the inset rule must come after the general one`)
   // The class it has to beat is layered, which is why an unlayered rule wins without !important.
   const stock = css.search(/\.outline-none\s*\{/)
   assert.ok(stock > 0, `${channel}: expected the stock outline-none utility in the build`)
@@ -95,7 +100,12 @@ test('file channel: the forced-colours focus rule reaches an app outside every l
 test('CLI channel: the shadcn CLI writes the rule from the css payload outside every layer too', async () => {
   // shadcn's own merger, the code `npx shadcn add` runs on an app's stylesheet. It is the CLI's internal
   // module: if this import breaks after a shadcn upgrade, re-prove the CLI channel rather than skip it.
-  const { transformCss } = await import('@shadcn/registry/internal/utils/updaters/update-css')
+  // (`@shadcn/registry` comes in with `shadcn`; it is not a dependency of its own.)
+  const merger = '@shadcn/registry/internal/utils/updaters/update-css'
+  const { transformCss } = await import(merger).catch((error) => {
+    throw new Error(`shadcn moved its CSS merger: update the import in scripts/file-channel.test.mjs (tried '${merger}': ${error.message})`)
+  })
+  assert.equal(typeof transformCss, 'function', `shadcn moved its CSS merger: update the import in scripts/file-channel.test.mjs ('${merger}' no longer exports transformCss)`)
   const item = JSON.parse(readFileSync(join(root, 'public/r/quill.json'), 'utf8'))
   // The shape of a fresh shadcn app's stylesheet: it has its own base layer, which the rule must not be folded
   // into. (Only the `css` field is merged here; the colour roles ride in `cssVars`, which this test does not need.)

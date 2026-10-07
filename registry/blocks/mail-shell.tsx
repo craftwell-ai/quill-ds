@@ -58,6 +58,8 @@ export function MailShell() {
             <li key={m.subject}>
               <button
                 type="button"
+                // Each row fills the scrolling list, which would cut off an outline drawn outside it. The theme's forced-colours rule (Windows High Contrast) draws it inside elements marked this way.
+                data-focus-inset=""
                 className="flex w-full flex-col gap-1 border-b border-border px-4 py-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:-outline-offset-2 focus-visible:outline-ring aria-[current=true]:bg-muted"
                 aria-current={m.subject === messages[0].subject}
               >

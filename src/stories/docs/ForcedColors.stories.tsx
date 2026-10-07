@@ -1,6 +1,6 @@
 'use client'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, waitFor } from 'storybook/test'
+import { expect, waitFor, within } from 'storybook/test'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -15,14 +15,21 @@ import { tabTo } from '../focus-ring'
 // outline, so focus used to be invisible there. The theme now carries one rule for that mode: every focused
 // element gets a 2px outline in the system's highlight colour.
 //
-// To see it by hand: DevTools → Rendering → "Emulate CSS media feature forced-colors" → active, then press Tab.
-// The test run does the same through the browser and measures each control (.storybook/forced-colors-guard.ts);
+// The test run turns the mode on through the browser and measures each control (.storybook/forced-colors-guard.ts);
 // the play function below checks the other half, that nothing changes when the mode is off.
+const WHAT = 'The stock form controls, to check keyboard focus in Windows High Contrast.'
+const WHY =
+  'High Contrast removes every shadow, and these controls draw their focus ring as a shadow. So in that mode Quill’s theme gives whichever control has keyboard focus a 2px outline in the system highlight colour. With the mode off, nothing changes: you see the usual accent ring.'
+const HOW =
+  'To see it: turn on a contrast theme in Windows (Settings → Accessibility → Contrast themes), or in Chrome open DevTools → Rendering → “Emulate CSS media feature forced-colors” → active. Then press Tab to move through the form.'
+
 const meta = {
   title: 'Foundations / Forced Colours',
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    docs: { description: { component: [WHAT, WHY, HOW].join('\n\n') } },
     // Read by the test-only guard: after the play function it turns forced colours on and measures these controls.
     forcedColorsFocus: true,
   },
@@ -38,6 +45,11 @@ const probe = { [FORCED_COLORS_PROBE]: '' }
 export const KeyboardFocus: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-4">
+      <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+        <p className="font-medium text-foreground">{WHAT}</p>
+        <p>{WHY}</p>
+        <p>{HOW}</p>
+      </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="fc-name">Name</Label>
         <Input id="fc-name" placeholder="Ada Lovelace" {...probe} />
@@ -76,9 +88,15 @@ export const KeyboardFocus: Story = {
   play: async ({ canvasElement }) => {
     const controls = [...canvasElement.querySelectorAll<HTMLElement>(`[${FORCED_COLORS_PROBE}]`)]
     await expect(controls).toHaveLength(8)
+    // Each label names the control a keyboard lands on, the checkbox and the switch included.
+    const canvas = within(canvasElement)
+    await expect(canvas.getByRole('checkbox', { name: 'Send me a copy' })).toBe(controls[3])
+    await expect(canvas.getByRole('switch', { name: 'Mark as urgent' })).toBe(controls[4])
+    // A person who really has High Contrast on is looking at the outline this page is about; the checks below are
+    // for the mode being OFF and would only show them a failed test.
+    if (window.matchMedia('(forced-colors: active)').matches) return
     // With the mode off, the rule must change nothing: the stock controls keep their ring (a box-shadow) and still
     // draw no outline. A rule that leaked out of its media query would show up here as a solid outline.
-    await expect(window.matchMedia('(forced-colors: active)').matches).toBe(false)
     for (const control of controls) {
       await tabTo(control)
       await waitFor(() => expect(getComputedStyle(control).boxShadow, `${control.id || control.textContent}: focus ring`).not.toBe('none'))

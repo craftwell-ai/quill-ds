@@ -302,6 +302,12 @@ export function renderAiUtilities(rules = AI_RULES) {
 export const FORCED_COLORS_RULES = {
   '@media (forced-colors: active)': {
     ':focus-visible': { outline: '2px solid Highlight', 'outline-offset': '2px' },
+    // The one opt-in, and it must stay AFTER the rule above. An outline 2px outside an element is cut off
+    // when the element fills a parent that clips: the suggestion scroll area in `ai-popover` (its popup is
+    // `overflow-hidden`), a full-width row in a scrolling list (`mail-shell`). Those draw their ring inside
+    // themselves with a layered `-outline-offset-*` class, which the unlayered rule above overrides. An
+    // element marked `data-focus-inset` gets the same outline drawn inside it instead.
+    '[data-focus-inset]:focus-visible': { 'outline-offset': '-2px' },
   },
 }
 
