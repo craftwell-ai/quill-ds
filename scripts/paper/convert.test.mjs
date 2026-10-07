@@ -363,7 +363,7 @@ test('form fields, line breaks, pictures and media', () => {
   const input = { ...el('input', { used: { display: 'block', ...border('rgb(138, 127, 110)'), ...radius('8px'), paddingLeft: '10px', paddingRight: '10px' }, rect: { x: 0, y: 0, w: 240, h: 32 } }), value: '', placeholder: 'you@example.com', placeholderColor: 'rgb(103, 95, 88)' }
   const checkbox = { ...el('input', { used: { display: 'block' }, rect: { x: 0, y: 0, w: 16, h: 16 } }), value: 'on', textless: true }
   const lines = el('p', { children: [{ text: `Line one${BREAK}  line two` }] })
-  const photo = { ...el('img', { used: { display: 'block', objectFit: 'cover', ...radius('3.35544e+07px') }, rect: { x: 0, y: 0, w: 40, h: 40 } }), src: 'https://example.com/a.png', alt: 'Ryan' }
+  const photo = { ...el('img', { used: { display: 'block', objectFit: 'cover', ...radius('3.35544e+07px') }, rect: { x: 0, y: 0, w: 40, h: 40 } }), src: 'https://example.com/a.png', alt: 'Ada' }
   const broken = { ...el('img', { used: { display: 'block' }, rect: { x: 0, y: 0, w: 40, h: 40 } }), src: 'https://example.com/missing.png', alt: '' }
   const video = el('video', { rect: { x: 0, y: 0, w: 320, h: 180 } })
   const tree = el('div', { used: { display: 'flex', flexDirection: 'column' }, children: [input, checkbox, lines, photo, broken, video] })
@@ -372,7 +372,7 @@ test('form fields, line breaks, pictures and media', () => {
   assert.deepEqual([field.name, field.style.width, field.style.height, field.children[0].text, field.children[0].style.color], ['input', '240px', '32px', 'you@example.com', 'var(--color-muted-foreground)'])
   assert.equal(box.children.length, 0, 'a checkbox has no text of its own')
   assert.equal(paragraph.text, 'Line one\nline two')
-  assert.match(picture.raw, /^<img layer-name="Ryan" src="data:image\/png;base64,AAAA" style="border-radius:9999px;width:40px;height:40px;flex-shrink:0;object-fit:cover">$/)
+  assert.match(picture.raw, /^<img layer-name="Ada" src="data:image\/png;base64,AAAA" style="border-radius:9999px;width:40px;height:40px;flex-shrink:0;object-fit:cover">$/)
   assert.deepEqual([placeholder.name, media.name], ['img (placeholder)', 'video (placeholder)'])
   assert.equal(stats.lost.length, 2)
   assert.deepEqual(visibleTexts(tree), ['you@example.com', 'Line one line two'])
