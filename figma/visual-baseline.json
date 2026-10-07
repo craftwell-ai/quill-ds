@@ -728,6 +728,34 @@
    "story": "examples-marketing-page--marketing-page",
    "frameId": "697:233",
    "at": "2026-10-04"
+  },
+  "ai-side-panel": {
+   "diffPct": 1.98,
+   "figma": [
+    384,
+    560
+   ],
+   "storybook": [
+    384,
+    560
+   ],
+   "story": "patterns-ai-ai-side-panel--default",
+   "frameId": "1180:208",
+   "at": "2026-10-07"
+  },
+  "conversation-history": {
+   "diffPct": 2.11,
+   "figma": [
+    300,
+    350
+   ],
+   "storybook": [
+    300,
+    350
+   ],
+   "story": "patterns-ai-conversation-history--default",
+   "frameId": "1214:22",
+   "at": "2026-10-07"
   }
  }
 }

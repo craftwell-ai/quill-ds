@@ -1,0 +1,46 @@
+{
+  "name": "suggested-prompts",
+  "kind": "component",
+  "summary": "Ready-made things to ask an AI — chips for follow-ups under an answer, cards for starters on an empty page, a list in a narrow panel. Picking one fills the composer; it never sends.",
+  "useWhen": [
+    "An AI page is empty and people need a first thing to ask.",
+    "An answer has natural next questions worth offering."
+  ],
+  "alternatives": [
+    {
+      "name": "command",
+      "when": "people pick from a long, searchable list of actions."
+    },
+    {
+      "name": "button",
+      "when": "the choice runs an action straight away instead of filling the composer."
+    }
+  ],
+  "rules": [
+    {
+      "id": "fill-not-send",
+      "do": "Fill the composer and focus it, so people can edit before sending.",
+      "dont": "Send the suggestion the moment it is clicked — people lose the chance to adjust it.",
+      "visual": false
+    },
+    {
+      "id": "layout-by-place",
+      "do": "Use chips under an answer, cards on an empty AI page, and the list in a narrow panel.",
+      "dont": "Put large starter cards under every answer — they crowd the thread.",
+      "visual": true
+    }
+  ],
+  "a11y": [
+    "A labelled list of buttons; each button's text is the suggestion, so it reads well out of context."
+  ],
+  "tokens": [
+    "--border",
+    "--background",
+    "--card",
+    "--input",
+    "--muted",
+    "--ink-soft",
+    "--foreground",
+    "--muted-foreground"
+  ]
+}

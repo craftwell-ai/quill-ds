@@ -13,6 +13,17 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.22.0] — 2026-10-07
+
+### Added
+- **Every usage guide is also published as data.** `/usage/<name>.json` is the guide as JSON, and `/usage/index.json` lists every guide with its kind and summary. Tools that read Quill get each rule's id and its `visual` flag, which the markdown page leaves out, and no longer have to find the list of guides by reading `llms.txt`. The pages themselves are unchanged. Both forms come from the same usage module in the same build step, and the test that keeps the pages current covers the JSON too.
+
+## [1.21.1] — 2026-10-07
+
+### Changed
+- chore(figma): visual baselines for ai-side-panel and conversation-history, from a CI run
+- fix(visual-diff): judge a block by its own stories when other blocks' stories import it
+
 ## [1.21.0] — 2026-10-07
 
 ### Added

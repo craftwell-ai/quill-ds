@@ -14,6 +14,14 @@ test('canonicalStory prefers --<name>, then --default, then the first real story
   assert.equal(canonicalStory('faq', ['x--docs']), null)
 })
 
+test('a block shown inside another block\'s stories is still judged by its own story file', () => {
+  // conversation-history is imported by the chat page's and the side panel's stories as well as its own.
+  const ids = ['patterns-ai-ai-chat--default', 'patterns-ai-ai-chat--own-sidebar', 'patterns-ai-ai-side-panel--default', 'patterns-ai-conversation-history--default', 'patterns-ai-conversation-history--docked']
+  assert.equal(canonicalStory('conversation-history', ids), 'patterns-ai-conversation-history--default')
+  // A block whose own title does not end in its name keeps the old rule.
+  assert.equal(canonicalStory('faq', ['marketing-questions--docs', 'marketing-questions--default']), 'marketing-questions--default')
+})
+
 test('pairsFromState takes mirrored patterns and templates with their canonical story', () => {
   const state = { patterns: [{ block: 'hero', status: 'mirrored', frameId: '1:1' }, { block: 'nope', status: 'declined' }], templates: [{ block: 'app-page', frameId: '2:2' }] }
   const roots = [{ kind: 'pattern', name: 'hero', storyIds: ['p-hero--docs', 'p-hero--hero'] }, { kind: 'template', name: 'app-page', storyIds: ['examples-app-page--docs', 'examples-app-page--app-page'] }]

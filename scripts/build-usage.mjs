@@ -1,6 +1,11 @@
 /**
  * Generates the usage outputs derived from src/usage/*.usage.mjs:
  *   - public/usage/<name>.md            one full usage page per entry
+ *   - public/usage/<name>.json          the same guide as data, for tools: keeps
+ *                                       the rule ids and `visual` flags the
+ *                                       page drops
+ *   - public/usage/index.json           the list of every guide (a site cannot
+ *                                       be listed like a folder)
  *   - registry.json                     `docs` field (shadcn CLI prints it at
  *                                       install time), `description`
  *                                       (:= summary), `meta.use_when`
@@ -30,6 +35,14 @@ export const MODULES_DTS_PATH = join(root, 'src/usage/modules.d.ts')
 
 export function renderUsagePage(u) {
   return `# ${u.name} (${u.kind})\n\n${renderUsageDocs(u, { format: 'markdown' })}\n`
+}
+
+export function renderUsageJson(u) {
+  return JSON.stringify(u, null, 2) + '\n'
+}
+
+export function renderUsageIndex(all = ALL_USAGE) {
+  return JSON.stringify({ schemaVersion: 1, guides: all.map((u) => ({ name: u.name, kind: u.kind, summary: u.summary })) }, null, 2) + '\n'
 }
 
 export function renderModulesDts(all = ALL_USAGE) {
@@ -98,7 +111,11 @@ export function injectRegistryDocs(registry, all = ALL_USAGE) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   mkdirSync(USAGE_DIR, { recursive: true })
-  for (const u of ALL_USAGE) writeFileSync(join(USAGE_DIR, `${u.name}.md`), renderUsagePage(u))
+  for (const u of ALL_USAGE) {
+    writeFileSync(join(USAGE_DIR, `${u.name}.md`), renderUsagePage(u))
+    writeFileSync(join(USAGE_DIR, `${u.name}.json`), renderUsageJson(u))
+  }
+  writeFileSync(join(USAGE_DIR, 'index.json'), renderUsageIndex())
   const registry = injectRegistryDocs(JSON.parse(readFileSync(REGISTRY_PATH, 'utf8')))
   // registry.json is committed without a trailing newline (verified with
   // `python3 -c "print(open('registry.json','rb').read().endswith(b'\\n'))"` → False);
