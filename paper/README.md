@@ -2,7 +2,13 @@
 
 Quill's components, blocks and page templates, drawn into the Paper file **Quill Design System** by script and kept in step with the code.
 
-Code is the source. Paper is a picture of it that a designer can open, measure, copy from and design beside. Nothing in the Paper file is drawn by hand, and nothing drawn by hand in it will survive the next sync: **to change what Paper shows, change the code and re-run the sync.**
+Code is the source. Paper is a picture of it that a designer can open, measure and copy from. **To change what Paper shows, change the code and re-run the sync.**
+
+**Every page in this file belongs to the sync. Design in your own Paper file and copy frames from here.**
+
+- Anything drawn inside a generated artboard is erased the next time that piece is synced.
+- A page you add to this file is left alone: its name, its place and its content. But a page cannot be moved by script, so yours may end up sitting between two generated pages.
+- An artboard you add to a generated page is left alone too, and the sync notes that it is there.
 
 ## What is in the file
 
@@ -31,6 +37,10 @@ A rule, so nobody keeps a list for 130 pieces:
 - **Never** the docs page, Do/Don't pairs, `Dark` stories (the file is one theme), or stories tagged `!autodocs`.
 - At most 8 per page.
 
+A story with a play function is read at its **end state**, after the play has finished. A story that ends in an error is not drawn: the piece is recorded as failed instead.
+
+For Quill's own AI components and blocks nearly every story has a play function, so those pieces have hand-picked lists of the stories whose end state is a distinct look (Streaming, Stopped, Error state …).
+
 Exceptions live in one small file, `scripts/paper/pieces.config.mjs`: `include` or `exclude` a story, say how to `open` an overlay, or give a piece a `declined` reason so it gets no page.
 
 ## How it stays in step
@@ -39,9 +49,9 @@ Three commands, run on this Mac. All of them start their own Storybook; the firs
 
 | Command | What it does |
 |---|---|
-| `npm run paper:sync` | Re-draws what changed: pieces whose code moved since they were drawn, new pieces, pieces that failed last time; tokens and Foundations when the token source changed. `-- --all` re-draws everything, `-- --only button,faq` re-draws those. |
-| `npm run paper:check` | Reads Paper back and compares it with Storybook (below). `-- --only …` narrows it. `-- --accept` records what it measured as the accepted baseline. Exits 1 when something got worse. |
-| `npm run paper:status` | Lists what is stale, pending, in error or declined. Works anywhere: it only reads files. |
+| `npm run paper:sync` | Re-draws what changed: pieces whose code moved since they were drawn, new pieces, pieces that failed last time; tokens and Foundations when the token source changed. `-- --all` re-draws everything, `-- --only button,faq` re-draws those. `-- --prune` also deletes **every** token in the Paper file that is not Quill's, including any added by hand. |
+| `npm run paper:check` | Reads Paper back and compares it with Storybook (below). `-- --only …` narrows it. Exits 1 when something got worse. `-- --accept --only button` records what it measured for those pieces as the accepted baseline (`--accept --all` for everything, on purpose); a story whose text does not match is never accepted without `--force`. |
+| `npm run paper:status` | Lists what is stale, pending, in error or declined. Works anywhere: it only reads files. `-- --record-pending` brings the record in line with the code without Paper (see below). |
 
 A full sync of everything takes about 20 minutes; a normal run touches a handful of pieces and takes under a minute.
 
@@ -54,7 +64,14 @@ Paper has no service a server can call. The only way in is the desktop app, whic
 
 **A piece being out of date does not fail the build.** A bot that bumps a dependency cannot re-draw Paper, so "stale" is a to-do for `paper:status` to show and `paper:sync` to clear, not an error.
 
-Adding a component, block or template? The GitHub check will tell you it has no Paper entry. With Paper open, run `npm run paper:sync`; without it, run `npm run paper:status -- --record-pending`, which records the piece as waiting to be drawn.
+**When the GitHub check fails on your pull request**, one command fixes it, and it needs no Paper: `npm run paper:status -- --record-pending`, then commit `paper/sync-state.json`. It handles each case a code change can cause:
+
+- you added a component, block or template: it is recorded as waiting to be drawn
+- you renamed or deleted a story that Paper shows: the story is dropped from the record and the piece waits to be redrawn
+- you deleted a piece: it leaves the record, and its drawing is queued for removal
+- you declined a piece in the config (or un-declined one): the record follows
+
+Nothing in Paper changes until the next `npm run paper:sync` on the Mac with Paper open, which draws what is waiting and removes what was queued.
 
 ### What the check compares
 
@@ -66,7 +83,14 @@ For every story of every drawn piece:
 
 Pictures never match exactly (see "Known differences"), so each story has an **accepted** difference in `paper/visual-baseline.json`. A story *regresses* when its picture is more than 1.0 point worse than accepted, a size drifts more than 8px, or text or a value that matched stops matching. A story with no accepted number yet is reported as "without a baseline" and is not a failure.
 
-Paper saves exports into your **Downloads** folder; a script cannot choose another place. The check reads each file and deletes it straight away, and only deletes a file it can prove it just made (right folder, the layer's unique name, written in the last seconds).
+Paper saves exports into your **Downloads** folder; a script cannot choose another place. The check reads each file and deletes it straight away. It only ever deletes the one exact file Paper said it wrote for that export, and only when that file is in Downloads, carries the exported layer's own name (each story's layer has a unique one), and was created after the export was asked for. It never deletes by pattern. A file it cannot prove is its own is left where it is and named at the end of the run.
+
+### What Paper keeps on its servers
+
+The Paper file lives in Paper's cloud, like any Paper file. Two things are worth knowing:
+
+- **Story images are uploaded.** When a page is drawn, the pictures in its stories (avatars, card photos, up to about 1.5 MB each) are sent to Paper as data and stored in Paper's own storage. All images in Quill's stories are sample content.
+- **Text is whatever the stories say.** The sample names, emails and figures in the stories are in the file.
 
 ## The daily check
 
@@ -76,8 +100,12 @@ The closest thing to the Figma bot that Paper allows: a job on this Mac that doe
 
 1. Works in its own copy of the repository (in `~/Library/Application Support/quill-paper-sync/`), brought up to `main`. It never touches the folder you work in.
 2. If Paper is not open, it stops quietly. That is a normal day, not a failure. After 7 days in a row of that, it says so in its log and with one macOS notification, so a job that has silently stopped being useful gets noticed.
-3. Otherwise it runs `paper:sync` (changed pieces only) and then `paper:check`.
+3. Otherwise it builds a Storybook in its own copy, runs `paper:sync` (changed pieces only) and then `paper:check`.
 4. If the record changed, it pushes it to the branch `auto/paper-sync` and opens, or updates, **one** pull request titled "chore(paper): daily sync".
+
+**When something goes wrong it tells you.** A run that breaks (a step crashes, the Paper file cannot be found, the wrong GitHub account is active) pushes nothing and sends one macOS notification with the first line of the error and where the log is. A regression (Paper now differs from Storybook more than was accepted) sends a notification naming the pieces; if the record changed too, it is also in the pull request.
+
+**Until the pull request is merged**, each day's run starts from that branch's record rather than `main`'s, so it only re-draws what changed since, and leaves the pull request alone when nothing did. The branch is rewritten on every run: do not commit to it by hand. If the job finds a commit there that it did not make, it stops and says so rather than discard it.
 
 **It only runs when the Mac is on, you are logged in and Paper is open** at the scheduled time (09:30 by default).
 
@@ -90,13 +118,26 @@ npm run paper:schedule -- install          # shows exactly what it will write; a
 npm run paper:schedule -- install --at 08:00 --yes
 npm run paper:schedule -- status
 npm run paper:schedule -- uninstall --yes
-npm run paper:daily -- --dry-run           # reads only: prints what a real run would push
+npm run paper:daily -- --dry-run           # plan only: prints what a real run would re-draw and push
+npm run paper:daily -- --no-push           # the whole run for real, stopping before the commit
 npm run paper:daily                        # one real run, now
 ```
+
+`--dry-run` writes nothing to Paper and pushes nothing, but it is not read-only: it clones or resets the job's own copy of the repository, may install packages there, and opens the Quill file as a tab in Paper.
 
 Logs: `~/Library/Logs/quill-paper-sync/`, one file per run, the last 14 kept.
 
 `install` records where `node`, `npm`, `gh` and `git` live, because the scheduler starts jobs without your terminal's settings and would not find them otherwise. If you change how Node is installed, run `install` again. The job uses your existing `gh` login; it stores no passwords or tokens.
+
+### What this job can and cannot do to your Mac and your accounts
+
+- **Where it works.** Only in its own folder, `~/Library/Application Support/quill-paper-sync/`, and its log folder. Before it resets anything it proves the folder is the copy it made itself; it refuses to run on any other folder, including the one you work in. It also reads, then deletes, its own export files in Downloads (see above).
+- **What it runs.** Whatever is on `main`, unattended: it installs the project's packages (which can run their install scripts) and runs the project's scripts. Anything merged to `main` will run on this Mac the next morning. That is the same trust you give `main` when you pull and run it yourself, without you watching.
+- **What it can do in Paper.** Redraw the generated pages of the one file named "Quill Design System", and its tokens. It checks on every call that Paper answered for that file. It does not open, change or delete any other Paper file.
+- **What it can do on GitHub.** Push one branch, `auto/paper-sync`, and open or update one pull request. It never merges, never pushes to `main`, and commits only files under `paper/`.
+- **Whose identity it uses.** Your existing `gh` login on this Mac; it stores no password or token. Commits carry the craftwell-ai no-reply address, not your email. If the wrong GitHub account is active it stops and tells you which one is; it does not switch accounts.
+- **When it runs.** Only when the Mac is awake, you are logged in, and Paper is open, at the scheduled time. It gives up after 45 minutes.
+- **How to turn it off.** `npm run paper:schedule -- uninstall --yes`. To remove every trace, also delete the two folders above.
 
 ## What Paper cannot do yet, and what that means
 
@@ -110,7 +151,7 @@ Logs: `~/Library/Logs/quill-paper-sync/`, one file per run, the last 14 kept.
 | **Token types for shadow, motion, and font-axis settings** | Shadows and the Fraunces settings are written on each layer as plain values, not tokens. Change a shadow token and Paper only follows after a sync. | Push them as tokens and bind them. |
 | **Some CSS** | `background-clip` (see the button ring below), `scale` and `skew`, masks and clip-paths have no equivalent and are dropped; each loss is listed per piece in the record. Hover and focus behaviour does not exist in a still frame. | Nothing to switch on: re-run the sync and the losses disappear from the record. |
 
-Also worth knowing: a script cannot delete or reorder a page. If a piece is removed from Quill, its page is renamed `(unused)` and has to be deleted by hand.
+Also worth knowing: a script cannot delete or reorder a page. When a piece is removed from Quill, the sync deletes that piece's artboard (only the one it recorded, and only if it still has the name the sync gave it) and renames the freed page `(unused 1)`. You can delete such a page by hand; if you do not, the sync reuses it for the next new piece.
 
 ## Paper and Figma, job by job
 
@@ -148,6 +189,8 @@ Written by `paper:sync`, in a fixed key order so a change shows up as a small di
   "tokens":      { "count", "byType", "payloadHash", "sourceHash", "theme", "notRepresentable", "syncedAt" },
   "foundations": { "page", "pageId", "artboardId", "sections", "htmlHash", "syncedAt" },
   "pages":       { "<page name>": "<Paper page id>" },
+  "ownedPages":  ["<Paper page id>", "…"],                      // every page the sync created: the only pages it will rename or draw on
+  "removed":     [{ "slug", "page", "artboard", "at" }],        // pieces taken out, and what happened to their drawing
   "pieces": [{
     "slug": "usage-meter", "name": "Usage Meter", "kind": "component",   // component | block | template
     "status": "synced",          // synced | pending (not drawn yet) | declined (see reason) | error (see error)

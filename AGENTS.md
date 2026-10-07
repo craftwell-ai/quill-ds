@@ -92,6 +92,7 @@ The Paper file "Quill Design System" is a second mirror of the code, beside Figm
 | `paper/visual-baseline.json` | accepted picture difference per story, written by `npm run paper:check -- --accept` |
 | `scripts/paper-coverage.test.mjs` | the CI check on the record (part of `test:tokens`) |
 
+- **A pull request that fails `paper-coverage.test.mjs` is fixed without Paper:** `npm run paper:status -- --record-pending`, then commit `paper/sync-state.json` (new piece, renamed or deleted story, deleted piece, changed `declined`).
 - **Never hand-edit the generated frames in Paper.** They are redrawn from code; a manual change is lost on the next sync. Change the code, then `npm run paper:sync` (needs the Paper desktop app open on this Mac).
 - **Every component, block and template needs an entry in `paper/sync-state.json`**: `synced`, `pending`, or `declined` with a reason. `paper-coverage.test.mjs` fails on a missing one and prints the command to run. Adding a file under `src/components/ui`, `registry/lib`, `registry/blocks` or `registry/examples` means running `npm run paper:sync`, or `npm run paper:status -- --record-pending` when Paper is not at hand.
 - **Stale is not a failure.** CI cannot reach Paper, so a piece whose code moved is reported by `npm run paper:status`, not by the build.

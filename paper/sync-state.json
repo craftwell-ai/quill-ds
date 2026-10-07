@@ -164,6 +164,140 @@
     "▣ Auth Page": "p-3-0",
     "▣ Marketing Page": "p-2-0"
   },
+  "ownedPages": [
+    "p-1-0",
+    "p-3N-0",
+    "p-3M-0",
+    "p-3L-0",
+    "p-3K-0",
+    "p-3J-0",
+    "p-3I-0",
+    "p-3H-0",
+    "p-3G-0",
+    "p-3F-0",
+    "p-3E-0",
+    "p-3D-0",
+    "p-3C-0",
+    "p-3B-0",
+    "p-3A-0",
+    "p-39-0",
+    "p-38-0",
+    "p-37-0",
+    "p-36-0",
+    "p-35-0",
+    "p-34-0",
+    "p-33-0",
+    "p-32-0",
+    "p-31-0",
+    "p-30-0",
+    "p-2Z-0",
+    "p-2Y-0",
+    "p-2X-0",
+    "p-2W-0",
+    "p-2V-0",
+    "p-2U-0",
+    "p-2T-0",
+    "p-2S-0",
+    "p-2R-0",
+    "p-2Q-0",
+    "p-2P-0",
+    "p-2O-0",
+    "p-2N-0",
+    "p-2M-0",
+    "p-2L-0",
+    "p-2K-0",
+    "p-2J-0",
+    "p-2I-0",
+    "p-2H-0",
+    "p-2G-0",
+    "p-2F-0",
+    "p-2E-0",
+    "p-2D-0",
+    "p-2C-0",
+    "p-2B-0",
+    "p-2A-0",
+    "p-29-0",
+    "p-28-0",
+    "p-27-0",
+    "p-26-0",
+    "p-25-0",
+    "p-24-0",
+    "p-23-0",
+    "p-22-0",
+    "p-21-0",
+    "p-20-0",
+    "p-1Z-0",
+    "p-1Y-0",
+    "p-1X-0",
+    "p-1W-0",
+    "p-1V-0",
+    "p-1U-0",
+    "p-1T-0",
+    "p-1S-0",
+    "p-1R-0",
+    "p-1Q-0",
+    "p-1P-0",
+    "p-1O-0",
+    "p-1N-0",
+    "p-1M-0",
+    "p-1L-0",
+    "p-1K-0",
+    "p-1J-0",
+    "p-1I-0",
+    "p-1H-0",
+    "p-1G-0",
+    "p-1F-0",
+    "p-1E-0",
+    "p-1D-0",
+    "p-1C-0",
+    "p-1B-0",
+    "p-1A-0",
+    "p-19-0",
+    "p-18-0",
+    "p-17-0",
+    "p-16-0",
+    "p-15-0",
+    "p-14-0",
+    "p-13-0",
+    "p-12-0",
+    "p-11-0",
+    "p-10-0",
+    "p-Z-0",
+    "p-Y-0",
+    "p-X-0",
+    "p-W-0",
+    "p-V-0",
+    "p-U-0",
+    "p-T-0",
+    "p-S-0",
+    "p-R-0",
+    "p-Q-0",
+    "p-P-0",
+    "p-O-0",
+    "p-N-0",
+    "p-M-0",
+    "p-L-0",
+    "p-K-0",
+    "p-J-0",
+    "p-I-0",
+    "p-H-0",
+    "p-G-0",
+    "p-F-0",
+    "p-E-0",
+    "p-D-0",
+    "p-C-0",
+    "p-B-0",
+    "p-A-0",
+    "p-9-0",
+    "p-8-0",
+    "p-7-0",
+    "p-6-0",
+    "p-5-0",
+    "p-4-0",
+    "p-3-0",
+    "p-2-0"
+  ],
+  "removed": [],
   "pieces": [
     {
       "slug": "accordion",
@@ -202,12 +336,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17SL-0",
+              "nodeId": "1M4U-0",
               "size": [
                 320,
                 126.22
               ],
-              "htmlHash": "4f05acc8263b5598"
+              "htmlHash": "24fea03bb540a99d"
             }
           ]
         },
@@ -222,12 +356,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17TI-0",
+              "nodeId": "1M5R-0",
               "size": [
                 320,
                 175.03
               ],
-              "htmlHash": "93b12ac27d61247d"
+              "htmlHash": "bb880df8575e2737"
             }
           ]
         },
@@ -242,12 +376,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17UI-0",
+              "nodeId": "1M6R-0",
               "size": [
                 320,
                 223.84
               ],
-              "htmlHash": "07e39c9eaac2c179"
+              "htmlHash": "e0db105497f4d270"
             }
           ]
         }
@@ -269,12 +403,12 @@
       "sourceHash": "b5b2c49fe5f459c8",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 51,
-        "approximated": 0,
-        "bound": 116,
-        "bindable": 118,
-        "bindingRate": 0.983
+        "stories": 4,
+        "nodes": 110,
+        "approximated": 1,
+        "bound": 269,
+        "bindable": 277,
+        "bindingRate": 0.971
       },
       "notes": [],
       "lost": [],
@@ -290,12 +424,72 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17VQ-0",
+              "nodeId": "1M7Z-0",
               "size": [
                 448,
                 224.44
               ],
               "htmlHash": "c00be8d70b9527f5"
+            }
+          ]
+        },
+        {
+          "id": "components-agentsteps--failed",
+          "title": "Failed",
+          "opened": "none",
+          "nodes": 17,
+          "approximated": 1,
+          "bound": 51,
+          "bindable": 53,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1M9Y-0",
+              "size": [
+                448,
+                90.81
+              ],
+              "htmlHash": "93c881994c7db05c"
+            }
+          ]
+        },
+        {
+          "id": "components-agentsteps--failed-without-retry",
+          "title": "Failed Without Retry",
+          "opened": "none",
+          "nodes": 15,
+          "approximated": 0,
+          "bound": 38,
+          "bindable": 40,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MAQ-0",
+              "size": [
+                448,
+                90.81
+              ],
+              "htmlHash": "cbf72a81887ec1cc"
+            }
+          ]
+        },
+        {
+          "id": "components-agentsteps--finished-list-stays-quiet",
+          "title": "Finished List Stays Quiet",
+          "opened": "none",
+          "nodes": 27,
+          "approximated": 0,
+          "bound": 64,
+          "bindable": 66,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MBG-0",
+              "size": [
+                448,
+                124.22
+              ],
+              "htmlHash": "4d6e41795aa33736"
             }
           ]
         }
@@ -338,7 +532,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17XU-0",
+              "nodeId": "1MCO-0",
               "size": [
                 75.13,
                 20
@@ -358,7 +552,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17Y5-0",
+              "nodeId": "1MCZ-0",
               "size": [
                 95.23,
                 20
@@ -378,7 +572,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17YG-0",
+              "nodeId": "1MDA-0",
               "size": [
                 182.17,
                 20
@@ -405,12 +599,12 @@
       "sourceHash": "2d8c1a041bf35a35",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 2,
-        "nodes": 6,
+        "stories": 3,
+        "nodes": 21,
         "approximated": 0,
-        "bound": 28,
-        "bindable": 28,
-        "bindingRate": 1
+        "bound": 95,
+        "bindable": 96,
+        "bindingRate": 0.99
       },
       "notes": [],
       "lost": [],
@@ -426,7 +620,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17YZ-0",
+              "nodeId": "1MDT-0",
               "size": [
                 84.83,
                 32
@@ -446,12 +640,32 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17ZB-0",
+              "nodeId": "1ME5-0",
               "size": [
                 117.8,
                 32
               ],
               "htmlHash": "f558247702e4dd89"
+            }
+          ]
+        },
+        {
+          "id": "components-aibutton--sizes",
+          "title": "Sizes",
+          "opened": "none",
+          "nodes": 15,
+          "approximated": 0,
+          "bound": 67,
+          "bindable": 68,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MEH-0",
+              "size": [
+                534.86,
+                36
+              ],
+              "htmlHash": "f4bee63a5d2ddd0c"
             }
           ]
         }
@@ -473,16 +687,16 @@
       "sourceHash": "61e1390eb1cd44bb",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 16,
-        "approximated": 1,
-        "bound": 70,
-        "bindable": 72,
-        "bindingRate": 0.972
+        "stories": 4,
+        "nodes": 49,
+        "approximated": 6,
+        "bound": 166,
+        "bindable": 171,
+        "bindingRate": 0.971
       },
       "notes": [],
       "lost": [
-        "button: background-clip: padding-box not carried"
+        "button: background-clip: padding-box not carried ×2"
       ],
       "stories": [
         {
@@ -496,12 +710,72 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "17ZS-0",
+              "nodeId": "1MFL-0",
               "size": [
                 480,
                 208
               ],
               "htmlHash": "0de33b005f322fb1"
+            }
+          ]
+        },
+        {
+          "id": "components-aifeedback--already-sent",
+          "title": "Already Sent",
+          "opened": "none",
+          "nodes": 4,
+          "approximated": 2,
+          "bound": 12,
+          "bindable": 12,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MGE-0",
+              "size": [
+                480,
+                20
+              ],
+              "htmlHash": "b47a526c5467bcd1"
+            }
+          ]
+        },
+        {
+          "id": "components-aifeedback--no-reasons",
+          "title": "No Reasons",
+          "opened": "none",
+          "nodes": 12,
+          "approximated": 1,
+          "bound": 52,
+          "bindable": 54,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MGS-0",
+              "size": [
+                480,
+                166
+              ],
+              "htmlHash": "950539a58780479e"
+            }
+          ]
+        },
+        {
+          "id": "components-aifeedback--under-the-answer",
+          "title": "Under The Answer",
+          "opened": "none",
+          "nodes": 17,
+          "approximated": 2,
+          "bound": 32,
+          "bindable": 33,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MHF-0",
+              "size": [
+                480,
+                90.08
+              ],
+              "htmlHash": "cb668b970fff542f"
             }
           ]
         }
@@ -523,11 +797,11 @@
       "sourceHash": "2274d9f43d347024",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 1,
+        "stories": 2,
+        "nodes": 8,
         "approximated": 0,
-        "bound": 1,
-        "bindable": 1,
+        "bound": 8,
+        "bindable": 8,
         "bindingRate": 1
       },
       "notes": [],
@@ -544,12 +818,32 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "180Q-0",
+              "nodeId": "1MIG-0",
               "size": [
                 18,
                 18
               ],
               "htmlHash": "ea5e38921a7cda4b"
+            }
+          ]
+        },
+        {
+          "id": "components-aimark--sizes",
+          "title": "Sizes",
+          "opened": "none",
+          "nodes": 7,
+          "approximated": 0,
+          "bound": 7,
+          "bindable": 7,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MIQ-0",
+              "size": [
+                231,
+                48
+              ],
+              "htmlHash": "097277eca646481e"
             }
           ]
         }
@@ -571,12 +865,12 @@
       "sourceHash": "d966182f56c93fd7",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 2,
-        "nodes": 38,
-        "approximated": 4,
-        "bound": 81,
-        "bindable": 85,
-        "bindingRate": 0.953
+        "stories": 7,
+        "nodes": 100,
+        "approximated": 11,
+        "bound": 188,
+        "bindable": 196,
+        "bindingRate": 0.959
       },
       "notes": [],
       "lost": [],
@@ -592,7 +886,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1815-0",
+              "nodeId": "1MJN-0",
               "size": [
                 576,
                 165.56
@@ -612,12 +906,112 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1827-0",
+              "nodeId": "1MKP-0",
               "size": [
                 576,
                 137.56
               ],
               "htmlHash": "b482df3d1913bcb2"
+            }
+          ]
+        },
+        {
+          "id": "components-aimessage--streaming",
+          "title": "Streaming",
+          "opened": "none",
+          "nodes": 13,
+          "approximated": 1,
+          "bound": 21,
+          "bindable": 22,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MLK-0",
+              "size": [
+                576,
+                85.72
+              ],
+              "htmlHash": "21ea8a3a200a0798"
+            }
+          ]
+        },
+        {
+          "id": "components-aimessage--streaming-no-answer-yet",
+          "title": "Streaming No Answer Yet",
+          "opened": "none",
+          "nodes": 13,
+          "approximated": 1,
+          "bound": 29,
+          "bindable": 29,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MM9-0",
+              "size": [
+                576,
+                63.41
+              ],
+              "htmlHash": "d1c173628406bf5a"
+            }
+          ]
+        },
+        {
+          "id": "components-aimessage--stopped",
+          "title": "Stopped",
+          "opened": "none",
+          "nodes": 15,
+          "approximated": 2,
+          "bound": 25,
+          "bindable": 26,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MMY-0",
+              "size": [
+                576,
+                112.08
+              ],
+              "htmlHash": "881ba368169b1ee9"
+            }
+          ]
+        },
+        {
+          "id": "components-aimessage--stopped-no-answer",
+          "title": "Stopped No Answer",
+          "opened": "none",
+          "nodes": 10,
+          "approximated": 1,
+          "bound": 16,
+          "bindable": 16,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MNQ-0",
+              "size": [
+                576,
+                50
+              ],
+              "htmlHash": "ccac08f999c619c8"
+            }
+          ]
+        },
+        {
+          "id": "components-aimessage--hidden-name",
+          "title": "Hidden Name",
+          "opened": "none",
+          "nodes": 11,
+          "approximated": 2,
+          "bound": 16,
+          "bindable": 18,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MOC-0",
+              "size": [
+                576,
+                81.11
+              ],
+              "htmlHash": "4a713fc27b6f7aa2"
             }
           ]
         }
@@ -639,11 +1033,11 @@
       "sourceHash": "b82c12fcdfcc6238",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 2,
-        "approximated": 0,
-        "bound": 6,
-        "bindable": 6,
+        "stories": 2,
+        "nodes": 5,
+        "approximated": 1,
+        "bound": 16,
+        "bindable": 16,
         "bindingRate": 1
       },
       "notes": [],
@@ -660,12 +1054,32 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1837-0",
+              "nodeId": "1MP5-0",
               "size": [
                 336.88,
                 16
               ],
               "htmlHash": "407dcc4250932a61"
+            }
+          ]
+        },
+        {
+          "id": "components-ainotice--with-link",
+          "title": "With Link",
+          "opened": "none",
+          "nodes": 3,
+          "approximated": 1,
+          "bound": 10,
+          "bindable": 10,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MPD-0",
+              "size": [
+                421.17,
+                16
+              ],
+              "htmlHash": "6b62f2edfeade1bb"
             }
           ]
         }
@@ -687,30 +1101,30 @@
       "sourceHash": "d3c4543186dc147b",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 20,
-        "approximated": 1,
-        "bound": 87,
-        "bindable": 100,
-        "bindingRate": 0.87
+        "stories": 3,
+        "nodes": 61,
+        "approximated": 3,
+        "bound": 250,
+        "bindable": 287,
+        "bindingRate": 0.871
       },
       "notes": [],
       "lost": [
-        "button: background-clip: padding-box not carried"
+        "button: background-clip: padding-box not carried ×3"
       ],
       "stories": [
         {
           "id": "components-aipopover--suggestion",
           "title": "Suggestion",
           "opened": "story",
-          "nodes": 20,
+          "nodes": 21,
           "approximated": 1,
           "bound": 87,
           "bindable": 100,
           "parts": [
             {
               "part": "main",
-              "nodeId": "183N-0",
+              "nodeId": "1MPV-0",
               "size": [
                 416,
                 66.23
@@ -719,12 +1133,70 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "183X-0",
+              "nodeId": "1MQ5-0",
               "size": [
                 384,
                 181.64
               ],
-              "htmlHash": "92c4771028c3f009"
+              "htmlHash": "82de886290afe971"
+            }
+          ]
+        },
+        {
+          "id": "components-aipopover--empty-suggestion",
+          "title": "Empty Suggestion",
+          "opened": "story",
+          "nodes": 19,
+          "approximated": 1,
+          "bound": 73,
+          "bindable": 85,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MR0-0",
+              "size": [
+                416,
+                66.23
+              ],
+              "htmlHash": "6f2956f9fafc1866"
+            },
+            {
+              "part": "panel-1",
+              "nodeId": "1MRA-0",
+              "size": [
+                384,
+                97.41
+              ],
+              "htmlHash": "8e9abe4aac3c96ab"
+            }
+          ]
+        },
+        {
+          "id": "components-aipopover--opens-from-a-button",
+          "title": "Opens From A Button",
+          "opened": "story",
+          "nodes": 21,
+          "approximated": 1,
+          "bound": 90,
+          "bindable": 102,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MS3-0",
+              "size": [
+                416,
+                32
+              ],
+              "htmlHash": "e8bb02aab80cc4b6"
+            },
+            {
+              "part": "panel-1",
+              "nodeId": "1MSD-0",
+              "size": [
+                384,
+                181.64
+              ],
+              "htmlHash": "a83030881e0146bd"
             }
           ]
         }
@@ -746,12 +1218,12 @@
       "sourceHash": "efcd3bb8e0dc70bd",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 7,
-        "approximated": 0,
-        "bound": 21,
-        "bindable": 21,
-        "bindingRate": 1
+        "stories": 3,
+        "nodes": 19,
+        "approximated": 1,
+        "bound": 51,
+        "bindable": 52,
+        "bindingRate": 0.981
       },
       "notes": [],
       "lost": [],
@@ -767,12 +1239,52 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "184R-0",
+              "nodeId": "1MTA-0",
               "size": [
                 320,
                 47.41
               ],
               "htmlHash": "8473bfded9621ab8"
+            }
+          ]
+        },
+        {
+          "id": "components-aithinking--done",
+          "title": "Done",
+          "opened": "none",
+          "nodes": 9,
+          "approximated": 1,
+          "bound": 25,
+          "bindable": 26,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MTS-0",
+              "size": [
+                320,
+                95.41
+              ],
+              "htmlHash": "e4804cde60a2dd3b"
+            }
+          ]
+        },
+        {
+          "id": "components-aithinking--done-without-steps",
+          "title": "Done Without Steps",
+          "opened": "none",
+          "nodes": 3,
+          "approximated": 0,
+          "bound": 5,
+          "bindable": 5,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1MUB-0",
+              "size": [
+                320,
+                19.41
+              ],
+              "htmlHash": "5b9809e7d6761ea5"
             }
           ]
         }
@@ -815,7 +1327,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "185E-0",
+              "nodeId": "1MUR-0",
               "size": [
                 384,
                 58.81
@@ -835,7 +1347,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "185W-0",
+              "nodeId": "1MV9-0",
               "size": [
                 384,
                 58.81
@@ -855,7 +1367,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "186E-0",
+              "nodeId": "1MVR-0",
               "size": [
                 384,
                 78.22
@@ -875,7 +1387,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "186R-0",
+              "nodeId": "1MW4-0",
               "size": [
                 384,
                 78.22
@@ -895,7 +1407,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "187E-0",
+              "nodeId": "1MWR-0",
               "size": [
                 384,
                 310.06
@@ -946,7 +1458,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "188U-0",
+              "nodeId": "1MY7-0",
               "size": [
                 111.2,
                 32
@@ -955,7 +1467,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "188Z-0",
+              "nodeId": "1MYC-0",
               "size": [
                 384,
                 164.61
@@ -975,7 +1487,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "189I-0",
+              "nodeId": "1MYV-0",
               "size": [
                 126.72,
                 32
@@ -984,7 +1496,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "189N-0",
+              "nodeId": "1MZ0-0",
               "size": [
                 384,
                 184.02
@@ -1004,7 +1516,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18AC-0",
+              "nodeId": "1MZP-0",
               "size": [
                 89.23,
                 32
@@ -1013,7 +1525,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "18AH-0",
+              "nodeId": "1MZU-0",
               "size": [
                 320,
                 164.61
@@ -1063,7 +1575,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18B3-0",
+              "nodeId": "1N0G-0",
               "size": [
                 480,
                 256.44
@@ -1083,7 +1595,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18C9-0",
+              "nodeId": "1N1M-0",
               "size": [
                 480,
                 117.41
@@ -1103,7 +1615,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18D1-0",
+              "nodeId": "1N2E-0",
               "size": [
                 480,
                 256.44
@@ -1151,7 +1663,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18E8-0",
+              "nodeId": "1N3L-0",
               "size": [
                 288,
                 162
@@ -1171,12 +1683,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18EJ-0",
+              "nodeId": "1N3W-0",
               "size": [
                 288,
                 162
               ],
-              "htmlHash": "df8d4d23ab78807c"
+              "htmlHash": "36c82ea00a683d2f"
             }
           ]
         },
@@ -1191,12 +1703,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18EX-0",
+              "nodeId": "1N4A-0",
               "size": [
                 288,
                 288
               ],
-              "htmlHash": "9ffc1aa346e187e7"
+              "htmlHash": "ba6757120012755b"
             }
           ]
         },
@@ -1211,12 +1723,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18FB-0",
+              "nodeId": "1N4O-0",
               "size": [
                 288,
                 80
               ],
-              "htmlHash": "f7c520addc84b664"
+              "htmlHash": "785e4a056cba5d13"
             }
           ]
         }
@@ -1259,7 +1771,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18G9-0",
+              "nodeId": "1N5M-0",
               "size": [
                 32,
                 32
@@ -1279,7 +1791,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18GJ-0",
+              "nodeId": "1N5W-0",
               "size": [
                 32,
                 32
@@ -1299,7 +1811,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18GU-0",
+              "nodeId": "1N67-0",
               "size": [
                 151.33,
                 64
@@ -1319,7 +1831,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18I6-0",
+              "nodeId": "1N7J-0",
               "size": [
                 136,
                 216
@@ -1339,7 +1851,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18KU-0",
+              "nodeId": "1NA7-0",
               "size": [
                 195.23,
                 64
@@ -1387,7 +1899,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18MC-0",
+              "nodeId": "1NBP-0",
               "size": [
                 43.92,
                 20
@@ -1407,7 +1919,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18MK-0",
+              "nodeId": "1NBX-0",
               "size": [
                 43.97,
                 20
@@ -1427,7 +1939,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18MS-0",
+              "nodeId": "1NC5-0",
               "size": [
                 45.31,
                 20
@@ -1447,7 +1959,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18N0-0",
+              "nodeId": "1NCD-0",
               "size": [
                 45.89,
                 20
@@ -1467,7 +1979,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18N8-0",
+              "nodeId": "1NCL-0",
               "size": [
                 60.17,
                 20
@@ -1487,7 +1999,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18NG-0",
+              "nodeId": "1NCT-0",
               "size": [
                 85.91,
                 20
@@ -1507,7 +2019,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18NO-0",
+              "nodeId": "1ND1-0",
               "size": [
                 97.2,
                 20
@@ -1527,7 +2039,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18NW-0",
+              "nodeId": "1ND9-0",
               "size": [
                 400.97,
                 20
@@ -1575,7 +2087,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18OP-0",
+              "nodeId": "1NE2-0",
               "size": [
                 255.02,
                 19.41
@@ -1595,7 +2107,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18PF-0",
+              "nodeId": "1NES-0",
               "size": [
                 268.14,
                 20
@@ -1615,7 +2127,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18QE-0",
+              "nodeId": "1NFR-0",
               "size": [
                 243.48,
                 19.41
@@ -1635,7 +2147,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18R0-0",
+              "nodeId": "1NGD-0",
               "size": [
                 255.02,
                 19.41
@@ -1685,7 +2197,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18RV-0",
+              "nodeId": "1NH8-0",
               "size": [
                 110.44,
                 32
@@ -1705,7 +2217,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18S3-0",
+              "nodeId": "1NHG-0",
               "size": [
                 78,
                 32
@@ -1725,7 +2237,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18SB-0",
+              "nodeId": "1NHO-0",
               "size": [
                 112.94,
                 32
@@ -1745,7 +2257,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18SM-0",
+              "nodeId": "1NHZ-0",
               "size": [
                 32,
                 32
@@ -1765,7 +2277,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18SV-0",
+              "nodeId": "1NI8-0",
               "size": [
                 458.67,
                 32
@@ -1785,7 +2297,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18TJ-0",
+              "nodeId": "1NIW-0",
               "size": [
                 308.72,
                 88
@@ -1835,7 +2347,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18UI-0",
+              "nodeId": "1NJV-0",
               "size": [
                 127.41,
                 32
@@ -1855,7 +2367,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18UU-0",
+              "nodeId": "1NK7-0",
               "size": [
                 96,
                 32
@@ -1875,7 +2387,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18VC-0",
+              "nodeId": "1NKP-0",
               "size": [
                 96,
                 32
@@ -1895,7 +2407,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18VU-0",
+              "nodeId": "1NL7-0",
               "size": [
                 84.8,
                 96
@@ -1915,7 +2427,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18W9-0",
+              "nodeId": "1NLM-0",
               "size": [
                 97,
                 32
@@ -1935,7 +2447,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18WT-0",
+              "nodeId": "1NM6-0",
               "size": [
                 224.7,
                 32
@@ -1955,7 +2467,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18XB-0",
+              "nodeId": "1NMO-0",
               "size": [
                 177.67,
                 320
@@ -2003,12 +2515,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "18YV-0",
+              "nodeId": "1NO8-0",
               "size": [
                 212,
                 261.75
               ],
-              "htmlHash": "8abadd063e894053"
+              "htmlHash": "3bee885395bbb0a2"
             }
           ]
         },
@@ -2023,12 +2535,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "193D-0",
+              "nodeId": "1NSQ-0",
               "size": [
                 424,
                 261.75
               ],
-              "htmlHash": "ba26887e88cdd7bf"
+              "htmlHash": "cc00d95de471e131"
             }
           ]
         },
@@ -2043,12 +2555,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19CE-0",
+              "nodeId": "1O1R-0",
               "size": [
                 212,
                 261.75
               ],
-              "htmlHash": "0a20865d0c3647c7"
+              "htmlHash": "93859d126c3fe6a1"
             }
           ]
         },
@@ -2063,12 +2575,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19GW-0",
+              "nodeId": "1O69-0",
               "size": [
                 212,
                 261.75
               ],
-              "htmlHash": "6d78fcb550426590"
+              "htmlHash": "fd66a6cb8aba3e2f"
             }
           ]
         },
@@ -2083,12 +2595,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19LO-0",
+              "nodeId": "1OB1-0",
               "size": [
                 212,
                 261.75
               ],
-              "htmlHash": "f59ef3a5d074fd60"
+              "htmlHash": "f0c8c7ab389b132b"
             }
           ]
         }
@@ -2133,7 +2645,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19QJ-0",
+              "nodeId": "1OFW-0",
               "size": [
                 320,
                 196.11
@@ -2153,7 +2665,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19R3-0",
+              "nodeId": "1OGG-0",
               "size": [
                 320,
                 149.89
@@ -2173,7 +2685,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19RO-0",
+              "nodeId": "1OH1-0",
               "size": [
                 320,
                 74.09
@@ -2193,7 +2705,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19S3-0",
+              "nodeId": "1OHG-0",
               "size": [
                 320,
                 336.7
@@ -2213,7 +2725,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19SP-0",
+              "nodeId": "1OI2-0",
               "size": [
                 320,
                 201.8
@@ -2261,7 +2773,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19TG-0",
+              "nodeId": "1OIT-0",
               "size": [
                 320,
                 224
@@ -2281,7 +2793,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19UK-0",
+              "nodeId": "1OJX-0",
               "size": [
                 320,
                 90.66
@@ -2301,7 +2813,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19W1-0",
+              "nodeId": "1OLE-0",
               "size": [
                 320,
                 368
@@ -2349,7 +2861,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "19XD-0",
+              "nodeId": "1OMQ-0",
               "size": [
                 1200,
                 256
@@ -2369,12 +2881,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A0B-0",
+              "nodeId": "1OPO-0",
               "size": [
                 1200,
                 256
               ],
-              "htmlHash": "c722abe7a34b5b55"
+              "htmlHash": "a6617bf86b06d5b8"
             }
           ]
         },
@@ -2389,7 +2901,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A2Z-0",
+              "nodeId": "1OSC-0",
               "size": [
                 1200,
                 256
@@ -2437,7 +2949,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A6W-0",
+              "nodeId": "1OW9-0",
               "size": [
                 206.47,
                 16
@@ -2457,7 +2969,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A77-0",
+              "nodeId": "1OWK-0",
               "size": [
                 121.92,
                 16
@@ -2477,7 +2989,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A7L-0",
+              "nodeId": "1OWY-0",
               "size": [
                 143.17,
                 16
@@ -2497,7 +3009,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A7W-0",
+              "nodeId": "1OX9-0",
               "size": [
                 112.95,
                 16
@@ -2517,7 +3029,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A87-0",
+              "nodeId": "1OXK-0",
               "size": [
                 154.33,
                 128
@@ -2544,12 +3056,12 @@
       "sourceHash": "1d2f1f3865082aa9",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 29,
-        "approximated": 2,
-        "bound": 91,
-        "bindable": 98,
-        "bindingRate": 0.929
+        "stories": 4,
+        "nodes": 88,
+        "approximated": 8,
+        "bound": 266,
+        "bindable": 274,
+        "bindingRate": 0.971
       },
       "notes": [],
       "lost": [],
@@ -2558,14 +3070,14 @@
           "id": "components-citations--in-an-answer",
           "title": "In An Answer",
           "opened": "story",
-          "nodes": 29,
+          "nodes": 30,
           "approximated": 2,
           "bound": 91,
           "bindable": 98,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1A9G-0",
+              "nodeId": "1OYT-0",
               "size": [
                 544,
                 84.91
@@ -2574,12 +3086,72 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AAC-0",
+              "nodeId": "1OZP-0",
               "size": [
                 288,
                 102.22
               ],
-              "htmlHash": "2040a27e092be3e7"
+              "htmlHash": "19c74b212401b77d"
+            }
+          ]
+        },
+        {
+          "id": "components-citations--sources-list",
+          "title": "Sources List",
+          "opened": "none",
+          "nodes": 36,
+          "approximated": 4,
+          "bound": 106,
+          "bindable": 106,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1P07-0",
+              "size": [
+                544,
+                204.22
+              ],
+              "htmlHash": "70bef7e4bf0757e1"
+            }
+          ]
+        },
+        {
+          "id": "components-citations--one-source",
+          "title": "One Source",
+          "opened": "none",
+          "nodes": 16,
+          "approximated": 1,
+          "bound": 50,
+          "bindable": 50,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1P1Q-0",
+              "size": [
+                544,
+                97.41
+              ],
+              "htmlHash": "128d09a7d725196d"
+            }
+          ]
+        },
+        {
+          "id": "components-citations--long-title-no-label",
+          "title": "Long Title No Label",
+          "opened": "none",
+          "nodes": 6,
+          "approximated": 1,
+          "bound": 19,
+          "bindable": 20,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1P2H-0",
+              "size": [
+                544,
+                20.45
+              ],
+              "htmlHash": "5fcbbe26f09a1e10"
             }
           ]
         }
@@ -2624,7 +3196,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AAW-0",
+              "nodeId": "1P32-0",
               "size": [
                 288,
                 28
@@ -2644,7 +3216,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ABE-0",
+              "nodeId": "1P3K-0",
               "size": [
                 288,
                 138.22
@@ -2672,7 +3244,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 3,
-        "nodes": 42,
+        "nodes": 44,
         "approximated": 2,
         "bound": 191,
         "bindable": 197,
@@ -2687,28 +3259,28 @@
           "id": "components-combobox--default",
           "title": "Default",
           "opened": "story",
-          "nodes": 14,
+          "nodes": 15,
           "approximated": 1,
           "bound": 60,
           "bindable": 61,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ACD-0",
+              "nodeId": "1P4J-0",
               "size": [
                 256,
-                157.41
+                144.91
               ],
-              "htmlHash": "de272a25c77048c0"
+              "htmlHash": "d68f89a6ddfdc8c8"
             },
             {
               "part": "panel-1",
-              "nodeId": "1ACN-0",
+              "nodeId": "1P4T-0",
               "size": [
                 208,
                 71.41
               ],
-              "htmlHash": "a60abcc891f29714"
+              "htmlHash": "43785737414b735e"
             }
           ]
         },
@@ -2716,14 +3288,14 @@
           "id": "components-combobox--with-clear",
           "title": "With Clear Button",
           "opened": "click",
-          "nodes": 22,
+          "nodes": 23,
           "approximated": 1,
           "bound": 111,
           "bindable": 116,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AD5-0",
+              "nodeId": "1P5E-0",
               "size": [
                 256,
                 258.44
@@ -2732,12 +3304,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1ADI-0",
+              "nodeId": "1P5R-0",
               "size": [
                 179,
                 172.44
               ],
-              "htmlHash": "2ec2b140d58b113c"
+              "htmlHash": "09201cbd10d53338"
             }
           ]
         },
@@ -2752,7 +3324,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AE9-0",
+              "nodeId": "1P6L-0",
               "size": [
                 256,
                 80
@@ -2802,12 +3374,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AER-0",
+              "nodeId": "1P73-0",
               "size": [
                 288,
                 213.22
               ],
-              "htmlHash": "c46c5e79fb4dac33"
+              "htmlHash": "1412513aef3a80cd"
             }
           ]
         },
@@ -2822,7 +3394,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AG5-0",
+              "nodeId": "1P8H-0",
               "size": [
                 189.92,
                 80
@@ -2842,12 +3414,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AGJ-0",
+              "nodeId": "1P8V-0",
               "size": [
                 288,
                 144.81
               ],
-              "htmlHash": "2523112e2a1175c6"
+              "htmlHash": "195300707c8565ed"
             }
           ]
         }
@@ -2870,7 +3442,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 4,
-        "nodes": 76,
+        "nodes": 78,
         "approximated": 2,
         "bound": 303,
         "bindable": 303,
@@ -2886,14 +3458,14 @@
           "id": "components-contextmenu--default",
           "title": "Default",
           "opened": "context",
-          "nodes": 19,
+          "nodes": 20,
           "approximated": 1,
           "bound": 83,
           "bindable": 83,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AHO-0",
+              "nodeId": "1PA0-0",
               "size": [
                 256,
                 96
@@ -2902,12 +3474,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AHT-0",
+              "nodeId": "1PA5-0",
               "size": [
                 144,
                 135.63
               ],
-              "htmlHash": "1c1d242ca9baa058"
+              "htmlHash": "726989cd32cd867b"
             }
           ]
         },
@@ -2922,7 +3494,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AIM-0",
+              "nodeId": "1PB1-0",
               "size": [
                 256,
                 96
@@ -2942,7 +3514,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AIU-0",
+              "nodeId": "1PB9-0",
               "size": [
                 256,
                 96
@@ -2955,14 +3527,14 @@
           "id": "components-contextmenu--all-variants",
           "title": "All Variants",
           "opened": "context",
-          "nodes": 53,
+          "nodes": 54,
           "approximated": 1,
           "bound": 202,
           "bindable": 202,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AJ5-0",
+              "nodeId": "1PBK-0",
               "size": [
                 256,
                 96
@@ -2971,12 +3543,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AJA-0",
+              "nodeId": "1PBP-0",
               "size": [
                 144,
                 390.06
               ],
-              "htmlHash": "72f54d055c4d4bda"
+              "htmlHash": "7704014a33d1efd6"
             }
           ]
         }
@@ -3021,7 +3593,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ALE-0",
+              "nodeId": "1PDW-0",
               "size": [
                 90.33,
                 32
@@ -3030,7 +3602,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1ALJ-0",
+              "nodeId": "1PE1-0",
               "size": [
                 384,
                 310.2
@@ -3050,7 +3622,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AMI-0",
+              "nodeId": "1PF0-0",
               "size": [
                 102.75,
                 32
@@ -3059,7 +3631,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AMN-0",
+              "nodeId": "1PF5-0",
               "size": [
                 384,
                 310.2
@@ -3109,7 +3681,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ANN-0",
+              "nodeId": "1PG5-0",
               "size": [
                 104.78,
                 32
@@ -3118,12 +3690,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1ANS-0",
+              "nodeId": "1PGA-0",
               "size": [
                 1280,
                 336.39
               ],
-              "htmlHash": "99b7668acc8be564"
+              "htmlHash": "8024587b9b4899d0"
             }
           ]
         },
@@ -3138,7 +3710,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AOT-0",
+              "nodeId": "1PHA-0",
               "size": [
                 125.84,
                 32
@@ -3147,12 +3719,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AOY-0",
+              "nodeId": "1PHF-0",
               "size": [
                 384,
                 900
               ],
-              "htmlHash": "382f0615723c0c5f"
+              "htmlHash": "e2012027f76fdf62"
             }
           ]
         }
@@ -3175,7 +3747,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 3,
-        "nodes": 60,
+        "nodes": 63,
         "approximated": 1,
         "bound": 253,
         "bindable": 256,
@@ -3188,14 +3760,14 @@
           "id": "components-dropdownmenu--default",
           "title": "Default",
           "opened": "story",
-          "nodes": 22,
+          "nodes": 23,
           "approximated": 1,
           "bound": 88,
           "bindable": 89,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AQ2-0",
+              "nodeId": "1PII-0",
               "size": [
                 80,
                 157.22
@@ -3204,12 +3776,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AQB-0",
+              "nodeId": "1PIR-0",
               "size": [
                 128,
                 150.63
               ],
-              "htmlHash": "7a135ce4b03e100e"
+              "htmlHash": "4784b7b015db5446"
             }
           ]
         },
@@ -3217,14 +3789,14 @@
           "id": "components-dropdownmenu--with-checkbox-items",
           "title": "With Checkbox Items",
           "opened": "click",
-          "nodes": 18,
+          "nodes": 19,
           "approximated": 0,
           "bound": 76,
           "bindable": 77,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AR4-0",
+              "nodeId": "1PJN-0",
               "size": [
                 151.69,
                 198.22
@@ -3233,12 +3805,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1ARC-0",
+              "nodeId": "1PJV-0",
               "size": [
                 192,
                 114.22
               ],
-              "htmlHash": "a790c6312ed56c7f"
+              "htmlHash": "03280be95570f0a0"
             }
           ]
         },
@@ -3246,14 +3818,14 @@
           "id": "components-dropdownmenu--with-radio-group",
           "title": "With Radio Group",
           "opened": "click",
-          "nodes": 20,
+          "nodes": 21,
           "approximated": 0,
           "bound": 89,
           "bindable": 90,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AS4-0",
+              "nodeId": "1PKQ-0",
               "size": [
                 159.39,
                 225.63
@@ -3262,12 +3834,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1ASC-0",
+              "nodeId": "1PKY-0",
               "size": [
                 160,
                 141.63
               ],
-              "htmlHash": "cd1a67b9aa0b3187"
+              "htmlHash": "51a821a583f6a5dd"
             }
           ]
         }
@@ -3312,7 +3884,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AT9-0",
+              "nodeId": "1PLY-0",
               "size": [
                 320,
                 257.56
@@ -3332,7 +3904,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ATW-0",
+              "nodeId": "1PML-0",
               "size": [
                 320,
                 279.64
@@ -3380,7 +3952,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AUO-0",
+              "nodeId": "1PND-0",
               "size": [
                 288,
                 107.47
@@ -3400,7 +3972,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AV5-0",
+              "nodeId": "1PNU-0",
               "size": [
                 288,
                 86.09
@@ -3420,7 +3992,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AVM-0",
+              "nodeId": "1POB-0",
               "size": [
                 288,
                 87.08
@@ -3440,7 +4012,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AW3-0",
+              "nodeId": "1POS-0",
               "size": [
                 288,
                 37.38
@@ -3460,7 +4032,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AWI-0",
+              "nodeId": "1PP7-0",
               "size": [
                 288,
                 300.25
@@ -3488,7 +4060,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 2,
-        "nodes": 17,
+        "nodes": 19,
         "approximated": 1,
         "bound": 55,
         "bindable": 55,
@@ -3501,14 +4073,14 @@
           "id": "components-hovercard--default",
           "title": "Default",
           "opened": "hover",
-          "nodes": 11,
+          "nodes": 12,
           "approximated": 1,
           "bound": 28,
           "bindable": 28,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AXK-0",
+              "nodeId": "1PQ9-0",
               "size": [
                 62.92,
                 16
@@ -3517,12 +4089,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AXM-0",
+              "nodeId": "1PQB-0",
               "size": [
                 256,
                 95.41
               ],
-              "htmlHash": "71b2bfe790995da9"
+              "htmlHash": "6f524055e91219cc"
             }
           ]
         },
@@ -3530,14 +4102,14 @@
           "id": "components-hovercard--link-preview",
           "title": "Link Preview",
           "opened": "hover",
-          "nodes": 6,
+          "nodes": 7,
           "approximated": 0,
           "bound": 27,
           "bindable": 27,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AYB-0",
+              "nodeId": "1PR3-0",
               "size": [
                 71.69,
                 16
@@ -3546,12 +4118,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1AYD-0",
+              "nodeId": "1PR5-0",
               "size": [
                 256,
                 99.41
               ],
-              "htmlHash": "ebf1cc86f46bded7"
+              "htmlHash": "7edf6477a6f37a36"
             }
           ]
         }
@@ -3594,7 +4166,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AYX-0",
+              "nodeId": "1PRS-0",
               "size": [
                 24,
                 24
@@ -3614,7 +4186,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AZ6-0",
+              "nodeId": "1PS1-0",
               "size": [
                 145.67,
                 19.41
@@ -3634,7 +4206,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AZJ-0",
+              "nodeId": "1PSE-0",
               "size": [
                 20,
                 20
@@ -3654,7 +4226,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1AZS-0",
+              "nodeId": "1PSN-0",
               "size": [
                 1200,
                 908.5
@@ -3702,7 +4274,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BEP-0",
+              "nodeId": "1Q7K-0",
               "size": [
                 288,
                 32
@@ -3722,7 +4294,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BF0-0",
+              "nodeId": "1Q7V-0",
               "size": [
                 288,
                 32
@@ -3742,7 +4314,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BFB-0",
+              "nodeId": "1Q86-0",
               "size": [
                 288,
                 32
@@ -3762,7 +4334,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BFM-0",
+              "nodeId": "1Q8H-0",
               "size": [
                 288,
                 32
@@ -3782,7 +4354,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BFX-0",
+              "nodeId": "1Q8S-0",
               "size": [
                 288,
                 32
@@ -3802,7 +4374,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BG8-0",
+              "nodeId": "1Q93-0",
               "size": [
                 288,
                 51.59
@@ -3822,7 +4394,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BGM-0",
+              "nodeId": "1Q9H-0",
               "size": [
                 288,
                 208
@@ -3870,7 +4442,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BHF-0",
+              "nodeId": "1QAA-0",
               "size": [
                 320,
                 32
@@ -3890,7 +4462,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BHV-0",
+              "nodeId": "1QAQ-0",
               "size": [
                 320,
                 32
@@ -3910,7 +4482,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BIE-0",
+              "nodeId": "1QB9-0",
               "size": [
                 320,
                 32
@@ -3930,7 +4502,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BIT-0",
+              "nodeId": "1QBO-0",
               "size": [
                 320,
                 32
@@ -3950,7 +4522,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BJD-0",
+              "nodeId": "1QC8-0",
               "size": [
                 320,
                 32
@@ -3970,12 +4542,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BJT-0",
+              "nodeId": "1QCO-0",
               "size": [
                 320,
                 99.41
               ],
-              "htmlHash": "c2c588ebf2a9f11e"
+              "htmlHash": "595fcbc2dc871f30"
             }
           ]
         },
@@ -3990,12 +4562,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BK8-0",
+              "nodeId": "1QD3-0",
               "size": [
                 320,
                 275.41
               ],
-              "htmlHash": "209ce3c51cab0202"
+              "htmlHash": "7298d86ec868f4c8"
             }
           ]
         }
@@ -4038,7 +4610,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BLL-0",
+              "nodeId": "1QEG-0",
               "size": [
                 224.92,
                 83.41
@@ -4058,7 +4630,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BMA-0",
+              "nodeId": "1QF5-0",
               "size": [
                 128,
                 59.41
@@ -4078,7 +4650,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BMR-0",
+              "nodeId": "1QFM-0",
               "size": [
                 208,
                 59.41
@@ -4098,7 +4670,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BNE-0",
+              "nodeId": "1QG9-0",
               "size": [
                 223.28,
                 83.41
@@ -4146,7 +4718,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BO8-0",
+              "nodeId": "1QH3-0",
               "size": [
                 320,
                 146.16
@@ -4166,7 +4738,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BP5-0",
+              "nodeId": "1QI0-0",
               "size": [
                 320,
                 146.16
@@ -4186,7 +4758,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BQ2-0",
+              "nodeId": "1QIX-0",
               "size": [
                 320,
                 146.16
@@ -4206,7 +4778,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BQZ-0",
+              "nodeId": "1QJU-0",
               "size": [
                 320,
                 140.16
@@ -4226,7 +4798,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BRW-0",
+              "nodeId": "1QKR-0",
               "size": [
                 320,
                 126.06
@@ -4246,7 +4818,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BST-0",
+              "nodeId": "1QLO-0",
               "size": [
                 320,
                 293.23
@@ -4266,12 +4838,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BU8-0",
+              "nodeId": "1QN3-0",
               "size": [
                 320,
                 277.56
               ],
-              "htmlHash": "4fd825143ce2d1c6"
+              "htmlHash": "ff04fe1d02a6f3c0"
             }
           ]
         },
@@ -4286,7 +4858,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BVH-0",
+              "nodeId": "1QOC-0",
               "size": [
                 320,
                 146.16
@@ -4334,7 +4906,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BWD-0",
+              "nodeId": "1QP8-0",
               "size": [
                 20,
                 20
@@ -4354,7 +4926,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BWL-0",
+              "nodeId": "1QPG-0",
               "size": [
                 20,
                 20
@@ -4374,7 +4946,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BWT-0",
+              "nodeId": "1QPO-0",
               "size": [
                 20,
                 20
@@ -4394,7 +4966,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BX2-0",
+              "nodeId": "1QPX-0",
               "size": [
                 419.64,
                 128
@@ -4414,7 +4986,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BY9-0",
+              "nodeId": "1QR4-0",
               "size": [
                 300.98,
                 56
@@ -4462,7 +5034,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1BZY-0",
+              "nodeId": "1QST-0",
               "size": [
                 256,
                 51.59
@@ -4482,7 +5054,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C0A-0",
+              "nodeId": "1QT5-0",
               "size": [
                 175.22,
                 16
@@ -4502,7 +5074,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C0L-0",
+              "nodeId": "1QTG-0",
               "size": [
                 256,
                 51.59
@@ -4530,7 +5102,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 2,
-        "nodes": 26,
+        "nodes": 27,
         "approximated": 1,
         "bound": 142,
         "bindable": 150,
@@ -4545,14 +5117,14 @@
           "id": "components-menubar--default",
           "title": "Default",
           "opened": "click",
-          "nodes": 23,
+          "nodes": 24,
           "approximated": 1,
           "bound": 123,
           "bindable": 127,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C15-0",
+              "nodeId": "1QU0-0",
               "size": [
                 1200,
                 32
@@ -4561,12 +5133,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1C1H-0",
+              "nodeId": "1QUC-0",
               "size": [
                 144,
                 126.63
               ],
-              "htmlHash": "031433e60653b63c"
+              "htmlHash": "2240b1ab31ebd17a"
             }
           ]
         },
@@ -4581,7 +5153,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C27-0",
+              "nodeId": "1QV5-0",
               "size": [
                 1200,
                 32
@@ -4608,12 +5180,12 @@
       "sourceHash": "68a5741c8bbbdf87",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 42,
+        "stories": 2,
+        "nodes": 46,
         "approximated": 1,
-        "bound": 139,
-        "bindable": 144,
-        "bindingRate": 0.965
+        "bound": 147,
+        "bindable": 153,
+        "bindingRate": 0.961
       },
       "notes": [],
       "lost": [
@@ -4625,14 +5197,14 @@
           "id": "components-modelpicker--in-the-composer",
           "title": "In The Composer",
           "opened": "story",
-          "nodes": 42,
+          "nodes": 43,
           "approximated": 1,
           "bound": 139,
           "bindable": 144,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C2Q-0",
+              "nodeId": "1QVO-0",
               "size": [
                 544,
                 84
@@ -4641,12 +5213,32 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1C3E-0",
+              "nodeId": "1QWC-0",
               "size": [
                 288,
                 249
               ],
-              "htmlHash": "ffbc559d34f783b3"
+              "htmlHash": "ce52b93967d73520"
+            }
+          ]
+        },
+        {
+          "id": "components-modelpicker--without-auto",
+          "title": "Without Auto",
+          "opened": "none",
+          "nodes": 3,
+          "approximated": 0,
+          "bound": 8,
+          "bindable": 9,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1QXN-0",
+              "size": [
+                96.64,
+                28
+              ],
+              "htmlHash": "0d263b43d4ec3bdf"
             }
           ]
         }
@@ -4689,7 +5281,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C4R-0",
+              "nodeId": "1QY3-0",
               "size": [
                 256,
                 32
@@ -4709,7 +5301,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C56-0",
+              "nodeId": "1QYI-0",
               "size": [
                 256,
                 57.41
@@ -4729,7 +5321,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C5N-0",
+              "nodeId": "1QYZ-0",
               "size": [
                 256,
                 32
@@ -4749,7 +5341,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C62-0",
+              "nodeId": "1QZE-0",
               "size": [
                 256,
                 28.7
@@ -4769,7 +5361,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C6H-0",
+              "nodeId": "1QZT-0",
               "size": [
                 256,
                 32
@@ -4789,7 +5381,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C6W-0",
+              "nodeId": "1R08-0",
               "size": [
                 256,
                 160.7
@@ -4817,10 +5409,10 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 2,
-        "nodes": 38,
+        "nodes": 40,
         "approximated": 1,
-        "bound": 145,
-        "bindable": 145,
+        "bound": 150,
+        "bindable": 150,
         "bindingRate": 1
       },
       "notes": [
@@ -4832,14 +5424,14 @@
           "id": "components-navigationmenu--default",
           "title": "Default",
           "opened": "click",
-          "nodes": 24,
+          "nodes": 26,
           "approximated": 1,
-          "bound": 89,
-          "bindable": 89,
+          "bound": 94,
+          "bindable": 94,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C81-0",
+              "nodeId": "1Y2Q-0",
               "size": [
                 245.66,
                 36
@@ -4848,12 +5440,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1C8M-0",
+              "nodeId": "1Y3B-0",
               "size": [
                 392,
                 127.41
               ],
-              "htmlHash": "d7804e6fa6db49dc"
+              "htmlHash": "2228b9eb63602c07"
             }
           ]
         },
@@ -4868,7 +5460,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1C98-0",
+              "nodeId": "1Y43-0",
               "size": [
                 237.2,
                 36
@@ -4916,7 +5508,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CA2-0",
+              "nodeId": "1R3N-0",
               "size": [
                 336.41,
                 32.19
@@ -4936,7 +5528,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CB8-0",
+              "nodeId": "1R4T-0",
               "size": [
                 336.41,
                 32.19
@@ -4956,7 +5548,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CCE-0",
+              "nodeId": "1R5Z-0",
               "size": [
                 336.41,
                 32.19
@@ -4976,7 +5568,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CDK-0",
+              "nodeId": "1R75-0",
               "size": [
                 404.41,
                 32.19
@@ -5004,7 +5596,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 3,
-        "nodes": 51,
+        "nodes": 54,
         "approximated": 1,
         "bound": 233,
         "bindable": 243,
@@ -5019,14 +5611,14 @@
           "id": "components-popover--default",
           "title": "Default",
           "opened": "click",
-          "nodes": 16,
+          "nodes": 17,
           "approximated": 0,
           "bound": 67,
           "bindable": 71,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CF7-0",
+              "nodeId": "1R8S-0",
               "size": [
                 161.14,
                 223.91
@@ -5035,12 +5627,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1CFF-0",
+              "nodeId": "1R90-0",
               "size": [
                 288,
                 139.91
               ],
-              "htmlHash": "59e09e237c0146f8"
+              "htmlHash": "0d41b7ee3a08b9c2"
             }
           ]
         },
@@ -5048,14 +5640,14 @@
           "id": "components-popover--with-description",
           "title": "With Description",
           "opened": "click",
-          "nodes": 20,
+          "nodes": 21,
           "approximated": 0,
           "bound": 82,
           "bindable": 88,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CG3-0",
+              "nodeId": "1R9R-0",
               "size": [
                 195.45,
                 245.31
@@ -5064,12 +5656,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1CGB-0",
+              "nodeId": "1R9Z-0",
               "size": [
                 288,
                 161.31
               ],
-              "htmlHash": "637481ad0ddd7678"
+              "htmlHash": "1e40c5a2f735b08c"
             }
           ]
         },
@@ -5077,14 +5669,14 @@
           "id": "components-popover--all-sides",
           "title": "All Sides",
           "opened": "click",
-          "nodes": 15,
+          "nodes": 16,
           "approximated": 1,
           "bound": 84,
           "bindable": 84,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CH3-0",
+              "nodeId": "1RAU-0",
               "size": [
                 512,
                 320
@@ -5093,12 +5685,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1CHI-0",
+              "nodeId": "1RB9-0",
               "size": [
                 288,
                 57.72
               ],
-              "htmlHash": "c46e74ed7b660c7d"
+              "htmlHash": "d1031981bd3e11bc"
             }
           ]
         }
@@ -5141,12 +5733,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CI0-0",
+              "nodeId": "1RBU-0",
               "size": [
                 288,
                 35.41
               ],
-              "htmlHash": "415da64b47478843"
+              "htmlHash": "98377e2c4be8a0d4"
             }
           ]
         },
@@ -5161,12 +5753,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CII-0",
+              "nodeId": "1RCB-0",
               "size": [
                 288,
                 35.41
               ],
-              "htmlHash": "4391ebc25f3ffb3a"
+              "htmlHash": "182ff44bf4374a42"
             }
           ]
         },
@@ -5181,12 +5773,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CJ0-0",
+              "nodeId": "1RCS-0",
               "size": [
                 288,
                 35.41
               ],
-              "htmlHash": "bd762ca299f3e384"
+              "htmlHash": "279012b2a1c9d418"
             }
           ]
         },
@@ -5201,12 +5793,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CJI-0",
+              "nodeId": "1RD9-0",
               "size": [
                 288,
                 241.03
               ],
-              "htmlHash": "6de61c5b4f801dd0"
+              "htmlHash": "5b60371fb16a930c"
             }
           ]
         }
@@ -5228,35 +5820,36 @@
       "sourceHash": "530d9a688ebf62fb",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 2,
-        "nodes": 22,
-        "approximated": 0,
-        "bound": 59,
-        "bindable": 66,
-        "bindingRate": 0.894
+        "stories": 10,
+        "nodes": 137,
+        "approximated": 5,
+        "bound": 377,
+        "bindable": 421,
+        "bindingRate": 0.895
       },
       "notes": [],
       "lost": [
-        "button: background-clip: padding-box not carried ×2"
+        "button: background-clip: padding-box not carried ×8",
+        "tab-fillet: mask not carried ×2"
       ],
       "stories": [
         {
           "id": "components-promptcomposer--large",
           "title": "Large",
           "opened": "none",
-          "nodes": 11,
+          "nodes": 10,
           "approximated": 0,
-          "bound": 29,
-          "bindable": 33,
+          "bound": 25,
+          "bindable": 29,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CKV-0",
+              "nodeId": "1Y4X-0",
               "size": [
-                1232,
-                852
+                576,
+                108
               ],
-              "htmlHash": "773326018fd90568"
+              "htmlHash": "c1c73892eade5026"
             }
           ]
         },
@@ -5264,19 +5857,179 @@
           "id": "components-promptcomposer--small",
           "title": "Small",
           "opened": "none",
-          "nodes": 11,
+          "nodes": 10,
           "approximated": 0,
-          "bound": 30,
-          "bindable": 33,
+          "bound": 26,
+          "bindable": 29,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CLM-0",
+              "nodeId": "1Y5L-0",
               "size": [
-                1232,
-                852
+                576,
+                84
               ],
-              "htmlHash": "bed08a112ba5b2a1"
+              "htmlHash": "28e14d4536d3bd48"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--working",
+          "title": "Working",
+          "opened": "none",
+          "nodes": 10,
+          "approximated": 0,
+          "bound": 28,
+          "bindable": 31,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Y69-0",
+              "size": [
+                576,
+                108
+              ],
+              "htmlHash": "af4afb7354499b20"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--disabled",
+          "title": "Disabled",
+          "opened": "none",
+          "nodes": 10,
+          "approximated": 0,
+          "bound": 25,
+          "bindable": 29,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Y6X-0",
+              "size": [
+                576,
+                108
+              ],
+              "htmlHash": "c3b905d0a1659083"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--error-state",
+          "title": "Error State",
+          "opened": "none",
+          "nodes": 13,
+          "approximated": 1,
+          "bound": 32,
+          "bindable": 36,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Y7L-0",
+              "size": [
+                576,
+                133.41
+              ],
+              "htmlHash": "8fd33d7707329cb7"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--with-mic",
+          "title": "With Mic",
+          "opened": "none",
+          "nodes": 9,
+          "approximated": 0,
+          "bound": 20,
+          "bindable": 24,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Y89-0",
+              "size": [
+                576,
+                108
+              ],
+              "htmlHash": "9871450b5e3a9c14"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--with-attachments",
+          "title": "With Attachments",
+          "opened": "none",
+          "nodes": 32,
+          "approximated": 1,
+          "bound": 101,
+          "bindable": 107,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Y8W-0",
+              "size": [
+                576,
+                166
+              ],
+              "htmlHash": "6752e483b974e4d7"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--with-modes",
+          "title": "With Modes",
+          "opened": "none",
+          "nodes": 21,
+          "approximated": 3,
+          "bound": 61,
+          "bindable": 74,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1YAB-0",
+              "size": [
+                576,
+                142.41
+              ],
+              "htmlHash": "7448a3f379fbb5a4"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--slash-commands",
+          "title": "Slash Commands",
+          "opened": "none",
+          "nodes": 10,
+          "approximated": 0,
+          "bound": 27,
+          "bindable": 28,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1YBB-0",
+              "size": [
+                576,
+                84
+              ],
+              "htmlHash": "dac8cb3aba5b7663"
+            }
+          ]
+        },
+        {
+          "id": "components-promptcomposer--notebook",
+          "title": "Notebook",
+          "opened": "none",
+          "nodes": 12,
+          "approximated": 0,
+          "bound": 32,
+          "bindable": 34,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1YBZ-0",
+              "size": [
+                576,
+                108
+              ],
+              "htmlHash": "748966539e5d78ff"
             }
           ]
         }
@@ -5298,15 +6051,17 @@
       "sourceHash": "381f611a9d43bdcd",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 42,
-        "approximated": 4,
-        "bound": 135,
-        "bindable": 138,
-        "bindingRate": 0.978
+        "stories": 6,
+        "nodes": 224,
+        "approximated": 23,
+        "bound": 727,
+        "bindable": 744,
+        "bindingRate": 0.977
       },
       "notes": [],
-      "lost": [],
+      "lost": [
+        "button: background-clip: padding-box not carried ×3"
+      ],
       "stories": [
         {
           "id": "components-questioncard--default",
@@ -5319,12 +6074,112 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CMI-0",
+              "nodeId": "1RMI-0",
               "size": [
                 480,
                 321.03
               ],
               "htmlHash": "d774aed68a9bd9fd"
+            }
+          ]
+        },
+        {
+          "id": "components-questioncard--free-text-row",
+          "title": "Free Text Row",
+          "opened": "none",
+          "nodes": 45,
+          "approximated": 4,
+          "bound": 149,
+          "bindable": 152,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1RO4-0",
+              "size": [
+                480,
+                361.03
+              ],
+              "htmlHash": "87d9a1b8c3407554"
+            }
+          ]
+        },
+        {
+          "id": "components-questioncard--no-skip-callback-hides-the-button",
+          "title": "No Skip Callback Hides The Button",
+          "opened": "none",
+          "nodes": 38,
+          "approximated": 4,
+          "bound": 120,
+          "bindable": 123,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1RPT-0",
+              "size": [
+                480,
+                321.03
+              ],
+              "htmlHash": "59dcd3bdea0a6a62"
+            }
+          ]
+        },
+        {
+          "id": "components-questioncard--no-options",
+          "title": "No Options",
+          "opened": "none",
+          "nodes": 21,
+          "approximated": 1,
+          "bound": 71,
+          "bindable": 73,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1RRB-0",
+              "size": [
+                480,
+                190.22
+              ],
+              "htmlHash": "06c56369db7d60ab"
+            }
+          ]
+        },
+        {
+          "id": "components-questioncard--outcome-is-announced",
+          "title": "Outcome Is Announced",
+          "opened": "none",
+          "nodes": 38,
+          "approximated": 6,
+          "bound": 120,
+          "bindable": 123,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1RS8-0",
+              "size": [
+                480,
+                305.03
+              ],
+              "htmlHash": "e4738e128dd19189"
+            }
+          ]
+        },
+        {
+          "id": "components-questioncard--recommended-is-the-stock-tag",
+          "title": "Recommended Is The Stock Tag",
+          "opened": "none",
+          "nodes": 40,
+          "approximated": 4,
+          "bound": 132,
+          "bindable": 135,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1RTQ-0",
+              "size": [
+                480,
+                321.03
+              ],
+              "htmlHash": "7694bbd291a080d2"
             }
           ]
         }
@@ -5367,7 +6222,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CO9-0",
+              "nodeId": "1RVF-0",
               "size": [
                 105.66,
                 64
@@ -5387,7 +6242,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1COW-0",
+              "nodeId": "1RW2-0",
               "size": [
                 105.66,
                 40
@@ -5407,7 +6262,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CPE-0",
+              "nodeId": "1RWK-0",
               "size": [
                 244.02,
                 67.41
@@ -5427,7 +6282,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CPW-0",
+              "nodeId": "1RX2-0",
               "size": [
                 152.02,
                 95.41
@@ -5447,7 +6302,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CQM-0",
+              "nodeId": "1RXS-0",
               "size": [
                 244.02,
                 311.63
@@ -5495,12 +6350,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CS7-0",
+              "nodeId": "1RZD-0",
               "size": [
                 448,
                 53.41
               ],
-              "htmlHash": "54a2e044b97b7177"
+              "htmlHash": "7e2015ef79488382"
             }
           ]
         },
@@ -5515,12 +6370,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CSR-0",
+              "nodeId": "1RZX-0",
               "size": [
                 384,
                 3
               ],
-              "htmlHash": "fb11be405d07cbda"
+              "htmlHash": "2c76b745bb6880d1"
             }
           ]
         },
@@ -5535,12 +6390,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CTB-0",
+              "nodeId": "1S0H-0",
               "size": [
                 448,
                 53.41
               ],
-              "htmlHash": "5f2e8fc7f0863b38"
+              "htmlHash": "02f4eab106383222"
             }
           ]
         },
@@ -5555,12 +6410,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CTW-0",
+              "nodeId": "1S12-0",
               "size": [
                 672,
                 53.41
               ],
-              "htmlHash": "f6054dcfda11e86c"
+              "htmlHash": "9981f476108cc83b"
             }
           ]
         }
@@ -5603,7 +6458,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CUV-0",
+              "nodeId": "1S21-0",
               "size": [
                 224,
                 256
@@ -5623,7 +6478,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CWR-0",
+              "nodeId": "1S3X-0",
               "size": [
                 224,
                 256
@@ -5643,7 +6498,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CYN-0",
+              "nodeId": "1S5T-0",
               "size": [
                 288,
                 80
@@ -5671,7 +6526,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 5,
-        "nodes": 125,
+        "nodes": 129,
         "approximated": 4,
         "bound": 491,
         "bindable": 492,
@@ -5686,14 +6541,14 @@
           "id": "components-select--default",
           "title": "Default",
           "opened": "story",
-          "nodes": 29,
+          "nodes": 30,
           "approximated": 1,
           "bound": 117,
           "bindable": 117,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1CZT-0",
+              "nodeId": "1S6Z-0",
               "size": [
                 256,
                 32
@@ -5702,12 +6557,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1D05-0",
+              "nodeId": "1S7B-0",
               "size": [
                 256,
                 210.03
               ],
-              "htmlHash": "74923e657ea1c0fe"
+              "htmlHash": "1510c7a531c2f719"
             }
           ]
         },
@@ -5715,14 +6570,14 @@
           "id": "components-select--with-value",
           "title": "With Value",
           "opened": "click",
-          "nodes": 31,
+          "nodes": 32,
           "approximated": 1,
           "bound": 119,
           "bindable": 119,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D16-0",
+              "nodeId": "1S8F-0",
               "size": [
                 256,
                 32
@@ -5731,12 +6586,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1D1I-0",
+              "nodeId": "1S8R-0",
               "size": [
                 256,
                 210.03
               ],
-              "htmlHash": "3023e3c22205dd07"
+              "htmlHash": "ca1b0373b8b753d2"
             }
           ]
         },
@@ -5744,14 +6599,14 @@
           "id": "components-select--with-label",
           "title": "With Label",
           "opened": "click",
-          "nodes": 31,
+          "nodes": 32,
           "approximated": 1,
           "bound": 122,
           "bindable": 123,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D2M-0",
+              "nodeId": "1S9Y-0",
               "size": [
                 256,
                 51.59
@@ -5760,12 +6615,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1D30-0",
+              "nodeId": "1SAC-0",
               "size": [
                 256,
                 210.03
               ],
-              "htmlHash": "752c0be8aa56472b"
+              "htmlHash": "76eea81c18ca6e3f"
             }
           ]
         },
@@ -5773,14 +6628,14 @@
           "id": "components-select--small",
           "title": "Small",
           "opened": "click",
-          "nodes": 29,
+          "nodes": 30,
           "approximated": 1,
           "bound": 117,
           "bindable": 117,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D41-0",
+              "nodeId": "1SBG-0",
               "size": [
                 256,
                 28
@@ -5789,12 +6644,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1D4D-0",
+              "nodeId": "1SBS-0",
               "size": [
                 256,
                 210.03
               ],
-              "htmlHash": "e4923e9dea35a431"
+              "htmlHash": "54bf7d1d5f2913ff"
             }
           ]
         },
@@ -5809,7 +6664,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D5B-0",
+              "nodeId": "1SCT-0",
               "size": [
                 256,
                 32
@@ -5857,7 +6712,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D5V-0",
+              "nodeId": "1SDD-0",
               "size": [
                 256,
                 63.81
@@ -5877,7 +6732,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D6A-0",
+              "nodeId": "1SDS-0",
               "size": [
                 256,
                 108.22
@@ -5897,7 +6752,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D6T-0",
+              "nodeId": "1SEB-0",
               "size": [
                 256,
                 19.41
@@ -5917,7 +6772,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D7C-0",
+              "nodeId": "1SEU-0",
               "size": [
                 256,
                 155.22
@@ -5967,7 +6822,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D8B-0",
+              "nodeId": "1SFT-0",
               "size": [
                 112.19,
                 32
@@ -5976,12 +6831,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1D8G-0",
+              "nodeId": "1SFY-0",
               "size": [
                 384,
                 900
               ],
-              "htmlHash": "cd6ffa7fb7e161b0"
+              "htmlHash": "191e24b68c01b171"
             }
           ]
         },
@@ -5996,7 +6851,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1D9H-0",
+              "nodeId": "1SGY-0",
               "size": [
                 128.31,
                 32
@@ -6005,7 +6860,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1D9M-0",
+              "nodeId": "1SH3-0",
               "size": [
                 384,
                 900
@@ -6025,7 +6880,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DAF-0",
+              "nodeId": "1SHW-0",
               "size": [
                 107.31,
                 32
@@ -6034,7 +6889,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1DAK-0",
+              "nodeId": "1SI1-0",
               "size": [
                 1280,
                 237.2
@@ -6082,12 +6937,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DBB-0",
+              "nodeId": "1YCV-0",
               "size": [
                 1232,
                 900
               ],
-              "htmlHash": "b1603c929d2db5a7"
+              "htmlHash": "dfe061dbb51b3ebd"
             }
           ]
         },
@@ -6102,12 +6957,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DEJ-0",
+              "nodeId": "1YG3-0",
               "size": [
                 1232,
                 900
               ],
-              "htmlHash": "f23f74d101edc33e"
+              "htmlHash": "feeedd84a421be1e"
             }
           ]
         },
@@ -6122,12 +6977,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DHA-0",
+              "nodeId": "1YIU-0",
               "size": [
                 1232,
                 900
               ],
-              "htmlHash": "ad8b7977608e22f1"
+              "htmlHash": "fd112a10e162d381"
             }
           ]
         },
@@ -6142,12 +6997,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DJP-0",
+              "nodeId": "1YL9-0",
               "size": [
                 1232,
                 900
               ],
-              "htmlHash": "911c583ae219fb6e"
+              "htmlHash": "522b0a158bb9fd72"
             }
           ]
         }
@@ -6190,7 +7045,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DMG-0",
+              "nodeId": "1STL-0",
               "size": [
                 288,
                 16
@@ -6210,7 +7065,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DMO-0",
+              "nodeId": "1STT-0",
               "size": [
                 288,
                 286
@@ -6230,7 +7085,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DNA-0",
+              "nodeId": "1SUF-0",
               "size": [
                 288,
                 468
@@ -6278,7 +7133,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DOF-0",
+              "nodeId": "1SVK-0",
               "size": [
                 288,
                 26
@@ -6298,7 +7153,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DOY-0",
+              "nodeId": "1SW3-0",
               "size": [
                 288,
                 4
@@ -6318,7 +7173,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DPH-0",
+              "nodeId": "1SWM-0",
               "size": [
                 288,
                 4
@@ -6338,7 +7193,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DPY-0",
+              "nodeId": "1SX3-0",
               "size": [
                 288,
                 4
@@ -6358,7 +7213,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DQF-0",
+              "nodeId": "1SXK-0",
               "size": [
                 288,
                 176
@@ -6406,7 +7261,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DRT-0",
+              "nodeId": "1SYY-0",
               "size": [
                 92.23,
                 32
@@ -6415,7 +7270,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1DRY-0",
+              "nodeId": "1SZ3-0",
               "size": [
                 356,
                 53.5
@@ -6435,7 +7290,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DSC-0",
+              "nodeId": "1SZH-0",
               "size": [
                 431.97,
                 32
@@ -6444,7 +7299,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1DSX-0",
+              "nodeId": "1T02-0",
               "size": [
                 356,
                 53.5
@@ -6464,7 +7319,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DTB-0",
+              "nodeId": "1T0G-0",
               "size": [
                 130.88,
                 32
@@ -6473,12 +7328,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1DTG-0",
+              "nodeId": "1T0L-0",
               "size": [
                 356,
                 58
               ],
-              "htmlHash": "066f4cb4492b1db8"
+              "htmlHash": "86e72728d743a0d2"
             }
           ]
         }
@@ -6521,7 +7376,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DTZ-0",
+              "nodeId": "1T13-0",
               "size": [
                 129.38,
                 19.41
@@ -6541,7 +7396,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DUA-0",
+              "nodeId": "1T1E-0",
               "size": [
                 132,
                 199.41
@@ -6568,11 +7423,11 @@
       "sourceHash": "2bc5bdb7aa69e83b",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 11,
-        "approximated": 1,
-        "bound": 25,
-        "bindable": 25,
+        "stories": 3,
+        "nodes": 42,
+        "approximated": 2,
+        "bound": 130,
+        "bindable": 130,
         "bindingRate": 1
       },
       "notes": [],
@@ -6589,12 +7444,52 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DVJ-0",
+              "nodeId": "1T2N-0",
               "size": [
                 640,
                 32
               ],
               "htmlHash": "ad72abf0f88e5127"
+            }
+          ]
+        },
+        {
+          "id": "components-suggestedprompts--cards",
+          "title": "Cards",
+          "opened": "none",
+          "nodes": 19,
+          "approximated": 1,
+          "bound": 82,
+          "bindable": 82,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1T38-0",
+              "size": [
+                640,
+                59.41
+              ],
+              "htmlHash": "19fd68b5abd74cca"
+            }
+          ]
+        },
+        {
+          "id": "components-suggestedprompts--list",
+          "title": "List",
+          "opened": "none",
+          "nodes": 12,
+          "approximated": 0,
+          "bound": 23,
+          "bindable": 23,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1T44-0",
+              "size": [
+                640,
+                81.81
+              ],
+              "htmlHash": "3ba72159cef463aa"
             }
           ]
         }
@@ -6637,7 +7532,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DW9-0",
+              "nodeId": "1T4W-0",
               "size": [
                 155.17,
                 18.39
@@ -6657,7 +7552,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DWL-0",
+              "nodeId": "1T58-0",
               "size": [
                 123.78,
                 48.78
@@ -6677,7 +7572,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DX3-0",
+              "nodeId": "1T5Q-0",
               "size": [
                 151.61,
                 103.2
@@ -6697,7 +7592,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DXR-0",
+              "nodeId": "1T6E-0",
               "size": [
                 155.17,
                 109.56
@@ -6745,7 +7640,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1DYQ-0",
+              "nodeId": "1T7D-0",
               "size": [
                 1200,
                 259.31
@@ -6765,7 +7660,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E0W-0",
+              "nodeId": "1T9J-0",
               "size": [
                 1200,
                 222.91
@@ -6785,7 +7680,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E2U-0",
+              "nodeId": "1TBH-0",
               "size": [
                 1200,
                 184.13
@@ -6833,12 +7728,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E3Z-0",
+              "nodeId": "1TCM-0",
               "size": [
                 320,
                 126.81
               ],
-              "htmlHash": "ab36e7c5bc4cdace"
+              "htmlHash": "ab892c24d852d63e"
             }
           ]
         },
@@ -6853,12 +7748,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E4L-0",
+              "nodeId": "1TD8-0",
               "size": [
                 320,
                 71.41
               ],
-              "htmlHash": "58eebf89acac97da"
+              "htmlHash": "fad7df61b5c6bd16"
             }
           ]
         },
@@ -6873,7 +7768,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E57-0",
+              "nodeId": "1TDU-0",
               "size": [
                 320,
                 82.22
@@ -6893,12 +7788,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E5S-0",
+              "nodeId": "1TEF-0",
               "size": [
                 320,
                 492.44
               ],
-              "htmlHash": "9c8c55c242378deb"
+              "htmlHash": "3b3178123f7cf0be"
             }
           ]
         }
@@ -6941,7 +7836,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E7V-0",
+              "nodeId": "1TGI-0",
               "size": [
                 320,
                 85.59
@@ -6961,7 +7856,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E8A-0",
+              "nodeId": "1TGX-0",
               "size": [
                 320,
                 85.59
@@ -6981,7 +7876,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E8P-0",
+              "nodeId": "1THC-0",
               "size": [
                 320,
                 109.59
@@ -7001,7 +7896,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1E96-0",
+              "nodeId": "1THT-0",
               "size": [
                 320,
                 402.59
@@ -7029,7 +7924,7 @@
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 4,
-        "nodes": 43,
+        "nodes": 44,
         "approximated": 0,
         "bound": 137,
         "bindable": 137,
@@ -7049,7 +7944,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EA8-0",
+              "nodeId": "1TIV-0",
               "size": [
                 36,
                 32
@@ -7069,7 +7964,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EAH-0",
+              "nodeId": "1TJ4-0",
               "size": [
                 38,
                 32
@@ -7089,7 +7984,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EAQ-0",
+              "nodeId": "1TJD-0",
               "size": [
                 69.72,
                 32
@@ -7102,19 +7997,19 @@
           "id": "components-toggle--all-variants",
           "title": "All Variants",
           "opened": "none",
-          "nodes": 36,
+          "nodes": 37,
           "approximated": 0,
           "bound": 105,
           "bindable": 105,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EB1-0",
+              "nodeId": "1TJO-0",
               "size": [
                 122,
                 276.19
               ],
-              "htmlHash": "d8f769e339869ced"
+              "htmlHash": "792c438fdc67dd71"
             }
           ]
         }
@@ -7157,7 +8052,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ECO-0",
+              "nodeId": "1TLC-0",
               "size": [
                 124,
                 32
@@ -7177,7 +8072,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ED6-0",
+              "nodeId": "1TLU-0",
               "size": [
                 124,
                 32
@@ -7197,7 +8092,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EDO-0",
+              "nodeId": "1TMC-0",
               "size": [
                 130,
                 32
@@ -7217,7 +8112,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EE6-0",
+              "nodeId": "1TMU-0",
               "size": [
                 100,
                 80
@@ -7237,7 +8132,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EEY-0",
+              "nodeId": "1TNM-0",
               "size": [
                 130,
                 536
@@ -7285,7 +8180,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EHL-0",
+              "nodeId": "1TQ9-0",
               "size": [
                 77.03,
                 20
@@ -7305,7 +8200,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EHT-0",
+              "nodeId": "1TQH-0",
               "size": [
                 78.94,
                 20
@@ -7325,7 +8220,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EI1-0",
+              "nodeId": "1TQP-0",
               "size": [
                 74.94,
                 16
@@ -7345,7 +8240,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EI9-0",
+              "nodeId": "1TQX-0",
               "size": [
                 454.02,
                 48
@@ -7393,7 +8288,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EJF-0",
+              "nodeId": "1YO3-0",
               "size": [
                 83.66,
                 32
@@ -7402,7 +8297,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1EJK-0",
+              "nodeId": "1YO8-0",
               "size": [
                 129.78,
                 28
@@ -7422,7 +8317,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EJX-0",
+              "nodeId": "1YOL-0",
               "size": [
                 24,
                 35.19
@@ -7431,7 +8326,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1EK3-0",
+              "nodeId": "1YOR-0",
               "size": [
                 263.7,
                 28
@@ -7451,7 +8346,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EKG-0",
+              "nodeId": "1YP4-0",
               "size": [
                 247.66,
                 28
@@ -7460,7 +8355,7 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1EKV-0",
+              "nodeId": "1YPJ-0",
               "size": [
                 100.3,
                 28
@@ -7508,7 +8403,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ELA-0",
+              "nodeId": "1TU7-0",
               "size": [
                 380,
                 271.2
@@ -7528,7 +8423,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EMM-0",
+              "nodeId": "1TVJ-0",
               "size": [
                 380,
                 34.8
@@ -7548,7 +8443,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EN9-0",
+              "nodeId": "1TW6-0",
               "size": [
                 380,
                 271.2
@@ -7568,7 +8463,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EOO-0",
+              "nodeId": "1TXL-0",
               "size": [
                 380,
                 18
@@ -7588,7 +8483,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EP6-0",
+              "nodeId": "1TY3-0",
               "size": [
                 380,
                 18
@@ -7636,7 +8531,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EPT-0",
+              "nodeId": "1TYQ-0",
               "size": [
                 420,
                 315.05
@@ -7663,16 +8558,16 @@
       "sourceHash": "3f0159d8ad3b17e2",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 84,
-        "approximated": 6,
-        "bound": 259,
-        "bindable": 271,
-        "bindingRate": 0.956
+        "stories": 5,
+        "nodes": 431,
+        "approximated": 32,
+        "bound": 1295,
+        "bindable": 1367,
+        "bindingRate": 0.947
       },
       "notes": [],
       "lost": [
-        "button: background-clip: padding-box not carried"
+        "button: background-clip: padding-box not carried ×7"
       ],
       "stories": [
         {
@@ -7686,12 +8581,92 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1ES7-0",
+              "nodeId": "1U14-0",
               "size": [
                 1232,
                 640
               ],
               "htmlHash": "3e7d7eb73f97bd06"
+            }
+          ]
+        },
+        {
+          "id": "patterns-ai-ai-chat--app-conversation",
+          "title": "App Conversation",
+          "opened": "none",
+          "nodes": 73,
+          "approximated": 5,
+          "bound": 236,
+          "bindable": 247,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1U4K-0",
+              "size": [
+                1232,
+                640
+              ],
+              "htmlHash": "3ea0d2a291bd9891"
+            }
+          ]
+        },
+        {
+          "id": "patterns-ai-ai-chat--own-sidebar",
+          "title": "Own Sidebar",
+          "opened": "none",
+          "nodes": 54,
+          "approximated": 3,
+          "bound": 162,
+          "bindable": 183,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1U7A-0",
+              "size": [
+                1232,
+                640
+              ],
+              "htmlHash": "91cd8a2fe5fdef42"
+            }
+          ]
+        },
+        {
+          "id": "patterns-ai-ai-chat--no-sidebar",
+          "title": "No Sidebar",
+          "opened": "none",
+          "nodes": 64,
+          "approximated": 5,
+          "bound": 172,
+          "bindable": 183,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1U99-0",
+              "size": [
+                1232,
+                640
+              ],
+              "htmlHash": "6d56caf3e764e1d6"
+            }
+          ]
+        },
+        {
+          "id": "patterns-ai-ai-chat--agent-pieces-in-one-thread",
+          "title": "Agent Pieces In One Thread",
+          "opened": "none",
+          "nodes": 156,
+          "approximated": 13,
+          "bound": 466,
+          "bindable": 483,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1UBY-0",
+              "size": [
+                1232,
+                1367.25
+              ],
+              "htmlHash": "acf6bfa3ae77baf8"
             }
           ]
         }
@@ -7737,7 +8712,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EVS-0",
+              "nodeId": "1UIE-0",
               "size": [
                 1232,
                 512
@@ -7764,16 +8739,16 @@
       "sourceHash": "5941f3f6f5278166",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 1,
-        "nodes": 47,
-        "approximated": 3,
-        "bound": 119,
-        "bindable": 133,
-        "bindingRate": 0.895
+        "stories": 4,
+        "nodes": 147,
+        "approximated": 8,
+        "bound": 388,
+        "bindable": 432,
+        "bindingRate": 0.898
       },
       "notes": [],
       "lost": [
-        "button: background-clip: padding-box not carried"
+        "button: background-clip: padding-box not carried ×4"
       ],
       "stories": [
         {
@@ -7787,12 +8762,72 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EXO-0",
+              "nodeId": "1Z1Y-0",
               "size": [
                 384,
                 560
               ],
-              "htmlHash": "0c5e1ef580b23969"
+              "htmlHash": "5c5bd8e6272cf2d3"
+            }
+          ]
+        },
+        {
+          "id": "patterns-ai-ai-side-panel--no-scope",
+          "title": "No Scope",
+          "opened": "none",
+          "nodes": 42,
+          "approximated": 3,
+          "bound": 108,
+          "bindable": 122,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Z41-0",
+              "size": [
+                384,
+                560
+              ],
+              "htmlHash": "45224b8d7775d9ed"
+            }
+          ]
+        },
+        {
+          "id": "patterns-ai-ai-side-panel--empty-app-thread",
+          "title": "Empty App Thread",
+          "opened": "none",
+          "nodes": 23,
+          "approximated": 0,
+          "bound": 67,
+          "bindable": 73,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Z5W-0",
+              "size": [
+                384,
+                560
+              ],
+              "htmlHash": "c67f3bf2767177e5"
+            }
+          ]
+        },
+        {
+          "id": "patterns-ai-ai-side-panel--history-in-the-panel",
+          "title": "History In The Panel",
+          "opened": "none",
+          "nodes": 35,
+          "approximated": 2,
+          "bound": 94,
+          "bindable": 104,
+          "parts": [
+            {
+              "part": "main",
+              "nodeId": "1Z6W-0",
+              "size": [
+                384,
+                448
+              ],
+              "htmlHash": "2afbab3800ebe366"
             }
           ]
         }
@@ -7835,7 +8870,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1EZV-0",
+              "nodeId": "1UWD-0",
               "size": [
                 512,
                 208.44
@@ -7883,12 +8918,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1F0X-0",
+              "nodeId": "1UXF-0",
               "size": [
                 880,
                 316.3
               ],
-              "htmlHash": "633ca9f8a55c095c"
+              "htmlHash": "71a44b347fa689e1"
             }
           ]
         }
@@ -7933,7 +8968,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1F7A-0",
+              "nodeId": "1V3S-0",
               "size": [
                 880,
                 120
@@ -7981,7 +9016,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1F8A-0",
+              "nodeId": "1V4S-0",
               "size": [
                 280,
                 76
@@ -8029,12 +9064,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1F8X-0",
+              "nodeId": "1V5F-0",
               "size": [
                 510,
                 352.58
               ],
-              "htmlHash": "f3fbc49361dba74d"
+              "htmlHash": "48f6f2787241c17b"
             }
           ]
         }
@@ -8079,12 +9114,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FEO-0",
+              "nodeId": "1VB6-0",
               "size": [
                 458,
                 449.58
               ],
-              "htmlHash": "ddcda48607aebe85"
+              "htmlHash": "c11553cc3ffcff1e"
             }
           ]
         }
@@ -8129,7 +9164,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FOW-0",
+              "nodeId": "1VLE-0",
               "size": [
                 400,
                 480
@@ -8179,7 +9214,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FPZ-0",
+              "nodeId": "1VMH-0",
               "size": [
                 820,
                 461.67
@@ -8227,12 +9262,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FSH-0",
+              "nodeId": "1VOZ-0",
               "size": [
                 440,
                 274.03
               ],
-              "htmlHash": "7d30cb3bdcb5fbe7"
+              "htmlHash": "6bc15a45d347d7c2"
             }
           ]
         }
@@ -8277,7 +9312,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FUC-0",
+              "nodeId": "1VQU-0",
               "size": [
                 440,
                 465.67
@@ -8325,7 +9360,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FVZ-0",
+              "nodeId": "1VSH-0",
               "size": [
                 300,
                 350
@@ -8345,7 +9380,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FXI-0",
+              "nodeId": "1VU0-0",
               "size": [
                 300,
                 582
@@ -8365,7 +9400,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1FZW-0",
+              "nodeId": "1VWE-0",
               "size": [
                 300,
                 89.41
@@ -8415,7 +9450,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1G0H-0",
+              "nodeId": "1VWZ-0",
               "size": [
                 520,
                 110.81
@@ -8465,12 +9500,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1G16-0",
+              "nodeId": "1VXO-0",
               "size": [
                 1232,
                 600
               ],
-              "htmlHash": "0bc9332612216e94"
+              "htmlHash": "c1fc515ed06d65cc"
             }
           ]
         }
@@ -8515,12 +9550,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1G3V-0",
+              "nodeId": "1W0D-0",
               "size": [
                 1200,
                 295.13
               ],
-              "htmlHash": "503a1c2077b5c098"
+              "htmlHash": "9a65f29ee275df92"
             }
           ]
         }
@@ -8565,7 +9600,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1G6U-0",
+              "nodeId": "1W3C-0",
               "size": [
                 420,
                 246.03
@@ -8615,7 +9650,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1G7I-0",
+              "nodeId": "1W40-0",
               "size": [
                 1232,
                 500
@@ -8663,12 +9698,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1G87-0",
+              "nodeId": "1W4P-0",
               "size": [
                 560,
                 419.5
               ],
-              "htmlHash": "8044df6c9472873a"
+              "htmlHash": "d9945c215502310f"
             }
           ]
         }
@@ -8711,7 +9746,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1G9U-0",
+              "nodeId": "1W6C-0",
               "size": [
                 1200,
                 406.63
@@ -8761,7 +9796,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GB1-0",
+              "nodeId": "1W7J-0",
               "size": [
                 440,
                 483.7
@@ -8809,7 +9844,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GD3-0",
+              "nodeId": "1W9L-0",
               "size": [
                 1232,
                 306.03
@@ -8859,7 +9894,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GEF-0",
+              "nodeId": "1WAX-0",
               "size": [
                 380,
                 268.3
@@ -8909,7 +9944,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GF9-0",
+              "nodeId": "1WBR-0",
               "size": [
                 1232,
                 610.77
@@ -8957,7 +9992,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GG1-0",
+              "nodeId": "1WCJ-0",
               "size": [
                 640,
                 429.97
@@ -9005,7 +10040,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GIQ-0",
+              "nodeId": "1WF8-0",
               "size": [
                 1200,
                 258.22
@@ -9053,7 +10088,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GLG-0",
+              "nodeId": "1WHY-0",
               "size": [
                 1232,
                 520
@@ -9103,7 +10138,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GN6-0",
+              "nodeId": "1WJO-0",
               "size": [
                 380,
                 348.48
@@ -9153,7 +10188,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GO7-0",
+              "nodeId": "1WKP-0",
               "size": [
                 320,
                 235.72
@@ -9203,7 +10238,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GP0-0",
+              "nodeId": "1WLI-0",
               "size": [
                 340,
                 423.13
@@ -9253,7 +10288,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GQE-0",
+              "nodeId": "1WMW-0",
               "size": [
                 1232,
                 560
@@ -9303,12 +10338,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GS0-0",
+              "nodeId": "1WOI-0",
               "size": [
                 1232,
                 560
               ],
-              "htmlHash": "2e639f5dd982faa0"
+              "htmlHash": "3b91b38fd6668a2c"
             }
           ]
         }
@@ -9353,12 +10388,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GUX-0",
+              "nodeId": "1WRF-0",
               "size": [
                 1232,
                 56
               ],
-              "htmlHash": "83f89b26a5b37af8"
+              "htmlHash": "2e5d8319cf054b39"
             }
           ]
         }
@@ -9403,7 +10438,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GVY-0",
+              "nodeId": "1WSF-0",
               "size": [
                 560,
                 297.75
@@ -9451,7 +10486,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GWQ-0",
+              "nodeId": "1WT7-0",
               "size": [
                 360,
                 266.44
@@ -9499,7 +10534,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GYA-0",
+              "nodeId": "1WUR-0",
               "size": [
                 400,
                 276.3
@@ -9549,7 +10584,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1GZE-0",
+              "nodeId": "1WVV-0",
               "size": [
                 400,
                 326.73
@@ -9599,7 +10634,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1H0J-0",
+              "nodeId": "1WX0-0",
               "size": [
                 380,
                 257.3
@@ -9649,7 +10684,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1H1O-0",
+              "nodeId": "1WY5-0",
               "size": [
                 1200,
                 97.47
@@ -9699,12 +10734,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1H2S-0",
+              "nodeId": "1WZ9-0",
               "size": [
                 1200,
                 328.52
               ],
-              "htmlHash": "1ea635ad56936670"
+              "htmlHash": "e125e53d705c008d"
             }
           ]
         }
@@ -9749,7 +10784,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1H5V-0",
+              "nodeId": "1X2A-0",
               "size": [
                 340,
                 348.83
@@ -9797,7 +10832,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1H71-0",
+              "nodeId": "1X3G-0",
               "size": [
                 440,
                 314.63
@@ -9847,7 +10882,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1H8V-0",
+              "nodeId": "1X5A-0",
               "size": [
                 560,
                 386.48
@@ -9895,12 +10930,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HA7-0",
+              "nodeId": "1YPY-0",
               "size": [
                 1232,
                 900
               ],
-              "htmlHash": "cc1afe002823c6c1"
+              "htmlHash": "e4a67f65b76df85d"
             }
           ]
         }
@@ -9945,7 +10980,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HE3-0",
+              "nodeId": "1XAF-0",
               "size": [
                 380,
                 368.08
@@ -9995,7 +11030,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HF6-0",
+              "nodeId": "1XBI-0",
               "size": [
                 380,
                 427.98
@@ -10043,7 +11078,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HGN-0",
+              "nodeId": "1XCZ-0",
               "size": [
                 1200,
                 134.06
@@ -10091,7 +11126,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HI1-0",
+              "nodeId": "1XED-0",
               "size": [
                 880,
                 250.06
@@ -10139,12 +11174,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HJ3-0",
+              "nodeId": "1XFF-0",
               "size": [
                 560,
                 251.48
               ],
-              "htmlHash": "243847092a542a03"
+              "htmlHash": "0dc343e43a03ee18"
             }
           ]
         }
@@ -10187,7 +11222,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HK6-0",
+              "nodeId": "1XGI-0",
               "size": [
                 880,
                 316.14
@@ -10235,7 +11270,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HMG-0",
+              "nodeId": "1XIS-0",
               "size": [
                 520,
                 348
@@ -10285,7 +11320,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HN0-0",
+              "nodeId": "1XJC-0",
               "size": [
                 92.05,
                 28
@@ -10305,7 +11340,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HNE-0",
+              "nodeId": "1XJQ-0",
               "size": [
                 520,
                 366.5
@@ -10355,7 +11390,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HOF-0",
+              "nodeId": "1XKR-0",
               "size": [
                 460,
                 312.48
@@ -10405,12 +11440,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HPV-0",
+              "nodeId": "1YTU-0",
               "size": [
                 1232,
                 900
               ],
-              "htmlHash": "063923ff0812fa6c"
+              "htmlHash": "d5b443030db8d9d3"
             }
           ]
         }
@@ -10455,7 +11490,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HXZ-0",
+              "nodeId": "1XU8-0",
               "size": [
                 1232,
                 900
@@ -10505,12 +11540,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1HZO-0",
+              "nodeId": "1XVX-0",
               "size": [
                 1232,
                 2439.94
               ],
-              "htmlHash": "4306b021f93ea226"
+              "htmlHash": "dc7e51efdf98eb95"
             }
           ]
         }
