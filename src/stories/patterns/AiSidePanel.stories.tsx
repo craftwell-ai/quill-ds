@@ -7,6 +7,9 @@ import { AiButton } from '@/components/ui/ai-button'
 import { Button } from '@/components/ui/button'
 import { ApprovalCard } from '@/components/ui/approval-card'
 import { AgentSteps } from '@/components/ui/agent-steps'
+import { AiMessage, UserMessage } from '@/components/ui/ai-message'
+import { AiThinking } from '@/components/ui/ai-thinking'
+import { ConversationHistory, type Conversation } from '@registry/blocks/conversation-history'
 import { usage } from '@/usage/ai-side-panel.usage.mjs'
 import { renderUsageDocs } from '@/usage/render.mjs'
 import { compositeOver, contrastRatio, surfaceBehind, washedTop } from '../contrast'
@@ -529,5 +532,382 @@ export const Phone: Story = {
     await expect(close.contains(document.elementFromPoint(closeBox.left + closeBox.width / 2, closeBox.top + closeBox.height / 2))).toBe(true)
     await userEvent.click(close)
     await waitFor(() => expect(page.queryByRole('dialog')).toBeNull())
+  },
+}
+
+// From here on the thread is the app's own (CRA-279): `children` replaces the sample conversation, and the app drives
+// the composer. The same frame as every other example; the shorter one makes a few turns overflow.
+const framed = (viewMode: string, height: '35rem' | '28rem' = '35rem') =>
+  `${height === '35rem' ? fitHeight(viewMode, 'h-[35rem]', 'h-[min(35rem,calc(100dvh-3rem))]') : fitHeight(viewMode, 'h-[28rem]', 'h-[min(28rem,calc(100dvh-3rem))]')} w-full max-w-sm rounded-xl border border-border shadow-md`
+const atNewest = (scroller: HTMLElement) => scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2
+
+// `reply`: text is an answer, null is a stopped answer, undefined is one still being written.
+type OwnTurn = { id: number; ask: string; reply?: string | null }
+const OWN_TURNS: OwnTurn[] = [
+  { id: 1, ask: 'Which plan do most new teams pick?', reply: 'Team, by a wide margin: 61% of September signups chose it, up from 48% in August.' },
+  { id: 2, ask: 'And the ones who leave in the first month?', reply: 'Mostly Starter. Four in five of them never invited a second person.' },
+  { id: 3, ask: 'Draft a nudge for those accounts.' },
+]
+const ownTurn = (turn: OwnTurn) => (
+  <React.Fragment key={turn.id}>
+    <UserMessage>{turn.ask}</UserMessage>
+    {/* hideName on every reply, as the sample does: the header already says who is answering. */}
+    {turn.reply === undefined
+      ? <AiMessage hideName streaming thinking={<AiThinking status="working" activity="Checking the plan mix" />} />
+      : turn.reply === null ? <AiMessage hideName stopped /> : <AiMessage hideName><p>{turn.reply}</p></AiMessage>}
+  </React.Fragment>
+)
+
+// The app's side: it owns the turns and whether a reply is being written, and applies what the panel reports.
+function AppThreadPanel({ args, className }: { args: Story['args']; className: string }) {
+  const [turns, setTurns] = React.useState(OWN_TURNS)
+  const [status, setStatus] = React.useState<'idle' | 'working'>('working')
+  // Two things that come from outside the panel in a real app; the test asks for each with an event. "Regenerate the
+  // last reply" starts writing without adding a turn; a turn arriving from elsewhere adds one without any writing.
+  React.useEffect(() => {
+    const regenerate = () => { setTurns((all) => all.map((turn, index) => (index === all.length - 1 ? { ...turn, reply: undefined } : turn))); setStatus('working') }
+    const arrive = () => setTurns((all) => [...all, { id: all.length + 1, ask: 'Send it on Monday instead.', reply: 'Done: it is set for Monday at 9.' }])
+    window.addEventListener('quill-story-regenerate', regenerate)
+    window.addEventListener('quill-story-turn-arrives', arrive)
+    return () => {
+      window.removeEventListener('quill-story-regenerate', regenerate)
+      window.removeEventListener('quill-story-turn-arrives', arrive)
+    }
+  }, [])
+  return (
+    <AiPanel scope="Pricing page" status={status} className={className}
+      onStop={() => { setTurns((all) => all.map((turn, index) => (index === all.length - 1 ? { ...turn, reply: null } : turn))); setStatus('idle'); args?.onStop?.() }}
+      onSubmit={(text) => { setTurns((all) => [...all, { id: all.length + 1, ask: text }]); setStatus('working'); args?.onSubmit?.(text) }}>
+      {turns.map(ownTurn)}
+    </AiPanel>
+  )
+}
+
+export const AppThread: Story = {
+  ...DESKTOP,
+  args: { onStop: fn() },
+  parameters: { ...DESKTOP.parameters, docs: { description: { story: 'The app\'s own conversation, passed as children. The app says when a reply is being written (status), and hears Stop and Send.' } } },
+  render: (args, { viewMode }) => <AppThreadPanel args={args} className={framed(viewMode, '28rem')} />,
+  play: async ({ canvas, args }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const log = within(panel).getByRole('log', { name: 'Messages' })
+    // None of the sample conversation is here: not its messages, not its follow-up.
+    await expect(log).not.toHaveTextContent('The September dip.')
+    await expect(log).not.toHaveTextContent("What's the one thing to fix?")
+    await expect(within(panel).queryByRole('list', { name: 'Follow-ups' })).toBeNull()
+    await expect(within(panel).queryByText('Draft a fix for the pricing page')).toBeNull()
+    // The app's turns are, in the log.
+    await expect(log).toHaveTextContent('Which plan do most new teams pick?')
+    await expect(log).toHaveTextContent('Four in five of them never invited a second person.')
+    // The header says "Assistant"; the app's replies passed hideName, so none repeats it.
+    await expect(visibleNames(log)).toHaveLength(0)
+    // Longer than the panel, and opened on the newest turn.
+    const scroller = threadOf(panel)
+    await expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight)
+    await waitFor(() => expect(atNewest(scroller)).toBe(true))
+    // The app said a reply is being written, so the composer offers Stop; pressing it tells the app.
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
+    await expect(args.onStop).toHaveBeenCalledTimes(1)
+    await expect(canvas.getByText('You stopped this answer.')).toBeVisible()
+    // Stop unmounts as the app goes idle; the cursor lands back in the box, as it does with the sample.
+    await expect(box).toHaveFocus()
+    await expect(canvas.queryByRole('button', { name: 'Stop' })).toBeNull()
+    // Sending tells the app once. The panel adds nothing of its own: the one new message is the app's, and there is
+    // no pretend reply ("Reading the page" is the sample's).
+    scroller.scrollTop = 0
+    await userEvent.type(box, 'Make it shorter{Enter}')
+    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSubmit).toHaveBeenCalledWith('Make it shorter')
+    await expect(within(log).getAllByText('Make it shorter')).toHaveLength(1)
+    await expect(log.querySelectorAll('article')).toHaveLength(4)
+    await expect(log).not.toHaveTextContent('Reading the page')
+    await expect(box).toHaveValue('')
+    // A turn was added below a thread scrolled to its top: the newest is brought into view.
+    await waitFor(() => expect(atNewest(scroller)).toBe(true))
+    await userEvent.click(await canvas.findByRole('button', { name: 'Stop' }))
+    await expect(args.onStop).toHaveBeenCalledTimes(2)
+    // The app starts writing again without adding a turn (the last reply is regenerated): the same.
+    scroller.scrollTop = 0
+    await waitFor(() => expect(scroller.scrollTop).toBe(0))
+    window.dispatchEvent(new Event('quill-story-regenerate'))
+    await canvas.findByRole('button', { name: 'Stop' })
+    await expect(log.querySelectorAll('article')).toHaveLength(4)
+    await waitFor(() => expect(atNewest(scroller)).toBe(true))
+    // And a turn added while nothing is being written is brought into view as well.
+    await userEvent.click(canvas.getByRole('button', { name: 'Stop' }))
+    scroller.scrollTop = 0
+    await waitFor(() => expect(scroller.scrollTop).toBe(0))
+    window.dispatchEvent(new Event('quill-story-turn-arrives'))
+    await expect(await within(log).findByText('Done: it is set for Monday at 9.')).toBeInTheDocument()
+    await expect(canvas.queryByRole('button', { name: 'Stop' })).toBeNull()
+    await waitFor(() => expect(atNewest(scroller)).toBe(true))
+  },
+}
+
+// An app with nothing said yet passes null (or an empty list): an empty thread, not the sample.
+export const EmptyAppThread: Story = {
+  ...DESKTOP,
+  parameters: { ...DESKTOP.parameters, docs: { description: { story: 'A new conversation: the app passed an empty thread, so nothing of the sample is shown.' } } },
+  render: (args, { viewMode }) => <AiPanel scope="Pricing page" onSubmit={args.onSubmit} onHistory={args.onHistory} className={framed(viewMode)}>{null}</AiPanel>,
+  play: async ({ canvas, args }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    // The log is on the page, empty, before the first turn, so the first turn is read out when it arrives.
+    const log = panel.querySelector('[role="log"]') as HTMLElement
+    await expect(log).toHaveAttribute('aria-label', 'Messages')
+    await expect(log).toBeEmptyDOMElement()
+    await expect(panel).not.toHaveTextContent('The September dip.')
+    await expect(within(panel).queryByRole('list', { name: 'Follow-ups' })).toBeNull()
+    await expect(within(panel).getByText('Looking at: Pricing page')).toBeVisible()
+    // Sending still reports, and still adds nothing by itself.
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, 'Where do I start?{Enter}')
+    await expect(args.onSubmit).toHaveBeenCalledWith('Where do I start?')
+    await expect(log).toBeEmptyDOMElement()
+    await expect(canvas.queryByRole('button', { name: 'Stop' })).toBeNull()
+    await expect(box).toHaveValue('')
+  },
+}
+
+// The app owns the composer's text: here it starts with a draft, and clears it once it has been sent.
+function ControlledComposerPanel({ args, className }: { args: Story['args']; className: string }) {
+  const [draft, setDraft] = React.useState('Summarise this page for the board')
+  return (
+    <AiPanel scope="Pricing page" value={draft} className={className}
+      onValueChange={(next) => { setDraft(next); args?.onValueChange?.(next) }}
+      onSubmit={(text) => { setDraft(''); args?.onSubmit?.(text) }}>
+      {null}
+    </AiPanel>
+  )
+}
+
+export const ControlledComposer: Story = {
+  ...DESKTOP,
+  args: { onValueChange: fn() },
+  parameters: { ...DESKTOP.parameters, docs: { description: { story: 'The app holds the composer\'s text (value and onValueChange): it starts with a draft, and the app clears it after sending.' } } },
+  render: (args, { viewMode }) => <ControlledComposerPanel args={args} className={framed(viewMode)} />,
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await expect(box).toHaveValue('Summarise this page for the board')
+    await userEvent.type(box, ', briefly')
+    await expect(args.onValueChange).toHaveBeenLastCalledWith('Summarise this page for the board, briefly')
+    await expect(box).toHaveValue('Summarise this page for the board, briefly')
+    await userEvent.keyboard('{Enter}')
+    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSubmit).toHaveBeenCalledWith('Summarise this page for the board, briefly')
+    // Emptied by the app, in its onSubmit.
+    await expect(box).toHaveValue('')
+  },
+}
+
+// The other half of "controlled": a value the app does not change stays, whatever is typed or sent. The panel keeps
+// no copy of its own and does not clear the app's.
+export const ControlledValueIsTheApps: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { value: 'Fixed by the app', onValueChange: fn() },
+  render: (args, { viewMode }) => <AiPanel value={args.value} onValueChange={args.onValueChange} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvas, args }) => {
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    await userEvent.type(box, '!')
+    await expect(args.onValueChange).toHaveBeenLastCalledWith('Fixed by the app!')
+    await expect(box).toHaveValue('Fixed by the app')
+    // The sample's suggestion asks the app too, instead of writing into the box behind its back.
+    await userEvent.click(canvas.getByRole('button', { name: 'Draft a fix for the pricing page' }))
+    await expect(args.onValueChange).toHaveBeenLastCalledWith('Draft a fix for the pricing page')
+    await expect(box).toHaveValue('Fixed by the app')
+    await userEvent.keyboard('{Enter}')
+    await expect(args.onSubmit).toHaveBeenCalledWith('Fixed by the app')
+    await expect(box).toHaveValue('Fixed by the app')
+    await expect(args.onValueChange).not.toHaveBeenCalledWith('')
+  },
+}
+
+const HISTORY_NOW = new Date(2026, 9, 6, 12, 0)
+const HISTORY_CHATS: Array<Conversation & { ask: string; reply: string }> = [
+  { id: 'q3', title: 'Q3 signups vs target', updatedAt: new Date(2026, 9, 6, 9, 0), ask: 'How did signups do against target?', reply: 'Ahead in July and August, 12% short in September. The quarter closed 4% ahead.' },
+  { id: 'launch', title: 'Launch brief draft', updatedAt: new Date(2026, 9, 6, 8, 0), ask: 'Start a brief for the annual-plans launch.', reply: 'Here is a first outline: the problem, who it is for, what changes on the pricing page, and how we will know it worked.' },
+  { id: 'pricing', title: 'Pricing page copy ideas', updatedAt: new Date(2026, 9, 5, 16, 0), ask: 'Three headlines for the pricing page.', reply: 'Pay for the team you have. One price, every feature. Start small, grow when you are ready.' },
+]
+const HISTORY_EARLIER = ['What changed on the page in September?', 'Who signed off on it?', 'When did the dip start?', 'Is it the same on phones?']
+
+// History inside the panel: pressing History swaps the thread for the list (`body`); choosing a chat swaps back.
+function PanelWithHistory({ args, className }: { args: Story['args']; className: string }) {
+  const [listOpen, setListOpen] = React.useState(false)
+  const [current, setCurrent] = React.useState('q3')
+  const chat = HISTORY_CHATS.find((each) => each.id === current) ?? HISTORY_CHATS[0]
+  return (
+    <AiPanel scope="Pricing page" onSubmit={args?.onSubmit} className={className}
+      onHistory={() => { setListOpen((was) => !was); args?.onHistory?.() }}
+      body={listOpen ? (
+        <ConversationHistory label="Past chats" now={HISTORY_NOW} conversations={HISTORY_CHATS} currentId={current}
+          onSelect={(id) => { setCurrent(id); setListOpen(false) }} />
+      ) : undefined}>
+      {current === 'q3' ? HISTORY_EARLIER.map((ask) => (
+        <React.Fragment key={ask}>
+          <UserMessage>{ask}</UserMessage>
+          <AiMessage hideName><p>That is in the changelog for 9 September; I can pull the exact entry if you need it.</p></AiMessage>
+        </React.Fragment>
+      )) : null}
+      <UserMessage>{chat.ask}</UserMessage>
+      <AiMessage hideName><p>{chat.reply}</p></AiMessage>
+    </AiPanel>
+  )
+}
+
+export const HistoryInThePanel: Story = {
+  ...DESKTOP,
+  parameters: { ...DESKTOP.parameters, docs: { description: { story: 'History shows the conversation-history list in the panel itself, in place of the thread. The header and the composer stay; choosing a chat brings the thread back.' } } },
+  render: (args, { viewMode }) => <PanelWithHistory args={args} className={framed(viewMode, '28rem')} />,
+  play: async ({ canvas, canvasElement }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const scroller = threadOf(panel)
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    const history = canvas.getByRole('button', { name: 'History' })
+    await expect(within(panel).getByRole('log', { name: 'Messages' })).toHaveTextContent('How did signups do against target?')
+    await expect(canvasElement.querySelector('[data-slot="conversation-history"]')).toBeNull()
+    // Somewhere in the middle of a long thread. The panel learns where the thread is from its scroll events, which
+    // arrive a frame late: going by way of the top (no fade) makes the fade's return the sign that 60 has been heard.
+    await expect(scroller.scrollHeight - scroller.clientHeight).toBeGreaterThan(80)
+    scroller.scrollTop = 0
+    await waitFor(() => expect(fadeOf(scroller)).toBe('none'))
+    scroller.scrollTop = 60
+    await waitFor(() => expect(fadeOf(scroller)).toContain('gradient'))
+    // History swaps the thread for the list, in the same scrolling area, starting at its top (so nothing is faded).
+    await userEvent.click(history)
+    const list = await within(panel).findByRole('navigation', { name: 'Past chats' })
+    await expect(list).toBeVisible()
+    await expect(scroller).toContainElement(list)
+    await expect(scroller.scrollTop).toBe(0)
+    await waitFor(() => expect(fadeOf(scroller)).toBe('none'))
+    // The list is not a message: it is not in the log, and while it shows there is no log (or scope chip) to read.
+    await expect(list.closest('[role="log"]')).toBeNull()
+    await expect(within(panel).queryByRole('log')).toBeNull()
+    await expect(within(panel).queryByText('How did signups do against target?')).not.toBeVisible()
+    await expect(panel.querySelector('[data-slot="scope-chip"]')).not.toBeVisible()
+    // The header and the composer stay.
+    await expect(box).toBeVisible()
+    await expect(history).toBeVisible()
+    await expect(panel).toContainElement(list)
+    const outer = panel.getBoundingClientRect()
+    await expect(list.getBoundingClientRect().top).toBeGreaterThanOrEqual(history.getBoundingClientRect().bottom)
+    await expect(list.getBoundingClientRect().bottom).toBeLessThanOrEqual(box.getBoundingClientRect().top)
+    await expect(box.getBoundingClientRect().bottom).toBeLessThanOrEqual(outer.bottom)
+    // The open chat is marked in the list.
+    await expect(within(list).getByRole('button', { name: 'Q3 signups vs target' })).toHaveAttribute('aria-current', 'true')
+    // History again: the thread is back where it was.
+    await userEvent.click(history)
+    await waitFor(() => expect(canvasElement.querySelector('[data-slot="conversation-history"]')).toBeNull())
+    await expect(within(panel).getByRole('log', { name: 'Messages' })).toHaveTextContent('How did signups do against target?')
+    await expect(scroller.scrollTop).toBe(60)
+    // Choosing a chat swaps back too, to that chat. The row that was pressed is gone with the list; the cursor
+    // lands in the message box, not on the page.
+    await userEvent.click(history)
+    await userEvent.click(await within(panel).findByRole('button', { name: 'Launch brief draft' }))
+    await waitFor(() => expect(canvasElement.querySelector('[data-slot="conversation-history"]')).toBeNull())
+    await expect(within(panel).getByRole('log', { name: 'Messages' })).toHaveTextContent('Start a brief for the annual-plans launch.')
+    await expect(within(panel).getByText('Looking at: Pricing page')).toBeVisible()
+    await waitFor(() => expect(box).toHaveFocus())
+  },
+}
+
+// `body` written the two usual ways, `open ? <List /> : null` and `open && <List />`, is "no body" while closed:
+// the thread shows. Only a real node takes the thread's place.
+const expectThreadNotBody = async (canvasElement: HTMLElement) => {
+  const panel = within(canvasElement).getByRole('region', { name: 'Assistant' })
+  await expect(within(panel).getByRole('log', { name: 'Messages' })).toBeVisible()
+  await expect(within(panel).getByRole('log', { name: 'Messages' })).toHaveTextContent('The September dip.')
+  await expect(within(panel).getByText('Looking at: Q3 report')).toBeVisible()
+  await expect(panel.querySelector('[data-slot="panel-body"]')).toBeNull()
+  await expect(panel.querySelector('[hidden]')).toBeNull()
+}
+export const BodyNullShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: null },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+export const BodyFalseShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: false },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+
+// On a touch screen, putting the cursor in the message box would throw the on-screen keyboard over the chat that was
+// just chosen. The panel itself takes focus there, as it does when the Sheet opens.
+export const ChoosingAChatOnATouchScreen: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  render: (args, { viewMode }) => <PanelWithHistory args={args} className={framed(viewMode, '28rem')} />,
+  play: async ({ canvas }) => {
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const box = canvas.getByRole('textbox', { name: 'Message' })
+    const realMatchMedia = window.matchMedia.bind(window)
+    const media = spyOn(window, 'matchMedia').mockImplementation((query: string) => (
+      query === '(pointer: coarse)' ? { ...realMatchMedia(query), matches: true, media: query } as MediaQueryList : realMatchMedia(query)
+    ))
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'History' }))
+      await userEvent.click(await within(panel).findByRole('button', { name: 'Launch brief draft' }))
+      await expect(within(panel).getByRole('log', { name: 'Messages' })).toHaveTextContent('Start a brief for the annual-plans launch.')
+      // Not lost to the page, and not in the box.
+      await waitFor(() => expect(document.activeElement).toBe(panel))
+      await expect(box).not.toHaveFocus()
+      await expect(media).toHaveBeenCalledWith('(pointer: coarse)')
+      // The panel was made focusable for that moment only: once focus moves on, it is as it was.
+      await expect(panel).toHaveAttribute('tabindex', '-1')
+      await userEvent.click(box)
+      await expect(box).toHaveFocus()
+      await expect(panel).not.toHaveAttribute('tabindex')
+    } finally {
+      media.mockRestore()
+    }
+  },
+}
+
+// Anything React draws nothing for is "no body": `text && <List />` with an empty string, or a stray `true`.
+export const BodyEmptyStringShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: '' },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+export const BodyTrueShowsTheThread: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  args: { body: true },
+  render: (args, { viewMode }) => <AiPanel body={args.body} onSubmit={args.onSubmit} className={framed(viewMode)} />,
+  play: async ({ canvasElement }) => expectThreadNotBody(canvasElement),
+}
+
+// An app's own dialog around an inline panel is the app's: on a touch screen the panel's own section takes focus,
+// and the dialog is not given a tabindex it did not have.
+export const InsideAnAppsOwnDialogOnATouchScreen: Story = {
+  ...DESKTOP,
+  tags: ['!autodocs'],
+  render: (args, { viewMode }) => (
+    <div role="dialog" aria-label="The app's own dialog" className="contents">
+      <PanelWithHistory args={args} className={framed(viewMode, '28rem')} />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const own = canvas.getByRole('dialog', { name: "The app's own dialog" })
+    const panel = canvas.getByRole('region', { name: 'Assistant' })
+    const realMatchMedia = window.matchMedia.bind(window)
+    const media = spyOn(window, 'matchMedia').mockImplementation((query: string) => (
+      query === '(pointer: coarse)' ? { ...realMatchMedia(query), matches: true, media: query } as MediaQueryList : realMatchMedia(query)
+    ))
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: 'History' }))
+      await userEvent.click(await within(panel).findByRole('button', { name: 'Launch brief draft' }))
+      await waitFor(() => expect(document.activeElement).toBe(panel))
+      await expect(own).not.toHaveAttribute('tabindex')
+    } finally {
+      media.mockRestore()
+    }
   },
 }

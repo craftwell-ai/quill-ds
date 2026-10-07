@@ -4,7 +4,7 @@ export const usage = {
   summary: 'Past AI chats grouped by when they happened — pinned first, then today, yesterday, the last week and earlier months — with the open chat filled and a menu on each row to rename, pin or delete it.',
   useWhen: ['People come back to earlier conversations with an AI and need to find one, reopen it, and tidy the list.'],
   alternatives: [
-    { name: 'ai-chat', when: 'you want the whole chat page; it carries a short list of its own.' },
+    { name: 'ai-chat', when: 'you want the whole chat page; it carries a short sample list of its own, and takes this block as its sidebar.' },
     { name: 'sidebar-nav', when: 'the side column moves between sections of the app, not between past chats.' },
     { name: 'command-palette', when: 'people look a chat up by typing its name instead of browsing by date.' },
   ],
@@ -35,8 +35,8 @@ export const usage = {
     },
     {
       id: 'open-from-the-side-panel',
-      do: 'Open this list from the AI side panel\'s History button (onHistory), in your own sheet or column.',
-      dont: 'Expect the side panel to show it by itself — the panel does not hold a history view.',
+      do: 'Open this list from the AI side panel\'s History button (onHistory). Pass it as the panel\'s body to show it in the panel itself, in place of the thread, and pass undefined again once a chat is chosen; or show it in your own sheet or column.',
+      dont: 'Expect the side panel to show it by itself — History only calls onHistory, and the list appears when you pass it.',
       visual: false,
     },
     {
