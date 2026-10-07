@@ -37,8 +37,9 @@
   <false/>
   <key>ProcessType</key>
   <string>Background</string>
+  <!-- the job writes its own dated log (and rotates it); a second, ever-growing copy from launchd is not wanted -->
   <key>StandardOutPath</key>
-  <string>{{LOG_DIR}}/launchd.out.log</string>
+  <string>/dev/null</string>
   <key>StandardErrorPath</key>
   <string>{{LOG_DIR}}/launchd.err.log</string>
 </dict>

@@ -17,7 +17,7 @@ import { homedir, userInfo } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { promisify } from 'node:util'
-import { paths, resolveTools } from './daily.mjs'
+import { paths, resolveTools, SOURCE_REPO, validateCloneTarget } from './daily.mjs'
 
 const run = promisify(execFile)
 const here = dirname(fileURLToPath(import.meta.url))
@@ -55,6 +55,13 @@ export function installPlan({ at = '09:30', env = process.env, home = homedir() 
 }
 
 const domain = () => `gui/${userInfo().uid}`
+/** Unload the agent and wait until launchd has really let go of it: loading again while it is still going fails. */
+async function unload() {
+  if (!(await loaded())) return
+  await run('/bin/launchctl', ['bootout', `${domain()}/${LABEL}`]).catch(() => {})
+  for (let attempt = 0; attempt < 50 && (await loaded()); attempt++) await new Promise((resolve) => setTimeout(resolve, 200))
+  if (await loaded()) throw new Error('launchd did not unload the agent within 10 seconds: try again in a moment')
+}
 const loaded = async () => { try { return (await run('/bin/launchctl', ['print', `${domain()}/${LABEL}`])).stdout } catch { return null } }
 
 async function main(args) {
@@ -82,9 +89,17 @@ async function main(args) {
     mkdirSync(plan.where.logs, { recursive: true })
     mkdirSync(dirname(plan.agent), { recursive: true })
     writeFileSync(plan.where.tools, JSON.stringify(plan.tools, null, 2) + '\n')
-    if (!existsSync(join(plan.where.repo, '.git'))) await run(plan.tools.git, ['clone', '--quiet', remote, plan.where.repo])
+    if (!existsSync(join(plan.where.repo, '.git'))) {
+      const target = validateCloneTarget({ repo: plan.where.repo, sourceRepo: SOURCE_REPO, exists: existsSync(plan.where.repo) })
+      if (!target.ok) throw new Error(target.reason)
+      await run(plan.tools.git, ['clone', '--quiet', remote, plan.where.repo])
+      // the marker is what later lets the job prove this folder is its own before it resets it
+      writeFileSync(plan.where.marker, JSON.stringify({ repo: plan.where.repo, remote, createdAt: new Date().toISOString() }, null, 2) + '\n')
+    }
     if (!existsSync(plan.values.SCRIPT)) console.log(`\nNote: ${plan.values.SCRIPT} does not exist yet: the Paper sync is not on origin/main. The agent will fail until it is merged and the job's copy is updated (git -C "${plan.where.repo}" pull).`)
-    if (await loaded()) await run('/bin/launchctl', ['bootout', `${domain()}/${LABEL}`]).catch(() => {})
+    await unload()
+    // only launchd's own complaints land here (the job logs to dated files); start it empty each install
+    writeFileSync(join(plan.where.logs, 'launchd.err.log'), '')
     writeFileSync(plan.agent, plan.plist)
     await run('/bin/launchctl', ['bootstrap', domain(), plan.agent])
     console.log(`\nInstalled and loaded. Run it once now:  launchctl kickstart ${domain()}/${LABEL}   (or  npm run paper:daily)`)
@@ -94,7 +109,7 @@ async function main(args) {
     const agent = agentPath()
     console.log(`This will unload the agent (launchctl bootout ${domain()}/${LABEL}) and delete ${agent}.\nThe job's copy of the repository and its logs are left in place.`)
     if (!yes) { console.log('\nNothing was changed. Run again with --yes to do it.'); return 0 }
-    if (await loaded()) await run('/bin/launchctl', ['bootout', `${domain()}/${LABEL}`]).catch(() => {})
+    await unload()
     rmSync(agent, { force: true })
     console.log('\nUninstalled.')
     return 0
