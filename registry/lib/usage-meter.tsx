@@ -47,7 +47,9 @@ const TRACK = '[&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track
 // The gradient is laid across the whole track and the fill reveals it from the left, so a nearly empty bar is plain gold
 // and not all three colours squeezed into a dot. The fill is `share` of the track wide, so a background 1/share of the
 // fill's own width is exactly the track's width: no measuring.
-const FILL = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:ai-meter [&_[data-slot=progress-indicator]]:bg-no-repeat [&_[data-slot=progress-indicator]]:[background-size:calc(100%/var(--usage-share,1))_100%]'
+// Only the width eases when the amount changes (the stock indicator eases everything): a gradient size that eased
+// with it would show the wrong colours for the length of the move.
+const FILL = '[&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:ai-meter [&_[data-slot=progress-indicator]]:bg-no-repeat [&_[data-slot=progress-indicator]]:transition-[width] [&_[data-slot=progress-indicator]]:[background-size:calc(100%/var(--usage-share,1))_100%]'
 
 /** Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer. */
 export function UsageMeter({

@@ -42,7 +42,7 @@ them. Quill ships the theme, eighteen components (`agent-steps`, `ai-badge`, `ai
 
 **What Quill expects underneath.** Quill's pieces are written for the Base UI flavour of the
 stock shadcn components (the `base-*` styles; this repo uses `"style": "base-nova"` in
-`components.json`), on `@base-ui/react` `^1.8.0` or newer. The AI pieces also need the Quill
+`components.json`), on `@base-ui/react` 1.8.0 or newer. The AI pieces also need the Quill
 theme (`@quill/quill`): it carries their `--ai-*` colours and `ai-*` utilities, and installing
 an AI piece does not pull the theme in for you. Without it the gradients are not drawn — AI
 text keeps the plain ink colour around it, and the sparkle and the usage ring come out black.

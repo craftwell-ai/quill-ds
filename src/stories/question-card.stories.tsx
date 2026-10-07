@@ -391,6 +391,22 @@ export const LongUnbrokenTextWraps: Story = {
   },
 }
 
+// An outcome is the app's own words and can hold a link that has no place to break.
+export const LongOutcomeStaysInside: Story = {
+  args: { outcome: `Sending it to https://example.com/a/very/long/path/${'x'.repeat(120)}` },
+  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  play: async ({ canvas, canvasElement }) => {
+    const root = canvasElement.querySelector('[data-slot="question-card"]') as HTMLElement
+    const status = canvas.getByRole('status')
+    const words = status.querySelector('p') as HTMLElement
+    // The line is as wide as its words only while they fit: past that it stops at the card's edge and the words wrap.
+    await expect(status.getBoundingClientRect().right).toBeLessThanOrEqual(root.getBoundingClientRect().right + 0.5)
+    await expect(words.getBoundingClientRect().right).toBeLessThanOrEqual(root.getBoundingClientRect().right + 0.5)
+    await expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth)
+    await expect(words.getBoundingClientRect().height).toBeGreaterThan(parseFloat(getComputedStyle(words).lineHeight) * 1.5)
+  },
+}
+
 // The tag once sat low beside a name (Phase 2); the radio must sit on the title's line too.
 export const RadioAndTagSitOnTheTitleLine: Story = {
   play: async ({ canvas, canvasElement }) => {

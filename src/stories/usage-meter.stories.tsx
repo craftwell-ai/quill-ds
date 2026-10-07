@@ -59,6 +59,10 @@ export const Card: Story = {
     // The fill is the AI gradient, and it does not move.
     await expect(getComputedStyle(fillOf(canvasElement)).backgroundImage).toContain('linear-gradient')
     await expect(getComputedStyle(fillOf(canvasElement)).animationName).toBe('none')
+    // Only the width eases when the amount changes. If the gradient's size eased too, the fill would show the wrong
+    // colours for the length of the move.
+    await expect(getComputedStyle(fillOf(canvasElement)).transitionProperty).toBe('width')
+    await expect(parseFloat(getComputedStyle(fillOf(canvasElement)).transitionDuration)).toBeGreaterThan(0)
     // At 30% the fill shows the first 30% of a gradient as wide as the track.
     await expectGradientSpansTrack(canvasElement)
     // The breakdown is a real table: three rows, each with a row header.

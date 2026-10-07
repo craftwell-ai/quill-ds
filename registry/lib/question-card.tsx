@@ -183,7 +183,7 @@ export function QuestionCard({
           positioned: a real box that takes no grid row and no gap. With words in it the box is only as wide as
           they are, with a little room on every side paid back in negative margin, so the focus ring it gets after a
           decision hugs the words and neither the words nor the card move. */}
-      <div ref={statusRef} role="status" tabIndex={-1} className="rounded-md outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 empty:absolute not-empty:w-fit not-empty:-mx-1.5 not-empty:-my-0.5 not-empty:px-1.5 not-empty:py-0.5">
+      <div ref={statusRef} role="status" tabIndex={-1} className="rounded-md outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 empty:absolute not-empty:w-fit not-empty:max-w-[calc(100%+0.75rem)] not-empty:-mx-1.5 not-empty:-my-0.5 not-empty:px-1.5 not-empty:py-0.5">
         {outcome ? <p className="text-xs break-words text-muted-foreground">{outcome}</p> : null}
       </div>
     </div>
