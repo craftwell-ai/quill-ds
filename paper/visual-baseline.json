@@ -4487,21 +4487,6 @@
    "piece": "ai-side-panel",
    "at": "2026-10-07"
   },
-  "patterns-ai-ai-side-panel--history-in-the-panel": {
-   "diffPct": 4.85,
-   "paper": [
-    384,
-    448
-   ],
-   "storybook": [
-    384,
-    448
-   ],
-   "text": true,
-   "values": "21/21",
-   "piece": "ai-side-panel",
-   "at": "2026-10-07"
-  },
   "patterns-ai-ai-side-panel--no-scope": {
    "diffPct": 3.15,
    "paper": [

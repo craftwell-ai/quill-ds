@@ -2197,7 +2197,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1NH8-0",
+              "nodeId": "1ZDW-0",
               "size": [
                 110.44,
                 32
@@ -2217,7 +2217,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1NHG-0",
+              "nodeId": "1ZE4-0",
               "size": [
                 78,
                 32
@@ -2237,7 +2237,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1NHO-0",
+              "nodeId": "1ZEC-0",
               "size": [
                 112.94,
                 32
@@ -2257,7 +2257,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1NHZ-0",
+              "nodeId": "1ZEN-0",
               "size": [
                 32,
                 32
@@ -2277,7 +2277,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1NI8-0",
+              "nodeId": "1ZEW-0",
               "size": [
                 458.67,
                 32
@@ -2297,7 +2297,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1NIW-0",
+              "nodeId": "1ZFK-0",
               "size": [
                 308.72,
                 88
@@ -8739,16 +8739,16 @@
       "sourceHash": "5941f3f6f5278166",
       "syncedAt": "2026-10-07",
       "counts": {
-        "stories": 4,
-        "nodes": 147,
-        "approximated": 8,
-        "bound": 388,
-        "bindable": 432,
-        "bindingRate": 0.898
+        "stories": 3,
+        "nodes": 112,
+        "approximated": 6,
+        "bound": 294,
+        "bindable": 328,
+        "bindingRate": 0.896
       },
       "notes": [],
       "lost": [
-        "button: background-clip: padding-box not carried ×4"
+        "button: background-clip: padding-box not carried ×3"
       ],
       "stories": [
         {
@@ -8762,7 +8762,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1Z1Y-0",
+              "nodeId": "1ZGJ-0",
               "size": [
                 384,
                 560
@@ -8782,7 +8782,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1Z41-0",
+              "nodeId": "1ZIM-0",
               "size": [
                 384,
                 560
@@ -8802,32 +8802,12 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1Z5W-0",
+              "nodeId": "1ZKH-0",
               "size": [
                 384,
                 560
               ],
               "htmlHash": "c67f3bf2767177e5"
-            }
-          ]
-        },
-        {
-          "id": "patterns-ai-ai-side-panel--history-in-the-panel",
-          "title": "History In The Panel",
-          "opened": "none",
-          "nodes": 35,
-          "approximated": 2,
-          "bound": 94,
-          "bindable": 104,
-          "parts": [
-            {
-              "part": "main",
-              "nodeId": "1Z6W-0",
-              "size": [
-                384,
-                448
-              ],
-              "htmlHash": "2afbab3800ebe366"
             }
           ]
         }

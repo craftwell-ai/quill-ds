@@ -56,7 +56,9 @@ export const CONFIG = {
   'question-card': { include: ['components-questioncard--free-text-row', 'components-questioncard--no-skip-callback-hides-the-button', 'components-questioncard--no-options', 'components-questioncard--outcome-is-announced', 'components-questioncard--recommended-is-the-stock-tag'] },
   'suggested-prompts': { include: ['components-suggestedprompts--cards', 'components-suggestedprompts--list'] },
   'ai-chat': { include: ['patterns-ai-ai-chat--app-conversation', 'patterns-ai-ai-chat--own-sidebar', 'patterns-ai-ai-chat--no-sidebar', 'patterns-ai-ai-chat--agent-pieces-in-one-thread'] },
-  'ai-side-panel': { include: ['patterns-ai-ai-side-panel--no-scope', 'patterns-ai-ai-side-panel--empty-app-thread', 'patterns-ai-ai-side-panel--history-in-the-panel'] },
+  'ai-side-panel': { include: ['patterns-ai-ai-side-panel--no-scope', 'patterns-ai-ai-side-panel--empty-app-thread'] },
+  // not `history-in-the-panel`: its play ends on a different chat in a built Storybook than in the dev server,
+  // so it is not one stable picture (found when the daily job's static build disagreed with a local sync)
   // ai-home has two stories and the other is the same page at phone width, which needs a phone-sized window
 
   // ---- the five pieces of the first spike keep their hand-picked stories where the rule differs

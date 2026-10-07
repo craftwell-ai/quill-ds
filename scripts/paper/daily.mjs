@@ -286,7 +286,7 @@ export async function daily({ dryRun = false, noPush = false, env = process.env 
       await run(tools.git, ['clone', '--quiet', remote, where.repo], { env: childEnv })
       writeFileSync(where.marker, JSON.stringify({ repo: where.repo, remote, createdAt: new Date().toISOString() }, null, 2) + '\n')
     }
-    const folder = validateJobFolder({ repo: where.repo, marker: readJson(where.marker, null), origin: await git('remote', 'get-url', 'origin'), expectedRemote: remote, sourceRepo: SOURCE_REPO })
+    const folder = validateJobFolder({ repo: where.repo, marker: readJson(where.marker, null), origin: await git('remote', 'get-url', 'origin').catch(() => null), expectedRemote: remote, sourceRepo: SOURCE_REPO })
     if (!folder.ok) throw new Error(folder.reason)
     await git('fetch', '--quiet', '--prune', 'origin')
     // a disposable copy: whatever a previous run left behind is thrown away
