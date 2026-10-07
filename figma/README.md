@@ -67,9 +67,11 @@ differences for a human to settle, not noise.
 drift: the stories' play steps (text typed into the box; on ai-chat a second turn, where the Figma frame
 shows the first render) and one answer line that wraps a word earlier in Figma. A new pair starts the same
 way: it reports `unbaselined`, which never fails the job, even with `--strict`, until a CI run of the
-**Figma parity** workflow is read and accepted with the last command below. `ai-side-panel` (added 2026-10-04) has no
-visual baseline yet; it reports `unbaselined` until such a run is read and accepted. `conversation-history` (added
-2026-10-05) has no visual baseline yet; it reports `unbaselined` until such a run is read and accepted.
+**Figma parity** workflow is read and accepted with the last command below. Baselined 2026-10-07 from CI run
+37573692270 (54 pairs, 0 regressions): `ai-side-panel` at 1.98 % (384×560; its answer's first line wraps a word earlier
+in Figma) and `conversation-history` at 2.11 % (300×350). Only those two entries were added; the other pairs keep the
+numbers they were accepted at. A block that other blocks' stories import (the chat page shows `conversation-history`
+as its sidebar) is judged by the stories in its own file (`canonicalStory`).
 
 ```bash
 npm run build-storybook -- -o .visual/sb --quiet
