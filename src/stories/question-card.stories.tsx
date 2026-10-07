@@ -279,6 +279,17 @@ export const FocusStaysInTheCardOnDecision: Story = {
     await expect(canvas.queryByRole('button')).toBeNull()
     await expect(card.contains(document.activeElement)).toBe(true)
     await expect(document.activeElement).toBe(canvas.getByRole('status'))
+    // The focus ring hugs the words: the box is only as wide as its text, with a little room inside the ring.
+    const status = canvas.getByRole('status')
+    const words = status.querySelector('p') as HTMLElement
+    await expect(status.getBoundingClientRect().width).toBeLessThan(card.getBoundingClientRect().width / 2)
+    await expect(words.getBoundingClientRect().left - status.getBoundingClientRect().left).toBeCloseTo(6, 0)
+    // The words have not moved: still on the card's left edge, under the options above it, and the card's own padding below.
+    const above = card.querySelector('[role="radiogroup"]') as HTMLElement
+    await expect(Math.abs(words.getBoundingClientRect().left - above.getBoundingClientRect().left)).toBeLessThanOrEqual(0.5)
+    await expect(Math.abs(words.getBoundingClientRect().top - above.getBoundingClientRect().bottom - 10)).toBeLessThanOrEqual(0.5)
+    const padding = parseFloat(getComputedStyle(card).paddingBottom) + parseFloat(getComputedStyle(card).borderBottomWidth)
+    await expect(Math.abs(card.getBoundingClientRect().bottom - words.getBoundingClientRect().bottom - padding)).toBeLessThanOrEqual(0.5)
   },
 }
 
