@@ -37,30 +37,76 @@ export type AiPanelProps = {
   /** The message box, for a wrapper that sends focus there. AiSidePanel passes its own, to open with the cursor in the box. */
   composerRef?: React.RefObject<HTMLTextAreaElement | null>
   onSubmit?: (value: string) => void
+  /** Your own conversation: UserMessage, AiMessage and cards, each turn a direct child. Passing anything but undefined replaces the sample conversation: no sample messages, no sample follow-up, and sending adds nothing by itself (add the turn in onSubmit). null or an empty list is an empty thread. Replies in a panel should pass hideName: the header already says who is answering. */
+  children?: React.ReactNode
+  /** With your own conversation: 'working' while a reply is being written, which shows Stop. Not read while the sample is shown. */
+  status?: 'idle' | 'working'
+  /** With your own conversation: called when Stop is pressed. The cursor goes back to the message box either way. */
+  onStop?: () => void
+  /** The message box's text. Pass a string to control it (and clear it yourself after onSubmit); leave it out and the panel keeps its own. */
+  value?: string
+  onValueChange?: (value: string) => void
+  /** Shown in place of the thread (the scope chip and the messages) for as long as it is passed: your list of past chats while History is open, for example. The header and the composer stay, and the thread is back where it was once this is undefined again. */
+  body?: React.ReactNode
   className?: string
 }
 
 /** The assistant panel on its own (header, scope chip, thread and composer on one AI wash), for a layout that gives it its own column. */
-export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, close, composerRef: givenComposerRef, onSubmit = () => {}, className }: AiPanelProps) {
+export function AiPanel({
+  title = 'Assistant', scope, onScopeRemove, onHistory, close, composerRef: givenComposerRef, onSubmit = () => {},
+  children, status = 'idle', onStop, value: givenValue, onValueChange, body, className,
+}: AiPanelProps) {
   const titleId = React.useId()
   const [ownScope, setOwnScope] = React.useState<string | null>('Q3 report')
   const currentScope = scope === undefined ? ownScope : scope
   // A scope the app controls, with nothing to call, cannot be removed: no dead button.
   const removable = scope === undefined || Boolean(onScopeRemove)
-  const [value, setValue] = React.useState('')
+  const [ownValue, setOwnValue] = React.useState('')
+  const value = givenValue === undefined ? ownValue : givenValue
+  const setValue = (next: string) => {
+    if (givenValue === undefined) setOwnValue(next)
+    onValueChange?.(next)
+  }
   const [turns, setTurns] = React.useState<Turn[]>([])
+  // The app's own conversation, or (left out) the sample one, which this panel keeps going with pretend replies.
+  const ownsThread = children !== undefined
+  const turnCount = ownsThread ? React.Children.count(children) : turns.length
+  const hasBody = body !== undefined
   const ownComposerRef = React.useRef<HTMLTextAreaElement>(null)
   const composerRef = givenComposerRef ?? ownComposerRef
   const scrollerRef = React.useRef<HTMLDivElement>(null)
-  const working = turns.at(-1)?.reply === 'working'
+  const working = ownsThread ? status === 'working' : turns.at(-1)?.reply === 'working'
   // Whether a message has been scrolled under the header: only then is there something to fade.
   const [scrolled, setScrolled] = React.useState(false)
 
   // A new turn is added at the bottom of a thread that may already be scrolled; keep the newest in view.
-  React.useEffect(() => {
+  // An app's thread also opens on its newest turn, and comes back to it when the app starts writing a reply.
+  // Where the thread was when something else took its place; while that shows, "the newest" is remembered instead.
+  const threadTop = React.useRef(0)
+  const showsBody = React.useRef(hasBody)
+  const toNewest = React.useCallback(() => {
     const scroller = scrollerRef.current
-    if (scroller && turns.length > 0) scroller.scrollTop = scroller.scrollHeight
-  }, [turns.length])
+    if (!scroller) return
+    if (showsBody.current) threadTop.current = Number.MAX_SAFE_INTEGER
+    else scroller.scrollTop = scroller.scrollHeight
+  }, [])
+  React.useEffect(() => {
+    if (turnCount > 0) toNewest()
+  }, [turnCount, toNewest])
+  const writing = ownsThread && working
+  React.useEffect(() => {
+    if (writing) toNewest()
+  }, [writing, toNewest])
+  // `body` takes the thread's place in the same scrolling area: it starts at its own top, and the thread returns to
+  // where it was. If the cursor was on something in the body, that is gone now; it lands in the message box.
+  React.useLayoutEffect(() => {
+    const scroller = scrollerRef.current
+    if (!scroller || showsBody.current === hasBody) return
+    showsBody.current = hasBody
+    scroller.scrollTop = hasBody ? 0 : threadTop.current
+    const active = document.activeElement
+    if (!hasBody && (active === null || active === document.body)) composerRef.current?.focus()
+  }, [hasBody, composerRef])
 
   const removeScope = () => {
     if (scope === undefined) setOwnScope(null)
@@ -86,9 +132,14 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
           avatar. scroll-pt keeps a control reached by keyboard below it, where its focus ring is drawn in full.
           relative: kit pieces placed in the thread keep absolutely positioned boxes for screen readers, which must
           take their place from the thread to scroll with it instead of hanging below the panel. */}
-      <div ref={scrollerRef} data-slot="thread" onScroll={(event) => setScrolled(event.currentTarget.scrollTop > THREAD_FADE_AFTER)}
+      <div ref={scrollerRef} data-slot="thread"
+        onScroll={(event) => {
+          setScrolled(event.currentTarget.scrollTop > THREAD_FADE_AFTER)
+          if (!hasBody) threadTop.current = event.currentTarget.scrollTop
+        }}
         className={cn('relative flex min-h-0 scroll-pt-8 flex-col overflow-y-auto px-3.5 pt-1 pb-2.5', scrolled && '[mask-image:linear-gradient(to_bottom,transparent,black_1.75rem)]')}>
-        <div className="mt-auto grid min-w-0 gap-3">
+        {/* Kept on the page (hidden) while something else is shown, so cards in the thread keep what was typed in them. */}
+        <div hidden={hasBody || undefined} className="mt-auto grid min-w-0 gap-3">
           {currentScope ? (
             // border-input, not the divider line: the chip has to read as a shape on the wash in the dark themes.
             <span data-slot="scope-chip" className={cn('inline-flex h-7 w-fit max-w-full items-center gap-1.5 rounded-full border border-input bg-background pl-2 text-xs text-ink-soft', removable ? 'pr-1' : 'pr-2.5')}>
@@ -104,26 +155,31 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
           ) : null}
           {/* A log is a polite live region, so each new turn is read out. */}
           <div role="log" aria-label="Messages" className="grid min-w-0 gap-3">
-            <UserMessage>{"What's the one thing to fix?"}</UserMessage>
-            {/* hideName on every reply: the header already says who is answering. */}
-            <AiMessage hideName>
-              <p>The September dip. It started the day the new pricing page shipped<Citation source={SOURCE} />.</p>
-            </AiMessage>
-            {turns.length === 0 ? (
-              <SuggestedPrompts layout="list" label="Follow-ups"
-                suggestions={[{ label: 'Draft a fix for the pricing page' }]}
-                onPick={(prompt) => { setValue(prompt); composerRef.current?.focus() }} />
-            ) : null}
-            {turns.map((turn) => (
-              <React.Fragment key={turn.id}>
-                <UserMessage>{turn.ask}</UserMessage>
-                {turn.reply === 'working'
-                  ? <AiMessage hideName streaming thinking={<AiThinking status="working" activity="Reading the page" />} />
-                  : <AiMessage hideName stopped />}
-              </React.Fragment>
-            ))}
+            {ownsThread ? children : (
+              <>
+                <UserMessage>{"What's the one thing to fix?"}</UserMessage>
+                {/* hideName on every reply: the header already says who is answering. */}
+                <AiMessage hideName>
+                  <p>The September dip. It started the day the new pricing page shipped<Citation source={SOURCE} />.</p>
+                </AiMessage>
+                {turns.length === 0 ? (
+                  <SuggestedPrompts layout="list" label="Follow-ups"
+                    suggestions={[{ label: 'Draft a fix for the pricing page' }]}
+                    onPick={(prompt) => { setValue(prompt); composerRef.current?.focus() }} />
+                ) : null}
+                {turns.map((turn) => (
+                  <React.Fragment key={turn.id}>
+                    <UserMessage>{turn.ask}</UserMessage>
+                    {turn.reply === 'working'
+                      ? <AiMessage hideName streaming thinking={<AiThinking status="working" activity="Reading the page" />} />
+                      : <AiMessage hideName stopped />}
+                  </React.Fragment>
+                ))}
+              </>
+            )}
           </div>
         </div>
+        {hasBody ? <div data-slot="panel-body" className="min-w-0">{body}</div> : null}
       </div>
       <div className="px-3 pt-2 pb-3">
         <PromptComposer
@@ -133,11 +189,17 @@ export function AiPanel({ title = 'Assistant', scope, onScopeRemove, onHistory, 
           onValueChange={setValue}
           status={working ? 'working' : 'idle'}
           onStop={() => {
-            setTurns((all) => all.map((turn, index) => (index === all.length - 1 ? { ...turn, reply: 'stopped' } : turn)))
+            if (ownsThread) onStop?.()
+            else setTurns((all) => all.map((turn, index) => (index === all.length - 1 ? { ...turn, reply: 'stopped' } : turn)))
             // Stop unmounts as the composer goes idle; without this keyboard focus falls to the page.
             composerRef.current?.focus()
           }}
-          onSubmit={(text) => { onSubmit(text); setTurns((all) => [...all, { id: all.length + 1, ask: text, reply: 'working' }]); setValue('') }}
+          onSubmit={(text) => {
+            onSubmit(text)
+            if (!ownsThread) setTurns((all) => [...all, { id: all.length + 1, ask: text, reply: 'working' }])
+            // A value the app controls is the app's to clear.
+            if (givenValue === undefined) setOwnValue('')
+          }}
           placeholder={currentScope ? 'Ask about this' : 'Ask anything'}
         />
       </div>

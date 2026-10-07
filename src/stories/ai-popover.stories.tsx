@@ -441,6 +441,371 @@ export const Controlled: Story = {
   },
 }
 
+// From here on the popover sits beside a selection, not an element (CRA-280): in a text box or an editor the selected
+// text is a range, and there is nothing to wrap. The app passes what to sit beside (`anchor`), drives `open`, and says
+// where the cursor goes back to (`returnFocus`).
+const PASSAGE = 'Signups beat target in July and August but missed it in September by twelve percent.'
+const BEFORE = 'Q3 closed ahead of plan. '
+const AFTER = ' We will revisit in October.'
+// The box the popover stands in for the selection with: laid over it, never a Tab stop, never pressed, never read out.
+const spot = () => document.querySelector('[data-slot="popover-anchor"]') as HTMLElement | null
+const selectText = (node: Node, start: number, end: number) => {
+  const range = document.createRange()
+  range.setStart(node, start)
+  range.setEnd(node, end)
+  const selection = document.getSelection() as Selection
+  selection.removeAllRanges()
+  selection.addRange(range)
+  return range
+}
+// The popover sits just below what it is anchored to (the stock 4px gap), its left edge on the anchor's left edge.
+// Waited for, with the anchor read afresh each time: the popover fades and slides in, and in a centred Storybook
+// canvas the page itself settles a moment after an overlay opens.
+const expectBeside = (dialog: HTMLElement, anchorBox: () => DOMRect) => waitFor(() => {
+  expect(dialog.getAnimations().filter((animation) => animation.playState === 'running')).toHaveLength(0)
+  const box = dialog.getBoundingClientRect()
+  const beside = anchorBox()
+  expect(box.top - beside.bottom).toBeGreaterThanOrEqual(0)
+  expect(box.top - beside.bottom).toBeLessThanOrEqual(6)
+  expect(Math.abs(box.left - beside.left)).toBeLessThanOrEqual(1)
+})
+
+type AnchorArgs = Omit<React.ComponentProps<typeof AiPopover>, 'anchor' | 'open' | 'returnFocus'>
+
+// An editor in miniature: selecting text in it opens the suggestion beside the selection; Replace swaps the text.
+function Editor({ args, text: initial = BEFORE + PASSAGE + AFTER, className, trigger }: { args: AnchorArgs; text?: string; className?: string; trigger?: React.ReactElement }) {
+  const editor = React.useRef<HTMLDivElement>(null)
+  const [text, setText] = React.useState(initial)
+  const [range, setRange] = React.useState<Range | null>(null)
+  const [open, setOpen] = React.useState(false)
+  React.useEffect(() => {
+    const read = () => {
+      const selection = document.getSelection()
+      if (!selection || selection.isCollapsed || !editor.current?.contains(selection.anchorNode)) return
+      setRange(selection.getRangeAt(0).cloneRange())
+      // With a button to ask from, selecting only says where; the button opens it.
+      if (!trigger) setOpen(true)
+    }
+    document.addEventListener('selectionchange', read)
+    return () => document.removeEventListener('selectionchange', read)
+  }, [trigger])
+  const popover = (
+    <AiPopover {...args} anchor={range} open={open} returnFocus={trigger ? undefined : editor}
+      onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }}
+      onReplace={() => { if (range) setText(text.replace(range.toString(), SUGGESTION)); args.onReplace() }}>
+      {trigger}
+    </AiPopover>
+  )
+  return (
+    <div className="grid w-[26rem] max-w-full gap-3">
+      {/* A button to ask from sits above the text, as a toolbar does, clear of the popover that opens below the selection. */}
+      {trigger ? popover : null}
+      {/* key: the text is the editor's own once typed in, so a replaced passage is drawn afresh. */}
+      <div key={text} ref={editor} role="textbox" aria-multiline="true" aria-label="Report" tabIndex={0} contentEditable suppressContentEditableWarning
+        className={`rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed text-foreground outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50 ${className ?? ''}`}>
+        {text}
+      </div>
+      {trigger ? null : popover}
+    </div>
+  )
+}
+// The meta's args wrap highlighted text; these stories have nothing to wrap.
+const withoutTrigger = (args: React.ComponentProps<typeof AiPopover>): AnchorArgs => ({ ...args, children: undefined })
+
+export const OnATextSelection: Story = {
+  parameters: { viewport: { options: VIEWPORTS }, docs: { description: { story: 'Select some of the text: the suggestion opens beside the selection. Nothing is wrapped around the text; the app passes the selection as `anchor`.' } } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  render: (args) => <Editor args={withoutTrigger(args)} />,
+  play: async ({ canvas, args }) => {
+    const editor = canvas.getByRole('textbox', { name: 'Report' })
+    await expect(page().queryByRole('dialog')).toBeNull()
+    // Nothing on the page was turned into a button: the text is still text.
+    await expect(canvas.queryByRole('button')).toBeNull()
+    const select = () => {
+      editor.focus()
+      return selectText(editor.firstChild as Text, BEFORE.length, BEFORE.length + PASSAGE.length)
+    }
+    let range = select()
+    let dialog = await page().findByRole('dialog', { name: TITLE })
+    await expect(args.onOpenChange).not.toHaveBeenCalled()
+    // It sits just below the selection, its left edge on the selection's left edge.
+    await expect(range.getBoundingClientRect().width).toBeGreaterThan(100)
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+    const selected = range.getBoundingClientRect()
+    // The stand-in for the selection is not there for people: hidden from screen readers, out of the Tab order, and
+    // a press on the selected text reaches the text.
+    const standIn = spot() as HTMLElement
+    await expect(standIn).toHaveAttribute('aria-hidden', 'true')
+    await expect(standIn).toHaveAttribute('tabindex', '-1')
+    await expect(getComputedStyle(standIn).pointerEvents).toBe('none')
+    await expect(canvas.queryByRole('button')).toBeNull()
+    await expect(editor.contains(document.elementFromPoint(selected.left + 20, selected.top + 6))).toBe(true)
+    // Opening lands on the popover; Tab walks its buttons and never lands on the stand-in.
+    await waitFor(() => expect(dialog).toHaveFocus())
+    for (const name of ['Discard', 'Try again', 'Replace']) {
+      await userEvent.tab()
+      await expect(document.activeElement).not.toBe(standIn)
+      await expect(within(dialog).getByRole('button', { name })).toHaveFocus()
+    }
+    for (const name of ['Try again', 'Discard']) {
+      await userEvent.tab({ shift: true })
+      await expect(within(dialog).getByRole('button', { name })).toHaveFocus()
+    }
+    // Back out of the popover's start: a wrapped anchor would take the cursor there; here the editor does, and the
+    // popover stays open as it would.
+    await userEvent.tab({ shift: true })
+    await waitFor(() => expect(editor).toHaveFocus())
+    await expect(document.activeElement).not.toBe(standIn)
+    await expect(page().getByRole('dialog', { name: TITLE })).toBe(dialog)
+    // From here on every way of closing sends the cursor straight to the editor, never by way of the stand-in.
+    let passedThrough = 0
+    standIn.addEventListener('focus', () => { passedThrough += 1 })
+    // Escape closes it and says so; the cursor goes back to the editor.
+    if (!page().queryByRole('dialog')) range = select()
+    dialog = await page().findByRole('dialog', { name: TITLE })
+    dialog.focus()
+    await userEvent.keyboard('{Escape}')
+    await closed()
+    await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
+    await expect(args.onDiscard).not.toHaveBeenCalled()
+    await waitFor(() => expect(editor).toHaveFocus())
+    // A press outside closes it and says so.
+    range = select()
+    dialog = await page().findByRole('dialog', { name: TITLE })
+    const calls = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length
+    await userEvent.click(document.body)
+    await closed()
+    await expect((args.onOpenChange as ReturnType<typeof fn>).mock.calls.length).toBe(calls + 1)
+    await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
+    // Replace calls back and closes; the cursor ends in the editor, which now holds the new text.
+    range = select()
+    dialog = await page().findByRole('dialog', { name: TITLE })
+    await waitFor(() => expect(dialog).toHaveFocus())
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Replace' }))
+    await expect(args.onReplace).toHaveBeenCalledTimes(1)
+    await closed()
+    const after = canvas.getByRole('textbox', { name: 'Report' })
+    await expect(after).toHaveTextContent(SUGGESTION)
+    await waitFor(() => expect(after).toHaveFocus())
+    await expect(spot()).toBe(standIn)
+    await expect(passedThrough).toBe(0)
+  },
+}
+
+// With no returnFocus, the cursor goes back to whatever had it when the popover opened.
+export const AnchorWithoutReturnFocus: Story = {
+  tags: ['!autodocs'],
+  parameters: { viewport: { options: VIEWPORTS } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  render: function Render(given) {
+    const args = withoutTrigger(given)
+    const [open, setOpen] = React.useState(false)
+    const [range, setRange] = React.useState<Range | null>(null)
+    const text = React.useRef<HTMLParagraphElement>(null)
+    return (
+      <div className="grid w-[26rem] max-w-full justify-items-start gap-3 text-sm leading-relaxed text-ink-soft">
+        <p ref={text}>{BEFORE + PASSAGE}</p>
+        <Button variant="outline" onClick={() => {
+          const range = document.createRange()
+          range.selectNodeContents(text.current as HTMLElement)
+          setRange(range)
+          setOpen(true)
+        }}>Shorten the paragraph</Button>
+        <AiPopover {...args} anchor={range} open={open} onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }} />
+      </div>
+    )
+  },
+  play: async ({ canvas }) => {
+    const opener = canvas.getByRole('button', { name: 'Shorten the paragraph' })
+    for (const close of ['Escape', 'Replace'] as const) {
+      await userEvent.click(opener)
+      const dialog = await page().findByRole('dialog', { name: TITLE })
+      // Beside the paragraph, not beside the button that asked.
+      await expectBeside(dialog, () => (canvas.getByText(BEFORE + PASSAGE) as HTMLElement).getBoundingClientRect())
+      await waitFor(() => expect(dialog).toHaveFocus())
+      if (close === 'Escape') await userEvent.keyboard('{Escape}')
+      else await userEvent.click(within(dialog).getByRole('button', { name: 'Replace' }))
+      await closed()
+      await waitFor(() => expect(opener, `focus after ${close}`).toHaveFocus())
+    }
+  },
+}
+
+// Both: the button is still what opens it (and where the cursor returns), the selection is only where it sits.
+export const AButtonOpensItBesideASelection: Story = {
+  parameters: { viewport: { options: VIEWPORTS }, docs: { description: { story: 'Select some of the text, then press Shorten: the button opens the suggestion, and it sits beside the selection.' } } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  render: (args) => <Editor args={withoutTrigger(args)} trigger={<Button variant="outline" className="justify-self-start">Shorten</Button>} />,
+  play: async ({ canvas, args }) => {
+    const editor = canvas.getByRole('textbox', { name: 'Report' })
+    const button = canvas.getByRole('button', { name: 'Shorten' })
+    editor.focus()
+    const range = selectText(editor.firstChild as Text, BEFORE.length, BEFORE.length + PASSAGE.length)
+    // Selecting alone opens nothing here.
+    await new Promise((resolve) => setTimeout(resolve, 150))
+    await expect(page().queryByRole('dialog')).toBeNull()
+    await expect(button).toHaveAttribute('aria-expanded', 'false')
+    // Being given an anchor did not swap the app's button for another one.
+    await expect(canvas.getByRole('button', { name: 'Shorten' })).toBe(button)
+    await userEvent.click(button)
+    let dialog = await page().findByRole('dialog', { name: TITLE })
+    await expect(args.onOpenChange).toHaveBeenLastCalledWith(true)
+    await expect(button).toHaveAttribute('aria-expanded', 'true')
+    // Beside the selection, not beside the button that opened it, and not over that button.
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+    await expect(dialog.getBoundingClientRect().top - button.getBoundingClientRect().bottom).toBeGreaterThan(6)
+    // The one button on the page is the app's; the stand-in is not one.
+    await expect(canvas.getAllByRole('button')).toEqual([button])
+    // Escape closes it; the cursor goes back to the button.
+    await waitFor(() => expect(dialog).toHaveFocus())
+    await userEvent.keyboard('{Escape}')
+    await closed()
+    await waitFor(() => expect(button).toHaveFocus())
+    await expect(button).toHaveAttribute('aria-expanded', 'false')
+    // A second press on the button closes it, as it does without an anchor.
+    await userEvent.click(button)
+    dialog = await page().findByRole('dialog', { name: TITLE })
+    await waitFor(() => expect(dialog).toHaveFocus())
+    await userEvent.click(button)
+    await closed()
+    await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
+    await waitFor(() => expect(button).toHaveFocus())
+  },
+}
+
+const LONG_TEXT = Array.from({ length: 14 }, (_, line) => (line === 6 ? PASSAGE : `Line ${line + 1} of the report, about something else entirely.`)).join(' ')
+
+// The selection moves when its text box scrolls; the popover goes with it.
+export const AnchorMoves: Story = {
+  parameters: { viewport: { options: VIEWPORTS }, docs: { description: { story: 'The text scrolls inside its box. Select some of it, then scroll: the suggestion stays beside the selection.' } } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  render: (args) => <Editor args={withoutTrigger(args)} text={LONG_TEXT} className="h-32 overflow-y-auto" />,
+  play: async ({ canvas }) => {
+    const editor = canvas.getByRole('textbox', { name: 'Report' })
+    await expect(editor.scrollHeight).toBeGreaterThan(editor.clientHeight + 60)
+    const start = LONG_TEXT.indexOf(PASSAGE)
+    editor.focus()
+    // Brought to the foot of the box, so there is room to scroll it up and keep it in view.
+    editor.scrollTop = 0
+    const range = selectText(editor.firstChild as Text, start, start + 30)
+    editor.scrollTop += range.getBoundingClientRect().bottom - editor.getBoundingClientRect().bottom + 12
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+    const before = { selection: range.getBoundingClientRect().bottom, popover: dialog.getBoundingClientRect().top }
+    editor.scrollTop += 40
+    await waitFor(() => expect(Math.abs(range.getBoundingClientRect().bottom - (before.selection - 40))).toBeLessThanOrEqual(1))
+    // The popover moved by the same 40px, and is still on the selection.
+    await waitFor(() => expect(Math.abs(dialog.getBoundingClientRect().top - (before.popover - 40))).toBeLessThanOrEqual(1))
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+    // And the stand-in is on the selection, where the popover takes its place from.
+    await waitFor(() => {
+      const standIn = (spot() as HTMLElement).getBoundingClientRect()
+      expect(Math.abs(standIn.top - range.getBoundingClientRect().top)).toBeLessThanOrEqual(1)
+      expect(Math.abs(standIn.left - range.getBoundingClientRect().left)).toBeLessThanOrEqual(1)
+    })
+    // The page changing around the text moves the selection too, with no scroll and no resize to say so (something
+    // above it grew). The popover still follows.
+    const frame = editor.parentElement as HTMLElement
+    const settledAt = { selection: range.getBoundingClientRect().bottom, popover: dialog.getBoundingClientRect().top }
+    frame.style.paddingTop = '32px'
+    await waitFor(() => expect(Math.abs(range.getBoundingClientRect().bottom - settledAt.selection)).toBeGreaterThanOrEqual(8))
+    await waitFor(() => expect(Math.abs(dialog.getBoundingClientRect().top - settledAt.popover - (range.getBoundingClientRect().bottom - settledAt.selection))).toBeLessThanOrEqual(1))
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+    frame.style.paddingTop = ''
+    await waitFor(() => expect(Math.abs(range.getBoundingClientRect().bottom - settledAt.selection)).toBeLessThanOrEqual(1))
+    await expectBeside(dialog, () => range.getBoundingClientRect())
+  },
+}
+
+// A <textarea> has no range to measure, so the app works the selection's box out itself: here with a copy of the
+// text box laid over it (same font, padding and width), in which the selected text is an element that can be measured.
+const selectionBox = (field: HTMLTextAreaElement) => {
+  const copy = document.createElement('div')
+  const style = getComputedStyle(field)
+  for (const name of ['font', 'letterSpacing', 'lineHeight', 'padding', 'border', 'boxSizing', 'textIndent', 'tabSize'] as const) copy.style[name] = style[name]
+  const at = field.getBoundingClientRect()
+  Object.assign(copy.style, { position: 'fixed', left: `${at.left}px`, top: `${at.top}px`, width: `${at.width}px`, height: `${at.height}px`, overflow: 'hidden', whiteSpace: 'pre-wrap', overflowWrap: 'break-word', visibility: 'hidden', pointerEvents: 'none' })
+  const selected = document.createElement('span')
+  selected.textContent = field.value.slice(field.selectionStart, field.selectionEnd)
+  copy.append(field.value.slice(0, field.selectionStart), selected, field.value.slice(field.selectionEnd))
+  document.body.append(copy)
+  copy.scrollTop = field.scrollTop
+  const box = selected.getBoundingClientRect()
+  copy.remove()
+  return box
+}
+
+function TextBox({ args }: { args: AnchorArgs }) {
+  const field = React.useRef<HTMLTextAreaElement>(null)
+  const [text, setText] = React.useState(BEFORE + PASSAGE + AFTER)
+  const [open, setOpen] = React.useState(false)
+  // The popover asks for the box on every frame while it is open, to follow the text as it moves. Working it out
+  // means building the copy, so that is done again only when something it depends on has changed.
+  const last = React.useRef<{ key: string; box: DOMRect } | undefined>(undefined)
+  const anchor = React.useMemo(() => ({
+    getBoundingClientRect: () => {
+      const box = field.current
+      if (!box) return new DOMRect()
+      const at = box.getBoundingClientRect()
+      const key = [at.left, at.top, at.width, at.height, box.scrollTop, box.selectionStart, box.selectionEnd, box.value].join('|')
+      if (last.current?.key !== key) last.current = { key, box: selectionBox(box) }
+      return last.current.box
+    },
+  }), [])
+  // The browser's own `select` event: it fires for a selection made by the mouse, the keyboard or a script alike.
+  React.useEffect(() => {
+    const box = field.current
+    if (!box) return
+    const selected = () => { if (box.selectionStart !== box.selectionEnd) setOpen(true) }
+    box.addEventListener('select', selected)
+    return () => box.removeEventListener('select', selected)
+  }, [])
+  return (
+    <div className="grid w-[26rem] max-w-full gap-3">
+      <textarea ref={field} aria-label="Report" rows={4} value={text} onChange={(event) => setText(event.target.value)}
+        className="resize-none rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed text-foreground outline-hidden focus-visible:ring-3 focus-visible:ring-ring/50" />
+      <AiPopover {...args} anchor={anchor} open={open} returnFocus={field}
+        onOpenChange={(next) => { setOpen(next); args.onOpenChange?.(next) }}
+        onReplace={() => {
+          const box = field.current
+          if (box) setText(text.slice(0, box.selectionStart) + SUGGESTION + text.slice(box.selectionEnd))
+          args.onReplace()
+        }} />
+    </div>
+  )
+}
+
+export const InATextarea: Story = {
+  parameters: { viewport: { options: VIEWPORTS }, docs: { description: { story: 'In a plain text box the app works out where the selected text is and passes that box as `anchor`.' } } },
+  globals: { viewport: { value: 'desktop', isRotated: false } },
+  render: (args) => <TextBox args={withoutTrigger(args)} />,
+  play: async ({ canvas, args }) => {
+    const field = canvas.getByRole('textbox', { name: 'Report' }) as HTMLTextAreaElement
+    await expect(page().queryByRole('dialog')).toBeNull()
+    field.focus()
+    field.setSelectionRange(BEFORE.length, BEFORE.length + PASSAGE.length)
+    const dialog = await page().findByRole('dialog', { name: TITLE })
+    // The popover is beside its stand-in, and the stand-in is on the box the app worked out. (That box is not asked
+    // for while waiting: working it out changes the page for a moment, and each change to the page makes the wait
+    // look again.)
+    await expectBeside(dialog, () => (spot() as HTMLElement).getBoundingClientRect())
+    const selected = selectionBox(field)
+    const standIn = (spot() as HTMLElement).getBoundingClientRect()
+    for (const edge of ['left', 'top', 'right', 'bottom'] as const) await expect(Math.abs(standIn[edge] - selected[edge])).toBeLessThanOrEqual(1)
+    // And that box is on the selected text: inside the text box, more than one line of it.
+    const around = field.getBoundingClientRect()
+    await expect(selected.height).toBeGreaterThan(20)
+    await expect(selected.top).toBeGreaterThanOrEqual(around.top)
+    await expect(selected.bottom).toBeLessThanOrEqual(around.bottom)
+    await waitFor(() => expect(dialog).toHaveFocus())
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Replace' }))
+    await expect(args.onReplace).toHaveBeenCalledTimes(1)
+    await closed()
+    await expect(field).toHaveValue(BEFORE + SUGGESTION + AFTER)
+    await waitFor(() => expect(field).toHaveFocus())
+  },
+}
+
 export const DoDont: Story = {
   parameters: { layout: 'padded', controls: { disable: true } },
   render: () => (

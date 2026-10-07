@@ -15,17 +15,24 @@ export const usage = {
       visual: false,
     },
     {
-      id: 'thread-is-sample-content',
-      do: 'Treat the conversation shown as sample content: the block does not yet take your app\'s own messages, so put yours in by editing the thread in your copy of the block.',
-      dont: 'Ship the sample conversation, or look for a prop that takes messages.',
+      id: 'pass-your-own-thread',
+      do: 'Pass your conversation as children and drive the composer with status, onStop and onSubmit. The conversation shown without children is sample content.',
+      dont: 'Ship the sample conversation, or edit the block to hard-code yours — the block is overwritten on update.',
+      visual: false,
+    },
+    {
+      id: 'chat-list-is-a-sample',
+      do: 'Pass the conversation-history block as sidebar: the built-in list of chats is a sample. Pass null for a page with no left column, and composerTrailing for your own control in place of the sample model picker (null for none).',
+      dont: 'Ship the sample list of chats or the sample model picker.',
       visual: false,
     },
   ],
   a11y: [
-    'The sidebar is a navigation landmark named "Chats" with the open chat marked aria-current; the thread and composer sit in a region named "Conversation".',
+    'The sample sidebar is a navigation landmark named "Chats" with the open chat marked aria-current; the thread and composer sit in a region named "Conversation". A sidebar you pass names itself (the conversation-history block is a navigation landmark of its own); with sidebar null there is no left column and no navigation landmark. Under 768px wide the left column is not shown, whatever is in it.',
     'The thread is a log named "Messages", a polite live region, so each new turn is read out as it is added, without moving focus.',
     'Each reply is an article. A working reply has a status region that is empty at first, filled a moment after it mounts and then updated as the activity changes; once it is stopped, "You stopped this answer." is announced from a status region that was already there.',
     'The chat links, suggestion chips, source chips and the thinking toggle show the same 3px focus ring as a Button.',
+    'With your own conversation, Stop calls onStop and moves the cursor back to the message box.',
   ],
   tokens: ['--background', '--border', '--muted', '--muted-foreground', '--ai-from', '--ai-via', '--ai-to'],
 }

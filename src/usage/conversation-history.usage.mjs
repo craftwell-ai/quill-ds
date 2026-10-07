@@ -35,8 +35,8 @@ export const usage = {
     },
     {
       id: 'open-from-the-side-panel',
-      do: 'Open this list from the AI side panel\'s History button (onHistory), in your own sheet or column.',
-      dont: 'Expect the side panel to show it by itself — the panel does not hold a history view.',
+      do: 'Open this list from the AI side panel\'s History button (onHistory). Pass it as the panel\'s body to show it in the panel itself, in place of the thread, and pass undefined again once a chat is chosen; or show it in your own sheet or column.',
+      dont: 'Expect the side panel to show it by itself — History only calls onHistory, and the list appears when you pass it.',
       visual: false,
     },
     {

@@ -6,9 +6,16 @@ import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@/compone
 import { AiMark } from '@/components/ui/ai-mark'
 import { cn } from '@/lib/utils'
 
+/** Anything that can say where it is on screen: a DOM Range, an element, or an object of your own with getBoundingClientRect. */
+export type AiPopoverAnchor = { getBoundingClientRect: () => DOMRect }
+
 export type AiPopoverProps = {
-  /** The text or control the suggestion is about: a <mark> around the selected text, or a Button. The popover opens from it and sits beside it. */
-  children: React.ReactElement
+  /** The text or control the suggestion is about: a <mark> around the selected text, or a Button. The popover opens from it and sits beside it. Optional once `anchor` is passed. */
+  children?: React.ReactElement
+  /** What the popover sits beside when there is no element to wrap: the selection in an editor (a Range), or for a <textarea> an object whose getBoundingClientRect returns the box you worked out. Nothing is pressed to open it, so drive `open` yourself. With `children` as well, children still opens it and `anchor` only says where it sits. Its box is asked for on every frame while the popover is open, to follow the text as it moves: keep getBoundingClientRect cheap. */
+  anchor?: AiPopoverAnchor | null
+  /** With `anchor`: where the cursor goes when the popover closes (the editor). Left out, it goes back to `children`, or to whatever had it when the popover opened. */
+  returnFocus?: React.RefObject<HTMLElement | null>
   /** What the AI did: "Rewrite: shorter". */
   title: string
   /** The suggested text. Leave it out while the AI is still writing. */
@@ -51,14 +58,61 @@ function WritingStatus({ working, label }: { working: boolean; label: string }) 
   return <div role="status" className="sr-only">{!announcing ? '' : working ? label : wasWorking ? 'Suggestion ready' : ''}</div>
 }
 
+// The first of these that is still on the page and can take the cursor.
+const firstOnPage = (...candidates: Array<HTMLElement | null | undefined>) =>
+  candidates.find((element) => element && element.isConnected && element !== document.body) ?? null
+
+// Anchor mode. The stock PopoverContent places the popover beside its trigger and takes no other anchor, so the
+// selection gets a stand-in: an empty box kept exactly over it, which is the popover's trigger in name only. It takes
+// no presses (they reach the text underneath), is not a Tab stop and is hidden from screen readers.
+function AnchorSpot({ id, anchor, open, onFocus }: { id: string; anchor: AiPopoverAnchor; open: boolean; onFocus: () => void }) {
+  // Typed as the stock trigger types it; the element is the <span> below.
+  const ref = React.useRef<HTMLButtonElement>(null)
+  const shift = React.useRef({ x: 0, y: 0 })
+  const place = React.useCallback(() => {
+    const spot = ref.current
+    if (!spot) return
+    const want = anchor.getBoundingClientRect()
+    const landed = spot.getBoundingClientRect()
+    // Already there (the usual answer): nothing is written, so nothing is laid out again.
+    const off = [want.left - landed.left, want.top - landed.top, want.width - landed.width, want.height - landed.height]
+    if (off.every((miss) => Math.abs(miss) < 0.05)) return
+    spot.style.width = `${want.width}px`
+    spot.style.height = `${want.height}px`
+    // A fixed box is measured from the window, unless an ancestor is transformed: then from that ancestor. Whichever
+    // it is, where the box really landed was read back above, and the miss is taken out.
+    shift.current = { x: shift.current.x + off[0], y: shift.current.y + off[1] }
+    spot.style.left = `${shift.current.x}px`
+    spot.style.top = `${shift.current.y}px`
+  }, [anchor])
+  // After every render while open (the anchor may be a new one), and before the popover works out its own place.
+  React.useLayoutEffect(() => {
+    if (open) place()
+  })
+  // Then on every frame while open. A selection moves when its box scrolls, when the window is resized and when the
+  // page around it changes height, and only the first two say so; asking each frame catches all three. The stock
+  // positioner notices the stand-in move and follows.
+  React.useEffect(() => {
+    if (!open) return
+    let frame = window.requestAnimationFrame(function follow() {
+      place()
+      frame = window.requestAnimationFrame(follow)
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [open, place])
+  return <PopoverTrigger ref={ref} id={id} nativeButton={false} tabIndex={-1} aria-hidden onFocus={onFocus} render={<span data-slot="popover-anchor" className="pointer-events-none fixed top-0 left-0" />} />
+}
+
 /** An AI suggestion beside the text it is about — what the AI did, the suggested text on a soft AI wash, then Discard, Try again and Replace. */
 export function AiPopover({
   children, title, suggestion, working = false, workingLabel = 'Writing',
   open, defaultOpen = false, onOpenChange, onReplace, replaceLabel = 'Replace',
-  onInsertBelow, onRetry, onDiscard, side = 'bottom', align = 'start', className,
+  onInsertBelow, onRetry, onDiscard, side = 'bottom', align = 'start', className, anchor, returnFocus,
 }: AiPopoverProps) {
   const [ownOpen, setOwnOpen] = React.useState(defaultOpen)
-  const isOpen = open === undefined ? ownOpen : open
+  // With neither a trigger nor an anchor there is nothing to sit beside, so nothing is shown.
+  const anchored = anchor !== undefined && anchor !== null
+  const isOpen = (open === undefined ? ownOpen : open) && (anchored || children !== undefined)
   const setOpen = (next: boolean) => {
     if (open === undefined) setOwnOpen(next)
     onOpenChange?.(next)
@@ -88,14 +142,41 @@ export function AiPopover({
   }, [scrollArea, working, ready])
   // A Button or a <button> is a native button. Highlighted text (a <mark>, a <span>) is not, and the trigger has to
   // be told so it adds the button role, a Tab stop and Enter / Space.
-  const nativeButton = typeof children.type !== 'string' || children.type === 'button'
+  const nativeButton = children === undefined || typeof children.type !== 'string' || children.type === 'button'
+  // Anchor mode: the stand-in is the trigger the popover is placed by, and must never end up holding the cursor.
+  // Closing sends the cursor to returnFocus, else to the trigger (children), else to what had it on opening.
+  const spotId = React.useId()
+  const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const opener = React.useRef<HTMLElement | null>(null)
 
   return (
-    <Popover open={isOpen} onOpenChange={(next) => setOpen(next)}>
-      <PopoverTrigger render={children} nativeButton={nativeButton} />
+    // triggerId says which trigger the popover is placed by: the stand-in while there is an anchor; null leaves it to
+    // the popover, which goes by the trigger that was pressed.
+    <Popover open={isOpen} triggerId={anchored ? spotId : null}
+      onOpenChange={(next, details) => {
+        // Placed by the stand-in, the popover takes a press on the real trigger while open as a request to move to
+        // it, not to close. A second press on the trigger closes, as it does without an anchor.
+        if (anchored && next && isOpen && details.reason === 'trigger-press') return setOpen(false)
+        setOpen(next)
+      }}>
+      {/* The stand-in is the trigger the popover belongs to, so the real one is told whether it is open here. */}
+      {children ? <PopoverTrigger render={children} nativeButton={nativeButton} {...(anchored ? { ref: triggerRef, 'aria-expanded': isOpen } : undefined)} /> : null}
+      {/* Shift+Tab out of the popover's start goes to its trigger. Here that is the stand-in, so it passes the cursor on. */}
+      {anchored ? (
+        <AnchorSpot id={spotId} anchor={anchor} open={isOpen}
+          onFocus={() => (firstOnPage(returnFocus?.current, triggerRef.current, opener.current) ?? popupRef.current)?.focus()} />
+      ) : null}
       {/* The wash is a background image over the popover's own fill, so the stock surface colour stays. Focus opens on
           the dialog itself, not on Discard: someone holding Enter to open it would otherwise discard on the key repeat. */}
-      <PopoverContent ref={popupRef} initialFocus={popupRef} side={side} align={align} className={cn('ai-wash w-96 max-w-[calc(100vw-2rem)] max-h-(--available-height) gap-0 overflow-hidden p-0 focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
+      <PopoverContent ref={popupRef} side={side} align={align}
+        // With an anchor, what has the cursor as the popover opens is remembered, to hand it back on closing.
+        initialFocus={anchored ? () => {
+          const active = document.activeElement
+          opener.current = active instanceof HTMLElement && !popupRef.current?.contains(active) ? active : null
+          return popupRef.current
+        } : popupRef}
+        finalFocus={anchored ? () => firstOnPage(returnFocus?.current, triggerRef.current, opener.current) ?? false : undefined}
+        className={cn('ai-wash w-96 max-w-[calc(100vw-2rem)] max-h-(--available-height) gap-0 overflow-hidden p-0 focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
         <div className="flex shrink-0 items-center gap-2 px-3.5 pt-3 pb-1">
           <AiMark size={18} />
           {/* A paragraph, not the default h2: headings take the serif display preset. */}
