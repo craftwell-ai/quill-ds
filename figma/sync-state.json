@@ -2302,7 +2302,7 @@
       "variantOf": "1212:94",
       "variant": "Variant=card, Low=false",
       "codeFile": "registry/lib/usage-meter.tsx",
-      "lastSynced": "2026-10-06",
+      "lastSynced": "2026-10-07",
       "figma": {
         "fill": {
           "var": "semantic/card",
@@ -2561,8 +2561,8 @@
       "page": "❖ Conversation history",
       "pageId": "1210:7",
       "frameId": "1214:22",
-      "codeHash": "c4101502eea8358b",
-      "syncedAt": "2026-10-06"
+      "codeHash": "ca200a22eba08c14",
+      "syncedAt": "2026-10-07"
     },
     {
       "block": "cookie-consent",
