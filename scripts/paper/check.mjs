@@ -267,7 +267,8 @@ async function checkStory(file, page, piece, story, { table, out, base, open }) 
     }
 
     // picture: Paper writes the export into the Downloads folder and answers with the path
-    const layerName = `${piece.slug} / ${story.id.split('--')[1]}${recorded.part === 'main' ? '' : ` · ${recorded.part}`}`
+    // the name Paper holds for the layer being exported (read back, not assumed: Paper folds a frame that only wraps one icon into the icon)
+    const layerName = nodes[0]?.name ?? `${piece.slug} / ${story.id.split('--')[1]}`
     const since = Date.now()
     const exported = await file.data('export', { pageId: piece.pageId, nodes: { [recorded.nodeId]: [{ format: 'png', scale: `${SCALE}x` }] } })
     const exportPath = exported.exports?.[0]?.filePath
