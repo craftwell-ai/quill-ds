@@ -1098,11 +1098,11 @@
         "src/stories/ai-popover.stories.tsx",
         "src/usage/ai-popover.usage.mjs"
       ],
-      "sourceHash": "d3c4543186dc147b",
+      "sourceHash": "95f5f202e95d636e",
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 3,
-        "nodes": 61,
+        "nodes": 58,
         "approximated": 3,
         "bound": 250,
         "bindable": 287,
@@ -1117,14 +1117,14 @@
           "id": "components-aipopover--suggestion",
           "title": "Suggestion",
           "opened": "story",
-          "nodes": 21,
+          "nodes": 20,
           "approximated": 1,
           "bound": 87,
           "bindable": 100,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1MPV-0",
+              "nodeId": "1ZLP-0",
               "size": [
                 416,
                 66.23
@@ -1133,12 +1133,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1MQ5-0",
+              "nodeId": "1ZLZ-0",
               "size": [
                 384,
                 181.64
               ],
-              "htmlHash": "82de886290afe971"
+              "htmlHash": "92c4771028c3f009"
             }
           ]
         },
@@ -1146,14 +1146,14 @@
           "id": "components-aipopover--empty-suggestion",
           "title": "Empty Suggestion",
           "opened": "story",
-          "nodes": 19,
+          "nodes": 18,
           "approximated": 1,
           "bound": 73,
           "bindable": 85,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1MR0-0",
+              "nodeId": "1ZMR-0",
               "size": [
                 416,
                 66.23
@@ -1162,12 +1162,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1MRA-0",
+              "nodeId": "1ZN1-0",
               "size": [
                 384,
                 97.41
               ],
-              "htmlHash": "8e9abe4aac3c96ab"
+              "htmlHash": "7fa3d2edfe861bbc"
             }
           ]
         },
@@ -1175,14 +1175,14 @@
           "id": "components-aipopover--opens-from-a-button",
           "title": "Opens From A Button",
           "opened": "story",
-          "nodes": 21,
+          "nodes": 20,
           "approximated": 1,
           "bound": 90,
           "bindable": 102,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1MS3-0",
+              "nodeId": "1ZNR-0",
               "size": [
                 416,
                 32
@@ -1191,12 +1191,12 @@
             },
             {
               "part": "panel-1",
-              "nodeId": "1MSD-0",
+              "nodeId": "1ZO1-0",
               "size": [
                 384,
                 181.64
               ],
-              "htmlHash": "a83030881e0146bd"
+              "htmlHash": "a6581d6fef55c67b"
             }
           ]
         }
@@ -9316,7 +9316,7 @@
         "src/stories/patterns/ConversationHistory.stories.tsx",
         "src/usage/conversation-history.usage.mjs"
       ],
-      "sourceHash": "81b5d8500f34ab6e",
+      "sourceHash": "63187b69289b2664",
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 3,
@@ -9340,7 +9340,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1VSH-0",
+              "nodeId": "1ZOV-0",
               "size": [
                 300,
                 350
@@ -9360,7 +9360,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1VU0-0",
+              "nodeId": "1ZQE-0",
               "size": [
                 300,
                 582
@@ -9380,7 +9380,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1VWE-0",
+              "nodeId": "1ZSS-0",
               "size": [
                 300,
                 89.41
@@ -10292,7 +10292,7 @@
         "src/stories/patterns/MailShell.stories.tsx",
         "src/usage/mail-shell.usage.mjs"
       ],
-      "sourceHash": "d3d05c5d9c408ee4",
+      "sourceHash": "0d30b49e31a04bb8",
       "syncedAt": "2026-10-07",
       "counts": {
         "stories": 1,
@@ -10318,7 +10318,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1WOI-0",
+              "nodeId": "1ZTD-0",
               "size": [
                 1232,
                 560
