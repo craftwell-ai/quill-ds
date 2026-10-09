@@ -49,6 +49,7 @@ export const SKIPS_BEFORE_ALARM = 7
 export const KEEP_LOGS = 14
 export const MARKER = 'clone.json'
 const TIMEOUT_MS = 45 * 60 * 1000
+const KILL_GRACE_MS = 5000
 const STALE_LOCK_MS = 2 * 60 * 60 * 1000
 
 export const paths = (env = process.env) => {
@@ -255,7 +256,14 @@ export async function daily({ dryRun = false, noPush = false, env = process.env 
   })
   /** Take Paper's "an agent is working here" markers off whatever was mid-write, stop children, free the lock. */
   const release = async () => {
-    for (const child of children) { try { process.kill(-child.pid, 'SIGTERM') } catch { /* already gone */ } }
+    // ask first, then insist: a check stuck inside its headless browser ignores the polite signal and would
+    // otherwise be left running after this process has gone
+    const groups = [...children].map((child) => child.pid)
+    for (const pid of groups) { try { process.kill(-pid, 'SIGTERM') } catch { /* already gone */ } }
+    if (groups.length) {
+      await new Promise((resolveWait) => setTimeout(resolveWait, KILL_GRACE_MS))
+      for (const pid of groups) { try { process.kill(-pid, 'SIGKILL') } catch { /* it stopped when asked */ } }
+    }
     try {
       const { connect } = await import(pathToFileURL(join(where.repo, 'scripts/paper/client.mjs')).href)
       const record = readJson(join(where.repo, 'paper/sync-state.json'), {})
@@ -264,7 +272,15 @@ export async function daily({ dryRun = false, noPush = false, env = process.env 
     serving?.close()
     rmSync(where.lock, { force: true })
   }
-  const stop = async (why, code) => { if (aborted) return; aborted = why; log(`STOPPED: ${why}`); await release(); process.exit(code) }
+  const stop = async (why, code) => {
+    if (aborted) return
+    aborted = why
+    log(`STOPPED: ${why}`)
+    await release()
+    // a run cut short by the time limit is a failed run, and a failed run is never silent
+    if (code === 1) await notify(`The daily Paper check FAILED: ${why}. Log: ${logFile.replace(homedir(), '~')}`)
+    process.exit(code)
+  }
   const timer = setTimeout(() => stop(`still running after ${TIMEOUT_MS / 60000} minutes`, 1), TIMEOUT_MS)
   const onSignal = (signal) => stop(`received ${signal}`, 130)
   process.once('SIGINT', onSignal)
