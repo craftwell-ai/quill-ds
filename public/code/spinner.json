@@ -1,0 +1,9 @@
+{
+  "name": "spinner",
+  "files": [
+    {
+      "path": "components/ui/spinner.tsx",
+      "content": "import { cn } from \"@/lib/utils\"\nimport { Icon } from \"@/components/ui/icon\"\n\n/** An indeterminate loading indicator — a spinning icon that inherits its color from `currentColor`, for waits with no known duration or percentage. */\nfunction Spinner({ className, ...props }: React.ComponentProps<\"svg\">) {\n  return (\n    <Icon role=\"status\" aria-label=\"Loading\" {...props} name=\"progress_activity\" className={cn(\"size-4 animate-spin\", className)} />\n  )\n}\n\nexport { Spinner }\n"
+    }
+  ]
+}

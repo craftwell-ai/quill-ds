@@ -37,6 +37,7 @@
 import { appendFileSync } from 'node:fs'
 
 import { run } from './library-sync.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 export const COMMAND = '@dependabot recreate'
 export const STUCK = new Set(['DIRTY', 'BEHIND'])
@@ -119,4 +120,4 @@ export async function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) await main()
+if (isMain(import.meta.url)) await main()

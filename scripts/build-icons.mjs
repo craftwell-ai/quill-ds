@@ -25,14 +25,39 @@ import {
   existsSync,
 } from 'node:fs'
 import { execSync } from 'node:child_process'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { MANIFEST } from './icons.manifest.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SRC = join(root, 'node_modules/@material-symbols/svg-400/outlined')
 const UI = join(root, 'src/components/ui')
 const ICONS_DIR = join(UI, 'icons')
+export const PUBLIC_ICONS_DIR = join(root, 'public/icons')
+
+// What <Icon> renders with (registry/lib/icon.tsx), stated for tools that draw the SVGs directly.
+// The paths are Material Symbols Outlined from @material-symbols/svg-400: weight 400, fill 0,
+// grade 0, drawn at optical size 48.
+export const ICON_DEFAULTS = { size: '1em', color: 'currentColor', weight: 400, fill: 0, grade: 0, opticalSize: 48 }
+
+/**
+ * public/icons: index.json plus one SVG per icon the `icon` registry item ships (the core set,
+ * not the whole library), keyed by file name. Built from the same map as icons.core.mjs.
+ */
+export function renderPublicIcons(coreMap) {
+  const names = Object.keys(coreMap).sort()
+  const viewBoxes = [...new Set(names.map((n) => coreMap[n].viewBox))]
+  if (viewBoxes.length !== 1) throw new Error(`the shipped icons do not share one viewBox: ${viewBoxes.join(', ')}`)
+  const files = {
+    'index.json': JSON.stringify({ schemaVersion: 1, set: 'Material Symbols Outlined', viewBox: viewBoxes[0], defaults: ICON_DEFAULTS, icons: names }, null, 2) + '\n',
+  }
+  for (const n of names) {
+    const paths = coreMap[n].paths.map((d) => `<path d="${d}"/>`).join('')
+    files[`${n}.svg`] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${coreMap[n].viewBox}" width="24" height="24" fill="currentColor">${paths}</svg>\n`
+  }
+  return files
+}
 const META_PATH = process.env.MS_META || '/tmp/ms-meta.json'
 
 // Size of the per-icon LAZY set (top-N Material Symbols by Google popularity).
@@ -197,12 +222,16 @@ export function build() {
   writeFileSync(join(UI, 'icons.core.mjs'), coreMjs)
   writeFileSync(join(UI, 'icons.generated.d.ts'), dts)
 
+  // 6) the shipped set as drawings, for tools that place icons without running the component
+  const coreMap = Object.fromEntries(core.map((n) => [n, parseSvg(n)]))
+  rmSync(PUBLIC_ICONS_DIR, { recursive: true, force: true })
+  mkdirSync(PUBLIC_ICONS_DIR, { recursive: true })
+  for (const [file, content] of Object.entries(renderPublicIcons(coreMap))) writeFileSync(join(PUBLIC_ICONS_DIR, file), content)
+
   return { core, lazy: full, tail, coreMjs, tailMjs, dts }
 }
 
-// compared as URLs: a folder with a space in its name is `%20` in import.meta.url, and a plain string
-// comparison then fails silently, so the script would exit having written nothing
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   const { core, lazy, tail } = build()
   console.log(
     `icons.core.mjs: ${core.length} core | icons/: ${lazy.length} per-icon modules | icons.tail.mjs: ${tail.length} tail icons`

@@ -4,637 +4,818 @@
     {
       "name": "accordion",
       "kind": "component",
-      "summary": "A vertically stacked set of expand/collapse sections — one open at a time by default, with an option to allow several."
+      "summary": "A vertically stacked set of expand/collapse sections — one open at a time by default, with an option to allow several.",
+      "hash": "79cebb8bfd74ba686b77bb5079a0bd018ec20d9429074500d9eae0b50a8b7d38",
+      "code": true
     },
     {
       "name": "activity-feed",
       "kind": "pattern",
-      "summary": "A card timeline of recent events — avatar, action text, and a relative timestamp per entry."
+      "summary": "A card timeline of recent events — avatar, action text, and a relative timestamp per entry.",
+      "hash": "f4b7a8c730c0d90888b3f34c182ba3b103f0f20df5817e5ceb86c48cb4963582"
     },
     {
       "name": "agent-steps",
       "kind": "component",
-      "summary": "Shows the steps an AI agent is working through — done, running, waiting or failed — with a count in the header and rows that open to show what happened."
+      "summary": "Shows the steps an AI agent is working through — done, running, waiting or failed — with a count in the header and rows that open to show what happened.",
+      "hash": "426497beb0dd501e1bdbecd8b59d1fa10480c3a3e1c18f240c5b96e7a7085798"
     },
     {
       "name": "ai-badge",
       "kind": "component",
-      "summary": "A small outline pill with the AI sparkle that marks content an AI made or suggested — \"AI draft\", \"Suggested\"."
+      "summary": "A small outline pill with the AI sparkle that marks content an AI made or suggested — \"AI draft\", \"Suggested\".",
+      "hash": "1c83f2b018e5fd95a84c4434a1bcd77b00fd7312c6f61c0b80222bbc84807653"
     },
     {
       "name": "ai-button",
       "kind": "component",
-      "summary": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink."
+      "summary": "A stock Quill button that runs an AI action, marked with the AI sparkle; the label stays plain ink.",
+      "hash": "a67129cc3fa731f4f49d4a2ee97acb8d91c2809057a3e9069978fb6035042a64"
     },
     {
       "name": "ai-feedback",
       "kind": "component",
-      "summary": "Asks what was wrong after a thumbs-down on an AI answer — one reason to choose from a short list, an optional note, and Send — opening under the answer so what is being judged stays in view."
+      "summary": "Asks what was wrong after a thumbs-down on an AI answer — one reason to choose from a short list, an optional note, and Send — opening under the answer so what is being judged stays in view.",
+      "hash": "b4342f48f417e9c22391d16f7b6111eb7a74b1ab04b04c72a6dcd5c9a2b8fb04"
     },
     {
       "name": "ai-mark",
       "kind": "component",
-      "summary": "Quill's AI sparkle — the one icon that means AI, drawn in the AI gradient with a one-star cut for 16px and under."
+      "summary": "Quill's AI sparkle — the one icon that means AI, drawn in the AI gradient with a one-star cut for 16px and under.",
+      "hash": "8d65766e054d2e01d8271d9491756034a4a1ef6fbb0d0b8e5e92830dcb6964c9"
     },
     {
       "name": "ai-message",
       "kind": "component",
-      "summary": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side."
+      "summary": "An AI's reply in a conversation — the AI mark on its avatar, the answer as plain readable text, and Copy, Try again and thumbs under it. Ships with UserMessage for the person's side.",
+      "hash": "12c8557b65a1a35df3551b78df55506e73e0dff7aefe7b8e7900d4364de64f28"
     },
     {
       "name": "ai-notice",
       "kind": "component",
-      "summary": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies."
+      "summary": "One quiet line under an AI composer saying the AI can be wrong, with an optional link the app supplies.",
+      "hash": "ac7048bf75dbfde64885d9558a1faa25e897ba7c48a629dea8c08a12deb92de5"
     },
     {
       "name": "ai-popover",
       "kind": "component",
-      "summary": "An AI suggestion beside the text it is about — what the AI did, the suggested text on a soft AI wash, then Discard, Try again and Replace."
+      "summary": "An AI suggestion beside the text it is about — what the AI did, the suggested text on a soft AI wash, then Discard, Try again and Replace.",
+      "hash": "853e3dff0a58f78c0772a22687413a75c5caa5cc0d2137602edaf1554a6b65e7"
     },
     {
       "name": "ai-thinking",
       "kind": "component",
-      "summary": "Shows an AI working before its answer — a shimmering \"Thinking\" with what it is doing — then folds into one quiet \"Thought for 8 s\" row that opens the reasoning."
+      "summary": "Shows an AI working before its answer — a shimmering \"Thinking\" with what it is doing — then folds into one quiet \"Thought for 8 s\" row that opens the reasoning.",
+      "hash": "77f7d4b22facba58bc20ec1d8427e2a6d6fa4dc4b00e058e34efc3004a1f3155"
     },
     {
       "name": "suggested-prompts",
       "kind": "component",
-      "summary": "Ready-made things to ask an AI — chips for follow-ups under an answer, cards for starters on an empty page, a list in a narrow panel. Picking one fills the composer; it never sends."
+      "summary": "Ready-made things to ask an AI — chips for follow-ups under an answer, cards for starters on an empty page, a list in a narrow panel. Picking one fills the composer; it never sends.",
+      "hash": "c1609072e3f53e63464e9e5d56f54f69338954e670e79b20b1bd786855fde504"
     },
     {
       "name": "model-picker",
       "kind": "component",
-      "summary": "Lets people choose which AI model answers — a quiet name-and-chevron trigger in the composer that opens a list with Auto first, a line on what each model is good for, and a check on the current one."
+      "summary": "Lets people choose which AI model answers — a quiet name-and-chevron trigger in the composer that opens a list with Auto first, a line on what each model is good for, and a check on the current one.",
+      "hash": "90013e98daa28a094bbd0e7aed4d8b819e4c40d1995e198d786c0c9ecc3534d3"
     },
     {
       "name": "alert",
       "kind": "component",
-      "summary": "A single inline status box for a message tied to a specific area of the page. `alerts` is this primitive already assembled into a vertical stack of several."
+      "summary": "A single inline status box for a message tied to a specific area of the page. `alerts` is this primitive already assembled into a vertical stack of several.",
+      "hash": "ef18f3c86f61b9b915e428af587150d840ce006c44f9584d3942c1c099902016",
+      "code": true
     },
     {
       "name": "alert-dialog",
       "kind": "component",
-      "summary": "A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside."
+      "summary": "A modal that forces an explicit response to a destructive or irreversible action — unlike Dialog, it cannot be dismissed by clicking outside.",
+      "hash": "bdefa479a8c3b934d7dd7fe6c90812ab18b7ecf1b8519d02f32c324420ac9c47",
+      "code": true
     },
     {
       "name": "alerts",
       "kind": "pattern",
-      "summary": "A vertical stack of informational, success, and destructive alerts with icons."
+      "summary": "A vertical stack of informational, success, and destructive alerts with icons.",
+      "hash": "21df0365fe63fda56ec5c370d832a935fb9c67bd8644adacd92d920aca685e2e"
     },
     {
       "name": "analytics-charts",
       "kind": "pattern",
-      "summary": "A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card."
+      "summary": "A dashboard pair — an area chart of audience growth beside a bar chart of weekly sales, each on its own card.",
+      "hash": "b16e92f722218a4ae2020ab95208126e5150b0d5bd8b0212b2f6f8277d163310"
     },
     {
       "name": "announcement-banner",
       "kind": "pattern",
-      "summary": "Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant."
+      "summary": "Two dismissible announcement banners — an inline bordered page banner and a full-bleed primary-color variant.",
+      "hash": "5265f0d967c6fdfdb26ccf249a0682b26d5e0764031cddc6ab245db840aaa664"
     },
     {
       "name": "approval-card",
       "kind": "component",
-      "summary": "Asks before an AI agent acts — an inline card that names the action, shows exactly what will happen, lets people edit it in place, and has a main button that says what it does."
+      "summary": "Asks before an AI agent acts — an inline card that names the action, shows exactly what will happen, lets people edit it in place, and has a main button that says what it does.",
+      "hash": "93588c61e908b3d33b9187561484c66cb01ab310a79b51ed6501a2673ee5b503"
     },
     {
       "name": "aspect-ratio",
       "kind": "component",
-      "summary": "Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails."
+      "summary": "Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails.",
+      "hash": "ec9500b72cc12c2dc4f811ee287d84f132670d5e81cedb364a69ab5d3d6444c0",
+      "code": true
     },
     {
       "name": "avatar",
       "kind": "component",
-      "summary": "A round image, initials, or icon representing a person or entity — reserves its shape immediately and swaps in the real photo once it loads."
+      "summary": "A round image, initials, or icon representing a person or entity — reserves its shape immediately and swaps in the real photo once it loads.",
+      "hash": "b9ae9900fc2c3a957069ec0caa04d516f99a4476ac44720d98de703938ba820c",
+      "code": true
     },
     {
       "name": "badge",
       "kind": "component",
-      "summary": "A small, non-interactive label for status, category, or count — not a button or a link on its own."
+      "summary": "A small, non-interactive label for status, category, or count — not a button or a link on its own.",
+      "hash": "250ab317faa1f6898813d3491f4276b8ca707dc3408d768f6676855a57e9ea7d",
+      "code": true
     },
     {
       "name": "badge-on-card",
       "kind": "pattern",
-      "summary": "Default, secondary, and destructive badges shown together on a card surface."
+      "summary": "Default, secondary, and destructive badges shown together on a card surface.",
+      "hash": "9dc37fd0729c285da529727a54e850b7dcce5b1912d5f88dc0c95c49798ebf2c"
     },
     {
       "name": "breadcrumb",
       "kind": "component",
-      "summary": "A trail of links showing the current page's position in a hierarchy — the last crumb is always the current, non-link page."
+      "summary": "A trail of links showing the current page's position in a hierarchy — the last crumb is always the current, non-link page.",
+      "hash": "b036d0e3d9cb2bd5cb3d507d20ae4e93ab9b2659d80cf19cfd2e55f01f711e85",
+      "code": true
     },
     {
       "name": "button",
       "kind": "component",
-      "summary": "Buttons trigger actions. The default (primary) variant is the single most important action on a surface."
+      "summary": "Buttons trigger actions. The default (primary) variant is the single most important action on a surface.",
+      "hash": "02c41493705a1a744212fc184bad6596a64d3cf0e2549560d4a5cfe07706014b",
+      "code": true
     },
     {
       "name": "button-group",
       "kind": "component",
-      "summary": "A structural wrapper that merges adjacent Buttons into one visually connected control — shared borders, no owned selection state."
+      "summary": "A structural wrapper that merges adjacent Buttons into one visually connected control — shared borders, no owned selection state.",
+      "hash": "262655d9c820e2bc83385ddd94df82984beaddb2e6e2569b6af9f36bc21ec5ea",
+      "code": true
     },
     {
       "name": "calendar",
       "kind": "component",
-      "summary": "The date-picker primitive built on react-day-picker — supports single, multiple, and range selection modes. `calendar-page` and `calendar-range` are this primitive already composed into full scheduling and booking patterns."
+      "summary": "The date-picker primitive built on react-day-picker — supports single, multiple, and range selection modes. `calendar-page` and `calendar-range` are this primitive already composed into full scheduling and booking patterns.",
+      "hash": "bee1edafdfa0757ebb4ab22e6d86128428317c305a8236a7b62b00260766dd01",
+      "code": true
     },
     {
       "name": "calendar-page",
       "kind": "pattern",
-      "summary": "A single-date calendar paired with the selected day's session list, in one studio-schedule card."
+      "summary": "A single-date calendar paired with the selected day's session list, in one studio-schedule card.",
+      "hash": "080bd55de1a9b40ef26377f4199e618bae2c5433352ee9d9a54974fdfe879806"
     },
     {
       "name": "calendar-range",
       "kind": "pattern",
-      "summary": "A stateful two-month range calendar for booking a span of days, with clear and reserve actions."
+      "summary": "A stateful two-month range calendar for booking a span of days, with clear and reserve actions.",
+      "hash": "e565c5631bf6f8407e694b0d5e3e0be7c0495a14de922b60644c8af3fe26ccfa"
     },
     {
       "name": "card",
       "kind": "component",
-      "summary": "A bounded content container with header, body, and footer slots — paper-warm surface with a soft ring instead of a box-shadow border."
+      "summary": "A bounded content container with header, body, and footer slots — paper-warm surface with a soft ring instead of a box-shadow border.",
+      "hash": "52013abe68b4a41c2d1e5150da39d177e492f957e54102f953ebcc0eeb8c5a9b",
+      "code": true
     },
     {
       "name": "carousel",
       "kind": "component",
-      "summary": "A horizontally or vertically scrolling item viewport built on Embla Carousel, with Previous/Next controls and keyboard arrow-key support."
+      "summary": "A horizontally or vertically scrolling item viewport built on Embla Carousel, with Previous/Next controls and keyboard arrow-key support.",
+      "hash": "c8ce0c222b8690a98c88b285d9954d95012d3be61046d7bcb9ab69b1b653ef76",
+      "code": true
     },
     {
       "name": "chart",
       "kind": "component",
-      "summary": "A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend."
+      "summary": "A themeable wrapper around Recharts — ChartContainer wires a config object to CSS custom properties per series, plus a matching ChartTooltip and ChartLegend.",
+      "hash": "f94d7aaeb0bbaf7c02776130eaedba9b15ac797d4c48ef3d73b2647a704a47be",
+      "code": true
     },
     {
       "name": "chat",
       "kind": "pattern",
-      "summary": "A one-on-one messaging panel — contact header, message bubbles, and a composer input."
+      "summary": "A one-on-one messaging panel — contact header, message bubbles, and a composer input.",
+      "hash": "a527eba50db2c41906e4f761fc5da3727e4699991b634f1630037346979886c1"
     },
     {
       "name": "ai-home",
       "kind": "pattern",
-      "summary": "An AI assistant's start page — a soft AI glow, a greeting, the large composer with Ask/Agent modes, and starter cards."
+      "summary": "An AI assistant's start page — a soft AI glow, a greeting, the large composer with Ask/Agent modes, and starter cards.",
+      "hash": "7c95b1fb919400bcfd7c7b02704615d1e02fc984af68a28ffb6884e3d79056ac"
     },
     {
       "name": "ai-chat",
       "kind": "pattern",
-      "summary": "A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom."
+      "summary": "A full AI conversation page — past chats on the left, the thread in a readable column with reasoning, source chips and follow-ups, and the composer with the model picker and AI notice pinned to the bottom.",
+      "hash": "d2b1189408bbd96f21adfd4c12fac334b41655bc904df60c79c93f105d57d2c3"
     },
     {
       "name": "ai-side-panel",
       "kind": "pattern",
-      "summary": "An AI assistant docked beside the page — a header with History and Close, a removable chip saying what it is looking at, a short thread, and the small composer, on one soft top-to-bottom AI wash."
+      "summary": "An AI assistant docked beside the page — a header with History and Close, a removable chip saying what it is looking at, a short thread, and the small composer, on one soft top-to-bottom AI wash.",
+      "hash": "993a0bb710282f06966f885a8190d58090510e285f02c23f51ed90a39ea8cdec"
     },
     {
       "name": "conversation-history",
       "kind": "pattern",
-      "summary": "Past AI chats grouped by when they happened — pinned first, then today, yesterday, the last week and earlier months — with the open chat filled and a menu on each row to rename, pin or delete it."
+      "summary": "Past AI chats grouped by when they happened — pinned first, then today, yesterday, the last week and earlier months — with the open chat filled and a menu on each row to rename, pin or delete it.",
+      "hash": "6c80c140313b88aee9175856d56f8e9a504a4f309603dc333b73cc6bfd07e2b0"
     },
     {
       "name": "checkbox",
       "kind": "component",
-      "summary": "A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox."
+      "summary": "A single independent yes/no selection — check it or leave it, with no relation to any other Checkbox.",
+      "hash": "11876d23f0947d32dd70632e3f53afcdd3117ace0b522c1787e85551c425b673",
+      "code": true
     },
     {
       "name": "checkout",
       "kind": "pattern",
-      "summary": "A two-column checkout — payment method picker and card form beside an order summary sidebar."
+      "summary": "A two-column checkout — payment method picker and card form beside an order summary sidebar.",
+      "hash": "dca34bc25de9285a4e1cc5b431fe9840b4478fc2a2569ce6306a10284f44716e"
     },
     {
       "name": "citations",
       "kind": "component",
-      "summary": "Shows where an AI answer came from — a small chip after each claim, named for its source, that previews it, and an \"N sources\" list under the answer."
+      "summary": "Shows where an AI answer came from — a small chip after each claim, named for its source, that previews it, and an \"N sources\" list under the answer.",
+      "hash": "97da429f9c8a041c30790f026e8acfa59e4d4f48db68d11fe81fa0edf7039a2f"
     },
     {
       "name": "collapsible",
       "kind": "component",
-      "summary": "A single open/closed disclosure toggle — the lower-level primitive behind Accordion, with no item/trigger/content grouping or built-in styling."
+      "summary": "A single open/closed disclosure toggle — the lower-level primitive behind Accordion, with no item/trigger/content grouping or built-in styling.",
+      "hash": "6b4e7795cde8b954c9546c8d3b93a1f3c933e8178650348e376b8115a47785bf",
+      "code": true
     },
     {
       "name": "combobox",
       "kind": "component",
-      "summary": "A searchable dropdown — type to filter a list, or multi-select with removable chips."
+      "summary": "A searchable dropdown — type to filter a list, or multi-select with removable chips.",
+      "hash": "3751efa58806bf980553e7f718002b999c8627fc5e9dc146e941c8147cb3dde2",
+      "code": true
     },
     {
       "name": "command",
       "kind": "component",
-      "summary": "A keyboard-first search palette — embed inline for settings search, or wrap in CommandDialog for a ⌘K-style command palette."
+      "summary": "A keyboard-first search palette — embed inline for settings search, or wrap in CommandDialog for a ⌘K-style command palette.",
+      "hash": "2cc8065071ba600530fd356178e3bccbe2a2231e0b5eb7ab2725282a9b495bf5",
+      "code": true
     },
     {
       "name": "command-palette",
       "kind": "pattern",
-      "summary": "A searchable ⌘K command palette with grouped actions, recent items, and keyboard shortcuts."
+      "summary": "A searchable ⌘K command palette with grouped actions, recent items, and keyboard shortcuts.",
+      "hash": "9cc379923977a2180cf7629e6e29112c6bda4ea6ceb3962801d8a6b331a302dd"
     },
     {
       "name": "contact-form",
       "kind": "pattern",
-      "summary": "A get-in-touch card — name, email, a topic select, and a message field."
+      "summary": "A get-in-touch card — name, email, a topic select, and a message field.",
+      "hash": "eec865b94eb29acc4a9f06c84c612a5db71324e4d9dbb1deb366dea7a43e18a0"
     },
     {
       "name": "context-menu",
       "kind": "component",
-      "summary": "A menu that appears at the pointer on right-click or long-press — a secondary, discoverable-only-by-trying affordance, not a replacement for a visible trigger."
+      "summary": "A menu that appears at the pointer on right-click or long-press — a secondary, discoverable-only-by-trying affordance, not a replacement for a visible trigger.",
+      "hash": "7a6203aa2e585ad611b7243444e6258f3fcbeec74d4f87bb23c53852422d4989",
+      "code": true
     },
     {
       "name": "cookie-consent",
       "kind": "pattern",
-      "summary": "A cookie consent banner offering accept, reject, and preferences actions."
+      "summary": "A cookie consent banner offering accept, reject, and preferences actions.",
+      "hash": "1a15e0b6d43877f506e60b2a50e670043a316c24117da663048139cd54e8cd56"
     },
     {
       "name": "dashboard",
       "kind": "pattern",
-      "summary": "An app shell with sidebar navigation, a search header, and KPI stat cards."
+      "summary": "An app shell with sidebar navigation, a search header, and KPI stat cards.",
+      "hash": "c68572761314fae7e65ac65879631876c6cfe32bc126b2a00e44db20dc322803"
     },
     {
       "name": "data-table",
       "kind": "pattern",
-      "summary": "A filterable members table with a toolbar, ToneBadge status pills, and a per-row actions menu."
+      "summary": "A filterable members table with a toolbar, ToneBadge status pills, and a per-row actions menu.",
+      "hash": "7696d5d93644679cf210600b18afe940e71d548de4ef9f15259675748ab11ac1"
     },
     {
       "name": "dialog",
       "kind": "component",
-      "summary": "A modal window over the page for focused, non-destructive tasks — forms, details, reversible confirmations."
+      "summary": "A modal window over the page for focused, non-destructive tasks — forms, details, reversible confirmations.",
+      "hash": "46f5e31e56116b56ffe9c1d5ca874357366de5bd935ae0fc3555e6d8271b04f8",
+      "code": true
     },
     {
       "name": "drawer",
       "kind": "component",
-      "summary": "A bottom- or edge-anchored panel built on Vaul, with drag-to-dismiss — a mobile-first alternative to Dialog's centered modal."
+      "summary": "A bottom- or edge-anchored panel built on Vaul, with drag-to-dismiss — a mobile-first alternative to Dialog's centered modal.",
+      "hash": "918879db7ed70dc825dffbc0b2e8a57bf0eeee49c87f78e06584d453337de784",
+      "code": true
     },
     {
       "name": "dropdown-menu",
       "kind": "component",
-      "summary": "A click-triggered list of actions anchored to a visible button, with full keyboard navigation and typeahead."
+      "summary": "A click-triggered list of actions anchored to a visible button, with full keyboard navigation and typeahead.",
+      "hash": "cb0d7fed6ece08f036b46ee64139ddc1066f17e174e9d8c85c3348af009925b0",
+      "code": true
     },
     {
       "name": "empty",
       "kind": "component",
-      "summary": "An empty-state block for zero-data surfaces — icon, title, description, and a primary action, centered in the available space."
+      "summary": "An empty-state block for zero-data surfaces — icon, title, description, and a primary action, centered in the available space.",
+      "hash": "adfa33d769573302af6f29325f2a9518f967c8974de9d91a182dc43236f48091",
+      "code": true
     },
     {
       "name": "empty-state",
       "kind": "pattern",
-      "summary": "A dashed-border empty state with an icon, explanatory text, and a primary action."
+      "summary": "A dashed-border empty state with an icon, explanatory text, and a primary action.",
+      "hash": "1fcb55df3b65eb07d053f7639b8bffbcdba27a23d6e1cd431c98dc9d79c626cc"
     },
     {
       "name": "error-404",
       "kind": "pattern",
-      "summary": "A full-page 404 error state with go-back and home recovery actions."
+      "summary": "A full-page 404 error state with go-back and home recovery actions.",
+      "hash": "764889243cc0bf94568affc97d68d204312d2b706afddbd54ed2c2f5ebce6860"
     },
     {
       "name": "faq",
       "kind": "pattern",
-      "summary": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer."
+      "summary": "A centered FAQ section — an accordion of common questions with a contact call-to-action footer.",
+      "hash": "78c83f7a2e5d2ba47870947518e6d37ccef071cd9a87870ece86f3bd0d35bb38"
     },
     {
       "name": "feature-section",
       "kind": "pattern",
-      "summary": "A marketing section with an editorial heading and a three-column feature grid."
+      "summary": "A marketing section with an editorial heading and a three-column feature grid.",
+      "hash": "687ac3e323891ac8d06cc875d6d94070eca6b28db240c114e8499dcdab961645"
     },
     {
       "name": "field",
       "kind": "component",
-      "summary": "A form field wrapper that connects a Label, FieldDescription, and FieldError to a control."
+      "summary": "A form field wrapper that connects a Label, FieldDescription, and FieldError to a control.",
+      "hash": "cf8044248d60d8203e5dba52bc53138870c352d1edd424f339b461aced669c39",
+      "code": true
     },
     {
       "name": "file-upload",
       "kind": "pattern",
-      "summary": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue."
+      "summary": "An asset-upload card with a drag-and-drop dropzone and a progress-tracked upload queue.",
+      "hash": "4bcf5e2f53a7f35a89459bfa6a4893b79bef9af6c73b4a311f1fedee59d7fb36"
     },
     {
       "name": "footer",
       "kind": "pattern",
-      "summary": "A marketing footer with brand blurb, link columns, and legal links."
+      "summary": "A marketing footer with brand blurb, link columns, and legal links.",
+      "hash": "c2a7491f6bbc2517b37aeb97951f439cf843dd199c568089edd3921cec0944ee"
     },
     {
       "name": "forgot-password",
       "kind": "pattern",
-      "summary": "A password-reset request card — an email field, a send-link action, and a way back to sign in."
+      "summary": "A password-reset request card — an email field, a send-link action, and a way back to sign in.",
+      "hash": "ca6f9ee7497473962e5e814734baba815d484f6aa0fc03b35fd1efff7009a7fe"
     },
     {
       "name": "hero",
       "kind": "pattern",
-      "summary": "A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action."
+      "summary": "A centered marketing hero — a release badge, serif headline, supporting copy, and primary/secondary calls to action.",
+      "hash": "378d063814a71f2a8e01b1d7c6c79c073de00bb333598529a7ee976752b190d5"
     },
     {
       "name": "hover-card",
       "kind": "component",
-      "summary": "A glanceable preview that opens after a brief hover-intent delay on a link — a visual enhancement for sighted mouse and keyboard users, informational only."
+      "summary": "A glanceable preview that opens after a brief hover-intent delay on a link — a visual enhancement for sighted mouse and keyboard users, informational only.",
+      "hash": "ee8a2504e76ceb5de667ca7fffac42ec05f0fbe453bbfd07712af2d3fd43eb78",
+      "code": true
     },
     {
       "name": "icon",
       "kind": "component",
-      "summary": "The Quill icon component — Material Symbols Outlined at weight 400, shipped as a self-contained core set of 98 names covering every icon the Quill blocks use."
+      "summary": "The Quill icon component — Material Symbols Outlined at weight 400, shipped as a self-contained core set of 98 names covering every icon the Quill blocks use.",
+      "hash": "4bfe5c59330dad8ea4821a5ac294033fbafd22c548ec4d5a05213c81f9ebaf3d"
     },
     {
       "name": "input",
       "kind": "component",
-      "summary": "A styled native text input for free-form single-line entry — email, name, search, URL."
+      "summary": "A styled native text input for free-form single-line entry — email, name, search, URL.",
+      "hash": "020e5d2eae8e28f9713b494a4ccd5beffe88d4243608f04247c2cd60304eee80",
+      "code": true
     },
     {
       "name": "input-group",
       "kind": "component",
-      "summary": "Merges an input (or textarea) with prefix/suffix addons — icons, buttons, plain text — inside one bordered control."
+      "summary": "Merges an input (or textarea) with prefix/suffix addons — icons, buttons, plain text — inside one bordered control.",
+      "hash": "e95928a0e2a7daaebb1f20ad40e87722cbc68a80dc0758a04dcde3b6fb4d8319",
+      "code": true
     },
     {
       "name": "input-otp",
       "kind": "component",
-      "summary": "Digit-by-digit secure code entry — email verification, 2FA, PIN."
+      "summary": "Digit-by-digit secure code entry — email verification, 2FA, PIN.",
+      "hash": "841116c0f99b802fb7f95dafae1bc58a11010ef8e503b44d0ca4eb538908d9ae",
+      "code": true
     },
     {
       "name": "invoice",
       "kind": "pattern",
-      "summary": "A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action."
+      "summary": "A printable invoice card — sender and recipient details, a ToneBadge payment status, a line-item table with totals, and a download action.",
+      "hash": "d5e656de14b6a2a0d80c5f876e480f47970e0b416a1c896fdd1d42ce8c64eeb3"
     },
     {
       "name": "item",
       "kind": "component",
-      "summary": "A general-purpose list row — compose ItemMedia (icon or avatar), ItemContent (title + description), and ItemActions (trailing button) into a consistent row for lists, search results, and settings."
+      "summary": "A general-purpose list row — compose ItemMedia (icon or avatar), ItemContent (title + description), and ItemActions (trailing button) into a consistent row for lists, search results, and settings.",
+      "hash": "49c7c2356a1673d88e6053a95bfaaddaa796e80dc9c9b2fd8b3a7fb81af87ec9",
+      "code": true
     },
     {
       "name": "kanban",
       "kind": "pattern",
-      "summary": "A three-column kanban board with card counts, tagged task cards, and an add-card affordance per column."
+      "summary": "A three-column kanban board with card counts, tagged task cards, and an add-card affordance per column.",
+      "hash": "dd2e2eef5df22f8b8e4c0639d523041c6ee3a48e3de4688d5a0eafdfdb0a1ce6"
     },
     {
       "name": "kbd",
       "kind": "component",
-      "summary": "A keyboard key badge — a single label rendered as Kbd, or a compound shortcut via KbdGroup — for hotkeys in tooltips, menus, and shortcut references."
+      "summary": "A keyboard key badge — a single label rendered as Kbd, or a compound shortcut via KbdGroup — for hotkeys in tooltips, menus, and shortcut references.",
+      "hash": "d580bbe28b9077402779522ab4d691159f033ed1115bd7b59a552941a11035f6",
+      "code": true
     },
     {
       "name": "label",
       "kind": "component",
-      "summary": "The accessible name for a form control — always associate it via htmlFor/id or co-location."
+      "summary": "The accessible name for a form control — always associate it via htmlFor/id or co-location.",
+      "hash": "dbf05505578759c337d09634421fd9dec25172b1ac843295d57f6d98312d28f6",
+      "code": true
     },
     {
       "name": "list-detail",
       "kind": "pattern",
-      "summary": "An inbox-style split view — a selectable message list beside a detail pane with archive and delete actions."
+      "summary": "An inbox-style split view — a selectable message list beside a detail pane with archive and delete actions.",
+      "hash": "ddba4b2f2de3583a64fa8089f68c91a624325d541908a0c25e106748c802f141"
     },
     {
       "name": "login",
       "kind": "pattern",
-      "summary": "The standard email-and-password sign-in card, with remember-me and a forgot-password escape hatch."
+      "summary": "The standard email-and-password sign-in card, with remember-me and a forgot-password escape hatch.",
+      "hash": "ccdf1669dffa183473ef2033a8d635385ce1a64c4a6e9e66fc354372b0827f41"
     },
     {
       "name": "login-minimal",
       "kind": "pattern",
-      "summary": "The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code."
+      "summary": "The bare-minimum sign-in — no card chrome, a single email field, sign-in by one-time code.",
+      "hash": "7f5eea13bbbfb9588245babbcf894dc8d75e03c5ea2e503e85bfccae1126951a"
     },
     {
       "name": "login-oauth",
       "kind": "pattern",
-      "summary": "Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback."
+      "summary": "Provider-first sign-in — Google, GitHub, and Apple buttons above an email fallback.",
+      "hash": "352c380cce70b2e52b12e90199b7fad80419a3d07980dfa0db673a242fee5c55"
     },
     {
       "name": "login-split-panel",
       "kind": "pattern",
-      "summary": "A full-page, branded sign-in — a testimonial panel beside an email/password form with a magic-link option."
+      "summary": "A full-page, branded sign-in — a testimonial panel beside an email/password form with a magic-link option.",
+      "hash": "8615b3554fc213462f6fc5d7b7401fc905c031558dbab5fac8c11b0bdb98fef8"
     },
     {
       "name": "mail-shell",
       "kind": "pattern",
-      "summary": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply."
+      "summary": "A two-pane mail client shell — a searchable message list and a reading pane with toolbar and inline reply.",
+      "hash": "201799e986305891dfad1cb465687d92cc27f6bec51e2d47ee0b268253142651"
     },
     {
       "name": "menubar",
       "kind": "component",
-      "summary": "A desktop application-style menu strip — a row of always-visible top-level menus, each opening its own dropdown on click."
+      "summary": "A desktop application-style menu strip — a row of always-visible top-level menus, each opening its own dropdown on click.",
+      "hash": "14e842a2c219cc3808e16f19bf269d384ab2f6f46f2e5a000cfc84545d91db06",
+      "code": true
     },
     {
       "name": "native-select",
       "kind": "component",
-      "summary": "The browser's own `<select>`, restyled to match the theme — the OS-native picker, not a custom-rendered popover."
+      "summary": "The browser's own `<select>`, restyled to match the theme — the OS-native picker, not a custom-rendered popover.",
+      "hash": "722208abc7a05f3db5669d9bebc39d6d258ae22758408da766e0cc1bea909815",
+      "code": true
     },
     {
       "name": "navbar",
       "kind": "pattern",
-      "summary": "A top navigation bar with brand wordmark, a responsive link list, and sign-in / get-started actions."
+      "summary": "A top navigation bar with brand wordmark, a responsive link list, and sign-in / get-started actions.",
+      "hash": "3ae6c7be041c27fa3eb2bd24bead4aae513700e17837afedb17942341778134a"
     },
     {
       "name": "navigation-menu",
       "kind": "component",
-      "summary": "Top-level site navigation with mega-dropdown panels — for public/marketing navigation, not desktop application chrome."
+      "summary": "Top-level site navigation with mega-dropdown panels — for public/marketing navigation, not desktop application chrome.",
+      "hash": "8bd4325f77073a027b73aa6391ec72612700f3ecd78d6a47f844d400b7a9f5fd",
+      "code": true
     },
     {
       "name": "newsletter",
       "kind": "pattern",
-      "summary": "A centered newsletter-signup section — an email field, subscribe action, and social proof."
+      "summary": "A centered newsletter-signup section — an email field, subscribe action, and social proof.",
+      "hash": "0a7989b0461d1751e090aa3f3416bdd8ef48b2b7c5cf06814b1fecc8ec56e329"
     },
     {
       "name": "notifications",
       "kind": "pattern",
-      "summary": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action."
+      "summary": "A notifications card listing recent events with icons, timestamps, unread indicators, and a mark-all-read action.",
+      "hash": "509ed19dd6088fc0b137d298b05ea70492b5ddbfe1ec7b27397e5a7e8f8f1675"
     },
     {
       "name": "onboarding",
       "kind": "pattern",
-      "summary": "A setup checklist card with a progress bar, completed and pending tasks, and start links for remaining steps."
+      "summary": "A setup checklist card with a progress bar, completed and pending tasks, and start links for remaining steps.",
+      "hash": "49efdd6dc92c306c155cbdb247be225e7c7607216c458b509315792a75bca3a1"
     },
     {
       "name": "order-summary",
       "kind": "pattern",
-      "summary": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button."
+      "summary": "A checkout order-summary card — line items, a promo code field, a total, and a pay-now button.",
+      "hash": "1ce2143318a1923e4d7a55217af30a704eda2745e2314f0f9df0e252bb707013"
     },
     {
       "name": "otp-verification",
       "kind": "pattern",
-      "summary": "A six-digit one-time-passcode entry card for verifying an email, with expiry messaging and a resend action."
+      "summary": "A six-digit one-time-passcode entry card for verifying an email, with expiry messaging and a resend action.",
+      "hash": "b88212b46d76856f71b22daa151e1146b9b9c5eedd71f779b21c0a3b151b4dcd"
     },
     {
       "name": "page-header",
       "kind": "pattern",
-      "summary": "A page header with a breadcrumb trail, title and description, and duplicate/new action buttons."
+      "summary": "A page header with a breadcrumb trail, title and description, and duplicate/new action buttons.",
+      "hash": "5f89f845e1a7e925b58fc609e3c6840c8e2ef872277f8961edf6963d7b919b64"
     },
     {
       "name": "pagination",
       "kind": "component",
-      "summary": "Page navigation for splitting a long list of records into discrete numbered pages, with Previous/Next controls and an ellipsis for skipped ranges."
+      "summary": "Page navigation for splitting a long list of records into discrete numbered pages, with Previous/Next controls and an ellipsis for skipped ranges.",
+      "hash": "a0adee48f6a5efdc155f6d5bed327e8eabdb5558bd0af8a412019e0bdfdfc330",
+      "code": true
     },
     {
       "name": "popover",
       "kind": "component",
-      "summary": "A small, click-triggered overlay anchored to its trigger — for inline forms, filters, and contextual editing, not a blocking task."
+      "summary": "A small, click-triggered overlay anchored to its trigger — for inline forms, filters, and contextual editing, not a blocking task.",
+      "hash": "bc649dbc37432c9e3eb521edaa49e4203cfa9a5c8b9427499e2108f4384a2bf4",
+      "code": true
     },
     {
       "name": "pricing",
       "kind": "pattern",
-      "summary": "A three-tier pricing grid with a highlighted popular plan, feature checklists, and per-plan calls to action."
+      "summary": "A three-tier pricing grid with a highlighted popular plan, feature checklists, and per-plan calls to action.",
+      "hash": "4dfffaeb85f97a1cc1b13d36ab90fe98ec37393119ad9038afbcc6c25bab0c21"
     },
     {
       "name": "profile-card",
       "kind": "pattern",
-      "summary": "A compact, centered profile card — avatar initials, role, follower stats, and follow/message actions."
+      "summary": "A compact, centered profile card — avatar initials, role, follower stats, and follow/message actions.",
+      "hash": "9c11b36a4b0c0bc8ec6529762a193f2a8facb1d95c00806759212a60521bd7e0"
     },
     {
       "name": "progress",
       "kind": "component",
-      "summary": "A determinate progress bar for a real, measurable completion value — pass a numeric `value` and pair it with ProgressLabel/ProgressValue for a labeled, live-updating readout."
+      "summary": "A determinate progress bar for a real, measurable completion value — pass a numeric `value` and pair it with ProgressLabel/ProgressValue for a labeled, live-updating readout.",
+      "hash": "a86ec29545673dff73e57fe282ca740e0d8ba6883cb728954d5095701ad686d6",
+      "code": true
     },
     {
       "name": "prompt-composer",
       "kind": "component",
-      "summary": "The box people type to an AI in — grows with the text, sends on Enter, turns Send into Stop while the AI works, with slots for tools, files and a model picker."
+      "summary": "The box people type to an AI in — grows with the text, sends on Enter, turns Send into Stop while the AI works, with slots for tools, files and a model picker.",
+      "hash": "094811d6a01c67d6cfc07560eb595a2bb946782721d2326361e77de924e9afe5"
     },
     {
       "name": "question-card",
       "kind": "component",
-      "summary": "An AI agent asks the person to choose — the question, options as full rows with the recommended one first, a free-text row for anything else, and Continue that waits for an answer."
+      "summary": "An AI agent asks the person to choose — the question, options as full rows with the recommended one first, a free-text row for anything else, and Continue that waits for an answer.",
+      "hash": "e26c14fd83007145087516a4a3e5946bee90302ad5a7a4c3ea9748c4e8ad10fb"
     },
     {
       "name": "radio-group",
       "kind": "component",
-      "summary": "A set of mutually exclusive options rendered as visible radio buttons — pick exactly one from a short, always-visible list."
+      "summary": "A set of mutually exclusive options rendered as visible radio buttons — pick exactly one from a short, always-visible list.",
+      "hash": "dd32f990745f4a16da748cdc014950269f76f0cd643022d139aa171837cc0407",
+      "code": true
     },
     {
       "name": "resizable",
       "kind": "component",
-      "summary": "Drag-resizable split panels — the user controls how space is divided between two or more regions by dragging a handle between them."
+      "summary": "Drag-resizable split panels — the user controls how space is divided between two or more regions by dragging a handle between them.",
+      "hash": "c3d413dcb028908f60f624b0314fba0d470581e1c636d72bc057e96f81dd1f04",
+      "code": true
     },
     {
       "name": "scroll-area",
       "kind": "component",
-      "summary": "A styled custom scrollbar over a fixed-size scrollable region — replaces the browser's native scrollbar chrome without changing scroll behavior."
+      "summary": "A styled custom scrollbar over a fixed-size scrollable region — replaces the browser's native scrollbar chrome without changing scroll behavior.",
+      "hash": "0f8ebb97899d4ec2a61068183657303fd180272b2ff59cfadb506fbb3db8b17d",
+      "code": true
     },
     {
       "name": "search-results",
       "kind": "pattern",
-      "summary": "A docs search panel — query input, result count, and a linked result list with breadcrumbs and type badges."
+      "summary": "A docs search panel — query input, result count, and a linked result list with breadcrumbs and type badges.",
+      "hash": "a72058c785fe2e61ba2bfad0324ff044c97e4ec41d242fb50ab6d49905562f9c"
     },
     {
       "name": "select",
       "kind": "component",
-      "summary": "A custom-rendered dropdown for choosing one option from a short list — the same look on every platform, unlike the OS-native picker."
+      "summary": "A custom-rendered dropdown for choosing one option from a short list — the same look on every platform, unlike the OS-native picker.",
+      "hash": "344df4074760b74155660e9140c2af84836cfe6d6b2d3ed83bc8d57786909b10",
+      "code": true
     },
     {
       "name": "separator",
       "kind": "component",
-      "summary": "A thin decorative divider line between stacked or inline content — horizontal by default, vertical for toolbars and inline groups."
+      "summary": "A thin decorative divider line between stacked or inline content — horizontal by default, vertical for toolbars and inline groups.",
+      "hash": "f00822ee7fb1addd2b89a0016ee8dd0d40d845f317f2ac38a4fd0d33541f2fa6",
+      "code": true
     },
     {
       "name": "settings",
       "kind": "pattern",
-      "summary": "A profile settings card — name fields, a bio textarea, and an email-notification toggle."
+      "summary": "A profile settings card — name fields, a bio textarea, and an email-notification toggle.",
+      "hash": "616ff02ddfc795486d26006bb9f81e7776bf5d54a33832047e4ef2ff0405ec5c"
     },
     {
       "name": "sheet",
       "kind": "component",
-      "summary": "A panel that slides in from a screen edge while the page stays visible behind it — the same Base UI dialog underneath Dialog, styled as an edge panel instead of a centered card."
+      "summary": "A panel that slides in from a screen edge while the page stays visible behind it — the same Base UI dialog underneath Dialog, styled as an edge panel instead of a centered card.",
+      "hash": "8c9dd7e5ad92dd071ce46069cf9eba91a37fb592c0220777b9d8f1816354f00c",
+      "code": true
     },
     {
       "name": "sidebar",
       "kind": "component",
-      "summary": "The persistent side-rail navigation primitive — expands, collapses to icons, or slides in as an off-canvas sheet on mobile. `sidebar-nav` is this primitive already assembled into a full app shell with grouped menus and a breadcrumb header."
+      "summary": "The persistent side-rail navigation primitive — expands, collapses to icons, or slides in as an off-canvas sheet on mobile. `sidebar-nav` is this primitive already assembled into a full app shell with grouped menus and a breadcrumb header.",
+      "hash": "6c4120964c3db6a532a32d1b5173324e0cc64c48371c2bf1641bef6fd5873bea",
+      "code": true
     },
     {
       "name": "sidebar-nav",
       "kind": "pattern",
-      "summary": "A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in."
+      "summary": "A collapsible icon-sidebar app shell with grouped menus, badges, a top bar, and a main area for the page — a card grid by default, or the children you pass in.",
+      "hash": "37f75e907dc9550848d1575dd78d00ad58517e694e8dcb5ed11b7e0c1cf3409d"
     },
     {
       "name": "signup",
       "kind": "pattern",
-      "summary": "Standard account-creation card — name, email, password, and a link back to sign-in."
+      "summary": "Standard account-creation card — name, email, password, and a link back to sign-in.",
+      "hash": "74a8ca8c2199457948d4f95567c2250bc6b48c8d8c1ca44282943b73000e6e09"
     },
     {
       "name": "signup-social",
       "kind": "pattern",
-      "summary": "Signup that leads with GitHub and Google provider buttons, falling back to an email/password form."
+      "summary": "Signup that leads with GitHub and Google provider buttons, falling back to an email/password form.",
+      "hash": "9cef6a18a3064bd76a9cb2f8f34cc34d8acd2107ac64c473b3502945ab73c735"
     },
     {
       "name": "skeleton",
       "kind": "component",
-      "summary": "An animate-pulse loading placeholder that reserves space and previews the shape of content while it loads."
+      "summary": "An animate-pulse loading placeholder that reserves space and previews the shape of content while it loads.",
+      "hash": "63705d0c36f374e545f476d75599d4e09d814776bf6e064ec5b4367110272527",
+      "code": true
     },
     {
       "name": "slider",
       "kind": "component",
-      "summary": "A draggable control for picking a numeric value, or range, within a bounded min/max — position matters as much as the exact figure."
+      "summary": "A draggable control for picking a numeric value, or range, within a bounded min/max — position matters as much as the exact figure.",
+      "hash": "5167675f7799201383dd7771ffbb24343656a0418e86c805f6db1300fa86a5b3",
+      "code": true
     },
     {
       "name": "sonner",
       "kind": "component",
-      "summary": "A toast-notification stack for transient feedback about an action just taken — mount one Toaster at the app root, then trigger toasts imperatively with the `toast()` function from `sonner`."
+      "summary": "A toast-notification stack for transient feedback about an action just taken — mount one Toaster at the app root, then trigger toasts imperatively with the `toast()` function from `sonner`.",
+      "hash": "b30accc1a3110f9906cf1cf7000b9dc891d0d1f26d6387857f7c11240ca42d0a",
+      "code": true
     },
     {
       "name": "spinner",
       "kind": "component",
-      "summary": "An indeterminate loading indicator — a spinning icon that inherits its color from `currentColor`, for waits with no known duration or percentage."
+      "summary": "An indeterminate loading indicator — a spinning icon that inherits its color from `currentColor`, for waits with no known duration or percentage.",
+      "hash": "0816f0e473f29f40fc71db5f2a04ea84878b306172e21e6f6b54a35e4052d81e",
+      "code": true
     },
     {
       "name": "stat-cards",
       "kind": "pattern",
-      "summary": "A responsive grid of KPI cards, each showing a value with a delta badge versus last month."
+      "summary": "A responsive grid of KPI cards, each showing a value with a delta badge versus last month.",
+      "hash": "5b0a560742b943464b59780d4024232a428fbd63b69c47ea5fda884fdf5384e7"
     },
     {
       "name": "stats-band",
       "kind": "pattern",
-      "summary": "A marketing band of headline statistics separated by vertical dividers on a card background."
+      "summary": "A marketing band of headline statistics separated by vertical dividers on a card background.",
+      "hash": "a5d2633dd9ca39e899289fdeef5905f55844a5f4a1cb7d2ea134e573746dba9a"
     },
     {
       "name": "switch",
       "kind": "component",
-      "summary": "An on/off control for a setting that takes effect immediately — no separate Save step."
+      "summary": "An on/off control for a setting that takes effect immediately — no separate Save step.",
+      "hash": "2a126f1ca43d38fce11764a6420e586adbc4ecb2628c3b272b2a6a5ea5c2d57f",
+      "code": true
     },
     {
       "name": "table",
       "kind": "component",
-      "summary": "A data table for rows of tabular content — headers, cells, an optional footer for totals, and a caption for the accessible description."
+      "summary": "A data table for rows of tabular content — headers, cells, an optional footer for totals, and a caption for the accessible description.",
+      "hash": "0fb3c56634882a11df1b9d559e3d395e359a6ce358109c547ccf2aef04766185",
+      "code": true
     },
     {
       "name": "tabs",
       "kind": "component",
-      "summary": "A set of triggers that swap which panel is visible in place — content panels share the same position, only one shown at a time."
+      "summary": "A set of triggers that swap which panel is visible in place — content panels share the same position, only one shown at a time.",
+      "hash": "f7179248d9e51d3d12cb2b08d5fc38f660eaa9d0af800c6e40f6df3cd9252043",
+      "code": true
     },
     {
       "name": "tabs-page",
       "kind": "pattern",
-      "summary": "A tabbed settings page with account, notifications, and security panels."
+      "summary": "A tabbed settings page with account, notifications, and security panels.",
+      "hash": "52db76cf50f737e5cd637d687a3a619789df4fad148e7e670d538b47c84306a0"
     },
     {
       "name": "team-section",
       "kind": "pattern",
-      "summary": "A marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action."
+      "summary": "A marketing team grid with avatar cards showing each member's name, role, specialty badge, and email action.",
+      "hash": "78411e2e702a51d4284b2aed7419fc21e9e214fe89f93339167f2c1742552e49"
     },
     {
       "name": "testimonial",
       "kind": "pattern",
-      "summary": "A customer-quote card with a serif pull-quote, avatar initials, and attribution."
+      "summary": "A customer-quote card with a serif pull-quote, avatar initials, and attribution.",
+      "hash": "b1c5bfda0777a45987c1beabd5e2c89b90bf6f85a6aa8b27f4ed921acec13d5c"
     },
     {
       "name": "textarea",
       "kind": "component",
-      "summary": "A styled native `<textarea>` for multi-line free text — descriptions, bios, comments."
+      "summary": "A styled native `<textarea>` for multi-line free text — descriptions, bios, comments.",
+      "hash": "6cd38aba766564f2438f2206b4130e0ccd5cf30e37696170cf942460f50297cd",
+      "code": true
     },
     {
       "name": "theme-selector",
       "kind": "pattern",
-      "summary": "A dropdown picker for the five Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage."
+      "summary": "A dropdown picker for the five Quill themes and four pigment accents — sets data-theme/data-accent and persists both to localStorage.",
+      "hash": "22acbc14c6c58d4985a1a1cac689e6a8436c0ec79b370616d091d59c483fe3b6"
     },
     {
       "name": "toggle",
       "kind": "component",
-      "summary": "A two-state icon or icon-plus-text button whose pressed state persists after the click — a formatting toggle inside a toolbar."
+      "summary": "A two-state icon or icon-plus-text button whose pressed state persists after the click — a formatting toggle inside a toolbar.",
+      "hash": "820a2f941484085694b19c79dcdf54478581764301ba1b99d79a129700c7034c",
+      "code": true
     },
     {
       "name": "toggle-group",
       "kind": "component",
-      "summary": "A row, or column, of Toggle buttons sharing selection, sizing, and spacing — single-select for exclusive choices, multi-select for independent ones."
+      "summary": "A row, or column, of Toggle buttons sharing selection, sizing, and spacing — single-select for exclusive choices, multi-select for independent ones.",
+      "hash": "1e472af4c0b11baaf47d77df68094e5846b8fb9e93258f4d4082d7bb17492e3a",
+      "code": true
     },
     {
       "name": "tone-badge",
       "kind": "component",
-      "summary": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site."
+      "summary": "Quill's uppercase tag pill for status, tiers, and labels — wraps Badge with the pigment vocabulary (moss/gold/terracotta/indigo/neutral/muted) baked in so tone never drifts per call site.",
+      "hash": "d90f7bbc8693d0b50e2b3f7b538a539a29c31ce3c1620b103d5103a62afc35be"
     },
     {
       "name": "tooltip",
       "kind": "component",
-      "summary": "A short hint that appears on hover or focus — a supplementary visual label for sighted mouse and keyboard users, not a reliable way to deliver essential information."
+      "summary": "A short hint that appears on hover or focus — a supplementary visual label for sighted mouse and keyboard users, not a reliable way to deliver essential information.",
+      "hash": "0b88fa51982d0b54f42a92dbbf95266056063242817955bab0ce355d7408a50e",
+      "code": true
     },
     {
       "name": "usage-meter",
       "kind": "component",
-      "summary": "Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer."
+      "summary": "Shows how much AI credit is left — the number, a bar in the AI gradient, when it renews, what the rest will buy, and a breakdown — with a compact ring for a composer footer.",
+      "hash": "49c23061dc9a00123cf5e2b30491c3d1509b0425a708e3b44b2a053016fdd27a"
     },
     {
       "name": "wizard",
       "kind": "pattern",
-      "summary": "A multi-step setup card — a progress stepper, workspace fields, and back/continue navigation."
+      "summary": "A multi-step setup card — a progress stepper, workspace fields, and back/continue navigation.",
+      "hash": "3e4a1fc5946377c3e216e1583a537ac44323892b0f046bdbcf2198abf320fe89"
     }
   ]
 }

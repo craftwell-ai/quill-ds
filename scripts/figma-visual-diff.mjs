@@ -15,6 +15,7 @@ import { execFileSync } from 'node:child_process'
 import http from 'node:http'
 import { PNG } from 'pngjs'
 import pixelmatch from 'pixelmatch'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const FILE_KEY = 'Dcf8lEB7Ash71iNl7WN4Jq'
@@ -309,4 +310,4 @@ async function main(argv = process.argv.slice(2)) {
   return opts.strict && regressions ? 1 : 0
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) process.exit(await main())
+if (isMain(import.meta.url)) process.exit(await main())

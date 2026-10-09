@@ -1,0 +1,9 @@
+{
+  "name": "skeleton",
+  "files": [
+    {
+      "path": "components/ui/skeleton.tsx",
+      "content": "import { cn } from \"@/lib/utils\"\n\n/** An animate-pulse loading placeholder that reserves space and previews the shape of content while it loads. */\nfunction Skeleton({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"skeleton\"\n      className={cn(\"animate-pulse rounded-md bg-muted\", className)}\n      {...props}\n    />\n  )\n}\n\nexport { Skeleton }\n"
+    }
+  ]
+}

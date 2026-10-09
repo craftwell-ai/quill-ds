@@ -7,6 +7,10 @@
   ],
   "alternatives": [
     {
+      "name": "empty",
+      "when": "the empty state sits inside an existing surface (a list, a table, a card, a search result) and you compose it from parts: media, title, description and actions. Use empty-state for the finished stand-alone panel."
+    },
+    {
       "name": "error-404",
       "when": "the view is empty because the resource doesn't exist or the route is wrong, not because the user hasn't created anything yet."
     },

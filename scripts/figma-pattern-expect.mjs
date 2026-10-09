@@ -12,6 +12,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 
 import { sourcePath } from './figma-stamp.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -81,7 +82,7 @@ export async function expectations(blocks = blockNames()) {
   return out
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   const e = await expectations()
   console.log(JSON.stringify(e, null, 1))
 }

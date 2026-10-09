@@ -6,6 +6,7 @@ A dashed-border empty state with an icon, explanatory text, and a primary action
 - You need to explain why a view is empty and offer the primary action to fill it.
 
 ### Reach for instead
+- **empty** — when the empty state sits inside an existing surface (a list, a table, a card, a search result) and you compose it from parts: media, title, description and actions. Use empty-state for the finished stand-alone panel.
 - **error-404** — when the view is empty because the resource doesn't exist or the route is wrong, not because the user hasn't created anything yet.
 - **onboarding** — when there's a multi-step setup to walk through, not a single action to take right now.
 

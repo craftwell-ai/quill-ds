@@ -45,7 +45,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `analytics-charts` — You need a dashboard view of trends over time — an area chart plus a bar chart on card surfaces. · instead: `stat-cards`, `data-table`
 
 ### navigation — Moving around an app — bars, breadcrumbs, tabs, command menus.
-- `command-palette` — You need a searchable ⌘K launcher for actions and quick navigation. · instead: `search-results`, `dropdown-menu`
+- `command-palette` — You need a searchable ⌘K launcher for actions and quick navigation. · instead: `command`, `search-results`, `dropdown-menu`
 - `navbar` — You need a top navigation bar with wordmark, links, and sign-in / get-started actions. · instead: `sidebar-nav`, `command-palette`
 - `page-header` — You need a screen header with breadcrumbs, title, description, and primary actions. · instead: `sidebar-nav`, `hero`
 - `search-results` — You need a search panel with a query input, result count, and a linked result list. · instead: `command-palette`, `data-table`
@@ -59,7 +59,7 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `alerts` — You need to surface inline status messages of varying severity (info, success, destructive) within a page. · instead: `sonner`, `announcement-banner`, `empty-state`
 - `announcement-banner` — You need to announce something site-wide with a dismissible banner, either inline or full-bleed. · instead: `alerts`, `cookie-consent`
 - `cookie-consent` — You need a compliance banner offering accept, reject, and preferences choices. · instead: `announcement-banner`, `alerts`
-- `empty-state` — You need to explain why a view is empty and offer the primary action to fill it. · instead: `error-404`, `onboarding`
+- `empty-state` — You need to explain why a view is empty and offer the primary action to fill it. · instead: `empty`, `error-404`, `onboarding`
 - `error-404` — You need a full-page not-found state with recovery actions. · instead: `empty-state`, `alerts`
 - `notifications` — You need a notifications center with unread indicators and a mark-all-read action. · instead: `activity-feed`, `sonner`
 
@@ -135,12 +135,12 @@ Each line below is: name — when to use it · instead: the components it is mos
 - `citations` (`@quill/`) — An AI answer draws on files, pages or records people may want to check. · instead: `hover-card`, `badge`
 - `collapsible` — You need one standalone show/hide toggle — a "view more" panel, an expandable filter section — without Accordion's multi-item structure. · instead: `accordion`
 - `combobox` — You need to filter a long option list by typing, or let users select multiple values as removable chips. · instead: `select`, `native-select`
-- `command` — You need a searchable, keyboard-navigable list of actions or destinations — settings search, a ⌘K command palette. · instead: `combobox`, `dropdown-menu`
+- `command` — You need a searchable, keyboard-navigable list of actions or destinations — settings search, a ⌘K command palette. · instead: `command-palette`, `combobox`, `dropdown-menu`
 - `context-menu` — You need a secondary set of actions on an item that most users will discover by right-clicking (desktop) or long-pressing (touch), not a primary action path. · instead: `dropdown-menu`
 - `dialog` — You need the user to complete a focused task without leaving the page — edit a record, fill a short form, confirm a reversible action. · instead: `alert-dialog`, `sheet`, `drawer`, `popover`
 - `drawer` — You need a mobile-first interaction — filters, quick actions, secondary navigation — that slides in from an edge and can be dragged closed. · instead: `sheet`, `dialog`
 - `dropdown-menu` — You need a set of actions or choices behind one visible trigger button — a row's "more actions" menu, a settings menu. · instead: `context-menu`, `menubar`
-- `empty` — A list, table, or search result surface has no data to show yet and you need to explain why, plus give the user a way to fix it (create, upload, search again). · instead: `skeleton`
+- `empty` — A list, table, or search result surface has no data to show yet and you need to explain why, plus give the user a way to fix it (create, upload, search again). · instead: `empty-state`, `skeleton`
 - `field` — You have a form control that needs a label, optional helper text, and/or a validation error message wired together. · instead: `label`
 - `hover-card` — You need a richer preview on hover — a link destination, an author bio, expanded metadata — without navigating away. · instead: `tooltip`, `popover`
 - `icon` (`@quill/`) — You need a glyph inside a Quill block or beside text — a nav item, a status row, an inline affordance — and want it to match the outlined, weight-400 set every block already uses. · instead: `button`, `spinner`

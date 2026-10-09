@@ -12,8 +12,9 @@
 //   node scripts/figma-sync-payload.mjs > /tmp/sync.js   # then paste it as the `code`
 
 import { readFileSync } from 'node:fs'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const LIMIT = 50000
@@ -34,7 +35,7 @@ export function syncPayload() {
   return `const DTCG = ${JSON.stringify(dtcg)};\n${script}\nreturn await syncFoundations(DTCG)\n`
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   const payload = syncPayload()
   process.stdout.write(payload)
   const headroom = LIMIT - payload.length

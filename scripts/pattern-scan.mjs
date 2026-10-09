@@ -31,6 +31,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join, relative } from 'node:path'
 
 import { STOCK_COMPONENTS, STRUCTURAL_STOPWORDS } from './pattern-scan-vocab.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 // This repo, for the tracking issue. GITHUB_REPOSITORY is set in Actions; the
@@ -546,4 +547,4 @@ export async function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main()
+if (isMain(import.meta.url)) main()

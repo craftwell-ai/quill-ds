@@ -6,6 +6,7 @@ export const usage = {
     'You need a searchable, keyboard-navigable list of actions or destinations — settings search, a ⌘K command palette.',
   ],
   alternatives: [
+    { name: 'command-palette', when: 'you want the finished ⌘K launcher, with grouped actions, recent items and shortcuts, ready to drop in. Use Command to build your own palette or an inline search list from its parts.' },
     { name: 'combobox', when: 'you need a single searchable field bound to a form value, not a multi-group action palette.' },
     { name: 'dropdown-menu', when: 'the action set is short enough for a plain click-triggered list, with no need for search.' },
   ],
