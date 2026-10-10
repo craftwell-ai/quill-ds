@@ -6,6 +6,7 @@ export const usage = {
     'You need to explain why a view is empty and offer the primary action to fill it.',
   ],
   alternatives: [
+    { name: 'empty', when: 'the empty state sits inside an existing surface (a list, a table, a card, a search result) and you compose it from parts: media, title, description and actions. Use empty-state for the finished stand-alone panel.' },
     { name: 'error-404', when: "the view is empty because the resource doesn't exist or the route is wrong, not because the user hasn't created anything yet." },
     { name: 'onboarding', when: "there's a multi-step setup to walk through, not a single action to take right now." },
   ],

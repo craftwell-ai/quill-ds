@@ -175,3 +175,23 @@ test('rule dark-variant: a theme imported from the layout, not the stylesheet, g
   assert.match(dv[0].fix, /directly below this line/)
   assert.doesNotMatch(dv[0].fix, /sits below Quill's/)
 })
+
+test('CLI: run through a symlinked folder or a folder with a space, it still checks and fails', async () => {
+  // The script used to compare import.meta.url (the real path) with argv[1] as written. Through a
+  // symlink (macOS temp folders are one) or a space (`%20`), they differed, main() never ran, and
+  // the check printed nothing and exited 0: a false pass.
+  const { symlinkSync, copyFileSync, mkdirSync, realpathSync } = await import('node:fs')
+  const base = realpathSync(mkdtempSync(join(tmpdir(), 'quill-check-')))
+  const real = join(base, 'app with space')
+  mkdirSync(real)
+  copyFileSync(CHECK_PATH, join(real, 'quill-check.mjs'))
+  writeFileSync(join(real, 'page.tsx'), 'export const P = () => <div className="bg-blue-500" />\n')
+  symlinkSync(real, join(base, 'linked'))
+  for (const script of [join(base, 'linked', 'quill-check.mjs'), join(real, 'quill-check.mjs')]) {
+    let out = ''
+    let code = 0
+    try { out = execFileSync(process.execPath, [script, '--dir', real], { cwd: real, encoding: 'utf8' }) } catch (e) { out = e.stdout; code = e.status }
+    assert.equal(code, 1, `${script} should report the finding and exit 1`)
+    assert.match(out, /bg-blue-500/)
+  }
+})

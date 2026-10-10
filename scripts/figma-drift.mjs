@@ -17,8 +17,9 @@
 // warnings, never counted as clean OR as drift.
 
 import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -609,6 +610,6 @@ export async function main({ repair = false, adopt = false, snapshotPatterns = f
   if (unrepaired) process.exitCode = repair ? 2 : 1
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   await main({ repair: process.argv.includes('--repair'), adopt: process.argv.includes('--adopt'), snapshotPatterns: process.argv.includes('--snapshot-patterns') })
 }

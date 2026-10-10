@@ -30,6 +30,7 @@ import {
 } from '../src/usage/foundations.mjs'
 import { renderRolesSection } from '../src/usage/roles.mjs'
 import { shippedComponents } from './build-agent-rules.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -204,7 +205,7 @@ export function refreshDesign(source, t = tokens) {
   return out
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMain(import.meta.url)) {
   writeFileSync(LLMS_PATH, renderLlms())
   writeFileSync(DESIGN_PATH, refreshDesign(readFileSync(DESIGN_PATH, 'utf8')))
   console.log('wrote public/llms.txt and the generated spans in DESIGN.md')

@@ -12,6 +12,7 @@ import { dirname, join } from 'node:path'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 import { renderCss } from './build-tokens.mjs'
 import { ROLE_INTENTS, STATUS_INTENTS } from '../src/usage/roles.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const CHECK_PATH = join(root, 'registry/check/quill-check.mjs')
@@ -116,7 +117,7 @@ export function renderCheck() {
   return template.replace('/*__DATA__*/ null', JSON.stringify(checkData(), null, 1))
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMain(import.meta.url)) {
   mkdirSync(dirname(CHECK_PATH), { recursive: true })
   writeFileSync(CHECK_PATH, renderCheck())
   console.log('wrote registry/check/quill-check.mjs')

@@ -15,9 +15,10 @@ import { execFile } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { homedir, userInfo } from 'node:os'
 import { dirname, join } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { paths, resolveTools, SOURCE_REPO, validateCloneTarget } from './daily.mjs'
+import { isMain } from '../lib/is-main.mjs'
 
 const run = promisify(execFile)
 const here = dirname(fileURLToPath(import.meta.url))
@@ -118,6 +119,6 @@ async function main(args) {
   return 1
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   try { process.exit(await main(process.argv.slice(2))) } catch (error) { console.error(error.message); process.exit(1) }
 }

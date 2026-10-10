@@ -20,7 +20,6 @@
  * at PAPER_STORYBOOK_URL). Exit code 1 when a piece failed.
  */
 import { writeFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
 import { tokensHash } from '../figma-stamp.mjs'
 import { connect, PaperError } from './client.mjs'
 import { convertStory, launch, quillTokenTable, serialize } from './convert.mjs'
@@ -30,6 +29,7 @@ import { inventory, KINDS, pageName, pieceLayerName, selectStories, sourceHash, 
 import { ensureStorybook } from './storybook.mjs'
 import { foundationsHash, syncFoundations } from './sync-foundations.mjs'
 import { syncTokens } from './sync-tokens.mjs'
+import { isMain } from '../lib/is-main.mjs'
 
 const unique = (list) => [...new Set(list)]
 const total = (list, key) => list.reduce((sum, entry) => sum + entry[key], 0)
@@ -223,7 +223,7 @@ export function parseArgs(args) {
   return { summary: value('--summary') ?? null, force: args.includes('--force'), all: args.includes('--all'), only: (value('--only') ?? '').split(',').map((name) => name.trim()).filter(Boolean), dryRun: args.includes('--dry-run'), prune: args.includes('--prune'), createFile: args.includes('--create-file'), accept: args.includes('--accept'), base: value('--base') ?? process.env.PAPER_STORYBOOK_URL }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   try {
     const options = parseArgs(process.argv.slice(2))
     delete options.accept

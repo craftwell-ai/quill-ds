@@ -3,7 +3,8 @@
 // and the role intents. Do not edit by hand: reinstall with
 //   npx shadcn@latest add @quill/check --overwrite
 // Usage: node scripts/quill-check.mjs [--dir <path>]… [--css <tailwind entry>] [--include-ui] [--json] [--quiet]
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
+import { readFileSync, readdirSync, statSync, existsSync, realpathSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { join, relative, resolve, dirname, extname } from 'node:path'
 import { createRequire } from 'node:module'
 
@@ -442,6 +443,14 @@ export async function main(argv = process.argv.slice(2)) {
   return active ? 1 : 0
 }
 
+// Compared as real file paths: run through a symlink (a macOS temp folder is one), argv[1] and
+// import.meta.url name different paths, and a string comparison would skip main() and exit 0 having
+// checked nothing.
+function isMain() {
+  if (!process.argv[1]) return false
+  try { return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url)) } catch { return false }
+}
+
 // exitCode, not exit(): on macOS a pipe is asynchronous, and exit() dropped the tail of a
 // --json report past ~64 KB — the agent reading it got "Unterminated string".
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) process.exitCode = await main()
+if (isMain()) process.exitCode = await main()

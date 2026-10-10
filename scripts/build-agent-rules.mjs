@@ -35,6 +35,7 @@ import { ALL_USAGE } from '../src/usage/index.mjs'
 import { EXAMPLES } from '../src/usage/examples.mjs'
 import { INTENT_TAGS } from './registry-intent-tags.mjs'
 import { renderUsagePage } from './build-usage.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const RULES_PATH = join(root, 'registry/agent-rules/quill.md')
@@ -213,7 +214,7 @@ export function agentRulesItemFiles() {
   ]
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMain(import.meta.url)) {
   mkdirSync(dirname(RULES_PATH), { recursive: true })
   writeFileSync(RULES_PATH, renderAgentRules())
   // Cleared first so a retired usage entry does not leave its guide behind.

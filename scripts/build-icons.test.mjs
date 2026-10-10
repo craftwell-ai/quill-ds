@@ -70,3 +70,17 @@ test('every icon name a shipped file references is in the core map consumers rec
   }
   assert.deepEqual(missing, [], `icons referenced by shipped code but absent from icons.core.mjs — run \`npm run build:icons\`:\n${missing.join('\n')}`)
 })
+
+test('public/icons publishes exactly the shipped set, from the same map (run `npm run build:icons`)', async () => {
+  const { renderPublicIcons, PUBLIC_ICONS_DIR } = await import('./build-icons.mjs')
+  const expected = renderPublicIcons(icons)
+  const onDisk = readdirSync(PUBLIC_ICONS_DIR).sort()
+  assert.deepEqual(onDisk, Object.keys(expected).sort(), 'public/icons has missing or stray files — run `npm run build:icons`')
+  for (const [file, content] of Object.entries(expected)) {
+    assert.equal(readFileSync(join(PUBLIC_ICONS_DIR, file), 'utf8'), content, `public/icons/${file} is stale — run \`npm run build:icons\``)
+  }
+  const index = JSON.parse(expected['index.json'])
+  assert.deepEqual(index.icons, Object.keys(icons).sort())
+  assert.equal(index.viewBox, '0 -960 960 960')
+  for (const name of ['add', 'folder_open']) assert.ok(index.icons.includes(name), `${name} is used by the blocks and must be published`)
+})

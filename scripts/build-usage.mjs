@@ -5,7 +5,14 @@
  *                                       the rule ids and `visual` flags the
  *                                       page drops
  *   - public/usage/index.json           the list of every guide (a site cannot
- *                                       be listed like a folder)
+ *                                       be listed like a folder), each with a
+ *                                       content hash of its JSON and `code: true`
+ *                                       when its source is published below
+ *   - public/code/<name>.json           the source of each stock primitive that
+ *                                       has a guide but no registry item, as the
+ *                                       site renders it (src/components/ui), so a
+ *                                       tool can read its anatomy; apps still
+ *                                       install these from shadcn, not from here
  *   - registry.json                     `docs` field (shadcn CLI prints it at
  *                                       install time), `description`
  *                                       (:= summary), `meta.use_when`
@@ -19,7 +26,8 @@
  * CI when a committed output is stale. Run `npm run build:usage` after
  * touching any usage file.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
@@ -27,11 +35,14 @@ import { ALL_USAGE } from '../src/usage/index.mjs'
 import { renderUsageDocs, renderNotFor } from '../src/usage/render.mjs'
 import { renderThemeDocs } from '../src/usage/theme-docs.mjs'
 import { EXAMPLES, renderExampleDocs } from '../src/usage/examples.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const USAGE_DIR = join(root, 'public/usage')
 export const REGISTRY_PATH = join(root, 'registry.json')
 export const MODULES_DTS_PATH = join(root, 'src/usage/modules.d.ts')
+export const CODE_DIR = join(root, 'public/code')
+const UI_DIR = join(root, 'src/components/ui')
 
 export function renderUsagePage(u) {
   return `# ${u.name} (${u.kind})\n\n${renderUsageDocs(u, { format: 'markdown' })}\n`
@@ -41,8 +52,34 @@ export function renderUsageJson(u) {
   return JSON.stringify(u, null, 2) + '\n'
 }
 
-export function renderUsageIndex(all = ALL_USAGE) {
-  return JSON.stringify({ schemaVersion: 1, guides: all.map((u) => ({ name: u.name, kind: u.kind, summary: u.summary })) }, null, 2) + '\n'
+/** A guide's fingerprint: the SHA-256 of its published JSON, so a tool can tell one guide changed. */
+export function usageHash(u) {
+  return createHash('sha256').update(renderUsageJson(u)).digest('hex')
+}
+
+/**
+ * Guides whose source is published under /code: stock primitives Quill restyles but does not
+ * ship (no registry item), read from the site's copy in src/components/ui.
+ */
+export function codeNames(all = ALL_USAGE, registry = JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'))) {
+  const shipped = new Set(registry.items.map((item) => item.name))
+  return all.map((u) => u.name).filter((name) => !shipped.has(name) && existsSync(join(UI_DIR, `${name}.tsx`)))
+}
+
+export function renderCode(name) {
+  const path = `components/ui/${name}.tsx`
+  return JSON.stringify({ name, files: [{ path, content: readFileSync(join(UI_DIR, `${name}.tsx`), 'utf8') }] }, null, 2) + '\n'
+}
+
+export function renderUsageIndex(all = ALL_USAGE, withCode = new Set(codeNames(all))) {
+  const guides = all.map((u) => ({
+    name: u.name,
+    kind: u.kind,
+    summary: u.summary,
+    hash: usageHash(u),
+    ...(withCode.has(u.name) ? { code: true } : {}),
+  }))
+  return JSON.stringify({ schemaVersion: 1, guides }, null, 2) + '\n'
 }
 
 export function renderModulesDts(all = ALL_USAGE) {
@@ -109,18 +146,23 @@ export function injectRegistryDocs(registry, all = ALL_USAGE) {
   return registry
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMain(import.meta.url)) {
   mkdirSync(USAGE_DIR, { recursive: true })
   for (const u of ALL_USAGE) {
     writeFileSync(join(USAGE_DIR, `${u.name}.md`), renderUsagePage(u))
     writeFileSync(join(USAGE_DIR, `${u.name}.json`), renderUsageJson(u))
   }
-  writeFileSync(join(USAGE_DIR, 'index.json'), renderUsageIndex())
+  // regenerated whole, so a primitive that gains a registry item or loses its guide drops out
+  rmSync(CODE_DIR, { recursive: true, force: true })
+  mkdirSync(CODE_DIR, { recursive: true })
+  const withCode = codeNames()
+  for (const name of withCode) writeFileSync(join(CODE_DIR, `${name}.json`), renderCode(name))
+  writeFileSync(join(USAGE_DIR, 'index.json'), renderUsageIndex(ALL_USAGE, new Set(withCode)))
   const registry = injectRegistryDocs(JSON.parse(readFileSync(REGISTRY_PATH, 'utf8')))
   // registry.json is committed without a trailing newline (verified with
   // `python3 -c "print(open('registry.json','rb').read().endswith(b'\\n'))"` → False);
   // no `+ '\n'` here, unlike the brief's assumed format, to keep the diff minimal.
   writeFileSync(REGISTRY_PATH, JSON.stringify(registry, null, 2))
   writeFileSync(MODULES_DTS_PATH, renderModulesDts())
-  console.log(`wrote ${ALL_USAGE.length} usage pages, registry.json docs fields, and modules.d.ts`)
+  console.log(`wrote ${ALL_USAGE.length} usage pages, ${withCode.length} primitive sources, registry.json docs fields, and modules.d.ts`)
 }

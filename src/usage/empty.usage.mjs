@@ -6,6 +6,7 @@ export const usage = {
     'A list, table, or search result surface has no data to show yet and you need to explain why, plus give the user a way to fix it (create, upload, search again).',
   ],
   alternatives: [
+    { name: 'empty-state', when: 'you want the finished panel dropped into a page as it is: a dashed-border card with a round icon well, a line of text and one primary action, already styled. Use Empty when the empty state sits inside your own list, table or card and you compose it from its parts.' },
     { name: 'skeleton', when: 'the surface is still loading real data and not yet confirmed empty — use Skeleton for the loading state, and switch to Empty only once loading finishes with zero results.' },
   ],
   rules: [

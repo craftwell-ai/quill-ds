@@ -35,6 +35,7 @@ import { homedir } from 'node:os'
 import { delimiter, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { promisify } from 'node:util'
+import { isMain } from '../lib/is-main.mjs'
 
 const run = promisify(execFile)
 const here = dirname(fileURLToPath(import.meta.url))
@@ -464,7 +465,7 @@ export async function daily({ dryRun = false, noPush = false, env = process.env 
   }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   const result = await daily({ dryRun: process.argv.includes('--dry-run'), noPush: process.argv.includes('--no-push') })
   // a closed Paper is a normal day; only a broken run is a failure
   process.exit(result.status === 'failed' ? 1 : 0)

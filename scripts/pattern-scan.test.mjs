@@ -398,7 +398,7 @@ test('main is exported and the file guards its own execution', () => {
   assert.match(source, /export async function main\(/)
   assert.match(
     source,
-    /import\.meta\.url === `file:\/\/\$\{process\.argv\[1\]\}`/,
+    /if \(isMain\(import\.meta\.url\)\)/,
     'must only run main() when invoked directly, or importing it in tests runs the scan',
   )
 })

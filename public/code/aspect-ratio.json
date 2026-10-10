@@ -1,0 +1,9 @@
+{
+  "name": "aspect-ratio",
+  "files": [
+    {
+      "path": "components/ui/aspect-ratio.tsx",
+      "content": "import { cn } from \"@/lib/utils\"\n\n/** Constrains any child to a fixed width-to-height ratio — a CSS-only box, most often used to reserve space for images, video embeds, and thumbnails. */\nfunction AspectRatio({\n  ratio,\n  className,\n  ...props\n}: React.ComponentProps<\"div\"> & { ratio: number }) {\n  return (\n    <div\n      data-slot=\"aspect-ratio\"\n      style={\n        {\n          \"--ratio\": ratio,\n        } as React.CSSProperties\n      }\n      className={cn(\"relative aspect-(--ratio)\", className)}\n      {...props}\n    />\n  )\n}\n\nexport { AspectRatio }\n"
+    }
+  ]
+}

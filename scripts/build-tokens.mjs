@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { tokens } from '../src/tokens/quill.tokens.mjs'
 import { MODES, DEFAULT_ACCENT } from '../src/tokens/themes.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const START = '/* @quill-tokens:start */'
@@ -550,4 +551,4 @@ export function main() {
   writeFileSync(registryPath, JSON.stringify(registry, null, 2))
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main()
+if (isMain(import.meta.url)) main()

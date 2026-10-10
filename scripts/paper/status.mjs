@@ -12,10 +12,10 @@
  *
  * Always exits 0: a stale piece is a to-do for whoever has Paper open, not a failure.
  */
-import { pathToFileURL } from 'node:url'
 import { tokensHash } from '../figma-stamp.mjs'
 import { readState, today, writeState } from './file.mjs'
 import { inventory, pageName, statusOf, storyFiles } from './pieces.mjs'
+import { isMain } from '../lib/is-main.mjs'
 
 export function status(state = readState(), pieces = inventory()) {
   const rows = statusOf(state, pieces)
@@ -79,7 +79,7 @@ export function reconcile(state = readState(), pieces = inventory(), storyIds = 
   return { state: { ...state, pieces: kept, removed: [...(state.removed ?? []), ...queued].slice(-50) }, changes }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   if (process.argv.includes('--record-pending')) {
     const result = reconcile()
     writeState(result.state)

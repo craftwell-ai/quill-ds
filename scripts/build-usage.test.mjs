@@ -1,10 +1,10 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { ALL_USAGE } from '../src/usage/index.mjs'
-import { renderUsagePage, renderUsageJson, renderUsageIndex, renderModulesDts, usageDocsField, USAGE_DIR, REGISTRY_PATH, MODULES_DTS_PATH } from './build-usage.mjs'
+import { renderUsagePage, renderUsageJson, renderUsageIndex, renderModulesDts, usageDocsField, renderCode, codeNames, usageHash, USAGE_DIR, CODE_DIR, REGISTRY_PATH, MODULES_DTS_PATH } from './build-usage.mjs'
 import { renderThemeDocs, accentNames, LLMS_URL } from '../src/usage/theme-docs.mjs'
 import { ALL_MODES, DEFAULT_MODE, DEFAULT_ACCENT } from '../src/tokens/themes.mjs'
 
@@ -30,6 +30,44 @@ test('every usage entry is also published as data, with an index (run `npm run b
   assert.ok(existsSync(index), 'public/usage/index.json is missing — run `npm run build:usage`')
   assert.equal(readFileSync(index, 'utf8'), renderUsageIndex(), 'public/usage/index.json is stale — run `npm run build:usage`')
   assert.ok(!ALL_USAGE.some((u) => u.name === 'index'), 'a usage entry named "index" would overwrite public/usage/index.json')
+})
+
+test('every stock primitive with a guide publishes its source, and only those (run `npm run build:usage`)', () => {
+  const names = codeNames()
+  const registry = JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'))
+  const shipped = new Set(registry.items.map((item) => item.name))
+  assert.ok(names.length > 0)
+  for (const name of names) assert.ok(!shipped.has(name), `${name} is a registry item: its source is already at /r/${name}.json`)
+  for (const name of ['button', 'sidebar', 'breadcrumb']) assert.ok(names.includes(name), `${name} should publish its source`)
+  assert.deepEqual(readdirSync(CODE_DIR).sort(), names.map((n) => `${n}.json`).sort(), 'public/code has missing or stray files — run `npm run build:usage`')
+  for (const name of names) {
+    assert.equal(readFileSync(join(CODE_DIR, `${name}.json`), 'utf8'), renderCode(name), `public/code/${name}.json is stale — run \`npm run build:usage\``)
+    const code = JSON.parse(renderCode(name))
+    assert.equal(code.name, name)
+    assert.equal(code.files[0].content, readFileSync(join(import.meta.dirname, '..', 'src/components/ui', `${name}.tsx`), 'utf8'))
+  }
+})
+
+test('the usage index fingerprints each guide and marks which ones have source', () => {
+  const index = JSON.parse(renderUsageIndex())
+  const withCode = new Set(codeNames())
+  for (const entry of index.guides) {
+    const u = ALL_USAGE.find((g) => g.name === entry.name)
+    assert.equal(entry.hash, usageHash(u))
+    assert.match(entry.hash, /^[0-9a-f]{64}$/)
+    assert.equal(entry.code === true, withCode.has(entry.name), `${entry.name}: code flag`)
+    if (!withCode.has(entry.name)) assert.ok(!('code' in entry))
+  }
+  assert.equal(new Set(index.guides.map((g) => g.hash)).size, index.guides.length, 'two guides share a hash')
+})
+
+test('pieces that do the same job name each other in their alternatives', () => {
+  const pairs = [['empty', 'empty-state'], ['command', 'command-palette']]
+  for (const [a, b] of pairs) {
+    const of = (name) => ALL_USAGE.find((u) => u.name === name).alternatives.map((alt) => alt.name)
+    assert.ok(of(a).includes(b), `${a} should name ${b}`)
+    assert.ok(of(b).includes(a), `${b} should name ${a}`)
+  }
 })
 
 test('registry.json carries the derived docs field, description, and use_when for documented items', () => {

@@ -30,6 +30,7 @@ import { parseArgs } from 'node:util'
 
 import { SETS, acceptedPicks } from './agent-selection-cases.mjs'
 import { SKILL_SRC } from './build-agent-rules.mjs'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 // The last release before the skill shipped: the rules file then listed block names only.
@@ -227,4 +228,4 @@ async function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) await main()
+if (isMain(import.meta.url)) await main()

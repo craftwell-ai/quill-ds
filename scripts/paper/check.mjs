@@ -27,7 +27,6 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { PNG } from 'pngjs'
 import { comparePngs, flatten, padTo, REGRESSION_PCT, REGRESSION_PX, strip } from '../figma-visual-diff.mjs'
 import { connect } from './client.mjs'
@@ -38,6 +37,7 @@ import { inventory, statusOf } from './pieces.mjs'
 import { ensureStorybook } from './storybook.mjs'
 import { parseArgs } from './sync.mjs'
 import { firstFamily, resolveTokens } from './tokens.mjs'
+import { isMain } from '../lib/is-main.mjs'
 
 export const DEFAULT_OUT = '.paper'
 export const BASELINE_PATH = join(root, 'paper/visual-baseline.json')
@@ -405,7 +405,7 @@ export async function check({ only = [], all = false, out = DEFAULT_OUT, base = 
   return { report, summary, ...result }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   const args = parseArgs(process.argv.slice(2))
   try {
     const result = await check({ only: args.only, all: args.all, base: args.base, accept: args.accept, force: args.force, summary: args.summary, progress: (line) => console.error(line) })

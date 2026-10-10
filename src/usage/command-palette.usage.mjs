@@ -6,6 +6,7 @@ export const usage = {
     'You need a searchable ⌘K launcher for actions and quick navigation.',
   ],
   alternatives: [
+    { name: 'command', when: 'the list is embedded in the page (settings search) or needs groups and behaviour the finished launcher does not have, so you build it from Command parts. Use command-palette for the ready-made ⌘K overlay.' },
     { name: 'search-results', when: 'search results should live inline on the page, not in a global keyboard-triggered overlay.' },
     { name: 'dropdown-menu', when: 'the list of options is small and tied to a specific trigger element, not a global searchable launcher.' },
   ],

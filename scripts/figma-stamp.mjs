@@ -12,8 +12,9 @@
 
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { isMain } from './lib/is-main.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const STAMP_COMMAND = 'node scripts/figma-stamp.mjs'
@@ -51,7 +52,7 @@ export function stamp({ blocks = [], tokens = false, allBlocks = false } = {}) {
   return { stamped, tokens }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   const args = process.argv.slice(2)
   const blocks = args.includes('--block') ? args.slice(args.indexOf('--block') + 1).filter((a) => !a.startsWith('--')) : []
   const result = stamp({ blocks, tokens: args.includes('--tokens'), allBlocks: args.includes('--all-blocks') })

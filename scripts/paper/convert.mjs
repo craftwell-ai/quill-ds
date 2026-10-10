@@ -21,9 +21,9 @@
  * The pure half (everything but `captureStory`) runs without a browser and is unit-tested.
  */
 import { createRequire } from 'node:module'
-import { pathToFileURL } from 'node:url'
 import { formatColor, mapColors, parseColor, sameColor } from './color.mjs'
 import { quillPaperTokens, resolveTokens } from './tokens.mjs'
+import { isMain } from '../lib/is-main.mjs'
 
 export const STORYBOOK = process.env.PAPER_STORYBOOK_URL || 'http://localhost:6150'
 export const CANVAS_PADDING = 24 // the same breathing room .storybook/preview.tsx gives a story
@@ -1345,7 +1345,7 @@ export async function convertStory(page, storyId, { base = STORYBOOK, tokenTable
   return { parts, stats, opened, crash, html: parts.map((part) => part.html).join('\n') }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMain(import.meta.url)) {
   const args = process.argv.slice(2)
   const base = args.includes('--base') ? args[args.indexOf('--base') + 1] : STORYBOOK
   const storyId = args.find((arg) => !arg.startsWith('--') && arg !== base)
