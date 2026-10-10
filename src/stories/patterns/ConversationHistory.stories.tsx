@@ -54,11 +54,6 @@ function Owned({ initial = CHATS, ...args }: Args & { initial?: Conversation[] }
 const page = () => within(document.body)
 const rowOf = (canvasElement: HTMLElement, title: string) =>
   [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="chat-row"]')].find((row) => row.textContent?.includes(title)) as HTMLElement
-// A dialog that has just closed keeps the rest of the page inert (Base UI's `data-base-ui-inert`) until its exit
-// transition ends; a click sent before then is swallowed, so the next menu or dialog never opens. Seen in CI
-// (CRA-296): the alert dialog was "not found" while the story's wrapper still carried the attribute. Only for a
-// story with no modal of its own open (a story inside a sheet stays inert by design).
-const pageSettled = () => waitFor(() => expect(document.querySelector('[data-base-ui-inert]')).toBeNull())
 const openMenu = async (canvas: ReturnType<typeof within>, title: string) => {
   await userEvent.click(canvas.getByRole('button', { name: `More for ${title}` }))
   return page().findByRole('menu')
@@ -287,11 +282,10 @@ export const DeleteThenUndo: Story = {
   render: (args) => <Owned {...args} />,
   play: async ({ canvas, args }) => {
     // It asks first, and Cancel changes nothing.
-    await clickWhenReady(await within(await openMenu(canvas, 'Launch brief draft')).findByRole('menuitem', { name: 'Delete' }))
+    await userEvent.click(await within(await openMenu(canvas, 'Launch brief draft')).findByRole('menuitem', { name: 'Delete' }))
     const dialog = await page().findByRole('alertdialog', { name: 'Delete this chat?' })
-    await clickWhenReady(within(dialog).getByRole('button', { name: 'Cancel' }))
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
     await waitFor(() => expect(page().queryByRole('alertdialog')).toBeNull())
-    await pageSettled()
     await expect(canvas.getByRole('button', { name: 'Launch brief draft' })).toBeVisible()
 
     await confirmDelete(canvas, 'Launch brief draft')
