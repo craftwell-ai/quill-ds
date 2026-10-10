@@ -21,7 +21,7 @@
     "sourceHash": "5e888beb6bbbd5e9",
     "theme": "light",
     "notRepresentable": 33,
-    "syncedAt": "2026-10-07"
+    "syncedAt": "2026-10-10"
   },
   "foundations": {
     "page": "Foundations",
@@ -3348,8 +3348,8 @@
         "src/stories/command.stories.tsx",
         "src/usage/command.usage.mjs"
       ],
-      "sourceHash": "ad269608a2f2f73d",
-      "syncedAt": "2026-10-07",
+      "sourceHash": "1daf08b05ff3d16c",
+      "syncedAt": "2026-10-10",
       "counts": {
         "stories": 3,
         "nodes": 64,
@@ -3374,7 +3374,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1P73-0",
+              "nodeId": "1ZWA-0",
               "size": [
                 288,
                 213.22
@@ -3394,7 +3394,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1P8H-0",
+              "nodeId": "1ZXO-0",
               "size": [
                 189.92,
                 80
@@ -3414,7 +3414,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1P8V-0",
+              "nodeId": "1ZY2-0",
               "size": [
                 288,
                 144.81
@@ -3858,8 +3858,8 @@
         "src/stories/empty.stories.tsx",
         "src/usage/empty.usage.mjs"
       ],
-      "sourceHash": "8eb7db70cf2b0bd0",
-      "syncedAt": "2026-10-07",
+      "sourceHash": "e593a7bfd92371a6",
+      "syncedAt": "2026-10-10",
       "counts": {
         "stories": 2,
         "nodes": 26,
@@ -3884,7 +3884,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1PLY-0",
+              "nodeId": "1ZZ4-0",
               "size": [
                 320,
                 257.56
@@ -3904,7 +3904,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1PML-0",
+              "nodeId": "1ZZR-0",
               "size": [
                 320,
                 279.64
@@ -5709,15 +5709,15 @@
         "src/stories/progress.stories.tsx",
         "src/usage/progress.usage.mjs"
       ],
-      "sourceHash": "076aac9cd60786d9",
-      "syncedAt": "2026-10-07",
+      "sourceHash": "b086adc6771054df",
+      "syncedAt": "2026-10-10",
       "counts": {
         "stories": 4,
         "nodes": 53,
         "approximated": 0,
-        "bound": 97,
+        "bound": 89,
         "bindable": 97,
-        "bindingRate": 1
+        "bindingRate": 0.918
       },
       "notes": [],
       "lost": [],
@@ -5728,17 +5728,17 @@
           "opened": "none",
           "nodes": 7,
           "approximated": 0,
-          "bound": 12,
+          "bound": 11,
           "bindable": 12,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1RBU-0",
+              "nodeId": "2032-0",
               "size": [
                 288,
                 35.41
               ],
-              "htmlHash": "98377e2c4be8a0d4"
+              "htmlHash": "1bd4f03d7c703567"
             }
           ]
         },
@@ -5748,17 +5748,17 @@
           "opened": "none",
           "nodes": 7,
           "approximated": 0,
-          "bound": 12,
+          "bound": 11,
           "bindable": 12,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1RCB-0",
+              "nodeId": "203J-0",
               "size": [
                 288,
                 35.41
               ],
-              "htmlHash": "182ff44bf4374a42"
+              "htmlHash": "fbec74e3fd3c1a48"
             }
           ]
         },
@@ -5768,17 +5768,17 @@
           "opened": "none",
           "nodes": 7,
           "approximated": 0,
-          "bound": 12,
+          "bound": 11,
           "bindable": 12,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1RCS-0",
+              "nodeId": "2040-0",
               "size": [
                 288,
                 35.41
               ],
-              "htmlHash": "279012b2a1c9d418"
+              "htmlHash": "1dba762149bde8e5"
             }
           ]
         },
@@ -5788,17 +5788,17 @@
           "opened": "none",
           "nodes": 32,
           "approximated": 0,
-          "bound": 61,
+          "bound": 56,
           "bindable": 61,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1RD9-0",
+              "nodeId": "204H-0",
               "size": [
                 288,
                 241.03
               ],
-              "htmlHash": "5b60371fb16a930c"
+              "htmlHash": "44f2f34365a4798b"
             }
           ]
         }
@@ -7109,15 +7109,15 @@
         "src/stories/slider.stories.tsx",
         "src/usage/slider.usage.mjs"
       ],
-      "sourceHash": "dd79c3da6361fba9",
-      "syncedAt": "2026-10-07",
+      "sourceHash": "181484a033c5515c",
+      "syncedAt": "2026-10-10",
       "counts": {
         "stories": 5,
         "nodes": 60,
         "approximated": 0,
-        "bound": 76,
+        "bound": 68,
         "bindable": 76,
-        "bindingRate": 1
+        "bindingRate": 0.895
       },
       "notes": [],
       "lost": [],
@@ -7128,17 +7128,17 @@
           "opened": "none",
           "nodes": 10,
           "approximated": 0,
-          "bound": 15,
+          "bound": 14,
           "bindable": 15,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1SVK-0",
+              "nodeId": "205U-0",
               "size": [
                 288,
                 26
               ],
-              "htmlHash": "2094dcb5e3e14819"
+              "htmlHash": "654209d701b2043c"
             }
           ]
         },
@@ -7148,17 +7148,17 @@
           "opened": "none",
           "nodes": 7,
           "approximated": 0,
-          "bound": 8,
+          "bound": 7,
           "bindable": 8,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1SW3-0",
+              "nodeId": "206D-0",
               "size": [
                 288,
                 4
               ],
-              "htmlHash": "942cf03c1ccde2ba"
+              "htmlHash": "6b16a4f08a486b15"
             }
           ]
         },
@@ -7168,17 +7168,17 @@
           "opened": "none",
           "nodes": 6,
           "approximated": 0,
-          "bound": 6,
+          "bound": 5,
           "bindable": 6,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1SWM-0",
+              "nodeId": "206W-0",
               "size": [
                 288,
                 4
               ],
-              "htmlHash": "030fc63c2d601df1"
+              "htmlHash": "6091138c690a29c8"
             }
           ]
         },
@@ -7188,17 +7188,17 @@
           "opened": "none",
           "nodes": 6,
           "approximated": 0,
-          "bound": 6,
+          "bound": 5,
           "bindable": 6,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1SX3-0",
+              "nodeId": "207D-0",
               "size": [
                 288,
                 4
               ],
-              "htmlHash": "f485a9dfdbf571f3"
+              "htmlHash": "3f1fcbdbb89fb431"
             }
           ]
         },
@@ -7208,17 +7208,17 @@
           "opened": "none",
           "nodes": 31,
           "approximated": 0,
-          "bound": 41,
+          "bound": 37,
           "bindable": 41,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1SXK-0",
+              "nodeId": "207U-0",
               "size": [
                 288,
                 176
               ],
-              "htmlHash": "a7a0461c404b6628"
+              "htmlHash": "12f5f998709576dc"
             }
           ]
         }
@@ -9218,8 +9218,8 @@
         "src/stories/patterns/CommandPalette.stories.tsx",
         "src/usage/command-palette.usage.mjs"
       ],
-      "sourceHash": "b3a86dd111ce1a22",
-      "syncedAt": "2026-10-07",
+      "sourceHash": "b5787d117e2518ed",
+      "syncedAt": "2026-10-10",
       "counts": {
         "stories": 1,
         "nodes": 43,
@@ -9242,7 +9242,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1VOZ-0",
+              "nodeId": "200J-0",
               "size": [
                 440,
                 274.03
@@ -9554,8 +9554,8 @@
         "src/stories/patterns/EmptyState.stories.tsx",
         "src/usage/empty-state.usage.mjs"
       ],
-      "sourceHash": "e5c2740127cf755e",
-      "syncedAt": "2026-10-07",
+      "sourceHash": "41851eea3dacbae8",
+      "syncedAt": "2026-10-10",
       "counts": {
         "stories": 1,
         "nodes": 9,
@@ -9580,7 +9580,7 @@
           "parts": [
             {
               "part": "main",
-              "nodeId": "1W3C-0",
+              "nodeId": "202E-0",
               "size": [
                 420,
                 246.03
@@ -10490,15 +10490,15 @@
         "src/stories/patterns/Onboarding.stories.tsx",
         "src/usage/onboarding.usage.mjs"
       ],
-      "sourceHash": "ad262972ba7fc596",
-      "syncedAt": "2026-10-07",
+      "sourceHash": "db75939c3c77d3e3",
+      "syncedAt": "2026-10-10",
       "counts": {
         "stories": 1,
         "nodes": 26,
         "approximated": 0,
-        "bound": 104,
+        "bound": 103,
         "bindable": 109,
-        "bindingRate": 0.954
+        "bindingRate": 0.945
       },
       "notes": [],
       "lost": [],
@@ -10509,17 +10509,17 @@
           "opened": "none",
           "nodes": 26,
           "approximated": 0,
-          "bound": 104,
+          "bound": 103,
           "bindable": 109,
           "parts": [
             {
               "part": "main",
-              "nodeId": "1WUR-0",
+              "nodeId": "2095-0",
               "size": [
                 400,
                 276.3
               ],
-              "htmlHash": "42dd4946680612a5"
+              "htmlHash": "629863b12e8d37a1"
             }
           ]
         }
