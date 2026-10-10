@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.23.2] — 2026-10-10
+
+### Changed
+- fix(paper): delete numbered exports too; Paper puts the counter after the scale
+
 ## [1.23.1] — 2026-10-10
 
 ### Changed
