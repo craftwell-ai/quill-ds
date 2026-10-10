@@ -193,10 +193,11 @@ export function keyNodes(tree) {
  */
 export function isOurExport(filePath, { layerName, since, downloads = join(homedir(), 'Downloads'), stat = statSync } = {}) {
   if (!filePath || dirname(resolve(filePath)) !== resolve(downloads)) return false
-  // Paper names the file after the layer, with `/` turned into `_`, an optional " (2)" and the scale
+  // Paper names the file after the layer, with `/` turned into `_`, then the scale, then " (2)" when the name is
+  // taken (seen in ~/Downloads: "accordion _ default@2x (3).png")
   const expected = layerName.replace(/\//g, '_')
   const name = basename(filePath)
-  if (!(name.startsWith(expected) && /^( \(\d+\))?@2x\.png$/.test(name.slice(expected.length)))) return false
+  if (!(name.startsWith(expected) && /^@2x( \(\d+\))?\.png$/.test(name.slice(expected.length)))) return false
   // made by this call: created (not merely touched) after the export was asked for
   try { const info = stat(filePath); return info.mtimeMs >= since - 2000 && (info.birthtimeMs ?? info.mtimeMs) >= since - 2000 } catch { return false }
 }

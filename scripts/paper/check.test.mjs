@@ -124,7 +124,9 @@ test('only a file this run exported is ever deleted from Downloads', () => {
   const fresh = () => ({ mtimeMs: since + 500 })
   const ours = { layerName: 'usage-meter / card', since, downloads: '/Users/x/Downloads', stat: fresh }
   assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x.png', ours), true)
-  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card (2)@2x.png', ours), true, 'Paper numbers a name that is taken')
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x (2).png', ours), true, 'Paper numbers a name that is taken, after the scale')
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card@2x (13).png', ours), true)
+  assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card (2)@2x.png', ours), false, 'not the form Paper writes')
   assert.equal(isOurExport('/Users/x/Downloads/usage-meter _ card-final@2x.png', ours), false, 'someone else\'s similar name')
   assert.equal(isOurExport('/Users/x/Downloads/holiday.png', ours), false)
   assert.equal(isOurExport('/Users/x/Documents/usage-meter _ card@2x.png', ours), false, 'not the folder Paper writes to')
