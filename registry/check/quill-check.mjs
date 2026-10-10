@@ -9,7 +9,7 @@ import { join, relative, resolve, dirname, extname } from 'node:path'
 import { createRequire } from 'node:module'
 
 export const DATA = {
- "version": "1.23.0",
+ "version": "1.23.1",
  "prefixes": [
   "bg",
   "text",
@@ -1148,7 +1148,7 @@ export const DATA = {
   "primary-foreground": "Text and icons on an ink (`primary`) fill.",
   "secondary": "The fill of the secondary button and the neutral badge.",
   "secondary-foreground": "The label on a secondary button or badge.",
-  "muted": "Quiet fills: icon wells, avatar fallbacks, skeletons, tab tracks.",
+  "muted": "Quiet fills: icon wells, avatar fallbacks, skeletons, tab tracks, hover washes on controls and rows.",
   "muted-foreground": "Supporting text: descriptions, captions, timestamps, helper text, placeholders, table meta.",
   "accent": "The highlighted item in a list or menu: the row under the pointer or keyboard focus, and the current item…",
   "accent-foreground": "Text and icons on a highlighted (`accent`) row.",

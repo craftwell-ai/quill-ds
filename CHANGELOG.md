@@ -13,6 +13,11 @@ within a minute, and that release is what triggers `library-sync` into the apps;
 manual tag races the bot and can leave a tag with no release behind it. The homepage
 footer reads `package.json` directly, so the displayed version updates with the bump.
 
+## [1.23.1] — 2026-10-10
+
+### Changed
+- **Slider and progress tracks are light again.** The empty part of a slider, a progress bar and the onboarding block's progress bar was the control line colour (`bg-input`) since July, which made the bar heavy and brought the filled part within 3.8:1 of the empty part. It is now the muted fill with 10% of the line colour mixed in (`bg-[color-mix(in_oklab,var(--input)_10%,var(--muted))]`): the filled part stands out at 10:1 again. The empty part sits at about 1.3:1 against the page, a deliberate choice: what a person reads is how much is filled. Apps get it through `onboarding` (re-add the block); the stock slider and progress bar in apps already had a light track. The Figma twins bind `semantic/muted`, a shade lighter than code, as the usage meter's track does.
+
 ## [1.23.0] — 2026-10-09
 
 ### Added
