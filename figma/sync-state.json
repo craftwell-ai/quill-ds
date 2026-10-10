@@ -545,11 +545,11 @@
       "name": "Progress",
       "nodeId": "81:8",
       "codeFile": "src/components/ui/progress.tsx",
-      "lastSynced": "2026-09-15",
+      "lastSynced": "2026-10-10",
       "figma": {
         "fill": {
-          "var": "semantic/input",
-          "raw": "#8A7F6E"
+          "var": "semantic/muted",
+          "raw": "#E8DCC0"
         },
         "strokeWeight": {
           "var": null,
@@ -565,7 +565,7 @@
         ]
       },
       "code": {
-        "classes": "relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-input"
+        "classes": "relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-[color-mix(in_oklab,var(--input)_10%,var(--muted))]"
       }
     },
     {
@@ -2768,8 +2768,8 @@
       "page": "❖ Onboarding",
       "pageId": "585:75",
       "frameId": "696:41",
-      "codeHash": "44b4ca7a66990cc2",
-      "syncedAt": "2026-09-21"
+      "codeHash": "89075d738f83c00e",
+      "syncedAt": "2026-10-10"
     },
     {
       "block": "order-summary",

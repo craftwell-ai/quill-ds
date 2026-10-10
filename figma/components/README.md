@@ -478,6 +478,7 @@ describes them as they are now.
   semantic/muted. **Light:** the twin's track is a shade LIGHTER than the browser's (the twin about 1.08:1 on the card,
   code about 1.2:1). A paint opacity or a second fill was not used: neither survives an instance nested in another
   component (`../README.md`, "What this manages"). **Dark and Classic Dark:** the twin matches code exactly.
+- **Slider and progress tracks (2026-10-10).** Code mixes 10% of `input` into `muted` for the empty track of ❖ Slider (all five states), ❖ Progress and the Onboarding page's bar; the twins bind `semantic/muted`, a shade lighter than the browser, for the same reason as the usage meter's track below.
 - **The bar is the ❖ Progress twin (81:8), detached in place.** An instance takes the height (space/1_5) and the two fills,
   but its fill layer is a fixed 120px that an instance cannot resize (the resize is ignored), so 30 % and 2.4 % cannot be
   drawn on a live instance. Each bar started as a Progress instance, got its overrides, and was detached with its

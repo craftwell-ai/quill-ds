@@ -30,7 +30,7 @@ function ProgressTrack({ className, ...props }: ProgressPrimitive.Track.Props) {
   return (
     <ProgressPrimitive.Track
       className={cn(
-        "relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-input",
+        "relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-[color-mix(in_oklab,var(--input)_10%,var(--muted))]",
         className
       )}
       data-slot="progress-track"
